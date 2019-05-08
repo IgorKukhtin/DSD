@@ -66,13 +66,14 @@ type
     { Private declarations }
 
     FHelsiID : string;
+    FHelsiIDList : string;
     FHelsiName : string;
     FHelsiQty : currency;
     FHelsiDate : TDateTime;
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
-       var AHelsiID, AHelsiName : string; var AHelsiQty : currency): boolean;
+       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
 
@@ -141,7 +142,7 @@ begin
     end else Exit;
 
     Result := True;
-  end else Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiName, FHelsiQty, FHelsiDate);
+  end else Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
 end;
 
 procedure TSPDialogForm.bbOkClick(Sender: TObject);
@@ -292,9 +293,9 @@ end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
-  var AHelsiID, AHelsiName : string; var AHelsiQty : currency): boolean;
+  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
 Begin
-      FHelsiID := ''; FHelsiName := '';
+      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
@@ -368,6 +369,7 @@ Begin
           (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = ASPKindId) then
         begin
           AHelsiID            := FHelsiID;
+          AHelsiIDList        := FHelsiIDList;
           AHelsiName          := FHelsiName;
           AHelsiQty           := FHelsiQty;
         end else

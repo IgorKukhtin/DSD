@@ -41,7 +41,7 @@ BEGIN
    
       IF (COALESCE ((SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = inMovementId
                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased  = FALSE), 0) > 1 OR 
+                                                         AND MovementItem.isErased  = FALSE), 0) > 3 OR 
           COALESCE ((SELECT COUNT(*) FROM Movement 
 
                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -49,9 +49,10 @@ BEGIN
                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
                               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
-                                              AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
-                                              AND Movement.DescId = zc_Movement_Inventory()
-                                              AND MovementLinkObject_Unit.ObjectId = vbUnitId), 0) > 5) AND
+                                AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                                AND Movement.DescId = zc_Movement_Inventory()
+                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                                AND Movement.StatusId = zc_Enum_Status_Complete()), 0) >= 1) AND
         EXISTS(SELECT 1
                 FROM Movement
 
@@ -88,7 +89,7 @@ BEGIN
                      FROM EmployeeWorkLog
                      WHERE EmployeeWorkLog.DateLogIn >= DATE_TRUNC ('DAY', CURRENT_DATE)
                        AND EmployeeWorkLog.DateLogIn < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
-                       AND EmployeeWorkLog.UnitId = 183292
+                       AND EmployeeWorkLog.UnitId = vbUnitId
                        AND EmployeeWorkLog.DateZReport IS NOT NULL),DATE_TRUNC ('DAY', CURRENT_DATE)) 
       THEN 
         RAISE EXCEPTION 'Ошибка. Смена не закрыта выполнение операций с инвентаризацией запрещено.';     

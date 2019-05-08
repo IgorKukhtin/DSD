@@ -2494,8 +2494,8 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actDeleteAccommodation: TAction
       Category = 'DSDLib'
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
       OnExecute = actDeleteAccommodationExecute
     end
     object actExpirationDateFilter: TAction
@@ -2889,6 +2889,18 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 16498
       OnExecute = actSetSPHelsiExecute
     end
+    object actDeleteAccommodationAllId: TAction
+      Category = 'DSDLib'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1080#1102
+      OnExecute = actDeleteAccommodationAllIdExecute
+    end
+    object actDeleteAccommodationAll: TAction
+      Category = 'DSDLib'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      OnExecute = actDeleteAccommodationAllExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3171,7 +3183,20 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = mmSaveToExcelClick
     end
     object mmDeleteAccommodation: TMenuItem
-      Action = actDeleteAccommodation
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      object N26: TMenuItem
+        Action = actDeleteAccommodation
+      end
+      object N27: TMenuItem
+        Action = actDeleteAccommodationAllId
+      end
+      object N28: TMenuItem
+        Caption = '-'
+      end
+      object N29: TMenuItem
+        Action = actDeleteAccommodationAll
+      end
     end
     object N11: TMenuItem
       Action = actExpirationDateFilter
@@ -3411,6 +3436,12 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'HelsiID'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HelsiIDList'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4208,8 +4239,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 219
+    Left = 224
+    Top = 379
   end
   object pm_OpenVIP: TPopupMenu
     Left = 472
@@ -4400,5 +4431,31 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 768
     Top = 168
+  end
+  object spDelete_AccommodationAllID: TdsdStoredProc
+    StoredProcName = 'gpDelete_Cash_AccommodationAllId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inAccommodationId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'AccommodationId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 224
+    Top = 427
+  end
+  object spDelete_AccommodationAll: TdsdStoredProc
+    StoredProcName = 'gpDelete_Cash_AccommodationAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 352
+    Top = 379
   end
 end

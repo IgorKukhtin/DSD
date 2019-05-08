@@ -154,6 +154,10 @@ begin
 
     FProcError := False;
 
+    Add_Log('');
+    Add_Log('-------------------');
+    Add_Log('Поставщик: ' + qryMaker.FieldByName('Name').AsString);
+
     if qryMaker.FieldByName('isReport1').AsBoolean then
     begin
       RepType := 0;
@@ -407,7 +411,9 @@ end;
 
 procedure TMainForm.ReportIncome(ADateStart, ADateEnd : TDateTime);
 begin
-  Add_Log('Начало Формирования отчета по приходам ' + qryMaker.FieldByName('Name').AsString);
+  Add_Log('Начало Формирования отчета по приходам за период с ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
   FileName := 'Отчет по приходам';
   Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
                                           FormatDateTime('dd.mm.yyyy', ADateEnd);
@@ -462,7 +468,9 @@ end;
 
 procedure TMainForm.ReportCheck(ADateStart, ADateEnd : TDateTime);
 begin
-  Add_Log('Начало Формирования отчета по продажам ' + qryMaker.FieldByName('Name').AsString);
+  Add_Log('Начало Формирования отчета по продажам с ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
   FileName := 'Отчет по продажам';
   Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
                                           FormatDateTime('dd.mm.yyyy', ADateEnd);
@@ -524,7 +532,9 @@ end;
 procedure TMainForm.ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
-  Add_Log('Начало Формирования отчета реализация за период с остатком на конец периода ' + qryMaker.FieldByName('Name').AsString);
+  Add_Log('Начало Формирования отчета реализация за период с остатком на конец периода с ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
   FileName := 'Отчет реализация за период с остатком на конец периода';
   Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
                                           FormatDateTime('dd.mm.yyyy', ADateEnd);
@@ -547,7 +557,9 @@ end;
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
-  Add_Log('Начало Формирования отчета приход расход остаток ' + qryMaker.FieldByName('Name').AsString);
+  Add_Log('Начало Формирования отчета приход расход остаток с ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
   FileName := 'Отчет приход расход остаток';
   Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
                                           FormatDateTime('dd.mm.yyyy', ADateEnd);
@@ -603,6 +615,10 @@ begin
        begin
          DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
          DateStart := StartOfTheMonth(DateEnd);
+
+         FormAddFile := True;
+         DateEndAdd := DateEnd;
+         DateStartAdd := StartOfTheMonth(DateEndAdd);
        end else
        begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
@@ -649,7 +665,7 @@ begin
   begin
     Form4MonthFile := True;
     DateEnd4Month := IncDay(StartOfTheMonth(Date), -1);
-    DateStart4Month := IncMonth(StartOfTheMonth(DateEndQuarter), - 3);
+    DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
   end;
 end;
 

@@ -386,6 +386,14 @@ type
     edAnalogFilter: TcxTextEdit;
     actSetSPHelsi: TAction;
     N25: TMenuItem;
+    N26: TMenuItem;
+    spDelete_AccommodationAllID: TdsdStoredProc;
+    spDelete_AccommodationAll: TdsdStoredProc;
+    actDeleteAccommodationAllId: TAction;
+    actDeleteAccommodationAll: TAction;
+    N27: TMenuItem;
+    N28: TMenuItem;
+    N29: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -483,6 +491,8 @@ type
     procedure actGoodsAnalogChooseExecute(Sender: TObject);
     procedure Label4Click(Sender: TObject);
     procedure actSetSPHelsiExecute(Sender: TObject);
+    procedure actDeleteAccommodationAllIdExecute(Sender: TObject);
+    procedure actDeleteAccommodationAllExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -629,7 +639,7 @@ implementation
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
-     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi;
+     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions;
 
 const
   StatusUnCompleteCode = 1;
@@ -996,6 +1006,7 @@ begin
   FormParams.ParamByName('RoundingDown').Value              := False;
   //***25.04.19
   FormParams.ParamByName('HelsiID').Value := '';
+  FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
 
@@ -1034,6 +1045,74 @@ end;
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
 begin
   lblMoneyInCash.Caption := '0.00';
+end;
+
+procedure TMainCashForm2.actDeleteAccommodationAllExecute(Sender: TObject);
+  var nID : integer;
+begin
+  if MessageDlg('Удалить все привязки по подразделению?',mtConfirmation,[mbYes,mbCancel], 0) <> mrYes then Exit;
+
+  spDelete_AccommodationAll.Execute;
+
+  try
+    nID := RemainsCDS.RecNo;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    RemainsCDS.First;
+    while not RemainsCDS.Eof do
+    begin
+      if not RemainsCDS.FieldByName('AccommodationId').IsNull then
+      begin
+        RemainsCDS.Edit;
+        RemainsCDS.FieldByName('AccommodationId').AsVariant     := Null;
+        RemainsCDS.FieldByName('AccommodationName').AsVariant   := Null;
+        RemainsCDS.Post;
+      end;
+      RemainsCDS.Next;
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.RecNo := nID;
+    RemainsCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.actDeleteAccommodationAllIdExecute(Sender: TObject);
+  var nID, nAccommodationId : integer;
+begin
+  if RemainsCDS.FieldByName('AccommodationID').IsNull then
+  begin
+    ShowMessage('Медикамент не привязан к размещению!');
+    Exit;
+  end;
+
+  if MessageDlg('Удалить привязку всех медикамента к размещению <' + RemainsCDS.FieldByName('AccommodationName').AsString + '> ?',
+    mtConfirmation,[mbYes,mbCancel], 0) <> mrYes then Exit;
+
+  spDelete_AccommodationAllID.Execute;
+
+  nAccommodationId := RemainsCDS.FieldByName('AccommodationId').AsInteger;
+  try
+    nID := RemainsCDS.RecNo;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    RemainsCDS.First;
+    while not RemainsCDS.Eof do
+    begin
+      if RemainsCDS.FieldByName('AccommodationId').AsInteger = nAccommodationId then
+      begin
+        RemainsCDS.Edit;
+        RemainsCDS.FieldByName('AccommodationId').AsVariant     := Null;
+        RemainsCDS.FieldByName('AccommodationName').AsVariant   := Null;
+        RemainsCDS.Post;
+      end;
+      RemainsCDS.Next;
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.RecNo := nID;
+    RemainsCDS.EnableControls;
+  end;
 end;
 
 procedure TMainCashForm2.actDeleteAccommodationExecute(Sender: TObject);
@@ -3070,10 +3149,11 @@ end;
 
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
-  PartnerMedicalId, SPKindId, MemberSPID : Integer;
+  PartnerMedicalId, SPKindId, MemberSPID, I : Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
   OperDateSP : TDateTime; SPTax : Currency;
-  HelsiID, HelsiName : string; HelsiQty : currency;
+  HelsiID, HelsiIDList, HelsiName : string; HelsiQty : currency;
+  Res: TArray<string>;
 begin
 
   if not CheckSP then Exit;
@@ -3097,6 +3177,7 @@ begin
      SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
      HelsiID      := Self.FormParams.ParamByName('HelsiID').Value;
+     HelsiIDList  := Self.FormParams.ParamByName('HelsiIDList').Value;
      HelsiName    := Self.FormParams.ParamByName('HelsiName').Value;
      HelsiQty     := Self.FormParams.ParamByName('HelsiQty').Value;
 
@@ -3105,7 +3186,7 @@ begin
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
      if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
-       MemberSPID, HelsiID, HelsiName, HelsiQty)
+       MemberSPID, HelsiID, HelsiIDList, HelsiName, HelsiQty)
      then exit;
   finally
      Free;
@@ -3123,6 +3204,7 @@ begin
   FormParams.ParamByName('MemberSPID').Value := MemberSPID;
   FormParams.ParamByName('RoundingDown').Value := SPKindId = 4823009;
   FormParams.ParamByName('HelsiID').Value := HelsiID;
+  FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
   FormParams.ParamByName('HelsiName').Value := HelsiName;
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
 
@@ -3137,7 +3219,24 @@ begin
     RemainsCDS.Filtered := False;
     try
       try
-        RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        if HelsiIDList <> '' then
+        begin
+           Res := TRegEx.Split(HelsiIDList, ',');
+           RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and (';
+           for I := 0 to High(Res) do
+             if I = 0 then RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' + QuotedStr(Res[I])
+             else RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' + QuotedStr(Res[I]);
+           RemainsCDS.Filter := RemainsCDS.Filter + ')'
+        end else RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        RemainsCDS.Filter := RemainsCDS.Filter +
+          ' and (CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 3) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 4) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 6) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) + ')';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -3162,7 +3261,8 @@ end;
 procedure TMainCashForm2.actSetSPHelsiExecute(Sender: TObject);
 var
   InvNumberSP: String; OperDateSP : TDateTime;
-  HelsiID, HelsiName : string; HelsiQty : currency;
+  HelsiID, HelsiIDList, HelsiName : string; HelsiQty : currency;
+  Res: TArray<string>; I : integer;
 begin
 
   if UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0 then
@@ -3173,8 +3273,7 @@ begin
 
   if not CheckSP then Exit;
 
-  if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') or
-    pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
+  if not CheckCDS.IsEmpty or pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
   Begin
     ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
     exit;
@@ -3183,7 +3282,11 @@ begin
   InvNumberSP := '';
   if not InputQuery('Скидка по соц. проекту "Доступні Ліки"', 'Введите номер рецепта: ', InvNumberSP) then Exit;
 
-  if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiName, HelsiQty, OperDateSP) then Exit;
+  if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP) then
+  begin
+    NewCheck(False);
+    Exit;
+  end;
 
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;
@@ -3191,6 +3294,7 @@ begin
   FormParams.ParamByName('SPKindName').Value:= 'Доступні Ліки';
   FormParams.ParamByName('RoundingDown').Value := True;
   FormParams.ParamByName('HelsiID').Value := HelsiID;
+  FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
   FormParams.ParamByName('HelsiName').Value := HelsiName;
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
 
@@ -3205,7 +3309,24 @@ begin
     RemainsCDS.Filtered := False;
     try
       try
-        RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        if HelsiIDList <> '' then
+        begin
+           Res := TRegEx.Split(HelsiIDList, ',');
+           RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and (';
+           for I := 0 to High(Res) do
+             if I = 0 then RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' + QuotedStr(Res[I])
+             else RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' + QuotedStr(Res[I]);
+           RemainsCDS.Filter := RemainsCDS.Filter + ')'
+        end else RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        RemainsCDS.Filter := RemainsCDS.Filter +
+          ' and (CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 3) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 4) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 6) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) + ')';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -4498,6 +4619,7 @@ begin
   FormParams.ParamByName('RoundingDown').Value              := False;
   //***25.04.19
   FormParams.ParamByName('HelsiID').Value := '';
+  FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
 

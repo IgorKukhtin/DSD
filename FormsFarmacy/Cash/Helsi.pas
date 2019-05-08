@@ -50,6 +50,7 @@ type
 
     // Данные из рецепта
     FMedication_ID : string;            // dosage_id что выписано
+    FMedication_ID_List : String;       // ID что выписано
     FMedication_Name : string;          // Название
     FMedication_Qty : currency;         // Количество выписано
 
@@ -97,7 +98,7 @@ type
     function ShowError(AText : string) : string;
   end;
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AName : string;
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 
 function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
@@ -118,7 +119,7 @@ uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
 
 var HelsiApi : THelsiApi;
 
-const arError : array [0..15, 0..2] of string =
+const arError : array [0..16, 0..2] of string =
   (('Active medication dispense already exists', 'forbidden', 'Наразі здійснюється погашення цього рецепту'),
   ('Legal entity is not verified', 'request_conflict', 'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
   ('Can''t update medication dispense status from PROCESSED to REJECTED', 'request_conflict', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
@@ -134,7 +135,8 @@ const arError : array [0..15, 0..2] of string =
   ('Does not match the signer last name', 'request_malformed', 'Помилка! Проблема з співставленням прізвища підписувача. Повторіть спробу використовуючи Ваш коректний КЕП'),
   ('document must contain 1 signature and 0 stamps but contains 0 signatures and 1 stamp', 'request_malformed', 'Помилка! При підписанні Ви використовуєте не власний КЕП. Повторіть спробу використовуючи Ваш коректний КЕП'),
   ('Requested discount price does not satisfy allowed reimbursement amount', 'validation_failed', 'Помилка! Невідповідність суми реімбурсації до умов програми "Доступні ліки".'),
-  ('Medication request is not valid', 'validation_failed', 'Некоректні параметри запиту на отримання рецепту'));
+  ('Medication request is not valid', 'validation_failed', 'Некоректні параметри запиту на отримання рецепту'),
+  ('Incorrect code', 'access_denied', 'Неправельный код подтверждения'));
 
 
 function DelDoubleQuote(AStr : string) : string;
@@ -239,14 +241,14 @@ begin
     end;
     if cDescription = '' then cDescription := cMessage;
 
-    for I := 0 to 15 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) and (LowerCase(arError[I, 1]) = LowerCase(cType)) then
+    for I := 0 to 16 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) and (LowerCase(arError[I, 1]) = LowerCase(cType)) then
     begin
       cError := arError[I, 2];
       Break;
     end;
 
     if cError = '' then
-      for I := 0 to 15 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
+      for I := 0 to 16 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
       begin
         cError := arError[I, 2];
         Break;
@@ -284,8 +286,13 @@ begin
   end;
 
   Result :=  FRESTResponse.StatusCode = 200;
-  if not Result then ShowMessage('Ошибка подключения к eSign Integration client:'#13#10 +
+  if not Result then
+  begin
+    if FRESTResponse.StatusCode = 0 then
+      ShowMessage('Ошибка подключения к eSign Integration client:'#13#10'Не был запущен Веб-сервер, запустите!')
+    else ShowMessage('Ошибка подключения к eSign Integration client:'#13#10 +
                      IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText);
+  end;
 end;
 
 
@@ -407,12 +414,15 @@ end;
 function THelsiApi.GetReceiptId : boolean;
 var
   jValue, j : TJSONValue;
+  JSONA: TJSONArray;
+  I : integer;
 begin
   Result := False;
   FDispense_sign_ID := '';
   FDispense_ID := '';
   FRequest_number := '';
   FMedication_request_id := '';
+  FMedication_ID_List := '';
 
   FRESTClient.BaseURL := FHelsi_be;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
@@ -457,6 +467,24 @@ begin
           if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
           if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
           if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
+
+          if jValue.FindValue('qualify') <> Nil then
+          begin
+            JSONA := jValue.GetValue<TJSONArray>('qualify');
+            if JSONA.Count > 0 then
+            begin
+              if JSONA.Items[0].FindValue('participants') <> Nil then
+              begin
+                JSONA := JSONA.Items[0].GetValue<TJSONArray>('participants');
+                for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
+                begin
+                  if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
+                  else FMedication_ID_List := FMedication_ID_List + ',' + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
+                end;
+              end;
+            end;
+          end;
+
           FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
 
           Result := True;
@@ -847,7 +875,7 @@ end;
 
 //------------------------
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AName : string;
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
   var I : integer;
       ds : TClientDataSet;
@@ -959,6 +987,7 @@ begin
   if HelsiApi.FStatus = 'ACTIVE' then
   begin
     AID := HelsiApi.FMedication_ID;
+    AIDList := HelsiApi.FMedication_ID_List;
     AName := HelsiApi.FMedication_Name;
     AQty := HelsiApi.FMedication_Qty;
     ADate := HelsiApi.FCreated_at;
