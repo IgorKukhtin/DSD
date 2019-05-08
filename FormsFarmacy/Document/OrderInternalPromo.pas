@@ -102,7 +102,7 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     bbInsertMaster: TdxBarButton;
     bbInsertChild: TdxBarButton;
-    Invnumber_Promo: TcxGridDBColumn;
+    InvNumber_Promo_Full: TcxGridDBColumn;
     spInsert: TdsdStoredProc;
     spInsertChild: TdsdStoredProc;
     isReport: TcxGridDBColumn;

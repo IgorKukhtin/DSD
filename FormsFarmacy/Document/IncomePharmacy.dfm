@@ -3,7 +3,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 563
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -129,6 +129,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentVert = vaCenter
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -141,6 +144,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
@@ -148,8 +152,25 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
+          end
+          object PartnerGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object PartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 173
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -158,6 +179,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 73
           end
@@ -166,6 +188,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'SalePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
           end
@@ -174,30 +197,35 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
           end
           object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object PartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
           object Measure: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'Measure'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
           end
@@ -205,6 +233,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             AlternateCaption = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #8470' '#1088#1077#1075
             DataBinding.FieldName = 'SertificatNumber'
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Options.Editing = False
             Width = 54
@@ -213,6 +242,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             AlternateCaption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1053#1072#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatStart'
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Options.Editing = False
             Width = 63
@@ -221,6 +251,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             AlternateCaption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1054#1082#1086#1085#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatEnd'
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Options.Editing = False
             Width = 58
@@ -228,18 +259,21 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           object DublePriceColour: TcxGridDBColumn
             DataBinding.FieldName = 'DublePriceColour'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
           end
           object WarningColor: TcxGridDBColumn
             DataBinding.FieldName = 'WarningColor'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
           end
           object AmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
+            HeaderAlignmentVert = vaCenter
             Width = 59
           end
           object AmountDiff: TcxGridDBColumn
@@ -247,6 +281,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+0.###;-0.###; ;'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object ReasonDifferencesName: TcxGridDBColumn
@@ -260,6 +295,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 131
           end
           object isPrint: TcxGridDBColumn
@@ -285,6 +321,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Caption = #1054#1090#1083#1086#1078#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'isDeferred'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
@@ -301,6 +338,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           object Color_AmountManual: TcxGridDBColumn
             DataBinding.FieldName = 'Color_AmountManual'
             Visible = False
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
