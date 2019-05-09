@@ -168,11 +168,13 @@ BEGIN
        SELECT
              Movement.Id
            , Movement.InvNumber
-           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
-           , MovementString_InvNumberMark.ValueData AS InvNumberMark
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
            , Movement.OperDate
-           , Movement.ParentId                          AS ParentId
-           , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
+        -- , Movement.ParentId AS ParentId
+        -- , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
+           , COALESCE (Movement.ParentId, 0) :: Integer AS ParentId
+           , COALESCE ((Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ), '') :: TVarChar AS InvNumber_Parent
            , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName

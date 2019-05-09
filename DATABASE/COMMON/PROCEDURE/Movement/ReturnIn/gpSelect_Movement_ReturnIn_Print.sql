@@ -33,6 +33,7 @@ $BODY$
 
     DECLARE vbStoreKeeperName TVarChar;
     DECLARE vbOperDate     TDateTime;   
+    DECLARE vbOperDatePartner TDateTime;
     DECLARE vbFromId       Integer;
     DECLARE vbPersonalId   Integer;
     DECLARE vbPersonalName TVarChar;
@@ -58,6 +59,7 @@ BEGIN
      SELECT Movement.DescId
           , Movement.StatusId
           , Movement.OperDate
+          , MovementDate_OperDatePartner.ValueData
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
@@ -68,11 +70,14 @@ BEGIN
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
           , MovementLinkObject_From.ObjectId                          AS FromId
-            INTO vbDescId, vbStatusId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice, vbFromId
+            INTO vbDescId, vbStatusId, vbOperDate, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice, vbFromId
      FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                   AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -619,11 +624,23 @@ BEGIN
                   , MovementItem.MovementId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
-                              THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                        )
                          WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_ReturnIn()
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                       , inChangePercent:= -1 * vbDiscountPercent
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                        )
                          WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_ReturnIn()
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                       , inChangePercent:= 1 * vbExtraChargesPercent
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                        )
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
                   , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -714,4 +731,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId:= 672146, inSession:= '2'); FETCH ALL "<unnamed portal 2>";
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId:= 672146, inSession:= '2'); -- FETCH ALL "<unnamed portal 2>";

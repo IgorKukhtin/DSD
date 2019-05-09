@@ -760,7 +760,11 @@ BEGIN
  , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND (tmpListDocSale.IsChangePrice = TRUE OR COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0) -- !!!для НАЛ не учитываем, но НЕ всегда!!!
-                              THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                              THEN zfCalc_PriceTruncate (inOperDate     := tmpListDocSale.OperDatePartner
+                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := tmpListDocSale.PriceWithVAT
+                                                        )
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -801,7 +805,14 @@ BEGIN
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_GoodsKind.ObjectId
-                    , MIFloat_Price.ValueData
+                    , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND (tmpListDocSale.IsChangePrice = TRUE OR COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0) -- !!!для НАЛ не учитываем, но НЕ всегда!!!
+                                THEN zfCalc_PriceTruncate (inOperDate     := tmpListDocSale.OperDatePartner
+                                                         , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                         , inPrice        := MIFloat_Price.ValueData
+                                                         , inIsWithVAT    := tmpListDocSale.PriceWithVAT
+                                                          )
+                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                      END
                     , MIFloat_CountForPrice.ValueData
                     , MIFloat_ChangePercent.ValueData
                     , tmpListDocSale.PriceWithVAT

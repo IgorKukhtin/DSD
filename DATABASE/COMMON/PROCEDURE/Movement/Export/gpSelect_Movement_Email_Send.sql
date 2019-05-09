@@ -10,7 +10,9 @@ RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
    DECLARE vbPartnerId Integer;
+   DECLARE vbOperDatePartner TDateTime;
 
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
@@ -32,17 +34,20 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT tmp.PartnerId
+     SELECT tmp.OperDatePartner
+          , tmp.PartnerId
           , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
           , tmp.ExportKindId
           , tmp.PaidKindId
           , tmp.ChangePercent
           , tmp.isDiscountPrice_juridical
-            INTO vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
+            INTO vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
-     SELECT Object_Partner.Id AS PartnerId
+     SELECT Movement.OperDate AS OperDate
+          , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+          , Object_Partner.Id AS PartnerId
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id), Object_Partner.Id) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0) AS GoodsPropertyId_basis
           , tmpExportJuridical.ExportKindId
@@ -50,6 +55,9 @@ BEGIN
           , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice_juridical
      FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -503,15 +511,20 @@ BEGIN
                -- количество
      || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- цена с НДС (Ваша) 
-     || '" CEN="' || CAST (1.2
-                         * CAST(CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
-                              * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                                          THEN 1 + MIFloat_ChangePercent.ValueData / 100
-                                     WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                          THEN 1 + vbChangePercent / 100
-                                     ELSE 1
-                                END
-                                AS NUMERIC(16, 2))
+     || '" CEN="' || CAST (1.2 * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                    , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                    , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                                    , inIsWithVAT    := FALSE
+                                                                     )
+                                      WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                    , inChangePercent:= vbChangePercent
+                                                                    , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                                    , inIsWithVAT    := FALSE
+                                                                     )
+                                      ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                 END
                            AS NUMERIC(16, 2)) :: TVarChar
                -- имя товара на всяк случай если забыли сообщить штрихкод
      || '" NAM="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -709,12 +722,19 @@ BEGIN
                -- Кол-во
      || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- Цена с НДС
-     || ';' || CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+     || ';' || CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                    * 1.2
                AS NUMERIC (16, 3)) :: TVarChar 
@@ -722,56 +742,91 @@ BEGIN
      || ';1' -- Коэффициент
      || ';' || COALESCE (Object_Measure.ValueData, '')
                -- Цена без НДС
-     || ';' || CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+     || ';' || CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                AS NUMERIC (16, 3)) :: TVarChar
                -- Сумма без НДС
      || ';' || CAST
-              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                AS NUMERIC (16, 3))
              * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
                -- Сумма с НДС
      || ';' || CAST
-              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                    * 1.2
                AS NUMERIC (16, 3))
              * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
                -- НДС
     || ';' || (CAST
-              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                    * 1.2
                AS NUMERIC (16, 3))
              * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
              - CAST
-              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
-                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
                           WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
-                                              THEN 1 + vbChangePercent / 100
-                          ELSE 1
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
                      END
                AS NUMERIC (16, 3))
              * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
@@ -850,4 +905,3 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 4953855, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 6887493 , inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Dakort39135074()
-

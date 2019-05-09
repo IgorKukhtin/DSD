@@ -25,6 +25,10 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
 
+-- IF inGUID = '?13' AND inSession = '1156045' THEN RETURN 0; END IF;
+ IF inSession = '1156045' THEN RETURN 0; END IF;
+
+
       -- поиск Id документа по GUID
       SELECT MovementString_GUID.MovementId 
            , Movement_RouteMember.StatusId
@@ -89,3 +93,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdateMobile_Movement_RouteMember (inGUID:= '{94774140-0FF6-4DC3-910C-5805989B6FC4}', inInvNumber:= '-9', inInsertDate:= CURRENT_TIMESTAMP, inGPSN:= 56, inGPSE:= 56, inAddressByGPS:= 'г. Кузнецк, ул. Сталелитейная, 7', inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdateMobile_Movement_RouteMember (inGUID:= '?13', inInvNumber:= '57710', inInsertDate:= '04.03.1518 14:43:59', inGPSN:= 47.8988, inGPSE:= 33.3982, inAddressByGPS:= '', inSession:= '1156045');
+

@@ -655,15 +655,37 @@ BEGIN
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в налоговых цены всегда будут без НДС
-                                      THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                      WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                      THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                           THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                      inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                    , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                                     )
+                                                      WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                           THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                      inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                    , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                                     )
                                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                                  END
                                          / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
                                  ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                           inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                         , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                         , inPrice        := MIFloat_Price.ValueData
+                                                                         , inIsWithVAT    := vbPriceWithVAT
+                                                                          )
                                            WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                           inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                         , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                                         , inPrice        := MIFloat_Price.ValueData
+                                                                         , inIsWithVAT    := vbPriceWithVAT
+                                                                          )
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END
                             END AS Price
@@ -740,6 +762,16 @@ BEGIN
                                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                                                      AND _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+
+                          LEFT JOIN Movement AS Movement_Tax_find ON Movement_Tax_find.Id
+                            = CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                        THEN CASE WHEN _tmpMovement_find.MovementId > 0
+                                                       THEN NULL -- vbMovementId_Tax
+                                                  ELSE COALESCE (MovementLinkMovement.MovementChildId, 0)
+                                             END
+                                   ELSE NULL -- vbMovementId_Tax
+                              END
+
                      GROUP BY CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                                         THEN CASE WHEN _tmpMovement_find.MovementId > 0
                                                        THEN vbMovementId_Tax
@@ -750,18 +782,41 @@ BEGIN
                             , MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                   THEN
                                         -- в налоговых цены всегда будут без НДС
-                                        THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                        WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                                   END
-                                           / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
-                                   ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                  THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                             WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                        END
+                                        CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                           THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                      inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                    , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                                     )
+                                                      WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                           THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                      inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                    , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                                     )
+                                                      ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                              END
+                                         / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+                                 ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                           inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                         , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                         , inPrice        := MIFloat_Price.ValueData
+                                                                         , inIsWithVAT    := vbPriceWithVAT
+                                                                          )
+                                           WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                           inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                         , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                                         , inPrice        := MIFloat_Price.ValueData
+                                                                         , inIsWithVAT    := vbPriceWithVAT
+                                                                          )
+                                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                      END
                               END
                             , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END
                     ) AS tmpMI_all

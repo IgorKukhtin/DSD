@@ -167,9 +167,17 @@ BEGIN
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                 THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                 THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                          , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                          , inPrice        := MIFloat_Price.ValueData
+                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                           )
                             WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                 THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                          , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                          , inPrice        := MIFloat_Price.ValueData
+                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                           )
                             ELSE MIFloat_Price.ValueData
                        END AS Price
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -177,6 +185,7 @@ BEGIN
                      , 0 AS Amount_Tax
                 FROM (SELECT Movement.Id
                            , Movement.DescId AS MovementDescId
+                           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                       FROM MovementDate AS MovementDate_OperDatePartner
                            JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                         AND Movement.DescId = zc_Movement_ReturnIn()
@@ -245,11 +254,23 @@ BEGIN
                          END
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
-                       , MIFloat_Price.ValueData
+                       , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                   THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                            , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                            , inPrice        := MIFloat_Price.ValueData
+                                                            , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                             )
+                              WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                   THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                            , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                            , inPrice        := MIFloat_Price.ValueData
+                                                            , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                             )
+                              ELSE MIFloat_Price.ValueData
+                         END
                        , MIFloat_CountForPrice.ValueData
                        , MIFloat_ChangePercent.ValueData
                        , Movement.MovementDescId
-                       , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Продажа покупателю
                 SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS FromId
@@ -268,9 +289,17 @@ BEGIN
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                 THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                          , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                          , inPrice        := MIFloat_Price.ValueData
+                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                           )
                             WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                 THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                          , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                          , inPrice        := MIFloat_Price.ValueData
+                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                           )
                             ELSE MIFloat_Price.ValueData
                        END AS Price
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -278,6 +307,7 @@ BEGIN
                      , 0                                                   AS Amount_Tax
                 FROM (SELECT Movement.Id
                            , Movement.DescId AS MovementDescId
+                           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                       FROM MovementDate AS MovementDate_OperDatePartner
                            JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                         AND Movement.DescId = zc_Movement_Sale()
@@ -361,11 +391,23 @@ BEGIN
                        , Movement_Tax.Id
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
-                       , MIFloat_Price.ValueData
+                       , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                   THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                            , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                            , inPrice        := MIFloat_Price.ValueData
+                                                            , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                             )
+                              WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                   THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                            , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                            , inPrice        := MIFloat_Price.ValueData
+                                                            , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                             )
+                              ELSE MIFloat_Price.ValueData
+                         END
                        , MIFloat_CountForPrice.ValueData
                        , MIFloat_ChangePercent.ValueData
                        , Movement.MovementDescId
-                       , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Перевод долга (расход)
                 SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS FromId
@@ -684,4 +726,4 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpReport_CheckTax (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_CheckTax (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());

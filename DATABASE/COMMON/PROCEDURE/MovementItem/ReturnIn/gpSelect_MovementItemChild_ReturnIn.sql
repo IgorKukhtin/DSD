@@ -49,8 +49,6 @@ BEGIN
    WITH tmpMI_all AS (SELECT MovementItem.Id                               AS MI_Id
                            , MovementItem.ParentId                         AS MI_ParentId
                            , MovementItem.ObjectId                         AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
 
                            , MovementItem.Amount                          AS Amount
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
@@ -63,19 +61,30 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.ParentId
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ParentId
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                       )
+  , tmpMIParent_MILO AS (SELECT MILO.*
+                         FROM MovementItemLinkObject AS MILO
+                         WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMI_all.MI_ParentId FROM tmpMI_all)
+                           AND MILO.DescId         = zc_MILinkObject_GoodsKind()
+                        )
+   , tmpMIParent_MIF AS (SELECT MIF.*
+                         FROM MovementItemFloat AS MIF
+                         WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMI_all.MI_ParentId FROM tmpMI_all)
+                           AND MIF.DescId         = zc_MIFloat_Price()
+                        )
           , tmpMI AS (SELECT tmpMI_all.*
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            LEFT JOIN tmpMI_all ON tmpMI_all.isErased = tmpIsErased.isErased
+                           LEFT JOIN tmpMIParent_MIF AS MIFloat_Price
+                                                     ON MIFloat_Price.MovementItemId = tmpMI_all.MI_ParentId
+                                                    AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                           LEFT JOIN tmpMIParent_MILO AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = tmpMI_all.MI_ParentId
+                                                     AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                       )
        -- результат
        SELECT tmpMI.MI_Id                                    AS Id

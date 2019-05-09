@@ -1709,9 +1709,17 @@ BEGIN
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
                 , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
-                            THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                                                     , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                     , inPrice        := MIFloat_Price.ValueData
+                                                     , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                                                      )
                        WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_ReturnIn()
-                            THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                                                     , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                     , inPrice        := MIFloat_Price.ValueData
+                                                     , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                                                      )
                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
                   END AS Price
                 , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
@@ -1722,6 +1730,12 @@ BEGIN
                 INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
                                    AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                    AND Movement.StatusId <> zc_Enum_Status_Erased() -- не проведенные должны учавствовать
+                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                      AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                          ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                         AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
                 INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND MovementItem.isErased   = FALSE
@@ -1739,7 +1753,20 @@ BEGIN
                                         ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
            GROUP BY MovementItem.ObjectId
-                  , MIFloat_Price.ValueData
+                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
+                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                                                        )
+                         WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_ReturnIn()
+                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                                                       , inChangePercent:= MovementFloat_ChangePercent.ValueData
+                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                                                        )
+                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                    END
                   , MIFloat_ChangePercent.ValueData
                   , Movement.DescId
                   , MovementFloat_ChangePercent.ValueData

@@ -329,11 +329,23 @@ BEGIN
                                , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
                                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                    , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                     )
                                       WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                    , inChangePercent:= -1 * vbDiscountPercent
+                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                     )
                                       WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                    , inChangePercent:= 1 * vbExtraChargesPercent
+                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                    , inIsWithVAT    := vbPriceWithVAT
+                                                                     )
                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                  END AS Price
                                , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
@@ -572,6 +584,26 @@ BEGIN
                                  , MovementItem.DescId
                                  , MovementItem.ObjectId
                                  , MILinkObject_GoodsKind.ObjectId
+                                 , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                      , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                      , inPrice        := MIFloat_Price.ValueData
+                                                                      , inIsWithVAT    := vbPriceWithVAT
+                                                                       )
+                                        WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                      , inChangePercent:= -1 * vbDiscountPercent
+                                                                      , inPrice        := MIFloat_Price.ValueData
+                                                                      , inIsWithVAT    := vbPriceWithVAT
+                                                                       )
+                                        WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                      , inChangePercent:= 1 * vbExtraChargesPercent
+                                                                      , inPrice        := MIFloat_Price.ValueData
+                                                                      , inIsWithVAT    := vbPriceWithVAT
+                                                                       )
+                                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                   END
                                  , MIFloat_Price.ValueData
                                  , MIFloat_CountForPrice.ValueData
                                  , MIFloat_ChangePercent.ValueData

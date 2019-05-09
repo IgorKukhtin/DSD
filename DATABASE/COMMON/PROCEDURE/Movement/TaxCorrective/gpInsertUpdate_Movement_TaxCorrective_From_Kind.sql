@@ -288,16 +288,37 @@ BEGIN
                                  , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                              -- в "налоговом документе" всегда будут без НДС
                                              THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
-                                                                  THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                             WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 AND vbMovementDescId <> zc_Movement_ReturnIn()
-                                                                  THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                                  THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                             inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                           , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                           , inPrice        := MIFloat_Price.ValueData
+                                                                                           , inIsWithVAT    := vbPriceWithVAT
+                                                                                            )
+                                                             WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbMovementDescId <> zc_Movement_ReturnIn()
+                                                                  THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                             inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                           , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                                           , inPrice        := MIFloat_Price.ValueData
+                                                                                           , inIsWithVAT    := vbPriceWithVAT
+                                                                                            )
                                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                                         END
                                                       / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                                         ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
-                                                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                  WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 AND vbMovementDescId <> zc_Movement_ReturnIn()
-                                                       THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                       THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                  inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                , inPrice        := MIFloat_Price.ValueData
+                                                                                , inIsWithVAT    := vbPriceWithVAT
+                                                                                 )
+
+                                                  WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbMovementDescId <> zc_Movement_ReturnIn()
+                                                       THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                  inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
+                                                                                , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                                , inPrice        := MIFloat_Price.ValueData
+                                                                                , inIsWithVAT    := vbPriceWithVAT
+                                                                                 )
                                                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                              END
                                    END AS OperPrice
@@ -338,6 +359,8 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id         -- MIFloat_MovementItemId.ValueData :: Integer
                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN Movement AS Movement_Tax_find ON Movement_Tax_find.Id = MovementLinkMovement_Tax.MovementChildId
+
                             WHERE MI_Master.MovementId = inMovementId
                               AND MI_Master.DescId     = zc_MI_Master()
                               AND MI_Master.isErased   = FALSE

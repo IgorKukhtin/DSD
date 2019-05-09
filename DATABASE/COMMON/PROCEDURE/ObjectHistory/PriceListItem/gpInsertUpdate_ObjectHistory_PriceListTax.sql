@@ -50,10 +50,11 @@ BEGIN
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
                                                      , inOperDate    := inOperDate
-                                                     , inValue       := CASE WHEN ObjectBoolean_PriceWithVAT.ValueData = TRUE
-                                                                                  THEN 6 * CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + inTax / 100) / 6 AS Numeric (16, 2))
-                                                                             ELSE 5 * CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + inTax / 100) / 5 AS Numeric (16, 2))
-                                                                        END :: TFloat
+                                                     , inValue       := zfCalc_PriceTruncate (inOperDate     := CURRENT_DATE
+                                                                                            , inChangePercent:= inTax
+                                                                                            , inPrice        := ObjectHistoryFloat_PriceListItem_Value.ValueData
+                                                                                            , inIsWithVAT    := ObjectBoolean_PriceWithVAT.ValueData
+                                                                                             )
                                                      , inUserId      := vbUserId)
    /*PERFORM  gpInsertUpdate_ObjectHistory_PriceListItemLast
                                                       (ioId          := inId

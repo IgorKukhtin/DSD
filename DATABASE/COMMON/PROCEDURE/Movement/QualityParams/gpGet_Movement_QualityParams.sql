@@ -65,6 +65,8 @@ BEGIN
            , MS_ExpertLast.ValueData                            AS ExpertLast
            , MS_QualityNumber.ValueData                         AS QualityNumber
            , MB_Comment.ValueData                               AS Comment
+        -- , ( SELECT ResourseProtocol.ProtocolData FROM ResourseProtocol where ResourseProtocol.Id = 96857)AS Comment
+
            , Object_Quality.Id                                  AS QualityId
            , Object_Quality.ValueData   		        AS QualityName
            , Object_Retail.id                               AS RetailId

@@ -236,9 +236,18 @@ BEGIN
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
            , (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                        THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                 , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                 , inPrice        := MIFloat_Price.ValueData
+                                                 , inIsWithVAT    := Movement.PriceWithVAT
+                                                  )
+
                    WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                        THEN CAST ( (1 + Movement.ChangePercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                        THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                 , inChangePercent:= Movement.ChangePercent
+                                                 , inPrice        := MIFloat_Price.ValueData
+                                                 , inIsWithVAT    := Movement.PriceWithVAT
+                                                  )
                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
               END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
             * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
@@ -257,9 +266,17 @@ BEGIN
                        THEN 1 / (1 + Movement.VATPercent / 100)
              END
            * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + Movement.ChangePercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= Movement.ChangePercent
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -276,9 +293,17 @@ BEGIN
              CAST ((
              CAST (
              CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + Movement.ChangePercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= Movement.ChangePercent
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -309,9 +334,17 @@ BEGIN
                        THEN 1 / (1 + Movement.VATPercent / 100)
              END
            * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + Movement.ChangePercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= Movement.ChangePercent
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -327,9 +360,17 @@ BEGIN
            , CAST ((
              CAST (
              CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                       THEN CAST ( (1 + Movement.ChangePercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
+                                                , inChangePercent:= Movement.ChangePercent
+                                                , inPrice        := MIFloat_Price.ValueData
+                                                , inIsWithVAT    := Movement.PriceWithVAT
+                                                 )
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())

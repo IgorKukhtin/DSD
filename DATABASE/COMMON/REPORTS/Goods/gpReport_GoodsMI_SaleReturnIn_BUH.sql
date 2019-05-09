@@ -244,35 +244,41 @@ BEGIN
                                 -- , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
 
                                 , SUM (CAST (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
-                                                  THEN  -1 * MIContainer.Amount * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
-                                                                                       WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
-                                                                                            THEN CASE WHEN MIFloat_ChangePercent.ValueData <> 0
-                                                                                                           THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                                                                      ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                                                                                 END
-                                                                                               * MovementFloat_VATPercent.ValueData / 100
-                                                                                       ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0
-                                                                                                      THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                                                                 ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                                                                            END
-                                                                                          / (1 + 100 / MovementFloat_VATPercent.ValueData)
-                                                                                   END
+                                                  THEN  -1 * MIContainer.Amount
+                                                           * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
+                                                                  WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
+                                                                      THEN zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
+                                                                                               , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                               , inPrice        := MIFloat_Price.ValueData
+                                                                                               , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                                                                )
+                                                                         * MovementFloat_VATPercent.ValueData / 100
+                                                                 ELSE zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
+                                                                                          , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                          , inPrice        := MIFloat_Price.ValueData
+                                                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                                                           )
+                                                                    / (1 + 100 / MovementFloat_VATPercent.ValueData)
+                                                             END
                                                   ELSE 0
                                              END AS NUMERIC (16, 2))) AS Sale_SummVAT
                                 , SUM (CAST (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800()
-                                                  THEN MIContainer.Amount * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
-                                                                                 WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
-                                                                                      THEN CASE WHEN MIFloat_ChangePercent.ValueData <> 0
-                                                                                                     THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                                                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                                                                           END
-                                                                                         * MovementFloat_VATPercent.ValueData / 100
-                                                                                 ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0
-                                                                                                THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                                                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                                                                      END
-                                                                                    / (1 + 100 / MovementFloat_VATPercent.ValueData)
-                                                                            END
+                                                  THEN MIContainer.Amount
+                                                     * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
+                                                            WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
+                                                                 THEN zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
+                                                                                          , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                          , inPrice        := MIFloat_Price.ValueData
+                                                                                          , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                                                           )
+                                                                    * MovementFloat_VATPercent.ValueData / 100
+                                                            ELSE zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
+                                                                                     , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                                                     , inPrice        := MIFloat_Price.ValueData
+                                                                                     , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
+                                                                                      )
+                                                               / (1 + 100 / MovementFloat_VATPercent.ValueData)
+                                                       END
                                                   ELSE 0
                                              END AS NUMERIC (16, 2))) AS Return_SummVAT
                            FROM tmpAnalyzer
@@ -309,6 +315,9 @@ BEGIN
                                                             ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
+                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                       ON MovementDate_OperDatePartner.MovementId =  MIContainer.MovementId
+                                                      AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
                                 LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                           ON MovementBoolean_PriceWithVAT.MovementId = MIContainer.MovementId
                                                          AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -523,12 +532,12 @@ BEGIN
                                          , inSession
                                           ) AS tmp
            FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalId,0)  = COALESCE (tmp.JuridicalId, 0)
-                           AND COALESCE (_tmpMI.ContractId,0) = COALESCE (tmp.ContractId,0)
-                           AND COALESCE (_tmpMI.PartnerId ,0)      = COALESCE (tmp.PartnerId, 0)
+                           AND COALESCE (_tmpMI.ContractId,0)   = COALESCE (tmp.ContractId,0)
+                           AND COALESCE (_tmpMI.PartnerId ,0)   = COALESCE (tmp.PartnerId, 0)
                            AND COALESCE (_tmpMI.InfoMoneyId,0)  = COALESCE (tmp.InfoMoneyId,0)
                            AND COALESCE (_tmpMI.BranchId,0)     = COALESCE (tmp.BranchId,0)
                            AND COALESCE (_tmpMI.TradeMarkId,0)  = COALESCE (tmp.TradeMarkId,0)
-                           AND COALESCE (_tmpMI.GoodsId, 0)        = COALESCE (tmp.GoodsId, 0)
+                           AND COALESCE (_tmpMI.GoodsId, 0)     = COALESCE (tmp.GoodsId, 0)
                            AND COALESCE (_tmpMI.GoodsKindId, 0) = COALESCE (tmp.GoodsKindId, 0)
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)

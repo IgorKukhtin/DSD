@@ -7,8 +7,18 @@
    VACUUM ANALYZE Container;
    VACUUM FULL ObjectFloat;
    VACUUM ANALYZE ObjectFloat;
-   VACUUM FULL ContainerLinkObject;
-   VACUUM ANALYZE ContainerLinkObject;
+   -- VACUUM FULL ContainerLinkObject;
+   -- VACUUM ANALYZE ContainerLinkObject;
+   VACUUM ANALYZE MovementFloat;
+   VACUUM ANALYZE MovementDate;
+   VACUUM ANALYZE MovementBoolean;
+
+   VACUUM FULL MovementFloat;
+   VACUUM ANALYZE MovementFloat;
+   VACUUM FULL MovementDate;
+   VACUUM ANALYZE MovementDate;
+   VACUUM FULL MovementBoolean;
+   VACUUM ANALYZE MovementBoolean;
 */
 /*
    VACUUM FULL HistoryCost;
@@ -26,6 +36,7 @@
  VACUUM FULL pg_catalog.pg_index;
  VACUUM FULL pg_catalog.pg_attrdef;
  VACUUM FULL pg_catalog.pg_proc;
+ -- VACUUM FULL pg_toast.pg_toast_1107196;
 
  VACUUM ANALYZE pg_catalog.pg_statistic;
  VACUUM ANALYZE pg_catalog.pg_attribute;
@@ -36,6 +47,7 @@
  VACUUM ANALYZE pg_catalog.pg_index;
  VACUUM ANALYZE pg_catalog.pg_attrdef;
  VACUUM ANALYZE pg_catalog.pg_proc;
+ -- VACUUM ANALYZE pg_toast.pg_toast_1107196;
 
 -- VACUUM FULL CashSessionSnapShot;
 -- VACUUM ANALYZE CashSessionSnapShot;

@@ -14,6 +14,7 @@ $BODY$
   DECLARE vbOperSumm_Partner_byItem TFloat;
   DECLARE vbOperSumm_Partner TFloat;
 
+  DECLARE vbOperDatePartner TDateTime;
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
@@ -34,7 +35,8 @@ BEGIN
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
-     SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+     SELECT MovementDate_OperDatePartner.ValueData AS OperDatePartner
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
@@ -44,9 +46,12 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
-            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+            INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId
      FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -144,11 +149,12 @@ BEGIN
                    , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                    , COALESCE (MIFloat_PriceEDI.ValueData, 0) AS PriceEDI
                    , CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0 -- vbDiscountPercent <> 0
-                               -- скидка в цене - с округлением до 2-х знаков
-                               THEN CAST ( (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) /* - vbDiscountPercent*/ / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          WHEN COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0 -- vbExtraChargesPercent <> 0
-                               -- наценка в цене - с округлением до 2-х знаков
-                               THEN CAST ( (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) /*+ vbExtraChargesPercent*/ / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                               -- скидка / наценка в цене - с округлением до 2-х знаков
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := MIFloat_Price.ValueData
+                                                        , inIsWithVAT    := vbPriceWithVAT
+                                                         )
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice

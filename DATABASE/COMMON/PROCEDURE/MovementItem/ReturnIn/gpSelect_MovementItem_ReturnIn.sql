@@ -152,27 +152,34 @@ BEGIN
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               FROM (SELECT DISTINCT tmpMI.MovementId_Promo AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             )
+        , tmpMIPromo_MILO AS (SELECT MILO.*
+                              FROM MovementItemLinkObject AS MILO
+                              WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                AND MILO.DescId         = zc_MILinkObject_GoodsKind()
+                             )
+         , tmpMIPromo_MIF AS (SELECT MIF.*
+                              FROM MovementItemFloat AS MIF
+                              WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                AND MIF.DescId         = zc_MIFloat_PriceWithOutVAT()
                              )
              , tmpMIPromo AS (SELECT DISTINCT
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                    , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                   LEFT JOIN tmpMIPromo_MILO AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                   LEFT JOIN tmpMIPromo_MIF AS MIFloat_PriceWithOutVAT
+                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                           AND MIFloat_PriceWithOutVAT.DescId         = zc_MIFloat_PriceWithOutVAT()
                              )
-
-
    , tmpMI_parent AS (SELECT MovementItem.ObjectId                         AS GoodsId
                            , SUM (MovementItem.Amount)                     AS Amount
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -533,27 +540,34 @@ BEGIN
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               FROM (SELECT DISTINCT tmpMI.MovementId_Promo AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             )
+        , tmpMIPromo_MILO AS (SELECT MILO.*
+                              FROM MovementItemLinkObject AS MILO
+                              WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                AND MILO.DescId         = zc_MILinkObject_GoodsKind()
+                             )
+         , tmpMIPromo_MIF AS (SELECT MIF.*
+                              FROM MovementItemFloat AS MIF
+                              WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                AND MIF.DescId         = zc_MIFloat_PriceWithOutVAT()
                              )
              , tmpMIPromo AS (SELECT DISTINCT
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                    , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                   LEFT JOIN tmpMIPromo_MILO AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                   LEFT JOIN tmpMIPromo_MIF AS MIFloat_PriceWithOutVAT
+                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                           AND MIFloat_PriceWithOutVAT.DescId         = zc_MIFloat_PriceWithOutVAT()
                              )
-
-
    , tmpMI_parent AS (SELECT MovementItem.ObjectId                         AS GoodsId
                            , SUM (MovementItem.Amount)                     AS Amount
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
