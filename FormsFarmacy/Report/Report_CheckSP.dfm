@@ -51,6 +51,10 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = ',0.####'
               Kind = skAverage
               Column = CountSP
+            end
+            item
+              Format = ',0.####'
+              Column = TotalSumm_Check
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -92,6 +96,10 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = ',0.####'
               Kind = skAverage
               Column = CountSP
+            end
+            item
+              Format = ',0.####'
+              Column = TotalSumm_Check
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -200,6 +208,32 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object TotalSumm_Check: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'TotalSumm_Check'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object InsertName_Check: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.) ('#1095#1077#1082')'
+            DataBinding.FieldName = 'InsertName_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object InsertDate_Check: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.) ('#1095#1077#1082')'
+            DataBinding.FieldName = 'InsertDate_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076

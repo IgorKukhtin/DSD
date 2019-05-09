@@ -104,6 +104,10 @@ RETURNS TABLE (MovementId     Integer
 
              , isPrintLast       Boolean
 
+             , TotalSumm_Check TFloat
+             , InsertName_Check TVarChar
+             , InsertDate_Check TDateTime
+
 )
 AS
 $BODY$
@@ -118,7 +122,7 @@ BEGIN
     -- Результат
     RETURN QUERY
         -- результат
-        SELECT tmp.*                                      AS isPrintLast
+        SELECT tmp.*
         FROM gpReport_Check_SP_01042019 (inStartDate        := inStartDate
                                        , inEndDate          := inEndDate          
                                        , inJuridicalId      := inJuridicalId      
@@ -130,7 +134,7 @@ BEGIN
     ELSE 
     RETURN QUERY
         -- результат
-        SELECT tmp.*                                      AS isPrintLast
+        SELECT tmp.*
         FROM gpReport_Check_SP_old (inStartDate        := inStartDate
                                   , inEndDate          := inEndDate          
                                   , inJuridicalId      := inJuridicalId      
