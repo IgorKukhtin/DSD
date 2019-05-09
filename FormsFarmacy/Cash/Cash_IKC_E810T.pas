@@ -1,7 +1,7 @@
 unit Cash_IKC_E810T;
 
 interface
-uses Windows, CashInterface, DBTables, NeoFiscalPrinterDriver_TLB;
+uses Windows, CashInterface, NeoFiscalPrinterDriver_TLB;
 type
   TCashIKC_E810T = class(TInterfacedObject, ICash)
   private
@@ -55,7 +55,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, RegularExpressions, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log;
 
 
 const
@@ -69,7 +69,7 @@ begin
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FLengNoFiscalText := 37;
-  FPrinter := CoFiscPrn.Create;
+  FPrinter := CoFiscPrn.Create_EP_11;
   if FPrinter.FPInitialize = 0 then
   begin
     if not FPrinter.FPOpen(StrToInt(iniPortNumber), StrToInt(iniPortSpeed), 3, 3) then

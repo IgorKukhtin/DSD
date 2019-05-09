@@ -39,6 +39,12 @@ BEGIN
         THEN
            RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
+        
+       IF EXISTS(SELECT 1 FROM Movement
+                 WHERE Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
+       THEN
+         RAISE EXCEPTION 'Ошибка. Отмена подписи инвентаризаций вам запрещена.';     
+       END IF;     
      END IF;     
 
      -- проверка - если <Master> Проведен, то <Ошибка>

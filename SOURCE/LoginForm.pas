@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxPropertiesStore,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, cxClasses;
 
 type
   TcxComboBoxUser = Class(TcxComboBox)
@@ -78,8 +78,9 @@ begin
       Begin
         if edUserName.Properties.Items.IndexOf(edUserName.Text) = -1 then
            edUserName.Properties.Items.Add(edUserName.Text);
-        if FAllowLocalConnect then
-          SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
+// 01.05.19  ѕолучение списка пользователей централизовано
+//        if FAllowLocalConnect then
+//          SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
         TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
         ModalResult := mrOk;
       End

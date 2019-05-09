@@ -10,18 +10,30 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromoChild(
 )
 RETURNS TABLE (Id Integer, ParentId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , Amount TFloat, AmountOut TFloat, Remains TFloat
+             , Amount TFloat, AmountManual TFloat
+             , AmountOut TFloat, Remains TFloat
+             , Koeff TFloat
              , IsErased Boolean
               )
 AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbStatusId Integer;
+    DECLARE vbDays TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternalPromo());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- данные из шапки документа
+    SELECT (DATE_PART ('DAY', AGE (Movement.OperDate + INTERVAL '1 DAY', MovementDate_StartSale.ValueData))) :: TFloat
+   INTO vbDays
+    FROM Movement
+        LEFT JOIN MovementDate AS MovementDate_StartSale
+                               ON MovementDate_StartSale.MovementId = Movement.Id
+                              AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+    WHERE Movement.Id = inMovementId;
+    
         RETURN QUERY
            SELECT MovementItem.Id
                 , MovementItem.ParentId
@@ -30,8 +42,10 @@ BEGIN
                 , Object_Unit.ValueData            AS UnitName
                 
                 , MovementItem.Amount              AS Amount
+                , MIFloat_AmountManual.ValueData   AS AmountManual
                 , MIFloat_AmountOut.ValueData      AS AmountOut
                 , MIFloat_Remains.ValueData        AS Remains
+                , (((MIFloat_AmountOut.ValueData /vbDays )*300 - MIFloat_Remains.ValueData)/300) :: TFloat AS Koeff
                 , MovementItem.IsErased
            FROM MovementItem
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
@@ -44,19 +58,22 @@ BEGIN
                                             ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                            ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Child()
              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
-  
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.05.19         *
  15.04.19         *
 */
 

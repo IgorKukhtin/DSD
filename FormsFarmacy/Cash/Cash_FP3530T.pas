@@ -1,11 +1,11 @@
 unit Cash_FP3530T;
 
 interface
-uses Windows, CashInterface, DBTables;
+uses Windows, CashInterface, DBClient;
 type
   TCashFP3530T = class(TInterfacedObject, ICash)
   private
-    Table: TTable;
+    Table: TClientDataSet;
     FAlwaysSold: boolean;
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
@@ -51,7 +51,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, BDE, RegularExpressions;
+uses Forms, SysUtils, Dialogs, Math, Variants, RegularExpressions, LocalWorkUnit;
 
 type
   RetData = record
@@ -205,10 +205,9 @@ begin
   InitFPport(1, 19200);
   SetDecimals(2);
   FLengNoFiscalText := 35;
-  Table:= TTable.Create(nil);
-  Table.TableName:='CashAttachment.db';
-  Table.Open;
-  Table.Filtered:=true;
+  Table:= TClientDataSet.Create(nil);
+  if FileExists(CashAttachment_lcl) then LoadLocalData(Table,CashAttachment_lcl)
+  else CreateCashAttachment(Table);
   {AssignFile(LogFile,'ToCash.Log');
   try
     Append(LogFile);
@@ -371,12 +370,10 @@ begin
        {вводим новую связь и программируем}
        Table.Last;
        CashCode:=Table.FieldByName('CashCode').asInteger+1;
-
        Table.AppendRecord([GoodsCode, CashCode, Price]);
-       Table.Close;
-       Table.Open;
+       SaveLocalData(Table,Goods_lcl);
 
-        ProgrammingGoods(CashCode, GoodsName, Price, NDS);
+       ProgrammingGoods(CashCode, GoodsName, Price, NDS);
     end;
 
     // продать артикул
@@ -754,7 +751,7 @@ end;
 procedure TCashFP3530T.ClearArticulAttachment;
 begin
   Table.Close;
-  Table.EmptyTable;
+  if FileExists(CashAttachment_lcl) then DeleteFile(CashAttachment_lcl);
   Table.Open
 end;
 

@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
   cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, System.Actions;
 
 type
   TCashCloseDialogForm = class(TAncestorDialogForm)

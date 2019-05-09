@@ -62,11 +62,6 @@ BEGIN
            vbUnitKey := '0';
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
-
-        IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
-        THEN
-           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
-        END IF;     
      END IF;     
 
     -- Находим остаток товара на дату

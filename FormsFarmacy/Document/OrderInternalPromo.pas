@@ -50,7 +50,7 @@ type
     bbMISetErasedChild: TdxBarButton;
     bbMISetUnErasedChild: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    UnitChoiceForm: TOpenChoiceForm;
     actDoLoad: TExecuteImportSettingsAction;
     actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc;
     actGetImportSettingId: TdsdExecStoredProc;
@@ -102,10 +102,13 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     bbInsertMaster: TdxBarButton;
     bbInsertChild: TdxBarButton;
-    Invnumber_Promo: TcxGridDBColumn;
+    InvNumber_Promo_Full: TcxGridDBColumn;
     spInsert: TdsdStoredProc;
     spInsertChild: TdsdStoredProc;
     isReport: TcxGridDBColumn;
+    chKoeff: TcxGridDBColumn;
+    chAmountManual: TcxGridDBColumn;
+    AmountManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

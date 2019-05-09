@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
              , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
+             , isPastMain Boolean
               )
 AS
 $BODY$
@@ -118,6 +119,16 @@ BEGIN
          , REPEAT ('*', LENGTH (CASE WHEN COALESCE (ObjectFloat_ScalePSW.ValueData, 0) = 0 THEN '' ELSE '12345' /*(ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar*/ END)) :: TVarChar AS ScalePSW
          , COALESCE (ObjectFloat_ScalePSW.ValueData, 0) ::TFloat                            AS ScalePSW_forPrint
          , Object_Personal_View.isErased
+         , CASE WHEN Object_Personal_View.isErased = TRUE /*OR DATE_PART('YEAR', AGE ( COALESCE (Object_Personal_View.DateOut, zc_DateEnd()) + interval '1 day' , Object_Personal_View.DateIn)) > 0*/
+                THEN FALSE
+                ELSE CASE WHEN (SELECT 1 FROM lfSelect_Object_Member_Personal_PastMain (inStartDate := Object_Personal_View.DateIn - INTERVAL '1 YEAR'
+                                                                                      , inEndDate   := Object_Personal_View.DateIn - INTERVAL '1 DAY'
+                                                                                      , inMemberId  := Object_Personal_View.MemberId
+                                                                                      , inSession   := inSession)) IS NOT NULL 
+                          THEN TRUE 
+                          ELSE FALSE
+                     END
+           END AS isPastMain
 
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
@@ -181,7 +192,7 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
                                 ON ObjectFloat_ScalePSW.ObjectId = Object_Personal_View.MemberId
                                AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_Member_ScalePSW()
-
+          
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
@@ -255,6 +266,7 @@ BEGIN
          , CAST ('' as TVarChar)    AS ScalePSW
          , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased
+         , FALSE                    AS isPastMain
     ;
 
 END;
@@ -429,3 +441,7 @@ order by Object_p.ValueData
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Personal (inStartDate:= null, inEndDate:= null, inIsPeriod:= FALSE, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+
+
+
+--SELECT DATE_PART('YEAR', AGE ('31.01.2019'::TDateTime+ interval '1 day' , '01.04.2018'::TDateTime))

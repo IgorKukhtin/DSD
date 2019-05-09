@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount_Sale TFloat, Amount_Remains TFloat
              , Amount_Master TFloat
              , inReportText TVarChar
+             , isManual TVarChar
              , JuridicalName TVarChar
              , ContractName TVarChar
               )
@@ -68,7 +69,8 @@ BEGIN
                              , Object_Unit.Id                   AS UnitId
                              , Object_Unit.ObjectCode           AS UnitCode
                              , Object_Unit.ValueData            AS UnitName
-                             , MovementItem.Amount              AS Amount
+                             , COALESCE (MIFloat_AmountManual.ValueData,MovementItem.Amount,0) AS Amount
+                             , COALESCE (MIFloat_AmountManual.ValueData,0)           :: TFloat AS AmountManual
                              , MIFloat_AmountOut.ValueData      AS AmountOut
                              , MIFloat_Remains.ValueData        AS Remains
                              , Count (*) OVER (PARTITION BY MovementItem.ParentId) AS Count_calc
@@ -80,6 +82,9 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                                          ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId = zc_MI_Child()
                           AND MovementItem.isErased = FALSE 
@@ -116,6 +121,7 @@ BEGIN
           , tmpMI_Child.Remains              AS Amount_Remains
           , (tmpMI_Master.Amount  / CASE WHEN COALESCE (tmpMI_Child.Count_calc, 0) <> 0 THEN tmpMI_Child.Count_calc ELSE 1 END ):: TFloat AS Amount_Master
           , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN 'дю' ELSE 'мер' END :: TVarChar AS inReportText
+          , CASE WHEN COALESCE (tmpMI_Child.AmountManual,0) <> 0 THEN 'дю' ELSE 'мер' END :: TVarChar AS isManual
           , tmpMI_Master.JuridicalName
           , tmpMI_Master.ContractName
      FROM tmpMI_Master 

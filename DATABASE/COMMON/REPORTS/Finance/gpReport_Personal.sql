@@ -93,7 +93,6 @@ BEGIN
      vbIsList_all:= NOT EXISTS (SELECT 1 FROM _tmpList) OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
 
 
-
      -- Результат
      RETURN QUERY
      WITH
@@ -140,6 +139,25 @@ BEGIN
                         AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
                       )
 
+   , tmpMIFloat_SummService AS (SELECT tmp.ContainerId
+                                     , SUM (COALESCE (MIFloat_SummService.ValueData,0)) AS  SummService_inf
+                                FROM (SELECT DISTINCT MIContainer.ContainerId
+                                           , MIContainer.MovementItemId
+                                           , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
+                                     FROM tmpContainer
+                                          LEFT JOIN MovementItemContainer AS MIContainer
+                                                                          ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                         AND MIContainer.OperDate >= inStartDate
+                                                                         AND MIContainer.OperDate <= inEndDate 
+                                          INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                                             AND Movement.DescId = zc_Movement_PersonalService()
+                                     ) AS tmp
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                                  ON MIFloat_SummService.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                WHERE tmp.Ord = 1
+                                GROUP BY tmp.ContainerId
+                                )
    , Operation_all AS (SELECT tmpContainer.ContainerId
                             , tmpContainer.AccountId
                             , tmpContainer.PersonalId
@@ -169,7 +187,7 @@ BEGIN
 
                             , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
                             --
-                            , MIN (MIContainer.MovementItemId) AS MovementItemId
+                            --, MIN (MIContainer.MovementItemId) AS MovementItemId
                             -- , MIContainer.MovementItemId
                             -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
                         FROM tmpContainer
@@ -191,15 +209,6 @@ BEGIN
                             -- , MIContainer.MovementItemId
                        )
 
-   , tmpMIFloat AS (SELECT MovementItem.Id
-                         , MIFloat_SummService.ValueData AS SummService
-                    FROM MovementItem
-                         INNER JOIN MovementItemFloat AS MIFloat_SummService
-                                                      ON MIFloat_SummService.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
-                    WHERE MovementItem.Id IN (SELECT DISTINCT Operation_all.MovementItemId FROM Operation_all)
-                    )
-
    , tmpOperation AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId
                            , Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
                            , Operation_all.PersonalServiceListId
@@ -212,7 +221,7 @@ BEGIN
                            , SUM (Operation_all.MoneySummCardSecond) AS MoneySummCardSecond
                            , SUM (Operation_all.MoneySummCash)       AS MoneySummCash
                            , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
-                           , SUM (tmpMIFloat.SummService)            AS ServiceSumm_inf
+                           , SUM (tmpMIFloat_SummService.SummService_inf) AS ServiceSumm_inf
                            , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
                            , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                            , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
@@ -223,8 +232,7 @@ BEGIN
 
                            , SUM (Operation_all.EndAmount)   AS EndAmount
                       FROM Operation_all
-                           LEFT JOIN tmpMIFloat ON tmpMIFloat.Id = Operation_all.MovementItemId
-                                            -- AND Operation_all.Ord = 1
+                           LEFT JOIN tmpMIFloat_SummService ON tmpMIFloat_SummService.Containerid = Operation_all.ContainerId
                       GROUP BY Operation_all.ContainerId
                              , Operation_all.AccountId
                              , Operation_all.PersonalId

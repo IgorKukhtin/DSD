@@ -23,6 +23,8 @@ $BODY$
    DECLARE vbPrice TFloat;
    DECLARE vbAmount TFloat;
    DECLARE vbAmountUser TFloat;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUserUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -43,6 +45,22 @@ BEGIN
                                       ON MLO_Unit.MovementId = Movement.Id
                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
+
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+     THEN
+     
+        vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+        IF vbUnitKey = '' THEN
+           vbUnitKey := '0';
+        END IF;
+        vbUserUnitId := vbUnitKey::Integer;
+
+        IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
+        THEN
+           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
+        END IF;    
+     END IF;     
 
     -- !!! - определяется <Торговая сеть>!!!
     vbObjectId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId

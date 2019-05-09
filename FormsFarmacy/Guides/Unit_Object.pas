@@ -77,6 +77,11 @@ type
     actUpdateGoodsCategory_Yes: TdsdExecStoredProc;
     bbUpdateisGoodsCategoryYes: TdxBarButton;
     bbUpdateisGoodsCategoryNo: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    spErasedUnErased: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

@@ -104,6 +104,10 @@ RETURNS TABLE (MovementId     Integer
              , TotalSumm_Invoice      TFloat
 
              , isPrintLast       Boolean
+             
+             , TotalSumm_Check TFloat
+             , InsertName_Check TVarChar
+             , InsertDate_Check TDateTime
 
 )
 AS
@@ -276,26 +280,61 @@ BEGIN
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) <> zc_Enum_SPKind_1303()
                               )
 
+        --
+        , tmpMovementString_MedicSP AS (SELECT MovementString.*
+                                        FROM MovementString
+                                        WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement_All.Id FROM tmpMovement_All) 
+                                          AND MovementString.DescId = zc_MovementString_MedicSP()
+                                        )
+        , tmpMovementDate AS (SELECT MovementDate.*
+                              FROM MovementDate
+                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement_All.Id FROM tmpMovement_All) 
+                                AND MovementDate.DescId IN (zc_MovementDate_OperDateSP()
+                                                          , zc_MovementDate_Insert())
+                              )
+        , tmpMovementFloat_TotalSumm AS (SELECT MovementFloat.*
+                                         FROM MovementFloat
+                                         WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement_All.Id FROM tmpMovement_All) 
+                                           AND MovementFloat.DescId = zc_MovementFloat_TotalSumm()
+                                         )
+        , tmpMLO_Insert AS (SELECT MovementLinkObject.*
+                            FROM MovementLinkObject
+                            WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_All.Id FROM tmpMovement_All) 
+                              AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
+                            )
 
-        , tmpMovement AS (SELECT  Movement_Check.Id                                         AS Id 
+        , tmpMovement AS (SELECT  Movement_Check.Id
                                 , Movement_Check.OperDate
                                 , Movement_Check.UnitId
                                 , Movement_Check.JuridicalId
                                 , Movement_Check.InvNumberSP
                                 , Movement_Check.HospitalId
-                                , MovementString_MedicSP.ValueData                          AS MedicSPName
-                                , MovementDate_OperDateSP.ValueData                         AS OperDateSP
+                                , MovementString_MedicSP.ValueData   AS MedicSPName
+                                , MovementDate_OperDateSP.ValueData  AS OperDateSP
+
+                                , MovementFloat_TotalSumm.ValueData  AS TotalSumm_Check
+                                , Object_Insert.ValueData            AS InsertName_Check
+                                , MovementDate_Insert.ValueData      AS InsertDate_Check
                           FROM tmpMovement_All AS Movement_Check
-                               LEFT JOIN MovementString AS MovementString_MedicSP
-                                      ON MovementString_MedicSP.MovementId = Movement_Check.Id
-                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                               LEFT JOIN tmpMovementString_MedicSP AS MovementString_MedicSP
+                                                                   ON MovementString_MedicSP.MovementId = Movement_Check.Id
 
-                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                                      ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
-                                                     AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+                               LEFT JOIN tmpMovementDate AS MovementDate_OperDateSP
+                                                         ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
+                                                        AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
+                               LEFT JOIN tmpMovementDate AS MovementDate_Insert
+                                                         ON MovementDate_Insert.MovementId = Movement_Check.Id
+                                                        AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+                               LEFT JOIN tmpMovementFloat_TotalSumm AS MovementFloat_TotalSumm
+                                                                    ON MovementFloat_TotalSumm.MovementId = Movement_Check.Id
+
+                               LEFT JOIN tmpMLO_Insert AS MLO_Insert
+                                                       ON MLO_Insert.MovementId = Movement_Check.Id
+                                                      AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
                           )
-
-
 
         , tmpMov AS (SELECT Movement_Check.Id                                         AS Id 
                           , Movement_Check.OperDate
@@ -309,6 +348,10 @@ BEGIN
                           , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
                           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
                           , Movement_Invoice.OperDate                                 AS OperDate_Invoice
+
+                          , Movement_Check.TotalSumm_Check
+                          , Movement_Check.InsertName_Check
+                          , Movement_Check.InsertDate_Check
 
                      FROM tmpMovement AS Movement_Check
                           -- счет
@@ -345,7 +388,11 @@ BEGIN
                          , Movement_Check.InvNumber_Invoice_Full
                          , Movement_Check.OperDate_Invoice
 
-                        , tmpGoods.GoodsMainId                                      AS GoodsMainId
+                         , Movement_Check.TotalSumm_Check
+                         , Movement_Check.InsertName_Check
+                         , Movement_Check.InsertDate_Check
+
+                         , tmpGoods.GoodsMainId                                      AS GoodsMainId
 
                          , MAX (CASE WHEN MIFloat_SummChangePercent.ValueData < 0 THEN Movement_Check.Id ELSE 0 END) AS MovementId_err
                          , SUM (MI_Check.Amount) AS Amount
@@ -386,6 +433,9 @@ BEGIN
                            , Movement_Check.OperDate_Invoice
                            , tmpGoods.GoodsMainId
                            , COALESCE (MIFloat_PriceSale.ValueData, 0)
+                           , Movement_Check.TotalSumm_Check
+                           , Movement_Check.InsertName_Check
+                           , Movement_Check.InsertDate_Check
                     HAVING  SUM (MI_Check.Amount) <> 0
                     )
 
@@ -744,6 +794,11 @@ BEGIN
              , tmpInvoice.TotalSumm                    :: TFloat AS TotalSumm_Invoice
 
              , FALSE                                             AS isPrintLast
+             
+             , tmpData.TotalSumm_Check
+             , tmpData.InsertName_Check
+             , tmpData.InsertDate_Check
+
         FROM tmpMI AS tmpData
              LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpData.JuridicalId
                                  ANd tmpInvoice.HospitalId  = tmpData.HospitalId

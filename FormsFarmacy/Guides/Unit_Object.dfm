@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 515
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -637,6 +637,34 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -670,6 +698,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -814,6 +850,16 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object bbUpdateisGoodsCategoryNo: TdxBarButton
       Action = macUpdateisGoodsCategoryNo
       Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+      ImageIndex = 2
+    end
+    object dxBarButton2: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+      ImageIndex = 8
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1142,5 +1188,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 816
     Top = 235
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Unit_IsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 224
+    Top = 192
   end
 end

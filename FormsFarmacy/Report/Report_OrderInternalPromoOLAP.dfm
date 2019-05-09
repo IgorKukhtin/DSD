@@ -84,10 +84,8 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    OptionsView.RowGrandTotalWidth = 1004
+    OptionsView.RowGrandTotalWidth = 975
     TabOrder = 1
-    ExplicitLeft = 56
-    ExplicitTop = 51
     object UnitId: TcxDBPivotGridField
       AreaIndex = 0
       IsCaptionAssigned = True
@@ -97,7 +95,8 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object UnitName: TcxDBPivotGridField
-      AreaIndex = 1
+      Area = faColumn
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1040#1087#1090#1077#1082#1072
       DataBinding.FieldName = 'UnitName'
@@ -105,21 +104,21 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'GoodsGroupName'
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object GoodsId: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1048#1076#1077#1085#1090'. '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
       DataBinding.FieldName = 'GoodsId'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object GoodsCode: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
       DataBinding.FieldName = 'GoodsCode'
@@ -134,18 +133,19 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
       DataBinding.FieldName = 'GoodsName'
       Visible = True
-      Width = 300
+      Width = 200
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object NDSKindName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1053#1044#1057
       DataBinding.FieldName = 'NDSKindName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object Price: TcxDBPivotGridField
-      AreaIndex = 8
+      Area = faRow
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
       DataBinding.FieldName = 'Price'
@@ -157,7 +157,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object inReportText: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1090'. '#1074' '#1089#1087#1080#1089#1082#1077', '#1044#1072'/'#1053#1077#1090
       DataBinding.FieldName = 'inReportText'
@@ -165,8 +165,17 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
+    object isManual: TcxDBPivotGridField
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1056#1091#1095#1085#1086#1081' '#1088#1077#1078#1080#1084', '#1044#1072'/'#1053#1077#1090
+      DataBinding.FieldName = 'isManual'
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
     object Amount_Sale: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090
       DataBinding.FieldName = 'Amount_Sale'
@@ -191,25 +200,27 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object ContractName: TcxDBPivotGridField
-      AreaIndex = 6
+      Area = faRow
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1044#1086#1075#1086#1074#1086#1088
       DataBinding.FieldName = 'ContractName'
       Visible = True
-      Width = 70
+      Width = 100
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object JuridicalName: TcxDBPivotGridField
-      AreaIndex = 7
+      Area = faRow
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       DataBinding.FieldName = 'JuridicalName'
       Visible = True
-      Width = 150
+      Width = 120
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object Summ: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '#1089' '#1053#1044#1057
       DataBinding.FieldName = 'Summ'
@@ -232,11 +243,10 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = 'Amount'
     end
     object Amount_Master: TcxDBPivotGridField
-      AreaIndex = 12
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
       DataBinding.FieldName = 'Amount_Master'
-      Visible = True
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
     end
   end
@@ -585,6 +595,8 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <>
+    ExpandRow = 3
+    ExpandColumn = 1
     ColorRuleList = <>
     SummaryList = <>
     Left = 392

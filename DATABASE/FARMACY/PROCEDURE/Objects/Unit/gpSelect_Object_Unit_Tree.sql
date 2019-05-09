@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Unit_Tree()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Tree(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Tree(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Tree(
+    IN inisShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
@@ -20,6 +22,11 @@ BEGIN
            , COALESCE (Object_Unit_View.ParentId, 0) AS ParentId
            , Object_Unit_View.isErased
        FROM Object_Unit_View
+       WHERE inisShowAll = True 
+          OR (COALESCE (Object_Unit_View.ParentId, 0) IN 
+             (SELECT DISTINCT U.Id FROM Object_Unit_View AS U WHERE U.isErased = False AND COALESCE (U.ParentId, 0) = 0) 
+          OR COALESCE (Object_Unit_View.ParentId, 0) = 0 AND Object_Unit_View.isErased = False AND
+             EXISTS(SELECT 1 FROM Object_Unit_View AS U WHERE U.isErased = False AND COALESCE (U.ParentId, 0) =  Object_Unit_View.Id ))
        UNION SELECT
              0 AS Id,
              0 AS Code,
@@ -32,10 +39,11 @@ $BODY$
 
 LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.05.19                                                      * inisShowAll
  21.12.13                                        * ParentId
  04.07.13          * дополнение всеми реквизитами              
  03.06.13          
@@ -43,4 +51,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit_Tree ('2')
+-- SELECT * FROM gpSelect_Object_Unit_Tree (False, '2')

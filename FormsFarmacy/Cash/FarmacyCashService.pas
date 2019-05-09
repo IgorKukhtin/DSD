@@ -14,7 +14,7 @@ uses
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
-  UnilWin;
+  UnilWin, System.ImageList, System.Actions;
 
 type
  THeadRecord = record
@@ -182,6 +182,8 @@ type
     procedure SaveListDiff;
     procedure SaveBankPOSTerminal;
     procedure SaveUnitConfig;
+    procedure SaveUserHelsi;
+    procedure SaveUserSettings;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
     procedure SaveGoodsAnalog;
@@ -215,7 +217,7 @@ var
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog: THandle;
+  MutexGoodsAnalog, MutexUserHelsi: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -409,6 +411,10 @@ begin
     begin
       //Получение конфигурации аптеки
       SaveUnitConfig;
+      //Получение Сотрудников и настроек
+      SaveUserSettings;
+      //Получение Сотрудников для сайта Хелси
+      SaveUserHelsi;
       //Получение разницы остатков
       SaveCashRemainsDif;
       //Получение POS терминалов
@@ -460,6 +466,10 @@ begin   //yes
 
         //Получение конфигурации аптеки
         SaveUnitConfig;
+        //Получение Сотрудников и настроек
+        SaveUserSettings;
+        //Получение Сотрудников для сайта Хелси
+        SaveUserHelsi;
         //Получение остатков
         bError := SaveCashRemains;
         //Проверка обновления программ
@@ -553,6 +563,8 @@ begin
   MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
   LastErr := GetLastError;
   MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
+  LastErr := GetLastError;
+  MutexUserHelsi := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
   LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
@@ -997,10 +1009,34 @@ begin
       sp.Params.AddParam('outIsEnter',ftString,ptOutput, Null);
       sp.Params.AddParam('outUnitId',ftString,ptOutput, Null);
       sp.Params.AddParam('inUnitName',ftString,ptInput, iniLocalUnitNameGet);
-      if sp.Execute(False,False) = '' then Result := sp.Params.ParamByName('outIsEnter').Value;
+      if sp.Execute(False,False) = '' then
+      begin
+        Result := sp.Params.ParamByName('outIsEnter').Value;
+
+        if gc_User.Local then
+        begin
+          gc_User.Local := False;
+          Add_Log('-- Связь востановлена');
+          tiServise.BalloonHint := 'Связь востановлена';
+          tiServise.ShowBalloonHint;
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
+        end;
+      end;
 
     Except ON E:Exception do
-      Add_Log('Ошибка сохранения аптеки содруднику:' + E.Message);
+      begin
+        Add_Log('Ошибка сохранения аптеки содруднику:' + E.Message);
+        if not gc_User.Local then
+        begin
+          gc_User.Local := True;
+          Add_Log('-- Нет связи с интернетом');
+          tiServise.BalloonHint := 'Локальный режим';
+          tiServise.ShowBalloonHint;
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
+        end;
+        tiServise.Hint := 'Локальный режим';
+        MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+      end;
     end;
   finally
     freeAndNil(sp);
@@ -1840,6 +1876,92 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveUserHelsi;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение Сотрудников для сайта Хелси';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_UserHelsi';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexUserHelsi');
+        WaitForSingleObject(MutexUserHelsi, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,UserHelsi_lcl);
+        finally
+          Add_Log('End MutexUserHelsi');
+          ReleaseMutex(MutexUserHelsi);
+        end;
+
+        if FileExists(ExtractFilePath(Application.ExeName) + 'users.local') then
+          DeleteFile(ExtractFilePath(Application.ExeName) + 'users.local');
+        if FileExists(ExtractFilePath(Application.ExeName) + 'users.backup') then
+          DeleteFile(ExtractFilePath(Application.ExeName) + 'users.backup');
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveUserHelsi Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveUserSettings;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение Сотрудников и настроек';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_UserSettings';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexUserSettings');
+        WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,UserSettings_lcl);
+        finally
+          Add_Log('End MutexUserSettings');
+          ReleaseMutex(MutexUserSettings);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveUserSettings Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure TMainCashForm2.SaveTaxUnitNight;
 var
   sp : TdsdStoredProc;
@@ -2279,6 +2401,7 @@ begin
  CloseHandle(MutexGoodsExpirationDate);
  CloseHandle(MutexGoods);
  CloseHandle(MutexGoodsAnalog);
+ CloseHandle(MutexUserHelsi);
 end;
 
 

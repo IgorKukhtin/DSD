@@ -64,6 +64,7 @@ BEGIN
         THEN 
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
+        
      END IF;     
 
      -- сохранили <Документ>

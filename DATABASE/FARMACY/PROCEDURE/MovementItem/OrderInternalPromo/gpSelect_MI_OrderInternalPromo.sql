@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromo(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
+             , AmountManual TFloat
              , Price TFloat, Summ TFloat
              , MovementId_Promo Integer, InvNumber_Promo_Full TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -42,12 +43,25 @@ BEGIN
                          AND Movement.ParentId = inMovementId
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                        )
+      , tmpChild AS (SELECT MovementItem.ParentId
+                          , SUM (COALESCE (MIFloat_AmountManual.ValueData,0)) AS AmountManual
+                     FROM MovementItem
+                          INNER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                       ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId = zc_MI_Child()
+                       AND MovementItem.isErased = FALSE
+                     GROUP BY MovementItem.ParentId
+                     )
 
+           ----
            SELECT MovementItem.Id
                 , MovementItem.ObjectId                    AS GoodsId
                 , Object_Goods.ObjectCode                  AS GoodsCode
                 , Object_Goods.ValueData                   AS GoodsName
                 , MovementItem.Amount             ::TFloat AS Amount
+                , tmpChild.AmountManual           ::TFloat AS AmountManual
                 , MIFloat_Price.ValueData         ::TFloat AS Price
                 , (COALESCE(MovementItem.Amount,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS Summ
 
@@ -86,6 +100,7 @@ BEGIN
 
               LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MILinkObject_Juridical.ObjectId
 
+              LEFT JOIN tmpChild ON tmpChild.ParentId = MovementItem.Id
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
              AND (MovementItem.isErased = FALSE or inIsErased = TRUE);
@@ -95,10 +110,11 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.05.19         * AmountManual
  15.04.19         *
 */
 
 --select * from gpSelect_MovementItem_OrderInternalPromo(inMovementId := 0, inIsErased := 'False' ,  inSession := '3');
 --select * from gpSelect_MovementItem_OrderInternalPromoChild(inMovementId := 0, inIsErased := 'False' ,  inSession := '3');
 
--- select * from gpSelect_MI_OrderInternalPromo(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MI_OrderInternalPromo(inMovementId := 13840564 , inIsErased := 'False' ,  inSession := '3');

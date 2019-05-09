@@ -1,7 +1,7 @@
 unit Cash_FP320;
 
 interface
-uses Windows, CashInterface, DBTables, OposFiscalPrinter_1_11_Lib_TLB, ComObj;
+uses Windows, CashInterface, OposFiscalPrinter_1_11_Lib_TLB, ComObj;
 
 type
   TCashFP320 = class(TInterfacedObject, ICash)
@@ -54,7 +54,7 @@ type
 implementation
 
 uses
-  Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, Log;
+  Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, Log;
 
 const
   Password = '000000';
