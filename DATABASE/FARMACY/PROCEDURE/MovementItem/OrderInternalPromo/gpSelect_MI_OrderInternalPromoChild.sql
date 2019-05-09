@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromoChild(
 )
 RETURNS TABLE (Id Integer, ParentId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , Amount TFloat, AmountOut TFloat, Remains TFloat
+             , Amount TFloat, AmountManual TFloat
+             , AmountOut TFloat, Remains TFloat
              , Koeff TFloat
              , IsErased Boolean
               )
@@ -41,6 +42,7 @@ BEGIN
                 , Object_Unit.ValueData            AS UnitName
                 
                 , MovementItem.Amount              AS Amount
+                , MIFloat_AmountManual.ValueData   AS AmountManual
                 , MIFloat_AmountOut.ValueData      AS AmountOut
                 , MIFloat_Remains.ValueData        AS Remains
                 , (((MIFloat_AmountOut.ValueData /vbDays )*300 - MIFloat_Remains.ValueData)/300) :: TFloat AS Koeff
@@ -56,6 +58,10 @@ BEGIN
                                             ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                            ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Child()
              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
@@ -67,6 +73,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.05.19         *
  15.04.19         *
 */
 

@@ -50,7 +50,7 @@ type
     bbMISetErasedChild: TdxBarButton;
     bbMISetUnErasedChild: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    UnitChoiceForm: TOpenChoiceForm;
     actDoLoad: TExecuteImportSettingsAction;
     actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc;
     actGetImportSettingId: TdsdExecStoredProc;
@@ -107,6 +107,8 @@ type
     spInsertChild: TdsdStoredProc;
     isReport: TcxGridDBColumn;
     chKoeff: TcxGridDBColumn;
+    chAmountManual: TcxGridDBColumn;
+    AmountManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

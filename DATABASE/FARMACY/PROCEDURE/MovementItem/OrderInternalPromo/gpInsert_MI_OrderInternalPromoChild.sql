@@ -32,35 +32,46 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
     -- Cуществующие чайлд
-     CREATE TEMP TABLE tmpMI_Child (Id Integer, ParentId Integer, UnitId Integer) ON COMMIT DROP;
-       INSERT INTO tmpMI_Child (Id, ParentId, UnitId)
+     CREATE TEMP TABLE tmpMI_Child (Id Integer, ParentId Integer, UnitId Integer, AmountManual TFloat) ON COMMIT DROP;
+       INSERT INTO tmpMI_Child (Id, ParentId, UnitId, AmountManual)
        SELECT MovementItem.Id
             , MovementItem.ParentId
             , MovementItem.ObjectId AS UnitId
+            , COALESCE (MIFloat_AmountManual.ValueData,0) AS AmountManual
         FROM MovementItem
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Child();
 
      -- снимаем удаление со строк чайлд
      UPDATE MovementItem
-     SET isErased = FALSE
+     SET isErased = FALSE, Amount = 0
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Child();
 
-
-    CREATE TEMP TABLE tmpData (Id Integer, ParentId Integer, UnitId Integer, AmountOut TFloat, Remains TFloat, AmountIn TFloat) ON COMMIT DROP;
-          INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn)
-          WITH -- строки мастера с кол-вом для распределения
-               tmpMI_Master AS (SELECT MovementItem.Id
+    CREATE TEMP TABLE tmpData (Id Integer, ParentId Integer, UnitId Integer, AmountOut TFloat, Remains TFloat, AmountIn TFloat, AmountManual TFloat) ON COMMIT DROP;
+          INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
+          WITH 
+               tmpMI_Chil_Manual AS (SELECT tmpMI_Child.ParentId
+                                          , SUM (tmpMI_Child.AmountManual) AS AmountManual
+                                     FROM tmpMI_Child
+                                     WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
+                                     GROUP BY tmpMI_Child.ParentId
+                                     )
+               -- строки мастера с кол-вом для распределения
+             , tmpMI_Master AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId AS GoodsId
-                                     , MovementItem.Amount
+                                     , (MovementItem.Amount - COALESCE (tmpMI_Chil_Manual.AmountManual, 0)) AS Amount
                                 FROM MovementItem
+                                     LEFT JOIN tmpMI_Chil_Manual ON tmpMI_Chil_Manual.ParentId = MovementItem.Id
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId = zc_MI_Master()
                                   AND COALESCE (MovementItem.Amount,0) > 0
                                   AND MovementItem.isErased = FALSE
                                 )
-
+             
              , tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
                            FROM ObjectLink AS ObjectLink_Unit_Juridical
                                 INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -109,10 +120,17 @@ BEGIN
                                 , tmpMI_Master.Id             AS ParentId
                                 , tmpUnit.UnitId              AS UnitId
                                 , tmpContainer.Amount         AS AmountOut_real
-                                , (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300) AS AmountOut
+                                , CASE WHEN COALESCE (tmpMI_Child.AmountManual, 0) <> 0 
+                                       THEN 0
+                                       ELSE (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300)
+                                  END  AS AmountOut
                                 , tmpRemains.Amount           AS Remains
                                 , tmpMI_Master.Amount         AS Amount_Master
-                                , SUM (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300) OVER (PARTITION BY tmpMI_Master.Id) AS AmountOutSUM
+                                , CASE WHEN COALESCE (tmpMI_Child.AmountManual, 0) <> 0 
+                                       THEN 0
+                                       ELSE SUM (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300) OVER (PARTITION BY tmpMI_Master.Id)
+                                  END  AS AmountOutSUM
+                                , COALESCE (tmpMI_Child.AmountManual, 0) AS AmountManual
                            FROM tmpMI_Master
                                 LEFT JOIN tmpUnit ON 1=1
                                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
@@ -122,22 +140,30 @@ BEGIN
                                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
                                                      AND tmpMI_Child.UnitId = tmpUnit.UnitId
                            WHERE COALESCE (tmpContainer.Amount,0) > 0
+                              OR COALESCE (tmpMI_Child.AmountManual, 0) <> 0
                            )
 
              , tmpData1 AS (SELECT tmpData.Id
                                   , tmpData.ParentId
                                   , tmpData.UnitId
+                                  , tmpData.AmountManual
                                   , tmpData.AmountOut
                                   , tmpData.AmountOut_real
                                   , tmpData.Remains
-                                  , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOut, 0) AS Amount_Calc
-                            FROM tmpData)
+                                  , CASE WHEN tmpData.AmountOutSUM <> 0
+                                         THEN ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOut, 0)
+                                         ELSE 0
+                                    END   AS Amount_Calc
+                            FROM tmpData
+                            WHERE COALESCE (tmpData.AmountManual,0) = 0)
+
               -- вспомогательные расчеты для распределения заказа
              , tmpData111 AS (SELECT tmpMI_Master.GoodsId
                                    , tmpData1.UnitId
                                    , tmpData1.Id
                                    , tmpMI_Master.Amount          AS Amount_Master
                                    , tmpMI_Master.Id              AS ParentId
+                                   , tmpData1.AmountManual
                                    , tmpData1.Amount_Calc
                                    , tmpData1.AmountOut
                                    , tmpData1.AmountOut_real
@@ -147,28 +173,48 @@ BEGIN
                               FROM tmpMI_Master
                                    INNER JOIN tmpData1 AS tmpData1 ON tmpData1.ParentId = tmpMI_Master.Id
                               )
-
+         -- результат
          SELECT DD.Id
               , DD.ParentId
               , DD.UnitId
-              , DD.AmountOut_real AS AmountOut
+              , DD.AmountOUT
               , DD.Remains
-              , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
-                          THEN ceil (DD.Amount_Calc)                                           ---ceil
-                     ELSE ceil ( DD.Amount_Master - DD.Amount_CalcSUM + DD.Amount_Calc)
-                END AS AmountIn
-         FROM tmpData111 AS DD
-         WHERE DD.Amount_Master - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0;
+              , DD.AmountIn
+              , DD.AmountManual :: TFloat
+         FROM (SELECT DD.Id
+                    , DD.ParentId
+                    , DD.UnitId
+                    , DD.AmountOut_real AS AmountOut
+                    , DD.Remains
+                    , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
+                                THEN ceil (DD.Amount_Calc)                                           ---ceil
+                           ELSE ceil ( DD.Amount_Master - DD.Amount_CalcSUM + DD.Amount_Calc)
+                      END AS AmountIn
+                    , 0 :: TFloat AS AmountManual
+               FROM tmpData111 AS DD
+               WHERE DD.Amount_Master - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0
+             UNION
+               SELECT tmpData.Id
+                    , tmpData.ParentId
+                    , tmpData.UnitId
+                    , tmpData.AmountOut_real AS AmountOut
+                    , tmpData.Remains
+                    , 0 AS AmountIn
+                    , tmpData.AmountManual ::TFloat
+               FROM tmpData
+               WHERE COALESCE (tmpData.AmountManual,0) <> 0
+               ) AS DD;
            
     --- сохраняем данные чайлд      
-    PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId         := COALESCE (tmpData.Id,0)
-                                                     , inParentId   := tmpData.ParentId
-                                                     , inMovementId := inMovementId
-                                                     , inUnitId     := tmpData.UnitId
-                                                     , inAmount     := COALESCE (tmpData.AmountIn,0)   :: TFloat
-                                                     , inAmountOut  := COALESCE (tmpData.AmountOut,0)  :: TFloat
-                                                     , inRemains    := COALESCE (tmpData.Remains,0)    :: TFloat
-                                                     , inUserId     := vbUserId
+    PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId           := COALESCE (tmpData.Id,0)
+                                                     , inParentId     := tmpData.ParentId
+                                                     , inMovementId   := inMovementId
+                                                     , inUnitId       := tmpData.UnitId
+                                                     , inAmount       := COALESCE (tmpData.AmountIn,0)   :: TFloat
+                                                     , inAmountManual := COALESCE (tmpData.AmountManual,0)   :: TFloat
+                                                     , inAmountOut    := COALESCE (tmpData.AmountOut,0)  :: TFloat
+                                                     , inRemains      := COALESCE (tmpData.Remains,0)    :: TFloat
+                                                     , inUserId       := vbUserId
                                                      )
     FROM tmpData;
     
@@ -191,6 +237,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.05.19         *
  16.04.19         *
 */
 
@@ -300,7 +347,7 @@ $BODY$
                                    , tmpMI_Master.Id              AS ParentId
                                    , tmpData1.Amount_Calc
                                    , tmpData1.AmountOut
-  ,tmpData1.AmountOut_real
+                                   ,tmpData1.AmountOut_real
                                    , tmpData1.Remains
                                    , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.ParentId ORDER BY tmpData1.AmountOUT, tmpMI_Master.Id) AS Amount_CalcSUM
                                    , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId/*, tmpMI_Master.Id*/ ORDER BY tmpData1.AmountOUT DESC) AS DOrd
@@ -312,7 +359,7 @@ $BODY$
               , DD.ParentId
               , DD.UnitId
               , DD.AmountOUT
-  ,DD.AmountOut_real
+              , DD.AmountOut_real
               , DD.Remains
               , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
                           THEN ceil (DD.Amount_Calc)                                           ---ceil

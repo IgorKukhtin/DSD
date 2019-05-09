@@ -165,8 +165,17 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object Amount_Sale: TcxDBPivotGridField
+    object isManual: TcxDBPivotGridField
       AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1056#1091#1095#1085#1086#1081' '#1088#1077#1078#1080#1084', '#1044#1072'/'#1053#1077#1090
+      DataBinding.FieldName = 'isManual'
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object Amount_Sale: TcxDBPivotGridField
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090
       DataBinding.FieldName = 'Amount_Sale'
@@ -234,7 +243,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       UniqueName = 'Amount'
     end
     object Amount_Master: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
       DataBinding.FieldName = 'Amount_Master'
