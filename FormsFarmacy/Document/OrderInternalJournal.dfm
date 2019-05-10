@@ -21,6 +21,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 478
+        ExplicitLeft = 264
+        ExplicitTop = 16
         ExplicitWidth = 828
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -111,7 +113,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -135,6 +136,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
           end
@@ -142,11 +144,14 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 139
           end
           object OrderKind: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
           end
@@ -157,6 +162,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 107
           end
           object TotalSumm: TcxGridDBColumn
@@ -166,15 +172,58 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 108
           end
           object isDocument: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
             DataBinding.FieldName = 'isDocument'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
             Options.Editing = False
             Width = 54
+          end
+          object MasterInvNumber: TcxGridDBColumn
+            Caption = #1042#1085'. '#1079#1072#1082#1072#1079' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
+            DataBinding.FieldName = 'MasterInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079'  ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
+            Options.Editing = False
+            Width = 112
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end

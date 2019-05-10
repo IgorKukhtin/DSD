@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
+  ExplicitLeft = -126
   ExplicitWidth = 1245
   ExplicitHeight = 567
   PixelsPerInch = 96
@@ -1021,9 +1022,27 @@ inherited OrderInternalForm: TOrderInternalForm
       TabOrder = 9
       Width = 137
     end
+    object cxLabel6: TcxLabel
+      Left = 969
+      Top = 3
+      Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
+    end
+    object edOrderInternalPromo: TcxButtonEdit
+      Left = 969
+      Top = 22
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 232
+    end
   end
   object edIsDocument: TcxCheckBox [2]
-    Left = 794
+    Left = 783
     Top = 22
     Caption = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
@@ -1785,6 +1804,21 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edIsDocument
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterId'
+        Value = Null
+        Component = GuidesOrderInternaPromo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterInvNumber'
+        Value = Null
+        Component = GuidesOrderInternaPromo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2467,5 +2501,34 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 896
     Top = 392
+  end
+  object GuidesOrderInternaPromo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderInternalPromo
+    FormNameParam.Value = 'TOrderInternalJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderInternalJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderInternaPromo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderInternaPromo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1072
+    Top = 8
   end
 end

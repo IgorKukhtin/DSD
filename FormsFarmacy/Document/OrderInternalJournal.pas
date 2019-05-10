@@ -37,6 +37,7 @@ type
     mactCalculateExternalZakaz: TMultiAction;
     ExecuteDialog: TExecuteDialog;
     JuridicalName: TcxGridDBColumn;
+    MasterInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

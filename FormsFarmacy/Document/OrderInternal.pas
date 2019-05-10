@@ -127,6 +127,9 @@ type
     spUpdateListDiff: TdsdStoredProc;
     actUpdateListDiff: TdsdExecStoredProc;
     bbUpdateListDiff: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edOrderInternalPromo: TcxButtonEdit;
+    GuidesOrderInternaPromo: TdsdGuides;
   private
     { Private declarations }
   public

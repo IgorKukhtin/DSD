@@ -13,13 +13,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternal(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
     vbUserId := inSession;
 
-     
+    -- определяем признак Создание/Корректировка
+    vbIsInsert:= COALESCE (ioId, 0) = 0; 
+
     --Проверить что бы в 1 дне не было 2 неподписаных заказа
     IF EXISTS(  SELECT Movement.Id
                 FROM Movement
@@ -54,6 +57,15 @@ BEGIN
     -- сохранили связь с Тип заказа>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderKind(), ioId, inOrderKindId);
 
+    -- !!!протокол через свойства конкретного объекта!!!
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
+     END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
 
@@ -65,6 +77,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.19         *
  09.12.14                         * add InvNumber
  04.12.14                         *
  11.09.14                         *

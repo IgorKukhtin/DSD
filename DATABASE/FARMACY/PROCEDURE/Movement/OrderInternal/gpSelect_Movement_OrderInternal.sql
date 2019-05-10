@@ -12,8 +12,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat
              , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar
              , isDocument Boolean, JuridicalId Integer, JuridicalName TVarChar
+             , MasterId Integer, MasterInvNumber TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
              )
-             
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -54,14 +56,22 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSumm.ValueData           AS TotalSum
+           , MovementFloat_TotalSumm.ValueData          AS TotalSum
            , Object_Unit.Id                             AS UnitId
            , Object_Unit.ValueData                      AS UnitName
-           , Object_OrderKind.Id                                AS OrderKindId
-           , Object_OrderKind.ValueData                         AS OrderKindName
+           , Object_OrderKind.Id                        AS OrderKindId
+           , Object_OrderKind.ValueData                 AS OrderKindName
            , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean AS isDocument
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.Valuedata                 AS JuridicalName
+
+           , Movement_Master.Id                         AS MasterId
+           , ('№ '||Movement_Master.InvNumber || ' от '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar AS MasterInvNumber
+
+           , Object_Insert.ValueData                    AS InsertName
+           , MovementDate_Insert.ValueData              AS InsertDate
+           , Object_Update.ValueData                    AS UpdateName
+           , MovementDate_Update.ValueData              AS UpdateDate
 
       FROM (SELECT Movement.id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -110,6 +120,26 @@ BEGIN
                                 AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
 
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+
+            LEFT JOIN MovementLinkMovement AS MLM_Master
+                                           ON MLM_Master.MovementId = Movement.Id
+                                          AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
             ;
 
 END;
@@ -121,6 +151,7 @@ ALTER FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Подмогильный В.В.
+ 10.05.19         *
  02.03.18                                                                       *
  15.07.16         *
  04.05.16         *
