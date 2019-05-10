@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, System.SysUtils, System.Variants, System.Classes, System.JSON,
-  Vcl.Dialogs, REST.Types, REST.Client, REST.Response.Adapter;
+  Vcl.Dialogs, REST.Types, REST.Client, REST.Response.Adapter,
+  Vcl.Forms, ShellApi, IdHTTP, IdSSLOpenSSL;
 
 type
 
@@ -78,6 +79,9 @@ type
     FPayment_amount : currency;
 
     FDispense_sign_ID : string;
+
+    FShow_eHealth : Boolean;
+    FShow_Location : String;
   protected
     function CheckIntegrationClient : boolean;
     function GetToken : boolean;
@@ -90,6 +94,7 @@ type
     function IntegrationClientKeyInfo : boolean;
     function IntegrationClientSign : boolean;
     function ProcessSignedDispense : boolean;
+    function GetHTTPLocation : Boolean;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -439,7 +444,7 @@ begin
   except
   end;
 
-  if FRESTResponse.StatusCode = 200 then
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin
     try
       jValue := FRESTResponse.JSONValue ;
@@ -492,6 +497,9 @@ begin
       end;
     except
     end
+  end else if ((FRESTResponse.StatusCode = 200) or (FRESTResponse.StatusCode = 302)) and (FRESTResponse.ContentType = 'text/html') then
+  begin
+    if GetHTTPLocation then Result := True;
   end;
 end;
 
@@ -815,6 +823,47 @@ begin
   end;
 end;
 
+function THelsiApi.GetHTTPLocation : Boolean;
+  var  mStream: TMemoryStream;
+       IdHTTP: TIdHTTP;
+       IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+       S : String;
+
+begin
+  Result := False;
+
+  IdHTTP := TIdHTTP.Create(Nil);
+  IdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  IdHTTP.IOHandler := IdSSLIOHandlerSocketOpenSSL;
+  mStream := TMemoryStream.Create;
+
+  try
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.Add('Authorization:Bearer ' + FAccess_Token);
+
+    try
+      S := IdHTTP.Get(FHelsi_be + 'dispenses');
+    except
+    end;
+
+    case IdHTTP.ResponseCode of
+      302 : if IdHTTP.Response.RawHeaders.IndexOfName('Location') >= 0 then
+            begin
+              Result := True;
+              FShow_eHealth := True;
+              FShow_Location := IdHTTP.Response.RawHeaders.Values['Location'];
+            end;
+    end;
+  finally
+    mStream.Free;
+    IdHTTP.Free;
+    IdSSLIOHandlerSocketOpenSSL.Free;
+  end;
+
+end;
+
 function THelsiApi.InitSession : boolean;
   var I : integer;
 begin
@@ -879,6 +928,7 @@ function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : stri
   var AQty : currency; var ADate : TDateTime) : boolean;
   var I : integer;
       ds : TClientDataSet;
+      S : string;
 begin
   Result := False;
 
@@ -977,10 +1027,18 @@ begin
     end;
   end;
 
+  if HelsiApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    HelsiApi.FShow_eHealth := False;
+    HelsiApi.FShow_Location := '';
+    Exit;
+  end;
+
   if AReceipt <> HelsiApi.FRequest_number then
   begin
     ShowMessage('Ошибка получения информации о рецепте с сайта Хелси...'#13#10 +
-      'Неправельный номер рецепта или обрыв соеденения.');
+      'Неправельный номер рецепта.');
     Exit;
   end;
 
