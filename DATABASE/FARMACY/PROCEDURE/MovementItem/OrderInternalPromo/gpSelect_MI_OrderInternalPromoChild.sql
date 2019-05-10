@@ -35,6 +35,35 @@ BEGIN
     WHERE Movement.Id = inMovementId;
     
         RETURN QUERY
+        WITH
+        tmpMI AS (SELECT MovementItem.Id
+                       , MovementItem.ParentId
+                       , MovementItem.ObjectId                       
+                       , MovementItem.Amount              AS Amount
+                       , MIFloat_AmountManual.ValueData   AS AmountManual
+                       , MIFloat_AmountOut.ValueData      AS AmountOut
+                       , MIFloat_Remains.ValueData        AS Remains
+                       , (((MIFloat_AmountOut.ValueData /vbDays )*300 - COALESCE (MIFloat_Remains.ValueData,0))/300) :: TFloat AS Koeff
+                       , SUM (((MIFloat_AmountOut.ValueData /vbDays )*300 - COALESCE (MIFloat_Remains.ValueData,0))/300) OVER (PARTITION BY MovementItem.ParentId) AS KoeffSUM
+                       , MovementItem.IsErased
+                  FROM MovementItem
+                       LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
+                                                   ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+       
+                       LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                                   ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+       
+                       LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                   ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+       
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId = zc_MI_Child()
+                    AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                  )
+        
            SELECT MovementItem.Id
                 , MovementItem.ParentId
                 , Object_Unit.Id                   AS UnitId
@@ -42,29 +71,14 @@ BEGIN
                 , Object_Unit.ValueData            AS UnitName
                 
                 , MovementItem.Amount              AS Amount
-                , MIFloat_AmountManual.ValueData   AS AmountManual
-                , MIFloat_AmountOut.ValueData      AS AmountOut
-                , MIFloat_Remains.ValueData        AS Remains
-                , (((MIFloat_AmountOut.ValueData /vbDays )*300 - MIFloat_Remains.ValueData)/300) :: TFloat AS Koeff
+                , MovementItem.AmountManual
+                , MovementItem.AmountOut
+                , MovementItem.Remains
+                , CASE WHEN COALESCE (MovementItem.KoeffSUM,0) <> 0 THEN (MovementItem.Koeff / MovementItem.KoeffSUM) ELSE 0 END :: TFloat AS Koeff
                 , MovementItem.IsErased
-           FROM MovementItem
+           FROM tmpMI AS MovementItem
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
-
-                LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
-                                            ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
-                                           AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
-
-                LEFT JOIN MovementItemFloat AS MIFloat_Remains
-                                            ON MIFloat_Remains.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-
-                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                            ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-
-           WHERE MovementItem.MovementId = inMovementId
-             AND MovementItem.DescId = zc_MI_Child()
-             AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+           ;
   
 END;
 $BODY$
