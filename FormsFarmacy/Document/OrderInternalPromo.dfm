@@ -23,7 +23,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Width = 814
         Height = 184
         ExplicitWidth = 814
-        ExplicitHeight = 255
+        ExplicitHeight = 184
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -337,7 +337,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 255
       end
     end
   end
@@ -608,8 +607,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spUnErasedMIChild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1102
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -974,6 +973,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080'  '#1084#1072#1088#1082#1077#1090'-'#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
       ImageIndex = 74
     end
+    object actInsertOrderInternal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertOrderInternal
+      StoredProcList = <
+        item
+          StoredProc = spInsertOrderInternal
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>'
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>'
+      ImageIndex = 30
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
+    end
     object actInsertChild: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1089,6 +1103,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1175,12 +1197,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = actOpenReport
       Category = 0
     end
-    object bbOpenReportMinPrice_All: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+    object bbInsertOrderInternal: TdxBarButton
+      Action = actInsertOrderInternal
       Category = 0
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
-      Visible = ivAlways
-      ImageIndex = 24
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateMovementItemContainer
@@ -1978,5 +1997,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 504
     Top = 144
+  end
+  object spInsertOrderInternal: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_OrderInternal_byPromoChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 568
+    Top = 152
   end
 end

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternal(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- Подразделения
-    IN inOrderKindId         Integer   , -- Подразделения
+    IN inOrderKindId         Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS

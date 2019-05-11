@@ -151,7 +151,7 @@ BEGIN
                                   , tmpData.AmountOut_real
                                   , tmpData.Remains
                                   , CASE WHEN tmpData.AmountOutSUM <> 0
-                                         THEN ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOut, 0)
+                                         THEN ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM * tmpData.AmountOut, 0)
                                          ELSE 0
                                     END   AS Amount_Calc
                             FROM tmpData

@@ -91,7 +91,7 @@ type
     bbInsertPromoPartner: TdxBarButton;
     actOpenReport: TdsdOpenForm;
     bbReportMinPriceForm: TdxBarButton;
-    bbOpenReportMinPrice_All: TdxBarButton;
+    bbInsertOrderInternal: TdxBarButton;
     actUpdateMovementItemContainer: TdsdExecStoredProc;
     spUpdate_MovementItemContainer: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
@@ -109,6 +109,8 @@ type
     chKoeff: TcxGridDBColumn;
     chAmountManual: TcxGridDBColumn;
     AmountManual: TcxGridDBColumn;
+    spInsertOrderInternal: TdsdStoredProc;
+    actInsertOrderInternal: TdsdExecStoredProc;
   private
     { Private declarations }
   public
