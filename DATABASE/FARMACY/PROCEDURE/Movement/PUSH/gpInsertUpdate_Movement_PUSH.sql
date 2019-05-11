@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TBlob, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, Integerб TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -9,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inDateEndPUSH           TDateTime  ,
     IN inReplays               Integer    , -- Количество повторов  
+    IN inDaily                 Boolean    , -- Повт. ежедневно
     IN inMessage               TBlob      , -- Сообщение
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -26,6 +26,7 @@ BEGIN
                                         , inOperDate        := inOperDate
                                         , inDateEndPUSH     := inDateEndPUSH
                                         , inReplays         := inReplays 
+                                        , inDaily           := inDaily 
                                         , inMessage         := inMessage
                                         , inUserId          := vbUserId
                                         );
@@ -36,6 +37,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 11.05.19         *
  13.03.19         *
  10.03.19         *
 */

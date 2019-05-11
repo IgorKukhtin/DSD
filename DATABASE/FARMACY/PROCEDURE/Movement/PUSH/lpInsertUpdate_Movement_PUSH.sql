@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TBlob, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inDateEndPUSH           TDateTime  ,
     IN inReplays               Integer    , -- Количество повторов  
+    IN inDaily                 Boolean    , -- Повт. ежедневно
     IN inMessage               TBlob      , -- Сообщение
     IN inUserId                Integer     -- сессия пользователя
 )
@@ -28,6 +29,9 @@ BEGIN
 
     -- сохранили свойство <Сообщение>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Replays(), ioId, inReplays);
+
+    -- сохранили свойство <Сообщение>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PUSHDaily(), ioId, inDaily);
 
     -- сохранили свойство <Дата окончания>
     IF inDateEndPUSH > inOperDate
@@ -62,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 11.05.19         *
  15.10.18        *
  11.09.18        *
 */

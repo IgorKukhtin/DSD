@@ -1,29 +1,30 @@
 inherited PUSHForm: TPUSHForm
   Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
   ClientHeight = 500
-  ClientWidth = 638
+  ClientWidth = 707
   AddOnFormData.AddOnFormRefresh.ParentList = 'PUSH'
-  ExplicitWidth = 654
+  ExplicitWidth = 723
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 179
-    Width = 638
-    Height = 321
-    ExplicitTop = 179
-    ExplicitWidth = 638
-    ExplicitHeight = 321
-    ClientRectBottom = 321
-    ClientRectRight = 638
+    Top = 195
+    Width = 707
+    Height = 305
+    ExplicitTop = 183
+    ExplicitWidth = 707
+    ExplicitHeight = 317
+    ClientRectBottom = 305
+    ClientRectRight = 707
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 638
-      ExplicitHeight = 297
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
+      ExplicitWidth = 707
+      ExplicitHeight = 293
       inherited cxGrid: TcxGrid
-        Width = 638
-        Height = 297
-        ExplicitWidth = 638
-        ExplicitHeight = 297
+        Width = 707
+        Height = 281
+        ExplicitWidth = 707
+        ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -81,96 +82,206 @@ inherited PUSHForm: TPUSHForm
         end
       end
     end
+    object tsChild: TcxTabSheet
+      Caption = #1044#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      ImageIndex = 1
+      ExplicitHeight = 293
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 707
+        Height = 281
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        ExplicitHeight = 293
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object chParentName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'ParentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 223
+          end
+          object chUnitCode: TcxGridDBColumn
+            AlternateCaption = 'chUnitCode'
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'UnitCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object chUnitName: TcxGridDBColumn
+            AlternateCaption = 'UserName'
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 390
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
-    Width = 638
-    Height = 153
+    Width = 707
+    Height = 169
     TabOrder = 3
-    ExplicitWidth = 638
-    ExplicitHeight = 153
+    ExplicitWidth = 707
+    ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
       Left = 8
-      Top = 57
+      Top = 54
+      TabOrder = 1
       ExplicitLeft = 8
-      ExplicitTop = 57
+      ExplicitTop = 54
       ExplicitWidth = 75
       Width = 75
     end
     inherited cxLabel1: TcxLabel
       Left = 8
-      Top = 40
+      Top = 38
       ExplicitLeft = 8
-      ExplicitTop = 40
+      ExplicitTop = 38
     end
     inherited edOperDate: TcxDateEdit
       Left = 8
-      Top = 91
+      Top = 110
       Properties.Kind = ckDateTime
+      TabOrder = 4
       ExplicitLeft = 8
-      ExplicitTop = 91
+      ExplicitTop = 110
       ExplicitWidth = 152
       Width = 152
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 75
-      Caption = #1044#1072#1090#1072' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
+      Top = 93
+      Caption = #1044#1072#1090#1072' '#1080' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072
       ExplicitLeft = 8
-      ExplicitTop = 75
-      ExplicitWidth = 168
+      ExplicitTop = 93
+      ExplicitWidth = 111
     end
     inherited cxLabel15: TcxLabel
-      Top = 4
-      ExplicitTop = 4
+      Top = 2
+      ExplicitTop = 2
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 19
-      ExplicitTop = 19
+      Top = 17
+      TabOrder = 0
+      ExplicitTop = 17
       ExplicitHeight = 22
     end
     object cxLabel3: TcxLabel
-      Left = 184
-      Top = 4
+      Left = 166
+      Top = 2
       Caption = #1058#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
     end
     object edMessage: TcxMemo
-      Left = 184
-      Top = 19
+      Left = 166
+      Top = 17
       Lines.Strings = (
         'edMessage')
-      TabOrder = 7
-      Height = 128
-      Width = 441
+      TabOrder = 6
+      Height = 150
+      Width = 532
     end
     object edDateEndPUSH: TcxDateEdit
-      Left = 8
-      Top = 133
+      Left = 10
+      Top = 146
       EditValue = 42132d
       Properties.Kind = ckDateTime
-      TabOrder = 8
-      Width = 152
+      TabOrder = 5
+      Width = 150
     end
     object cxLabel4: TcxLabel
-      Left = 8
-      Top = 110
+      Left = 9
+      Top = 129
       Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
     end
     object cxLabel5: TcxLabel
-      Left = 92
-      Top = 40
+      Left = 89
+      Top = 38
       Caption = #1055#1086#1074#1090#1086#1088#1086#1074
     end
     object edReplays: TcxCurrencyEdit
-      Left = 92
-      Top = 57
+      Left = 89
+      Top = 54
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = False
-      TabOrder = 11
-      Width = 68
+      TabOrder = 2
+      Width = 71
+    end
+    object chbDaily: TcxCheckBox
+      Left = 8
+      Top = 75
+      Caption = #1055#1086#1074#1090'. '#1077#1078#1077#1076#1085#1077#1074#1085#1086
+      TabOrder = 3
+      Width = 125
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsChild
+      Enabled = False
+      DataSource = ChildDS
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsChild
+      Enabled = False
+      DataSource = ChildDS
+    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -179,12 +290,22 @@ inherited PUSHForm: TPUSHForm
         item
         end>
     end
-    inherited actShowAll: TBooleanStoredProcAction
+    inherited actShowErased: TBooleanStoredProcAction
+      TabSheet = tsChild
+      Enabled = False
+      StoredProc = spSelectChild
       StoredProcList = <
         item
-          StoredProc = spSelect
-        end
+          StoredProc = spSelectChild
+        end>
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      TabSheet = tsChild
+      Enabled = False
+      StoredProc = spSelectChild
+      StoredProcList = <
         item
+          StoredProc = spSelectChild
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -246,6 +367,18 @@ inherited PUSHForm: TPUSHForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -257,6 +390,31 @@ inherited PUSHForm: TPUSHForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -267,26 +425,6 @@ inherited PUSHForm: TPUSHForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -329,6 +467,22 @@ inherited PUSHForm: TPUSHForm
       Visible = ivAlways
       ImageIndex = 43
     end
+    object dxBarButton4: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actMISetErased
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actMISetUnErased
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -340,6 +494,7 @@ inherited PUSHForm: TPUSHForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    Left = 350
     Top = 241
   end
   inherited FormParams: TdsdFormParams
@@ -444,6 +599,13 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Daily'
+        Value = Null
+        Component = chbDaily
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Message'
         Value = Null
         Component = edMessage
@@ -496,6 +658,14 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDaily'
+        Value = Null
+        Component = chbDaily
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMessage'
         Value = Null
         Component = edMessage
@@ -505,8 +675,8 @@ inherited PUSHForm: TPUSHForm
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
-    Left = 282
-    Top = 272
+    Left = 298
+    Top = 240
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -540,6 +710,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edReplays
+      end
+      item
+        Control = chbDaily
       end>
     Left = 208
     Top = 233
@@ -549,15 +722,61 @@ inherited PUSHForm: TPUSHForm
     Top = 384
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Left = 534
-    Top = 232
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Component = ChildCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 590
+    Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 534
-    Top = 296
+    StoredProcName = 'gpSetUnErased_MovementItemChild_PUSH'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Component = ChildCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 590
+    Top = 304
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PUSH'
     Params = <
       item
         Name = 'ioId'
@@ -654,12 +873,11 @@ inherited PUSHForm: TPUSHForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 424
-    Top = 232
+    Left = 456
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 448
-    Top = 368
+    Left = 456
+    Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PUSH_TotalSumm'
@@ -667,7 +885,78 @@ inherited PUSHForm: TPUSHForm
       item
       end>
     OutputType = otDataSet
-    Left = 284
-    Top = 348
+    Left = 244
+    Top = 300
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItemChild_PUSH'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'ShowAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 384
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 296
+    Top = 384
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 240
+    Top = 384
+  end
+  object DBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 0
+      end>
+    SearchAsFilter = False
+    Left = 382
+    Top = 385
   end
 end

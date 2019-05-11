@@ -75,6 +75,13 @@ inherited PUSHJournalForm: TPUSHJournalForm
             Options.Editing = False
             Width = 66
           end
+          object cjlDaily: TcxGridDBColumn
+            Caption = #1055#1086#1074#1090'. '#1077#1078#1077#1076#1085#1077#1074#1085#1086
+            DataBinding.FieldName = 'Daily'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object colMessageText: TcxGridDBColumn
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'Message'

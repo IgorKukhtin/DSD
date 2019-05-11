@@ -79,6 +79,23 @@ BEGIN
    END IF;
 
    -- PUSH Û‚Â‰ÓÏÎÂÌËˇ
+   WITH tmpMovementItemUnit AS (SELECT DISTINCT Movement.Id AS MovementId
+                                FROM Movement
+
+                                    INNER JOIN MovementItem 
+                                           ON MovementItem.MovementId = Movement.Id
+                                          AND MovementItem.DescId = zc_MI_Child()
+                                          AND MovementItem.IsErased = False
+                                          
+                                    LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
+                                                           ON MovementDate_DateEndPUSH.MovementId = Movement.Id
+                                                          AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
+                                                          
+                                WHERE Movement.OperDate <= CURRENT_TIMESTAMP
+                                  AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
+                                  AND Movement.DescId = zc_Movement_PUSH()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete())
+   
    INSERT INTO _PUSH (Id, Text)
    SELECT
           Movement.Id                              AS ID
@@ -97,16 +114,46 @@ BEGIN
         LEFT JOIN MovementBlob AS MovementBlob_Message
                                ON MovementBlob_Message.MovementId = Movement.Id
                               AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
+                              
+        LEFT JOIN MovementBoolean AS MovementBoolean_Daily
+                                  ON MovementBoolean_Daily.MovementId = Movement.Id
+                                 AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
+                              
+        LEFT JOIN MovementItem AS MovementItem_Child
+                               ON MovementItem_Child.MovementId = Movement.Id
+                              AND MovementItem_Child.DescId = zc_MI_Child()
+                              AND MovementItem_Child.ObjectId = vbUnitId
+
+        LEFT JOIN tmpMovementItemUnit AS MovementItemUnit
+                                      ON MovementItemUnit.MovementId = Movement.Id
 
    WHERE Movement.OperDate <= CURRENT_TIMESTAMP
      AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
      AND Movement.DescId = zc_Movement_PUSH()
      AND Movement.StatusId = zc_Enum_Status_Complete()
-     AND COALESCE(MovementFloat_Replays.ValueData, 1) >
-         COALESCE ((SELECT SUM(MovementItem.Amount) FROM MovementItem 
-                    WHERE MovementItem.MovementId = Movement.Id
-                      AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.ObjectId = vbUserId), 0);
+     AND (COALESCE(MovementItemUnit.MovementId, 0) = 0 OR COALESCE(MovementItem_Child.ObjectId, 0) = vbUnitId)
+     AND (COALESCE (MovementBoolean_Daily.ValueData, FALSE) = FALSE
+          AND COALESCE(MovementFloat_Replays.ValueData, 1) >
+              COALESCE ((SELECT SUM(MovementItem.Amount) 
+                         FROM MovementItem 
+                         WHERE MovementItem.MovementId = Movement.Id
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.ObjectId = vbUserId), 0)
+          OR
+          COALESCE (MovementBoolean_Daily.ValueData, FALSE) = TRUE
+          AND COALESCE(MovementFloat_Replays.ValueData, 1) >
+              COALESCE ((SELECT SUM(MovementItem.Amount) 
+                         FROM MovementItem 
+              
+                              LEFT JOIN MovementItemDate AS MID_Viewed
+                                     ON MID_Viewed.MovementItemId = MovementItem.Id
+                                    AND MID_Viewed.DescId = zc_MIDate_Viewed()
+
+                         WHERE MovementItem.MovementId = Movement.Id
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.ObjectId = vbUserId
+                           AND MID_Viewed.ValueData >= CURRENT_DATE
+                           AND MID_Viewed.ValueData < CURRENT_DATE + INTERVAL '1 DAY'), 0));
 
 
    RETURN QUERY
@@ -122,6 +169,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 11.05.19                                                       *
  13.03.18                                                       *
  04.03.18                                                       *
 
