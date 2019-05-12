@@ -20,7 +20,7 @@ BEGIN
      SELECT (MovementDate_StartSale.ValueData - INTERVAL '1 DAY')
           , (Movement.OperDate + INTERVAL '1 DAY')
           , MovementLinkObject_Retail.ObjectId AS RetailId
-          , (DATE_PART('day', AGE ((Movement.OperDate + INTERVAL '1 DAY'), (MovementDate_StartSale.ValueData - INTERVAL '1 DAY')))) :: TFloat
+          , DATE_PART ( 'day', ((Movement.OperDate - MovementDate_StartSale.ValueData)+ INTERVAL '1 DAY'))
     INTO vbStartDate, vbEndDate, vbRetailId, vbDays
      FROM Movement 
         LEFT JOIN MovementDate AS MovementDate_StartSale

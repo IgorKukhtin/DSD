@@ -1,28 +1,28 @@
 inherited OrderInternalPromoForm: TOrderInternalPromoForm
   Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
   ClientHeight = 564
-  ClientWidth = 814
+  ClientWidth = 824
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 830
+  ExplicitWidth = 840
   ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 814
+    Width = 824
     Height = 388
     ExplicitTop = 76
-    ExplicitWidth = 814
+    ExplicitWidth = 824
     ExplicitHeight = 388
     ClientRectBottom = 388
-    ClientRectRight = 814
+    ClientRectRight = 824
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 824
       ExplicitHeight = 364
       inherited cxGrid: TcxGrid
-        Width = 814
+        Width = 824
         Height = 184
-        ExplicitWidth = 814
+        ExplicitWidth = 824
         ExplicitHeight = 184
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -35,6 +35,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -51,6 +56,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTotal
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -157,12 +167,59 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Options.Editing = False
             Width = 67
           end
+          object AmountTotal: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' + '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' + '#1079#1072#1082#1072#1079
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountOut_avg: TcxGridDBColumn
+            Caption = #1057#1088'. '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'AmountOut_avg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDay: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'RemainsDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDay2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' ('#1073#1077#1079' '#1091#1095'. '#1086#1090#1088'.'#1082#1086#1101#1092'.)'
+            DataBinding.FieldName = 'RemainsDay2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 192
-        Width = 814
+        Width = 824
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
@@ -196,6 +253,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountManual
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -222,6 +283,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountManual
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -308,11 +373,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1072
             Options.Editing = False
             Width = 100
+          end
+          object chRemainsDay: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'RemainsDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object chIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -331,7 +409,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 184
-        Width = 814
+        Width = 824
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -341,10 +419,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 814
+    Width = 824
     Height = 50
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 824
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -422,7 +500,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxSplitter2: TcxSplitter [4]
     Left = 0
     Top = 464
-    Width = 814
+    Width = 824
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
@@ -432,7 +510,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxGrid2: TcxGrid [5]
     Left = 0
     Top = 472
-    Width = 814
+    Width = 824
     Height = 92
     Align = alBottom
     PopupMenu = PopupMenu

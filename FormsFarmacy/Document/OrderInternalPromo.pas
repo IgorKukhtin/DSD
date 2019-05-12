@@ -111,6 +111,11 @@ type
     AmountManual: TcxGridDBColumn;
     spInsertOrderInternal: TdsdStoredProc;
     actInsertOrderInternal: TdsdExecStoredProc;
+    AmountTotal: TcxGridDBColumn;
+    AmountOut_avg: TcxGridDBColumn;
+    RemainsDay: TcxGridDBColumn;
+    RemainsDay2: TcxGridDBColumn;
+    chRemainsDay: TcxGridDBColumn;
   private
     { Private declarations }
   public
