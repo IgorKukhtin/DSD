@@ -128,6 +128,7 @@ BEGIN
                                       ON MovementItemUnit.MovementId = Movement.Id
 
    WHERE Movement.OperDate <= CURRENT_TIMESTAMP
+     AND make_time(date_part('hour', Movement.OperDate)::integer, date_part('minute', Movement.OperDate)::integer, date_part('second', Movement.OperDate)::integer) <= CURRENT_TIME
      AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
      AND Movement.DescId = zc_Movement_PUSH()
      AND Movement.StatusId = zc_Enum_Status_Complete()

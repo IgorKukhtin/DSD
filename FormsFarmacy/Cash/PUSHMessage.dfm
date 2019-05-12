@@ -11,12 +11,13 @@ object PUSHMessageForm: TPUSHMessageForm
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object TPanel
+  object pn1: TPanel
     Left = 0
     Top = 0
     Width = 566
     Height = 296
     Align = alClient
+    Caption = 'pn1'
     ShowCaption = False
     TabOrder = 0
     object Memo: TcxMemo
@@ -37,18 +38,17 @@ object PUSHMessageForm: TPUSHMessageForm
       Style.IsFontAssigned = True
       TabOrder = 0
       OnKeyDown = MemoKeyDown
-      ExplicitLeft = 2
-      ExplicitTop = 3
       Height = 294
       Width = 564
     end
   end
-  object TPanel
+  object pn2: TPanel
     Left = 0
     Top = 296
     Width = 566
     Height = 41
     Align = alBottom
+    Caption = 'pn2'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

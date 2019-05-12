@@ -639,7 +639,8 @@ implementation
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
-     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage;
+     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
+     EnterRecipeNumber;
 
 const
   StatusUnCompleteCode = 1;
@@ -3278,7 +3279,7 @@ begin
   End;
 
   InvNumberSP := '';
-  if not InputQuery('Скидка по соц. проекту "Доступні Ліки"', 'Введите номер рецепта: ', InvNumberSP) then Exit;
+  if not InputEnterRecipeNumber(InvNumberSP) then Exit;
 
   if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP) then
   begin

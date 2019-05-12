@@ -14,6 +14,8 @@ type
     bbCancel: TcxButton;
     bbOk: TcxButton;
     Memo: TcxMemo;
+    pn2: TPanel;
+    pn1: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private

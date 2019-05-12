@@ -117,6 +117,8 @@ function IntegrationClientSign : boolean;
 
 function ProcessSignedDispense : boolean;
 
+function CheckRequest_Number(ANumber : string) : boolean;
+
 implementation
 
 uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
@@ -168,9 +170,9 @@ begin
     end;
     Result := True;
   finally
-    if not Result then ShowMessage ('Ошибка.<Регистрационный номер рецепта>'#13#10 +
+    if not Result then ShowMessage ('Ошибка.<Регистрационный номер рецепта>'#13#10#13#10 +
       'Номер должен содержать 19 символов в 4 блока по 4 символа разделенных символом "-"'#13#10 +
-      'Cодержать только цыфры и большие буквы латинского алфовита'#13#10 +
+      'Cодержать только цыфры и буквы латинского алфовита'#13#10 +
       'В виде XXXX-XXXX-XXXX-XXXX ...');
   end;
 end;
