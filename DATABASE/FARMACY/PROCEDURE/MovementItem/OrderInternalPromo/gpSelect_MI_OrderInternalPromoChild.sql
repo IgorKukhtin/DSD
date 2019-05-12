@@ -138,7 +138,6 @@ BEGIN
            FROM tmpMI_Child AS MovementItem
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
                 LEFT JOIN tmpMI_Child_Calc2 ON tmpMI_Child_Calc2.Id = MovementItem.Id
-                --LEFT JOIN tmpMI_Child_Calc ON tmpMI_Child_Calc.Id = MovementItem.Id
            ;
   
 END;
