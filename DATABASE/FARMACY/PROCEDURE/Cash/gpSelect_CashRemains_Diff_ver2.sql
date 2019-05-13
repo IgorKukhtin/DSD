@@ -295,10 +295,11 @@ BEGIN
     ;
 
     --доливаем те, что появились
-    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
+       ,0  
        ,_DIFF.Price
        ,_DIFF.Remains
        ,_DIFF.MCSValue
@@ -364,7 +365,8 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.05.19                                                                                      * PartionDateKindId
  16.03.16         *
  12.09.15                                                                       *CashSessionSnapShot
 */

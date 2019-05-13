@@ -163,7 +163,7 @@ BEGIN
 
 
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate,AccommodationId)
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,MinExpirationDate,AccommodationId)
     WITH
     tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
@@ -195,6 +195,7 @@ BEGIN
     SELECT
         inCashSessionId                             AS CashSession
        ,GoodsRemains.ObjectId                       AS GoodsId
+       ,0                                           AS PartionDateKindId
        ,COALESCE(tmpObject_Price.Price,0)           AS Price
        ,(GoodsRemains.Remains
             - COALESCE(Reserve.Amount,0))::TFloat   AS Remains
@@ -754,6 +755,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 13.05.19                                                                                     * PartionDateKindId
  24.04.19                                                                                                    * Helsi
  04.04.19                                                                                                    * GoodsAnalog
  06.03.19                                                                                                    * DoesNotShare

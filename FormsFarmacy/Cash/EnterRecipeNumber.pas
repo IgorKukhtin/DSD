@@ -60,6 +60,7 @@ begin
     ANumber := EnterRecipeNumberForm.edMaskNumber.Text;
   finally
     EnterRecipeNumberForm.Free;
+    LoadKeyboardLayout('00000419', KLF_ACTIVATE);
   end;
 end;
 
