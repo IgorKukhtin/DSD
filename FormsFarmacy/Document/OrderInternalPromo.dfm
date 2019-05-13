@@ -380,6 +380,19 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Options.Editing = False
             Width = 100
           end
+          object chKoeff2: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'.(2)'
+            DataBinding.FieldName = 'Koeff2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
           object chRemainsDay: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
             DataBinding.FieldName = 'RemainsDay'

@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Amount TFloat, AmountManual TFloat
              , AmountOut TFloat, Remains TFloat
-             , Koeff TFloat
+             , Koeff TFloat, Koeff2 TFloat
              , RemainsDay TFloat
              , IsErased Boolean
               )
@@ -92,7 +92,7 @@ BEGIN
 
       , tmpMI_Child_Calc AS (SELECT tmpMI_Child.*
                                   , (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) :: TFloat AS Koeff
-                                 -- , SUM (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) OVER (PARTITION BY tmpMI_Child.ParentId) AS KoeffSUM
+                                  , SUM (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) OVER (PARTITION BY tmpMI_Child.ParentId) AS KoeffSUM
                              FROM tmpMI_Child
                                   LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                              WHERE COALESCE (tmpMI_Child.AmountManual,0) = 0
@@ -117,6 +117,8 @@ BEGIN
 
       , tmpMI_Child_Calc2 AS (SELECT tmpMI_Child.*
                                    , SUM (tmpMI_Child.Koeff) OVER (PARTITION BY tmpMI_Child.ParentId) AS KoeffSUM
+                                   , (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) :: TFloat AS Koeff2
+                                   , SUM (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) OVER (PARTITION BY tmpMI_Child.ParentId) AS KoeffSUM2
                               FROM tmpMI_Child_Calc AS tmpMI_Child
                                    LEFT JOIN tmpMI_Master2 AS tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                               WHERE COALESCE (tmpMI_Child.Koeff,0) > 0
@@ -132,12 +134,14 @@ BEGIN
                 , MovementItem.AmountManual :: TFloat
                 , MovementItem.AmountOut    :: TFloat
                 , MovementItem.Remains      :: TFloat
-                , CASE WHEN COALESCE (tmpMI_Child_Calc2.KoeffSUM,0) > 0 THEN (tmpMI_Child_Calc2.Koeff / tmpMI_Child_Calc2.KoeffSUM) ELSE 0 END :: TFloat AS Koeff
+                , CASE WHEN COALESCE (tmpMI_Child_Calc.KoeffSUM,0) > 0 THEN (tmpMI_Child_Calc.Koeff / tmpMI_Child_Calc.KoeffSUM) ELSE 0 END :: TFloat AS Koeff
+                , CASE WHEN COALESCE (tmpMI_Child_Calc2.KoeffSUM2,0) > 0 THEN (tmpMI_Child_Calc2.Koeff2 / tmpMI_Child_Calc2.KoeffSUM2) ELSE 0 END :: TFloat AS Koeff2
                 , MovementItem.RemainsDay   :: TFloat 
                 , MovementItem.IsErased
            FROM tmpMI_Child AS MovementItem
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
                 LEFT JOIN tmpMI_Child_Calc2 ON tmpMI_Child_Calc2.Id = MovementItem.Id
+                LEFT JOIN tmpMI_Child_Calc  ON tmpMI_Child_Calc.Id = MovementItem.Id
            ;
   
 END;
