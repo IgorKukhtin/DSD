@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdExportToXLSAction, cxMemo, cxDBEdit;
+  dsdExportToXLSAction, cxMemo, cxDBEdit, cxCheckBox;
 
 type
   TPUSHForm = class(TAncestorDocumentForm)
@@ -45,6 +45,23 @@ type
     cxLabel5: TcxLabel;
     edReplays: TcxCurrencyEdit;
     Views: TcxGridDBColumn;
+    tsChild: TcxTabSheet;
+    cxGridChild: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chisErased: TcxGridDBColumn;
+    chUnitCode: TcxGridDBColumn;
+    chUnitName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    spSelectChild: TdsdStoredProc;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    dxBarButton7: TdxBarButton;
+    chbDaily: TcxCheckBox;
+    chParentName: TcxGridDBColumn;
+    DBViewAddOnChild: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

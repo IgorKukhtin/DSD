@@ -49,7 +49,8 @@ BEGIN
                                            ON MovementItemDate_Viewed.MovementItemId = MovementItem.Id
                                           AND MovementItemDate_Viewed.DescId = zc_MIDate_Viewed()
                 
-      WHERE MovementItem.MovementID = inMovementId;
+      WHERE MovementItem.MovementID = inMovementId
+        AND MovementItem.DescId = zc_MI_Master();
 
 END;
 $BODY$
@@ -58,6 +59,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 10.05.19         *
  21.03.19         *
 */
 -- select * from gpSelect_MovementItem_PUSH(inMovementId := 10582538  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

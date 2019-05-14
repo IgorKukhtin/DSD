@@ -1,29 +1,29 @@
 inherited OrderInternalPromoForm: TOrderInternalPromoForm
   Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
   ClientHeight = 564
-  ClientWidth = 814
+  ClientWidth = 824
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 830
+  ExplicitWidth = 840
   ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 814
+    Width = 824
     Height = 388
     ExplicitTop = 76
-    ExplicitWidth = 814
+    ExplicitWidth = 824
     ExplicitHeight = 388
     ClientRectBottom = 388
-    ClientRectRight = 814
+    ClientRectRight = 824
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 824
       ExplicitHeight = 364
       inherited cxGrid: TcxGrid
-        Width = 814
+        Width = 824
         Height = 184
-        ExplicitWidth = 814
-        ExplicitHeight = 255
+        ExplicitWidth = 824
+        ExplicitHeight = 184
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -35,6 +35,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -51,6 +56,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTotal
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -157,12 +167,59 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Options.Editing = False
             Width = 67
           end
+          object AmountTotal: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' + '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' + '#1079#1072#1082#1072#1079
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountOut_avg: TcxGridDBColumn
+            Caption = #1057#1088'. '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'AmountOut_avg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDay: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'RemainsDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDay2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' ('#1073#1077#1079' '#1091#1095'. '#1086#1090#1088'.'#1082#1086#1101#1092'.)'
+            DataBinding.FieldName = 'RemainsDay2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 192
-        Width = 814
+        Width = 824
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
@@ -196,6 +253,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountManual
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -222,6 +283,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountManual
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -308,11 +373,37 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1072
             Options.Editing = False
             Width = 100
+          end
+          object chKoeff2: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'.(2)'
+            DataBinding.FieldName = 'Koeff2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object chRemainsDay: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'RemainsDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object chIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -331,21 +422,20 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 184
-        Width = 814
+        Width = 824
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 255
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 814
+    Width = 824
     Height = 50
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 824
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -423,7 +513,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxSplitter2: TcxSplitter [4]
     Left = 0
     Top = 464
-    Width = 814
+    Width = 824
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
@@ -433,7 +523,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxGrid2: TcxGrid [5]
     Left = 0
     Top = 472
-    Width = 814
+    Width = 824
     Height = 92
     Align = alBottom
     PopupMenu = PopupMenu
@@ -608,8 +698,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spUnErasedMIChild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1102
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -974,6 +1064,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080'  '#1084#1072#1088#1082#1077#1090'-'#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
       ImageIndex = 74
     end
+    object actInsertOrderInternal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertOrderInternal
+      StoredProcList = <
+        item
+          StoredProc = spInsertOrderInternal
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>'
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>'
+      ImageIndex = 30
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
+    end
     object actInsertChild: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1089,6 +1194,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1175,12 +1288,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = actOpenReport
       Category = 0
     end
-    object bbOpenReportMinPrice_All: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+    object bbInsertOrderInternal: TdxBarButton
+      Action = actInsertOrderInternal
       Category = 0
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
-      Visible = ivAlways
-      ImageIndex = 24
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateMovementItemContainer
@@ -1978,5 +2088,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 504
     Top = 144
+  end
+  object spInsertOrderInternal: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_OrderInternal_byPromoChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 568
+    Top = 152
   end
 end

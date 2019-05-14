@@ -24,6 +24,7 @@ type
     bbmacPrint: TdxBarButton;
     colDateEndPUSH: TcxGridDBColumn;
     colReplays: TcxGridDBColumn;
+    cjlDaily: TcxGridDBColumn;
   private
     { Private declarations }
   public

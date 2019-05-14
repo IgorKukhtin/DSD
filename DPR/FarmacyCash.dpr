@@ -107,7 +107,9 @@ uses
   ChoiceGoodsAnalog in '..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas' {ChoiceGoodsAnalogForm: TParentForm},
   Helsi in '..\FormsFarmacy\Cash\Helsi.pas',
   Cash_IKC_C651T in '..\FormsFarmacy\Cash\Cash_IKC_C651T.pas',
-  ChoiceHelsiUserName in '..\FormsFarmacy\Cash\ChoiceHelsiUserName.pas' {ChoiceHelsiUserNameForm: TParentForm};
+  ChoiceHelsiUserName in '..\FormsFarmacy\Cash\ChoiceHelsiUserName.pas' {ChoiceHelsiUserNameForm: TParentForm},
+  PUSHMessage in '..\FormsFarmacy\Cash\PUSHMessage.pas' {PUSHMessageForm},
+  EnterRecipeNumber in '..\FormsFarmacy\Cash\EnterRecipeNumber.pas' {EnterRecipeNumberForm};
 
 {$R *.res}
 

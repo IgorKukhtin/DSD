@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , DateEndPUSH TVarChar
              , Replays Integer
+             , Daily Boolean
              , Message TBlob
 
              , InsertName TVarChar, InsertDate TDateTime
@@ -48,13 +49,14 @@ BEGIN
             date_trunc('day', Movement.OperDate + INTERVAL '1 DAY')), 
             'DD.MM.YYYY HH24:MI:SS')::TVarChar                         AS DateEndPUSH
           , COALESCE(MovementFloat_Replays.ValueData, 1)::Integer      AS Replays  
+          , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
 
           , MovementBlob_Message.ValueData                             AS Message
 
           , Object_Insert.ValueData                                    AS InsertName
           , MovementDate_Insert.ValueData                              AS InsertDate
           , Object_Update.ValueData                                    AS UpdateName
-          , MovementDate_Update.ValueData                             AS UpdateDate
+          , MovementDate_Update.ValueData                              AS UpdateDate
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -79,6 +81,10 @@ BEGIN
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Daily
+                                      ON MovementBoolean_Daily.MovementId = Movement.Id
+                                     AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
+
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -100,6 +106,7 @@ ALTER FUNCTION gpSelect_Movement_PUSH (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 11.05.19         *
  10.03.19         *
 */
 

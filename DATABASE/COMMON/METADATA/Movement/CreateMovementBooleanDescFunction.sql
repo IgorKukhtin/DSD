@@ -157,9 +157,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_RoundingDown() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_RoundingDown', 'Округление в низ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RoundingDown');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PUSHDaily() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PUSHDaily'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_PUSHDaily', 'Повторять PUSH ежедневно'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PUSHDaily');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 11.05.19                                                                                    * zc_MovementBoolean_PUSHDaily
  02.04.19                                                                                    * zc_MovementBoolean_RoundingDown
  01.04.19                                                                                    * zc_MovementBoolean_Delay, zc_MovementBoolean_Deadlines
  16.10.18                                                                                    * zc_MovementBoolean_Promo_Prescribe

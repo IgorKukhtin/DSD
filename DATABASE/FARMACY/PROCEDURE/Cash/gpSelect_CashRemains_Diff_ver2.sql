@@ -247,15 +247,15 @@ BEGIN
                                END                                                               AS NewRow
                              , Accommodation.AccommodationId                                     AS AccommodationID
                              , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
-                        FROM tmpPrice
-                             LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = tmpPrice.ObjectId
-                             LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = tmpPrice.ObjectId
-                             LEFT JOIN RESERVE      ON RESERVE.GoodsId       = tmpPrice.ObjectId
+                        FROM GoodsRemains
+                             LEFT JOIN tmpPrice ON tmpPrice.ObjectId = GoodsRemains.ObjectId
+                             LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
+                             LEFT JOIN RESERVE      ON RESERVE.GoodsId       = GoodsRemains.ObjectId
                              LEFT JOIN AccommodationLincGoods AS Accommodation
                                                               ON Accommodation.UnitId = vbUnitId
-                                                             AND Accommodation.GoodsId = tmpPrice.ObjectId
-                        WHERE tmpPrice.Price    <> COALESCE (SESSIONDATA.Price, 0)
-                           OR tmpPrice.MCSValue <> COALESCE (SESSIONDATA.MCSValue, 0)
+                                                             AND Accommodation.GoodsId = GoodsRemains.ObjectId
+                        WHERE COALESCE (tmpPrice.Price, 0)    <> COALESCE (SESSIONDATA.Price, 0)
+                           OR COALESCE (tmpPrice.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
                            OR COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
                            OR COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
                            OR COALESCE (Accommodation.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
@@ -295,10 +295,11 @@ BEGIN
     ;
 
     --доливаем те, что появились
-    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
+       ,0  
        ,_DIFF.Price
        ,_DIFF.Remains
        ,_DIFF.MCSValue
@@ -364,11 +365,12 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.05.19                                                                                      * PartionDateKindId
  16.03.16         *
  12.09.15                                                                       *CashSessionSnapShot
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{1590AD6F-681A-4B34-992A-87AEABB4D33F}', '308120')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0,  '{0B05C610-B172-4F81-99B8-25BF5385ADD6}' , '3354092')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, 'tmp1', '3')

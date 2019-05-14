@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , DateEndPUSH TDateTime
              , Replays Integer
+             , Daily Boolean
              , Message TBlob
              )
 AS
@@ -39,6 +40,7 @@ BEGIN
           , Object_Status.Name              	             AS StatusName
           , date_trunc('day', CURRENT_TIMESTAMP + INTERVAL '1 DAY')::TDateTime  AS DateEndPUSH
           , 1::Integer                                       AS Replays
+          , False::Boolean                                   AS Message
           , Null::TBlob                                      AS Message
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -48,11 +50,12 @@ BEGIN
             Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
-          , Object_Status.ObjectCode                 AS StatusCode
-          , Object_Status.ValueData                  AS StatusName
-          , MovementDate_DateEndPUSH.ValueData       AS DateEndPUSH
-          , MovementFloat_Replays.ValueData::Integer AS Replays  
-          , MovementBlob_Message.ValueData           AS Message
+          , Object_Status.ObjectCode                         AS StatusCode
+          , Object_Status.ValueData                          AS StatusName
+          , MovementDate_DateEndPUSH.ValueData               AS DateEndPUSH
+          , MovementFloat_Replays.ValueData::Integer         AS Replays  
+          , COALESCE(MovementBoolean_Daily.ValueData, False) AS Daily
+          , MovementBlob_Message.ValueData                   AS Message
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -76,15 +79,9 @@ BEGIN
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
 
-            LEFT JOIN MovementLinkObject AS MLO_Insert
-                                         ON MLO_Insert.MovementId = Movement.Id
-                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MLO_Update
-                                         ON MLO_Update.MovementId = Movement.Id
-                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+            LEFT JOIN MovementBoolean AS MovementBoolean_Daily
+                                      ON MovementBoolean_Daily.MovementId = Movement.Id
+                                     AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
 
         WHERE Movement.Id =  inMovementId;
     END IF;
@@ -98,6 +95,7 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 11.05.19         *
  10.03.19         *
 */
 

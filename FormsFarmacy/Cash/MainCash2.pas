@@ -639,7 +639,8 @@ implementation
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
-     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions;
+     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
+     EnterRecipeNumber;
 
 const
   StatusUnCompleteCode = 1;
@@ -1514,11 +1515,10 @@ begin
   TimerPUSH.Enabled := False;
   TimerPUSH.Interval := 60 * 1000;
   if TimeOf(FPUSHEnd) > TimeOf(Now) then FPUSHEnd := Now;
-  Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
   try
     if FPUSHStart then
     begin
-      ShowMessage('Уважаемые коллеги!'#13#10 +
+      ShowPUSHMessage('Уважаемые коллеги!'#13#10 +
                   '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
                   '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
                   '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
@@ -1530,13 +1530,13 @@ begin
       not UnitConfigCDS.FieldByName('TimePUSHFinal2').IsNull and (TimeOf(FPUSHEnd) < TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime)) and
       (TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime) < TimeOf(Now))) then
     begin
-      ShowMessage('Уважаемые коллеги!'#13#10 +
-                  '1. Не забудьте сделать X-отчет!!! Вынесите необходимую сумму наличных средств из кассы согласно Х-отчета за минусом 100,00 грн !!!'#13#10 +
-                  '2. Еще раз сделайте х-отчет!!! Убедитесь, что наличных в кассе 100,00 грн!!!'#13#10 +
-                  '3. Сделайте z-отчет!!!'#13#10 +
-                  '4. Убедитесь, что Ваш z-отчет отправился в бухгалтерию!!!'#13#10 +
-                  '5. Форс-Мажор РРО: звоним в любое время : Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
-                  '6. Сделайте запись в книге РРО!!!');
+      ShowPUSHMessage('Уважаемые коллеги!'#13#10 +
+                      '1. Не забудьте сделать X-отчет!!! Вынесите необходимую сумму наличных средств из кассы согласно Х-отчета за минусом 100,00 грн !!!'#13#10 +
+                      '2. Еще раз сделайте х-отчет!!! Убедитесь, что наличных в кассе 100,00 грн!!!'#13#10 +
+                      '3. Сделайте z-отчет!!!'#13#10 +
+                      '4. Убедитесь, что Ваш z-отчет отправился в бухгалтерию!!!'#13#10 +
+                      '5. Форс-Мажор РРО: звоним в любое время : Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
+                      '6. Сделайте запись в книге РРО!!!');
       FPUSHEnd := Now;
     end else if (CheckCDS.RecordCount = 0) and PUSHDS.Active and (PUSHDS.RecordCount > 0) then
     begin
@@ -1545,7 +1545,7 @@ begin
         TimerPUSH.Interval := 1000;
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
-          if MessageDlg(PUSHDS.FieldByName('Text').AsString, mtConfirmation, mbOKCancel, 0) = mrOk then
+          if ShowPUSHMessage(PUSHDS.FieldByName('Text').AsString) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value := PUSHDS.FieldByName('Id').AsInteger;
@@ -1562,7 +1562,6 @@ begin
   finally
     FPUSHStart := False;
     TimerPUSH.Enabled := True;
-    Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
   end;
 end;
 
@@ -3280,7 +3279,7 @@ begin
   End;
 
   InvNumberSP := '';
-  if not InputQuery('Скидка по соц. проекту "Доступні Ліки"', 'Введите номер рецепта: ', InvNumberSP) then Exit;
+  if not InputEnterRecipeNumber(InvNumberSP) then Exit;
 
   if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP) then
   begin
