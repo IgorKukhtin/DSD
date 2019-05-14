@@ -1079,7 +1079,9 @@ uses
   GoodsByGoodsKind_VMC in '..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas' {GoodsByGoodsKind_VMCForm: TParentForm},
   GoodsByGK_VMCDialog in '..\..\Forms\Guides\GoodsByGK_VMCDialog.pas' {GoodsByGK_VMCDialogForm: TParentForm},
   OrderExternalItemJournal in '..\..\Forms\Document\OrderExternalItemJournal.pas' {OrderExternalItemJournalForm: TParentForm},
-  ClientKind in '..\..\Forms\Kind\ClientKind.pas' {ClientKindForm: TParentForm};
+  ClientKind in '..\..\Forms\Kind\ClientKind.pas' {ClientKindForm: TParentForm},
+  BarCodeBox in '..\..\Forms\Guides\BarCodeBox.pas' {BarCodeBoxForm: TParentForm},
+  BarCodeBoxEdit in '..\..\Forms\Guides\BarCodeBoxEdit.pas' {BarCodeBoxEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
