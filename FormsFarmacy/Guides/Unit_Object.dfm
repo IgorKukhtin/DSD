@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 516
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

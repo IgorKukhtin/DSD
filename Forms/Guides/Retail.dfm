@@ -135,6 +135,14 @@ object RetailForm: TRetailForm
         Options.Editing = False
         Width = 79
       end
+      object ClientKindName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+        DataBinding.FieldName = 'ClientKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -233,6 +241,22 @@ object RetailForm: TRetailForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbUpdate_ClientKind_Retai'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_ClientKind_Null'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -308,6 +332,14 @@ object RetailForm: TRetailForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdate_ClientKind_Retai: TdxBarButton
+      Action = macUpdate_ClientKind_Retai
+      Category = 0
+    end
+    object bbUpdate_ClientKind_Null: TdxBarButton
+      Action = macUpdate_ClientKind_Null
       Category = 0
     end
   end
@@ -543,6 +575,84 @@ object RetailForm: TRetailForm
         end>
       isShowModal = True
     end
+    object actUpdate_ClientKind_Null: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClientKind_Null
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClientKind_Null
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1091' '#1074#1089#1077#1093' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'.'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1091' '#1074#1089#1077#1093' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'.'
+      ImageIndex = 58
+    end
+    object actUpdate_ClientKind_Retail: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClientKind_Retail
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClientKind_Retail
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'. - '#1057#1077#1090#1077#1074#1080#1082
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'. - '#1057#1077#1090#1077#1074#1080#1082
+      ImageIndex = 77
+    end
+    object macUpdate_ClientKind_Retai: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_ClientKind_Retail_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'. - '#1057#1077#1090#1077#1074#1080#1082'?'
+      InfoAfterExecute = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1057#1077#1090#1077#1074#1080#1082' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1072
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'. - '#1057#1077#1090#1077#1074#1080#1082
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'. - '#1057#1077#1090#1077#1074#1080#1082
+      ImageIndex = 77
+    end
+    object macUpdate_ClientKind_Retail_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_ClientKind_Retail
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_ClientKind_Null_List'
+      ImageIndex = 77
+    end
+    object macUpdate_ClientKind_Null: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_ClientKind_Null_List
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1091' '#1074#1089#1077#1093' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'.'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1091' '#1074#1089#1077#1093' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086#1082#1091#1087'.'
+      ImageIndex = 58
+    end
+    object macUpdate_ClientKind_Null_List: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_ClientKind_Null
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_ClientKind_Null_List'
+      ImageIndex = 58
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Retail'
@@ -672,5 +782,51 @@ object RetailForm: TRetailForm
     PackSize = 1
     Left = 464
     Top = 80
+  end
+  object spUpdate_ClientKind_Retail: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_ClientKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientKindId'
+        Value = '3651651'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 112
+  end
+  object spUpdate_ClientKind_Null: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_ClientKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientKindId'
+        Value = 'Null'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 176
   end
 end

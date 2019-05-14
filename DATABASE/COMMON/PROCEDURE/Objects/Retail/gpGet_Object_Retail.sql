@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
+             , ClientKindId Integer, ClientKindName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -39,6 +40,9 @@ BEGIN
            , CAST (0 as Integer)     AS PersonalTradeId 
            , CAST ('' as TVarChar)   AS PersonalTradeName 
 
+           , CAST (0 as Integer)     AS ClientKindId 
+           , CAST ('' as TVarChar)   AS ClientKindName 
+           
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
        RETURN QUERY 
@@ -57,7 +61,9 @@ BEGIN
            , Object_PersonalMarketing.Id         AS PersonalMarketingId
            , Object_PersonalMarketing.ValueData  AS PersonalMarketingName    
            , Object_PersonalTrade.Id             AS PersonalTradeId
-           , Object_PersonalTrade.ValueData      AS PersonalTradeName       
+           , Object_PersonalTrade.ValueData      AS PersonalTradeName
+           , Object_ClientKind.Id                AS ClientKindId
+           , Object_ClientKind.ValueData         AS ClientKindName
            , Object_Retail.isErased   AS isErased
 
        FROM OBJECT AS Object_Retail
@@ -90,7 +96,11 @@ BEGIN
                              ON ObjectLink_Retail_PersonalTrade.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade()
         LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Retail_PersonalTrade.ChildObjectId
-                              
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_ClientKind
+                             ON ObjectLink_Retail_ClientKind.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_ClientKind.DescId = zc_ObjectLink_Retail_ClientKind()
+        LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId
        WHERE Object_Retail.Id = inId;
    END IF; 
   
@@ -104,6 +114,7 @@ ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.05.19         * ClientKind
  02.04.15         * add OperDateOrder
  19.02.15         * add GoodsProperty               
  10.11.14         * add GLNCode

@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inGoodsPropertyId       Integer   ,     -- Классификаторы свойств товаров
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
     IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
+    IN inClientKindId          Integer   ,     -- Категории покупателей
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -64,7 +66,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  
    -- сохранили связь с <Сотрудник (Ответственный представитель коммерческого отдела)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalTrade(), ioId, inPersonalTradeId);  
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_ClientKind(), ioId, inClientKindId);  
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -77,6 +80,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.05.19         * inClientKindId
  29.01.19         * add OKPO
  24.11.15         * add inPersonalMarketingId
  02.04.15         * add inOperDateOrder

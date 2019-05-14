@@ -67,6 +67,17 @@ type
     PersonalMarketingName: TcxGridDBColumn;
     actChoicePersonalMarketing: TOpenChoiceForm;
     actChoicePersonalTrade: TOpenChoiceForm;
+    ClientKindName: TcxGridDBColumn;
+    spUpdate_ClientKind_Retail: TdsdStoredProc;
+    spUpdate_ClientKind_Null: TdsdStoredProc;
+    actUpdate_ClientKind_Retail: TdsdExecStoredProc;
+    actUpdate_ClientKind_Null: TdsdExecStoredProc;
+    macUpdate_ClientKind_Null_List: TMultiAction;
+    macUpdate_ClientKind_Null: TMultiAction;
+    macUpdate_ClientKind_Retail_list: TMultiAction;
+    macUpdate_ClientKind_Retai: TMultiAction;
+    bbUpdate_ClientKind_Retai: TdxBarButton;
+    bbUpdate_ClientKind_Null: TdxBarButton;
   private
     { Private declarations }
   public
