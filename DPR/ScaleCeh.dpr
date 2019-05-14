@@ -90,7 +90,8 @@ uses
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
-  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  MU110 in '..\ScaleCeh\Util\MU110.pas';
 
 {$R *.res}
 

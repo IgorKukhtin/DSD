@@ -495,10 +495,11 @@ object MainCehForm: TMainCehForm
       Left = 0
       Top = 33
       Width = 617
-      Height = 534
+      Height = 493
       Align = alClient
       PopupMenu = PopupMenuGrid
       TabOrder = 2
+      ExplicitHeight = 534
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -920,6 +921,7 @@ object MainCehForm: TMainCehForm
         object UpdateDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072'('#1074#1088') '#1080#1079#1084'.'
           DataBinding.FieldName = 'UpdateDate'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -928,14 +930,254 @@ object MainCehForm: TMainCehForm
         object isErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 55
+          Width = 50
         end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
+      end
+    end
+    object infoPanelTotalSorting: TPanel
+      Left = 0
+      Top = 526
+      Width = 617
+      Height = 41
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 3
+      ExplicitTop = 567
+      object Panel9: TPanel
+        Left = 485
+        Top = 0
+        Width = 110
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 0
+        ExplicitLeft = 441
+        object Label1: TLabel
+          Left = 1
+          Top = 1
+          Width = 108
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1048#1090#1086#1075#1086' '#8470'3 - '#1053#1045#1053#1054#1052'.'
+          ExplicitWidth = 102
+        end
+        object Panel10: TPanel
+          Left = 1
+          Top = 14
+          Width = 108
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = -2
+          ExplicitTop = 9
+          ExplicitWidth = 120
+        end
+      end
+      object Panel5: TPanel
+        Left = 85
+        Top = 0
+        Width = 100
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 1
+        ExplicitLeft = 96
+        object Label2: TLabel
+          Left = 1
+          Top = 1
+          Width = 98
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #8470'2 - '#1074#1077#1089' '#1053#1054#1052#1048#1053'.'
+          ExplicitWidth = 90
+        end
+        object Panel11: TPanel
+          Left = 1
+          Top = 14
+          Width = 98
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 120
+        end
+      end
+      object Panel12: TPanel
+        Left = 0
+        Top = 0
+        Width = 85
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 2
+        object Label3: TLabel
+          Left = 1
+          Top = 1
+          Width = 83
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #8470'1 - '#1074#1077#1089' '#1064#1058'.'
+          ExplicitWidth = 69
+        end
+        object Panel13: TPanel
+          Left = 1
+          Top = 14
+          Width = 83
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Enabled = False
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 120
+        end
+      end
+      object Panel2: TPanel
+        Left = 375
+        Top = 0
+        Width = 110
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 3
+        ExplicitLeft = 363
+        object Label4: TLabel
+          Left = 1
+          Top = 1
+          Width = 108
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1048#1090#1086#1075#1086' '#8470'2 - '#1053#1054#1052#1048#1053'.'
+          ExplicitWidth = 103
+        end
+        object Panel7: TPanel
+          Left = 1
+          Top = 14
+          Width = 108
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 120
+        end
+      end
+      object Panel14: TPanel
+        Left = 285
+        Top = 0
+        Width = 90
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 4
+        ExplicitLeft = 273
+        object Label5: TLabel
+          Left = 1
+          Top = 1
+          Width = 88
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1048#1090#1086#1075#1086' '#8470'1 - '#1064#1058'.'
+          ExplicitWidth = 82
+        end
+        object Panel15: TPanel
+          Left = 1
+          Top = 14
+          Width = 88
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 120
+        end
+      end
+      object Panel16: TPanel
+        Left = 185
+        Top = 0
+        Width = 100
+        Height = 41
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvSpace
+        TabOrder = 5
+        object Label6: TLabel
+          Left = 1
+          Top = 1
+          Width = 98
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #8470'3 - '#1074#1077#1089' '#1053#1045#1053#1054#1052'.'
+          ExplicitWidth = 89
+        end
+        object Panel17: TPanel
+          Left = 1
+          Top = 14
+          Width = 98
+          Height = 26
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 120
+        end
       end
     end
   end

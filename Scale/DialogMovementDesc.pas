@@ -78,7 +78,9 @@ uses dmMainScale,GuidePartner;
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      // Для Sticker + сразу ВЫХОД
-     if (SettingMain.isSticker = TRUE) and (BarCode = '') then
+     if ((SettingMain.isSticker = TRUE) and (BarCode = ''))
+     or (SettingMain.isModeSorting = TRUE)
+     then
      begin
            CDS.Locate('Number',GetArrayList_Value_byName(Default_Array,'MovementNumber'),[]);
 

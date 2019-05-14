@@ -68,6 +68,9 @@ BEGIN
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentLviv()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
                   END;
      -- проверка
      IF COALESCE (vbBranchId, 0) = 0

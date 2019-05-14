@@ -480,6 +480,51 @@ BEGIN
                                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                       )
+               , tmpMI_child AS (SELECT MovementItem.ParentId       AS ParentId
+                                      , MAX (Movement_Tax.OperDate) AS OperDate_tax
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                  ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                      LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                     ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
+                                                                    AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+                                      LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased   = FALSE
+                                   AND MovementItem.Amount     <> 0
+                                 GROUP BY MovementItem.ParentId
+                                )
+           , tmpMI AS (SELECT tmpMI_all.MovementItemId
+                            , tmpMI_all.GoodsId
+                            , tmpMI_all.GoodsKindId
+                            , tmpMI_all.AssetId
+                            , tmpMI_all.PartionGoods
+                            , tmpMI_all.PartionGoodsDate
+                            , tmpMI_all.ChangePercent
+                            , COALESCE (tmpChangePrice.isChangePrice, FALSE) AS isChangePrice
+         
+                            , tmpMI_all.OperCount
+                            , tmpMI_all.OperCount_Partner
+                            , CASE WHEN tmpChangePrice.isChangePrice = TRUE -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
+                                        THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child.OperDate_tax, vbOperDatePartner)
+                                                                 , inChangePercent:= tmpMI_all.ChangePercent
+                                                                 , inPrice        := tmpMI_all.Price_original
+                                                                 , inIsWithVAT    := vbPriceWithVAT
+                                                                  )
+                                   ELSE tmpMI_all.Price_original
+                              END AS Price
+                            , tmpMI_all.Price_original
+                            , tmpMI_all.CountForPrice
+         
+                            , tmpMI_all.MovementId_Partion
+         
+                       FROM tmpMI_all
+                            LEFT JOIN tmpChangePrice ON tmpChangePrice.isChangePrice = TRUE
+                            LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = tmpMI_all.MovementItemId
+                      )
         -- Результат
         SELECT
               _tmp.MovementItemId
@@ -638,34 +683,7 @@ BEGIN
                     --
                   , tmpMI.MovementId_Partion
 
-              FROM
-             (SELECT tmpMI_all.MovementItemId
-                   , tmpMI_all.GoodsId
-                   , tmpMI_all.GoodsKindId
-                   , tmpMI_all.AssetId
-                   , tmpMI_all.PartionGoods
-                   , tmpMI_all.PartionGoodsDate
-                   , tmpMI_all.ChangePercent
-                   , COALESCE (tmpChangePrice.isChangePrice, FALSE) AS isChangePrice
-
-                   , tmpMI_all.OperCount
-                   , tmpMI_all.OperCount_Partner
-                   , CASE WHEN tmpChangePrice.isChangePrice = TRUE -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
-                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                        , inChangePercent:= tmpMI_all.ChangePercent
-                                                        , inPrice        := tmpMI_all.Price_original
-                                                        , inIsWithVAT    := vbPriceWithVAT
-                                                         )
-                          ELSE tmpMI_all.Price_original
-                     END AS Price
-                   , tmpMI_all.Price_original
-                   , tmpMI_all.CountForPrice
-
-                   , tmpMI_all.MovementId_Partion
-
-              FROM tmpMI_all
-                   LEFT JOIN tmpChangePrice ON tmpChangePrice.isChangePrice = TRUE
-             ) AS tmpMI
+              FROM tmpMI
 
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = tmpMI.GoodsId

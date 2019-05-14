@@ -755,7 +755,7 @@ end;
 function gpInitialize_Ini: Boolean;
 var
   Ini: TInifile;
-  ScaleList:TStringList;
+  ScaleList : TStringList;
   i:Integer;
   tmpValue:String;
 begin
@@ -784,6 +784,9 @@ begin
 
   SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCehCOMPort',1);
   if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCehCOMPort',1);
+
+  SettingMain.LightCOMPort:=Ini.ReadInteger('Main','DefaultLightCOMPort',0);
+  if SettingMain.LightCOMPort=0 then Ini.WriteInteger('Main','DefaultLightCOMPort',4);
 
   SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCehCount',1);
   if SettingMain.ScaleCount=1 then Ini.WriteInteger('Main','ScaleCehCount',1);
@@ -823,6 +826,8 @@ begin
   //
   if SettingMain.isCeh = TRUE then
   begin
+       SettingMain.isModeSorting:=GetArrayList_Value_byName(Default_Array,'isModeSorting') = AnsiUpperCase('TRUE');
+
        SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
 

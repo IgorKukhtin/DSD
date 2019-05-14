@@ -64,10 +64,11 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , SaleMI_Id Integer
              , MovementId_Sale Integer, InvNumber_Sale TVarChar
              , OperDate_Sale TDateTime, InsertDate_Sale TDateTime
-             , DescName TVarChar
-             , Comment   TVarChar
-             , isErased  Boolean
-             , isChecked Boolean
+             , DescName     TVarChar
+             , Comment      TVarChar
+             , isErased     Boolean
+             , isChecked    Boolean
+             , ContainerId  Integer
               )
 AS
 $BODY$
@@ -350,7 +351,7 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT DISTINCT Container.*
+   , tmpContainer AS (SELECT DISTINCT Container.*, CLO_GoodsSize.ObjectId AS GoodsSizeId
                       FROM tmpMI AS tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
                                                AND Container.WhereObjectId = inUnitId
@@ -362,6 +363,9 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                           LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                         ON CLO_GoodsSize.ContainerId = Container.Id
+                                                        AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                      )
 
@@ -496,6 +500,8 @@ BEGIN
            , tmpMI.Comment                     :: TVarChar  AS Comment
            , tmpMI.isErased                    :: Boolean   AS isErased
            , tmpMI.isChecked                   :: Boolean   AS isChecked
+           
+           , Container.Id                                   AS ContainerId
 
        FROM tmpMI
             -- суммы оплаты
@@ -517,7 +523,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = COALESCE (Container.GoodsSizeId, Object_PartionGoods.GoodsSizeId)
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
@@ -745,8 +751,12 @@ BEGIN
            , MovementDate_Insert.ValueData                                AS InsertDate_Sale
            , MovementDesc.ItemName                                        AS DescName
            , tmpMI.Comment                                    :: TVarChar AS Comment
+
            , tmpMI.isErased                                               AS isErased
            , COALESCE (MIBoolean_Checked.ValueData, FALSE)    :: Boolean  AS isChecked
+
+           , Container.Id                                                 AS ContainerId
+
        FROM tmpMI_Master AS tmpMI
             -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id

@@ -40,12 +40,20 @@ type
     COMPort  : Integer;
   end;
 
+  {TListItemLight = record
+    Number   : Integer;
+    LightName: string;
+    COMPort  : Integer;
+  end;}
+
   TArrayStickerFileList = array of TStickerFileItem;
   TArrayList = array of TListItem;
   TArrayListScale = array of TListItemScale;
+  //TArrayListLight = array of TListItemLight;
 
   TSettingMain = record
-    isSticker:Boolean;          // Scale
+    isModeSorting:Boolean;  // ScaleCeh - Режим маркировка/сортировка
+    isSticker:Boolean;      // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
     WeightSkewer1:Double;   // only ScaleCeh
@@ -59,6 +67,7 @@ type
     BranchName:String;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
+    LightCOMPort:Integer;
     IndexScale_old:Integer;
   end;
 
@@ -116,6 +125,7 @@ var
 
   StickerFile_Array   :TArrayStickerFileList;
   Scale_Array         :TArrayListScale;
+  //Light_Array         :TArrayListLight;
 
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;

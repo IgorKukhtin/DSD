@@ -75,7 +75,7 @@
 			<VerInfo_Build>22</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_UPAK.ini ves=1.2345</Debugger_RunParams>
+			<Debugger_RunParams>Scale_SORT.ini ves=1.2345</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -229,6 +229,7 @@
 				<Form>DialogDateValueForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\ScaleCeh\Util\MU110.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

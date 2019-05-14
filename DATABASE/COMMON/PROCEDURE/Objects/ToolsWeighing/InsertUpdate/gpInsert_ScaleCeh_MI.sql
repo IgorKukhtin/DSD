@@ -90,7 +90,10 @@ BEGIN
                                                           , inCountSkewer2        := inCountSkewer2
                                                           , inWeightSkewer2       := inWeightSkewer2
                                                           , inWeightOther         := inWeightOther
-                                                          , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0 THEN inPartionGoodsDate ELSE NULL END :: TDateTime
+                                                          , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
+                                                                                               THEN inPartionGoodsDate
+                                                                                          ELSE NULL
+                                                                                     END :: TDateTime
                                                           , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
                                                           , inMovementItemId      := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
                                                           , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId

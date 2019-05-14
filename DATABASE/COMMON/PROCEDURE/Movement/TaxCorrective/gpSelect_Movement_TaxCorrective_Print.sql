@@ -1705,17 +1705,35 @@ BEGIN
                                         ON MovementFloat_TotalSummPVAT.MovementId =  tmpMovement.Id
                                        AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
           )
-          -- Суммы в Возврате
+                 -- zc_MI_Child в Возврате
+         , tmpReturnIn_child AS (SELECT MovementItem.ParentId       AS ParentId
+                                      , MAX (Movement_Tax.OperDate) AS OperDate_tax
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                  ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                      LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                     ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
+                                                                    AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+                                      LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+                                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.MovementId_Return FROM tmpMovement)
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased   = FALSE
+                                   AND MovementItem.Amount     <> 0
+                                 GROUP BY MovementItem.ParentId
+                                 )
+          -- zc_MI_Master в Возврате
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
                 , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
-                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpReturnIn_child.OperDate_tax, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate))
                                                      , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                      , inPrice        := MIFloat_Price.ValueData
                                                      , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
                                                       )
                        WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_ReturnIn()
-                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpReturnIn_child.OperDate_tax, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate))
                                                      , inChangePercent:= MovementFloat_ChangePercent.ValueData
                                                      , inPrice        := MIFloat_Price.ValueData
                                                      , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
@@ -1752,15 +1770,17 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                         ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                LEFT JOIN tmpReturnIn_child ON tmpReturnIn_child.ParentId = MovementItem.Id
+
            GROUP BY MovementItem.ObjectId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
-                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpReturnIn_child.OperDate_tax, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate))
                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                        , inPrice        := MIFloat_Price.ValueData
                                                        , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
                                                         )
                          WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_ReturnIn()
-                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpReturnIn_child.OperDate_tax, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate))
                                                        , inChangePercent:= MovementFloat_ChangePercent.ValueData
                                                        , inPrice        := MIFloat_Price.ValueData
                                                        , inIsWithVAT    := COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)

@@ -280,7 +280,8 @@ AS
            , CAST ('PrintMovement_Sale39118745' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745' -- ? + Фінєст + ? + ? + ?
+       AND OH_JuridicalDetails.OKPO IN ('39118745','39117631', '39118572', '39143745' -- ? + Фінєст + ? + ? + ?
+                                      , '39118195' -- Мегамаркет
                                       , '39117799' -- Нордон
                                       , '41805811' -- Гловер
                                       , '40145541' -- Амиата
@@ -290,6 +291,7 @@ AS
                                       , '41201250' -- Левайс
                                       , '41200660' -- Релайз
                                       , '42599711' -- Пангеон
+                                      , '32490244' -- ЕПІЦЕНТР К ТОВ 
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
@@ -694,4 +696,3 @@ PrintMovement_Sale37910513.fr3 -- Фуршет Центр ДП
 -- тест
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE JuridicalId IN (SELECT JuridicalId FROM PrintForms_View GROUP BY JuridicalId, ReportType, PaidKindId, StartDate HAVING COUNT(*) > 1) ORDER BY ReportType, JuridicalId, PaidKindId, StartDate
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE PrintFormName = 'PrintMovement_Sale35275230'
-

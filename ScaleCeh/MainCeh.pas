@@ -236,6 +236,25 @@ type
     miReport_GoodsBalance_Unit4: TMenuItem;
     miReport_GoodsBalance_Unit5: TMenuItem;
     AmountOneWeight: TcxGridDBColumn;
+    infoPanelTotalSorting: TPanel;
+    Panel9: TPanel;
+    Label1: TLabel;
+    Panel10: TPanel;
+    Panel5: TPanel;
+    Label2: TLabel;
+    Panel11: TPanel;
+    Panel12: TPanel;
+    Label3: TLabel;
+    Panel13: TPanel;
+    Panel2: TPanel;
+    Label4: TLabel;
+    Panel7: TPanel;
+    Panel14: TPanel;
+    Label5: TLabel;
+    Panel15: TPanel;
+    Panel16: TPanel;
+    Label6: TLabel;
+    Panel17: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -307,6 +326,7 @@ type
     procedure miReport_GoodsBalance_Unit1Click(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
+    ii_test : Integer;
     fEnterKey13:Boolean;
     fSaveAll:Boolean;
 
@@ -325,6 +345,12 @@ type
     procedure Initialize_afterSave_all;
     procedure Initialize_afterSave_MI;
 
+    function Create_Light : Boolean;
+    function Close_Light : Boolean;
+    function Set_LightOn(number : byte) : Boolean;
+    function Set_LightOff(number : byte) : Boolean;
+    function Set_LightGoods(number : byte) : Boolean;
+
     procedure SetParams_OperCount;
     procedure myActiveControl;
 
@@ -342,7 +368,8 @@ implementation
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport
-    ,IdIPWatch, LookAndFillSettings;
+    ,IdIPWatch, LookAndFillSettings
+    ,MU110;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -753,6 +780,10 @@ begin
      //сохранение MovementItem
      Result:=DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
      //
+     //Light
+     Set_LightGoods(0);
+     //
+     //
      if Result then
      begin
           MovementInfo:= '';
@@ -775,7 +806,10 @@ begin
           end;
 
           oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
-          Initialize_afterSave_MI;
+          if SettingMain.isModeSorting = TRUE
+          then begin ActiveControl:=EditGoodsCode; oldGoodsId:=0; end
+          else Initialize_afterSave_MI;
+
           RefreshDataSet;
           WriteParamsMovement;
 
@@ -805,6 +839,9 @@ end;
 function TMainCehForm.GetParams_MovementDesc(BarCode: String):Boolean;
 var MovementId_save:Integer;
 begin
+     if (SettingMain.isModeSorting = TRUE) and (ParamsMovement.ParamByName('MovementId').AsInteger > 0)
+     then exit;
+     //
      MovementId_save:=ParamsMovement.ParamByName('MovementId').AsInteger;
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
@@ -1251,7 +1288,7 @@ begin
           PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
           WriteParamsMovement;
           if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
-          then ActiveControl:=EditEnterCount;
+          then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
           if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
              and (oldGoodsCode <> GoodsCode_int)
@@ -1470,7 +1507,8 @@ begin
      if Key = 13 then
      begin
           if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
-          else ActiveControl:=EditCount;
+          else if infoPanelCount.Visible then ActiveControl:=EditCount
+               else ActiveControl:=EditGoodsCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -1668,6 +1706,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  //потушили светофор
+  Close_Light;
   //отметили "Выход"
   spProtocol_isExit.Execute;
 end;
@@ -1675,6 +1715,7 @@ end;
 procedure TMainCehForm.FormCreate(Sender: TObject);
 begin
   fSaveAll:= false;
+  ii_test:= 0;
 
   // определили IP
   with TIdIPWatch.Create(nil) do
@@ -1690,7 +1731,9 @@ begin
 
 
   SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
-  Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
+  if SettingMain.isModeSorting = TRUE
+  then Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>'
+  else Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
@@ -1703,6 +1746,7 @@ begin
   Create_ParamsMI(ParamsMI);
   //global Initialize
   Create_Scale;
+  Create_Light;
   //
   //local Movement Initialize
   OperDateEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime);
@@ -1711,22 +1755,29 @@ begin
   Initialize_afterSave_all;
   Initialize_afterSave_MI;
   //local visible Columns
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountOneWeight').Index].Visible     :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1_k').Index].Visible      :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1_k').Index].Visible:=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1').Index].Visible        :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1').Index].Visible  :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer2').Index].Visible        :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer2').Index].Visible  :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightOther').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=(SettingMain.isGoodsComplete = TRUE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountOneWeight').Index].Visible     :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1_k').Index].Visible      :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1_k').Index].Visible:=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1').Index].Visible        :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1').Index].Visible  :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer2').Index].Visible        :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer2').Index].Visible  :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightOther').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isStartWeighing').Index].Visible     :=(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          :=(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          :=(SettingMain.isModeSorting = FALSE);
+  //
+  infoPanelTotalSumm.Visible :=(SettingMain.isModeSorting = FALSE);
+  infoPanelTotalSorting.Visible :=(SettingMain.isModeSorting = TRUE);
   //local visible
   if SettingMain.isGoodsComplete = TRUE
   then begin
@@ -1745,6 +1796,10 @@ begin
             LabelCountPack.Caption:='Живой вес';
             LabelSkewer.Caption:='Крючки';
   end ;
+  HeadCountPanel.Visible:=SettingMain.isModeSorting = FALSE;
+  infoPanelCount.Visible:=SettingMain.isModeSorting = FALSE;
+  infoPanelTare_enter.Visible:=SettingMain.isModeSorting = FALSE;
+  infoPanelSkewer1.Visible:=SettingMain.isModeSorting = FALSE;
   infoPanelSkewer2.Visible:=SettingMain.WeightSkewer2 > 0;
   infoPanelWeightOther.Visible:=infoPanelSkewer2.Visible;
   LabelSkewer1.Caption:='Кол-во по '+FloatToStr(SettingMain.WeightSkewer1)+' кг';
@@ -1769,7 +1824,7 @@ begin
   bbChangeCountPack.Visible:=not PanelPartionGoods.Visible;;
   bbChangePartionGoodsDate.Visible:=not PanelPartionGoods.Visible;
   //local enabled
-  gbStartWeighing.Enabled:=SettingMain.isGoodsComplete = TRUE;
+  gbStartWeighing.Enabled:=(SettingMain.isGoodsComplete = TRUE)and (SettingMain.isModeSorting = FALSE);
   //
   //
   with spSelect do
@@ -1815,6 +1870,86 @@ begin
   end;
   //
   CDS.First;
+  //
+  if (SettingMain.isModeSorting = TRUE) and (ParamsMI.ParamByName('GoodsId').AsInteger = 0) and (CDS.RecordCount > 0)then
+  begin
+       //сохраним что был ГЕТ
+       oldGoodsCode:= CDS.FieldByName('GoodsCode').AsInteger;
+       EditGoodsCode.Text:= CDS.FieldByName('GoodsCode').AsString;
+
+       if DMMainScaleCehForm.gpGet_Scale_Goods(ParamsMI,IntToStr(oldGoodsCode)) = TRUE
+       then begin
+            PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
+            //и выставим вид упаковки
+            if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1)
+            then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,CDS.FieldByName('GoodsKindCode').AsInteger);
+       end
+       else
+            PanelGoodsName.Caption:= '('+IntToStr(oldGoodsCode)+') ERROR !!!';
+
+  end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Set_LightGoods(number : byte) : Boolean;
+begin
+     if SettingMain.isModeSorting = FALSE then exit;
+     //
+     Set_LightOff(1);
+     Set_LightOff(2);
+     Set_LightOff(3);
+     //
+     if ii_test > 2  then ii_test:= 0;
+     ii_test:= ii_test + 1;
+     if not Set_LightOn(ii_test) then ShowMessage ('Error Light - On - '+IntToStr(ii_test));
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Set_LightOn(number : byte) : Boolean;
+begin
+     Result:= MU110OutOn(number);
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Set_LightOff(number : byte) : Boolean;
+begin
+     Result:= MU110OutOff(number);
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Create_Light : Boolean;
+begin
+     Result:= false;
+     //
+     if SettingMain.isModeSorting = FALSE then exit;
+     //
+     MU110SetPort('COM' +IntToStr(SettingMain.LightCOMPort));
+     if Set_LightOn(1) = FALSE then ShowMessage ('Error Light - On - 1');
+     if Set_LightOn(2) = FALSE then ShowMessage ('Error Light - On - 2');
+     if Set_LightOn(3) = FALSE then ShowMessage ('Error Light - On - 3');
+     //
+     MyDelay_two(500);
+     //
+     MU110OutOff(1);
+     MU110OutOff(2);
+     MU110OutOff(3);
+     //
+     Result:= true;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Close_Light : Boolean;
+begin
+     Result:= false;
+     //
+     if SettingMain.isModeSorting = FALSE then exit;
+     //
+     Set_LightOn(1);
+     Set_LightOn(2);
+     Set_LightOn(3);
+     //
+     MyDelay_two(500);
+     //
+     MU110OutOff(1);
+     MU110OutOff(2);
+     MU110OutOff(3);
+     //
+     Result:= true;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Create_Scale;
@@ -1956,9 +2091,9 @@ end;
 procedure TMainCehForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if (Key = VK_F1)and(gbStartWeighing.Enabled) then if gbStartWeighing.ItemIndex = 0 then gbStartWeighing.ItemIndex:= 1 else gbStartWeighing.ItemIndex:= 0;
-     if Key = VK_F2 then GetParams_MovementDesc('');
-     if Key = VK_F4 then Save_MI;
-     if Key = VK_F5 then Save_Movement_all;
+     if (Key = VK_F2) and (Shift = []) then GetParams_MovementDesc('');
+     if (Key = VK_F4) and (Shift = []) then Save_MI;
+     if (Key = VK_F5) and (Shift = []) then Save_Movement_all;
      // Меняется шрифт
      if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
      //
@@ -1978,6 +2113,8 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.FormShow(Sender: TObject);
 begin
+     if SettingMain.isModeSorting = TRUE then GetParams_MovementDesc('');
+     //
      RefreshDataSet;
      WriteParamsMovement;
      myActiveControl;

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
-             , GoodsKindName TVarChar, StorageLineName TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, StorageLineName TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat, AmountOneWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
@@ -29,63 +29,8 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
 
      RETURN QUERY
-       SELECT
-             tmpMI.MovementItemId
-           , Object_Goods.Id                  AS GoodsId
-           , Object_Goods.ObjectCode          AS GoodsCode
-           , Object_Goods.ValueData           AS GoodsName
-           , Object_Measure.Id                AS MeasureId
-           , Object_Measure.ValueData         AS MeasureName
-           , Object_GoodsKind.ValueData       AS GoodsKindName
-           , Object_StorageLine.ValueData     AS StorageLineName
-
-           , tmpMI.isStartWeighing :: Boolean AS isStartWeighing
-
-           , tmpMI.Amount :: TFloat           AS Amount
-           , (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight
-           , CASE WHEN tmpMI.Count > 0 THEN CAST ((tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) / tmpMI.Count AS NUMERIC (16, 3)) ELSE 0 END :: TFloat AS AmountOneWeight
-
-           , tmpMI.RealWeight  :: TFloat      AS RealWeight
-           , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
-           , tmpMI.WeightTare  :: TFloat      AS WeightTare
-           , tmpMI.WeightOther :: TFloat      AS WeightOther
-
-           , tmpMI.CountSkewer1_k   :: TFloat AS CountSkewer1_k
-           , tmpMI.CountSkewer1     :: TFloat AS CountSkewer1
-           , tmpMI.CountSkewer2     :: TFloat AS CountSkewer2
-           , tmpMI.WeightSkewer1_k  :: TFloat AS WeightSkewer1_k
-           , tmpMI.WeightSkewer1    :: TFloat AS WeightSkewer1
-           , tmpMI.WeightSkewer2    :: TFloat AS WeightSkewer2
-           , (tmpMI.CountSkewer1_k * tmpMI.WeightSkewer1_k) :: TFloat AS TotalWeightSkewer1_k
-           , (tmpMI.CountSkewer1   * tmpMI.WeightSkewer1)   :: TFloat AS TotalWeightSkewer1
-           , (tmpMI.CountSkewer2   * tmpMI.WeightSkewer2)   :: TFloat AS TotalWeightSkewer2
-
-           , tmpMI.Count       :: TFloat AS Count
-           , tmpMI.CountPack   :: TFloat AS CountPack
-           , tmpMI.HeadCount   :: TFloat AS HeadCount
-           , tmpMI.LiveWeight  :: TFloat AS LiveWeight
-
-           , CASE WHEN tmpMI.PartionGoods <> ''
-                       THEN tmpMI.PartionGoods
-                  WHEN MI_Partion.Id > 0
-                       THEN
-                       ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
-                     || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
-                     || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
-                     || ' партия=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
-                     || ' № <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
-                       )
-                  ELSE tmpMI.MovementItemId_Partion :: TVarChar
-             END :: TVarChar AS PartionGoods
-           , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
-
-
-           , tmpMI.InsertDate :: TDateTime AS InsertDate
-           , tmpMI.UpdateDate :: TDateTime AS UpdateDate
-
-           , tmpMI.isErased
-
-       FROM (SELECT MovementItem.Id AS MovementItemId
+       WITH tmpMI AS
+            (SELECT MovementItem.Id AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
                   , MovementItem.Amount
 
@@ -189,7 +134,67 @@ BEGIN
 
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
-            ) AS tmpMI
+            )
+       SELECT
+             tmpMI.MovementItemId
+           , Object_Goods.Id                  AS GoodsId
+           , Object_Goods.ObjectCode          AS GoodsCode
+           , Object_Goods.ValueData           AS GoodsName
+           , Object_Measure.Id                AS MeasureId
+           , Object_Measure.ValueData         AS MeasureName
+
+           , Object_GoodsKind.Id              AS GoodsKindId
+           , Object_GoodsKind.ObjectCode      AS GoodsKindCode
+           , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_StorageLine.ValueData     AS StorageLineName
+
+           , tmpMI.isStartWeighing :: Boolean AS isStartWeighing
+
+           , tmpMI.Amount :: TFloat           AS Amount
+           , (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight
+           , CASE WHEN tmpMI.Count > 0 THEN CAST ((tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) / tmpMI.Count AS NUMERIC (16, 3)) ELSE 0 END :: TFloat AS AmountOneWeight
+
+           , tmpMI.RealWeight  :: TFloat      AS RealWeight
+           , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
+           , tmpMI.WeightTare  :: TFloat      AS WeightTare
+           , tmpMI.WeightOther :: TFloat      AS WeightOther
+
+           , tmpMI.CountSkewer1_k   :: TFloat AS CountSkewer1_k
+           , tmpMI.CountSkewer1     :: TFloat AS CountSkewer1
+           , tmpMI.CountSkewer2     :: TFloat AS CountSkewer2
+           , tmpMI.WeightSkewer1_k  :: TFloat AS WeightSkewer1_k
+           , tmpMI.WeightSkewer1    :: TFloat AS WeightSkewer1
+           , tmpMI.WeightSkewer2    :: TFloat AS WeightSkewer2
+           , (tmpMI.CountSkewer1_k * tmpMI.WeightSkewer1_k) :: TFloat AS TotalWeightSkewer1_k
+           , (tmpMI.CountSkewer1   * tmpMI.WeightSkewer1)   :: TFloat AS TotalWeightSkewer1
+           , (tmpMI.CountSkewer2   * tmpMI.WeightSkewer2)   :: TFloat AS TotalWeightSkewer2
+
+           , tmpMI.Count       :: TFloat AS Count
+           , tmpMI.CountPack   :: TFloat AS CountPack
+           , tmpMI.HeadCount   :: TFloat AS HeadCount
+           , tmpMI.LiveWeight  :: TFloat AS LiveWeight
+
+           , CASE WHEN tmpMI.PartionGoods <> ''
+                       THEN tmpMI.PartionGoods
+                  WHEN MI_Partion.Id > 0
+                       THEN
+                       ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
+                     || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
+                     || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
+                     || ' партия=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                     || ' № <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                       )
+                  ELSE tmpMI.MovementItemId_Partion :: TVarChar
+             END :: TVarChar AS PartionGoods
+           , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
+
+
+           , tmpMI.InsertDate :: TDateTime AS InsertDate
+           , tmpMI.UpdateDate :: TDateTime AS UpdateDate
+
+           , tmpMI.isErased
+
+       FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
@@ -202,16 +207,16 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-                                 LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = tmpMI.MovementItemId_Partion
-                                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
-                                                                       AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
-                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                  ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
-                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                 LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                             ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
-                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+            LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = tmpMI.MovementItemId_Partion
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                  AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                        ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
        ORDER BY tmpMI.MovementItemId DESC
      ;
 
