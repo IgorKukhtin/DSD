@@ -257,6 +257,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             item
               Format = ',0.###'
               Kind = skSum
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = chKoeff2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -287,6 +292,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             item
               Format = ',0.###'
               Kind = skSum
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = chKoeff2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
