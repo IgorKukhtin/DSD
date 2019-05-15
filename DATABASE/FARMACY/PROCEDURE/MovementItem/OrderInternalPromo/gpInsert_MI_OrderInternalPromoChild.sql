@@ -67,7 +67,7 @@ BEGIN
                                                ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId = zc_MI_Master()
-                                  AND COALESCE (MovementItem.Amount,0) > 0
+                                  AND COALESCE (MovementItem.Amount,0) <> 0
                                   AND MovementItem.isErased = FALSE
                                 )
 
@@ -147,8 +147,8 @@ BEGIN
 
              -- расчет кол-ва дней остатка
              , tmpRemainsDay AS (SELECT tmpMI_Master.Id
-                                      , CASE WHEN COALESCE (tmpChild.AmountOut_real,0) <> 0 AND COALESCE (3,0) <> 0 
-                                             THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / 3)
+                                      , CASE WHEN COALESCE (tmpChild.AmountOut_real,0) <> 0 AND COALESCE (vbDays,0) <> 0 
+                                             THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / vbDays)
                                              ELSE 0
                                         END AS RemainsDay
                                  FROM tmpMI_Master

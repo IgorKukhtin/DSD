@@ -80,22 +80,30 @@ BEGIN
       , tmpMI_Master AS (SELECT MovementItem.Id
                               , MovementItem.ObjectId
                               , MovementItem.Amount             ::TFloat AS Amount
-                              , tmpChild.AmountManual           ::TFloat AS AmountManual
+                              , COALESCE (tmpChild_AmountManual.AmountManual,0)           ::TFloat AS AmountManual
                               , (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) AS AmountTotal
                               , (COALESCE (tmpChild.AmountOut,0) / vbDays) AS AmountOut_avg
                               , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
-                                     THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
+                                     THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                      ELSE 0
                                 END AS RemainsDay
                               , MovementItem.IsErased       AS IsErased
                          FROM MovementItem
                               LEFT JOIN (SELECT MovementItem.ParentId
-                                              , SUM (COALESCE (MovementItem.AmountManual,0)) AS AmountManual
                                               , SUM (COALESCE (MovementItem.Remains,0))      AS Remains
                                               , SUM (COALESCE (MovementItem.AmountOut,0))    AS AmountOut
                                          FROM tmpMI_Child AS MovementItem
+                                         WHERE COALESCE (MovementItem.AmountManual,0) = 0
                                          GROUP BY MovementItem.ParentId
                                          ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+
+                              LEFT JOIN (SELECT MovementItem.ParentId
+                                              , SUM (COALESCE (MovementItem.AmountManual,0)) AS AmountManual
+                                         FROM tmpMI_Child AS MovementItem
+                                         WHERE COALESCE (MovementItem.AmountManual,0) <> 0
+                                         GROUP BY MovementItem.ParentId
+                                         ) AS tmpChild_AmountManual ON tmpChild_AmountManual.ParentId = MovementItem.Id
+
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Master()
                            AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -105,6 +113,7 @@ BEGIN
                                , (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) :: TFloat AS Koeff
                           FROM tmpMI_Child
                                LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
+                          WHERE COALESCE (tmpMI_Child.AmountManual,0) = 0
                          )
 
       -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
@@ -112,7 +121,7 @@ BEGIN
                                , (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) AS AmountTotal
                                , (COALESCE (tmpChild.AmountOut,0) / vbDays) AS AmountOut_avg
                                , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
-                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
+                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (MovementItem.AmountManual,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                       ELSE 0
                                  END AS RemainsDay
                           FROM tmpMI_Master AS MovementItem

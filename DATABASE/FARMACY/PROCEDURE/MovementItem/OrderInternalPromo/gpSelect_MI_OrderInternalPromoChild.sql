@@ -57,24 +57,25 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
                                                          ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
-             
+
                              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                                          ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-             
+
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-             
+
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId = zc_MI_Child()
-                          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                          AND MovementItem.isErased = FALSE
                         )
       -- строки мастера, для расчета кол-ва дней ()
       , tmpMI_Master AS (SELECT MovementItem.Id
                               , MovementItem.Amount
+                              , (COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0)) AS Amount_calc
                               , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
-                                     THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
+                                     THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0) ) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                      ELSE 0
                                 END AS RemainsDay
                          FROM MovementItem
@@ -85,6 +86,12 @@ BEGIN
                                          WHERE COALESCE (MovementItem.AmountManual,0) = 0
                                          GROUP BY MovementItem.ParentId
                                          ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+                              LEFT JOIN (SELECT MovementItem.ParentId
+                                              , SUM (COALESCE (MovementItem.AmountManual,0)) AS AmountManual
+                                         FROM tmpMI_Child AS MovementItem
+                                         WHERE COALESCE (MovementItem.AmountManual,0) <> 0
+                                         GROUP BY MovementItem.ParentId
+                                         ) AS tmpChild_AmountManual ON tmpChild_AmountManual.ParentId = MovementItem.Id
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = FALSE
@@ -101,7 +108,7 @@ BEGIN
       -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
       , tmpMI_Master2 AS (SELECT MovementItem.Id
                                , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
-                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
+                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount_calc,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                       ELSE 0
                                  END AS RemainsDay
                           FROM tmpMI_Master AS MovementItem
