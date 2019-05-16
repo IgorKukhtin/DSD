@@ -125,6 +125,15 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 42
           end
+          object InvNumber_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1063#1077#1082
+            DataBinding.FieldName = 'InvNumber_Full'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
           object InvNumber_Invoice_Full: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' ('#1057#1055')'
             DataBinding.FieldName = 'InvNumber_Invoice_Full'
