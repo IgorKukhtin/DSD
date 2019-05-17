@@ -142,7 +142,20 @@ begin
     end else Exit;
 
     Result := True;
-  end else Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+  end else
+  begin
+
+    if spGet_Movement_InvNumberSP.Execute = '' then
+    begin
+      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+        Exit;
+      end;
+    end else Exit;
+
+    Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+  end;
 end;
 
 procedure TSPDialogForm.bbOkClick(Sender: TObject);

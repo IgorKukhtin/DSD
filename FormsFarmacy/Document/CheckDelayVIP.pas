@@ -62,6 +62,7 @@ type
     spMovementUnComplete: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
     actIsShowAll: TBooleanStoredProcAction;
+    PartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

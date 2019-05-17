@@ -76,6 +76,9 @@ begin
       AddIntField(LocalDataBaseHead,  'JACKCHECK');  //Галка
       //***02.04.19
       AddBoolField(LocalDataBaseHead,  'ROUNDDOWN');  //Округление в низ
+      //***13.05.19
+      AddIntField(LocalDataBaseHead,  'PDKINDID');    //Тип срок/не срок
+      AddStrField(LocalDataBaseHead,  'CONFCODESP', 10); //Код подтверждения рецепта
 
       LocalDataBaseHead.CreateTable;
     end
@@ -147,6 +150,11 @@ begin
         //***02.04.19
         if FindField('ROUNDDOWN') = nil then
           AddBoolField(LFieldDefs,  'ROUNDDOWN');
+        //***13.05.19
+        if FindField('PDKINDID') = nil then
+          AddIntField(LFieldDefs,  'PDKINDID'); //Тип срок/не срок
+        if FindField('CONFCODESP') = nil then
+          AddStrField(LFieldDefs, 'CONFCODESP', 55);
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -206,7 +214,10 @@ begin
         //***25.02.19
         (FindField('JACKCHECK') = nil) or
         //***02.04.19
-        (FindField('ROUNDDOWN') = nil));
+        (FindField('ROUNDDOWN') = nil) or
+        //***13.05.19
+        (FindField('PDKINDID') = nil) or
+        (FindField('CONFCODESP') = nil));
 
       Close;
 
@@ -327,9 +338,13 @@ begin
       AddFloatField(LocalDataBaseDiff, 'REMAINS'); // Остатки
       AddFloatField(LocalDataBaseDiff, 'MCSVALUE'); //
       AddFloatField(LocalDataBaseDiff, 'RESERVED'); //
+      AddDateField(LocalDataBaseDiff,  'MEXPDATE'); //срок годности
+      AddIntField(LocalDataBaseDiff,   'PDKINDID'); //Тип срок/не срок
+      AddStrField(LocalDataBaseDiff,   'PDKINDNAME',100); //наименование типа срок/не срок
       AddBoolField(LocalDataBaseDiff,  'NEWROW'); //
       AddIntField(LocalDataBaseDiff,   'ACCOMID'); //
-      AddStrField(LocalDataBaseDiff,   'ACCOMNAME',3); //наименование товара
+      AddStrField(LocalDataBaseDiff,   'ACCOMNAME',20); //наименование расположения
+      AddIntField(LocalDataBaseDiff,   'COLORCALC'); //цвет
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -338,12 +353,6 @@ begin
     with LocalDataBaseDiff do
     begin
       Open;
-
-      if FindField('LIST_UID') = nil then
-        AddIntField(LocalDataBaseDiff,  'ACCOMID');
-
-      if FindField('ACCOMNAME') = nil then
-        AddStrField(LocalDataBaseDiff,   'ACCOMNAME',3);
 
       Result := not ((FindField('ID') = nil) or
         (FindField('GOODSCODE') = nil) or
@@ -354,7 +363,11 @@ begin
         (FindField('RESERVED') = nil) or
         (FindField('NEWROW') = nil) or
         (FindField('ACCOMID') = nil) or
-        (FindField('ACCOMNAME') = nil));
+        (FindField('ACCOMNAME') = nil) or
+        (FindField('MEXPDATE') = nil) or
+        (FindField('PDKINDID') = nil) or
+        (FindField('PDKINDNAME') = nil) or
+        (FindField('COLORCALC') = nil));
 
       Close;
 

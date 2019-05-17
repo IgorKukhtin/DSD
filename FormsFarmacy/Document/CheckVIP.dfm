@@ -158,6 +158,13 @@ inherited CheckVIPForm: TCheckVIPForm
             Options.Editing = False
             Width = 70
           end
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False

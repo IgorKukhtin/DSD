@@ -66,6 +66,10 @@ type
     JACKCHECK   : integer;       //Галка
     //***02.04.19
     ROUNDDOWN   : boolean;       //Округление в низ
+    //***15.05.19
+    PDKINDID    : integer;       //Тип срок/не срок
+    CONFCODESP  : String[10];    //Код подтверждения рецепта
+
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -113,15 +117,6 @@ type
     actRefreshLite: TdsdDataSetRefresh;
     actShowMessage: TShowMessageAction;
     actSelectCheck: TdsdExecStoredProc;
-    MemData: TdxMemData;
-    MemDataID: TIntegerField;
-    MemDataGOODSCODE: TIntegerField;
-    MemDataGOODSNAME: TStringField;
-    MemDataPRICE: TFloatField;
-    MemDataREMAINS: TFloatField;
-    MemDataMCSVALUE: TFloatField;
-    MemDataRESERVED: TFloatField;
-    MemDataNEWROW: TBooleanField;
     actSetCashSessionId: TAction;
     pmServise: TPopupMenu;
     N1: TMenuItem;
@@ -422,7 +417,7 @@ begin
       //Получение ночных скидок
       if not gc_User.Local then SaveTaxUnitNight;
       //Получение остатков по партиям
-  //    if not gc_User.Local then SaveGoodsExpirationDate;
+      if not gc_User.Local then SaveGoodsExpirationDate;
       //Получение справочника аналогов
       if not gc_User.Local then SaveGoodsAnalog;
       // Отправка сообщения приложению про надобность обновить остатки из файла
@@ -435,6 +430,7 @@ begin
       begin
         tiServise.BalloonHint:='Разница в остатках получена.';
       end;
+      tiServise.Hint := 'Ожидание задания.';
       end else
     begin
       tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
@@ -485,7 +481,7 @@ begin   //yes
         //Получение ночных скидок
         if not gc_User.Local then SaveTaxUnitNight;
         //Получение остатков по партиям
-  //      if not gc_User.Local then SaveGoodsExpirationDate;
+        if not gc_User.Local then SaveGoodsExpirationDate;
         //Получение справочника аналогов
         if not gc_User.Local then SaveGoodsAnalog;
 
@@ -501,6 +497,7 @@ begin   //yes
           tiServise.ShowBalloonHint;
           FirstRemainsReceived := true;
         end;
+        tiServise.Hint := 'Ожидание задания.';
       end else
       begin
         tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
@@ -754,16 +751,20 @@ begin
           while not DiffCDS.Eof  do
           begin
              FLocalDataBaseDiff.Append;
-             FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
-             FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
-              FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
-             FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
-             FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
-             FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
-             FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
-             FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
-             FLocalDataBaseDiff.Fields[8].AsString:=DiffCDS.Fields[8].AsString;
-             FLocalDataBaseDiff.Fields[9].AsString:=DiffCDS.Fields[9].AsString;
+             FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
+             FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
+             FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
+             FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
+             FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
+             FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
+             FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
+             FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
+             FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
+             FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
+             FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
+             FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
+             FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
+             FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
              FLocalDataBaseDiff.Post;
              DiffCDS.Next;
           end;
@@ -1259,6 +1260,9 @@ begin
                 JACKCHECK := FieldByName('JACKCHECK').AsInteger;
                 // ***02.04.19
                 ROUNDDOWN := FieldByName('ROUNDDOWN').AsBoolean;
+                // ***15.05.19
+                PDKINDID := FieldByName('PDKINDID').AsInteger;
+                CONFCODESP := trim(FieldByName('CONFCODESP').AsString);
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1395,6 +1399,9 @@ begin
                   dsdSave.Params.AddParam('inJackdawsChecksCode', ftInteger, ptInput, Head.JACKCHECK);
                   // ***02.04.19
                   dsdSave.Params.AddParam('inRoundingDown', ftBoolean, ptInput, Head.ROUNDDOWN);
+                  // ***15.05.19
+                  dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Head.PDKINDID);
+                  dsdSave.Params.AddParam('inConfirmationCodeSP', ftString, ptInput, Head.CONFCODESP);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
@@ -1679,14 +1686,20 @@ begin
                 while not DiffCDS.eof do
                 begin
                   FLocalDataBaseDiff.Append;
-                  FLocalDataBaseDiff.Fields[0].AsString := DiffCDS.Fields[0].AsString;
-                  FLocalDataBaseDiff.Fields[1].AsString := DiffCDS.Fields[1].AsString;
-                  FLocalDataBaseDiff.Fields[2].AsString := DiffCDS.Fields[2].AsString;
-                  FLocalDataBaseDiff.Fields[3].AsString := DiffCDS.Fields[3].AsString;
-                  FLocalDataBaseDiff.Fields[4].AsString := DiffCDS.Fields[4].AsString;
-                  FLocalDataBaseDiff.Fields[5].AsString := DiffCDS.Fields[5].AsString;
-                  FLocalDataBaseDiff.Fields[6].AsString := DiffCDS.Fields[6].AsString;
-                  FLocalDataBaseDiff.Fields[7].AsString := DiffCDS.Fields[7].AsString;
+                  FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
+                  FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
+                  FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
+                  FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
+                  FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
+                  FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
+                  FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
+                  FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
+                  FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
+                  FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
+                  FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
+                  FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
+                  FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
+                  FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
                   FLocalDataBaseDiff.Post;
                   DiffCDS.Next;
                 end;
@@ -2009,6 +2022,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  tiServise.Hint := 'Получение остатков по партиям';
   sp := TdsdStoredProc.Create(nil);
   try
     try

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_CheckDelayVIP()
 
---DROP FUNCTION IF EXISTS gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckDelayVIP(
     IN inIsShowAll     Boolean,    -- за последнии 10 дней
@@ -42,7 +42,9 @@ RETURNS TABLE (
   PromoCodeGUID TVarChar,
   PromoCodeChangePercent TFloat,
   MemberSPId Integer,
-  SiteDiscount TFloat
+  SiteDiscount TFloat,
+  PartionDateKindId Integer,
+  PartionDateKindName TVarChar
  )
 AS
 $BODY$
@@ -161,6 +163,9 @@ BEGIN
             , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
             , Object_MemberSP.Id                                        AS MemberSPId
             , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
+            
+            , Object_PartionDateKind.ID                     AS PartionDateKindId
+            , Object_PartionDateKind.ValueData              AS PartionDateKindName
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -287,9 +292,14 @@ BEGIN
 		                               ON MovementBoolean_Site.MovementId = Movement.Id
 		                              AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
                                                                             
-             LEFT JOIN MovementDate AS MovementDate_Delay
-                                    ON MovementDate_Delay.MovementId = Movement.Id
-                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+            LEFT JOIN MovementDate AS MovementDate_Delay
+                                   ON MovementDate_Delay.MovementId = Movement.Id
+                                  AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                         ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
        WHERE inIsShowAll OR COALESCE(MovementDate_Delay.ValueData, Movement.OperDate) >= CURRENT_DATE - INTERVAL '10 DAY';
 
@@ -301,6 +311,7 @@ ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 15.05.19                                                                                    *
  05.04.19                                                                                    *
 */
 
