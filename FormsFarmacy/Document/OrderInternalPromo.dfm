@@ -143,19 +143,33 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actContractChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
-            Options.Editing = False
             Width = 64
           end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actContractChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Options.Editing = False
             Width = 64
           end
           object InvNumber_Promo_Full: TcxGridDBColumn
@@ -863,6 +877,48 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spGet
         end>
     end
+    object actContractChoice: TOpenChoiceForm [28]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContract_ObjectForm'
+      FormNameParam.Value = 'TContract_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1556,7 +1612,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 248
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Amount'
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo'
     Params = <
       item
         Name = 'ioId'
@@ -1571,6 +1627,22 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1610,8 +1682,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 416
-    Top = 232
+    Top = 160
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 304

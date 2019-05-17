@@ -117,6 +117,7 @@ type
     RemainsDay2: TcxGridDBColumn;
     chRemainsDay: TcxGridDBColumn;
     MakerName_Promo: TcxGridDBColumn;
+    actContractChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
