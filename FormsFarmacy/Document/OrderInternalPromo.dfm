@@ -40,6 +40,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSIP
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -61,6 +66,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSIP
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -139,6 +149,25 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
+          end
+          object PriceSIP: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1057#1048#1055
+            DataBinding.FieldName = 'PriceSIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object SummSIP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1048#1055
+            DataBinding.FieldName = 'SummSIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090'.'

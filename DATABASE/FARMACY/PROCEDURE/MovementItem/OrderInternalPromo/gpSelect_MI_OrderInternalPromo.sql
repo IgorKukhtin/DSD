@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer
              , Amount TFloat
              , AmountManual TFloat
              , Price TFloat, Summ TFloat
+             , PriceSIP TFloat, SummSIP TFloat
              , AmountTotal TFloat
              , AmountOut_avg TFloat
              , RemainsDay TFloat
@@ -160,6 +161,24 @@ BEGIN
                            AND MovementLinkObject.DescId = zc_MovementLinkObject_Maker()
                          )
 
+      , tmpMIPromo AS (SELECT tmpMovement.Id                       AS MovementId
+                            , MI_Promo.ObjectId                    AS GoodsId
+                            , MIFloat_Price.ValueData     ::TFloat AS Price
+                       FROM (SELECT DISTINCT tmpMIFloat_PromoMovement.ValueData AS Id
+                             FROM tmpMIFloat_PromoMovement
+                             ) AS tmpMovement
+                          LEFT JOIN MovementItem AS MI_Promo 
+                                                 ON MI_Promo.MovementId = tmpMovement.Id
+                                                AND MI_Promo.DescId = zc_MI_Master()
+                                                AND MI_Promo.isErased = FALSE
+                          INNER JOIN (SELECT tmpMI_Master.ObjectId 
+                                      FROM tmpMI_Master
+                                      ) AS tmpGoods ON tmpGoods.ObjectId = MI_Promo.ObjectId
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MI_Promo.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                      )
+
            ----
            SELECT MovementItem.Id
                 , MovementItem.ObjectId                    AS GoodsId
@@ -169,6 +188,8 @@ BEGIN
                 , MovementItem.AmountManual       ::TFloat AS AmountManual
                 , MIFloat_Price.ValueData         ::TFloat AS Price
                 , (COALESCE(MovementItem.Amount,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS Summ
+                , tmpMIPromo.Price                ::TFloat AS PriceSIP
+                , (COALESCE(MovementItem.Amount,0) * COALESCE(tmpMIPromo.Price,0))        ::TFloat AS SummSIP
                 
                 , MovementItem.AmountTotal   ::TFloat
                 , MovementItem.AmountOut_avg ::TFloat
@@ -217,6 +238,10 @@ BEGIN
               LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MILinkObject_Juridical.ObjectId
 
               LEFT JOIN tmpMI_Master2 ON tmpMI_Master2.Id = MovementItem.Id
+
+              LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId = Movement_Promo.Id
+                                  AND tmpMIPromo.GoodsId = MovementItem.ObjectId
+                      
 
               ;
 END;
