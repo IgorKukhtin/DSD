@@ -118,6 +118,12 @@ type
     chRemainsDay: TcxGridDBColumn;
     MakerName_Promo: TcxGridDBColumn;
     actContractChoice: TOpenChoiceForm;
+    InsertRecordMaster: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    actGoodsPromoChoiceForm: TOpenChoiceForm;
+    InsertRecordPromoMaster: TInsertRecord;
+    bbInsertRecordMaster: TdxBarButton;
+    bbInsertRecordPromoMaster: TdxBarButton;
   private
     { Private declarations }
   public

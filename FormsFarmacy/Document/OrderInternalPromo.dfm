@@ -793,7 +793,33 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordChild: TInsertRecord [13]
+    object InsertRecordPromoMaster: TInsertRecord [13]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsPromoChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072'>'
+      ImageIndex = 0
+    end
+    object InsertRecordMaster: TInsertRecord [14]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+    end
+    object InsertRecordChild: TInsertRecord [15]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -816,7 +842,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spSelect_MI_PromoChild
         end>
     end
-    object actUpdatePartnerDS: TdsdUpdateDataSet [15]
+    object actUpdatePartnerDS: TdsdUpdateDataSet [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -831,7 +857,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Caption = 'actUpdatePartnerDS'
       DataSource = PartnerDS
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [16]
+    object actUpdateChildDS: TdsdUpdateDataSet [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -846,7 +872,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [17]
+    object actDoLoad: TExecuteImportSettingsAction [19]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -906,7 +932,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spGet
         end>
     end
-    object actContractChoice: TOpenChoiceForm [28]
+    object actContractChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -948,6 +974,65 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
+    object actGoodsPromoChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsPromoChoiceForm'
+      FormName = 'TGoodsPromoChoiceForm'
+      FormNameParam.Value = 'TGoodsPromoChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterRetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterRetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -971,6 +1056,57 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           Component = PartnerDCS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoodsRetailForm'
+      FormNameParam.Value = 'TGoodsRetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1254,6 +1390,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordPromoMaster'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1279,10 +1423,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertMaster'
         end
         item
           Visible = True
@@ -1406,6 +1546,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbInsertChild: TdxBarButton
       Action = actInsertChild
+      Category = 0
+    end
+    object bbInsertRecordMaster: TdxBarButton
+      Action = InsertRecordMaster
+      Category = 0
+    end
+    object bbInsertRecordPromoMaster: TdxBarButton
+      Action = InsertRecordPromoMaster
       Category = 0
     end
   end

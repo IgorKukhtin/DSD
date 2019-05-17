@@ -21,6 +21,10 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
     
+    IF COALESCE (inGoodsId,0) = 0
+    THEN
+        RETURN;
+    END IF;
     --Посчитали сумму
     outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(inPrice,0),2);
     
