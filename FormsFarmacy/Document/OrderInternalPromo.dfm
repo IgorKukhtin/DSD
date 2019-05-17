@@ -159,13 +159,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Width = 64
           end
           object InvNumber_Promo_Full: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090
+            Caption = #8470' '#1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'InvNumber_Promo_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
             Options.Editing = False
             Width = 67
+          end
+          object MakerName_Promo: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090')'
+            DataBinding.FieldName = 'MakerName_Promo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
           end
           object AmountTotal: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' + '#1079#1072#1082#1072#1079
@@ -332,13 +340,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Width = 235
           end
           object chAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
+            Caption = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1085#1099#1081' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1085#1099#1081' '#1079#1072#1082#1072#1079
             Options.Editing = False
             Width = 120
           end
@@ -1601,8 +1610,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 400
-    Top = 272
+    Left = 416
+    Top = 232
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 304

@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer
              , AmountOut_avg TFloat
              , RemainsDay TFloat
              , RemainsDay2 TFloat
-             , MovementId_Promo Integer, InvNumber_Promo_Full TVarChar
+             , MovementId_Promo Integer, InvNumber_Promo_Full TVarChar, MakerName_Promo TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , isReport Boolean
@@ -133,6 +133,32 @@ BEGIN
                                           GROUP BY MovementItem.ParentId
                                           ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
                         )
+      , tmpMI_Float_Price AS (SELECT MovementItemFloat.*
+                              FROM MovementItemFloat
+                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+                                AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                              )
+
+      , tmpMIFloat_PromoMovement AS (SELECT MovementItemFloat.MovementItemId
+                                          , MovementItemFloat.ValueData :: Integer
+                                     FROM MovementItemFloat
+                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+                                       AND MovementItemFloat.DescId = zc_MIFloat_PromoMovementId()
+                                     )
+
+      , tmpMILO AS (SELECT MovementItemLinkObject.*
+                              FROM MovementItemLinkObject
+                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+                                AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Juridical()
+                                                                    , zc_MILinkObject_Contract()
+                                                                    )
+                              )
+
+      , tmpMLO_Maker AS (SELECT MovementLinkObject.*
+                         FROM MovementLinkObject
+                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMIFloat_PromoMovement.ValueData FROM tmpMIFloat_PromoMovement)
+                           AND MovementLinkObject.DescId = zc_MovementLinkObject_Maker()
+                         )
 
            ----
            SELECT MovementItem.Id
@@ -151,6 +177,7 @@ BEGIN
 
                 , Movement_Promo.Id           AS MovementId_Promo
                 , ('№ ' || Movement_Promo.InvNumber || ' от ' || Movement_Promo.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Promo_Full
+                , Object_Maker.ValueData      AS MakerName_Promo
                 
                 , Object_Juridical.Id         AS JuridicalId
                 , Object_Juridical.ValueData  AS JuridicalName
@@ -163,23 +190,28 @@ BEGIN
            FROM tmpMI_Master AS MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId    
 
-              LEFT JOIN MovementItemFloat AS MIFloat_Price
+              LEFT JOIN tmpMI_Float_Price AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         --AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                         AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-              LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MIFloat_PromoMovement.ValueData :: Integer
+              LEFT JOIN tmpMIFloat_PromoMovement AS MIFloat_PromoMovement
+                                                 ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                --AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+              LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MIFloat_PromoMovement.ValueData
             
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
-                                               ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+              LEFT JOIN tmpMLO_Maker AS MovementLinkObject_Maker
+                                     ON MovementLinkObject_Maker.MovementId = Movement_Promo.Id
+                                   -- AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+              LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MovementLinkObject_Maker.ObjectId
+
+              LEFT JOIN tmpMILO AS MILinkObject_Juridical
+                                ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                               AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
 
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+              LEFT JOIN tmpMILO AS MILinkObject_Contract
+                                ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                               AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
               LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MILinkObject_Juridical.ObjectId

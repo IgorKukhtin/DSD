@@ -54,6 +54,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             end
             item
               Format = ',0.####'
+              Kind = skSum
               Column = TotalSumm_Check
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -99,6 +100,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             end
             item
               Format = ',0.####'
+              Kind = skSum
               Column = TotalSumm_Check
             end>
           OptionsData.Deleting = False

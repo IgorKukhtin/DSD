@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 995
-  ExplicitHeight = 603
+  ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

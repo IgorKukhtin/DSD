@@ -116,6 +116,7 @@ type
     RemainsDay: TcxGridDBColumn;
     RemainsDay2: TcxGridDBColumn;
     chRemainsDay: TcxGridDBColumn;
+    MakerName_Promo: TcxGridDBColumn;
   private
     { Private declarations }
   public
