@@ -1221,6 +1221,25 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       Caption = 'actInsertUpdate_MovementItem_Promo_Set_Zero'
     end
+    object actUpdateMaster_calc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMaster_calc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMaster_calc
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectPromoPartner
+        end>
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090
+      Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090
+      ImageIndex = 74
+    end
     object actGetImportSettingId: TdsdExecStoredProc
       Category = 'Load'
       MoveParams = <>
@@ -1426,6 +1445,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMaster_calc'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1540,8 +1563,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = actUpdateMovementItemContainer
       Category = 0
     end
-    object bbInsertMaster: TdxBarButton
-      Action = actInsertMaster
+    object bbUpdateMaster_calc: TdxBarButton
+      Action = actUpdateMaster_calc
       Category = 0
     end
     object bbInsertChild: TdxBarButton
@@ -2374,5 +2397,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 568
     Top = 152
+  end
+  object spUpdateMaster_calc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_calc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 248
+    Top = 160
   end
 end

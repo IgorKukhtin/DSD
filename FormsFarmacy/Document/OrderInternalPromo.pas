@@ -100,7 +100,7 @@ type
     actInsertChild: TdsdExecStoredProc;
     actInsertMaster: TdsdExecStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
-    bbInsertMaster: TdxBarButton;
+    bbUpdateMaster_calc: TdxBarButton;
     bbInsertChild: TdxBarButton;
     InvNumber_Promo_Full: TcxGridDBColumn;
     spInsert: TdsdStoredProc;
@@ -124,6 +124,8 @@ type
     InsertRecordPromoMaster: TInsertRecord;
     bbInsertRecordMaster: TdxBarButton;
     bbInsertRecordPromoMaster: TdxBarButton;
+    spUpdateMaster_calc: TdsdStoredProc;
+    actUpdateMaster_calc: TdsdExecStoredProc;
   private
     { Private declarations }
   public
