@@ -43,6 +43,9 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clCode: TcxGridDBColumn;
+    ShortName: TcxGridDBColumn;
+    spUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
