@@ -107,6 +107,8 @@ type
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 
+function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+
 function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;  overload;
 function CreateNewDispense : boolean; overload;
@@ -974,15 +976,14 @@ end;
 
 //------------------------
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime) : boolean;
+
+function InitHelsiApi : boolean;
   var I : integer;
       ds : TClientDataSet;
       S : string;
 begin
-  Result := False;
 
-  if not CheckRequest_Number(AReceipt) then Exit;
+  Result := False;
 
   if not Assigned(HelsiApi) then
   begin
@@ -1059,6 +1060,20 @@ begin
     end;
   end else if not HelsiApi.IntegrationClientKeyInfo then Exit;
 
+  Result := True;
+end;
+
+
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+  var AQty : currency; var ADate : TDateTime) : boolean;
+  var I : integer;
+begin
+  Result := False;
+
+  if not CheckRequest_Number(AReceipt) then Exit;
+
+  if not InitHelsiApi then Exit;
+
   HelsiApi.FNumber := AReceipt;
 
   for I := 1 to 5 do
@@ -1127,6 +1142,55 @@ begin
     ShowMessage('Ошибка неизвестный статус чека.');
   end;
 end;
+
+function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+  var I : integer;
+begin
+  Result := False;
+  AState := 'Error';
+
+  if not CheckRequest_Number(AReceipt) then Exit;
+
+  if not InitHelsiApi then Exit;
+
+  HelsiApi.FNumber := AReceipt;
+
+  for I := 1 to 3 do
+  begin
+    if HelsiApi.GetReceiptId then Break;
+    Sleep(1000);
+    case I of
+      1, 3 : begin
+               HelsiApi.GetTokenRefresh;
+               HelsiApi.InitReinitSession
+             end;
+      2 : begin
+            HelsiApi.GetToken;
+            HelsiApi.InitReinitSession
+          end;
+    end;
+  end;
+
+  if HelsiApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    HelsiApi.FShow_eHealth := False;
+    HelsiApi.FShow_Location := '';
+    Exit;
+  end;
+
+  if AReceipt <> HelsiApi.FRequest_number then Exit;
+
+  if HelsiApi.FDispense_valid_to < Date then
+  begin
+    AState := 'EXPIRED';
+    Exit;
+  end;
+
+  AState := HelsiApi.FStatus;
+  Result := True;
+end;
+
 
 function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;

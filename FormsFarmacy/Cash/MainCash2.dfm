@@ -223,8 +223,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 196
       Align = alRight
       TabOrder = 3
-      ExplicitLeft = 361
-      ExplicitTop = -1
       object ExpirationDateView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ExpirationDateDS
@@ -4691,6 +4689,7 @@ inherited MainCashForm2: TMainCashForm2
     object pm_CheckHelsi: TMenuItem
       Tag = 1
       Caption = #1057#1074#1077#1088#1082#1072' '#1095#1077#1082#1086#1074' '#1089' '#1061#1077#1083#1089#1080
+      OnClick = pm_CheckHelsiClick
     end
   end
 end

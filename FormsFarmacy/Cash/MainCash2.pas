@@ -521,6 +521,7 @@ type
     procedure cxButton5Click(Sender: TObject);
     procedure cxButton6Click(Sender: TObject);
     procedure pm_CheckClick(Sender: TObject);
+    procedure pm_CheckHelsiClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -674,7 +675,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
-     EnterRecipeNumber;
+     EnterRecipeNumber, CheckHelsiSign;
 
 const
   StatusUnCompleteCode = 1;
@@ -1188,6 +1189,37 @@ procedure TMainCashForm2.LoadVIPCheck;
 begin
   inherited;
 
+  if FormParams.ParamByName('CheckId').Value <> 0 then
+  begin
+    WaitForSingleObject(MutexDBF, INFINITE);
+    try
+      FLocalDataBaseHead.Active:=True;
+      try
+        // если чек загруженный VIP проверяем нет ли его в DBF
+        if FormParams.ParamByName('CheckId').Value <> 0 then
+        begin
+          FLocalDataBaseHead.First;
+          while not FLocalDataBaseHead.Eof do
+          begin
+            if FLocalDataBaseHead.FieldByName('ID').AsInteger = FormParams.ParamByName('CheckId').Value then
+            begin
+              NewCheck(False);
+              raise Exception.Create('Выбранный вип чек не сохранен после изменений. Загрузка запрещена...');
+              Exit;
+            end;
+            FLocalDataBaseHead.Next;
+          end;
+        end;
+      finally
+        FLocalDataBaseBody.Close;
+        FLocalDataBaseHead.Close;
+        MemData.EnableControls;
+      end;
+    finally
+      ReleaseMutex(MutexDBF);
+    end;
+  end;
+
   //обновим "нужные" параметры-Main ***20.07.16
   DiscountServiceForm.pGetDiscountExternal (FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
   // ***20.07.16
@@ -1406,7 +1438,10 @@ begin
 end;
 
 procedure TMainCashForm2.SetFilterPartionDateKind;
+ var Id, PartionDateKindId : Integer;
 begin
+  Id := RemainsCDS.FieldByName('Id').AsInteger;
+  PartionDateKindId := FormParams.ParamByName('PartionDateKindId').Value;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := False;
   try
@@ -1415,20 +1450,27 @@ begin
     else RemainsCDS.Filter := '(' + RemainsCDS.Filter + ') and PartionDateKindId = Null';
   finally
     RemainsCDS.Filtered := True;
+    if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+      RemainsCDS.Locate('Id', Id,[]);
     RemainsCDS.EnableControls;
   end;
 end;
 
 procedure TMainCashForm2.ClearFilterPartionDateKind;
+  var Id, PartionDateKindId : Integer;
 begin
   if Pos(') and PartionDateKindId', RemainsCDS.Filter) > 0 then
   begin
+    Id := RemainsCDS.FieldByName('Id').AsInteger;
+    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsInteger;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
     try
       RemainsCDS.Filter := Copy(RemainsCDS.Filter , 2, Pos(') and PartionDateKindId', RemainsCDS.Filter) - 2);
     finally
       RemainsCDS.Filtered := True;
+      if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+        RemainsCDS.Locate('Id', Id,[]);
       RemainsCDS.EnableControls;
     end;
   end;
@@ -2279,6 +2321,7 @@ var
   vip,vipList: TClientDataSet; nRecNo : integer;
 begin
   inherited;
+
   vip := TClientDataSet.Create(Nil);
   vipList := TClientDataSet.Create(nil);
   try
@@ -3722,12 +3765,15 @@ begin
 end;
 
 procedure TMainCashForm2.btnCheckClick(Sender: TObject);
+  var APoint : TPoint;
 begin
-  SetBlinkCheck(true);
-  //
-  if fBlinkCheck = true
-  then actOpenCheckVIP_Error.Execute
-  else actCheck.Execute;
+  if gc_User.Local then
+  Begin
+    ShowMessage('В отложенном режиме неработает...');
+    Exit;
+  End;
+  APoint := btnCheck.ClientToScreen(Point(0, btnCheck.ClientHeight));
+  pm_OpenCheck.Popup(APoint.X, APoint.Y);
 end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
@@ -4793,6 +4839,16 @@ begin
   else actCheck.Execute;
 end;
 
+procedure TMainCashForm2.pm_CheckHelsiClick(Sender: TObject);
+begin
+  with TCheckHelsiSignForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+     Free;
+  end;
+end;
+
 procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
@@ -5833,6 +5889,7 @@ begin
     if AUID = '' then
       AUID := GenerateGUID;
     Result := True;
+
     //сохраняем шапку
     try
       if (FormParams.ParamByName('CheckId').Value = 0) or
@@ -5893,7 +5950,7 @@ begin
       End
       else
       Begin
-        AUID := FLocalDataBaseHead.FieldByName('UID').Value;//uid чека
+        AUID := trim(FLocalDataBaseHead.FieldByName('UID').Value);//uid чека
         FLocalDataBaseHead.Edit;
         FLocalDataBaseHead.FieldByName('DATE').Value := Now; //дата оплаты
         FLocalDataBaseHead.FieldByName('PAIDTYPE').Value := Integer(PaidType); //тип оплаты
