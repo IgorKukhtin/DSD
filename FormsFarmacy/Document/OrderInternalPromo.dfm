@@ -8,20 +8,20 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 76
+    Top = 116
     Width = 824
-    Height = 388
+    Height = 348
     ExplicitTop = 76
     ExplicitWidth = 824
     ExplicitHeight = 388
-    ClientRectBottom = 388
+    ClientRectBottom = 348
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 364
       inherited cxGrid: TcxGrid
         Width = 824
-        Height = 184
+        Height = 144
         ExplicitWidth = 824
         ExplicitHeight = 184
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -45,6 +45,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = SummSIP
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -130,7 +135,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Width = 65
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -163,7 +168,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Caption = #1057#1091#1084#1084#1072' '#1057#1048#1055
             DataBinding.FieldName = 'SummSIP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -269,12 +274,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 192
+        Top = 152
         Width = 824
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 192
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -483,22 +489,23 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 184
+        Top = 144
         Width = 824
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 184
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 824
-    Height = 50
+    Height = 90
     TabOrder = 3
     ExplicitWidth = 824
-    ExplicitHeight = 50
+    ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 168
       ExplicitLeft = 168
@@ -545,19 +552,33 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 142
+      Width = 320
     end
     object cxLabel7: TcxLabel
-      Left = 628
-      Top = 6
+      Left = 8
+      Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 628
-      Top = 23
+      Left = 8
+      Top = 62
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 181
+      Width = 464
+    end
+    object edReplays: TcxCurrencyEdit
+      Left = 478
+      Top = 62
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = False
+      TabOrder = 10
+      Width = 157
+    end
+    object cxLabel5: TcxLabel
+      Left = 478
+      Top = 46
+      Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
     end
   end
   object edStartSale: TcxDateEdit [2]
@@ -655,6 +676,34 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object cxGridLevel2: TcxGridLevel
       GridView = cxGridDBTableView2
     end
+  end
+  object ceTotalSummPrice: TcxCurrencyEdit [6]
+    Left = 478
+    Top = 62
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 157
+  end
+  object cxLabel4: TcxLabel [7]
+    Left = 478
+    Top = 46
+    Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+  end
+  object ceTotalSummSIP: TcxCurrencyEdit [8]
+    Left = 641
+    Top = 62
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 157
+  end
+  object cxLabel6: TcxLabel [9]
+    Left = 641
+    Top = 46
+    Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1057#1048#1055
   end
   inherited ActionList: TActionList
     Left = 199
@@ -1592,8 +1641,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     SearchAsFilter = False
   end
   inherited PopupMenu: TPopupMenu
-    Left = 128
-    Top = 240
+    Left = 80
+    Top = 224
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1706,9 +1755,23 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = edStartSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummSIP'
+        Value = Null
+        Component = ceTotalSummSIP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPrice'
+        Value = Null
+        Component = ceTotalSummPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 224
+    Left = 160
+    Top = 240
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_OrderInternalPromo'
@@ -1746,6 +1809,22 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTotalSummPrice'
+        Value = Null
+        Component = ceTotalSummPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSummSIP'
+        Value = Null
+        Component = ceTotalSummSIP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRetailId'
         Value = Null
         Component = GuidesRetail
@@ -1764,7 +1843,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     NeedResetData = True
     ParamKeyField = 'ioId'
     Left = 202
-    Top = 248
+    Top = 240
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1795,6 +1874,12 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Control = edStartSale
+      end
+      item
+        Control = ceTotalSummSIP
+      end
+      item
+        Control = ceTotalSummPrice
       end>
     Left = 200
     Top = 177
@@ -1918,8 +2003,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 16
+    Left = 608
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternalPromo_Print'
@@ -2357,8 +2441,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 416
-    Top = 136
+    Left = 432
+    Top = 176
   end
   object spInsertChild: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderInternalPromoChild'
@@ -2377,7 +2461,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 504
-    Top = 144
+    Top = 160
   end
   object spInsertOrderInternal: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_OrderInternal_byPromoChild'
@@ -2395,8 +2479,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 568
-    Top = 152
+    Left = 592
+    Top = 144
   end
   object spUpdateMaster_calc: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_OrderInternalPromo_calc'

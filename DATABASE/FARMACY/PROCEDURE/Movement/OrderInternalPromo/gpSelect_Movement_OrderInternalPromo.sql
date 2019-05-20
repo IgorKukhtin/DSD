@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , StartSale TDateTime
              , Amount TFloat
+             , TotalSummPrice TFloat, TotalSummSIP TFloat
              , RetailId Integer
              , RetailName TVarChar
              , Comment TVarChar
@@ -38,7 +39,9 @@ BEGIN
           , Object_Status.ObjectCode                                       AS StatusCode
           , Object_Status.ValueData                                        AS StatusName
           , MovementDate_StartSale.ValueData                               AS StartSale
-          , COALESCE(MovementFloat_Amount.ValueData,0)::TFloat             AS Amount
+          , COALESCE (MovementFloat_Amount.ValueData,0)       :: TFloat    AS Amount
+          , COALESCE (MovementFloat_TotalSummPrice.ValueData,0):: TFloat   AS TotalSummPrice
+          , COALESCE (MovementFloat_TotalSummSIP.ValueData,0) :: TFloat    AS TotalSummSIP
           , MovementLinkObject_Retail.ObjectId                             AS RetailId
           , Object_Retail.ValueData                                        AS RetailName
           , MovementString_Comment.ValueData                               AS Comment
@@ -49,7 +52,15 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_Amount
                                 ON MovementFloat_Amount.MovementId =  Movement.Id
                                AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                                   
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummPrice
+                                ON MovementFloat_TotalSummPrice.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSummPrice.DescId = zc_MovementFloat_TotalSummPrice()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummSIP
+                                ON MovementFloat_TotalSummSIP.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSummSIP.DescId = zc_MovementFloat_TotalSummSIP()
+
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()

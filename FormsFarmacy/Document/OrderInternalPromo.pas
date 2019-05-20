@@ -126,6 +126,12 @@ type
     bbInsertRecordPromoMaster: TdxBarButton;
     spUpdateMaster_calc: TdsdStoredProc;
     actUpdateMaster_calc: TdsdExecStoredProc;
+    edReplays: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    ceTotalSummPrice: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceTotalSummSIP: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
