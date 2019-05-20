@@ -11,19 +11,19 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 116
     Width = 824
     Height = 348
-    ExplicitTop = 76
+    ExplicitTop = 116
     ExplicitWidth = 824
-    ExplicitHeight = 388
+    ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
-      ExplicitHeight = 364
+      ExplicitHeight = 324
       inherited cxGrid: TcxGrid
         Width = 824
         Height = 144
         ExplicitWidth = 824
-        ExplicitHeight = 184
+        ExplicitHeight = 144
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -280,7 +280,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 192
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -496,7 +495,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 184
       end
     end
   end
@@ -1243,6 +1241,26 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
+    object actUpdateMasterAmount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMasterAmount
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMasterAmount
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 
+        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
+        #1089#1072' / '#1057#1048#1055
+      Hint = 
+        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
+        #1089#1072' / '#1057#1048#1055
+      ImageIndex = 45
+    end
     object macInsertPromoPartner: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1502,6 +1520,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMasterAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertChild'
         end
         item
@@ -1628,16 +1654,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = InsertRecordPromoMaster
       Category = 0
     end
+    object bbUpdateMasterAmount: TdxBarButton
+      Action = actUpdateMasterAmount
+      Category = 0
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
-      end>
     SearchAsFilter = False
   end
   inherited PopupMenu: TPopupMenu
@@ -1889,8 +1912,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Left = 550
-    Top = 224
+    Left = 590
+    Top = 208
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     Left = 654
@@ -2479,8 +2502,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 592
-    Top = 144
+    Left = 560
+    Top = 240
   end
   object spUpdateMaster_calc: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_OrderInternalPromo_calc'
@@ -2500,5 +2523,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 248
     Top = 160
+  end
+  object spUpdateMasterAmount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 728
+    Top = 96
   end
 end

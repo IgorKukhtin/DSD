@@ -132,6 +132,9 @@ type
     cxLabel4: TcxLabel;
     ceTotalSummSIP: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    spUpdateMasterAmount: TdsdStoredProc;
+    actUpdateMasterAmount: TdsdExecStoredProc;
+    bbUpdateMasterAmount: TdxBarButton;
   private
     { Private declarations }
   public
