@@ -418,6 +418,7 @@ type
     pm_OpenCheck: TPopupMenu;
     pm_Check: TMenuItem;
     pm_CheckHelsi: TMenuItem;
+    pm_CheckHelsiAllUnit: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -522,6 +523,7 @@ type
     procedure cxButton6Click(Sender: TObject);
     procedure pm_CheckClick(Sender: TObject);
     procedure pm_CheckHelsiClick(Sender: TObject);
+    procedure pm_CheckHelsiAllUnitClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -675,7 +677,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
-     EnterRecipeNumber, CheckHelsiSign;
+     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit;
 
 const
   StatusUnCompleteCode = 1;
@@ -1196,24 +1198,20 @@ begin
       FLocalDataBaseHead.Active:=True;
       try
         // если чек загруженный VIP проверяем нет ли его в DBF
-        if FormParams.ParamByName('CheckId').Value <> 0 then
+        FLocalDataBaseHead.First;
+        while not FLocalDataBaseHead.Eof do
         begin
-          FLocalDataBaseHead.First;
-          while not FLocalDataBaseHead.Eof do
+          if (FLocalDataBaseHead.FieldByName('ID').AsInteger = FormParams.ParamByName('CheckId').Value) and
+            not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean then
           begin
-            if FLocalDataBaseHead.FieldByName('ID').AsInteger = FormParams.ParamByName('CheckId').Value then
-            begin
-              NewCheck(False);
-              raise Exception.Create('Выбранный вип чек не сохранен после изменений. Загрузка запрещена...');
-              Exit;
-            end;
-            FLocalDataBaseHead.Next;
+            NewCheck(False);
+            raise Exception.Create('Выбранный вип чек не сохранен после изменений. Загрузка запрещена...');
+            Exit;
           end;
+          FLocalDataBaseHead.Next;
         end;
       finally
-        FLocalDataBaseBody.Close;
         FLocalDataBaseHead.Close;
-        MemData.EnableControls;
       end;
     finally
       ReleaseMutex(MutexDBF);
@@ -2108,8 +2106,8 @@ begin
 
             if not GetStateReceipt then
             begin
-              pnlHelsiError.Visible := True;
-              edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+//              pnlHelsiError.Visible := True;
+//              edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
 
               nOldColor := Screen.MessageFont.Color;
               try
@@ -4839,6 +4837,16 @@ begin
   else actCheck.Execute;
 end;
 
+procedure TMainCashForm2.pm_CheckHelsiAllUnitClick(Sender: TObject);
+begin
+  with TCheckHelsiSignAllUnitForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+     Free;
+  end;
+end;
+
 procedure TMainCashForm2.pm_CheckHelsiClick(Sender: TObject);
 begin
   with TCheckHelsiSignForm.Create(nil) do
@@ -5136,6 +5144,12 @@ begin
   End;
   FPUSHEnd := Now;
   if FPUSHStart then TimerPUSH.Enabled := True;
+  pm_CheckHelsiAllUnit.Visible := False;
+  if not gc_User.Local then
+  Begin
+    spGet_User_IsAdmin.Execute;
+    pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True;
+  End;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА

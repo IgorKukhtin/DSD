@@ -244,10 +244,10 @@ BEGIN
         GoodsRemains
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
         LEFT OUTER JOIN RESERVE ON RESERVE.GoodsId = GoodsRemains.ObjectId
-                               AND RESERVE.GoodsId = GoodsRemains.ObjectId
                                AND COALESCE(RESERVE.PartionDateKindId, 0) = COALESCE(GoodsRemains.PartionDateKindId, 0)
         LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
-                                               ON Accommodation.UnitId = vbUnitId;
+                                               ON Accommodation.UnitId = vbUnitId
+                                              AND Accommodation.GoodsId = GoodsRemains.ObjectId;
 
     RETURN QUERY
       WITH -- Товары соц-проект

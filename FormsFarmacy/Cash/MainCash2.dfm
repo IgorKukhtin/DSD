@@ -4691,5 +4691,9 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1057#1074#1077#1088#1082#1072' '#1095#1077#1082#1086#1074' '#1089' '#1061#1077#1083#1089#1080
       OnClick = pm_CheckHelsiClick
     end
+    object pm_CheckHelsiAllUnit: TMenuItem
+      Caption = #1057#1074#1077#1088#1082#1072' '#1095#1077#1082#1086#1074' '#1089' '#1061#1077#1083#1089#1080' '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      OnClick = pm_CheckHelsiAllUnitClick
+    end
   end
 end

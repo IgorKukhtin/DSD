@@ -150,6 +150,7 @@ type
     procedure N7Click(Sender: TObject);
     procedure actCashRemainsExecute(Sender: TObject);
     procedure gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
+    procedure spSelectRemainsAfterExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -336,6 +337,7 @@ begin
   WaitForSingleObject(MutexDBF, INFINITE);
   try
     FLocalDataBaseHead.Active := True;
+    FLocalDataBaseHead.First;
     while not FLocalDataBaseHead.eof do
     Begin
       IF not FLocalDataBaseHead.Deleted and FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean then
@@ -1042,6 +1044,11 @@ begin
   finally
     freeAndNil(sp);
   end;
+end;
+
+procedure TMainCashForm2.spSelectRemainsAfterExecute(Sender: TObject);
+begin
+
 end;
 
 { TSaveRealThread }

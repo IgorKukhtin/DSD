@@ -133,7 +133,7 @@ uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
 
 var HelsiApi : THelsiApi;
 
-const arError : array [0..18, 0..1] of string =
+const arError : array [0..19, 0..1] of string =
   (('Active medication dispense already exists', 'Наразі здійснюється погашення цього рецепту'),
   ('Legal entity is not verified',  'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
   ('Can''t update medication dispense status from PROCESSED to REJECTED', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
@@ -152,7 +152,8 @@ const arError : array [0..18, 0..1] of string =
   ('Medication request is not valid', 'Некоректні параметри запиту на отримання рецепту'),
   ('Incorrect code', 'Неправельный код подтверждения'),
   ('Invalid dispense period', 'Увага! Сплив термін дії рецепту. Пацієнту потрібно звернутися до лікаря для виписки нового рецепту'),
-  ('dispensed medication quantity must be equal to medication quantity in Medication Request', 'Количество отпускаемого лекарства должно быть равно количеству выписанного в рецепте лекарства'));
+  ('dispensed medication quantity must be equal to medication quantity in Medication Request', 'Количество отпускаемого лекарства должно быть равно количеству выписанного в рецепте лекарства'),
+  ('Certificate verificaton failed', 'Не удалось подтвердить сертификат. Повторите попытку погашения чека.'));
 
 
 function DelDoubleQuote(AStr : string) : string;
@@ -257,7 +258,7 @@ begin
     end;
     if cDescription = '' then cDescription := cMessage;
 
-    for I := 0 to 18 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
+    for I := 0 to 19 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
     begin
       cError := arError[I, 1];
       Break;
@@ -772,19 +773,28 @@ begin
 
   try
     FRESTRequest.Execute;
-  except
+  except on E: Exception do
+         Begin
+           ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message);
+           Exit;
+         End;
   end;
 
   case FRESTResponse.StatusCode of
     200 : Result := True;
     else
+    begin
       cError := '';
-      jValue := FRESTResponse.JSONValue ;
-      if jValue.FindValue('Message') <> Nil then
+      if FRESTResponse.ContentType = 'application/json' then
       begin
-        cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+        jValue := FRESTResponse.JSONValue ;
+        if jValue.FindValue('Message') <> Nil then
+        begin
+          cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+        end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + cError);
+    end;
   end;
 end;
 

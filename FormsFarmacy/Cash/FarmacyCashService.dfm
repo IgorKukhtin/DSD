@@ -318,6 +318,7 @@ object MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
+    AfterExecute = spSelectRemainsAfterExecute
     Left = 256
     Top = 80
   end
