@@ -38,6 +38,7 @@ type
     GuidesRetail: TdsdGuides;
     edOperDate: TcxDateEdit;
     FormParams: TdsdFormParams;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

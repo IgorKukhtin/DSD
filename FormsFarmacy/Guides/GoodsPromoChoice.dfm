@@ -4,22 +4,31 @@ inherited GoodsPromoChoiceForm: TGoodsPromoChoiceForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 803
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
     Width = 787
     Height = 247
+    ExplicitTop = 61
+    ExplicitWidth = 787
+    ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 787
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitWidth = 787
+      ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 787
         Height = 247
+        ExplicitWidth = 787
+        ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -49,13 +58,23 @@ inherited GoodsPromoChoiceForm: TGoodsPromoChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 120
+            Options.Editing = False
+            Width = 137
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1073#1086#1085#1091#1089#1072' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 105
           end
         end
@@ -69,7 +88,6 @@ inherited GoodsPromoChoiceForm: TGoodsPromoChoiceForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9
@@ -124,6 +142,13 @@ inherited GoodsPromoChoiceForm: TGoodsPromoChoiceForm
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
           MultiSelectSeparator = ','
         end>
     end

@@ -1054,6 +1054,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Promo'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MasterOperDate'
           Value = 'NULL'
           Component = edOperDate
@@ -1865,7 +1872,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
-    Left = 202
+    Left = 218
     Top = 240
   end
   inherited GuidesFiller: TGuidesFiller
@@ -1935,6 +1942,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Promo'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
