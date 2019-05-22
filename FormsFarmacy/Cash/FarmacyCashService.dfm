@@ -418,8 +418,8 @@ object MainCashForm2: TMainCashForm2
   object TimerGetRemains: TTimer
     Enabled = False
     OnTimer = TimerGetRemainsTimer
-    Left = 16
-    Top = 128
+    Left = 32
+    Top = 134
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -524,7 +524,7 @@ object MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 120000
     OnTimer = TimerSaveRealTimer
-    Left = 92
+    Left = 100
     Top = 132
   end
   object tiServise: TTrayIcon
@@ -26104,5 +26104,12 @@ object MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 432
     Top = 152
+  end
+  object TimerNeedRemainsDiff: TTimer
+    Enabled = False
+    Interval = 120000
+    OnTimer = TimerNeedRemainsDiffTimer
+    Left = 172
+    Top = 132
   end
 end

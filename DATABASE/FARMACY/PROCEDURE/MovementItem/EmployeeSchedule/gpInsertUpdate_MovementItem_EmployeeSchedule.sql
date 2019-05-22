@@ -70,6 +70,7 @@ BEGIN
                               WHEN '9:00' THEN 2
                               WHEN '10:00' THEN 3
                               WHEN '7:00' THEN 4
+                              WHEN '12:00' THEN 5
                               WHEN '21:00' THEN 7
                               WHEN 'В' THEN 9
                               ELSE 0 END;
@@ -80,6 +81,7 @@ BEGIN
                                       WHEN '9:00' THEN 2
                                       WHEN '10:00' THEN 3
                                       WHEN '7:00' THEN 4
+                                      WHEN '12:00' THEN 5
                                       WHEN '21:00' THEN 7
                                       WHEN 'В' THEN 9
                                       ELSE 0 END;
@@ -111,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+22.05.19                                                        *
 13.03.19                                                        *
 11.12.18                                                        *
 09.12.18                                                        *

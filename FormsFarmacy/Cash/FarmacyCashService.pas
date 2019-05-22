@@ -135,6 +135,7 @@ type
     spLoadFTPParam: TdsdStoredProc;
     EmployeeWorkLogCDS: TClientDataSet;
     spEmployeeWorkLog: TdsdStoredProc;
+    TimerNeedRemainsDiff: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -151,6 +152,8 @@ type
     procedure actCashRemainsExecute(Sender: TObject);
     procedure gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
     procedure spSelectRemainsAfterExecute(Sender: TObject);
+    procedure TimerNeedRemainsDiffTimer(Sender: TObject);
+    procedure CashRemainsDiffExecute;
 
   private
     { Private declarations }
@@ -398,11 +401,11 @@ begin
   end;
 end;
 
-procedure TMainCashForm2.actCashRemainsExecute(Sender: TObject);
+procedure TMainCashForm2.CashRemainsDiffExecute;
 begin
-  if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
-  if ExistNotCompletedCheck then Exit; // нельзя получать, пока есть неотгруженные чеки
+
   try
+    TimerNeedRemainsDiff.Enabled := False;
     MainCashForm2.tiServise.IconIndex:=1;
     if SetFarmacyNameByUser then
     begin
@@ -410,14 +413,8 @@ begin
       SaveUnitConfig;
       //Получение Сотрудников и настроек
       SaveUserSettings;
-      //Получение Сотрудников для сайта Хелси
-      SaveUserHelsi;
       //Получение разницы остатков
       SaveCashRemainsDif;
-      //Получение POS терминалов
-      if not gc_User.Local then SaveBankPOSTerminal;
-      //Получение ночных скидок
-      if not gc_User.Local then SaveTaxUnitNight;
       //Получение остатков по партиям
       if not gc_User.Local then SaveGoodsExpirationDate;
       //Получение справочника аналогов
@@ -440,7 +437,17 @@ begin
   finally
     tiServise.Hint := '';
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    TimerNeedRemainsDiff.Enabled := True;
   end;
+end;
+
+
+procedure TMainCashForm2.actCashRemainsExecute(Sender: TObject);
+begin
+  if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
+  if ExistNotCompletedCheck then Exit; // нельзя получать, пока есть неотгруженные чеки
+
+  if TimerNeedRemainsDiff.Enabled then CashRemainsDiffExecute;
 end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
@@ -992,9 +999,44 @@ begin
     Add_Log('End MutexRefresh 660');
     ReleaseMutex(MutexRefresh);
     TimerGetRemains.Enabled := not FirstRemainsReceived;
+    TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
   end;
 end;
 
+procedure TMainCashForm2.TimerNeedRemainsDiffTimer(Sender: TObject);
+  var dsdSave : TdsdStoredProc; bRun : boolean;
+begin
+  TimerNeedRemainsDiff.Enabled := False;
+  TimerNeedRemainsDiff.Interval := 120000;
+  try
+
+    bRun := False;
+    dsdSave := TdsdStoredProc.Create(nil);
+    try
+      dsdSave.StoredProcName := 'gpSelect_Cash_NeedRemainsDiff';
+      dsdSave.OutputType := otResult;
+      dsdSave.Params.Clear;
+      dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
+      dsdSave.Params.AddParam('outIsRemainsDiff', ftBoolean, ptOutput, False);
+      try
+        Add_Log('Start Execute gpSelect_Cash_NeedRemainsDiff');
+        dsdSave.Execute(False, False);
+        bRun := dsdSave.ParamByName('outIsRemainsDiff').Value;
+      except
+        on E: Exception do
+        Begin
+          Add_Log('Error gpSelect_Cash_NeedRemainsDiff: ' + E.Message);
+        End;
+      end;
+    finally
+      freeAndNil(dsdSave);
+    end;
+
+    if bRun then CashRemainsDiffExecute;
+  finally
+    TimerNeedRemainsDiff.Enabled := True;
+  end;
+end;
 
 function TMainCashForm2.SetFarmacyNameByUser : boolean;
 var
@@ -1119,7 +1161,7 @@ begin
       end;
     end;
 
-    // Запускаем поиски чеков ели разрешено
+    // Запускаем поиски чеков если разрешено
     if AllowedConduct then
     begin
       Add_Log('SaveReal Allowed Conduct Exit');
@@ -1669,93 +1711,100 @@ begin
         End;
       End;
 
-      // получаем Diff
-      if not ExistNotCompletedCheck and FirstRemainsReceived then
+      // получаем Diff через отдельный таймер
+      if TimerNeedRemainsDiff.Enabled then
       begin
-        MainCashForm2.tiServise.IconIndex := 3;
-        tiServise.Hint := 'Получение разницы в остатках';
-        Application.ProcessMessages;
-        Add_Log('Start MutexRemains 1173');
-        WaitForSingleObject(MutexRemains, INFINITE);
-        try
-          try
-            Add_Log('Receiving DIFF: Получаем разницу');
-            MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
-            Add_Log('Receiving DIFF: Получили записей: '+ IntToStr(DiffCDS.RecordCount));
-            DiffCDS.First;
-            if DiffCDS.FieldCount > 0 then
-            begin
-              Add_Log('Start MutexDBFDiff 1184');
-              WaitForSingleObject(MutexDBFDiff, INFINITE);
-              try
-                Add_Log('Receiving DIFF: Заполняем DBFDiff');
-                FLocalDataBaseDiff.Open;
-                while not DiffCDS.eof do
-                begin
-                  FLocalDataBaseDiff.Append;
-                  FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
-                  FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
-                  FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
-                  FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
-                  FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
-                  FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
-                  FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
-                  FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
-                  FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
-                  FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
-                  FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
-                  FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
-                  FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
-                  FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
-                  FLocalDataBaseDiff.Post;
-                  DiffCDS.Next;
-                end;
-              finally
-                Add_Log('End MutexDBFDiff 1184');
-                FLocalDataBaseDiff.Close;
-                ReleaseMutex(MutexDBFDiff);
-              end;
-              // Отправка сообщения приложению про надобность обновить остатки из файла
-              PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
-            end;
-          except on E: Exception do
-            begin
-              Add_Log('Receiving DIFF: ' + E.Message);
-              Add_Log(IntToStr(GetLastError) + ' - ' + SysErrorMessage(GetLastError));
-              FHasError := true;
-              if gc_User.Local then
-              begin
-                tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                tiServise.ShowBalloonHint;
-                Exit;
-              end;
-            end;
-          end;
-        finally
-          Add_Log('End MutexRemains 1173');
-          ReleaseMutex(MutexRemains);
-        end;
-        Add_Log('Start MutexRemains 1228');
-        WaitForSingleObject(MutexRemains, INFINITE);
-        try
-          SaveLocalData(MainCashForm2.RemainsCDS, Remains_lcl);
-        finally
-          Add_Log('End MutexRemains 1228');
-          ReleaseMutex(MutexRemains);
-        end;
-        Add_Log('Start MutexRemains 1236');
-        WaitForSingleObject(MutexAlternative, INFINITE);
-        try
-          SaveLocalData(MainCashForm2.AlternativeCDS, Alternative_lcl);
-        finally
-          Add_Log('End MutexRemains 1236');
-          ReleaseMutex(MutexAlternative);
-        end;
-        if FNeedSaveVIP then
-        begin
-          MainCashForm2.SaveLocalVIP;
-        end;
-      end;
+        TimerNeedRemainsDiff.Enabled := False;
+        TimerNeedRemainsDiff.Interval := 1000;
+        TimerNeedRemainsDiff.Enabled := True;
+      end else TimerNeedRemainsDiff.Interval := 1000;
+
+//      if not ExistNotCompletedCheck and FirstRemainsReceived then
+//      begin
+//        MainCashForm2.tiServise.IconIndex := 3;
+//        tiServise.Hint := 'Получение разницы в остатках';
+//        Application.ProcessMessages;
+//        Add_Log('Start MutexRemains 1173');
+//        WaitForSingleObject(MutexRemains, INFINITE);
+//        try
+//          try
+//            Add_Log('Receiving DIFF: Получаем разницу');
+//            MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+//            Add_Log('Receiving DIFF: Получили записей: '+ IntToStr(DiffCDS.RecordCount));
+//            DiffCDS.First;
+//            if DiffCDS.FieldCount > 0 then
+//            begin
+//              Add_Log('Start MutexDBFDiff 1184');
+//              WaitForSingleObject(MutexDBFDiff, INFINITE);
+//              try
+//                Add_Log('Receiving DIFF: Заполняем DBFDiff');
+//                FLocalDataBaseDiff.Open;
+//                while not DiffCDS.eof do
+//                begin
+//                  FLocalDataBaseDiff.Append;
+//                  FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
+//                  FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
+//                  FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
+//                  FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
+//                  FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
+//                  FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
+//                  FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
+//                  FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
+//                  FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
+//                  FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
+//                  FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
+//                  FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
+//                  FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
+//                  FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
+//                  FLocalDataBaseDiff.Post;
+//                  DiffCDS.Next;
+//                end;
+//              finally
+//                Add_Log('End MutexDBFDiff 1184');
+//                FLocalDataBaseDiff.Close;
+//                ReleaseMutex(MutexDBFDiff);
+//              end;
+//              // Отправка сообщения приложению про надобность обновить остатки из файла
+//              PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+//            end;
+//          except on E: Exception do
+//            begin
+//              Add_Log('Receiving DIFF: ' + E.Message);
+//              Add_Log(IntToStr(GetLastError) + ' - ' + SysErrorMessage(GetLastError));
+//              FHasError := true;
+//              if gc_User.Local then
+//              begin
+//                tiServise.BalloonHint := 'Останавливаем проведение чеков';
+//                tiServise.ShowBalloonHint;
+//                Exit;
+//              end;
+//            end;
+//          end;
+//        finally
+//          Add_Log('End MutexRemains 1173');
+//          ReleaseMutex(MutexRemains);
+//        end;
+//        Add_Log('Start MutexRemains 1228');
+//        WaitForSingleObject(MutexRemains, INFINITE);
+//        try
+//          SaveLocalData(MainCashForm2.RemainsCDS, Remains_lcl);
+//        finally
+//          Add_Log('End MutexRemains 1228');
+//          ReleaseMutex(MutexRemains);
+//        end;
+//        Add_Log('Start MutexRemains 1236');
+//        WaitForSingleObject(MutexAlternative, INFINITE);
+//        try
+//          SaveLocalData(MainCashForm2.AlternativeCDS, Alternative_lcl);
+//        finally
+//          Add_Log('End MutexRemains 1236');
+//          ReleaseMutex(MutexAlternative);
+//        end;
+//        if FNeedSaveVIP then
+//        begin
+//          MainCashForm2.SaveLocalVIP;
+//        end;
+//      end;
     finally
       tiServise.Hint := '';
       Add_Log('End MutexAllowed 734');
