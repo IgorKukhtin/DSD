@@ -195,6 +195,8 @@ BEGIN
 
                                 , SUM (((tmpData_all.TotalSummSale_avg) * tmpData_all.RemainsDay - COALESCE (tmpData_all.SummRemains,0))/tmpData_all.RemainsDay) OVER () AS AmountOutSUM
                            FROM tmpMI_Child_Calc AS tmpData_all
+                           WHERE COALESCE (tmpData_all.Koeff,0) > 0
+                             AND (((tmpData_all.TotalSummSale_avg) * tmpData_all.RemainsDay - COALESCE (tmpData_all.SummRemains,0))/tmpData_all.RemainsDay)>0
                            )
 
             , tmpData1 AS (SELECT tmpData.Id
@@ -385,6 +387,7 @@ $BODY$
 
                                 , SUM (((tmpData_all.TotalSummSale_avg) * tmpData_all.RemainsDay - COALESCE (tmpData_all.SummRemains,0))/tmpData_all.RemainsDay) OVER () AS AmountOutSUM
                            FROM tmpMI_Child_Calc AS tmpData_all
+
                            )
 
             , tmpData1 AS (SELECT tmpData.Id
