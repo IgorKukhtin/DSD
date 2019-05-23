@@ -66,6 +66,8 @@ type
     SPKindName: TcxGridDBColumn;
     SPTax: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
+    DateDelay: TcxGridDBColumn;
+    PartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

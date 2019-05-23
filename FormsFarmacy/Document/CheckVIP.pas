@@ -71,6 +71,7 @@ type
     actCheckCash: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
     PartionDateKindName: TcxGridDBColumn;
+    DateDelay: TcxGridDBColumn;
   private
     { Private declarations }
   public

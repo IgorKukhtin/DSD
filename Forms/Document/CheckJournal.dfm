@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 927
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -399,6 +399,12 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object DateDelay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1082#1080
+            DataBinding.FieldName = 'DateDelay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object PartionDateKindName: TcxGridDBColumn
             Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082

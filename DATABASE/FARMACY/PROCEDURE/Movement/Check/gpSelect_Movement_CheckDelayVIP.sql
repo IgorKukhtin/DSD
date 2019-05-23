@@ -44,7 +44,8 @@ RETURNS TABLE (
   MemberSPId Integer,
   SiteDiscount TFloat,
   PartionDateKindId Integer,
-  PartionDateKindName TVarChar
+  PartionDateKindName TVarChar, 
+  DateDelay TDateTime
  )
 AS
 $BODY$
@@ -166,6 +167,7 @@ BEGIN
             
             , Object_PartionDateKind.ID                     AS PartionDateKindId
             , Object_PartionDateKind.ValueData              AS PartionDateKindName
+            , MovementDate_Delay.ValueData                  AS DateDelay
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -311,6 +313,7 @@ ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 23.05.19                                                                                    *
  15.05.19                                                                                    *
  05.04.19                                                                                    *
 */

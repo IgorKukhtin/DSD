@@ -8,7 +8,7 @@ object dmMain: TdmMain
     Left = 102
     Top = 60
     Bitmap = {
-      494C01014F00940B040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01014F00940B080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004001000001002000000000000040
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2661,7 +2661,7 @@ object dmMain: TdmMain
     Left = 170
     Top = 58
     Bitmap = {
-      494C01011700040B040020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01011700040B080020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000C000000001002000000000000080
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5840,7 +5840,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 140
     Bitmap = {
-      494C01010300280B040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010300280B080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5980,7 +5980,7 @@ object dmMain: TdmMain
       000000000000}
   end
   object frxReport: TfrxReport
-    Version = '6.2.11'
+    Version = '4.15.6'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -6011,20 +6011,16 @@ object dmMain: TdmMain
       RightMargin = 10.000000000000000000
       TopMargin = 10.000000000000000000
       BottomMargin = 10.000000000000000000
-      Frame.Typ = []
       object Memo3: TfrxMemoView
-        AllowVectorExport = True
         Left = 157.000000000000000000
         Top = 85.000000000000000000
         Width = 80.000000000000000000
         Height = 16.000000000000000000
-        Frame.Typ = []
+        ShowHint = False
         Memo.UTF8W = (
           'fffffffffffffff')
       end
       object MasterData1: TfrxMasterData
-        FillType = ftBrush
-        Frame.Typ = []
         Height = 20.000000000000000000
         Top = 16.000000000000000000
         Width = 718.110700000000000000
@@ -6133,19 +6129,19 @@ object dmMain: TdmMain
     object cxGridBandedTableViewStyleSheet: TcxGridBandedTableViewStyleSheet
       Caption = #1053#1072#1096' '#1089#1090#1080#1083#1100
       Styles.Content = cxContentStyle
-      Styles.Footer = cxFooterStyle
-      Styles.Header = cxHeaderStyle
       Styles.Inactive = cxSelection
       Styles.Selection = cxSelection
+      Styles.Footer = cxFooterStyle
+      Styles.Header = cxHeaderStyle
       BuiltIn = True
     end
     object cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet
       Caption = #1053#1072#1096' '#1089#1090#1080#1083#1100
       Styles.Content = cxContentStyle
-      Styles.Footer = cxFooterStyle
-      Styles.Header = cxHeaderStyle
       Styles.Inactive = cxSelection
       Styles.Selection = cxSelection
+      Styles.Footer = cxFooterStyle
+      Styles.Header = cxHeaderStyle
       BuiltIn = True
     end
     object cxTreeListStyleSheet: TcxTreeListStyleSheet
@@ -6162,7 +6158,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 188
     Bitmap = {
-      494C010116004009040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010116004009080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6994,13 +6990,11 @@ object dmMain: TdmMain
     ShowProgress = True
     OverwritePrompt = False
     DataOnly = False
-    OpenAfterExport = False
     PrintOptimized = False
     Outline = False
     Background = False
     HTMLTags = True
     Quality = 95
-    Transparency = False
     Author = 'FastReport'
     Subject = 'FastReport PDF export'
     ProtectionFlags = [ePrint, eModify, eCopy, eAnnot]
@@ -7010,12 +7004,11 @@ object dmMain: TdmMain
     FitWindow = False
     CenterWindow = False
     PrintScaling = False
-    PdfA = False
+    CheckboxAsShape = False
     Left = 232
     Top = 184
   end
   object cxImageList1: TcxImageList
-    SourceDPI = 96
     Height = 32
     Width = 32
     FormatVersion = 1
@@ -10266,7 +10259,6 @@ object dmMain: TdmMain
       end>
   end
   object ImageList1: TcxImageList
-    SourceDPI = 96
     FormatVersion = 1
     DesignInfo = 655460
     ImageInfo = <

@@ -148,7 +148,7 @@ WITH -- Товары соц-проект
                                          ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                         AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
 
-           LEFT JOIN Object AS Object_Helsi_IdSP
+           INNER JOIN Object AS Object_Helsi_IdSP
                              ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
                             AND Object_Helsi_IdSP.ObjectCode  = 1
                             AND Object_Helsi_IdSP.Id  = MovementLinkObject_SPKind.ObjectId
