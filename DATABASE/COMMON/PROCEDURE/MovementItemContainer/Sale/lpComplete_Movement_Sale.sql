@@ -945,7 +945,11 @@ END IF;*/
                    , COALESCE (tmpContainer.Amount, tmpMI_all.OperCount_Partner)       AS OperCount_Partner
 
                    , CASE WHEN tmpChangePrice.isChangePrice = TRUE AND tmpMI_all.ChangePercent <> 0 -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
-                               THEN CAST ( (1 + tmpMI_all.ChangePercent / 100) * tmpMI_all.Price_original AS NUMERIC (16, 2))
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= tmpMI_all.ChangePercent
+                                                        , inPrice        := tmpMI_all.Price_original
+                                                        , inIsWithVAT    := vbPriceWithVAT
+                                                         )
                           ELSE tmpMI_all.Price_original
                      END AS Price
                    , tmpMI_all.Price_original

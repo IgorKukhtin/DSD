@@ -34,6 +34,25 @@ BEGIN
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
+     -- мен€ем дату, если мес€ц не закрыт
+     IF     -- если в "текущем" мес€це
+            EXTRACT ('MONTH' FROM inStartDate) = EXTRACT ('MONTH' FROM CURRENT_DATE - INTERVAL '0 DAY')
+            -- после 12:00
+        AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 12
+     THEN
+         -- надо брать -1 день
+         inEndDate:= CURRENT_DATE - INTERVAL '1 DAY';
+
+     ELSEIF -- если в "текущем" мес€це
+            EXTRACT ('MONTH' FROM inStartDate) = EXTRACT ('MONTH' FROM CURRENT_DATE - INTERVAL '1 DAY')
+            -- до 12:00
+        AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) < 12
+     THEN
+         -- надо брать -2 день
+         inEndDate:= CURRENT_DATE - INTERVAL '2 DAY';
+     END IF;
+
+
      -- !!!¬–≈ћ≈ЌЌќ!!!
      /*IF inStartDate >= '01.02.2018' THEN
           return;
@@ -1139,7 +1158,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
           || '<Field FieldName = " од" FieldValue = "HistoryCost"/>'
           || '<Field FieldName = "Ќазвание" FieldValue = "end - update Price"/>'
           || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
-          || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
+          || '<Field FieldName = "StartDate" FieldValue = "'     || zfConvert_DateToString (inStartDate) || '"/>'
+          || '<Field FieldName = "EndDate" FieldValue = "'     || zfConvert_DateToString (inEndDate) || '"/>'
           || '</XML>'
            , TRUE;
 

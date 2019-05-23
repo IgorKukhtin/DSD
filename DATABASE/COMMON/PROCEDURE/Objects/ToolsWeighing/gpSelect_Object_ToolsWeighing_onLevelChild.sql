@@ -83,6 +83,14 @@ BEGIN
                                                        THEN '0'
                                                   WHEN STRPOS (tmp.Name, 'DiffSaleOrder') > 0
                                                        THEN '20'
+
+                                                  WHEN STRPOS (tmp.Name, 'LightColor_1') > 0
+                                                       THEN '1118719'  -- Red
+                                                  WHEN STRPOS (tmp.Name, 'LightColor_2') > 0
+                                                       THEN '8978431'  -- Yelow
+                                                  WHEN STRPOS (tmp.Name, 'LightColor_3') > 0
+                                                       THEN '11987626' -- GreenL
+                                                       
                                                   ELSE '1'
                                              END
                                            , inSession) AS Value
@@ -110,8 +118,13 @@ BEGIN
            UNION SELECT 'isEnterPrice'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
+
            -- Режим ScaleCeh - маркировка/сортировка
            UNION SELECT 'isModeSorting'          AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'LightColor_1'           AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'LightColor_2'           AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'LightColor_3'           AS Name WHERE inIsCeh = TRUE
+           
 
            UNION SELECT 'DayPrior_PriceReturn'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 

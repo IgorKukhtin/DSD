@@ -1008,4 +1008,5 @@ $BODY$
 
 -- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)
 -- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 2953032)
-select * from gpSelect_Movement_Sale_DATA22 (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)
+-- select * from gpSelect_Movement_Sale_DATA22 (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)
+ SELECT * FROM gpSelect_Movement_Sale_DATA22 (inStartDate:= '01.05.2019', inEndDate:= '14.05.2019', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
