@@ -74,6 +74,12 @@ inherited PromoCodeDialogForm: TPromoCodeDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'BayerName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PromoCodeChangePercent'
         Value = 0c
         DataType = ftFloat
@@ -108,6 +114,14 @@ inherited PromoCodeDialogForm: TPromoCodeDialogForm
         Value = ''
         Component = FormParams
         ComponentItem = 'PromoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBayerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerName'
         DataType = ftString
         MultiSelectSeparator = ','
       end

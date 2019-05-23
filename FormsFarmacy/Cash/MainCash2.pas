@@ -419,6 +419,8 @@ type
     pm_Check: TMenuItem;
     pm_CheckHelsi: TMenuItem;
     pm_CheckHelsiAllUnit: TMenuItem;
+    Label22: TLabel;
+    lblPromoBayerName: TLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -640,7 +642,7 @@ type
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     function pCheck_InvNumberSP(ASPKind : integer; ANumber : string) : boolean;
-    procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+    procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: currency);
   end;
 
@@ -1276,6 +1278,7 @@ begin
     SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
       FormParams.ParamByName('PromoName').AsString,
       FormParams.ParamByName('PromoCodeGUID').AsString,
+      FormParams.ParamByName('BayerName').AsString,
       FormParams.ParamByName('PromoCodeChangePercent').Value);
   if FormParams.ParamByName('SiteDiscount').Value > 0 then SetSiteDiscount(FormParams.ParamByName('SiteDiscount').Value);
 
@@ -2563,7 +2566,7 @@ begin
 
 end;
 
-procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
   APromoCodeChangePercent: currency);
 var
   nRecNo: Integer;
@@ -2574,6 +2577,7 @@ begin
     FormParams.ParamByName('PromoCodeID').Value             := 0;
     FormParams.ParamByName('PromoCodeGUID').Value           := '';
     FormParams.ParamByName('PromoName').Value               := '';
+    FormParams.ParamByName('BayerName').Value               := '';
     FormParams.ParamByName('PromoCodeChangePercent').Value  := 0;
 
     pnlPromoCode.Visible          := False;
@@ -2585,6 +2589,7 @@ begin
     FormParams.ParamByName('PromoCodeID').Value             := APromoCodeId;
     FormParams.ParamByName('PromoCodeGUID').Value           := APromoCodeGUID;
     FormParams.ParamByName('PromoName').Value               := APromoName;
+    FormParams.ParamByName('BayerName').Value               := ABayerName;
     FormParams.ParamByName('PromoCodeChangePercent').Value  := APromoCodeChangePercent;
     //***27.06.18
 
@@ -2592,6 +2597,7 @@ begin
 
     pnlPromoCode.Visible          := APromoCodeId > 0;
     lblPromoName.Caption          := '  ' + APromoName + '  ';
+    lblPromoBayerName.Caption     := '  ' + ABayerName + '  ';
     lblPromoCode.Caption          := '  ' + APromoCodeGUID + '  ';
     edPromoCodeChangePrice.Value  := APromoCodeChangePercent;
   end;
@@ -2652,7 +2658,7 @@ end;
 procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
 var
   PromoCodeId, nRecNo: Integer;
-  PromoName, PromoCodeGUID: String;
+  PromoName, PromoCodeGUID, BayerName: String;
   PromoCodeChangePercent: currency;
 begin
 
@@ -2661,14 +2667,15 @@ begin
      PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
      PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
      PromoName              := Self.FormParams.ParamByName('PromoName').Value;
+     BayerName              := Self.FormParams.ParamByName('BayerName').Value;
      PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
-     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
+     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, BayerName, PromoCodeChangePercent)
      then exit;
   finally
      Free;
   end;
 
-  SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, PromoCodeChangePercent);
+  SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, BayerName, PromoCodeChangePercent);
 end;
 
 procedure TMainCashForm2.edPromoCodeExit(Sender: TObject);
@@ -2681,7 +2688,8 @@ begin
       SetPromoCode(FormParams.ParamByName('PromoCodeID').Value,
         FormParams.ParamByName('PromoName').Value,
         FormParams.ParamByName('PromoCodeGUID').Value,
-        FormParams.ParamByName('PromoCodeChangePercent').Value);
+        FormParams.ParamByName('BayerName').Value,
+        FormParams.ParamByName('PromoCodeChangePercent').AsFloat);
         ActiveControl := MainGrid;
     Except ON E:Exception do
       Begin
@@ -2696,7 +2704,7 @@ begin
     begin
       ActiveControl := edPromoCode;
       ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
-    end else SetPromoCode(0, '', '', 0);
+    end else SetPromoCode(0, '', '', '', 0);
   end;
 end;
 

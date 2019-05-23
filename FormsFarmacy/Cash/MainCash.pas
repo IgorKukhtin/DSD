@@ -1106,7 +1106,7 @@ end;
 procedure TMainCashForm.actSetPromoCodeExecute(Sender: TObject);
 var
   PromoCodeId: Integer;
-  PromoName, PromoCodeGUID: String;
+  PromoName, PromoCodeGUID, BayerName: String;
   PromoCodeChangePercent: currency;
 begin
   if (not CheckCDS.IsEmpty) then
@@ -1120,8 +1120,9 @@ begin
      PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
      PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
      PromoName              := Self.FormParams.ParamByName('PromoName').Value;
+     BayerName              := Self.FormParams.ParamByName('BayerName').Value;
      PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
-     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
+     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, BayerName, PromoCodeChangePercent)
      then exit;
   finally
      Free;
@@ -1130,6 +1131,7 @@ begin
   FormParams.ParamByName('PromoCodeID').Value             := PromoCodeId;
   FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
   FormParams.ParamByName('PromoName').Value               := PromoName;
+  FormParams.ParamByName('BayerName').Value               := BayerName;
   FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
 
   pnlPromoCode.Visible          := PromoCodeId > 0;

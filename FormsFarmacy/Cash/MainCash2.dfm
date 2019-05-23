@@ -1514,7 +1514,8 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
+      ExplicitLeft = 437
+      ExplicitTop = -4
     end
     object lblMedicSP: TLabel
       Left = 457
@@ -1530,7 +1531,8 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 503
+      ExplicitLeft = 463
+      ExplicitTop = 0
     end
   end
   object pnlPromoCode: TPanel [7]
@@ -1561,7 +1563,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblPromoName: TLabel
       Left = 54
       Top = 1
-      Width = 209
+      Width = 165
       Height = 19
       Align = alLeft
       AutoSize = False
@@ -1572,10 +1574,9 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 56
     end
     object Label10: TLabel
-      Left = 263
+      Left = 219
       Top = 1
       Width = 57
       Height = 19
@@ -1587,12 +1588,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
+      ExplicitLeft = 247
+      ExplicitTop = -4
     end
     object lblPromoCode: TLabel
-      Left = 320
+      Left = 276
       Top = 1
-      Width = 110
+      Width = 79
       Height = 19
       Align = alLeft
       AutoSize = False
@@ -1603,7 +1605,6 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 379
     end
     object Label12: TLabel
       Left = 522
@@ -1618,6 +1619,37 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+    end
+    object Label22: TLabel
+      Left = 355
+      Top = 1
+      Width = 30
+      Height = 19
+      Align = alLeft
+      Caption = #1060#1048#1054': '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object lblPromoBayerName: TLabel
+      Left = 385
+      Top = 1
+      Width = 131
+      Height = 19
+      Align = alLeft
+      AutoSize = False
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitTop = -2
     end
     object edPromoCodeChangePrice: TcxCurrencyEdit
       Left = 567
@@ -3907,7 +3939,7 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     Left = 152
-    Top = 120
+    Top = 96
   end
   object spGet_Password_MoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Password_MoneyInCash'
@@ -3921,7 +3953,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
+    Left = 248
     Top = 96
   end
   object spGet_User_IsAdmin: TdsdStoredProc
@@ -3970,7 +4002,7 @@ inherited MainCashForm2: TMainCashForm2
     Params = <>
     StoreDefs = True
     Left = 280
-    Top = 96
+    Top = 120
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
@@ -3999,8 +4031,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 184
-    Top = 88
+    Left = 200
+    Top = 96
   end
   object TimerSaveAll: TTimer
     Enabled = False
@@ -4036,7 +4068,7 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     OnTimer = TimerBlinkBtnTimer
     Left = 320
-    Top = 96
+    Top = 104
   end
   object spGet_BlinkVIP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check_ConfirmedKind'
@@ -4360,6 +4392,14 @@ inherited MainCashForm2: TMainCashForm2
         Value = ''
         Component = FormParams
         ComponentItem = 'PromoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBayerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
