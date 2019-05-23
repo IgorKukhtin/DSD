@@ -3670,6 +3670,10 @@
 				<Form>WeighingProduction_wmsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_wms.pas">
+				<Form>GoodsByGoodsKind_wmsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

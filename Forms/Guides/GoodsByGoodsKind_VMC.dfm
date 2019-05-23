@@ -24,6 +24,8 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       inherited cxGrid: TcxGrid
         Width = 1039
         Height = 364
+        ExplicitLeft = -112
+        ExplicitTop = 16
         ExplicitWidth = 1039
         ExplicitHeight = 364
         inherited cxGridDBTableView: TcxGridDBTableView

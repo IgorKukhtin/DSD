@@ -504,7 +504,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
@@ -512,7 +512,7 @@ begin
   // торг. сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGK_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGK_VMCDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
 
@@ -520,6 +520,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   }
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_wmsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_wmsForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsBrandFormTest;

@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsTagName TVarChar
              , GoodsPlatformName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             , MeasureName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
@@ -323,6 +323,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
+           , Object_Measure.Id               AS MeasureId
            , Object_Measure.ValueData        AS MeasureName
 
            , ObjectFloat_Weight.ValueData    AS Weight
