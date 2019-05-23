@@ -6240,6 +6240,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actWeighingProduction_wms: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086') '#1042#1052#1057
+      FormName = 'TWeighingProduction_wmsJournalForm'
+      FormNameParam.Value = 'TWeighingProduction_wmsJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_ReceiptSaleAnalyzeRealForm: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
@@ -6635,6 +6646,9 @@
       end
       object miWeighingProduction: TMenuItem
         Action = actWeighingProduction
+      end
+      object miWeighingProduction_wms: TMenuItem
+        Action = actWeighingProduction_wms
       end
       object N71: TMenuItem
         Action = actWeighingPartnerItem

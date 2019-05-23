@@ -189,7 +189,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
-
+    procedure LoadWeighingProduction_wmsFormTest;
     //procedure LoadZakazExternalFormTest;
     //procedure LoadZakazInternalFormTest;
   end;
@@ -3148,6 +3148,17 @@ end;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
+end;
+
+  procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;
+ begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

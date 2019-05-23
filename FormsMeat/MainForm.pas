@@ -1027,6 +1027,8 @@ type
     miClientKind: TMenuItem;
     actBarCodeBox: TdsdOpenForm;
     miBarCodeBox: TMenuItem;
+    actWeighingProduction_wms: TdsdOpenForm;
+    miWeighingProduction_wms: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

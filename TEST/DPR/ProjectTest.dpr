@@ -1081,7 +1081,9 @@ uses
   OrderExternalItemJournal in '..\..\Forms\Document\OrderExternalItemJournal.pas' {OrderExternalItemJournalForm: TParentForm},
   ClientKind in '..\..\Forms\Kind\ClientKind.pas' {ClientKindForm: TParentForm},
   BarCodeBox in '..\..\Forms\Guides\BarCodeBox.pas' {BarCodeBoxForm: TParentForm},
-  BarCodeBoxEdit in '..\..\Forms\Guides\BarCodeBoxEdit.pas' {BarCodeBoxEditForm: TParentForm};
+  BarCodeBoxEdit in '..\..\Forms\Guides\BarCodeBoxEdit.pas' {BarCodeBoxEditForm: TParentForm},
+  WeighingProduction_wmsJournal in '..\..\Forms\Document\WeighingProduction_wmsJournal.pas' {WeighingProduction_wmsJournalForm: TParentForm},
+  WeighingProduction_wms in '..\..\Forms\Document\WeighingProduction_wms.pas' {WeighingProduction_wmsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
