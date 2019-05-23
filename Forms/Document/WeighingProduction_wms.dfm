@@ -26,7 +26,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1100
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -213,14 +212,12 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1100
     ClientRectBottom = 336
     ClientRectRight = 1021
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1100
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -228,7 +225,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1100
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -402,7 +398,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 118
   end
   object cxLabel13: TcxLabel
@@ -419,7 +415,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
+    TabOrder = 8
     Width = 157
   end
   object cxLabel14: TcxLabel
@@ -1282,7 +1278,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 24
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_WeighingProduction'
+    StoredProcName = 'gpUpdate_Status_WeighingProduction_wms'
     DataSets = <>
     OutputType = otResult
     Params = <

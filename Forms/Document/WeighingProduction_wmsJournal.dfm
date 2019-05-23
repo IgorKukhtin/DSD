@@ -24,7 +24,6 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -64,7 +63,6 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

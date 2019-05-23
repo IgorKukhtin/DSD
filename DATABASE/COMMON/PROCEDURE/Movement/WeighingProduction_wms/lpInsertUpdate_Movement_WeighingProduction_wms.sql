@@ -20,18 +20,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_WeighingProduction _wms(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
 BEGIN
 
-     IF COALESCE (ioId, 0) = 0
-     THEN
-         vbStartWeighing:= CURRENT_TIMESTAMP;
-     END IF;
-
-     -- определяем признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     IF COALESCE (ioId, 0) <> 0
      THEN
          -- изменили
          UPDATE Movement_WeighingProduction
@@ -48,37 +38,6 @@ BEGIN
                   , StartWeighing        = inStartWeighing
                   , EndWeighing          = inEndWeighing
          WHERE Movement_WeighingProduction.Id = ioId;
-     ELSE
-     -- если такой элемент не был найден
-        -- добавили новый элемент
-        INSERT INTO Movement_WeighingProduction (Id
-                                               , InvNumber
-                                               , OperDate
-                                               , FromId
-                                               , ToId
-                                               , GoodsId
-                                               , GoodsKindId
-                                               , MovementDescId
-                                               , MovementDescNumber
-                                               , PlaceNumber
-                                               , UserId
-                                               , StartWeighing
-                                               , EndWeighing
-                                               )
-            VALUES (ioId
-                  , inInvNumber
-                  , inOperDate
-                  , inFromId
-                  , inAToId
-                  , inGoodsId
-                  , inGoodsKindId
-                  , inMovementDescId
-                  , inMovementDescNumber
-                  , inPlaceNumber
-                  , inUserId
-                  , inStartWeighing
-                  , inEndWeighing);
-     END IF;
 
      -- сохранили протокол
      --PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
