@@ -154,13 +154,6 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         Options.Editing = False
         Width = 91
       end
-      object PlaceNumber: TcxGridDBColumn
-        Caption = #8470' '#1088#1072#1073'. '#1084#1077#1089#1090#1072
-        DataBinding.FieldName = 'PlaceNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
@@ -168,6 +161,29 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 92
+      end
+      object PlaceNumber: TcxGridDBColumn
+        Caption = #8470' '#1088#1072#1073'. '#1084#1077#1089#1090#1072
+        DataBinding.FieldName = 'PlaceNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object GoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 129
+      end
+      object GoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 124
       end
       object StartWeighing: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'

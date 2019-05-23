@@ -92,6 +92,8 @@ type
     FormParams: TdsdFormParams;
     actMovementProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
   private
   public
   end;
