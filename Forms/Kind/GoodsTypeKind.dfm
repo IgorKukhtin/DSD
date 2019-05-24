@@ -3,7 +3,7 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
   Top = 0
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 255
-  ClientWidth = 316
+  ClientWidth = 490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,10 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 316
+    Width = 490
     Height = 229
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 533
-    ExplicitHeight = 239
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -37,7 +35,6 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
       OptionsBehavior.IncSearchItem = clName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -50,14 +47,23 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Options.Editing = False
+        Width = 58
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 252
+        Options.Editing = False
+        Width = 292
+      end
+      object ShortName: TcxGridDBColumn
+        Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 126
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -66,8 +72,8 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 216
-    Top = 56
+    Left = 32
+    Top = 184
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -84,8 +90,8 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 56
+    Left = 280
+    Top = 64
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -199,6 +205,18 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsTypeKind'
@@ -236,5 +254,31 @@ object GoodsTypeKindForm: TGoodsTypeKindForm
     SummaryItemList = <>
     Left = 120
     Top = 200
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsTypeKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShortName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ShortName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 96
   end
 end

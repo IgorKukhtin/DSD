@@ -79,6 +79,7 @@ type
     JackdawsChecksName: TcxGridDBColumn;
     Delay: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
+    DateDelay: TcxGridDBColumn;
   private
     { Private declarations }
   public

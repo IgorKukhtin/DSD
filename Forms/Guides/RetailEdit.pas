@@ -32,18 +32,21 @@ type
     edGLNCode: TcxTextEdit;
     cxLabel4: TcxLabel;
     ceGoodsProperty: TcxButtonEdit;
-    GoodsPropertyGuides: TdsdGuides;
+    GuidesGoodsProperty: TdsdGuides;
     cxLabel5: TcxLabel;
     edGLNCodeCorporate: TcxTextEdit;
     cbOperDateOrder: TcxCheckBox;
     cxLabel6: TcxLabel;
     cePersonalMarketing: TcxButtonEdit;
-    PersonalMarketingGuides: TdsdGuides;
+    GuidesPersonalMarketing: TdsdGuides;
     cxLabel7: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     cxLabel8: TcxLabel;
     edOKPO: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    edClientKind: TcxButtonEdit;
+    GuidesClientKind: TdsdGuides;
   private
     { Private declarations }
   public

@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION gpGet_PromoCode_by_GUID (
     IN  inPromoGUID                     TVarChar,              -- промо код
     OUT outPromoCodeID                  Integer,               -- код акции
     OUT outPromoName                    TVarChar,              -- название акции
+    OUT outBayerName                    TVarChar,              -- ФИО Клиента
     OUT outPromoCodeChangePercent       TFloat,                -- процент скидки
     IN  inSession                       TVarChar               -- сессия пользователя
 )
@@ -30,6 +31,7 @@ BEGIN
 
     outPromoCodeID            := 0;
     outPromoName              := '';
+    outBayerName              := '';
     outPromoCodeChangePercent := 0;
     
     -- получаем подразделение
@@ -148,6 +150,7 @@ BEGIN
 
     outPromoCodeID            := vbPromoID;
     outPromoName              := vbPromoName;
+    outBayerName              := vbBayerName;
     outPromoCodeChangePercent := vbPromoCodeChangePercent;
 
 END;
@@ -157,6 +160,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 23.06.19                                                                                                        *
  07.08.18                                                                                                        *
  16.06.18                                                                                                        *
  02.02.18                                                                                        *

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
+             , ClientKindId Integer, ClientKindName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -35,6 +36,8 @@ BEGIN
            , Object_PersonalMarketing.ValueData  AS PersonalMarketingName       
            , Object_PersonalTrade.Id             AS PersonalTradeId
            , Object_PersonalTrade.ValueData      AS PersonalTradeName   
+           , Object_ClientKind.Id                AS ClientKindId
+           , Object_ClientKind.ValueData         AS ClientKindName
            , Object_Retail.isErased   AS isErased
        FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
@@ -66,7 +69,11 @@ BEGIN
                              ON ObjectLink_Retail_PersonalTrade.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade()
         LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Retail_PersonalTrade.ChildObjectId
-                              
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_ClientKind
+                             ON ObjectLink_Retail_ClientKind.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_ClientKind.DescId = zc_ObjectLink_Retail_ClientKind()
+        LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId                              
        WHERE Object_Retail.DescId = zc_Object_Retail();
    
 END;
@@ -76,6 +83,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.05.19         * ClientKind
  29.01.19         * add OKPO
  24.11.15         * add PersonalMarketing
  20.05.15         *

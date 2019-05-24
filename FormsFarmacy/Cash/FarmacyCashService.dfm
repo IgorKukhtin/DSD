@@ -308,14 +308,6 @@ object MainCashForm2: TMainCashForm2
       end>
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCashSessionId'
         Value = Null
         Component = FormParams
@@ -326,6 +318,7 @@ object MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
+    AfterExecute = spSelectRemainsAfterExecute
     Left = 256
     Top = 80
   end
@@ -354,14 +347,6 @@ object MainCashForm2: TMainCashForm2
         DataSet = DiffCDS
       end>
     Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inCashSesionId'
         Value = Null
@@ -433,8 +418,8 @@ object MainCashForm2: TMainCashForm2
   object TimerGetRemains: TTimer
     Enabled = False
     OnTimer = TimerGetRemainsTimer
-    Left = 16
-    Top = 128
+    Left = 32
+    Top = 134
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -502,37 +487,6 @@ object MainCashForm2: TMainCashForm2
       OnExecute = actCashRemainsExecute
     end
   end
-  object MemData: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 88
-    Top = 80
-    object MemDataID: TIntegerField
-      FieldName = 'ID'
-    end
-    object MemDataGOODSCODE: TIntegerField
-      FieldName = 'GOODSCODE'
-    end
-    object MemDataGOODSNAME: TStringField
-      FieldName = 'GOODSNAME'
-      Size = 254
-    end
-    object MemDataPRICE: TFloatField
-      FieldName = 'PRICE'
-    end
-    object MemDataREMAINS: TFloatField
-      FieldName = 'REMAINS'
-    end
-    object MemDataMCSVALUE: TFloatField
-      FieldName = 'MCSVALUE'
-    end
-    object MemDataRESERVED: TFloatField
-      FieldName = 'RESERVED'
-    end
-    object MemDataNEWROW: TBooleanField
-      FieldName = 'NEWROW'
-    end
-  end
   object pmServise: TPopupMenu
     Left = 216
     Top = 16
@@ -570,7 +524,7 @@ object MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 120000
     OnTimer = TimerSaveRealTimer
-    Left = 92
+    Left = 100
     Top = 132
   end
   object tiServise: TTrayIcon
@@ -589,7 +543,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010109003400F00180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010109003400040080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008001000001002000000000000000
       0C00000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -26150,5 +26104,12 @@ object MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 432
     Top = 152
+  end
+  object TimerNeedRemainsDiff: TTimer
+    Enabled = False
+    Interval = 120000
+    OnTimer = TimerNeedRemainsDiffTimer
+    Left = 172
+    Top = 132
   end
 end

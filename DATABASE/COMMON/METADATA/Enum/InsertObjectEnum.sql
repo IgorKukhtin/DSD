@@ -938,7 +938,16 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GoodsTypeKind_Ves() , inDescId:= zc_Object_GoodsTypeKind(), inCode:= 3, inName:= 'Неноминальный', inEnumName:= 'zc_Enum_GoodsTypeKind_Ves');
 END $$;
 
+DO $$
+BEGIN
 
+     -- !!! Категории покупателей
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ClientKind_Retail()   , inDescId:= zc_Object_ClientKind(), inCode:= 1, inName:= 'Сетевик'           , inEnumName:= 'zc_Enum_ClientKind_Retail');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ClientKind_Partner()  , inDescId:= zc_Object_ClientKind(), inCode:= 2, inName:= 'Мелкие'            , inEnumName:= 'zc_Enum_ClientKind_Partner');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ClientKind_Unit()     , inDescId:= zc_Object_ClientKind(), inCode:= 3, inName:= 'Региональный склад', inEnumName:= 'zc_Enum_ClientKind_Unit');
+
+
+END $$;
 
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>

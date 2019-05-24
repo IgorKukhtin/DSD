@@ -89,6 +89,7 @@ type
     cxLabel6: TcxLabel;
     edJuridicalMedic: TcxButtonEdit;
     GuidesJuridicalMedic: TdsdGuides;
+    InvNumber_Full: TcxGridDBColumn;
   private
     { Private declarations }
   public

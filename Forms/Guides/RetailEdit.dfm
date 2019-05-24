@@ -148,7 +148,24 @@ object RetailEditForm: TRetailEditForm
     Left = 10
     Top = 209
     TabOrder = 18
-    Width = 311
+    Width = 156
+  end
+  object cxLabel9: TcxLabel
+    Left = 177
+    Top = 189
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+  end
+  object edClientKind: TcxButtonEdit
+    Left = 177
+    Top = 209
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 144
   end
   object ActionList: TActionList
     Left = 152
@@ -245,7 +262,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'inGoodsPropertyId'
         Value = Null
-        Component = GoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -253,7 +270,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'inPersonalMarketingId'
         Value = Null
-        Component = PersonalMarketingGuides
+        Component = GuidesPersonalMarketing
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -261,7 +278,15 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'inPersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientKindId'
+        Value = Null
+        Component = GuidesClientKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -338,14 +363,14 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'GoodsPropertyId'
         Value = Null
-        Component = GoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyName'
         Value = Null
-        Component = GoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -353,14 +378,14 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'PersonalMarketingId'
         Value = Null
-        Component = PersonalMarketingGuides
+        Component = GuidesPersonalMarketing
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalMarketingName'
         Value = Null
-        Component = PersonalMarketingGuides
+        Component = GuidesPersonalMarketing
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -368,16 +393,30 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'PersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeName'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientKindId'
+        Value = Null
+        Component = GuidesClientKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientKindName'
+        Value = Null
+        Component = GuidesClientKind
+        ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -403,7 +442,7 @@ object RetailEditForm: TRetailEditForm
     Left = 256
     Top = 48
   end
-  object GoodsPropertyGuides: TdsdGuides
+  object GuidesGoodsProperty: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
@@ -415,7 +454,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -424,7 +463,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -433,7 +472,7 @@ object RetailEditForm: TRetailEditForm
     Left = 128
     Top = 235
   end
-  object PersonalMarketingGuides: TdsdGuides
+  object GuidesPersonalMarketing: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalMarketing
     FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -445,7 +484,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalMarketingGuides
+        Component = GuidesPersonalMarketing
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -454,7 +493,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalMarketingGuides
+        Component = GuidesPersonalMarketing
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -463,7 +502,7 @@ object RetailEditForm: TRetailEditForm
     Left = 151
     Top = 290
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalTrade
     FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -475,7 +514,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -484,7 +523,7 @@ object RetailEditForm: TRetailEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -492,5 +531,35 @@ object RetailEditForm: TRetailEditForm
       end>
     Left = 175
     Top = 346
+  end
+  object GuidesClientKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edClientKind
+    FormNameParam.Value = 'TClientKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TClientKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesClientKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesClientKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 239
+    Top = 203
   end
 end

@@ -8,7 +8,8 @@ uses
   cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
-  cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters, Data.DB;
+  cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters, Data.DB,
+  System.Actions;
 
 type
   TPromoCodeDialogForm = class(TAncestorDialogForm)
@@ -20,7 +21,7 @@ type
   private
     { Private declarations }
   public
-    function PromoCodeDialogExecute(var APromoCodeID: Integer; var APromoCodeGUID, APromoName: string;
+    function PromoCodeDialogExecute(var APromoCodeID: Integer; var APromoCodeGUID, APromoName, ABayerName: string;
                                     var APromoCodeChangePercent: currency): boolean;
   end;
 
@@ -75,7 +76,7 @@ begin
     'A', 'B', 'C', 'D', 'E', 'F']) then Key:= #0;}
 end;
 
-function TPromoCodeDialogForm.PromoCodeDialogExecute(var APromoCodeID: Integer; var APromoCodeGUID, APromoName: string;
+function TPromoCodeDialogForm.PromoCodeDialogExecute(var APromoCodeID: Integer; var APromoCodeGUID, APromoName, ABayerName: string;
                                                      var APromoCodeChangePercent: currency): boolean;
 begin
   edPromoCode.Text:= APromoCodeGUID;
@@ -85,6 +86,7 @@ begin
     APromoCodeID := FormParams.ParamByName('PromoCodeID').Value;
     APromoCodeGUID := FormParams.ParamByName('PromoCodeGUID').Value;
     APromoName := FormParams.ParamByName('PromoName').Value;
+    ABayerName := FormParams.ParamByName('BayerName').Value;
     APromoCodeChangePercent := FormParams.ParamByName('PromoCodeChangePercent').AsFloat;
   end
   else

@@ -70,6 +70,8 @@ type
     cxSplitter1: TcxSplitter;
     actCheckCash: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
+    PartionDateKindName: TcxGridDBColumn;
+    DateDelay: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -100,7 +100,7 @@ type
     actInsertChild: TdsdExecStoredProc;
     actInsertMaster: TdsdExecStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
-    bbInsertMaster: TdxBarButton;
+    bbUpdateMaster_calc: TdxBarButton;
     bbInsertChild: TdxBarButton;
     InvNumber_Promo_Full: TcxGridDBColumn;
     spInsert: TdsdStoredProc;
@@ -116,6 +116,25 @@ type
     RemainsDay: TcxGridDBColumn;
     RemainsDay2: TcxGridDBColumn;
     chRemainsDay: TcxGridDBColumn;
+    MakerName_Promo: TcxGridDBColumn;
+    actContractChoice: TOpenChoiceForm;
+    InsertRecordMaster: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    actGoodsPromoChoiceForm: TOpenChoiceForm;
+    InsertRecordPromoMaster: TInsertRecord;
+    bbInsertRecordMaster: TdxBarButton;
+    bbInsertRecordPromoMaster: TdxBarButton;
+    spUpdateMaster_calc: TdsdStoredProc;
+    actUpdateMaster_calc: TdsdExecStoredProc;
+    edReplays: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    ceTotalSummPrice: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceTotalSummSIP: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    spUpdateMasterAmount: TdsdStoredProc;
+    actUpdateMasterAmount: TdsdExecStoredProc;
+    bbUpdateMasterAmount: TdxBarButton;
   private
     { Private declarations }
   public

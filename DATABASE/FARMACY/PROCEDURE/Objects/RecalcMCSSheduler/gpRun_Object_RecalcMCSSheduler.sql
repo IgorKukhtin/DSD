@@ -116,7 +116,7 @@ BEGIN
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
     AND Object_Unit_Run.isErased = FALSE
     AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 183290, 10779386);
+    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 183290, 10779386, 11152911);
 
 
     -- По аптекам не вошедшим в сети
@@ -220,7 +220,7 @@ BEGIN
         AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
         AND Object_Unit_Run.isErased = FALSE
         AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-        AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 183290, 10779386));
+        AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 183290, 10779386, 11152911));
 
 END;
 $BODY$

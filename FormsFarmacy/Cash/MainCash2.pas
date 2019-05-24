@@ -105,7 +105,6 @@ type
     MainColPrice: TcxGridDBColumn;
     MainColReserved: TcxGridDBColumn;
     dsdDBViewAddOnMain: TdsdDBViewAddOn;
-    spSelectRemains: TdsdStoredProc;
     RemainsDS: TDataSource;
     RemainsCDS: TClientDataSet;
     cxLabel1: TcxLabel;
@@ -228,7 +227,7 @@ type
     Panel1: TPanel;
     ceScaner: TcxCurrencyEdit;
     lbScaner: TLabel;
-    GoodsId_main: TcxGridDBColumn;    
+    MainisGoodsId_main: TcxGridDBColumn;
     MemData: TdxMemData; // только 2 форма
     MemDataID: TIntegerField; // только 2 форма
     MemDataGOODSCODE: TIntegerField; // только 2 форма
@@ -299,7 +298,7 @@ type
     edManualDiscount: TcxCurrencyEdit;
     actDivisibilityDialog: TAction;
     edAmount: TcxTextEdit;
-    AccommodationName: TcxGridDBColumn;
+    MainisAccommodationName: TcxGridDBColumn;
     spUpdate_Accommodation: TdsdStoredProc;
     actOpenAccommodation: TOpenChoiceForm;
     MemDataACCOMID: TIntegerField;
@@ -373,7 +372,7 @@ type
     Multiplicity: TcxGridDBColumn;
     actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
     actCashGoodsOneToExpirationDate: TAction;
-    GoodsAnalogName: TcxGridDBColumn;
+    MainisGoodsAnalogName: TcxGridDBColumn;
     actOpenDelayVIPForm: TdsdOpenForm;
     VIP2: TMenuItem;
     actGoodsAnalog: TAction;
@@ -394,6 +393,34 @@ type
     N27: TMenuItem;
     N28: TMenuItem;
     N29: TMenuItem;
+    MemDataMEXPDATE: TDateTimeField;
+    MemDataPDKINDID: TIntegerField;
+    MemDataPDKINDNAME: TStringField;
+    MemDataCOLORCALC: TIntegerField;
+    MainisPartionDateKindName: TcxGridDBColumn;
+    ExpirationDateCDS: TClientDataSet;
+    ExpirationDateDS: TDataSource;
+    ExpirationDateGrid: TcxGrid;
+    ExpirationDateView: TcxGridDBTableView;
+    ExpirationDateExpirationDate: TcxGridDBColumn;
+    ExpirationDateColor_calc: TcxGridDBColumn;
+    ExpirationDatePrice: TcxGridDBColumn;
+    ExpirationDateAmount: TcxGridDBColumn;
+    ExpirationDateLevel: TcxGridLevel;
+    dsdDBViewAddOnExpirationDate: TdsdDBViewAddOn;
+    spGet_Movement_InvNumberSP: TdsdStoredProc;
+    pnlHelsiError: TPanel;
+    Label21: TLabel;
+    edHelsiError: TcxTextEdit;
+    cxButton4: TcxButton;
+    cxButton5: TcxButton;
+    cxButton6: TcxButton;
+    pm_OpenCheck: TPopupMenu;
+    pm_Check: TMenuItem;
+    pm_CheckHelsi: TMenuItem;
+    pm_CheckHelsiAllUnit: TMenuItem;
+    Label22: TLabel;
+    lblPromoBayerName: TLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -493,6 +520,12 @@ type
     procedure actSetSPHelsiExecute(Sender: TObject);
     procedure actDeleteAccommodationAllIdExecute(Sender: TObject);
     procedure actDeleteAccommodationAllExecute(Sender: TObject);
+    procedure cxButton4Click(Sender: TObject);
+    procedure cxButton5Click(Sender: TObject);
+    procedure cxButton6Click(Sender: TObject);
+    procedure pm_CheckClick(Sender: TObject);
+    procedure pm_CheckHelsiClick(Sender: TObject);
+    procedure pm_CheckHelsiAllUnitClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -550,6 +583,8 @@ type
     procedure LoadBankPOSTerminal;
     procedure LoadUnitConfig;
     procedure LoadTaxUnitNight;
+    procedure LoadGoodsExpirationDate;
+
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
@@ -558,7 +593,8 @@ type
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
-      ARoundingDown, ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string;
+      ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
     function fCheck_RemainsError : Boolean;
@@ -576,6 +612,9 @@ type
     procedure Finish_Check_History(SalerCash: Currency);
     // Очистка фильтров
     procedure ClearFilterAll;
+    // Установка фильтра по сроку
+    procedure SetFilterPartionDateKind;
+    procedure ClearFilterPartionDateKind;
     // Загружает VIP чек
     procedure LoadVIPCheck;
     procedure SetSiteDiscount(ASiteDiscount : Currency);
@@ -603,7 +642,7 @@ type
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     function pCheck_InvNumberSP(ASPKind : integer; ANumber : string) : boolean;
-    procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+    procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: currency);
   end;
 
@@ -640,7 +679,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
-     EnterRecipeNumber;
+     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit;
 
 const
   StatusUnCompleteCode = 1;
@@ -681,6 +720,7 @@ begin
           difUpdate:=false;
           actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
           actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
+          LoadGoodsExpirationDate;
           LoadBankPOSTerminal;
           LoadUnitConfig;
           LoadTaxUnitNight;
@@ -693,6 +733,7 @@ begin
       3:  // получен запрос на обновление всего
         begin
           LoadFromLocalStorage;
+          LoadGoodsExpirationDate;
           LoadBankPOSTerminal;
           LoadUnitConfig;
           LoadTaxUnitNight;
@@ -851,9 +892,13 @@ begin
         MemData.FieldByName('REMAINS').AsFloat:=FLocalDataBaseDiff.FieldByName('REMAINS').AsFloat;
         MemData.FieldByName('MCSVALUE').AsFloat:=FLocalDataBaseDiff.FieldByName('MCSVALUE').AsFloat;
         MemData.FieldByName('RESERVED').AsFloat:=FLocalDataBaseDiff.FieldByName('RESERVED').AsFloat;
+        MemData.FieldByName('MEXPDATE').AsVariant:=FLocalDataBaseDiff.FieldByName('MEXPDATE').AsVariant;
+        MemData.FieldByName('PDKINDID').AsVariant:=FLocalDataBaseDiff.FieldByName('PDKINDID').AsVariant;
+        MemData.FieldByName('PDKINDNAME').AsVariant:=FLocalDataBaseDiff.FieldByName('PDKINDNAME').AsVariant;
         MemData.FieldByName('NEWROW').AsBoolean:=FLocalDataBaseDiff.FieldByName('NEWROW').AsBoolean;
         MemData.FieldByName('ACCOMID').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMID').AsVariant;
         MemData.FieldByName('ACCOMNAME').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMNAME').AsVariant;
+        MemData.FieldByName('COLORCALC').AsVariant:=FLocalDataBaseDiff.FieldByName('COLORCALC').AsVariant;
         FLocalDataBaseDiff.Edit;
         FLocalDataBaseDiff.DeleteRecord;
         FLocalDataBaseDiff.Post;
@@ -1010,6 +1055,10 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
+  FormParams.ParamByName('ConfirmationCodeSP').Value := '';
+  //**13.05.19
+  FormParams.ParamByName('PartionDateKindId').Value := 0;
+  FormParams.ParamByName('PartionDateKindName').Value := '';
 
   ClearFilterAll;
 
@@ -1144,6 +1193,33 @@ procedure TMainCashForm2.LoadVIPCheck;
 begin
   inherited;
 
+  if FormParams.ParamByName('CheckId').Value <> 0 then
+  begin
+    WaitForSingleObject(MutexDBF, INFINITE);
+    try
+      FLocalDataBaseHead.Active:=True;
+      try
+        // если чек загруженный VIP проверяем нет ли его в DBF
+        FLocalDataBaseHead.First;
+        while not FLocalDataBaseHead.Eof do
+        begin
+          if (FLocalDataBaseHead.FieldByName('ID').AsInteger = FormParams.ParamByName('CheckId').Value) and
+            not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean then
+          begin
+            NewCheck(False);
+            raise Exception.Create('Выбранный вип чек не сохранен после изменений. Загрузка запрещена...');
+            Exit;
+          end;
+          FLocalDataBaseHead.Next;
+        end;
+      finally
+        FLocalDataBaseHead.Close;
+      end;
+    finally
+      ReleaseMutex(MutexDBF);
+    end;
+  end;
+
   //обновим "нужные" параметры-Main ***20.07.16
   DiscountServiceForm.pGetDiscountExternal (FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
   // ***20.07.16
@@ -1202,6 +1278,7 @@ begin
     SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
       FormParams.ParamByName('PromoName').AsString,
       FormParams.ParamByName('PromoCodeGUID').AsString,
+      FormParams.ParamByName('BayerName').AsString,
       FormParams.ParamByName('PromoCodeChangePercent').Value);
   if FormParams.ParamByName('SiteDiscount').Value > 0 then SetSiteDiscount(FormParams.ParamByName('SiteDiscount').Value);
 
@@ -1291,6 +1368,7 @@ begin
     RemainsCDS.EnableControls;
   end;
 
+  SetFilterPartionDateKind;
   pnlVIP.Visible := true;
 end;
 
@@ -1356,6 +1434,45 @@ begin
       RemainsCDS.EnableControls;
       edlExpirationDateFilter.Text := '';
       edAnalogFilter.Text := '';
+    end;
+  end;
+end;
+
+procedure TMainCashForm2.SetFilterPartionDateKind;
+ var Id, PartionDateKindId : Integer;
+begin
+  Id := RemainsCDS.FieldByName('Id').AsInteger;
+  PartionDateKindId := FormParams.ParamByName('PartionDateKindId').Value;
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
+  try
+    if FormParams.ParamByName('PartionDateKindId').Value <> 0 then
+      RemainsCDS.Filter := '(' + RemainsCDS.Filter + ') and PartionDateKindId = ' + IntToStr(FormParams.ParamByName('PartionDateKindId').Value)
+    else RemainsCDS.Filter := '(' + RemainsCDS.Filter + ') and PartionDateKindId = Null';
+  finally
+    RemainsCDS.Filtered := True;
+    if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+      RemainsCDS.Locate('Id', Id,[]);
+    RemainsCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.ClearFilterPartionDateKind;
+  var Id, PartionDateKindId : Integer;
+begin
+  if Pos(') and PartionDateKindId', RemainsCDS.Filter) > 0 then
+  begin
+    Id := RemainsCDS.FieldByName('Id').AsInteger;
+    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsInteger;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    try
+      RemainsCDS.Filter := Copy(RemainsCDS.Filter , 2, Pos(') and PartionDateKindId', RemainsCDS.Filter) - 2);
+    finally
+      RemainsCDS.Filtered := True;
+      if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+        RemainsCDS.Locate('Id', Id,[]);
+      RemainsCDS.EnableControls;
     end;
   end;
 end;
@@ -1769,6 +1886,7 @@ var
   nBankPOSTerminal : integer;
   nPOSTerminalCode : integer;
   HelsiError : Boolean;
+  nOldColor : integer;
 begin
   if CheckCDS.RecordCount = 0 then exit;
 
@@ -1803,7 +1921,7 @@ begin
     end;
 
     if not InputQuery('Введите код подтверждения рецепта', 'Код подтверждения: ', ConfirmationCode) then Exit;
-
+    FormParams.ParamByName('ConfirmationCodeSP').Value := ConfirmationCode;
   end;
 
   if FormParams.ParamByName('PartnerMedicalId').Value <> 0 then if not CheckSP then Exit;
@@ -1849,14 +1967,6 @@ begin
   if (FormParams.ParamByName('HelsiID').Value <> '') then
   begin
     HelsiError := True;
-//    if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-//                             CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
-//                             CheckCDS.FieldByName('PriceRetSP').asCurrency,
-//                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2),
-//                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-//                               RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
-//                             ConfirmationCode) then
-
     if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
                              CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
                              CheckCDS.FieldByName('PriceSale').asCurrency,
@@ -1865,11 +1975,9 @@ begin
                                RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
                              ConfirmationCode) then
     begin
-      Begin
-        if Self.ActiveControl <> edAmount then
-          Self.ActiveControl := MainGrid;
-        exit;
-      End;
+      if Self.ActiveControl <> edAmount then
+        Self.ActiveControl := MainGrid;
+      exit;
     end;
   end;
 
@@ -1917,78 +2025,112 @@ begin
       then fErr:= not DiscountServiceForm.fCommitCDS_Discount (CheckNumber, CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value)
       else fErr:= false;
 
-      if fErr = true
-      then ShowMessage ('Ошибка.Чек распечатан.Продажа не сохранена')
-      else begin
-//      Add_Log('Уменьшение остатков по партиям');
-//      UpdateRemainsGoodsToExpirationDate;
-      Add_Log('Сохранение чека');
-      ShapeState.Brush.Color := clRed;
-      ShapeState.Repaint;
-        if SaveLocal(CheckCDS,
-                   FormParams.ParamByName('ManagerId').Value,
-                   FormParams.ParamByName('ManagerName').Value,
-                   FormParams.ParamByName('BayerName').Value,
-                   //***16.08.16
-                   FormParams.ParamByName('BayerPhone').Value,
-                   FormParams.ParamByName('ConfirmedKindName').Value,
-                   FormParams.ParamByName('InvNumberOrder').Value,
-                   FormParams.ParamByName('ConfirmedKindClientName').Value,
-                   //***20.07.16
-                   FormParams.ParamByName('DiscountExternalId').Value,
-                   FormParams.ParamByName('DiscountExternalName').Value,
-                   FormParams.ParamByName('DiscountCardNumber').Value,
-                   //***08.04.17
-                   FormParams.ParamByName('PartnerMedicalId').Value,
-                   FormParams.ParamByName('PartnerMedicalName').Value,
-                   FormParams.ParamByName('Ambulance').Value,
-                   FormParams.ParamByName('MedicSP').Value,
-                   FormParams.ParamByName('InvNumberSP').Value,
-                   FormParams.ParamByName('OperDateSP').Value,
-                   //***15.06.17
-                   FormParams.ParamByName('SPKindId').Value,
-                   FormParams.ParamByName('SPKindName').Value,
-                   FormParams.ParamByName('SPTax').Value,
-                   //***05.02.18
-                   FormParams.ParamByName('PromoCodeID').Value,
-                   //***27.06.18
-                   FormParams.ParamByName('ManualDiscount').Value,
-                   //***02.11.18
-                   FormParams.ParamByName('SummPayAdd').Value,
-                   //***14.01.19
-                   FormParams.ParamByName('MemberSPID').Value,
-                   //***20.02.19
-                   FormParams.ParamByName('BankPOSTerminal').Value,
-                   //***25.02.19
-                   FormParams.ParamByName('JackdawsChecksCode').Value,
-                   //***28.01.19
-                   FormParams.ParamByName('SiteDiscount').Value,
-                   //***02.04.19
-                   FormParams.ParamByName('RoundingDown').Value,
+      if fErr = true then ShowMessage ('Ошибка.Чек распечатан.Продажа не сохранена')
+      else
+      begin
+        Add_Log('Сохранение чека');
+        ShapeState.Brush.Color := clRed;
+        ShapeState.Repaint;
+          if SaveLocal(CheckCDS,
+                     FormParams.ParamByName('ManagerId').Value,
+                     FormParams.ParamByName('ManagerName').Value,
+                     FormParams.ParamByName('BayerName').Value,
+                     //***16.08.16
+                     FormParams.ParamByName('BayerPhone').Value,
+                     FormParams.ParamByName('ConfirmedKindName').Value,
+                     FormParams.ParamByName('InvNumberOrder').Value,
+                     FormParams.ParamByName('ConfirmedKindClientName').Value,
+                     //***20.07.16
+                     FormParams.ParamByName('DiscountExternalId').Value,
+                     FormParams.ParamByName('DiscountExternalName').Value,
+                     FormParams.ParamByName('DiscountCardNumber').Value,
+                     //***08.04.17
+                     FormParams.ParamByName('PartnerMedicalId').Value,
+                     FormParams.ParamByName('PartnerMedicalName').Value,
+                     FormParams.ParamByName('Ambulance').Value,
+                     FormParams.ParamByName('MedicSP').Value,
+                     FormParams.ParamByName('InvNumberSP').Value,
+                     FormParams.ParamByName('OperDateSP').Value,
+                     //***15.06.17
+                     FormParams.ParamByName('SPKindId').Value,
+                     FormParams.ParamByName('SPKindName').Value,
+                     FormParams.ParamByName('SPTax').Value,
+                     //***05.02.18
+                     FormParams.ParamByName('PromoCodeID').Value,
+                     //***27.06.18
+                     FormParams.ParamByName('ManualDiscount').Value,
+                     //***02.11.18
+                     FormParams.ParamByName('SummPayAdd').Value,
+                     //***14.01.19
+                     FormParams.ParamByName('MemberSPID').Value,
+                     //***20.02.19
+                     FormParams.ParamByName('BankPOSTerminal').Value,
+                     //***25.02.19
+                     FormParams.ParamByName('JackdawsChecksCode').Value,
+                     //***28.01.19
+                     FormParams.ParamByName('SiteDiscount').Value,
+                     //***02.04.19
+                     FormParams.ParamByName('RoundingDown').Value,
+                     //***13.05.19
+                     FormParams.ParamByName('PartionDateKindId').Value,
+                     FormParams.ParamByName('ConfirmationCodeSP').Value,
 
-                   True,         // NeedComplete
-                   CheckNumber,  // FiscalCheckNumber
-                   UID           // out AUID
-                  )
-      then Begin
+                     True,         // NeedComplete
+                     CheckNumber,  // FiscalCheckNumber
+                     UID           // out AUID
+                    ) then
+        Begin
 
-        if (FormParams.ParamByName('HelsiID').Value <> '') then
-        begin
-           HelsiError := not SetPayment(CheckNumber, CheckCDS.FieldByName('Summ').asCurrency);
-           if not HelsiError then HelsiError := not IntegrationClientSign;
-           if not HelsiError then HelsiError := not ProcessSignedDispense;
-        end;
+          if (FormParams.ParamByName('HelsiID').Value <> '') then
+          begin
+            HelsiError := not SetPayment(CheckNumber, CheckCDS.FieldByName('Summ').asCurrency);
+            if not HelsiError then HelsiError := not IntegrationClientSign;
+            if not HelsiError then HelsiError := not ProcessSignedDispense;
 
-        Add_Log('Чек сохранен');
-        NewCheck(false);
-      End;
-           end; // else if fErr = true
+            if HelsiError then
+            begin
+              RejectDispense;
+
+              if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+                                   CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
+                                   CheckCDS.FieldByName('PriceSale').asCurrency,
+                                   RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+                                   RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+                                     RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+                                   ConfirmationCode) then
+              begin
+                HelsiError := not SetPayment(CheckNumber, CheckCDS.FieldByName('Summ').asCurrency);
+                if not HelsiError then HelsiError := not IntegrationClientSign;
+                if not HelsiError then HelsiError := not ProcessSignedDispense;
+              end;
+
+              if HelsiError then RejectDispense;
+            end;
+
+            if not GetStateReceipt then
+            begin
+//              pnlHelsiError.Visible := True;
+//              edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+
+              nOldColor := Screen.MessageFont.Color;
+              try
+                Screen.MessageFont.Color := clRed;
+                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+                MessageDlg('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его зарегистрировать СЕЙЧАС НА САЙТЕ ХЕЛСИ.', mtError, [mbOK], 0);
+              finally
+                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+                Screen.MessageFont.Color := nOldColor;
+              end;
+            end;
+          end;
+
+          Add_Log('Чек сохранен');
+          NewCheck(false);
+        End;
+      end; // else if fErr = true
     End;
 
-    if HelsiError then
-    begin
-      if RejectDispense then ShowMessage ('Ошибка. Погашение чека отменено...');
-    end;
+    if HelsiError then RejectDispense;
 
   finally
     ShapeState.Brush.Color := clGreen;
@@ -2008,10 +2150,12 @@ begin
 //      ShowMessage('Загрузка из Remains');
       MainGridDBTableView.BeginUpdate;
       RemainsCDS.DisableControls;
-      AlternativeCDS.DisableControls;
+//      AlternativeCDS.DisableControls;
+      ExpirationDateCDS.DisableControls;
       try
         if not FileExists(Remains_lcl) or
-           not FileExists(Alternative_lcl) then
+//           not FileExists(Alternative_lcl) then
+           not FileExists(GoodsExpirationDate_lcl) then
         Begin
           ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
           Close;
@@ -2022,15 +2166,22 @@ begin
         finally
           ReleaseMutex(MutexRemains);
         end;
-        WaitForSingleObject(MutexAlternative, INFINITE);
+//        WaitForSingleObject(MutexAlternative, INFINITE);
+//        try
+//          LoadLocalData(AlternativeCDS, Alternative_lcl);
+//        finally
+//          ReleaseMutex(MutexAlternative);
+//        end;
+        WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
         try
-          LoadLocalData(AlternativeCDS, Alternative_lcl);
+          LoadLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
         finally
-          ReleaseMutex(MutexAlternative);
+          ReleaseMutex(MutexGoodsExpirationDate);
         end;
       finally
         RemainsCDS.EnableControls;
-        AlternativeCDS.EnableControls;
+        ExpirationDateCDS.EnableControls;
+//        AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
       end;
       if not gc_User.Local then
@@ -2073,7 +2224,8 @@ begin
 
       MainGridDBTableView.BeginUpdate;
       RemainsCDS.DisableControls;
-      AlternativeCDS.DisableControls;
+      ExpirationDateCDS.DisableControls;
+//      AlternativeCDS.DisableControls;
       try
         ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
         lMsg:= '';
@@ -2099,11 +2251,17 @@ begin
         finally
           ReleaseMutex(MutexRemains);
         end;
-        WaitForSingleObject(MutexAlternative, INFINITE);
+//        WaitForSingleObject(MutexAlternative, INFINITE);
+//        try
+//          SaveLocalData(AlternativeCDS,Alternative_lcl);
+//        finally
+//          ReleaseMutex(MutexAlternative);
+//        end;
+        WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
         try
-          SaveLocalData(AlternativeCDS,Alternative_lcl);
+          SaveLocalData(ExpirationDateCDS,GoodsExpirationDate_lcl);
         finally
-          ReleaseMutex(MutexAlternative);
+          ReleaseMutex(MutexGoodsExpirationDate);
         end;
 
         ChangeStatus('Получение ВИП чеков');
@@ -2113,7 +2271,8 @@ begin
       finally
         ChangeStatus('Перезагрузка данных в окне программы');
         RemainsCDS.EnableControls;
-        AlternativeCDS.EnableControls;
+        ExpirationDateCDS.EnableControls;
+//        AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
       end;
 
@@ -2163,6 +2322,7 @@ var
   vip,vipList: TClientDataSet; nRecNo : integer;
 begin
   inherited;
+
   vip := TClientDataSet.Create(Nil);
   vipList := TClientDataSet.Create(nil);
   try
@@ -2245,21 +2405,26 @@ begin
     vipList.Free;
   end;
 end;
+
 procedure TMainCashForm2.actSetFilterExecute(Sender: TObject);
 begin
   inherited;
  // if RemainsCDS.Active and AlternativeCDS.Active then
 
 //a1  код из события RemainsCDSAfterScroll для ускорения работы приложения
- if RemainsCDS.IsEmpty then
-    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId= 0'
- else if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
-    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
-  else
-    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
-      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
-           ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
+// if RemainsCDS.IsEmpty then
+//    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId= 0'
+// else if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
+//    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
+//  else
+//    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
+//      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
+//           ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
 //a1
+
+ if RemainsCDS.IsEmpty then
+    ExpirationDateCDS.Filter := 'Amount <> 0 AND ID = 0'
+ else ExpirationDateCDS.Filter := 'Amount <> 0 AND ID = ' + RemainsCDS.FieldByName('Id').AsString;
 end;
 
 procedure TMainCashForm2.actServiseRunExecute(Sender: TObject);  // только 2 форма
@@ -2361,30 +2526,25 @@ begin
              begin
                if FLocalDataBaseHead.FieldByName('UID').AsString = FLocalDataBaseBody.FieldByName('CH_UID').AsString then
                begin
-
                   MemData.Append;
                   MemData.FieldByName('ID').AsInteger:=FLocalDataBaseBody.FieldByName('GOODSID').AsInteger;
                   MemData.FieldByName('GOODSCODE').AsInteger:=FLocalDataBaseBody.FieldByName('GOODSCODE').AsInteger;
                   MemData.FieldByName('GOODSNAME').AsString:=FLocalDataBaseBody.FieldByName('GOODSNAME').AsString;
                   MemData.FieldByName('PRICE').AsFloat:=FLocalDataBaseBody.FieldByName('PRICE').AsFloat;
 
-
                   if (FLocalDataBaseHead.FieldByName('MANAGER').AsInteger<> 0) or (Trim(FLocalDataBaseHead.FieldByName('BAYER').AsString)<>'')   then
-                   begin
+                  begin
                     MemData.FieldByName('REMAINS').asCurrency:=0;
                     MemData.FieldByName('RESERVED').asCurrency:=FLocalDataBaseBody.FieldByName('AMOUNT').asCurrency;
-
-                   end
-                  else
-                   begin
+                  end else
+                  begin
                     MemData.FieldByName('REMAINS').asCurrency:=FLocalDataBaseBody.FieldByName('AMOUNT').asCurrency;
                     MemData.FieldByName('RESERVED').asCurrency:=0;
-                   end;
+                  end;
 
-
+                  MemData.FieldByName('PDKINDID').AsVariant:=FLocalDataBaseHead.FieldByName('PDKINDID').AsVariant;
                   MemData.FieldByName('NEWROW').AsBoolean:=False;
                   MemData.Post;
-
                end;
               FLocalDataBaseBody.Next;
              end;
@@ -2406,7 +2566,7 @@ begin
 
 end;
 
-procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
   APromoCodeChangePercent: currency);
 var
   nRecNo: Integer;
@@ -2417,6 +2577,7 @@ begin
     FormParams.ParamByName('PromoCodeID').Value             := 0;
     FormParams.ParamByName('PromoCodeGUID').Value           := '';
     FormParams.ParamByName('PromoName').Value               := '';
+    FormParams.ParamByName('BayerName').Value               := '';
     FormParams.ParamByName('PromoCodeChangePercent').Value  := 0;
 
     pnlPromoCode.Visible          := False;
@@ -2428,6 +2589,7 @@ begin
     FormParams.ParamByName('PromoCodeID').Value             := APromoCodeId;
     FormParams.ParamByName('PromoCodeGUID').Value           := APromoCodeGUID;
     FormParams.ParamByName('PromoName').Value               := APromoName;
+    FormParams.ParamByName('BayerName').Value               := ABayerName;
     FormParams.ParamByName('PromoCodeChangePercent').Value  := APromoCodeChangePercent;
     //***27.06.18
 
@@ -2435,6 +2597,7 @@ begin
 
     pnlPromoCode.Visible          := APromoCodeId > 0;
     lblPromoName.Caption          := '  ' + APromoName + '  ';
+    lblPromoBayerName.Caption     := '  ' + ABayerName + '  ';
     lblPromoCode.Caption          := '  ' + APromoCodeGUID + '  ';
     edPromoCodeChangePrice.Value  := APromoCodeChangePercent;
   end;
@@ -2495,7 +2658,7 @@ end;
 procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
 var
   PromoCodeId, nRecNo: Integer;
-  PromoName, PromoCodeGUID: String;
+  PromoName, PromoCodeGUID, BayerName: String;
   PromoCodeChangePercent: currency;
 begin
 
@@ -2504,14 +2667,15 @@ begin
      PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
      PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
      PromoName              := Self.FormParams.ParamByName('PromoName').Value;
+     BayerName              := Self.FormParams.ParamByName('BayerName').Value;
      PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
-     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
+     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, BayerName, PromoCodeChangePercent)
      then exit;
   finally
      Free;
   end;
 
-  SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, PromoCodeChangePercent);
+  SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, BayerName, PromoCodeChangePercent);
 end;
 
 procedure TMainCashForm2.edPromoCodeExit(Sender: TObject);
@@ -2524,7 +2688,8 @@ begin
       SetPromoCode(FormParams.ParamByName('PromoCodeID').Value,
         FormParams.ParamByName('PromoName').Value,
         FormParams.ParamByName('PromoCodeGUID').Value,
-        FormParams.ParamByName('PromoCodeChangePercent').Value);
+        FormParams.ParamByName('BayerName').Value,
+        FormParams.ParamByName('PromoCodeChangePercent').AsFloat);
         ActiveControl := MainGrid;
     Except ON E:Exception do
       Begin
@@ -2539,7 +2704,7 @@ begin
     begin
       ActiveControl := edPromoCode;
       ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
-    end else SetPromoCode(0, '', '', 0);
+    end else SetPromoCode(0, '', '', '', 0);
   end;
 end;
 
@@ -2573,7 +2738,7 @@ var
 begin
 //  ShowMessage('actSetRimainsFromMemdataExecute - begin');
   Add_Log('Начало заполнения с Memdata');
-  AlternativeCDS.DisableControls;
+//  AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
@@ -2581,7 +2746,7 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').asInteger;
   RemainsCDS.Filtered := False;
-  AlternativeCDS.Filtered := False;
+//  AlternativeCDS.Filtered := False;
   CheckCDS.DisableControls;
   oldFilter:= CheckCDS.Filter;
   oldFiltered:= CheckCDS.Filtered;
@@ -2589,19 +2754,24 @@ begin
     MemData.First;
     while not MemData.eof do
     begin
-          // сначала найдем кол-во в чеках
+        // сначала найдем кол-во в чеках
+        Amount_find:=0;
+        if FormParams.ParamByName('PartionDateKindId').Value = MemData.FieldByName('PDKINDID').AsInteger then
+        begin
           CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger);
           CheckCDS.Filtered:=true;
           CheckCDS.First;
-          Amount_find:=0;
           while not CheckCDS.EOF do begin
               Amount_find:= Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
               CheckCDS.Next;
           end;
           CheckCDS.Filter := oldFilter;
           CheckCDS.Filtered:= oldFiltered;
+        end;
 
-      if not RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) and  MemData.FieldByName('NewRow').AsBoolean then
+      if not RemainsCDS.Locate('Id;PartionDateKindId',
+        VarArrayOf([MemData.FieldByName('Id').AsInteger, MemData.FieldByName('PDKINDID').AsVariant]),[]) and
+        MemData.FieldByName('NewRow').AsBoolean then
       Begin
         RemainsCDS.Append;
         RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
@@ -2610,61 +2780,61 @@ begin
         RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
         RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
         RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
-        RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.FieldByName('Reserved').AsVariant := MemData.FieldByName('Reserved').AsVariant;
+        RemainsCDS.FieldByName('MinExpirationDate').AsVariant := MemData.FieldByName('MEXPDATE').AsVariant;
+        RemainsCDS.FieldByName('PartionDateKindId').AsVariant := MemData.FieldByName('PDKINDID').AsVariant;
+        RemainsCDS.FieldByName('PartionDateKindName').AsVariant := MemData.FieldByName('PDKINDNAME').AsVariant;
         RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
         RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
+        RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
         RemainsCDS.Post;
       End
       else
       Begin
-        if RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) then
+        if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
+          MemData.FieldByName('PDKINDID').AsVariant]),[]) then
         Begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
           RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
           RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-                                                        - Amount_find;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - Amount_find;
+          RemainsCDS.FieldByName('MinExpirationDate').AsVariant := MemData.FieldByName('MEXPDATE').AsVariant;
+          RemainsCDS.FieldByName('PartionDateKindId').AsVariant := MemData.FieldByName('PDKINDID').AsVariant;
+          RemainsCDS.FieldByName('PartionDateKindName').AsVariant := MemData.FieldByName('PDKINDNAME').AsVariant;
           RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
           RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
+          RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
           RemainsCDS.Post;
         End;
       End;
+
       MemData.Next;
     end;
 
-    AlternativeCDS.First;
-    while Not AlternativeCDS.eof do
-    Begin
-      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-      Begin
-        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
-        Begin
-          AlternativeCDS.Edit;
-          AlternativeCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-                                                            - Amount_find;
-          AlternativeCDS.Post;
-        End;
-      End;
-      AlternativeCDS.Next;
-    End;
+//    AlternativeCDS.First;
+//    while Not AlternativeCDS.eof do
+//    Begin
+//      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+//      Begin
+//        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
+//        Begin
+//          AlternativeCDS.Edit;
+//          AlternativeCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
+//          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - Amount_find;
+//          AlternativeCDS.Post;
+//        End;
+//      End;
+//      AlternativeCDS.Next;
+//    End;
     MemData.Close;
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    AlternativeCDS.Filtered := true;
-    AlternativeCDS.EnableControls;
+//    AlternativeCDS.Filtered := true;
+//    AlternativeCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
@@ -2682,13 +2852,14 @@ procedure TMainCashForm2.actSetUpdateFromMemdataExecute(Sender: TObject);  // то
 var
   GoodsId: Integer;
   nCheckId: integer;
-  Amount_find: Currency;
-  oldFilter:String;
+  Amount_find, nDelta: Currency;
+  oldFilter, oldFilterExpirationDate:String;
   oldFiltered:Boolean;
 begin
 //  ShowMessage('actSetUpdateFromMemdataExecute - begin');
   Add_Log('Начало обновления с Memdata');
-  AlternativeCDS.DisableControls;
+//  AlternativeCDS.DisableControls;
+  ExpirationDateCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
@@ -2696,7 +2867,8 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := False;
-  AlternativeCDS.Filtered := False;
+//  AlternativeCDS.Filtered := False;
+  oldFilterExpirationDate := ExpirationDateCDS.Filter;
   CheckCDS.DisableControls;
   oldFilter:= CheckCDS.Filter;
   oldFiltered:= CheckCDS.Filtered;
@@ -2705,6 +2877,9 @@ begin
     while not MemData.eof do
     begin
           // сначала найдем кол-во в чеках
+        Amount_find:=0;
+        if FormParams.ParamByName('PartionDateKindId').Value = MemData.FieldByName('PDKINDID').AsInteger then
+        begin
           CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger);
           CheckCDS.Filtered:=true;
           CheckCDS.First;
@@ -2715,8 +2890,10 @@ begin
           end;
           CheckCDS.Filter := oldFilter;
           CheckCDS.Filtered:= oldFiltered;
+        end;
 
-      if not RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) and  MemData.FieldByName('NewRow').AsBoolean then
+      if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
+        MemData.FieldByName('PDKINDID').AsVariant]),[]) and MemData.FieldByName('NewRow').AsBoolean then
       Begin
         RemainsCDS.Append;
         RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
@@ -2725,59 +2902,81 @@ begin
         RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
         RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency - MemData.FieldByName('Reserved').asCurrency;
         RemainsCDS.FieldByName('Reserved').asCurrency :=  RemainsCDS.FieldByName('Reserved').asCurrency + MemData.FieldByName('Reserved').asCurrency;
-        RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
-        RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
         RemainsCDS.Post;
       End
       else
       Begin
-        if RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) then
+        if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
+          MemData.FieldByName('PDKINDID').AsVariant]),[]) then
         Begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
           RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency -  MemData.FieldByName('Reserved').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := RemainsCDS.FieldByName('Reserved').asCurrency + MemData.FieldByName('Reserved').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-                                                        - Amount_find;
-          RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
-          RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - Amount_find;
           RemainsCDS.Post;
         End;
       End;
+
+      nDelta := MemData.FieldByName('Remains').asCurrency;
+      ExpirationDateCDS.Filter := 'ID = ' + MemData.FieldByName('GoodsCode').AsString +
+        ' and PartionDateKindId = ' + IntToStr(MemData.FieldByName('PDKINDID').AsInteger);
+      ExpirationDateCDS.First;
+      while Not ExpirationDateCDS.eof and (nDelta <> 0) do
+      Begin
+        if nDelta > 0 then
+        begin
+          if ExpirationDateCDS.FieldByName('Amount').asCurrency > 0 then
+          begin
+            ExpirationDateCDS.Edit;
+            if nDelta > ExpirationDateCDS.FieldByName('Amount').asCurrency then
+            begin
+              nDelta := nDelta - ExpirationDateCDS.FieldByName('Amount').asCurrency;
+              ExpirationDateCDS.FieldByName('Amount').asCurrency := 0;
+            end else
+            begin
+              ExpirationDateCDS.FieldByName('Amount').asCurrency := ExpirationDateCDS.FieldByName('Amount').asCurrency - nDelta;
+              nDelta := 0;
+            end;
+            ExpirationDateCDS.Post;
+          end;
+        end else
+        begin
+          ExpirationDateCDS.Last;
+          ExpirationDateCDS.Edit;
+          ExpirationDateCDS.FieldByName('Amount').asCurrency := ExpirationDateCDS.FieldByName('Amount').asCurrency - nDelta;
+          ExpirationDateCDS.Post;
+          nDelta := 0;
+        end;
+        ExpirationDateCDS.Next;
+      End;
+
       MemData.Next;
     end;
 
-    AlternativeCDS.First;
-    while Not AlternativeCDS.eof do
-    Begin
-      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-      Begin
-        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
-        Begin
-          AlternativeCDS.Edit;
-          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency -  MemData.FieldByName('Reserved').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          AlternativeCDS.FieldByName('Remains').asCurrency :=  AlternativeCDS.FieldByName('Remains').asCurrency
-                                                            - Amount_find;
-          AlternativeCDS.Post;
-        End;
-      End;
-      AlternativeCDS.Next;
-    End;
+//    AlternativeCDS.First;
+//    while Not AlternativeCDS.eof do
+//    Begin
+//      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+//      Begin
+//        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
+//        Begin
+//          AlternativeCDS.Edit;
+//          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency -  MemData.FieldByName('Reserved').asCurrency;
+//          AlternativeCDS.FieldByName('Remains').asCurrency :=  AlternativeCDS.FieldByName('Remains').asCurrency - Amount_find;
+//          AlternativeCDS.Post;
+//        End;
+//      End;
+//      AlternativeCDS.Next;
+//    End;
     MemData.Close;
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    AlternativeCDS.Filtered := true;
-    AlternativeCDS.EnableControls;
+//    AlternativeCDS.Filtered := true;
+//    AlternativeCDS.EnableControls;
+    ExpirationDateCDS.Filter := oldFilterExpirationDate;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
@@ -2866,6 +3065,9 @@ begin
               ,FormParams.ParamByName('SiteDiscount').Value
               //***02.04.19
               ,FormParams.ParamByName('RoundingDown').Value
+              //***13.05.19
+              ,FormParams.ParamByName('PartionDateKindId').Value
+              ,FormParams.ParamByName('ConfirmationCodeSP').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2954,6 +3156,9 @@ begin
               ,FormParams.ParamByName('SiteDiscount').Value
               //***02.04.19
               ,FormParams.ParamByName('RoundingDown').Value
+              //***13.05.19
+              ,FormParams.ParamByName('PartionDateKindId').Value
+              ,FormParams.ParamByName('ConfirmationCodeSP').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2986,6 +3191,12 @@ begin
     ShowMessage('В текущем чеке применена скидка. Сначала очистите чек!');
     exit;
   End;
+
+  if pnlHelsiError.Visible then
+  begin
+    ShowMessage('Обработайте непогашенный чек Хелси!');
+    exit;
+  end;
 
   with TDiscountDialogForm.Create(nil) do
   try
@@ -3157,6 +3368,12 @@ begin
 
   if not CheckSP then Exit;
 
+  if pnlHelsiError.Visible then
+  begin
+    ShowMessage('Обработайте непогашенный чек Хелси!');
+    exit;
+  end;
+
   if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') or
     pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
   Begin
@@ -3270,6 +3487,12 @@ begin
     exit;
   End;
 
+  if pnlHelsiError.Visible then
+  begin
+    ShowMessage('Обработайте непогашенный чек Хелси!');
+    exit;
+  end;
+
   if not CheckSP then Exit;
 
   if not CheckCDS.IsEmpty or pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
@@ -3280,6 +3503,38 @@ begin
 
   InvNumberSP := '';
   if not InputEnterRecipeNumber(InvNumberSP) then Exit;
+
+  WaitForSingleObject(MutexDBF, INFINITE);
+  try
+    FLocalDataBaseHead.Open;
+    FLocalDataBaseHead.First;
+    while not FLocalDataBaseHead.Eof do
+    begin
+      if Trim(FLocalDataBaseHead.FieldByName('INVNUMSP').AsString) = InvNumberSP then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+        Exit;
+      end;
+      FLocalDataBaseHead.Next;
+    end;
+  finally
+    FLocalDataBaseHead.Close;
+    ReleaseMutex(MutexDBF);
+  end;
+
+  if not gc_User.Local then
+  begin
+    spGet_Movement_InvNumberSP.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
+    spGet_Movement_InvNumberSP.ParamByName('inInvNumberSP').Value := InvNumberSP;
+    if spGet_Movement_InvNumberSP.Execute = '' then
+    begin
+      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+        Exit;
+      end;
+    end else Exit;
+  end;
 
   if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP) then
   begin
@@ -3402,6 +3657,9 @@ begin
               ,FormParams.ParamByName('SiteDiscount').Value
               //***02.04.19
               ,FormParams.ParamByName('RoundingDown').Value
+              //***13.05.19
+              ,FormParams.ParamByName('PartionDateKindId').Value
+              ,FormParams.ParamByName('ConfirmationCodeSP').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3513,12 +3771,15 @@ begin
 end;
 
 procedure TMainCashForm2.btnCheckClick(Sender: TObject);
+  var APoint : TPoint;
 begin
-  SetBlinkCheck(true);
-  //
-  if fBlinkCheck = true
-  then actOpenCheckVIP_Error.Execute
-  else actCheck.Execute;
+  if gc_User.Local then
+  Begin
+    ShowMessage('В отложенном режиме неработает...');
+    Exit;
+  End;
+  APoint := btnCheck.ClientToScreen(Point(0, btnCheck.ClientHeight));
+  pm_OpenCheck.Popup(APoint.X, APoint.Y);
 end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
@@ -3673,6 +3934,38 @@ end;
 procedure TMainCashForm2.ConnectionModeChange(var Msg: TMessage);
 begin
   SetWorkMode(gc_User.Local);
+end;
+
+procedure TMainCashForm2.cxButton4Click(Sender: TObject);
+begin
+  if MessageDlg('Отменить обработку непогашенного чека Хелси?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+  pnlHelsiError.Visible := False;
+  edHelsiError.Text := '';
+end;
+
+procedure TMainCashForm2.cxButton5Click(Sender: TObject);
+begin
+  if GetStateReceipt then
+  begin
+    ShowMessage('Рецепт погашен...');
+    pnlHelsiError.Visible := False;
+    edHelsiError.Text := '';
+  end else ShowMessage('Рецепт не погашен...');
+end;
+
+procedure TMainCashForm2.cxButton6Click(Sender: TObject);
+  var HelsiError : boolean;
+begin
+  HelsiError := true;
+  if CreateNewDispense then
+  begin
+    HelsiError := not SetPayment;
+    if not HelsiError then HelsiError := not IntegrationClientSign;
+    if not HelsiError then HelsiError := not ProcessSignedDispense;
+  end;
+
+  if HelsiError then RejectDispense;
+  if HelsiError then cxButton5Click(Sender);
 end;
 
 procedure TMainCashForm2.edAmountExit(Sender: TObject);
@@ -3860,6 +4153,7 @@ begin
   FNeedFullRemains := true;
   TimerServiceRun.Enabled := true;
 
+  LoadGoodsExpirationDate;
   LoadBankPOSTerminal;
   LoadUnitConfig;
   LoadTaxUnitNight;
@@ -3901,6 +4195,12 @@ begin
   SetTaxUnitNight;
   nMultiplicity := 0;
 
+  if pnlHelsiError.Visible then
+  begin
+    ShowMessage('Обработайте непогашенный чек Хелси!');
+    exit;
+  end;
+
   nAmount := GetAmount;
   if nAmount = 0 then
      exit;
@@ -3925,6 +4225,25 @@ begin
   begin
     ShowMessage('Деление медикамента заблокировано!');
     exit;
+  end;
+
+  if nAmount > 0 then
+  begin
+    if CheckCDS.RecordCount > 0 then
+    begin
+      if FormParams.ParamByName('PartionDateKindId').Value <> SourceClientDataSet.FieldByName('PartionDateKindId').AsInteger then
+      begin
+        if FormParams.ParamByName('PartionDateKindName').Value = '' then
+          ShowMessage('В чек можно опускать толбко медикаменты со сроком <более 6 месяцев>')
+        else ShowMessage('В чек можно опускать толбко медикаменты со сроком <' + FormParams.ParamByName('PartionDateKindName').Value + '>');
+        Exit;
+      end;
+    end else
+    begin
+      FormParams.ParamByName('PartionDateKindId').Value := SourceClientDataSet.FieldByName('PartionDateKindId').AsInteger;
+      FormParams.ParamByName('PartionDateKindName').Value := SourceClientDataSet.FieldByName('PartionDateKindName').AsString;
+      SetFilterPartionDateKind;
+    end;
   end;
 
   //
@@ -4287,6 +4606,7 @@ begin
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
 
     CalcTotalSumm;
+    if CheckCDS.RecordCount = 0 then ClearFilterPartionDateKind;
   End
   else
   if SoldRegim AND (nAmount < 0) then
@@ -4320,7 +4640,7 @@ begin
   //отключаем реакции
 
   Add_Log('Начало обновления остатков');
-  AlternativeCDS.DisableControls;
+//  AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
@@ -4328,7 +4648,7 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := False;
-  AlternativeCDS.Filtered := False;
+//  AlternativeCDS.Filtered := False;
   ADIffCDS.DisableControls;
   CheckCDS.DisableControls;
   oldFilter:= CheckCDS.Filter;
@@ -4339,7 +4659,10 @@ begin
     while not ADIffCDS.eof do
     begin
           // сначала найдем кол-во в чеках
-          CheckCDS.Filter:='GoodsId = ' + IntToStr(ADIffCDS.FieldByName('Id').AsInteger);
+        Amount_find:=0;
+        if FormParams.ParamByName('PartionDateKindId').Value = MemData.FieldByName('PDKINDID').AsInteger then
+        begin
+          CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger);
           CheckCDS.Filtered:=true;
           CheckCDS.First;
           Amount_find:=0;
@@ -4349,6 +4672,7 @@ begin
           end;
           CheckCDS.Filter := oldFilter;
           CheckCDS.Filtered:= oldFiltered;
+        end;
 
       if ADIffCDS.FieldByName('NewRow').AsBoolean then
       Begin
@@ -4371,44 +4695,34 @@ begin
           RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
           RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-                                                        - Amount_find;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - Amount_find;
           RemainsCDS.Post;
         End;
       End;
       ADIffCDS.Next;
     end;
 
-    AlternativeCDS.First;
-    while Not AlternativeCDS.eof do
-    Begin
-      if ADIffCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-      Begin
-        if AlternativeCDS.FieldByName('Remains').asCurrency <> ADIffCDS.FieldByName('Remains').asCurrency then
-        Begin
-          AlternativeCDS.Edit;
-          AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-                                                            - Amount_find;
-          AlternativeCDS.Post;
-        End;
-      End;
-      AlternativeCDS.Next;
-    End;
+//    AlternativeCDS.First;
+//    while Not AlternativeCDS.eof do
+//    Begin
+//      if ADIffCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+//      Begin
+//        if AlternativeCDS.FieldByName('Remains').asCurrency <> ADIffCDS.FieldByName('Remains').asCurrency then
+//        Begin
+//          AlternativeCDS.Edit;
+//          AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
+//          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - Amount_find;
+//          AlternativeCDS.Post;
+//        End;
+//      End;
+//      AlternativeCDS.Next;
+//    End;
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    AlternativeCDS.Filtered := true;
-    AlternativeCDS.EnableControls;
+//    AlternativeCDS.Filtered := true;
+//    AlternativeCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
@@ -4522,6 +4836,35 @@ begin
     AText := FormatCurr(',0.00', CalcTaxUnitNightPriceGrid(ARecord.Values[MainColPrice.Index], ARecord.Values[MainGridPriceChange.Index]));
 end;
 
+procedure TMainCashForm2.pm_CheckClick(Sender: TObject);
+begin
+  SetBlinkCheck(true);
+  //
+  if fBlinkCheck = true
+  then actOpenCheckVIP_Error.Execute
+  else actCheck.Execute;
+end;
+
+procedure TMainCashForm2.pm_CheckHelsiAllUnitClick(Sender: TObject);
+begin
+  with TCheckHelsiSignAllUnitForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+     Free;
+  end;
+end;
+
+procedure TMainCashForm2.pm_CheckHelsiClick(Sender: TObject);
+begin
+  with TCheckHelsiSignForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+     Free;
+  end;
+end;
+
 procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
@@ -4621,6 +4964,10 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
+  FormParams.ParamByName('ConfirmationCodeSP').Value := '';
+  //**13.05.19
+  FormParams.ParamByName('PartionDateKindId').Value := 0;
+  FormParams.ParamByName('PartionDateKindName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -4706,11 +5053,17 @@ begin
         finally
           ReleaseMutex(MutexRemains);
         end;
-        WaitForSingleObject(MutexAlternative, INFINITE);
+//        WaitForSingleObject(MutexAlternative, INFINITE);
+//        try
+//          SaveLocalData(AlternativeCDS,Alternative_lcl);
+//        finally
+//          ReleaseMutex(MutexAlternative);
+//        end;
+        WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
         try
-          SaveLocalData(AlternativeCDS,Alternative_lcl);
+          SaveLocalData(ExpirationDateCDS,GoodsExpirationDate_lcl);
         finally
-          ReleaseMutex(MutexAlternative);
+          ReleaseMutex(MutexGoodsExpirationDate);
         end;
       end;
     Except
@@ -4799,6 +5152,12 @@ begin
   End;
   FPUSHEnd := Now;
   if FPUSHStart then TimerPUSH.Enabled := True;
+  pm_CheckHelsiAllUnit.Visible := False;
+  if not gc_User.Local then
+  Begin
+    spGet_User_IsAdmin.Execute;
+    pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True;
+  End;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -5092,6 +5451,8 @@ end;
 procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
 var
   GoodsId: Integer;
+  nDelta : Currency;
+  oldFilterExpirationDate : String;
   //lPriceSale : Currency;
 begin
   //Если пусто - ничего не делаем
@@ -5104,12 +5465,14 @@ begin
     exit;
   End;
   //открючаем реакции
-  AlternativeCDS.DisableControls;
+//  AlternativeCDS.DisableControls;
+  ExpirationDateCDS.DisableControls;
+  oldFilterExpirationDate := ExpirationDateCDS.Filter;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   RemainsCDS.Filtered := False;
-  AlternativeCDS.Filtered := False;
+//  AlternativeCDS.Filtered := False;
   try
     CheckCDS.First;
     while not CheckCDS.eof do
@@ -5137,34 +5500,67 @@ begin
       CheckCDS.Next;
     end;
 
-    AlternativeCDS.First;
-    while Not AlternativeCDS.eof do
+    nDelta := AAmount;
+    ExpirationDateCDS.Filter := 'ID = ' + IntToStr(AGoodsId) +
+      ' and PartionDateKindId = ' + IntToStr(FormParams.ParamByName('PartionDateKindId').Value);
+    ExpirationDateCDS.First;
+    while Not ExpirationDateCDS.eof and (nDelta <> 0) do
     Begin
-      if (AGoodsId = 0) or ((AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) and (AlternativeCDS.FieldByName('Price').AsFloat = APriceSale)) then
-      Begin
-        //if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
-        //then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
-        //else lPriceSale:= AlternativeCDS.fieldByName('Price').asCurrency;
-
-        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,APriceSale]),[]) then
-        Begin
-          AlternativeCDS.Edit;
-          if (AAmount = 0) or
-             (
-               (AAmount < 0)
-               AND
-               (abs(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
-             ) then
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              + CheckCDS.FieldByName('Amount').asCurrency
-          else
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - AAmount;
-          AlternativeCDS.Post;
-        End;
-      End;
-      AlternativeCDS.Next;
+      if nDelta > 0 then
+      begin
+        if ExpirationDateCDS.FieldByName('Amount').asCurrency > 0 then
+        begin
+          ExpirationDateCDS.Edit;
+          if nDelta > ExpirationDateCDS.FieldByName('Amount').asCurrency then
+          begin
+            nDelta := nDelta - ExpirationDateCDS.FieldByName('Amount').asCurrency;
+            ExpirationDateCDS.FieldByName('Amount').asCurrency := 0;
+          end else
+          begin
+            ExpirationDateCDS.FieldByName('Amount').asCurrency := ExpirationDateCDS.FieldByName('Amount').asCurrency - nDelta;
+            nDelta := 0;
+          end;
+          ExpirationDateCDS.Post;
+        end;
+      end else
+      begin
+        ExpirationDateCDS.Edit;
+        ExpirationDateCDS.FieldByName('Amount').asCurrency := ExpirationDateCDS.FieldByName('Amount').asCurrency - nDelta;
+        ExpirationDateCDS.Post;
+        nDelta := 0;
+      end;
+      ExpirationDateCDS.Next;
     End;
+
+
+//    AlternativeCDS.First;
+//    while Not AlternativeCDS.eof do
+//    Begin
+//      if (AGoodsId = 0) or ((AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) and (AlternativeCDS.FieldByName('Price').AsFloat = APriceSale)) then
+//      Begin
+//        //if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
+//        //then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
+//        //else lPriceSale:= AlternativeCDS.fieldByName('Price').asCurrency;
+//
+//        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,APriceSale]),[]) then
+//        Begin
+//          AlternativeCDS.Edit;
+//          if (AAmount = 0) or
+//             (
+//               (AAmount < 0)
+//               AND
+//               (abs(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+//             ) then
+//            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+//              + CheckCDS.FieldByName('Amount').asCurrency
+//          else
+//            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+//              - AAmount;
+//          AlternativeCDS.Post;
+//        End;
+//      End;
+//      AlternativeCDS.Next;
+//    End;
 
     CheckCDS.First;
     while not CheckCDS.Eof do
@@ -5310,8 +5706,10 @@ begin
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    AlternativeCDS.Filtered := true;
-    AlternativeCDS.EnableControls;
+//    AlternativeCDS.Filtered := true;
+//    AlternativeCDS.EnableControls;
+    ExpirationDateCDS.Filter := oldFilterExpirationDate;
+    ExpirationDateCDS.EnableControls;
     CheckCDS.Filtered := True;
     if AGoodsId <> 0 then
       CheckCDS.Locate('GoodsId',AGoodsId,[]);
@@ -5381,7 +5779,8 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
-      ARoundingDown, ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string;
+      ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
@@ -5512,6 +5911,7 @@ begin
     if AUID = '' then
       AUID := GenerateGUID;
     Result := True;
+
     //сохраняем шапку
     try
       if (FormParams.ParamByName('CheckId').Value = 0) or
@@ -5564,12 +5964,15 @@ begin
                                          //***25.02.19
                                          AJackdawsChecksCode,      // Галка
                                          //***02.04.19
-                                         ARoundingDown             // Округление в низ
+                                         ARoundingDown,            // Округление в низ
+                                         //***13.05.19
+                                         APartionDateKindId,       // Тип срок/не срок
+                                         AConfirmationCodeSP       // Код подтверждения рецепта
                                         ]));
       End
       else
       Begin
-        AUID := FLocalDataBaseHead.FieldByName('UID').Value;//uid чека
+        AUID := trim(FLocalDataBaseHead.FieldByName('UID').Value);//uid чека
         FLocalDataBaseHead.Edit;
         FLocalDataBaseHead.FieldByName('DATE').Value := Now; //дата оплаты
         FLocalDataBaseHead.FieldByName('PAIDTYPE').Value := Integer(PaidType); //тип оплаты
@@ -5617,6 +6020,9 @@ begin
         FLocalDataBaseHead.FieldByName('JACKCHECK').Value := AJackdawsChecksCode;
         //***02.04.19
         FLocalDataBaseHead.FieldByName('ROUNDDOWN').Value := ARoundingDown;
+        //***13.05.19
+        FLocalDataBaseHead.FieldByName('PDKINDID').Value := APartionDateKindId;
+        FLocalDataBaseHead.FieldByName('CONFCODESP').Value := AConfirmationCodeSP;
 
         FLocalDataBaseHead.Post;
       End;
@@ -6083,13 +6489,14 @@ begin
   try
     MainGridDBTableView.BeginUpdate;
     RemainsCDS.DisableControls;
-    AlternativeCDS.DisableControls;
+//    AlternativeCDS.DisableControls;
+    ExpirationDateCDS.DisableControls;
     nRemainsID := 0;
     if RemainsCDS.Active and (RemainsCDS.RecordCount > 0) then
       nRemainsID := RemainsCDS.FieldByName('Id').asInteger;
     nAlternativeID := 0;
-    if AlternativeCDS.Active and (AlternativeCDS.RecordCount > 0) then
-      nAlternativeID := AlternativeCDS.FieldByName('Id').asInteger;
+//    if AlternativeCDS.Active and (AlternativeCDS.RecordCount > 0) then
+//      nAlternativeID := AlternativeCDS.FieldByName('Id').asInteger;
     nCheckID := 0;
     if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
       nCheckID := CheckCDS.FieldByName('GoodsId').asInteger;
@@ -6103,11 +6510,17 @@ begin
       finally
         ReleaseMutex(MutexRemains);
       end;
-      WaitForSingleObject(MutexAlternative, INFINITE);
+//      WaitForSingleObject(MutexAlternative, INFINITE);
+//      try
+//        LoadLocalData(AlternativeCDS, Alternative_lcl);
+//      finally
+//        ReleaseMutex(MutexAlternative);
+//      end;
+      WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
       try
-        LoadLocalData(AlternativeCDS, Alternative_lcl);
+        LoadLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
       finally
-        ReleaseMutex(MutexAlternative);
+        ReleaseMutex(MutexGoodsExpirationDate);
       end;
       // корректируем новые остатки с учетом того, что уже было в чеке
       CheckCDS.First;
@@ -6140,12 +6553,13 @@ begin
     finally
       if nRemainsID <> 0 then
         RemainsCDS.Locate('Id', nRemainsID, []);
-      if nAlternativeID <> 0 then
-        AlternativeCDS.Locate('Id', nAlternativeID, []);
+//      if nAlternativeID <> 0 then
+//        AlternativeCDS.Locate('Id', nAlternativeID, []);
       if nCheckID <> 0 then
         CheckCDS.Locate('GoodsId', nCheckID, []);
       RemainsCDS.EnableControls;
-      AlternativeCDS.EnableControls;
+//      AlternativeCDS.EnableControls;
+      ExpirationDateCDS.EnableControls;
       MainGridDBTableView.EndUpdate;
     end;
   finally
@@ -6173,6 +6587,23 @@ begin
     if (nPos <> 0) and BankPOSTerminalCDS.Active and
       (BankPOSTerminalCDS.RecordCount >= nPos) then BankPOSTerminalCDS.RecNo := nPos;
     BankPOSTerminalCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.LoadGoodsExpirationDate;
+begin
+  if not FileExists(GoodsExpirationDate_lcl) then Exit;
+
+  ExpirationDateCDS.DisableControls;
+  try
+    WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
+    try
+      LoadLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
+    finally
+      ReleaseMutex(MutexGoodsExpirationDate);
+    end;
+  finally
+    ExpirationDateCDS.EnableControls;
   end;
 end;
 

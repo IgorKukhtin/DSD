@@ -56,6 +56,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccountContract_Unit() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_BankAccountContract_Unit', 'Связь с Подразделением', zc_Object_BankAccountContract(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccountContract_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BarCodeBox_Box() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BarCodeBox_Box'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_BarCodeBox_Box', 'Связь c Ящик', zc_Object_BarCodeBox(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BarCodeBox_Box');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarModel() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_CarModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -1310,6 +1313,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_PersonalTrade() RETURNS Integer 
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_Retail_PersonalTrade', 'Связь торг.сеть с Сотрудником(Отв. представитель коммерч.отдела)', zc_Object_Retail(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalTrade');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_ClientKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_ClientKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_Retail_ClientKind', 'Связь торг.сеть с Категории покупателей', zc_Object_Retail(), zc_Object_ClientKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_ClientKind');
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderType_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2143,6 +2149,7 @@ SELECT 'zc_ObjectLink_User_Helsi_Unit', 'Связь с Подразделением для которого зар
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.05.19         * zc_ObjectLink_Retail_ClientKind
  27.04.19                                                                                      * zc_ObjectLink_User_Helsi_Unit
  23.04.19         * zc_ObjectLink_RetailCostCredit_Retail
  10.04.19         * zc_ObjectLink_GoodsPropertyValue_Box

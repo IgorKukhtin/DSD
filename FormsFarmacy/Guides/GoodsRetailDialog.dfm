@@ -53,6 +53,7 @@ object GoodsRetailDialogForm: TGoodsRetailDialogForm
     Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 3
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Width = 314
   end
   object cxLabel2: TcxLabel
@@ -72,6 +73,7 @@ object GoodsRetailDialogForm: TGoodsRetailDialogForm
     Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 5
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1074#1072#1088'>'
     Width = 314
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -114,8 +116,8 @@ object GoodsRetailDialogForm: TGoodsRetailDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 15
-    Top = 121
+    Left = 175
+    Top = 113
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'

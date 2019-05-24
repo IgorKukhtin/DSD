@@ -95,6 +95,7 @@ type
     function IntegrationClientSign : boolean;
     function ProcessSignedDispense : boolean;
     function GetHTTPLocation : Boolean;
+    function GetStateReceipt : boolean;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -106,18 +107,24 @@ type
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 
+function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+
 function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
-  ACode : string) : boolean;
+  ACode : string) : boolean;  overload;
+function CreateNewDispense : boolean; overload;
 
 function RejectDispense : boolean;
 
-function SetPayment(AID : string; ASum : currency) : boolean;
+function SetPayment(AID : string; ASum : currency) : boolean; overload;
+function SetPayment : boolean; overload;
 
 function IntegrationClientSign : boolean;
 
 function ProcessSignedDispense : boolean;
 
 function CheckRequest_Number(ANumber : string) : boolean;
+
+function GetStateReceipt : boolean;
 
 implementation
 
@@ -126,24 +133,27 @@ uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
 
 var HelsiApi : THelsiApi;
 
-const arError : array [0..16, 0..2] of string =
-  (('Active medication dispense already exists', 'forbidden', 'Наразі здійснюється погашення цього рецепту'),
-  ('Legal entity is not verified', 'request_conflict', 'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
-  ('Can''t update medication dispense status from PROCESSED to REJECTED', 'request_conflict', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
-  ('Medication request is not active', 'request_conflict', 'Увага! Рецепт не може бути погашено, адже дата закінчення лікування за ним прошла. Рекомендуйте пацієнту звернутися до лікаря для виписки нового рецепту із більш тривалим терміном лікування.'),
-  ('Division should be participant of a contract to create dispense', 'request_conflict', 'Увага! Аптеку в якій Ви працюєте, не включено в діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
-  ('Medication request can not be dispensed. Invoke qualify medication request API to get detailed info', 'request_conflict', 'Неможливо погасити цей рецепт за програмою "Доступні ліки"! Пацієнту щойно було видано препарат з такою же діючою речовиною. Поки що цей рецепт може бути відпущено тільки поза програмою реімбурсації.'),
-  ('Program cannot be used - no active contract exists', 'request_conflict', 'Увага! За Вашим закладом відсутній діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
-  ('Can''t update medication dispense status from EXPIRED to PROCESSED', 'request_conflict', 'Необхідно повторити операцію погашення'),
-  ('Can''t update medication dispense status from REJECTED to PROCESSED', 'request_conflict', 'Необхідно повторити операцію погашення'),
-  ('Can''t update medication dispense status from REJECTED to REJECTED', 'request_conflict', 'Необхідно повторити операцію погашення'),
-  ('Does not match the legal entity', 'request_malformed', 'Помилка! Підпис КЕП не належить юридичній особі. Повторіть спробу використовуючи Ваш коректний КЕП'),
-  ('Does not match the signer drfo', 'request_malformed', 'Помилка! Підпис КЕП належить іншому співробітнику. Повторіть спробу використовуючи Ваш коректний КЕП'),
-  ('Does not match the signer last name', 'request_malformed', 'Помилка! Проблема з співставленням прізвища підписувача. Повторіть спробу використовуючи Ваш коректний КЕП'),
-  ('document must contain 1 signature and 0 stamps but contains 0 signatures and 1 stamp', 'request_malformed', 'Помилка! При підписанні Ви використовуєте не власний КЕП. Повторіть спробу використовуючи Ваш коректний КЕП'),
-  ('Requested discount price does not satisfy allowed reimbursement amount', 'validation_failed', 'Помилка! Невідповідність суми реімбурсації до умов програми "Доступні ліки".'),
-  ('Medication request is not valid', 'validation_failed', 'Некоректні параметри запиту на отримання рецепту'),
-  ('Incorrect code', 'access_denied', 'Неправельный код подтверждения'));
+const arError : array [0..19, 0..1] of string =
+  (('Active medication dispense already exists', 'Наразі здійснюється погашення цього рецепту'),
+  ('Legal entity is not verified',  'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
+  ('Can''t update medication dispense status from PROCESSED to REJECTED', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
+  ('Medication request is not active', 'Увага! Рецепт не може бути погашено, адже дата закінчення лікування за ним прошла. Рекомендуйте пацієнту звернутися до лікаря для виписки нового рецепту із більш тривалим терміном лікування.'),
+  ('Division should be participant of a contract to create dispense', 'Увага! Аптеку в якій Ви працюєте, не включено в діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
+  ('Medication request can not be dispensed. Invoke qualify medication request API to get detailed info', 'Неможливо погасити цей рецепт за програмою "Доступні ліки"! Пацієнту щойно було видано препарат з такою же діючою речовиною. Поки що цей рецепт може бути відпущено тільки поза програмою реімбурсації.'),
+  ('Program cannot be used - no active contract exists', 'Увага! За Вашим закладом відсутній діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
+  ('Can''t update medication dispense status from EXPIRED to PROCESSED', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to PROCESSED', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to REJECTED', 'Необхідно повторити операцію погашення'),
+  ('Does not match the legal entity', 'Помилка! Підпис КЕП не належить юридичній особі. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Does not match the signer drfo', 'Помилка! Підпис КЕП належить іншому співробітнику. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Does not match the signer last name', 'Помилка! Проблема з співставленням прізвища підписувача. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('document must contain 1 signature and 0 stamps but contains 0 signatures and 1 stamp', 'Помилка! При підписанні Ви використовуєте не власний КЕП. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Requested discount price does not satisfy allowed reimbursement amount', 'Помилка! Невідповідність суми реімбурсації до умов програми "Доступні ліки".'),
+  ('Medication request is not valid', 'Некоректні параметри запиту на отримання рецепту'),
+  ('Incorrect code', 'Неправельный код подтверждения'),
+  ('Invalid dispense period', 'Увага! Сплив термін дії рецепту. Пацієнту потрібно звернутися до лікаря для виписки нового рецепту'),
+  ('dispensed medication quantity must be equal to medication quantity in Medication Request', 'Количество отпускаемого лекарства должно быть равно количеству выписанного в рецепте лекарства'),
+  ('Certificate verificaton failed', 'Не удалось подтвердить сертификат. Повторите попытку погашения чека.'));
 
 
 function DelDoubleQuote(AStr : string) : string;
@@ -248,18 +258,11 @@ begin
     end;
     if cDescription = '' then cDescription := cMessage;
 
-    for I := 0 to 16 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) and (LowerCase(arError[I, 1]) = LowerCase(cType)) then
+    for I := 0 to 19 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
     begin
-      cError := arError[I, 2];
+      cError := arError[I, 1];
       Break;
     end;
-
-    if cError = '' then
-      for I := 0 to 16 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
-      begin
-        cError := arError[I, 2];
-        Break;
-      end;
 
     if (cError = '') and (cDescription <> '') then cError := cDescription
   end;
@@ -458,7 +461,7 @@ begin
         begin
           j := jValue.FindValue('medical_program');
           FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
-        end else Exit;
+        end else FMedical_program_id := '';
 
         if jValue.FindValue('medication_info') <> Nil then
         begin
@@ -644,6 +647,7 @@ begin
   Result := False;
 
   if HelsiApi.FRequest_number = '' then Exit;
+  if FDispense_ID = '' then Exit;
 
   FRESTClient.BaseURL := FHelsi_be;
   FRESTClient.ContentType := 'application/json';
@@ -662,7 +666,10 @@ begin
   end;
 
   case FRESTResponse.StatusCode of
-    204 : Result := True;
+    204 : begin
+            Result := True;
+            FDispense_ID := '';
+          end
     else ShowError('Ошибка запроса на отмену запроса на погашения')
   end;
 end;
@@ -766,19 +773,28 @@ begin
 
   try
     FRESTRequest.Execute;
-  except
+  except on E: Exception do
+         Begin
+           ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message);
+           Exit;
+         End;
   end;
 
   case FRESTResponse.StatusCode of
     200 : Result := True;
     else
+    begin
       cError := '';
-      jValue := FRESTResponse.JSONValue ;
-      if jValue.FindValue('Message') <> Nil then
+      if FRESTResponse.ContentType = 'application/json' then
       begin
-        cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+        jValue := FRESTResponse.JSONValue ;
+        if jValue.FindValue('Message') <> Nil then
+        begin
+          cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+        end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + cError);
+    end;
   end;
 end;
 
@@ -863,8 +879,52 @@ begin
     IdHTTP.Free;
     IdSSLIOHandlerSocketOpenSSL.Free;
   end;
-
 end;
+
+function THelsiApi.GetStateReceipt : boolean;
+var
+  jValue, j : TJSONValue;
+  JSONA: TJSONArray;
+  I : integer;
+begin
+  Result := False;
+
+  FRESTClient.BaseURL := FHelsi_be;
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmGET;
+  FRESTRequest.Resource := 'receipts/' + FNumber;
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('Authorization', 'bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                        [TRESTRequestParameterOption.poDoNotEncode]);
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
+  begin
+    try
+      jValue := FRESTResponse.JSONValue ;
+      if jValue.FindValue('data') <> Nil then
+      begin
+        jValue := jValue.FindValue('data');
+
+        if jValue.FindValue('medication_info') <> Nil then
+        begin
+          Result := DelDoubleQuote(jValue.FindValue('status').ToString) = 'COMPLETED';;
+        end;
+      end;
+    except
+    end
+  end else if ((FRESTResponse.StatusCode = 200) or (FRESTResponse.StatusCode = 302)) and (FRESTResponse.ContentType = 'text/html') then
+  begin
+    GetHTTPLocation;
+  end;
+end;
+
 
 function THelsiApi.InitSession : boolean;
   var I : integer;
@@ -926,15 +986,14 @@ end;
 
 //------------------------
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime) : boolean;
+
+function InitHelsiApi : boolean;
   var I : integer;
       ds : TClientDataSet;
       S : string;
 begin
-  Result := False;
 
-  if not CheckRequest_Number(AReceipt) then Exit;
+  Result := False;
 
   if not Assigned(HelsiApi) then
   begin
@@ -1011,6 +1070,20 @@ begin
     end;
   end else if not HelsiApi.IntegrationClientKeyInfo then Exit;
 
+  Result := True;
+end;
+
+
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+  var AQty : currency; var ADate : TDateTime) : boolean;
+  var I : integer;
+begin
+  Result := False;
+
+  if not CheckRequest_Number(AReceipt) then Exit;
+
+  if not InitHelsiApi then Exit;
+
   HelsiApi.FNumber := AReceipt;
 
   for I := 1 to 5 do
@@ -1044,8 +1117,21 @@ begin
     Exit;
   end;
 
+  if HelsiApi.FDispense_valid_to < Date then
+  begin
+    ShowMessage('Срок действия рецепта истек...');
+    Exit;
+  end;
+
   if HelsiApi.FStatus = 'ACTIVE' then
   begin
+
+    if HelsiApi.FMedical_program_id = '' then
+    begin
+      ShowMessage('Нет в чеке информации о соц проекте...');
+      Exit;
+    end;
+
     AID := HelsiApi.FMedication_ID;
     AIDList := HelsiApi.FMedication_ID_List;
     AName := HelsiApi.FMedication_Name;
@@ -1067,6 +1153,55 @@ begin
   end;
 end;
 
+function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+  var I : integer;
+begin
+  Result := False;
+  AState := 'Error';
+
+  if not CheckRequest_Number(AReceipt) then Exit;
+
+  if not InitHelsiApi then Exit;
+
+  HelsiApi.FNumber := AReceipt;
+
+  for I := 1 to 3 do
+  begin
+    if HelsiApi.GetReceiptId then Break;
+    Sleep(1000);
+    case I of
+      1, 3 : begin
+               HelsiApi.GetTokenRefresh;
+               HelsiApi.InitReinitSession
+             end;
+      2 : begin
+            HelsiApi.GetToken;
+            HelsiApi.InitReinitSession
+          end;
+    end;
+  end;
+
+  if HelsiApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    HelsiApi.FShow_eHealth := False;
+    HelsiApi.FShow_Location := '';
+    Exit;
+  end;
+
+  if AReceipt <> HelsiApi.FRequest_number then Exit;
+
+  if HelsiApi.FDispense_valid_to < Date then
+  begin
+    AState := 'EXPIRED';
+    Exit;
+  end;
+
+  AState := HelsiApi.FStatus;
+  Result := True;
+end;
+
+
 function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
 begin
@@ -1085,6 +1220,19 @@ begin
   HelsiApi.FSell_amount := ASell_amount;
   HelsiApi.FDiscount_amount := ADiscount_amount;
   HelsiApi.FDispensed_Code := ACode;
+
+  Result := HelsiApi.CreateNewDispense;
+end;
+
+function CreateNewDispense : boolean;
+begin
+  Result := False;
+
+  if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
+  begin
+    ShowMessage('Ошибка не получена информация о рецепте с сайта Хелси...');
+    Exit;
+  end;
 
   Result := HelsiApi.CreateNewDispense;
 end;
@@ -1111,7 +1259,7 @@ begin
   Result := HelsiApi.SetPayment;
 end;
 
-function RejectDispense : boolean;
+function SetPayment : boolean; overload;
 begin
   Result := False;
 
@@ -1126,6 +1274,23 @@ begin
     ShowMessage('Ошибка не создан запрос на погашение рецепта...');
     Exit;
   end;
+
+  Result := HelsiApi.SetPayment;
+end;
+
+
+
+function RejectDispense : boolean;
+begin
+  Result := False;
+
+  if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
+  begin
+    ShowMessage('Ошибка не получена информация о рецепте с сайта Хелси...');
+    Exit;
+  end;
+
+  if HelsiApi.FDispense_ID = '' then Exit;
 
   Result := HelsiApi.RejectDispense;
 end;
@@ -1170,6 +1335,27 @@ begin
   end;
 
   Result := HelsiApi.ProcessSignedDispense;
+end;
+
+function GetStateReceipt : boolean;
+begin
+  Result := False;
+
+  if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
+  begin
+    ShowMessage('Ошибка не получена информация о рецепте с сайта Хелси...');
+    Exit;
+  end;
+
+  Result := HelsiApi.GetStateReceipt;
+
+  if HelsiApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    HelsiApi.FShow_eHealth := False;
+    HelsiApi.FShow_Location := '';
+    Exit;
+  end;
 end;
 
 

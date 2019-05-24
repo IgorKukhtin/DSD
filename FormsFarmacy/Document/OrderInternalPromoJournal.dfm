@@ -29,6 +29,22 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
         ExplicitWidth = 769
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummSIP
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -37,6 +53,21 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummSIP
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -91,6 +122,24 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object TotalSummPrice: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'TotalSummPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 93
+          end
+          object TotalSummSIP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1057#1048#1055
+            DataBinding.FieldName = 'TotalSummSIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081

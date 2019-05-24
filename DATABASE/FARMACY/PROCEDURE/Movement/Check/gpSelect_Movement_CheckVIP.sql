@@ -42,7 +42,10 @@ RETURNS TABLE (
   PromoCodeGUID TVarChar,
   PromoCodeChangePercent TFloat,
   MemberSPId Integer,
-  SiteDiscount TFloat
+  SiteDiscount TFloat,
+  PartionDateKindId Integer,
+  PartionDateKindName TVarChar, 
+  DateDelay TDateTime
  )
 AS
 $BODY$
@@ -162,6 +165,10 @@ BEGIN
             , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
             , Object_MemberSP.Id                                        AS MemberSPId
             , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
+
+            , Object_PartionDateKind.ID                     AS PartionDateKindId
+            , Object_PartionDateKind.ValueData              AS PartionDateKindName
+            , MovementDate_Delay.ValueData                  AS DateDelay
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -288,6 +295,14 @@ BEGIN
 		                               ON MovementBoolean_Site.MovementId = Movement.Id
 		                              AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                         ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_Delay
+                                   ON MovementDate_Delay.MovementId = Movement.Id
+                                  AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
        ;
 
 END;
@@ -298,6 +313,8 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 23.05.19                                                                                    *
+ 15.05.19                                                                                    *
  30.06.18                                                                                    *
  31.10.16         *
  10.08.16                                                                     * оптимизация
@@ -317,5 +334,4 @@ where Movement.Id = MovementBoolean.MovementId
   AND ValueData = TRUE
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')

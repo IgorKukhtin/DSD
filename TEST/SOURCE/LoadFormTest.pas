@@ -29,6 +29,7 @@ type
     procedure LoadBankAccountContractFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadBarCodeBoxFormTest;
     procedure LoadBonusKindFormTest;
     procedure LoadBranchFormTest;
     procedure LoadBranchJuridicalFormTest;
@@ -38,6 +39,7 @@ type
     procedure LoadCarFormTest;
     procedure LoadCarExternalFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadClientKindFormTest;
     procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
@@ -187,7 +189,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
-
+    procedure LoadWeighingProduction_wmsFormTest;
     //procedure LoadZakazExternalFormTest;
     //procedure LoadZakazInternalFormTest;
   end;
@@ -262,6 +264,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
+end;
+
+procedure TLoadFormTest.LoadBarCodeBoxFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxEditForm');
 end;
 
 procedure TLoadFormTest.LoadBonusKindFormTest;
@@ -494,7 +504,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
@@ -502,7 +512,7 @@ begin
   // торг. сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGK_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGK_VMCDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
 
@@ -510,6 +520,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   }
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_wmsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_wmsForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsBrandFormTest;
@@ -3070,6 +3082,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarModelEditForm');
 end;
 
+procedure TLoadFormTest.LoadClientKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientKindForm');
+end;
+
 procedure TLoadFormTest.LoadRateFuelKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelKindForm'));
@@ -3132,6 +3150,17 @@ end;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
+end;
+
+  procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;
+ begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

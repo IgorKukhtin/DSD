@@ -6,8 +6,11 @@ CREATE OR REPLACE FUNCTION gpSelect_CashGoodsToExpirationDate(
     IN inSession        TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (ID Integer,
+               Price TFloat,
                Amount TFloat,
-               ExpirationDate TDateTime)
+               ExpirationDate TDateTime,
+               PartionDateKindId  Integer,
+               Color_calc Integer)
 
 AS
 $BODY$
@@ -15,7 +18,16 @@ $BODY$
   DECLARE vbObjectId   Integer;
   DECLARE vbUnitId     Integer;
   DECLARE vbUnitIdStr  TVarChar;
-  DECLARE vbAreaId     Integer;
+
+  DECLARE vbMonth_0  TFloat;
+  DECLARE vbMonth_1  TFloat;
+  DECLARE vbMonth_6  TFloat;
+
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbDate180  TDateTime;
+  DECLARE vbDate30   TDateTime;
+
+  DECLARE vbPartion   boolean;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
@@ -29,9 +41,35 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
+    -- получаем значени€ из справочника дл€ разделени€ по срокам
+    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+    -- даты + 6 мес€цев, + 1 мес€ц
+    vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
+    vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
+    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
+
+    vbPartion := False;
 
      RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
+     WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
                           FROM Container
                           WHERE Container.DescId = zc_Container_Count()
                             AND Container.WhereObjectId = vbUnitId
@@ -57,14 +95,48 @@ BEGIN
                                                          ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
                                                         -- AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
+       , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                          AND ObjectFloat_Goods_Price.ValueData > 0
+                                         THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                         ELSE ROUND (Price_Value.ValueData, 2)
+                                    END :: TFloat                           AS Price
+                                  , Price_Goods.ChildObjectId               AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+                                LEFT JOIN ObjectLink AS Price_Goods
+                                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                LEFT JOIN ObjectFloat AS Price_Value
+                                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                -- ‘икс цена дл€ всей —ети
+                                LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                       ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                      AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                        ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                       AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                             WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                             )
 
      SELECT Container.ObjectId                                                AS ID
+           ,COALESCE(tmpObject_Price.Price,0)::TFloat                         AS Price
           , Container.Amount                                                  AS Amount
           , COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) :: TDateTime AS MinExpirationDate
+          , CASE WHEN vbPartion = True AND COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0() ELSE   -- просрочено
+            CASE WHEN vbPartion = True AND COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbDate30  THEN zc_Enum_PartionDateKind_1() ELSE    -- ћеньше 1 мес€ца
+            CASE WHEN vbPartion = True AND COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6() ELSE      -- ћеньше 6 мес€ца
+            0 END END END                                                           AS PartionDateKindId          
+          , CASE WHEN COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Color_Red() ELSE   -- просрочено
+            CASE WHEN COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbDate30  THEN zc_Color_Yelow() ELSE     -- ћеньше 1 мес€ца
+            CASE WHEN COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Color_Cyan() ELSE      -- ћеньше 6 мес€ца
+            zc_Color_White() END END END                                                           AS Color_calc
      FROM tmpContainer AS Container
 
           LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
-     ORDER BY 1, 3;
+
+          LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.ObjectId
+     ORDER BY 1, 4;
 
 END;
 $BODY$
@@ -77,4 +149,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3354092');
+-- SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3');

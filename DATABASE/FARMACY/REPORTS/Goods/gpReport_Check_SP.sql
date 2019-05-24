@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_SP(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
+             , InvNumber_Full TVarChar
              , UnitName       TVarChar
              , JuridicalId    Integer
              , JuridicalName  TVarChar
@@ -107,7 +108,6 @@ RETURNS TABLE (MovementId     Integer
              , TotalSumm_Check TFloat
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
-
 )
 AS
 $BODY$

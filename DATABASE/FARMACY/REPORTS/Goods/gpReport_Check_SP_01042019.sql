@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_SP_01042019(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
+             , InvNumber_Full TVarChar
              , UnitName       TVarChar
              , JuridicalId    Integer
              , JuridicalName  TVarChar
@@ -108,7 +109,6 @@ RETURNS TABLE (MovementId     Integer
              , TotalSumm_Check TFloat
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
-
 )
 AS
 $BODY$
@@ -604,6 +604,7 @@ BEGIN
 
         -- результат
         SELECT tmpData.MovementId
+             , ('№ ' || Movement.InvNumber || ' от ' || Movement.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Full
              , Object_Unit.ValueData               AS UnitName
              , Object_Juridical.Id                 AS JuridicalId
              , Object_Juridical.ValueData          AS JuridicalName
@@ -737,6 +738,8 @@ BEGIN
              LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.JuridicalMedicId and Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsMainId
+
+             LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
 
         ORDER BY Object_Unit.ValueData 
                , Object_Juridical.ValueData

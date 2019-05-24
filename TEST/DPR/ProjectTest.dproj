@@ -3650,6 +3650,30 @@
 				<Form>OrderExternalItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ClientKind.pas">
+				<Form>ClientKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BarCodeBox.pas">
+				<Form>BarCodeBoxForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BarCodeBoxEdit.pas">
+				<Form>BarCodeBoxEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingProduction_wmsJournal.pas">
+				<Form>WeighingProduction_wmsJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingProduction_wms.pas">
+				<Form>WeighingProduction_wmsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_wms.pas">
+				<Form>GoodsByGoodsKind_wmsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

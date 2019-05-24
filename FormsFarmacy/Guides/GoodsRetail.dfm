@@ -4,6 +4,7 @@ inherited GoodsRetailForm: TGoodsRetailForm
   ClientWidth = 871
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 887
   ExplicitHeight = 481
   PixelsPerInch = 96
@@ -1047,7 +1048,22 @@ inherited GoodsRetailForm: TGoodsRetailForm
     Top = 144
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 240
     Top = 64
   end

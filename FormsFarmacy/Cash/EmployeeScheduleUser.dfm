@@ -309,6 +309,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         '8:00'
         '9:00'
         '10:00'
+        '12:00'
         '21:00'
         #1042)
       TabOrder = 0

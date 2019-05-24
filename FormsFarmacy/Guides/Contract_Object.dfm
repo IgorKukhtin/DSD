@@ -137,6 +137,37 @@ inherited Contract_ObjectForm: TContract_ObjectForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = 'TContractEditForm'
     end
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+    end
     object actUpdateisReport: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

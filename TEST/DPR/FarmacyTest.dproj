@@ -2345,6 +2345,10 @@
 			<DCCReference Include="..\..\FormsFarmacy\Guides\UserHelsiEdit.pas">
 				<Form>UserHelsiEditForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPromoChoice.pas">
+				<Form>GoodsPromoChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

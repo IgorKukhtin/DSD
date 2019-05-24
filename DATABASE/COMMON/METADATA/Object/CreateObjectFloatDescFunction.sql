@@ -30,7 +30,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Box_Width() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Box(), 'zc_ObjectFloat_Box_Width', 'ширина' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Box_Width');
 --
-
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCodeBox_Weight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCodeBox_Weight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_BarCodeBox(), 'zc_ObjectFloat_BarCodeBox_Weight', 'точный вес ящ.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCodeBox_Weight');
+--
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_CardFuel_Limit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CardFuel_Limit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PersonalGroup(), 'zc_ObjectFloat_CardFuel_Limit', 'Лимит, грн' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CardFuel_Limit');

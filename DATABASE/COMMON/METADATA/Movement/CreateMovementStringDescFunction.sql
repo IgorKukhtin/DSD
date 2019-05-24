@@ -171,10 +171,14 @@ CREATE OR REPLACE FUNCTION zc_MovementString_AccountNumber() RETURNS Integer AS 
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_AccountNumber', 'Номер счёта' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_AccountNumber');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_ConfirmationCodeSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_ConfirmationCodeSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_ConfirmationCodeSP', 'код подтверждения рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_ConfirmationCodeSP');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 17.05.19                                                                      * zc_MovementString_ConfirmationCodeSP
  01.10.18                                                                      * zc_MovementString_AccountNumber
  07.04.17         * zc_MovementString_Ambulance
  22.12.16         * zc_MovementString_MedicSP

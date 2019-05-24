@@ -315,21 +315,6 @@ BEGIN
                           WHERE ObjectLink_Unit_Juridical.ObjectId IN (SELECT DISTINCT tmpData.UnitId FROM tmpData)
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                          )
-  , tmpMakerReport AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
-                       FROM Object AS Object_MakerReport
-   
-                            LEFT JOIN ObjectLink AS ObjectLink_Maker 
-                                ON ObjectLink_Maker.ObjectId = Object_MakerReport.Id 
-                               AND ObjectLink_Maker.DescId = zc_ObjectLink_MakerReport_Maker()
-
-                            INNER JOIN ObjectLink AS ObjectLink_Juridical 
-                                ON ObjectLink_Juridical.ObjectId = Object_MakerReport.Id 
-                               AND ObjectLink_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical()
-
-                       WHERE Object_MakerReport.DescId = zc_Object_MakerReport()
-                         AND COALESCE (ObjectLink_Maker.ChildObjectid, inMakerId) = inMakerId
-                         AND Object_MakerReport.isErased = False
-                       )
 
       -- Результат
       SELECT Movement.Id                              AS MovementId
@@ -391,8 +376,21 @@ BEGIN
         
         LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
 
-        LEFT JOIN tmpMakerReport AS MakerReport
-                                 ON MakerReport.JuridicalId = tmpData.JuridicalId_Income
+        LEFT JOIN (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                       FROM Object AS Object_MakerReport
+   
+                            LEFT JOIN ObjectLink AS ObjectLink_Maker 
+                                ON ObjectLink_Maker.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Maker.DescId = zc_ObjectLink_MakerReport_Maker()
+
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical 
+                                ON ObjectLink_Juridical.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical()
+
+                       WHERE Object_MakerReport.DescId = zc_Object_MakerReport()
+                         AND COALESCE (ObjectLink_Maker.ChildObjectid, inMakerId) = inMakerId
+                         AND Object_MakerReport.isErased = False) AS MakerReport
+                                                                  ON MakerReport.JuridicalId = tmpData.JuridicalId_Income
      ;
 
 END;

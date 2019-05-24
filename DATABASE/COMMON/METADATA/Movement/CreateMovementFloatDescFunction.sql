@@ -208,6 +208,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummSocialAdd() RETURNS Integer
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummSocialAdd', 'Соц.выплаты (к зарплате)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSocialAdd');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummSIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummSIP', 'Итого сумма по ценам СИП' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSIP');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummPrice', 'Итого сумма по ценам прайса' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPrice');
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummToPay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummToPay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummToPay', 'Сумма к выплате' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummToPay');
@@ -441,6 +449,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 20.05.19         * zc_MovementFloat_TotalSummSIP
  13.03.19                                                                                     * zc_MovementFloat_Replays
  05.03.19         * zc_MovementFloat_TotalSummPayOth
  22.02.19         * zc_MovementFloat_TotalHeadCount

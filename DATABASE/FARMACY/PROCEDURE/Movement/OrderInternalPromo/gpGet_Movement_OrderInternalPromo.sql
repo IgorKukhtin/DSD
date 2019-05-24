@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , StartSale TDateTime
              , Amount TFloat
+             , TotalSummPrice TFloat, TotalSummSIP TFloat
              , RetailId Integer
              , RetailName TVarChar
              , Comment TVarChar
@@ -34,8 +35,10 @@ BEGIN
           , inOperDate		                             AS OperDate
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name            	             AS StatusName
-          , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime   AS StartSale
-          , 0::TFloat                                        AS Amount
+          , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime    AS StartSale
+          , 0   :: TFloat                                    AS Amount
+          , 0   :: TFloat                                    AS TotalSummPrice
+          , 0   :: TFloat                                    AS TotalSummSIP
           , NULL::Integer                                    AS RetailId
           , NULL::TVarChar                                   AS RetailName
           , NULL::TVarChar                                   AS Comment
@@ -51,6 +54,8 @@ BEGIN
           , Object_Status.ValueData                                        AS StatusName
           , MovementDate_StartSale.ValueData                               AS StartSale
           , COALESCE(MovementFloat_Amount.ValueData,0)::TFloat             AS Amount
+          , COALESCE (MovementFloat_TotalSummPrice.ValueData,0):: TFloat   AS TotalSummPrice
+          , COALESCE (MovementFloat_TotalSummSIP.ValueData,0)  :: TFloat   AS TotalSummSIP
           , MovementLinkObject_Retail.ObjectId                             AS RetailId
           , Object_Retail.ValueData                                        AS RetailName
           , MovementString_Comment.ValueData                               AS Comment
@@ -61,6 +66,14 @@ BEGIN
                                 ON MovementFloat_Amount.MovementId =  Movement.Id
                                AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummPrice
+                                ON MovementFloat_TotalSummPrice.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSummPrice.DescId = zc_MovementFloat_TotalSummPrice()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummSIP
+                                ON MovementFloat_TotalSummSIP.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSummSIP.DescId = zc_MovementFloat_TotalSummSIP()
+
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -69,7 +82,7 @@ BEGIN
                                      ON MovementLinkObject_Retail.MovementId = Movement.Id
                                     AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
-        
+
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()

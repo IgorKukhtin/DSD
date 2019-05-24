@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inStartSale             TDateTime  , -- Дата начала продаж
-  --  IN inAmount                TFloat     , -- итого кол-во
+    IN inTotalSummPrice        TFloat     , -- итого сумма по ценам прайса
+    IN inTotalSummSIP          TFloat     , -- итого сумма по ценам сип
     IN inRetailId              Integer    , -- Торговая сеть
     IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
@@ -52,6 +54,8 @@ BEGIN
                                                       , inStartSale     := inStartSale
                                                       , inAmount        := vbAmount
                                                       , inRetailId      := inRetailId
+                                                      , inTotalSummPrice:= inTotalSummPrice
+                                                      , inTotalSummSIP  := inTotalSummSIP
                                                       , inComment       := inComment
                                                       , inUserId        := vbUserId
                                                       );

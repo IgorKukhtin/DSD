@@ -480,12 +480,13 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-  {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailDialogForm');
-
+    exit;
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
     //exit;
@@ -1397,6 +1398,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPromoOLAPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPromoOLAPForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPromoChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPromoChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadObjectUnionFormTest;

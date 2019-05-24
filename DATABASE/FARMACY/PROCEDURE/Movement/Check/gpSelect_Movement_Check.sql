@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BankPOSTerminalName TVarChar
              , JackdawsChecksName TVarChar
              , PartionDateKindName TVarChar
-             , Delay Boolean
+             , Delay Boolean, DateDelay TDateTime
               )
 AS
 $BODY$
@@ -135,6 +135,7 @@ BEGIN
            , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
            , Object_PartionDateKind.ValueData                :: TVarChar  AS PartionDateKindName
            , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
+           , MovementDate_Delay.ValueData                                 AS DateDelay
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -341,6 +342,9 @@ BEGIN
                                       ON MovementBoolean_Delay.MovementId = Movement_Check.Id
                                      AND MovementBoolean_Delay.DescId = zc_MovementBoolean_Delay()
 
+            LEFT JOIN MovementDate AS MovementDate_Delay
+                                   ON MovementDate_Delay.MovementId = Movement_Check.Id
+                                  AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
       ;
 
 END;
@@ -351,6 +355,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. +
+ 23.05.19                                                                                    *
  01.04.19                                                                                    * add Delay
  25.02.19                                                                                    * add JackdawsChecks
  16.02.19                                                                                    * add BankPOSTerminal
