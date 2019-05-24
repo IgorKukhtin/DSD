@@ -1364,6 +1364,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_RetailCostCredit_Percent() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_RetailCostCredit(), 'zc_ObjectFloat_RetailCostCredit_Percent', '% кредитных средств' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RetailCostCredit_Percent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_Value', '% скидки в партии' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_Value');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
