@@ -19,6 +19,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercent() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_ChangePercent', '(-)% Скидки (+)% Наценки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercent');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercentMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_ChangePercentMin', '% скидки(срок меньше месяца)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentMin');
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercentPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_ChangePercentPartner', '(-)% Скидки (+)% Наценки покупателя' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentPartner');
@@ -449,6 +453,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 27.05.19         * zc_MovementFloat_ChangePercentMin
  20.05.19         * zc_MovementFloat_TotalSummSIP
  13.03.19                                                                                     * zc_MovementFloat_Replays
  05.03.19         * zc_MovementFloat_TotalSummPayOth

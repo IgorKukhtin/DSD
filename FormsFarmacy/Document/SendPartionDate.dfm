@@ -1,26 +1,26 @@
 inherited SendPartionDateForm: TSendPartionDateForm
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082
   ClientHeight = 553
-  ClientWidth = 900
+  ClientWidth = 1048
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 916
+  ExplicitWidth = 1064
   ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 900
+    Width = 1048
     Height = 430
     ExplicitTop = 123
     ExplicitWidth = 900
     ExplicitHeight = 430
     ClientRectBottom = 430
-    ClientRectRight = 900
+    ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 900
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 900
+        Width = 1048
         Height = 227
         ExplicitWidth = 900
         ExplicitHeight = 227
@@ -140,7 +140,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -192,6 +191,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Amount_0: TcxGridDBColumn
@@ -238,20 +238,22 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Options.Editing = False
             Width = 49
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
-            DataBinding.FieldName = 'Price'
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1076#1086' 6 '#1084#1077#1089')'
+            DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 78
           end
-          object PriceExp: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'.)'
-            DataBinding.FieldName = 'PriceExp'
+          object ChangePercentMin: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+            DataBinding.FieldName = 'ChangePercentMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
@@ -305,11 +307,12 @@ inherited SendPartionDateForm: TSendPartionDateForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 235
-        Width = 900
+        Width = 1048
         Height = 171
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 900
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -456,17 +459,17 @@ inherited SendPartionDateForm: TSendPartionDateForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 227
-        Width = 900
+        Width = 1048
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 221
+        ExplicitWidth = 900
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 900
+    Width = 1048
     Height = 97
     TabOrder = 3
     ExplicitWidth = 900
@@ -524,27 +527,27 @@ inherited SendPartionDateForm: TSendPartionDateForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 332
+      Width = 315
     end
     object cxLabel7: TcxLabel
-      Left = 221
-      Top = 49
+      Left = 546
+      Top = 46
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 221
+      Left = 546
       Top = 64
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 332
+      Width = 498
     end
     object cxLabel10: TcxLabel
-      Left = 565
+      Left = 546
       Top = 4
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 565
+      Left = 546
       Top = 22
       Properties.Buttons = <
         item
@@ -557,12 +560,12 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Width = 118
     end
     object cxLabel12: TcxLabel
-      Left = 692
+      Left = 670
       Top = 4
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
     object edInsertdate: TcxDateEdit
-      Left = 692
+      Left = 670
       Top = 22
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -571,13 +574,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Width = 120
     end
     object cxLabel11: TcxLabel
-      Left = 565
-      Top = 47
+      Left = 799
+      Top = 4
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
-      Left = 565
-      Top = 64
+      Left = 799
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -589,19 +592,47 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Width = 118
     end
     object cxLabel13: TcxLabel
-      Left = 692
-      Top = 47
+      Left = 924
+      Top = 4
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
-      Left = 692
-      Top = 64
+      Left = 924
+      Top = 22
       EditValue = 42485d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 120
     end
+    object cxLabel9: TcxLabel
+      Left = 221
+      Top = 46
+      Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1-6 '#1084#1077#1089')'
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 221
+      Top = 64
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
+      TabOrder = 19
+      Width = 142
+    end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 369
+    Top = 46
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+  end
+  object edChangePercentMin: TcxCurrencyEdit [3]
+    Left = 369
+    Top = 64
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 167
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
@@ -1179,6 +1210,20 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Component = edUpdateDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercentMin'
+        Value = Null
+        Component = edChangePercentMin
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 432
     Top = 200
@@ -1215,6 +1260,22 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentMin'
+        Value = Null
+        Component = edChangePercentMin
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1257,8 +1318,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Control = edComment
       end
       item
+        Control = edChangePercent
       end
       item
+        Control = edChangePercentMin
       end
       item
       end
@@ -1335,19 +1398,19 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inChangePercent'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Price'
+        ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceExp'
+        Name = 'inChangePercentMin'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceExp'
+        ComponentItem = 'ChangePercentMin'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1408,8 +1471,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 65528
+    Left = 424
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1490,83 +1552,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Left = 792
     Top = 112
   end
-  object GuidesMemberSP: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TMemberSPForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberSPForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesMemberSP
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesMemberSP
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GroupMemberSPId'
-        Value = Null
-        Component = GuidesGroupMemberSP
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GroupMemberSPName'
-        Value = Null
-        Component = GuidesGroupMemberSP
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerMedicalId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerMedicalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Passport'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Inn'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 704
-    Top = 96
-  end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInsertName
@@ -1599,8 +1584,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 762
-    Top = 14
+    Left = 722
+    Top = 6
   end
   object GuidesUpdate: TdsdGuides
     KeyField = 'Id'
@@ -1634,8 +1619,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 770
-    Top = 62
+    Left = 986
+    Top = 14
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_SendPartionDate_Child'

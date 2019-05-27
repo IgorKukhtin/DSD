@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountRemains       TFloat    , --
-    IN inPrice               TFloat    , -- цена (срок от 1 мес до 6 мес)
-    IN inPriceExp            TFloat    , -- цена (срок меньше месяца)
+    IN inChangePercent       TFloat    , -- % (срок от 1 мес до 6 мес)
+    IN inChangePercentMin    TFloat    , -- % (срок меньше месяца)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -21,6 +21,10 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbDate180  TDateTime;
    DECLARE vbDate30   TDateTime;
+   DECLARE vbDate0    TDateTime;
+   DECLARE vbMonth_0  TFloat;
+   DECLARE vbMonth_1  TFloat;
+   DECLARE vbMonth_6  TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendPartionDate());
@@ -39,9 +43,30 @@ BEGIN
                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                 );
     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+    -- получаем значения из справочника 
+    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
     -- даты + 6 месяцев, + 1 месяц
-    vbDate180 := CURRENT_DATE + INTERVAL '6 MONTH';
-    vbDate30  := CURRENT_DATE + INTERVAL '1 MONTH';
+    vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
+    vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
+    vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
 
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -50,9 +75,9 @@ BEGIN
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
     
     -- сохранили <цену>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceExp(), ioId, inPriceExp);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentMin(), ioId, inChangePercentMin);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, inAmountRemains);
 
@@ -100,8 +125,8 @@ BEGIN
                   , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
                   , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId);
 
-    CREATE TEMP TABLE tmpChild (Id Integer, ContainerId Integer, MovementId_Income Integer, Amount TFloat, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, ContainerId, MovementId_Income, Amount, Expired, ExpirationDate)
+    CREATE TEMP TABLE tmpChild (Id Integer, ContainerId Integer, MovementId_Income Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ContainerId, MovementId_Income, Amount, PartionDateKindId, ExpirationDate)
     WITH
       MI_Child AS (SELECT MovementItem.Id                    AS Id
                         , MovementItem.ParentId              AS ParentId
@@ -144,11 +169,11 @@ BEGIN
           , tmpCalc.ContainerId
           , tmpRemains.MovementId_Income
           , tmpCalc.Amount_Calc               AS Amount
-          , CASE WHEN tmpCalc.ExpirationDate < vbOperDate THEN 0
-                 WHEN tmpCalc.ExpirationDate <= vbDate30 THEN 1
-                 WHEN tmpCalc.ExpirationDate <= vbDate180 THEN 2
-                 ELSE 999
-            END                      ::TFloat AS Expired
+          , CASE WHEN tmpCalc.ExpirationDate <= vbDate0   THEN zc_Enum_PartionDateKind_0()
+                 WHEN tmpCalc.ExpirationDate <= vbDate30  THEN zc_Enum_PartionDateKind_1()
+                 WHEN tmpCalc.ExpirationDate <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                 ELSE 0
+            END                       AS PartionDateKindId
           , tmpCalc.ExpirationDate
      FROM tmpRemains 
           FULL JOIN tmpCalc ON tmpCalc.GoodsId     = tmpRemains.GoodsId
@@ -176,12 +201,13 @@ BEGIN
      PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId            := tmpChild.Id
                                                    , inParentId      := ioId
                                                    , inMovementId    := inMovementId
-                                                   , inGoodsId       := inGoodsId  
+                                                   , inGoodsId       := inGoodsId
+                                                   , inPartionDateKindId := tmpChild.PartionDateKindId
                                                    , inExpirationDate:= tmpChild.ExpirationDate
                                                    , inAmount        := tmpChild.Amount        :: TFloat
                                                    , inContainerId   := tmpChild.ContainerId   :: TFloat
                                                    , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0) :: TFloat
-                                                   , inExpired       := tmpChild.Expired       :: TFloat
+                                                   --, inExpired       := tmpChild.Expired       :: TFloat
                                                    , inUserId        := vbUserId)
      FROM tmpChild
      WHERE COALESCE (tmpChild.Amount, 0) <> 0;
@@ -199,5 +225,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.19         *
  03.04.19         *
 */

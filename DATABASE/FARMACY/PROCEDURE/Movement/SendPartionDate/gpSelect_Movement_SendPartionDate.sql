@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendPartionDate(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
+             , ChangePercent TFloat, ChangePercentMin TFloat
              , UnitId Integer, UnitName TVarChar, ProvinceCityName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -69,16 +70,18 @@ BEGIN
                               )
 
        SELECT
-             Movement.Id                            AS Id
-           , Movement.InvNumber                     AS InvNumber
-           , Movement.OperDate                      AS OperDate
-           , Object_Status.ObjectCode               AS StatusCode
-           , Object_Status.ValueData                AS StatusName
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
+             Movement.Id                          AS Id
+           , Movement.InvNumber                   AS InvNumber
+           , Movement.OperDate                    AS OperDate
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
+           , MovementFloat_TotalCount.ValueData   AS TotalCount
+           , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+           , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
 
-           , Object_Unit.Id                         AS UnitId
-           , Object_Unit.ValueData                  AS UnitName
-           , tmpProvinceCity.ProvinceCityName       AS ProvinceCityName
+           , Object_Unit.Id                       AS UnitId
+           , Object_Unit.ValueData                AS UnitName
+           , tmpProvinceCity.ProvinceCityName     AS ProvinceCityName
 
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
@@ -100,6 +103,14 @@ BEGIN
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
  
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
+                                    ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentMin.DescId = zc_MovementFloat_ChangePercentMin()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -140,6 +151,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.05.19         *
  02.04.19         *
 */
 

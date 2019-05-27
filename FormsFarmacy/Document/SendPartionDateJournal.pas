@@ -47,6 +47,8 @@ type
     bbUpdate_OperDateList: TdxBarButton;
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
+    ChangePercent: TcxGridDBColumn;
+    ChangePercentMin: TcxGridDBColumn;
   private
     { Private declarations }
   public

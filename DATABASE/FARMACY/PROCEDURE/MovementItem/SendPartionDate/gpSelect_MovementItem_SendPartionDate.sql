@@ -177,25 +177,26 @@ BEGIN
                                , MovementItem.ObjectId              AS GoodsId
                                , MovementItem.Amount                AS Amount
                                , MIFloat_AmountRemains.ValueData    AS AmountRemains
-                               , MIFloat_Price.ValueData            AS Price
-                               , COALESCE (MIFloat_PriceExp.ValueData, MIFloat_Price.ValueData) AS PriceExp
+                               , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                               , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
                                , MovementItem.isErased              AS isErased
                           FROM  MovementItem
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemFloat AS MIFloat_PriceExp
-                                                          ON MIFloat_PriceExp.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_PriceExp.DescId = zc_MIFloat_PriceExp()
+                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
+                                                          ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
                               LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                                           ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                          AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+                                                         
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId = zc_MI_Master() 
                             AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                           )  
                               
-          , tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
+          /*, tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
                               , ROUND(Price_Value.ValueData, 2) ::TFloat AS Price
                          FROM ObjectLink AS ObjectLink_Price_Unit
                               LEFT JOIN ObjectFloat AS Price_Value
@@ -206,7 +207,7 @@ BEGIN
                                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit() 
                            AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                         )
+                         )*/
 
     SELECT COALESCE(MI_Master.Id,0)                     AS Id
          -- , COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId) AS GoodsId
@@ -226,8 +227,8 @@ BEGIN
           , tmpCountPartionDate.Amount_2       :: TFloat  AS AmountPartionDate_2
 
           , tmpRemains.ExpirationDate :: TDateTime AS ExpirationDate
-          , COALESCE (MI_Master.Price, tmpPrice.Price)    AS Price
-          , COALESCE (MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
+          , COALESCE (MI_Master.ChangePercent, 0)   :: TFloat AS ChangePercent
+          , COALESCE (MI_Master.ChangePercentMin, 0):: TFloat AS ChangePercentMin
           --, COALESCE(MI_Master.IsErased, FALSE)          AS isErased
     FROM (SELECT tmpRemains.GoodsId
                , MIN (tmpRemains.ExpirationDate) AS ExpirationDate
@@ -241,7 +242,7 @@ BEGIN
           GROUP BY tmpRemains.GoodsId
           ) AS tmpRemains 
         FULL OUTER JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId
-        LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId)
+        --LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId)
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId)
         LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);
 
@@ -334,16 +335,16 @@ BEGIN
                                       , MovementItem.ObjectId              AS GoodsId
                                       , MovementItem.Amount                AS Amount
                                       , MIFloat_AmountRemains.ValueData    AS AmountRemains
-                                      , MIFloat_Price.ValueData            AS Price
-                                      , COALESCE (MIFloat_PriceExp.ValueData, MIFloat_Price.ValueData) AS PriceExp
+                                      , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                                      , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
                                       , MovementItem.isErased              AS isErased
-                                 FROM  MovementItem
-                                     LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceExp
-                                                                 ON MIFloat_PriceExp.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_PriceExp.DescId = zc_MIFloat_PriceExp()
+                                 FROM MovementItem
+                                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                 ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
+                                                                 ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
                                      LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                                                  ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
@@ -386,10 +387,10 @@ BEGIN
                     , tmpCountPartionDate.Amount_1       :: TFloat  AS AmountPartionDate_1
                     , tmpCountPartionDate.Amount_2       :: TFloat  AS AmountPartionDate_2
                     
-                    , MI_Child.ExpirationDate :: TDateTime AS ExpirationDate
-                    , MI_Master.Price          :: TFloat   AS Price
-                    , MI_Master.PriceExp       :: TFloat   AS PriceExp
-                    , MI_Master.IsErased                   AS isErased
+                    , MI_Child.ExpirationDate    :: TDateTime AS ExpirationDate
+                    , MI_Master.ChangePercent    :: TFloat    AS ChangePercent
+                    , MI_Master.ChangePercentMin :: TFloat    AS ChangePercentMin
+                    , MI_Master.IsErased                      AS isErased
                FROM MI_Master
                    LEFT JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
@@ -491,6 +492,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.05.19         *
  03.04.19         *
 */
 --select * from gpSelect_MovementItem_SendPartionDate(inMovementId := 4516628 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

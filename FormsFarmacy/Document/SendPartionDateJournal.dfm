@@ -185,6 +185,30 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
             Options.Editing = False
             Width = 109
           end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
+            Options.Editing = False
+            Width = 89
+          end
+          object ChangePercentMin: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+            DataBinding.FieldName = 'ChangePercentMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+            Options.Editing = False
+            Width = 93
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
