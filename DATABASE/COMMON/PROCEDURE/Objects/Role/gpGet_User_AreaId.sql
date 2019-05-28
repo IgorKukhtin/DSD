@@ -52,7 +52,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_User_JuridicalId(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_User_AreaId(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

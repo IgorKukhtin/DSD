@@ -830,7 +830,7 @@ BEGIN
           , tmpGoodsSP.PaymentSP                                   AS PaymentSP
           , Object_PartionDateKind.AmountMonth                          AS AmountMonth
           , COALESCE(tmpPDChangePercentGoods.PartionDateDiscount,
-                     tmpPDChangePercent.PartionDateDiscount, 0)::TFloat AS PartionDateDiscount
+                     tmpPDChangePercent.PartionDateDiscount)::TFloat    AS PartionDateDiscount
 
          FROM
             CashSessionSnapShot
@@ -938,5 +938,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 */
 
 -- тест
---
-SELECT * FROM gpSelect_CashRemains_ver2(inCashSessionId := '{0B05C610-B172-4F81-99B8-25BF5385ADD6}' ,  inSession := '3');
+-- SELECT * FROM gpSelect_CashRemains_ver2(inCashSessionId := '{0B05C610-B172-4F81-99B8-25BF5385ADD6}' ,  inSession := '3');

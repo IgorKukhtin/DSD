@@ -17,9 +17,9 @@ inherited MainCashForm2: TMainCashForm2
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 341
+    Top = 384
     Width = 820
-    Height = 196
+    Height = 153
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
@@ -27,9 +27,12 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 0
       Width = 355
-      Height = 196
+      Height = 153
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = -3
+      ExplicitTop = -2
+      ExplicitHeight = 196
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
@@ -137,10 +140,11 @@ inherited MainCashForm2: TMainCashForm2
       Left = 569
       Top = 0
       Width = 251
-      Height = 196
+      Height = 153
       Align = alRight
       TabOrder = 1
       Visible = False
+      ExplicitHeight = 196
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -212,17 +216,19 @@ inherited MainCashForm2: TMainCashForm2
       Left = 355
       Top = 0
       Width = 3
-      Height = 196
+      Height = 153
       AlignSplitter = salRight
       Control = ExpirationDateGrid
+      ExplicitHeight = 196
     end
     object ExpirationDateGrid: TcxGrid
       Left = 358
       Top = 0
       Width = 211
-      Height = 196
+      Height = 153
       Align = alRight
       TabOrder = 3
+      ExplicitHeight = 196
       object ExpirationDateView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ExpirationDateDS
@@ -268,33 +274,36 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 338
+    Top = 381
     Width = 820
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitTop = 338
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 200
     Width = 820
-    Height = 138
+    Height = 181
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 138
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
       Width = 820
-      Height = 84
+      Height = 127
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 84
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.KeyFieldNames = 'Id'
+        DataController.KeyFieldNames = 'Id;PartionDateKindId'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -895,6 +904,15 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 60
         end
+        object MainPartionDateDiscount: TcxGridDBColumn
+          Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1089#1088#1086#1082#1091
+          DataBinding.FieldName = 'PartionDateDiscount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
+          Options.Editing = False
+          Width = 62
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -902,11 +920,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 105
+      Top = 148
       Width = 820
       Height = 33
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 105
       object ShapeState: TShape
         Left = 797
         Top = 13
@@ -950,8 +969,8 @@ inherited MainCashForm2: TMainCashForm2
         Width = 172
       end
       object cbSpec: TcxCheckBox
-        Left = 407
-        Top = 7
+        Left = 408
+        Top = 5
         Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
         Caption = #1063#1077#1082
@@ -1113,7 +1132,7 @@ inherited MainCashForm2: TMainCashForm2
         OnKeyPress = edAmountKeyPress
         Width = 55
       end
-      object cxCheckBox1: TcxCheckBox
+      object cbSpecCorr: TcxCheckBox
         Left = 459
         Top = 7
         Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1086#1095#1082#1072
@@ -3622,6 +3641,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'PartionDateKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountMonth'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 32

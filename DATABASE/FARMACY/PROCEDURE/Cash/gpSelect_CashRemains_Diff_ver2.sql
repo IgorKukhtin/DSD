@@ -526,9 +526,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             _DIFF.NewRow,
             _DIFF.AccommodationId,
             Object_Accommodation.ValueData AS AccommodationName,
-            Object_PartionDateKind.AmountMonth                     AS AmountMonth,
+            Object_PartionDateKind.AmountMonth                       AS AmountMonth,
             COALESCE(tmpPDChangePercentGoods.PartionDateDiscount,
-                     tmpPDChangePercent.PartionDateDiscount, 0)::TFloat AS PartionDateDiscount,
+                     tmpPDChangePercent.PartionDateDiscount)::TFloat AS PartionDateDiscount,
             _DIFF.Color_calc
         FROM _DIFF
             LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (_DIFF.PartionDateKindId, 0)
