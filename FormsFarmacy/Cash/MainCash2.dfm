@@ -1514,8 +1514,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 437
-      ExplicitTop = -4
+      ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
       Left = 457
@@ -1588,8 +1587,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 247
-      ExplicitTop = -4
+      ExplicitHeight = 13
     end
     object lblPromoCode: TLabel
       Left = 276
@@ -4305,6 +4303,12 @@ inherited MainCashForm2: TMainCashForm2
       DisplayWidth = 20
       FieldName = 'ACCOMNAME'
       Size = 3
+    end
+    object MemDataAMOUNTMON: TFloatField
+      FieldName = 'AMOUNTMON'
+    end
+    object MemDataPDDISCOUNT: TFloatField
+      FieldName = 'PDDISCOUNT'
     end
     object MemDataCOLORCALC: TIntegerField
       FieldName = 'COLORCALC'

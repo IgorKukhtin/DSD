@@ -421,6 +421,8 @@ type
     pm_CheckHelsiAllUnit: TMenuItem;
     Label22: TLabel;
     lblPromoBayerName: TLabel;
+    MemDataAMOUNTMON: TFloatField;
+    MemDataPDDISCOUNT: TFloatField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -898,6 +900,8 @@ begin
         MemData.FieldByName('NEWROW').AsBoolean:=FLocalDataBaseDiff.FieldByName('NEWROW').AsBoolean;
         MemData.FieldByName('ACCOMID').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMID').AsVariant;
         MemData.FieldByName('ACCOMNAME').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMNAME').AsVariant;
+        MemData.FieldByName('AMOUNTMON').AsVariant:=FLocalDataBaseDiff.FieldByName('AMOUNTMON').AsVariant;
+        MemData.FieldByName('PDDISCOUNT').AsVariant:=FLocalDataBaseDiff.FieldByName('PDDISCOUNT').AsVariant;
         MemData.FieldByName('COLORCALC').AsVariant:=FLocalDataBaseDiff.FieldByName('COLORCALC').AsVariant;
         FLocalDataBaseDiff.Edit;
         FLocalDataBaseDiff.DeleteRecord;
@@ -2773,6 +2777,7 @@ begin
         VarArrayOf([MemData.FieldByName('Id').AsInteger, MemData.FieldByName('PDKINDID').AsVariant]),[]) and
         MemData.FieldByName('NewRow').AsBoolean then
       Begin
+        Add_Log('    Add ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' + MemData.FieldByName('Remains').AsString);
         RemainsCDS.Append;
         RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
         RemainsCDS.FieldByName('GoodsCode').AsInteger := MemData.FieldByName('GoodsCode').AsInteger;
@@ -2786,6 +2791,8 @@ begin
         RemainsCDS.FieldByName('PartionDateKindName').AsVariant := MemData.FieldByName('PDKINDNAME').AsVariant;
         RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
         RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
+        RemainsCDS.FieldByName('AmountMonth').AsVariant := MemData.FieldByName('AMOUNTMON').AsVariant;
+        RemainsCDS.FieldByName('PartionDateDiscount').AsVariant := MemData.FieldByName('PDDISCOUNT').AsVariant;
         RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
         RemainsCDS.Post;
       End
@@ -2794,17 +2801,20 @@ begin
         if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
           MemData.FieldByName('PDKINDID').AsVariant]),[]) then
         Begin
+          Add_Log('    Update ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' +
+            RemainsCDS.FieldByName('Remains').AsString + ' = ' + MemData.FieldByName('Remains').AsString);
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
-          RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
+          RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency - Amount_find;
           RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
-          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - Amount_find;
           RemainsCDS.FieldByName('MinExpirationDate').AsVariant := MemData.FieldByName('MEXPDATE').AsVariant;
           RemainsCDS.FieldByName('PartionDateKindId').AsVariant := MemData.FieldByName('PDKINDID').AsVariant;
           RemainsCDS.FieldByName('PartionDateKindName').AsVariant := MemData.FieldByName('PDKINDNAME').AsVariant;
           RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
           RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
+          RemainsCDS.FieldByName('AmountMonth').AsVariant := MemData.FieldByName('AMOUNTMON').AsVariant;
+          RemainsCDS.FieldByName('PartionDateDiscount').AsVariant := MemData.FieldByName('PDDISCOUNT').AsVariant;
           RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
           RemainsCDS.Post;
         End;
@@ -3452,7 +3462,9 @@ begin
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 6) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) + ')';
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 9) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) + ')';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -3580,7 +3592,9 @@ begin
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 6) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) + ')';
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 9) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) + ')';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -4227,7 +4241,7 @@ begin
     exit;
   end;
 
-  if nAmount > 0 then
+  if (nAmount > 0) and Assigned(SourceClientDataSet.FindField('PartionDateKindId')) then
   begin
     if CheckCDS.RecordCount > 0 then
     begin
