@@ -1,28 +1,30 @@
 inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1053#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091
-  ClientHeight = 480
+  ClientHeight = 481
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 957
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
     Width = 941
-    Height = 422
+    Height = 423
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 941
     ExplicitHeight = 422
-    ClientRectBottom = 422
+    ClientRectBottom = 423
     ClientRectRight = 941
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 941
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 941
-        Height = 200
+        Height = 201
+        ExplicitLeft = 3
+        ExplicitTop = 24
         ExplicitWidth = 941
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -256,6 +258,13 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isSend: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100
+            DataBinding.FieldName = 'isSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object isSaleAnother: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1076#1088'. '#1072#1087#1090#1077#1082#1072#1093
             DataBinding.FieldName = 'isSaleAnother'
@@ -501,12 +510,13 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 208
+        Top = 209
         Width = 941
         Height = 214
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 208
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -836,12 +846,13 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 200
+        Top = 201
         Width = 941
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 200
       end
     end
   end
@@ -1119,17 +1130,37 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 43
     end
+    object macSend_all: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDelete_GoodsPrint
+        end
+        item
+          Action = macAddGoodsPrintList
+        end
+        item
+          Action = macSend
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 41
+    end
     object macSend: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
+        end
+        item
+        end
+        item
           Action = actSend
         end>
       DataSource = DataSourceDocs
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
       ImageIndex = 41
     end
@@ -1145,6 +1176,87 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macUpdate_isSend_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isSend_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdate_isSend_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isSend_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object actDelete_GoodsPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spDelete_GoodsPrint
+        end>
+      Caption = 'actInsertUpdate_GoodsPrint'
+    end
+    object actInsertUpdate_GoodsPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint
+        end>
+      Caption = 'actInsertUpdate_GoodsPrint'
+    end
+    object actUpdate_isSend_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSend_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSend_No
+        end>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+    end
+    object actUpdate_isSend_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSend_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSend_Yes
+        end>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+    end
+    object macAddGoodsPrintList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_GoodsPrint
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 15
     end
   end
   inherited MasterDS: TDataSource
@@ -1251,6 +1363,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isSend_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isSend_No'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1286,12 +1406,25 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       Category = 0
     end
     object bbmacSend: TdxBarButton
-      Action = macSend
+      Action = macSend_all
       Category = 0
     end
     object bbReportUnLiquid_mov: TdxBarButton
       Action = macReportUnLiquid_mov
       Category = 0
+    end
+    object bbUpdate_isSend_Yes: TdxBarButton
+      Action = macUpdate_isSend_Yes
+      Category = 0
+    end
+    object bbUpdate_isSend_No: TdxBarButton
+      Action = macUpdate_isSend_No
+      Category = 0
+    end
+    object bbTest: TdxBarButton
+      Action = macSend_all
+      Category = 0
+      ImageIndex = 53
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1384,8 +1517,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   end
   object DataSourceDocs: TDataSource
     DataSet = DataSetDocs
-    Left = 184
-    Top = 384
+    Left = 216
+    Top = 376
   end
   object DataSetDocs: TClientDataSet
     Aggregates = <>
@@ -1661,7 +1794,113 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         MultiSelectSeparator = ','
       end>
     PackSize = 500
-    Left = 296
-    Top = 360
+    Left = 328
+    Top = 368
+  end
+  object spUpdate_isSend_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Report_UnLiquid_isSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 163
+  end
+  object spUpdate_isSend_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Report_UnLiquid_isSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 219
+  end
+  object spInsertUpdate_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 200
+  end
+  object spDelete_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 160
   end
 end

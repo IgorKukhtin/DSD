@@ -240,8 +240,7 @@ BEGIN
                   , COALESCE (tmpRemains.RemainsEnd, 0)
                   , COALESCE (tmpReserve.Amount, 0)
            HAVING sum(COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-         ; 
-      
+         ;
       -- свяжем товары с главным товаром
       WITH 
       tmpGoodsMain AS (SELECT tmpGoods.GoodsId
@@ -502,12 +501,16 @@ BEGIN
      -- Результат
      OPEN Cursor1 FOR
       WITH
-      tmpChildTo AS (SELECT tmpDataTo.GoodsMainId
+      tmpGoodsPrint AS (SELECT DISTINCT Object_GoodsPrint.GoodsId
+                        FROM Object_GoodsPrint
+                        WHERE Object_GoodsPrint.UserId = vbUserId
+                          AND (Object_GoodsPrint.UnitId = inUnitId OR inUnitId  = 0)
+                        )
+    , tmpChildTo AS (SELECT tmpDataTo.GoodsMainId
                           , SUM (tmpDataTo.RemainsMCS_result) AS RemainsMCS_result
                      FROM tmpDataTo
                      GROUP BY tmpDataTo.GoodsMainId
                     )
-                    
         --результат
         SELECT
              Object_Goods_View.Id                               AS GoodsId
@@ -544,10 +547,12 @@ BEGIN
            , COALESCE (tmpChildTo.RemainsMCS_result, 0)         :: TFloat AS RemainsMCS_result
            , COALESCE (_tmpData.Amount_Send, 0)                 :: TFloat AS Amount_Send
            , COALESCE (_tmpData.Amount_Reserve, 0)              :: TFloat AS Amount_Reserve
-           , _tmpData.isSaleAnother                         AS isSaleAnother
+           , _tmpData.isSaleAnother                                               AS isSaleAnother
+           , CASE WHEN tmpGoodsPrint.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isSend
         FROM _tmpData
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = _tmpData.GoodsId
              LEFT JOIN tmpChildTo ON tmpChildTo.GoodsMainId = _tmpData.GoodsMainId
+             LEFT JOIN tmpGoodsPrint ON tmpGoodsPrint.GoodsId = _tmpData.GoodsId
         -- WHERE COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) =0
         -- where (Object_Goods_View.GoodsCodeInt in (1922, 22258) OR  inSession <> '3')
         ORDER BY GoodsGroupName, GoodsName;
@@ -595,9 +600,9 @@ BEGIN
                           FROM tmpDataTo
                                LEFT JOIN Object_Price_View ON object_price_view.GoodsId = tmpDataTo.GoodsId
                                                           AND Object_Price_View.unitid  = tmpDataTo.UnitId
-                               -- получаем значения цены из истории значений на конеч. дату                                                          
+                               -- получаем значения цены из истории значений на конеч. дату
                                LEFT JOIN ObjectHistory AS ObjectHistory_PriceEnd
-                                                       ON ObjectHistory_PriceEnd.ObjectId = Object_Price_View.Id 
+                                                       ON ObjectHistory_PriceEnd.ObjectId = Object_Price_View.Id
                                                       AND ObjectHistory_PriceEnd.DescId   = zc_ObjectHistory_Price()
                                                       AND DATE_TRUNC ('DAY', inEndDate) >= ObjectHistory_PriceEnd.StartDate AND DATE_TRUNC ('DAY', inEndDate) < ObjectHistory_PriceEnd.EndDate
                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceEnd

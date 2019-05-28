@@ -76,6 +76,22 @@ type
     macReportUnLiquid_mov: TMultiAction;
     bbReportUnLiquid_mov: TdxBarButton;
     cbReserve: TcxCheckBox;
+    isSend: TcxGridDBColumn;
+    spUpdate_isSend_Yes: TdsdStoredProc;
+    spUpdate_isSend_No: TdsdStoredProc;
+    actUpdate_isSend_Yes: TdsdExecStoredProc;
+    actUpdate_isSend_No: TdsdExecStoredProc;
+    macUpdate_isSend_No: TMultiAction;
+    macUpdate_isSend_Yes: TMultiAction;
+    bbUpdate_isSend_Yes: TdxBarButton;
+    bbUpdate_isSend_No: TdxBarButton;
+    macAddGoodsPrintList: TMultiAction;
+    spInsertUpdate_GoodsPrint: TdsdStoredProc;
+    actInsertUpdate_GoodsPrint: TdsdExecStoredProc;
+    spDelete_GoodsPrint: TdsdStoredProc;
+    actDelete_GoodsPrint: TdsdExecStoredProc;
+    bbTest: TdxBarButton;
+    macSend_all: TMultiAction;
   private
     { Private declarations }
   public
