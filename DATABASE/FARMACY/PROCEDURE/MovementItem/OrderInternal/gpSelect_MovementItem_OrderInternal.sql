@@ -687,12 +687,13 @@ BEGIN
 
            , tmpMI.ConditionsKeepName
 
-           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
+           , CASE 
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                    -- отклонение по цене  светло - салатовая- цена подешевела, светло-розовая - подорожала
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  ----светло красная -- светло-розовая - подорожала
+                  WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
@@ -703,8 +704,8 @@ BEGIN
              END AS AVGPriceWarning   */
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
-                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
-                  ELSE 0
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
+                  ELSE -1 --0
              END AS AVGPriceWarning
 
            /*
@@ -2351,11 +2352,12 @@ BEGIN
 
            , COALESCE(tmpGoodsConditionsKeep.ConditionsKeepName, '') ::TVarChar  AS ConditionsKeepName
 
-           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
+           , CASE 
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
+                  WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
              
@@ -2363,8 +2365,8 @@ BEGIN
 
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
-                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
-                  ELSE 0
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
+                  ELSE -1  -- 0
              END AS AVGPriceWarning
 
            -- , tmpJuridicalArea.AreaId                                      AS AreaId
