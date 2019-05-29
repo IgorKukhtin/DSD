@@ -4,6 +4,7 @@ inherited ListGoodsForm: TListGoodsForm
   ClientHeight = 442
   ClientWidth = 839
   OnCreate = ParentFormCreate
+  OnDestroy = ParentFormDestroy
   OnKeyDown = ParentFormKeyDown
   ExplicitWidth = 855
   ExplicitHeight = 481
@@ -11,9 +12,9 @@ inherited ListGoodsForm: TListGoodsForm
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
     Left = 0
-    Top = 78
+    Top = 80
     Width = 839
-    Height = 229
+    Height = 227
     Align = alClient
     TabOrder = 1
     object ListGoodsGridDBTableView: TcxGridDBTableView
@@ -38,12 +39,12 @@ inherited ListGoodsForm: TListGoodsForm
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
+      Styles.OnGetContentStyle = ListGoodsGridDBTableViewStylesGetContentStyle
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object colGoodsName: TcxGridDBColumn
@@ -51,7 +52,6 @@ inherited ListGoodsForm: TListGoodsForm
         DataBinding.FieldName = 'GoodsName'
         OnCustomDrawCell = colGoodsNameCustomDrawCell
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 204
       end
@@ -61,7 +61,6 @@ inherited ListGoodsForm: TListGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 61
       end
@@ -71,7 +70,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.Alignment.Horz = taRightJustify
         OnGetDisplayText = colAmoutDayUserGetDisplayText
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
       end
@@ -81,7 +79,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.Alignment.Horz = taRightJustify
         OnGetDisplayText = colAmountDiffGetDisplayText
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 62
       end
@@ -90,7 +87,6 @@ inherited ListGoodsForm: TListGoodsForm
         PropertiesClassName = 'TcxTextEditProperties'
         OnGetDisplayText = colAmountDiffPrevGetDisplayText
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 62
       end
@@ -103,7 +99,6 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 119
       end
@@ -114,7 +109,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = ',0 %; ; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object colJuridicalPrice: TcxGridDBColumn
@@ -123,7 +117,6 @@ inherited ListGoodsForm: TListGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object colMarginPercent: TcxGridDBColumn
@@ -132,7 +125,6 @@ inherited ListGoodsForm: TListGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.## %'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 57
       end
@@ -140,7 +132,6 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'ExpirationDate'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 82
       end
@@ -149,7 +140,6 @@ inherited ListGoodsForm: TListGoodsForm
         DataBinding.FieldName = 'IsClose'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
       end
@@ -158,7 +148,6 @@ inherited ListGoodsForm: TListGoodsForm
         DataBinding.FieldName = 'isFirst'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 56
       end
@@ -167,7 +156,6 @@ inherited ListGoodsForm: TListGoodsForm
         DataBinding.FieldName = 'isSecond'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
     end
@@ -178,7 +166,7 @@ inherited ListGoodsForm: TListGoodsForm
   end
   object pnl1: TPanel [1]
     Left = 0
-    Top = 53
+    Top = 55
     Width = 839
     Height = 25
     Align = alTop
@@ -254,14 +242,12 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object colName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 244
       end
@@ -272,7 +258,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.000'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 77
       end
@@ -282,7 +267,6 @@ inherited ListGoodsForm: TListGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 73
       end
@@ -293,7 +277,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.Alignment.Horz = taLeftJustify
         OnGetDisplayText = colDiffKindIdGetDisplayText
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 211
       end
@@ -305,7 +288,6 @@ inherited ListGoodsForm: TListGoodsForm
         Properties.BlobPaintStyle = bpsText
         Properties.PictureGraphicClassName = 'TIcon'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 154
       end
@@ -313,7 +295,6 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
         DataBinding.FieldName = 'DateInput'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 136
       end
@@ -321,7 +302,6 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1050#1090#1086' '#1074#1074#1077#1083
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
       end
@@ -417,6 +397,13 @@ inherited ListGoodsForm: TListGoodsForm
     Top = 296
   end
   object ListlDiffNoSendCDS: TClientDataSet
+    PersistDataPacket.Data = {
+      A00000009619E0BD010000001800000004000000000003000000A00002494404
+      000100000000000D416D6F757444696666557365720800040000000100075355
+      42545950450200490006004D6F6E65790009416D6F7574446966660800040000
+      00010007535542545950450200490006004D6F6E6579000E416D6F756E744469
+      666650726576080004000000010007535542545950450200490006004D6F6E65
+      79000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -442,13 +429,6 @@ inherited ListGoodsForm: TListGoodsForm
     StoreDefs = True
     Left = 520
     Top = 136
-    Data = {
-      A00000009619E0BD010000001800000004000000000003000000A00002494404
-      000100000000000D416D6F757444696666557365720800040000000100075355
-      42545950450200490006004D6F6E65790009416D6F7574446966660800040000
-      00010007535542545950450200490006004D6F6E6579000E416D6F756E744469
-      666650726576080004000000010007535542545950450200490006004D6F6E65
-      79000000}
     object ListlDiffNoSendCDSID: TIntegerField
       FieldName = 'ID'
     end
@@ -511,10 +491,11 @@ inherited ListGoodsForm: TListGoodsForm
     UseSystemFont = True
     Left = 168
     Top = 104
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object Bar: TdxBar
       Caption = 'Custom'

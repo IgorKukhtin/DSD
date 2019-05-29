@@ -13,7 +13,8 @@ uses
   cxDBData, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   Vcl.ComCtrls, cxCheckBox, cxBlobEdit, dxSkinsdxBarPainter, dxBarExtItems,
-  dxBar;
+  dxBar, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog,
+  DataModul, System.Actions;
 
 type
   TListGoodsForm = class(TAncestorBaseForm)
@@ -96,9 +97,14 @@ type
     procedure colDiffKindIdGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure mmSearchGoodsClick(Sender: TObject);
+    procedure ListGoodsGridDBTableViewStylesGetContentStyle(
+      Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+    procedure ParentFormDestroy(Sender: TObject);
   private
     { Private declarations }
     FOldStr : String;
+    FStyle: TcxStyle;
     procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
   public
     procedure SetFilter(AText : string);
@@ -149,6 +155,16 @@ begin
   else ListDiffCDS.Filter := 'Id = 0';
 end;
 
+procedure TListGoodsForm.ListGoodsGridDBTableViewStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+begin
+  FStyle.Assign(dmMain.cxContentStyle);
+  if (ARecord.Values[colExpirationDate.Index] <> Null) and ((ARecord.Values[colExpirationDate.Index]) < IncYear(Date, 1)) then
+    FStyle.TextColor := clRed;
+  AStyle := FStyle;
+end;
+
 procedure TListGoodsForm.mmSearchGoodsClick(Sender: TObject);
   var i : Integer;
 begin
@@ -178,7 +194,7 @@ begin
 
   with TListDiffAddGoodsForm.Create(nil) do
   try
-    ListGoodsCDS := Self.ListGoodsCDS;
+    GoodsCDS := Self.ListGoodsCDS;
     if ShowModal <> mrOk then Exit;
   finally
      Free;
@@ -276,7 +292,9 @@ begin
       s:=copy(AText,k,length(s));
       OldColor:=ACanvas.Font.Color;
       ACanvas.Font.Color:=clRed;
-      ACanvas.TextOut(AViewInfo.Bounds.Left+ACanvas.TextWidth(copy(AText,1,K-1))+2,AViewInfo.Bounds.Top+2,S);
+      ACanvas.Font.Style := ACanvas.Font.Style + [fsUnderline];
+      ACanvas.TextOut(AViewInfo.Bounds.Left+ACanvas.TextWidth(copy(AText,1,K-1))+1,AViewInfo.Bounds.Top+2,S);
+      ACanvas.Font.Style := ACanvas.Font.Style - [fsUnderline];
       ACanvas.Font.Color:=OldColor;
     End;
   until S1='';
@@ -316,6 +334,8 @@ end;
 
 procedure TListGoodsForm.ParentFormCreate(Sender: TObject);
 begin
+
+  FStyle := TcxStyle.Create(nil);
 
   if not gc_User.Local then
   begin
@@ -375,6 +395,12 @@ begin
   end;
 
   FOldStr := '';
+end;
+
+procedure TListGoodsForm.ParentFormDestroy(Sender: TObject);
+begin
+  inherited;
+  FStyle.Free;
 end;
 
 procedure TListGoodsForm.ParentFormKeyDown(Sender: TObject; var Key: Word;

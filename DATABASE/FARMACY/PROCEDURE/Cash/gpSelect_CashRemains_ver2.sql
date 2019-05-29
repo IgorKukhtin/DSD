@@ -44,6 +44,8 @@ $BODY$
    DECLARE vbDate0    TDateTime;
    DECLARE vbDate180  TDateTime;
    DECLARE vbDate30   TDateTime;
+
+   DECLARE vbPartion   boolean;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -93,6 +95,8 @@ BEGIN
     vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
     vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
+    
+    vbPartion := False;
 
     -- ќбъ€вили новую сессию кассового места / обновили дату последнего обращени€
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -145,7 +149,8 @@ BEGIN
                             FROM Container
                             WHERE Container.DescId = zc_Container_CountPartionDate()
                               AND Container.WhereObjectId = vbUnitId
-                              AND Container.Amount <> 0)
+                              AND Container.Amount <> 0
+                              AND vbPartion = True)
        , tmpPDCLO AS (SELECT CLO.*
                     FROM ContainerlinkObject AS CLO
                     WHERE CLO.ContainerId IN (SELECT DISTINCT tmpPDContainer.Id FROM tmpPDContainer)

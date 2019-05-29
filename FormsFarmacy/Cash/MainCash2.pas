@@ -424,6 +424,7 @@ type
     MemDataAMOUNTMON: TFloatField;
     MemDataPDDISCOUNT: TFloatField;
     MainPartionDateDiscount: TcxGridDBColumn;
+    TimerDroppedDown: TTimer;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -529,6 +530,7 @@ type
     procedure pm_CheckClick(Sender: TObject);
     procedure pm_CheckHelsiClick(Sender: TObject);
     procedure pm_CheckHelsiAllUnitClick(Sender: TObject);
+    procedure TimerDroppedDownTimer(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -1260,8 +1262,8 @@ begin
 
   end;
   //
-  if FormParams.ParamByName('InvNumberSP').Value = ''
-  then begin
+  if (FormParams.ParamByName('InvNumberSP').Value = '') and  (FormParams.ParamByName('PartionDateKindId').Value = 0)  then
+  begin
       // Update Дисконт в CDS - по всем "обновим" Дисконт
       DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
       //
@@ -1768,7 +1770,7 @@ begin
 
   with TListDiffAddGoodsForm.Create(nil) do
   try
-    ListGoodsCDS := RemainsCDS;
+    GoodsCDS := RemainsCDS;
     ShowModal;
   finally
      Free;
@@ -1948,6 +1950,7 @@ var
   nOldColor : integer;
 begin
   if CheckCDS.RecordCount = 0 then exit;
+  TimerDroppedDown.Enabled := True;
 
   if (FormParams.ParamByName('CheckId').Value <> 0) and
     (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден') then
@@ -2840,7 +2843,7 @@ begin
         VarArrayOf([MemData.FieldByName('Id').AsInteger, MemData.FieldByName('PDKINDID').AsVariant]),[]) and
         MemData.FieldByName('NewRow').AsBoolean then
       Begin
-        Add_Log('    Add ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' + MemData.FieldByName('Remains').AsString);
+//        Add_Log('    Add ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' + MemData.FieldByName('Remains').AsString);
         RemainsCDS.Append;
         RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
         RemainsCDS.FieldByName('GoodsCode').AsInteger := MemData.FieldByName('GoodsCode').AsInteger;
@@ -2864,8 +2867,8 @@ begin
         if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
           MemData.FieldByName('PDKINDID').AsVariant]),[]) then
         Begin
-          Add_Log('    Update ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' +
-            RemainsCDS.FieldByName('Remains').AsString + ' = ' + MemData.FieldByName('Remains').AsString);
+//          Add_Log('    Update ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' +
+//            RemainsCDS.FieldByName('Remains').AsString + ' = ' + MemData.FieldByName('Remains').AsString);
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
           RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency - Amount_find;
@@ -6419,6 +6422,12 @@ begin
    TimerBlinkBtn.Enabled:=True;
  end;
 
+end;
+
+procedure TMainCashForm2.TimerDroppedDownTimer(Sender: TObject);
+begin
+  lcName.DroppedDown := False;
+  TimerDroppedDown.Enabled := False;
 end;
 
 procedure TMainCashForm2.SetBlinkVIP (isRefresh : boolean);

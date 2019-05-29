@@ -45,6 +45,7 @@ RETURNS TABLE (
   SiteDiscount TFloat,
   PartionDateKindId Integer,
   PartionDateKindName TVarChar, 
+  AmountMonth TFloat,
   DateDelay TDateTime
  )
 AS
@@ -166,9 +167,10 @@ BEGIN
             , Object_MemberSP.Id                                        AS MemberSPId
             , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
 
-            , Object_PartionDateKind.ID                     AS PartionDateKindId
-            , Object_PartionDateKind.ValueData              AS PartionDateKindName
-            , MovementDate_Delay.ValueData                  AS DateDelay
+            , Object_PartionDateKind.ID                         AS PartionDateKindId
+            , Object_PartionDateKind.ValueData                  AS PartionDateKindName
+            , ObjectFloat_Month.ValueData                       AS AmountMonth
+            , MovementDate_Delay.ValueData                      AS DateDelay
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -299,6 +301,10 @@ BEGIN
                                          ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                  ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                 AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
 
             LEFT JOIN MovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement.Id
