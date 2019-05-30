@@ -30,6 +30,7 @@ type
     ///	</param>
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
+
     procedure LoadReportList(ASession: string);
     procedure LoadReportLocalList(ASession: string);
     property Connection: String read GetConnection;
@@ -120,6 +121,7 @@ type
   public
     property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
+
   end;
 
   TIdHTTPWork = class
@@ -450,6 +452,29 @@ begin
       end;
 end;
 
+procedure MyDelay_two(mySec:Integer);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     DecodeTime(Present, Hour, Min, Sec, MSec);
+     //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     while abs(calcSec-calcSec2)<mySec do
+     begin
+          Present:=Now;
+          DecodeDate(Present, Year, Month, Day);
+          DecodeTime(Present, Hour, Min, Sec, MSec);
+          //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     end;
+end;
+
 function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
   AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
   function GetAddConnectString(pExecOnServer: boolean): String;
@@ -460,6 +485,7 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
        result := '';
   end;
 var
+iii : Integer;
   ResultType: string;
   AttemptCount: Integer;
   ok: Boolean;
@@ -516,8 +542,42 @@ begin
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
+
+   if ((Pos('TSale_OrderJournalForm', pData) > 0) or (Pos('TReturnInJournalForm', pData) > 0))
+    and (Pos('gpGet_Object_Form', pData) > 0)
+   then
+      for iii:= 1 to 100 do begin
+
+      if Assigned (FReceiveStream) then FReceiveStream.Clear;
+
+      Logger.AddToLog(' .........' );
+      Logger.AddToLog(' ...... start ...' + IntToSTr(iii));
+      Logger.AddToLog(' .........' + DateTimeToStr(now));
+      Logger.AddToLog(' .........');
+
             idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
               {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+
+            DString := FReceiveStream.DataString;
+
+      Logger.AddToLog(' .........');
+      Logger.AddToLog(' .........' + DateTimeToStr(now));
+      Logger.AddToLog(' ...... end ...' + IntToSTr(iii));
+      Logger.AddToLog(' .........');
+
+      {Logger.AddToLog(DString);}
+
+      MyDelay_two(1000);
+
+
+   end
+   else
+
+            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
+              {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+
+      Logger.AddToLog(' ok ...');
+
             ok := true;
             break;
           except
@@ -644,6 +704,7 @@ begin
     FCriticalSection.Leave;
   end;
 end;
+
 
 class function TStorageFactory.GetStorage: IStorage;
 begin
