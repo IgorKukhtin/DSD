@@ -29,8 +29,8 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
-     vbUserId := inSession;
+     --vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
 
      ioId := lpInsertUpdate_Movement_ReturnOut(ioId
                                              , inInvNumber

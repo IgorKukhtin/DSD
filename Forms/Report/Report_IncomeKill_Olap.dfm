@@ -2,7 +2,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1059#1073#1086#1102
-  ClientHeight = 440
+  ClientHeight = 413
   ClientWidth = 874
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -92,7 +92,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     Left = 0
     Top = 57
     Width = 874
-    Height = 383
+    Height = 356
     Align = alClient
     DataSource = DataSource
     Groups = <>
@@ -102,6 +102,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     OptionsView.RowGrandTotals = False
     OptionsView.RowGrandTotalWidth = 921
     TabOrder = 7
+    ExplicitHeight = 383
     object pvOperDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0

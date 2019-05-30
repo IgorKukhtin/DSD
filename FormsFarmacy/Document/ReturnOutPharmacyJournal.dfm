@@ -1,8 +1,9 @@
-inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
+inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
   ClientWidth = 807
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 823
   ExplicitHeight = 507
   PixelsPerInch = 96
@@ -69,10 +70,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+              Column = TotalSummMVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -115,15 +118,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SaleSumm
+              Column = TotalSummMVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -139,49 +139,43 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 74
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 88
           end
           object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 187
+            Width = 125
           end
           object ToName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 200
+            Width = 143
           end
-          object ContractName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
-            DataBinding.FieldName = 'ContractName'
-            GroupSummaryAlignment = taCenter
+          object BranchDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'BranchDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 136
+            HeaderHint = #1044#1072#1090#1072' '#1092#1072#1082#1090'. '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1087#1086#1089#1090'-'#1082#1072
+            Width = 92
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -191,139 +185,93 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 60
           end
-          object SaleSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
-            DataBinding.FieldName = 'SaleSumm'
+          object TotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 79
+            Width = 65
           end
-          object NDS: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDS'
+            DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 50
-          end
-          object InvNumberBranch: TcxGridDBColumn
-            Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
-            DataBinding.FieldName = 'InvNumberBranch'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 47
-          end
-          object BranchDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
-            DataBinding.FieldName = 'BranchDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object Checked: TcxGridDBColumn
-            Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
-            DataBinding.FieldName = 'Checked'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 95
-          end
-          object Button: TcxGridDBColumn
-            AlternateCaption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1092#1090#1086#1084'"'
-            Caption = #1048#1079#1084'.'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = mactFarmacyShow
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ViewStyle = vsButtonsOnly
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1092#1090#1086#1084'"'
-            Options.ShowEditButtons = isebAlways
-            Width = 25
+            Width = 56
           end
           object JuridicalName: TcxGridDBColumn
-            Caption = #1063#1055
+            Caption = #1070#1088'.'#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 127
+            Width = 113
           end
-          object isDocument: TcxGridDBColumn
-            Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'.'
-            DataBinding.FieldName = 'isDocument'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 68
-          end
-          object isRegistered: TcxGridDBColumn
-            Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
-            DataBinding.FieldName = 'isRegistered'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1047#1072#1075#1088#1091#1078#1077#1085#1072' '#1074' '#1084#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer '#1052#1044#1052
-            Options.Editing = False
-            Width = 74
-          end
-          object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
+          object InvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 101
+            Width = 80
           end
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertDate'
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 85
           end
-          object UpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-            DataBinding.FieldName = 'UpdateName'
+          object AdjustingOurDate: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1085#1072#1096#1077#1081' '#1076#1072#1090#1099
+            DataBinding.FieldName = 'AdjustingOurDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 101
+            Width = 85
           end
-          object UpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-            DataBinding.FieldName = 'UpdateDate'
+          object IncomeOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1055#1053
+            DataBinding.FieldName = 'IncomeOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 71
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object IncomeInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1055#1053
+            DataBinding.FieldName = 'IncomeInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object ReturnTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReturnTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -362,15 +310,82 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      Enabled = False
-      FormName = 'TIncomeForm'
+      Category = 'Edit'
+      ImageIndex = -1
+      FormName = 'TReturnOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
-      Enabled = False
+      Category = 'Edit'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TIncomePharmacyForm'
-      FormNameParam.Value = 'TIncomePharmacyForm'
+      Category = 'Edit'
+      FormName = 'TReturnOutForm'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actUnCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSetErasedList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited spReCompete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spCompete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spUncomplete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spErased: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited actSimpleCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleUncompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleErased: TMultiAction
+      Category = 'Complete'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -392,8 +407,8 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -413,9 +428,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -423,76 +438,176 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintForManager: TdsdPrintAction
-      Category = 'DSDLib'
+    object ADOQueryAction1: TADOQueryAction
+      Category = 'dsdImportExport'
       MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
-      ImageIndex = 16
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <>
-      ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
-      ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actisDocument: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actGetDataForSend: TdsdExecStoredProc
+      Category = 'dsdImportExport'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spisDocument
+      StoredProc = spGetDataForSend
       StoredProcList = <
         item
-          StoredProc = spisDocument
+          StoredProc = spGetDataForSend
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
+      Caption = 'actGetDataForSend'
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
+    object mactSendOneDoc: TMultiAction
+      Category = 'dsdImportExport'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actUpdateDataSet'
-      DataSource = MasterDS
-    end
-    object mactFarmacyShow: TMultiAction
-      Category = 'AmountManual'
-      MoveParams = <
-        item
-          FromParam.Value = Null
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.MultiSelectSeparator = ','
-        end>
       ActionList = <
         item
-          Action = actGet_Movement_ManualAmountTrouble
+          Action = actGetDataForSend
         end
         item
-          Action = actaOpen_Income_AmountTroubleForm
+          Action = ADOQueryAction1
+        end
+        item
+          Action = actComplete
         end>
-      Caption = 'mactFarmacyShow'
+      Caption = 'mactSendOneDoc'
     end
-    object actPrintSticker_notPrice: TdsdPrintAction
+    object MultiAction2: TMultiAction
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      ActionList = <>
+      Caption = 'MultiAction2'
+    end
+    object mactInsert: TMultiAction
+      Category = 'Edit'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceIncomeMovement
+        end
+        item
+          Action = actReturnOutMovementInsert
+        end
+        item
+          Action = actInsert
+        end>
+      ImageIndex = 0
+    end
+    object actReturnOutMovementInsert: TdsdExecStoredProc
+      Category = 'Edit'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertMovement
+        end>
+      Caption = 'actReturnOutMovementInsert'
+    end
+    object actChoiceIncomeMovement: TOpenChoiceForm
+      Category = 'Edit'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceIncomeMovement'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'IncomeMovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartData'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndData'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactEditPartnerData: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartnerDataDialog
+        end
+        item
+          Action = actUpdateReturnOut_PartnerData
+        end
+        item
+          Action = DataSetPost1
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 35
+    end
+    object actPartnerDataDialog: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialog'
+      FormName = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberPartner'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AdjustingOurDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'AdjustingOurDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateReturnOut_PartnerData: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReturnOut_PartnerData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReturnOut_PartnerData
+        end>
+      Caption = 'actUpdateReturnOut_PartnerData'
+    end
+    object DataSetPost1: TDataSetPost
+      Category = 'PartnerData'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      ImageIndex = 78
+      DataSource = MasterDS
+    end
+    object actPrintTTN: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -507,19 +622,22 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintSticker
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintSticker
+          StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ImageIndex = 19
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 18
       DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName'
         end>
       Params = <
         item
@@ -528,68 +646,15 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ToName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = 'False'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1058#1058#1053
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1058#1058#1053
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc
-      Category = 'AmountManual'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      StoredProc = spGet_Movement_ManualAmountTrouble
-      StoredProcList = <
-        item
-          StoredProc = spGet_Movement_ManualAmountTrouble
-        end>
-      Caption = 'actGet_Movement_ManualAmountTrouble'
-    end
-    object actaOpen_Income_AmountTroubleForm: TdsdOpenForm
-      Category = 'AmountManual'
-      MoveParams = <>
-      Caption = 'actaOpen_Income_AmountTroubleForm'
-      FormName = 'TIncome_AmountTroubleForm'
-      FormNameParam.Value = 'TIncome_AmountTroubleForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -622,74 +687,17 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPrintSticker: TdsdPrintAction
+    object actUpdate_BranchDate: TdsdUpdateDataSet
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintSticker
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BranchDate
       StoredProcList = <
         item
-          StoredProc = spSelectPrintSticker
+          StoredProc = spUpdate_BranchDate
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ToName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = 'True'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
+      Caption = 'actUpdate_BranchDate'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -700,7 +708,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_IncomePharmacy'
+    StoredProcName = 'gpSelect_Movement_ReturnOutPharmacy'
     Params = <
       item
         Name = 'instartdate'
@@ -732,7 +740,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 128
     Top = 163
   end
   inherited BarManager: TdxBarManager
@@ -745,6 +753,10 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
         item
           Visible = True
           ItemName = 'bbEdit'
@@ -793,7 +805,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbisDocument'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -805,6 +817,18 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -813,15 +837,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Client'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker_notPrice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbSendData'
         end
         item
           Visible = True
@@ -836,6 +852,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           ItemName = 'bbGridToExcel'
         end>
     end
+    inherited bbInsert: TdxBarButton
+      Action = mactInsert
+    end
     object bbTax: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       Category = 0
@@ -848,36 +867,29 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       Category = 0
     end
     object bbPrintTax_Us: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Action = actPrintTTN
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
     end
     object bbPrintTax_Client: TdxBarButton
-      Action = actPrintSticker
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Category = 0
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Visible = ivAlways
+      ImageIndex = 18
     end
     object bbPrint_Bill: TdxBarButton
-      Caption = #1057#1095#1077#1090
+      Action = actPrintTTN
       Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
-    object dxBarButton1: TdxBarButton
-      Action = actPrintForManager
+    object bbSendData: TdxBarButton
+      Action = mactSendOneDoc
       Category = 0
       Visible = ivNever
     end
-    object bbisDocument: TdxBarButton
-      Action = actisDocument
+    object dxBarButton1: TdxBarButton
+      Action = mactEditPartnerData
       Category = 0
-    end
-    object bbPrintSticker_notPrice: TdxBarButton
-      Action = actPrintSticker_notPrice
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080' '#1073#1077#1079' '#1094#1077#1085#1099
-      Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -887,6 +899,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    inherited N3: TMenuItem
+      Action = mactInsert
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288
@@ -903,7 +918,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Income'
+    StoredProcName = 'gpComplete_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -912,19 +927,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCurrentData'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Income'
+    StoredProcName = 'gpUnComplete_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -938,7 +946,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Income'
+    StoredProcName = 'gpSetErased_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -974,25 +982,51 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameIncome'
+        Name = 'ReportNameReturnOut'
         Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameIncomeTax'
+        Name = 'ReportNameReturnOutTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IncomeMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AdjustingOurDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'AdjustingOurDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
-  end
-  inherited spMovementReComplete: TdsdStoredProc
-    Left = 384
-    Top = 136
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1007,7 +1041,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1027,8 +1061,8 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
-    Top = 248
+    Left = 607
+    Top = 224
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
@@ -1052,158 +1086,114 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       item
         Name = 'ConnectionString'
         Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'ConnectionString'
         MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
         Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'QueryText'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 56
+    Left = 456
+    Top = 112
   end
-  object spGetDataForSendNew: TdsdStoredProc
-    StoredProcName = 'gpGetDataForSendNew'
+  object spInsertMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_ReturnOutFromIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ConnectionString'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'QueryText'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 472
-    Top = 136
-  end
-  object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_IncomeSale'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChecked'
-        Value = 'False'
-        Component = MasterCDS
-        ComponentItem = 'Checked'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 578
-    Top = 136
-  end
-  object spGet_Movement_ManualAmountTrouble: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ManualAmountTrouble'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReverce'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioChecked'
-        Value = 'False'
-        Component = MasterCDS
-        ComponentItem = 'Checked'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTrouble'
-        Value = Null
-        Component = actaOpen_Income_AmountTroubleForm
-        ComponentItem = 'Enabled'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 408
-    Top = 392
-  end
-  object spisDocument: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_isDocument'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDocument'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isDocument'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 760
-    Top = 139
-  end
-  object spSelectPrintSticker: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
+        Name = 'outId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 615
-    Top = 224
+    Left = 192
+    Top = 288
+  end
+  object spUpdateReturnOut_PartnerData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = 42381d
+        Component = FormParams
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAdjustingOurDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'AdjustingOurDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 400
+  end
+  object spUpdate_BranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_BranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'BranchDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 280
   end
 end

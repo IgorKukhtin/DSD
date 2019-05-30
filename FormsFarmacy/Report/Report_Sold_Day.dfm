@@ -4,7 +4,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   ClientWidth = 797
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 813
-  ExplicitHeight = 614
+  ExplicitHeight = 613
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -79,16 +79,33 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             DataBinding.FieldName = 'PlanDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Width = 61
           end
           object UnitJuridical: TcxGridDBColumn
             Caption = #1070#1088#1083#1080#1094#1086
             DataBinding.FieldName = 'UnitJuridical'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Width = 80
+          end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 109
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Width = 154
           end
           object PlanAmount: TcxGridDBColumn
@@ -96,36 +113,54 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object PlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PlanAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object FactAmount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090
             DataBinding.FieldName = 'FactAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object FactAmountAccum: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'FactAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object DiffAmount: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'DiffAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object DiffAmountAccum: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'DiffAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
           end
           object PercentMake: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
@@ -133,6 +168,9 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             DataBinding.FieldName = 'PercentMake'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00%'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           end
           object PercentMakeAccum: TcxGridDBColumn
@@ -141,6 +179,9 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             DataBinding.FieldName = 'PercentMakeAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00%'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
             Width = 72
           end
