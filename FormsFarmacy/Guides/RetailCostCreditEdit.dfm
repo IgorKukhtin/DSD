@@ -23,7 +23,8 @@ inherited RetailCostCreditEditForm: TRetailCostCreditEditForm
   object cePercent: TcxCurrencyEdit [3]
     Left = 192
     Top = 82
-    Properties.DisplayFormat = ',0.##'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 3
     Width = 150
   end

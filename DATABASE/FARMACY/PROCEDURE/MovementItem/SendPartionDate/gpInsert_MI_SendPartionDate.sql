@@ -96,26 +96,26 @@ BEGIN
            ;
 
     -- 
-    CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Price TFloat, PriceExp TFloat) ON COMMIT DROP;
-    INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, Price, PriceExp)
+    CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, ChangePercent TFloat, ChangePercentMin TFloat) ON COMMIT DROP;
+    INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, ChangePercent, ChangePercentMin)
     WITH
       MI_Master AS (SELECT MovementItem.Id                    AS Id
                          , MovementItem.ObjectId              AS GoodsId
-                         , MIFloat_Price.ValueData            AS Price
-                         , COALESCE (MIFloat_PriceExp.ValueData, MIFloat_Price.ValueData) AS PriceExp
+                         , MIFloat_ChangePercent.ValueData            AS ChangePercent
+                         , COALESCE (MIFloat_ChangePercentMin.ValueData, MIFloat_ChangePercent.ValueData) AS ChangePercentMin
                     FROM MovementItem
-                         LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceExp
-                                                     ON MIFloat_PriceExp.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_PriceExp.DescId = zc_MIFloat_PriceExp()
+                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                     ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
+                                                     ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.DescId = zc_MI_Master()
                       --AND MovementItem.IsErased = FALSE
                     )
 
-    , tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
+    /*, tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
                         , ROUND(Price_Value.ValueData, 2) ::TFloat AS Price
                    FROM ObjectLink AS ObjectLink_Price_Unit
                         LEFT JOIN ObjectFloat AS Price_Value
@@ -126,14 +126,14 @@ BEGIN
                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                    WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit() 
                      AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                   )
+                   )*/
     
     SELECT COALESCE(MI_Master.Id,0)                     AS Id
           , COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId) AS GoodsId
           , tmpRemains.Amount                            AS Amount
           , tmpRemains.AmountRemains          ::TFloat   AS AmountRemains
-          , COALESCE(MI_Master.Price, tmpPrice.Price)    AS Price
-          , COALESCE(MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
+          , COALESCE(MI_Master.ChangePercent, 0)   ::TFloat AS ChangePercent
+          , COALESCE(MI_Master.ChangePercentMin, 0)::TFloat AS ChangePercentMin
     FROM (SELECT tmpRemains.GoodsId
                , SUM (tmpRemains.Amount) AS AmountRemains
                , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
@@ -151,8 +151,8 @@ BEGIN
                            ELSE 0
                       END) <> 0
           ) AS tmpRemains
-        FULL OUTER JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId
-        LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);
+        FULL OUTER JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId;
+        --LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);
 
     --- сохраняем MI_Master
     PERFORM lpInsertUpdate_MI_SendPartionDate_Master(ioId            := tmpMaster.Id
@@ -160,9 +160,9 @@ BEGIN
                                                    , inGoodsId       := tmpMaster.GoodsId  
                                                    , inAmount        := COALESCE (tmpMaster.Amount,0)        :: TFloat     -- Количество
                                                    , inAmountRemains := COALESCE (tmpMaster.AmountRemains,0) :: TFloat     --
-                                                   , inPrice         := COALESCE (tmpMaster.Price,0)         :: TFloat     -- цена (срок от 1 мес до 6 мес)
-                                                   , inPriceExp      := COALESCE (tmpMaster.PriceExp,0)      :: TFloat     -- цена (срок меньше месяца)
-                                                   , inUserId       := vbUserId)
+                                                   , inChangePercent    := COALESCE (tmpMaster.ChangePercent,0)         :: TFloat     -- % скидки(срок от 1 мес до 6 мес)
+                                                   , inChangePercentMin := COALESCE (tmpMaster.ChangePercentMin,0)      :: TFloat     -- % скидки(срок меньше месяца)
+                                                   , inUserId        := vbUserId)
     FROM tmpMaster; 
                                   
     
@@ -251,5 +251,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.19         *
  05.04.19         *
 */

@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Movement_SendPartionDate()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendPartionDate(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , --
+    IN inChangePercent       TFloat    , -- % скидки (срок от 1 мес до 6 мес)
+    IN inChangePercentMin    TFloat    , -- % скидки (срок меньше месяца)
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -61,6 +64,8 @@ BEGIN
                                                    , inInvNumber        := inInvNumber
                                                    , inOperDate         := inOperDate
                                                    , inUnitId           := inUnitId
+                                                   , inChangePercent    := inChangePercent
+                                                   , inChangePercentMin := inChangePercentMin
                                                    , inComment          := inComment
                                                    , inUserId           := vbUserId
                                                     );
@@ -72,6 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 27.05.19         *
  02.04.19         *
 */
 

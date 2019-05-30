@@ -344,6 +344,8 @@ begin
       AddBoolField(LocalDataBaseDiff,  'NEWROW'); //
       AddIntField(LocalDataBaseDiff,   'ACCOMID'); //
       AddStrField(LocalDataBaseDiff,   'ACCOMNAME',20); //наименование расположени€
+      AddFloatField(LocalDataBaseDiff, 'AMOUNTMON'); //ћес€цев срока
+      AddFloatField(LocalDataBaseDiff, 'PDDISCOUNT'); //—кидка дл€ просроченных товаров
       AddIntField(LocalDataBaseDiff,   'COLORCALC'); //цвет
 
       LocalDataBaseDiff.CreateTable;

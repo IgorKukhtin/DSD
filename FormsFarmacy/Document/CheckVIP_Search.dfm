@@ -1,5 +1,5 @@
 inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
-  Caption = #1055#1086#1080#1089#1082' '#1074' VIP '#1095#1077#1082#1080#1072#1093' '#1090#1086#1074#1072#1088#1086#1074
+  Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' VIP '#1095#1077#1082#1072#1093
   ClientHeight = 405
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -747,13 +747,21 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     Top = 56
   end
   object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_CheckDeferred'
+    StoredProcName = 'gpSelect_MovementItem_CheckVIP'
     DataSet = ClientDataSet1
     DataSets = <
       item
         DataSet = ClientDataSet1
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 440
     Top = 56

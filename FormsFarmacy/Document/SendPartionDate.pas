@@ -34,7 +34,7 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
@@ -50,7 +50,6 @@ type
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     GuidesGroupMemberSP: TdsdGuides;
-    GuidesMemberSP: TdsdGuides;
     actPrintCheck: TdsdPrintAction;
     PrintDialog: TExecuteDialog;
     macPrintCheck: TMultiAction;
@@ -83,6 +82,10 @@ type
     bbOpenFormIncome: TdxBarButton;
     minExpirationDate: TcxGridDBColumn;
     actOpenPartionDateKind: TdsdOpenForm;
+    cxLabel9: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    edChangePercentMin: TcxCurrencyEdit;
   private
     { Private declarations }
   public

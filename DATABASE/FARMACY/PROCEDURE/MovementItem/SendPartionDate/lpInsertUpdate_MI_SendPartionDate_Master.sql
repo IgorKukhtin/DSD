@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountRemains       TFloat    , --
-    IN inPrice               TFloat    , -- цена (срок от 1 мес до 6 мес)
-    IN inPriceExp            TFloat    , -- цена (срок меньше месяца)
+    IN inChangePercent       TFloat    , -- % (срок от 1 мес до 6 мес)
+    IN inChangePercentMin    TFloat    , -- % (срок меньше месяца)
     IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer
@@ -25,9 +25,9 @@ BEGIN
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
     
     -- сохранили <цену>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceExp(), ioId, inPriceExp);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentMin(), ioId, inChangePercentMin);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, inAmountRemains);
 
@@ -44,5 +44,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.19         *
  03.04.19         *
 */

@@ -28,6 +28,12 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
 
+
+   IF NOT EXISTS (SELECT 1 FROM Object_GoodsPrint WHERE Object_GoodsPrint.UnitId = inFromId AND Object_GoodsPrint.GoodsId = inGoodsId AND Object_GoodsPrint.UserId = vbUserId)
+   THEN
+       RETURN;
+   END IF;
+    
     IF COALESCE(inRemainsMCS_result, 0) <> 0
     THEN
         -- ищем ИД документа перещения (ключ - дата, от кого, кому, создан автоматически)

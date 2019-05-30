@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpDelete_Object_GoodsPrint(
 RETURNS RECORD
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());

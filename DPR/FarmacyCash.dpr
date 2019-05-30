@@ -19,7 +19,7 @@ uses
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  FormStorage in '..\SOURCE\FormStorage.pas',
+  FormStorage in  '..\SOURCE\FormStorage.pas',
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   UnilWin in '..\SOURCE\UnilWin.pas',
   cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',

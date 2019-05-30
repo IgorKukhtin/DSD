@@ -774,6 +774,8 @@ begin
              FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
              FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
              FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
+             FLocalDataBaseDiff.Fields[14].AsVariant:=DiffCDS.Fields[14].AsVariant;
+             FLocalDataBaseDiff.Fields[15].AsVariant:=DiffCDS.Fields[15].AsVariant;
              FLocalDataBaseDiff.Post;
              DiffCDS.Next;
           end;
@@ -1032,7 +1034,12 @@ begin
       freeAndNil(dsdSave);
     end;
 
-    if bRun then CashRemainsDiffExecute;
+    if bRun then
+    begin
+      Add_Log('Start CashRemainsDiffExecute');
+      CashRemainsDiffExecute;
+      Add_Log('End CashRemainsDiffExecute');
+    end;
   finally
     TimerNeedRemainsDiff.Enabled := True;
   end;

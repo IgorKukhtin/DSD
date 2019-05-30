@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_SendPartionDate()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TFloat, TFloat, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendPartionDate(
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendPartionDate(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- 
+    IN inChangePercent       TFloat    , -- % скидки (срок от 1 мес до 6 мес)
+    IN inChangePercentMin    TFloat    , -- % скидки (срок меньше месяца)
     IN inComment             TVarChar   , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -34,6 +37,11 @@ BEGIN
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     -- сохранили <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentMin(), ioId, inChangePercentMin);
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
@@ -65,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.19         *
  02.04.19         *
  */
 
