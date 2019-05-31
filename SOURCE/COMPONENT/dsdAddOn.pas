@@ -646,6 +646,7 @@ type
     FisFreeAtClosing: boolean;
     FOnLoadAction: TdsdCustomAction;
     FAddOnFormRefresh: TAddOnFormRefresh;
+    FPUSHMessage: TdsdShowPUSHMessage;
   public
     constructor Create;
     destructor Destroy; override;
@@ -668,6 +669,8 @@ type
     property Params: TdsdFormParams read FParams write FParams;
     // Параметры для перечитывания формы
     property AddOnFormRefresh: TAddOnFormRefresh Read FAddOnFormRefresh Write FAddOnFormRefresh;
+    // Событие вызываемое для выыода PUSH сообщений при открытии окна
+    property PUSHMessage: TdsdShowPUSHMessage Read FPUSHMessage Write FPUSHMessage;
   end;
 
   TdsdGMMap = class(TGMMap)

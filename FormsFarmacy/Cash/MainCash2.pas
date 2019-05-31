@@ -1072,7 +1072,7 @@ begin
   //**13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   FormParams.ParamByName('PartionDateKindName').Value := '';
-  FormParams.ParamByName('AmountMonth').Value := Null;
+  FormParams.ParamByName('AmountMonth').Value := 0;
 
   ClearFilterAll;
 
@@ -1965,7 +1965,7 @@ begin
     Exit;
   end;
 
-  if (FormParams.ParamByName('AmountMonth').Value <> Null) and (FormParams.ParamByName('AmountMonth').Value = 0) and
+  if (FormParams.ParamByName('PartionDateKindId').Value <> 0) and (FormParams.ParamByName('AmountMonth').Value = 0) and
     not (actSpecCorr.Checked or actSpec.Checked) then
   begin
     ShowMessage('Ошибка.Просроченный товар продавать нельзя.');
@@ -2434,7 +2434,7 @@ begin
         try
           if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) then
           begin
-            checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
+            checkCDS.FieldByName('Remains').asCurrency:=RemainsCDS.FieldByName('Remains').asCurrency;
             checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
             checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
           end else
@@ -5070,7 +5070,7 @@ begin
   //**13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   FormParams.ParamByName('PartionDateKindName').Value := '';
-  FormParams.ParamByName('AmountMonth').Value := Null;
+  FormParams.ParamByName('AmountMonth').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;

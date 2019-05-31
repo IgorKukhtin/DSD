@@ -809,6 +809,21 @@ type
     property APIKeyStoredProc: TdsdStoredProc  read FAPIKeyStoredProc write FAPIKeyStoredProc;
   end;
 
+  TPUSHMessageType = (pmtResult, pmtWarning, pmtError, pmtInformation, pmtConfirmation);
+
+  TdsdShowPUSHMessage = class(TdsdCustomDataSetAction)
+  private
+    FPUSHMessageType : TPUSHMessageType;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+
+  published
+    property PUSHMessageType : TPUSHMessageType read FPUSHMessageType write FPUSHMessageType default pmtResult;
+  end;
+
+
 procedure Register;
 
 implementation
@@ -854,7 +869,8 @@ begin
   RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
   RegisterActions('DSDLib', [TdsdPartnerMapAction], TdsdPartnerMapAction);
   RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
-  RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
+  RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
+  RegisterActions('DSDLib', [TdsdShowPUSHMessage], TdsdShowPUSHMessage);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -3354,6 +3370,79 @@ end;
 procedure TdsdDataSetRefreshEx.SetColumn(const Value: TcxGridDBColumn);
 begin
   FColumn := Value;
+end;
+
+  { TdsdShowPUSHMessage }
+
+constructor TdsdShowPUSHMessage.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FPUSHMessageType := pmtResult;
+end;
+
+function TdsdShowPUSHMessage.LocalExecute: Boolean;
+var
+  i: Integer; MessageType : TPUSHMessageType;
+begin
+  result := true;
+  for i := 0 to StoredProcList.Count - 1 do
+    if Assigned(StoredProcList[i]) then
+      if Assigned(StoredProcList[i].StoredProc) then
+      begin
+        // Если табшит не установлен, но если установлен, то активен
+        if (not Assigned(StoredProcList[i].TabSheet)) or
+          (Assigned(StoredProcList[i].TabSheet) and
+          (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
+        begin
+          StoredProcList[i].StoredProc.Execute;
+          if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
+          begin
+            raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+            Exit;
+          end;
+          if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
+
+          if FPUSHMessageType = pmtResult then
+          begin
+            if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType')) then
+            begin
+              raise Exception.Create('Не найден возвращаемый параметр <outPUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+              Exit;
+            end;
+
+            case StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType').Value of
+              1 : MessageType := pmtWarning;
+              2 : MessageType := pmtError;
+              3 : MessageType := pmtInformation;
+              4 : MessageType := pmtConfirmation;
+              else
+              begin
+                raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                Exit;
+              end;
+            end;
+
+          end else MessageType := FPUSHMessageType;
+
+          case MessageType of
+            pmtWarning : MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, [mbOK], 0);
+            pmtError : begin
+                         raise Exception.Create(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value);
+                         Result := False;
+                         Exit;
+                       end;
+            pmtInformation : MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, [mbOK], 0);
+            pmtConfirmation : if MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
+                                #13#10#13#10'Продолжит выполнение ?...', mtConfirmation, mbYesNo, 0) <> mrYes then
+                              begin
+                                raise Exception.Create('Выполнение операции прервано...');
+                                Result := False;
+                                exit;
+                              end;
+          end;
+        end;
+      end;
 end;
 
 end.
