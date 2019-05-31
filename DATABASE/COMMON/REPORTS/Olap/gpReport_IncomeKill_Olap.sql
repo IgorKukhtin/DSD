@@ -225,26 +225,26 @@ BEGIN
                                    )
  
          , tmpSummIn AS (SELECT MIContainer.MovementItemId
-                              , SUM (MIContainer.Amount) AS SummIn
-                             FROM tmp
-                                  LEFT JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.MovementId = tmp.MovementId
-                                                                 AND MIContainer.DescId     = zc_MIContainer_Summ()
-                                                                 AND MIContainer.isActive   = TRUE
-                             GROUP BY MIContainer.MovementItemId
-                             )
+                              , SUM (COALESCE (MIContainer.Amount,0)) AS SummIn
+                         FROM tmp
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementId = tmp.MovementId
+                                                             AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                                             AND MIContainer.isActive   = TRUE
+                         GROUP BY MIContainer.MovementItemId
+                         )
          , tmpSeparate AS (SELECT tmp.PartionGoods
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN MI_Child.Amount ELSE 0 END) AS Amount_17
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2844 THEN MI_Child.Amount ELSE 0 END) AS Amount_19
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4183 THEN MI_Child.Amount ELSE 0 END) AS Amount_20
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4187 THEN MI_Child.Amount ELSE 0 END) AS Amount_21
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2550 THEN MI_Child.Amount ELSE 0 END) AS Amount_22
-                                , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN tmpSummIn.SummIn ELSE 0 END) AS SummIn_17
+                                , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN COALESCE (tmpSummIn.SummIn,0) ELSE 0 END) AS SummIn_17
                            FROM tmp 
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                        ON MovementLinkObject_From.MovementId = tmp.MovementId
-                                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                       AND MovementLinkObject_From.ObjectId = tmp.LocationId
+                                                               ON MovementLinkObject_From.MovementId = tmp.MovementId
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                              AND MovementLinkObject_From.ObjectId = tmp.LocationId
                                  JOIN MovementItem AS MI_Master
                                                    ON MI_Master.MovementId = tmp.MovementId
                                                   AND MI_Master.DescId   = zc_MI_Master()
@@ -640,6 +640,16 @@ BEGIN
                                       , zc_Color_White() AS Color_calc
                                       , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
+                              /* UNION-- проверка
+                                 SELECT '18.1. Проверка сумма СВИНИНА Н/К' AS Col_Name
+                                      , 18 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <> 0 THEN tmpOperationGroupAll.SummIn_17  ELSE 0 END AS Value
+                                      , tmpOperationGroupAll.Amount_17
+                                      , zc_Color_White() AS Color_calc
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
+                                 FROM tmpOperationGroupAll*/
                                  )
 
       -- Результат

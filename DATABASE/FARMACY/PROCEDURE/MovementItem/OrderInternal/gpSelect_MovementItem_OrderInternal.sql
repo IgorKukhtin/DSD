@@ -702,10 +702,10 @@ BEGIN
                      THEN TRUE
                   ELSE FALSE
              END AS AVGPriceWarning   */
-           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10
-                     THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
+           , CASE WHEN (AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0) > 0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
+                  WHEN (AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0) < -0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
-                  ELSE -1 --0
+                  ELSE 0
              END AS AVGPriceWarning
 
            /*
@@ -2363,10 +2363,10 @@ BEGIN
              
            , AVGIncome.AVGIncomePrice    AS AVGPrice
 
-           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
-                     THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
+           , CASE WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
+                  WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < -0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
-                  ELSE -1  -- 0
+                  ELSE 0
              END AS AVGPriceWarning
 
            -- , tmpJuridicalArea.AreaId                                      AS AreaId

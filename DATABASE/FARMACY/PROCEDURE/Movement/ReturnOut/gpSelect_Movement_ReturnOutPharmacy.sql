@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_Movement_ReturnOutPharmacy()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnOutPharmacy (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOutPharmacy(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
@@ -28,8 +28,10 @@ RETURNS TABLE (Id Integer
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitId   Integer;
+   DECLARE vbUnitKey  TVarChar;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -42,7 +44,10 @@ BEGIN
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
-
+     -- Определяется Аптека
+     vbUnitKey := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '');
+     vbUnitId  := CASE WHEN vbUnitKey = '' THEN 0 ELSE vbUnitKey :: Integer END;
+     
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -53,13 +58,17 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
 
-        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+        , tmpUnit  AS  (SELECT vbUnitId AS UnitId
+                        WHERE vbUnitId <> 0
+                        UNION
+                        SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                           AND vbUnitId = 0
                         )
 
        SELECT
@@ -99,25 +108,17 @@ BEGIN
            LEFT JOIN MovementDate AS MovementDate_Branch
                                   ON MovementDate_Branch.MovementId = Movement_ReturnOut_View.Id
                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-  ;
-
-
+       ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
  29.05.19         * add BranchDate
- 29.05.18                                                                     * 
- 05.01.18         * add NDS
- 04.05.16         *
- 06.02.15                        *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ReturnOutPharmacy (inStartDate:= '30.01.2019', inEndDate:= '01.02.2019', inIsErased := FALSE, inSession:= '2')

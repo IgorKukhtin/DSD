@@ -847,13 +847,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidDialogForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
 
@@ -934,18 +934,20 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryDialogForm');
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
 
@@ -1086,6 +1088,9 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPharmacyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPharmacyJournalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));

@@ -1,10 +1,10 @@
 -- Function: gpUpdate_Movement_ReturnOut_PartnerData()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData
-   (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnOut_PartnerData(
-    IN inMovementId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumberPartner    TVarChar  , -- Номер документа
     IN inOperDatePartner     TDateTime , -- Дата документа
     IN inAdjustingOurDate    TDateTime , -- Корректировка нашей даты
@@ -16,8 +16,9 @@ $BODY$
    DECLARE vbNeedComplete Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
-    vbUserId := inSession;
+    --vbUserId := inSession;
+    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ReturnOut_PartnerData());
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
     
     IF COALESCE (inMovementId,0) = 0
     THEN

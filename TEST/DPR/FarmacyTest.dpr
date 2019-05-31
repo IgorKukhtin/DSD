@@ -690,7 +690,8 @@ uses
   RetailCostCredit in '..\..\FormsFarmacy\Guides\RetailCostCredit.pas' {RetailCostCreditForm: TParentForm},
   RetailCostCreditEdit in '..\..\FormsFarmacy\Guides\RetailCostCreditEdit.pas' {RetailCostCreditEditForm: TParentForm},
   UserHelsiEdit in '..\..\FormsFarmacy\Guides\UserHelsiEdit.pas' {UserHelsiEditForm},
-  GoodsPromoChoice in '..\..\FormsFarmacy\Guides\GoodsPromoChoice.pas' {GoodsPromoChoiceForm: TParentForm};
+  GoodsPromoChoice in '..\..\FormsFarmacy\Guides\GoodsPromoChoice.pas' {GoodsPromoChoiceForm: TParentForm},
+  ReturnOutPharmacyJournal in '..\..\FormsFarmacy\Document\ReturnOutPharmacyJournal.pas' {ReturnOutPharmacyJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

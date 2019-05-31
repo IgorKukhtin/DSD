@@ -16,7 +16,6 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
     end
     inherited tsPivot: TcxTabSheet
       inherited cxDBPivotGrid1: TcxDBPivotGrid
-        ExplicitHeight = 503
         inherited pcolPlanDate: TcxDBPivotGridField
           UniqueName = #1044#1072#1090#1072
         end
@@ -45,6 +44,12 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
     end
   end
   inherited Panel: TPanel
+    inherited deStart: TcxDateEdit
+      OnDblClick = nil
+    end
+    inherited deEnd: TcxDateEdit
+      OnDblClick = nil
+    end
     inherited ceUnit: TcxButtonEdit
       Enabled = False
     end
@@ -55,5 +60,8 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
       0
       26
       0)
+  end
+  inherited UnitGuides: TdsdGuides
+    Top = 160
   end
 end
