@@ -21,8 +21,9 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
-     vbUserId := inSession;
+     --vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnOut());
+     
      
      outSumm := (inAmount*inPrice)::TFloat;
      
