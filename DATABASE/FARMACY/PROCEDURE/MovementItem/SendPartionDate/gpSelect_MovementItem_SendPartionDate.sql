@@ -261,11 +261,43 @@ BEGIN
                              , MovementItem.ParentId         AS ParentId
                              , MovementItem.ObjectId         AS GoodsId
                              , MIFloat_ContainerId.ValueData AS ContainerId
+                             , MovementItem.Amount           AS Amount
+                             , MILinkObject_PartionDateKind.ObjectId  AS PartionDateKindId
+                             , MIFloat_MovementId.ValueData ::Integer AS MovementId_Income
+                             , MIDate_ExpirationDate.ValueData        AS ExpirationDate
+                             , COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd())  AS ExpirationDate_in
                              , MovementItem.isErased
                         FROM MovementItem
                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                         AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                              ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                             LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
+
+                             -- находим срок годности из прихода
+                             LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                           ON CLO_PartionMovementItem.Containerid = (MIFloat_ContainerId.ValueData :: Integer)
+                                                          AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                             -- элемент прихода
+                             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                             -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                             -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                        
+                             LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate_in
+                                                               ON MIDate_ExpirationDate_in.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                              AND MIDate_ExpirationDate_in.DescId = zc_MIDate_PartionGoods()
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId = zc_MI_Child() 
                           AND MovementItem.isErased = FALSE
@@ -290,35 +322,40 @@ BEGIN
                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-                         WHERE Movement.Id IN (SELECT DISTINCT tmpRemains.MovementId_Income FROM tmpRemains)
+                         WHERE Movement.Id IN (SELECT DISTINCT tmpRemains.MovementId_Income FROM tmpRemains
+                                              UNION all
+                                               SELECT DISTINCT MI_Child.MovementId_Income FROM MI_Child)
                          )
 
          --св€звываем чайлд с мастером
-         SELECT COALESCE (MI_Child.Id,0)                        AS Id
+         SELECT COALESCE (MI_Child.Id,0)                           AS Id
               , COALESCE (MI_Master.Id, MI_Child.ParentId, 0)      AS ParentId
-              , COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId) AS GoodsId
-              , tmpRemains.Amount                               AS Amount
-              , tmpRemains.ContainerId                 ::Integer
+              , COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId)    AS GoodsId
+              , COALESCE (MI_Child.Amount, tmpRemains.Amount)           ::TFloat  AS Amount
+              , COALESCE (MI_Child.ContainerId, tmpRemains.ContainerId) ::Integer AS ContainerId
 
+              , COALESCE (Object_PartionDateKind.Id, 0)                     AS PartionDateKindId
               , COALESCE (Object_PartionDateKind.ValueData, '') :: TVarChar AS PartionDateKindName
               , ObjectFloat_Month.ValueData  ::TFloat AS Expired
-              , tmpRemains.ExpirationDate
+              , COALESCE (MI_Child.ExpirationDate, tmpRemains.ExpirationDate)     AS ExpirationDate
+              , COALESCE (MI_Child.ExpirationDate_in, tmpRemains.ExpirationDate)  AS ExpirationDate_in
               , tmpRemains.MovementId_Income  AS MovementId_Income
               , tmpIncome.BranchDate          AS OperDate_Income
               , tmpIncome.Invnumber           AS Invnumber_Income
               , tmpIncome.FromName            AS FromName_Income
               , tmpIncome.ContractName        AS ContractName_Income
+              , FALSE                         AS isExpirationDateDiff
               , COALESCE (MI_Child.isErased, FALSE) AS isErased
          FROM (SELECT tmpRemains.*
-               FROM tmpRemains 
+               FROM tmpRemains
                WHERE tmpRemains.ExpirationDate <= vbDate180
                ) AS tmpRemains
              FULL JOIN MI_Child ON MI_Child.GoodsId     = tmpRemains.GoodsId
                                AND MI_Child.ContainerId = tmpRemains.ContainerId
              LEFT JOIN MI_Master ON MI_Master.GoodsId = COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId)
-             LEFT JOIN tmpIncome ON tmpIncome.Id = tmpRemains.MovementId_Income
+             LEFT JOIN tmpIncome ON tmpIncome.Id = COALESCE (MI_Child.MovementId_Income, tmpRemains.MovementId_Income)
 
-             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpRemains.PartionDateKindId
+             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = COALESCE (MI_Child.PartionDateKindId, tmpRemains.PartionDateKindId)
              LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                    ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                   AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
@@ -358,7 +395,7 @@ BEGIN
                                      , SUM (CASE WHEN MILinkObject_PartionDateKind.ObjectId = zc_Enum_PartionDateKind_1() THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
                                      , SUM (CASE WHEN MILinkObject_PartionDateKind.ObjectId = zc_Enum_PartionDateKind_6() THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
                                      , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) AS ExpirationDate
-                                FROM  MovementItem
+                                FROM MovementItem
                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                                      ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                                     AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
@@ -408,6 +445,7 @@ BEGIN
                                      , MILinkObject_PartionDateKind.ObjectId  AS PartionDateKindId
                                      , MIFloat_MovementId.ValueData ::Integer AS MovementId_Income
                                      , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+                                     , COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd())  AS ExpirationDate_in
                                      , MovementItem.isErased              AS isErased
                                 FROM  MovementItem
                                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -423,7 +461,25 @@ BEGIN
                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
-   
+
+                                    -- находим срок годности из прихода
+                                    LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                                  ON CLO_PartionMovementItem.Containerid = (MIFloat_ContainerId.ValueData :: Integer)
+                                                                 AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                    -- элемент прихода
+                                    LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                               
+                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate_in
+                                                                      ON MIDate_ExpirationDate_in.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate_in.DescId = zc_MIDate_PartionGoods()
+
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId = zc_MI_Child() 
                                   AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -450,17 +506,19 @@ BEGIN
                                       LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
                                  WHERE Movement.Id IN (SELECT DISTINCT MI_Child.MovementId_Income FROM MI_Child)
                                  )
-                                         
+
                SELECT
                    COALESCE (MI_Child.Id, 0)        AS Id
                  , COALESCE (MI_Child.ParentId, 0)  AS ParentId
                  , MI_Child.GoodsId AS GoodsId
-                 , MI_Child.ExpirationDate ::TDateTime
-                 , MI_Child.Amount         ::TFloat AS Amount
-                 , tmpCountPartionDate.Amount         :: TFloat  AS AmountPartionDate
+                 , MI_Child.ExpirationDate    ::TDateTime
+                 , MI_Child.ExpirationDate_in ::TDateTime
+                 , MI_Child.Amount            ::TFloat AS Amount
+                 , tmpCountPartionDate.Amount ::TFloat AS AmountPartionDate
               
-                 , MI_Child.ContainerId    ::TFloat
-                 , ObjectFloat_Month.ValueData      AS Expired
+                 , MI_Child.ContainerId       ::TFloat
+                 , ObjectFloat_Month.ValueData         AS Expired
+                 , Object_PartionDateKind.Id                    AS PartionDateKindId
                  , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
 
                  , MI_Child.MovementId_Income    AS MovementId_Income
@@ -468,6 +526,8 @@ BEGIN
                  , tmpIncome.Invnumber           AS Invnumber_Income
                  , tmpIncome.FromName            AS FromName_Income
                  , tmpIncome.ContractName        AS ContractName_Income
+                 
+                 , CASE WHEN MI_Child.ExpirationDate <> MI_Child.ExpirationDate_in THEN TRUE ELSE FALSE END AS isExpirationDateDiff
 
                  , MI_Child.IsErased             AS isErased
 

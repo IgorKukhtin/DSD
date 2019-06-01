@@ -4,20 +4,23 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Intege
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Child(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inParentId            Integer   , --
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inPartionDateKindId   Integer   , -- 
-    IN inExpirationDate      TDateTime ,
-    IN inAmount              TFloat    , -- Количество
-    IN inContainerId         TFloat    , -- 
-    IN inMovementId_Income   TFloat    , -- 
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inParentId              Integer   , --
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inPartionDateKindId     Integer   , -- 
+    IN inExpirationDate        TDateTime ,
+    IN inExpirationDate_in     TDateTime ,
+   OUT outisExpirationDateDiff Boolean   ,
+    IN inAmount                TFloat    , -- Количество
+    IN inContainerId           TFloat    , -- 
+    IN inMovementId_Income     TFloat    , -- 
+    IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -46,7 +49,9 @@ BEGIN
     
     -- пересчитали Итоговые суммы по накладной
     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-    
+
+    outisExpirationDateDiff := CASE WHEN inExpirationDate <> inExpirationDate_in THEN TRUE ELSE FALSE END;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 

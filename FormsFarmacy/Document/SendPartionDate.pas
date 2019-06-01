@@ -86,6 +86,7 @@ type
     edChangePercent: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     edChangePercentMin: TcxCurrencyEdit;
+    spUpdate_ExpirationDate: TdsdStoredProc;
   private
     { Private declarations }
   public

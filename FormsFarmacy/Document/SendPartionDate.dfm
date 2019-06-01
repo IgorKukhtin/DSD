@@ -12,17 +12,17 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 1048
     Height = 430
     ExplicitTop = 123
-    ExplicitWidth = 900
+    ExplicitWidth = 1048
     ExplicitHeight = 430
     ClientRectBottom = 430
     ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 900
+      ExplicitWidth = 1048
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 1048
         Height = 227
-        ExplicitWidth = 900
+        ExplicitWidth = 1048
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -312,7 +312,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 900
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -350,7 +349,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -403,8 +401,24 @@ inherited SendPartionDateForm: TSendPartionDateForm
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
+          object ExpirationDate_in: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ExpirationDate_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 125
+          end
+          object isExpirationDateDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'isExpirationDateDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080
+            Options.Editing = False
+            Width = 42
           end
           object OperDate_Income: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
@@ -464,7 +478,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 900
       end
     end
   end
@@ -472,7 +485,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 1048
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 900
+    ExplicitWidth = 1048
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -679,9 +692,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIChild
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMainDS'
       DataSource = DetailDS
@@ -1668,6 +1678,32 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inExpirationDate'
+        Value = 'NULL'
+        Component = DetailDCS
+        ComponentItem = 'ExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate_in'
+        Value = 'NULL'
+        Component = DetailDCS
+        ComponentItem = 'ExpirationDate_in'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisExpirationDateDiff'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isExpirationDateDiff'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = DetailDCS
@@ -1697,8 +1733,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 424
-    Top = 416
+    Left = 432
+    Top = 440
   end
   object spInsertMI: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_SendPartionDate'
@@ -1745,5 +1781,50 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end>
     Left = 536
     Top = 192
+  end
+  object spUpdate_ExpirationDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SendPartionDate_ExpirationDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate'
+        Value = 'NULL'
+        Component = DetailDCS
+        ComponentItem = 'ExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate_in'
+        Value = 'NULL'
+        Component = DetailDCS
+        ComponentItem = 'ExpirationDate_in'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisExpirationDateDiff'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isExpirationDateDiff'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 288
+    Top = 472
   end
 end
