@@ -1069,6 +1069,12 @@ end if;*/
                                 , inUserId     := vbUserId
                                  );
 
+
+-- if inMovementId = 13432633
+-- then
+--    RAISE EXCEPTION 'Повторите действие через 3 мин.';
+-- end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

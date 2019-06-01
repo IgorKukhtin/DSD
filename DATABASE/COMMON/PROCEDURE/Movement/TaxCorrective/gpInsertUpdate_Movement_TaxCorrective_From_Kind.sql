@@ -392,11 +392,11 @@ BEGIN
           IF EXISTS (SELECT 1 FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0)
           THEN
               RAISE EXCEPTION 'Ошибка. Для товара <%> <%>%кол-во = <%> цена = <%>%не определен № налоговой.'
-                            , lfGet_Object_ValueData    ((SELECT _tmpResult.GoodsId     FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
-                            , lfGet_Object_ValueData_sh ((SELECT _tmpResult.GoodsKindId FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , lfGet_Object_ValueData    ((SELECT _tmpResult.GoodsId     FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0 ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , lfGet_Object_ValueData_sh ((SELECT _tmpResult.GoodsKindId FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0 ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
                             , CHR (13)
-                            , (SELECT _tmpResult.Amount      FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1)
-                            , (SELECT _tmpResult.OperPrice   FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1)
+                            , (SELECT _tmpResult.Amount      FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0 ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1)
+                            , (SELECT _tmpResult.OperPrice   FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0 ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1)
                             , CHR (13)
                              ;
           END IF;

@@ -68,6 +68,7 @@ $BODY$
   DECLARE vbChangePrice TFloat;
   DECLARE vbPaidKindId Integer;
   DECLARE vbIsChangePrice Boolean;
+  DECLARE vbIsDiscountPrice Boolean;
 
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyPartnerId Integer;
@@ -93,8 +94,9 @@ BEGIN
             END AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE)  AS isDiscountPrice_juridical
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)          AS ChangePrice
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)         AS PaidKindId
 
@@ -104,7 +106,8 @@ BEGIN
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
-            INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbPaidKindId
+ 
+            INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
 
       FROM Movement
@@ -129,6 +132,16 @@ BEGIN
            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_FromTo
+                                        ON MovementLinkObject_FromTo.MovementId = Movement.Id
+                                       AND MovementLinkObject_FromTo.DescId     = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() END
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_FromTo.ObjectId
+                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+                                   ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                  AND ObjectBoolean_isDiscountPrice.DescId   = zc_ObjectBoolean_Juridical_isDiscountPrice()
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -190,8 +203,9 @@ BEGIN
      -- !!!надо определить - есть ли скидка в цене!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal())
      THEN
-         vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
-                        OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
+         vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
+                        OR vbPaidKindId <> zc_Enum_PaidKind_SecondForm()         -- это БН
+                        OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0) -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
                             AND EXISTS (SELECT 1
                                         FROM MovementItem
                                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
@@ -322,26 +336,44 @@ BEGIN
                , vbTotalHeadCount_Master, vbTotalHeadCount_Child
 
      FROM  -- Расчет Итоговых суммы
-          (WITH tmpMI AS (SELECT Movement.DescId AS MovementDescId
+          (WITH tmpMI_child_ReturnIn AS (SELECT MovementItem.ParentId       AS ParentId
+                                              , MAX (Movement_Tax.OperDate) AS OperDate_tax
+                                         FROM MovementItem
+                                              LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                              LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                                              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                             ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
+                                                                            AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+                                              LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+                                         WHERE MovementItem.MovementId = inMovementId
+                                           AND MovementItem.DescId     = zc_MI_Child()
+                                           AND MovementItem.isErased   = FALSE
+                                           AND MovementItem.Amount     <> 0
+                                           AND vbMovementDescId = zc_Movement_ReturnIn()
+                                         GROUP BY MovementItem.ParentId
+                                        )
+              , tmpMI AS (SELECT Movement.DescId AS MovementDescId
                                , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
                                , MovementItem.DescId
                                , MovementItem.ObjectId AS GoodsId
                                , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
                                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                           THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                     , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                     , inPrice        := MIFloat_Price.ValueData
                                                                     , inIsWithVAT    := vbPriceWithVAT
                                                                      )
                                       WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                           THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                     , inChangePercent:= -1 * vbDiscountPercent
                                                                     , inPrice        := MIFloat_Price.ValueData
                                                                     , inIsWithVAT    := vbPriceWithVAT
                                                                      )
                                       WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                           THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                     , inChangePercent:= 1 * vbExtraChargesPercent
                                                                     , inPrice        := MIFloat_Price.ValueData
                                                                     , inIsWithVAT    := vbPriceWithVAT
@@ -423,6 +455,8 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               LEFT JOIN tmpMI_child_ReturnIn ON tmpMI_child_ReturnIn.ParentId = MovementItem.Id
 
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -585,19 +619,19 @@ BEGIN
                                  , MovementItem.ObjectId
                                  , MILinkObject_GoodsKind.ObjectId
                                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                             THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                       , inPrice        := MIFloat_Price.ValueData
                                                                       , inIsWithVAT    := vbPriceWithVAT
                                                                        )
                                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                             THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                       , inChangePercent:= -1 * vbDiscountPercent
                                                                       , inPrice        := MIFloat_Price.ValueData
                                                                       , inIsWithVAT    := vbPriceWithVAT
                                                                        )
                                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                             THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                       , inChangePercent:= 1 * vbExtraChargesPercent
                                                                       , inPrice        := MIFloat_Price.ValueData
                                                                       , inIsWithVAT    := vbPriceWithVAT

@@ -157,7 +157,7 @@ BEGIN
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)      AS GoodsKindId
                       , COALESCE (MIFloat_Price.ValueData, 0)              AS Price
 
-                      , CASE WHEN MISale.isErased = TRUE THEN 0 ELSE MISale.ObjectId END AS GoodsId_Sale
+                      , CASE WHEN MISale.isErased = TRUE OR Movement_Sale.StatusId <> zc_Enum_Status_Complete() THEN 0 ELSE MISale.ObjectId END AS GoodsId_Sale
                       , MovementLinkObject_To.ObjectId                     AS PartnerId_Sale
                       , COALESCE (MILinkObject_GoodsKind_Sale.ObjectId, 0) AS GoodsKindId_Sale
                       , COALESCE (MIFloat_Price_Sale.ValueData, 0)         AS Price_Sale
@@ -240,13 +240,13 @@ BEGIN
                          ELSE FALSE
                          END                      AS isDiffPrice
                   , CASE WHEN COALESCE (Movement_Sale.StatusId, 0) <> zc_Enum_Status_Complete()
-                           OR (COALESCE (Movement_Tax.StatusId, 0) <> zc_Enum_Status_Complete() AND Movement_Tax.Id > 0)
+                           OR (COALESCE (Movement_Tax.StatusId, 0) <> zc_Enum_Status_Complete())-- AND Movement_Tax.Id > 0)
                          THEN TRUE
                          ELSE FALSE
                          END                      AS isDiffStatus
                          
                   , CASE WHEN tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Sale.ContractId, 0)
-                           OR (tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Tax.ContractId, 0) AND Movement_Tax.Id > 0)
+                           OR (tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Tax.ContractId, 0)) -- AND Movement_Tax.Id > 0)
                          THEN TRUE
                          ELSE FALSE
                          END                      AS isDiffContract

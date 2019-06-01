@@ -110,9 +110,10 @@ BEGIN
 
 
      -- !!!надо определить - есть ли скидка в цене!!!
-     vbIsChangePrice:= vbIsDiscountPrice = TRUE
-                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+     vbIsChangePrice:= vbIsDiscountPrice = TRUE                    -- у Юр лица есть галка
+                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm() -- это БН
                     OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
+                        -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
                         AND EXISTS (SELECT 1
                                     FROM MovementItem
                                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent

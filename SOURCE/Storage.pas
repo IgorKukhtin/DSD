@@ -545,6 +545,7 @@ begin
 
    if ((Pos('TSale_OrderJournalForm', pData) > 0) or (Pos('TReturnInJournalForm', pData) > 0))
     and (Pos('gpGet_Object_Form', pData) > 0)
+    and (1=0)
    then
       for iii:= 1 to 100 do begin
 
@@ -552,7 +553,8 @@ begin
 
       Logger.AddToLog(' .........' );
       Logger.AddToLog(' ...... start ...' + IntToSTr(iii));
-      Logger.AddToLog(' .........' + DateTimeToStr(now));
+      Logger.AddToLog(' ......... send:');
+      Logger.AddToLog(FSendList[0]);
       Logger.AddToLog(' .........');
 
             idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
@@ -561,11 +563,10 @@ begin
             DString := FReceiveStream.DataString;
 
       Logger.AddToLog(' .........');
-      Logger.AddToLog(' .........' + DateTimeToStr(now));
+      Logger.AddToLog(' ......... receive:');
+      Logger.AddToLog(DString);
       Logger.AddToLog(' ...... end ...' + IntToSTr(iii));
       Logger.AddToLog(' .........');
-
-      {Logger.AddToLog(DString);}
 
       MyDelay_two(1000);
 

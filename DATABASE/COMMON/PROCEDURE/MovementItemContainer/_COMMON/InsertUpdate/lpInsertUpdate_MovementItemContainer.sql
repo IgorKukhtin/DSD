@@ -33,8 +33,9 @@ $BODY$
    DECLARE vbLock Integer;
    DECLARE vbSec Integer;
 BEGIN
+
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    IF zc_IsLockTable() = TRUE
+/*    IF zc_IsLockTable() = TRUE
     THEN
         -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
         LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
@@ -44,7 +45,12 @@ BEGIN
         vbLock := 1;
         WHILE vbLock <> 0 LOOP
             BEGIN
+               --
                PERFORM Container.* FROM Container WHERE Container.Id = inContainerId FOR UPDATE;
+               --
+               -- !!!изменить значение остатка
+               -- UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
+               --
                vbLock := 0;
             EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
@@ -77,14 +83,15 @@ BEGIN
     ELSE
         PERFORM Container.* FROM Container WHERE Container.Id = inContainerId FOR UPDATE;
     END IF;
-    END IF;
+    END IF;*/
 
 
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;
 
-     -- изменить значение остатка
+     -- !!!изменить значение остатка
      UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
+     
      -- сохранили проводку
      INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
@@ -103,7 +110,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

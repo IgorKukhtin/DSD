@@ -39,6 +39,7 @@ $BODY$
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
   DECLARE vbIsChangePrice Boolean;
+  DECLARE vbIsDiscountPrice Boolean;
 
   DECLARE vbOperDate TDateTime;
   DECLARE vbOperDatePartner TDateTime;
@@ -130,8 +131,9 @@ BEGIN
             END AS isHistoryCost -- !!!еще раз расчет!!!
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE)            AS isDiscountPrice_juridical
 
           , Movement.DescId                                                      AS MovementDescId
           , COALESCE (Movement.ParentId, 0)                                      AS MovementId_parent
@@ -192,7 +194,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_ContractTo_JuridicalBasis.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
-            INTO vbIsHistoryCost, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+            INTO vbIsHistoryCost, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice
                , vbMovementDescId, vbMovementId_parent, vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From , vbMemberId_From, vbInfoMoneyId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbIsPartionDoc_Branch, vbAccountDirectionId_To, vbIsPartionDate_Unit, vbUnitId_HistoryCost
@@ -301,6 +303,10 @@ BEGIN
                                ON ObjectLink_Juridical_InfoMoney.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
           LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+                                  ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindTo
                                        ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
@@ -456,7 +462,10 @@ BEGIN
              )
   , tmpChangePrice AS (SELECT TRUE AS isChangePrice
                        FROM tmpMI_all
-                       WHERE (tmpMI_all.ChangePercent = 0 OR vbPaidKindId = zc_Enum_PaidKind_FirstForm())
+                       WHERE (vbIsDiscountPrice = TRUE                    -- у Юр лица есть галка
+                           OR tmpMI_all.ChangePercent = 0                 -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
+                           OR vbPaidKindId = zc_Enum_PaidKind_FirstForm() -- это БН
+                             )
                          AND (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
                        LIMIT 1
                       )

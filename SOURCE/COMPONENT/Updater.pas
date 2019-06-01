@@ -15,6 +15,9 @@ type
      class procedure AutomaticUpdateProgram;
   end;
 
+    const fAlan_colocall : Boolean = FALSE;
+//  const fAlan_colocall : Boolean = TRUE;
+
 implementation
 
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
@@ -28,7 +31,7 @@ var StoredProc: TdsdStoredProc;
     StringList: TStringList;
     StringListConnection: TStringList;
     i:Integer;
-    fFind:Boolean;
+    fFind, fFirst_colocall, fFirst_srv:Boolean;
 begin
   // !!! DEMO
   if gc_ProgramName = 'FDemo.exe' then exit;
@@ -36,6 +39,7 @@ begin
 
   StoredProc := TdsdStoredProc.Create(nil);
   try
+    //основное подключение из базы
     StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectParam');
     StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
     StoredProc.OutputType := otResult;
@@ -51,25 +55,50 @@ begin
       on E: Exception do
           raise;
     end;
+    //основное подключение из базы
     Connection := StoredProc.ParamByName('gpGetConstName').AsString;
+    //
     //
     StringList := TStringList.Create;
     with StringList do begin
        LoadFromFile(ConnectionPath);
        fFind:=false;
+       fFirst_colocall:=false;
+       fFirst_srv:=false;
+       // есть ли в init.php подключение как в базе, если вдруг нет - в init.php надо изменить
+       for i:=0 to Count-1 do fFind:= (fFind) or (StringList[i] = Connection);
+       // какой первый в init.php - colocall или integer-srv
        for i:=0 to Count-1
-       do fFind:= (fFind) or (StringList[i] = Connection);
+       do if (Pos(AnsiUpperCase('colocall'), AnsiUpperCase(StringList[i])) > 0)and(fFirst_srv = FALSE)
+          then fFirst_colocall:= TRUE
+          else if (Pos(AnsiUpperCase('alan'), AnsiUpperCase(StringList[i])) > 0)and(fFirst_colocall = FALSE)
+               then fFirst_srv:= TRUE;
+       //
        StringList.Free;
     end;
-    if    (TStorageFactory.GetStorage.Connection <> Connection) and (fFind = FALSE) and (Connection<>'')
+    //
+    //
+    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) then
+       // 1.1. надо переключиться на colocall
+       UpdateConnect('alan')
+    else
+    if (fAlan_colocall = FALSE) and (fFirst_colocall = TRUE) then
+       // 1.2. надо переключиться на integer-srv
+       UpdateConnect('colocall')
+    else
+    if (TStorageFactory.GetStorage.Connection <> Connection) and (fFind = FALSE) and (Connection<>'')
       // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
     then
+       // 1.3. надо как раньше на integer-srv + integer-srv2
        UpdateConnect(Connection);
     //
+    //
     // теперь тоже самое для отчетов
+    //
     if Pos('\init.php', ConnectionPath) > 0 then
     begin
         StoredProc.Params.Clear;
+        //основное подключение из базы
         StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectReportParam');
         StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
         StoredProc.OutputType := otResult;
@@ -85,6 +114,7 @@ begin
           on E: Exception do
               raise;
         end;
+        //основное подключение из базы
         ReportConnection := StoredProc.ParamByName('gpGetConstName').AsString;
         //
         StringList := TStringList.Create;
@@ -92,20 +122,41 @@ begin
            if FileExists(ReplaceStr(ConnectionPath,'\init.php','\initRep.php')) = TRUE
            then LoadFromFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
            fFind:=false;
+           fFirst_colocall:=false;
+           fFirst_srv:=false;
+           // есть ли в init.php подключение как в базе, если вдруг нет - в init.php надо изменить
+           for i:=0 to Count-1 do fFind:= (fFind) or (StringList[i] = ReportConnection);
+           // какой первый в init.php - colocall или integer-srv
            for i:=0 to Count-1
-           do fFind:= (fFind) or (StringList[i] = ReportConnection);
+           do if (Pos(AnsiUpperCase('colocall'), AnsiUpperCase(StringList[i])) > 0)and(fFirst_srv = FALSE)
+              then fFirst_colocall:= TRUE
+              else if (Pos(AnsiUpperCase('alan'), AnsiUpperCase(StringList[i])) > 0)and(fFirst_colocall = FALSE)
+                   then fFirst_srv:= TRUE;
+           //
            StringList.Free;
         end;
-        if    (fFind = FALSE) and (ReportConnection<>'')
+
+    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) then
+       // 2.1. надо переключиться на colocall
+       UpdateConnectReport(TStorageFactory.GetStorage.Connection)
+    else
+    if (fAlan_colocall = FALSE) and (fFirst_colocall = TRUE) then
+       // 2.2. надо переключиться на integer-srv
+       UpdateConnectReport(TStorageFactory.GetStorage.Connection)
+    else
+        if (fFind = FALSE) and (ReportConnection<>'')
         then
+           // 2.3. надо как раньше на integer-srv + integer-srv2
            UpdateConnectReport(ReportConnection);
-
     end;
-
+    //
+    //
     // теперь тоже самое для отчетов фармаси
+    //
     if Pos('\farmacy_init.php', ConnectionPath) > 0 then
     begin
         StoredProc.Params.Clear;
+        //основное подключение из базы
         StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectReportParam');
         StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
         StoredProc.OutputType := otResult;
@@ -121,6 +172,7 @@ begin
           on E: Exception do
               raise;
         end;
+        //основное подключение из базы
         ReportConnection := StoredProc.ParamByName('gpGetConstName').AsString;
         //
         StringList := TStringList.Create;
@@ -148,11 +200,14 @@ begin
            UpdateConnectReport(ReportConnection, False);
 
     end;
-
+    //
+    //
     // теперь тоже самое для отчетов фармаси через сервис
+    //
     if Pos('\farmacy_init.php', ConnectionPath) > 0 then
     begin
         StoredProc.Params.Clear;
+        //основное подключение из базы
         StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectReportLocalService');
         StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
         StoredProc.OutputType := otResult;
@@ -168,6 +223,7 @@ begin
           on E: Exception do
               raise;
         end;
+        //основное подключение из базы
         ReportConnectionLocal := StoredProc.ParamByName('gpGetConstName').AsString;
         //
         StringList := TStringList.Create;
@@ -190,7 +246,6 @@ begin
            StringList.Free;
            StringListConnection.Free;
         end;
-
 
         if    (fFind = FALSE) and (ReportConnectionLocal<>'')
         then
@@ -225,15 +280,42 @@ var StringList: TStringList;
 begin
   StringList := TStringList.Create;
   try
+
+  // 1.1. надо переключиться на colocall
+  if (fAlan_colocall = TRUE)and(Pos(AnsiUpperCase('alan'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://project-vds.vds.colocall.com/projectReal/index.php');
+    StringList.SaveToFile(ConnectionPath);
+  end
+  else
+  // 1.2. надо переключиться на integer-srv
+  if (fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://integer-srv.alan.dp.ua');
+    StringList.Add('http://project-vds.vds.colocall.com/projectReal/index.php');
+    StringList.SaveToFile(ConnectionPath);
+  end
+  else
+  // 1.3. надо как раньше на integer-srv + integer-srv2
+  begin
     if Pos('srv2.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2.alan','srv.alan');
     StringList.Add(Connection);
     if Pos('srv2.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2.alan','srv.alan'));
     if Pos('srv.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv.alan','srv2.alan'));
     StringList.SaveToFile(ConnectionPath);
+  end
   finally
     StringList.Free;
   end;
-  ShowMessage('Путь к серверу приложений изменен с <'+TStorageFactory.GetStorage.Connection+'> на <'+Connection+'>. Нажмите кнопку для перезапуска');
+  //
+  //
+  if  ((fAlan_colocall = TRUE) and(Pos(AnsiUpperCase('alan'),     AnsiUpperCase(Connection)) > 0))
+    or((fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0))
+  then
+    ShowMessage('Путь к серверу приложений изменен с <'+TStorageFactory.GetStorage.Connection+'> на <'+'другой'+'>. Нажмите кнопку для перезапуска')
+  else
+    ShowMessage('Путь к серверу приложений изменен с <'+TStorageFactory.GetStorage.Connection+'> на <'+Connection+'>. Нажмите кнопку для перезапуска')
+  ;
   Application.Terminate;
   ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
 end;
@@ -243,6 +325,25 @@ var StringList: TStringList;
 begin
   StringList := TStringList.Create;
   try
+  // 1.1. надо переключиться на colocall
+  if (fAlan_colocall = TRUE)and(Pos(AnsiUpperCase('alan'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://project-vds.vds.colocall.com/projectRealR/index.php');
+    StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+    exit;
+  end
+  else
+  // 1.2. надо переключиться на integer-srv
+  if (fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://integer-srv-r.alan.dp.ua');
+    StringList.Add('http://project-vds.vds.colocall.com/projectRealR/index.php');
+    StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+    exit;
+  end
+  else
+  // 1.3. надо как раньше на integer-srv + integer-srv2
+  begin
     if Pos('srv2-r.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2-r.alan','srv-r.alan');
     StringList.Add(Connection);
     if Pos('srv2-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2-r.alan','srv-r.alan'));
@@ -250,6 +351,7 @@ begin
     if Pos('\farmacy_init.php', ConnectionPath) > 0 then
       StringList.SaveToFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRep.php'))
     else StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+  end;
   finally
     StringList.Free;
   end;
@@ -266,6 +368,25 @@ var StringList: TStringList;
 begin
   StringList := TStringList.Create;
   try
+  // 1.1. надо переключиться на colocall
+  if (fAlan_colocall = TRUE)and(Pos(AnsiUpperCase('alan'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://project-vds.vds.colocall.com/projectRealR/index.php');
+    StringList.SaveToFile(ConnectionPath);
+    exit;
+  end
+  else
+  // 1.2. надо переключиться на integer-srv
+  if (fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0) then
+  begin
+    StringList.Add('http://integer-srv-r.alan.dp.ua');
+    StringList.Add('http://project-vds.vds.colocall.com/projectRealR/index.php');
+    StringList.SaveToFile(ConnectionPath);
+    exit;
+  end
+  else
+  // 1.3. надо как раньше на integer-srv + integer-srv2
+  begin
     if Pos('srv2-r.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2-r.alan','srv-r.alan');
     StringList.Add(Connection);
     if Pos('srv2-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2-r.alan','srv-r.alan'));
@@ -273,6 +394,7 @@ begin
     if Pos('\farmacy_init.php', ConnectionPath) > 0 then
       StringList.SaveToFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRepLocal.php'))
     else StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRepLocal.php'));
+  end;
   finally
     StringList.Free;
   end;

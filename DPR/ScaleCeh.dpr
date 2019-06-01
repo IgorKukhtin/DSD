@@ -91,7 +91,9 @@ uses
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
-  MU110 in '..\ScaleCeh\Util\MU110.pas';
+  ModLink in '..\ScaleCeh\Util\Oven\ModLink.pas',
+  Oven in '..\ScaleCeh\Util\Oven\Oven.pas',
+  DialogBoxLight in '..\ScaleCeh\DialogBoxLight.pas' {DialogBoxLightForm};
 
 {$R *.res}
 
@@ -129,6 +131,7 @@ begin
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
+         Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
   end
   else
 
@@ -160,6 +163,7 @@ begin
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
+         Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
 
   end;
   //

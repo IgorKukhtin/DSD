@@ -229,7 +229,11 @@
 				<Form>DialogDateValueForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
-			<DCCReference Include="..\ScaleCeh\Util\MU110.pas"/>
+			<DCCReference Include="..\ScaleCeh\Util\Oven\ModLink.pas"/>
+			<DCCReference Include="..\ScaleCeh\Util\Oven\Oven.pas"/>
+			<DCCReference Include="..\ScaleCeh\DialogBoxLight.pas">
+				<Form>DialogBoxLightForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
