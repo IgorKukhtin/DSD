@@ -65,6 +65,7 @@ type
     bbGridToExcelPivot: TdxBarButton;
     UnitJuridical: TcxGridDBColumn;
     pcolUnitJuridical: TcxDBPivotGridField;
+    ProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

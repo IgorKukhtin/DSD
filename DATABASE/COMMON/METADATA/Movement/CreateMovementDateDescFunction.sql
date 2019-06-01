@@ -176,7 +176,7 @@ INSERT INTO MovementDateDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementDate_Delay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Delay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)
-  SELECT 'zc_MovementDate_Delay', 'Дата изменения просроски или востановления доекмента' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Delay');
+  SELECT 'zc_MovementDate_Delay', 'Дата изменения просрочки или востановления документа' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Delay');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

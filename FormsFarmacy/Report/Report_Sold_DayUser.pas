@@ -13,7 +13,8 @@ uses
   cxButtonEdit, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, Vcl.ExtCtrls,
   cxCustomPivotGrid, cxDBPivotGrid, cxGridChartView, cxGridDBChartView,
   cxSplitter, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_Sold_DayUserForm = class(TReport_Sold_DayForm)

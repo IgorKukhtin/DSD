@@ -11,6 +11,7 @@ RETURNS TABLE (
     PlanDate          TDateTime,  --Месяц плана
     UnitJuridical     TVarChar,   --Юрлицо
     UnitName          TVarChar,   --подразделение
+    ProvinceCityName  TVarChar,   -- район
     PlanAmount        TFloat,     --План
     PlanAmountAccum   TFloat,     --План с накоплением
     FactAmount        TFloat,     --Факт
@@ -198,6 +199,8 @@ BEGIN
             T0.PlanDate::TDateTime                                              AS PlanAmount
            ,Object_Juridical.ValueData::TVarChar                                AS UnitJuridical
            ,Object_Unit.ValueData::TVarChar                                     AS UnitName
+           ,Object_ProvinceCity.ValueData                                       AS ProvinceCityName
+           
            ,T0.PlanAmount::TFloat                                               AS PlanAmount
            ,(SUM(T0.PlanAmount)OVER(PARTITION BY T0.UnitId 
                                     ORDER BY T0.PlanDate))::TFloat              AS PlanAmountAccum
@@ -236,11 +239,16 @@ BEGIN
                 _PartDay.PlanDate
                ,_PartDay.UnitId
            ) AS T0
-           INNER JOIN Object AS Object_Unit ON T0.UnitId = Object_Unit.ID
+           INNER JOIN Object AS Object_Unit ON T0.UnitId = Object_Unit.Id
            LEFT OUTER JOIN ObjectLink AS ObjectLinkJuridical 
                                  ON Object_Unit.id = ObjectLinkJuridical.objectid 
                                 AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
-           LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid		
+           LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+           LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
        ORDER BY
            Object_Unit.ValueData
           ,T0.PlanDate;
@@ -253,6 +261,7 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А. Шаблий О.В.
+ 30.05.19         *
  21.06.15                                                                                     *
  31.03.15                                                                                     *
  28.09.15                                                                        *

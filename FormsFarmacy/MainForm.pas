@@ -512,6 +512,8 @@ type
     N184: TMenuItem;
     actRetailCostCredit: TdsdOpenForm;
     miRetailCostCredit: TMenuItem;
+    actReturnOutPharmacy: TdsdOpenForm;
+    miReturnOutPharmacy: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -30,9 +30,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -3
-      ExplicitTop = -2
-      ExplicitHeight = 196
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
@@ -144,7 +141,6 @@ inherited MainCashForm2: TMainCashForm2
       Align = alRight
       TabOrder = 1
       Visible = False
-      ExplicitHeight = 196
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -219,7 +215,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       AlignSplitter = salRight
       Control = ExpirationDateGrid
-      ExplicitHeight = 196
     end
     object ExpirationDateGrid: TcxGrid
       Left = 358
@@ -228,7 +223,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       Align = alRight
       TabOrder = 3
-      ExplicitHeight = 196
       object ExpirationDateView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ExpirationDateDS
@@ -279,7 +273,6 @@ inherited MainCashForm2: TMainCashForm2
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 338
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -289,7 +282,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 138
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
@@ -297,7 +289,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 127
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 84
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -910,6 +901,7 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####'
+          HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 62
         end
@@ -925,7 +917,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 105
       object ShapeState: TShape
         Left = 797
         Top = 13
@@ -950,7 +941,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       object lcName: TcxLookupComboBox
         Left = 7
-        Top = 7
+        Top = 6
         Properties.DropDownListStyle = lsEditList
         Properties.KeyFieldNames = 'GoodsName'
         Properties.ListColumns = <
@@ -2411,6 +2402,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'PartionDateKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountMonth'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AmountMonth'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4764,5 +4763,12 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1057#1074#1077#1088#1082#1072' '#1095#1077#1082#1086#1074' '#1089' '#1061#1077#1083#1089#1080' '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       OnClick = pm_CheckHelsiAllUnitClick
     end
+  end
+  object TimerDroppedDown: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TimerDroppedDownTimer
+    Left = 472
+    Top = 103
   end
 end

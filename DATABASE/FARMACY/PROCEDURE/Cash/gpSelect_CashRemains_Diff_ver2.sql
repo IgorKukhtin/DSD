@@ -147,7 +147,8 @@ BEGIN
                             FROM Container
                             WHERE Container.DescId = zc_Container_CountPartionDate()
                               AND Container.WhereObjectId = vbUnitId
-                              AND Container.Amount <> 0)
+                              AND Container.Amount <> 0
+                              AND vbPartion = True)
        , tmpPDCLO AS (SELECT CLO.*
                     FROM ContainerlinkObject AS CLO
                     WHERE CLO.ContainerId IN (SELECT DISTINCT tmpPDContainer.Id FROM tmpPDContainer)
@@ -353,6 +354,29 @@ BEGIN
                            OR COALESCE (Accommodation.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
                            OR COALESCE (GoodsRemains.MinExpirationDate, zc_DateEnd()) <> COALESCE (SESSIONDATA.MinExpirationDate, zc_DateEnd())
                            OR COALESCE (GoodsRemains.PartionDateKindId,0) <> COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                        UNION ALL
+                        SELECT tmpPrice.ObjectId                                                 AS ObjectId
+                             , tmpPrice.Price                                                    AS Price
+                             , tmpPrice.MCSValue                                                 AS MCSValue
+                             , COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount,0)  AS Remains
+                             , Reserve.Amount                                                    AS Reserved
+                             , CASE WHEN SESSIONDATA.ObjectId IS NULL
+                                         THEN TRUE
+                                     ELSE FALSE
+                               END                                                               AS NewRow
+                             , Accommodation.AccommodationId                                     AS AccommodationID
+                             , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
+                             , GoodsRemains.PartionDateKindId                                    AS PartionDateKindId
+                        FROM SESSIONDATA
+                             LEFT JOIN GoodsRemains  ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
+                                                   AND COALESCE (GoodsRemains.PartionDateKindId, 0) = COALESCE (SESSIONDATA.PartionDateKindId,0)
+                             LEFT JOIN tmpPrice ON tmpPrice.ObjectId = SESSIONDATA.ObjectId
+                             LEFT JOIN RESERVE      ON RESERVE.GoodsId       = SESSIONDATA.ObjectId
+                                                   AND COALESCE (RESERVE.PartionDateKindId,0) = COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                             LEFT JOIN AccommodationLincGoods AS Accommodation
+                                                              ON Accommodation.UnitId = vbUnitId
+                                                             AND Accommodation.GoodsId = SESSIONDATA.ObjectId
+                        WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0
                        )
        -- –≈«”À‹“¿“
        SELECT tmpDiff.ObjectId

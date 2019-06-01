@@ -65,6 +65,7 @@ type
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
     actPrintSticker_notPrice: TdsdPrintAction;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

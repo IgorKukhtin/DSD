@@ -21,7 +21,6 @@ inherited CheckVIPForm: TCheckVIPForm
         Width = 273
         Height = 356
         Align = alLeft
-        ExplicitLeft = 2
         ExplicitWidth = 273
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -134,6 +133,7 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'InvNumberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object MedicSP: TcxGridDBColumn
@@ -141,6 +141,7 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'MedicSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object SPKindName: TcxGridDBColumn
@@ -164,6 +165,7 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'PartionDateKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
           object DateDelay: TcxGridDBColumn
@@ -171,10 +173,13 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'DateDelay'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -555,6 +560,29 @@ inherited CheckVIPForm: TCheckVIPForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountMonth'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountMonth'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

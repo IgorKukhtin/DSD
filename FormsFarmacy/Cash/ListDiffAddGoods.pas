@@ -25,16 +25,18 @@ type
     lcbDiffKind: TcxLookupComboBox;
     DiffKindCDS: TClientDataSet;
     DiffKindDS: TDataSource;
+    Label5: TLabel;
+    ListGoodsCDS: TClientDataSet;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    FListGoodsCDS : TClientDataSet;
+    FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
     FAmountPromo : Currency;
     FAmountAll : Currency;
   public
 
-    property ListGoodsCDS : TClientDataSet read FListGoodsCDS write FListGoodsCDS;
+    property GoodsCDS : TClientDataSet read FGoodsCDS write FGoodsCDS;
   end;
 
 implementation
@@ -83,20 +85,20 @@ begin
   begin
     if lcbDiffKind.EditValue = 9704137 then
     begin
-      if ((FAmountPromo + nAmount - 1) * ListGoodsCDS.FieldByName('Price').AsCurrency) > 3000 then
+      if ((FAmountPromo + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > 3000 then
       begin
         Action := TCloseAction.caNone;
-        ShowMessage('Сумма заказа по позиции :'#13#10 + ListGoodsCDS.FieldByName('GoodsName').AsString +
+        ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
           #13#10'С видом отказа "Маркетинг" превисит 3000 грн. ...');
         lcbDiffKind.SetFocus;
         Exit;
       end;
     end else
     begin
-      if ((FAmountAll + nAmount - 1) * ListGoodsCDS.FieldByName('Price').AsCurrency) > 1000 then
+      if ((FAmountAll + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > 1000 then
       begin
         Action := TCloseAction.caNone;
-        ShowMessage('Сумма заказа по позиции:'#13#10 + ListGoodsCDS.FieldByName('GoodsName').AsString +
+        ShowMessage('Сумма заказа по позиции:'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
           #13#10'С видами отказа не под клиента превисит 1000 грн. ...');
         lcbDiffKind.SetFocus;
         Exit;
@@ -112,11 +114,11 @@ begin
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
       if not ListDiffCDS.Active then ListDiffCDS.Open;
       ListDiffCDS.Append;
-      ListDiffCDS.FieldByName('ID').AsInteger := ListGoodsCDS.FieldByName('ID').AsInteger;
+      ListDiffCDS.FieldByName('ID').AsInteger := GoodsCDS.FieldByName('ID').AsInteger;
       ListDiffCDS.FieldByName('Amount').AsCurrency := nAmount;
-      ListDiffCDS.FieldByName('Code').AsInteger := ListGoodsCDS.FieldByName('GoodsCode').AsInteger;
-      ListDiffCDS.FieldByName('Name').AsString := ListGoodsCDS.FieldByName('GoodsName').AsString;
-      ListDiffCDS.FieldByName('Price').AsCurrency := ListGoodsCDS.FieldByName('Price').AsCurrency;
+      ListDiffCDS.FieldByName('Code').AsInteger := GoodsCDS.FieldByName('GoodsCode').AsInteger;
+      ListDiffCDS.FieldByName('Name').AsString := GoodsCDS.FieldByName('GoodsName').AsString;
+      ListDiffCDS.FieldByName('Price').AsCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
       ListDiffCDS.FieldByName('DiffKindId').AsVariant := lcbDiffKind.EditValue;
       ListDiffCDS.FieldByName('Comment').AsString := meComent.Text;
       ListDiffCDS.FieldByName('UserID').AsString := gc_User.Session;
@@ -142,14 +144,14 @@ procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
   var AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
       S : string;
 begin
-  if ListGoodsCDS = Nil then Exit;
+  if GoodsCDS = Nil then Exit;
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
     try
       FAmountDay := 0; AmountDiffUser := 0; AmountDiff := 0; AmountDiffPrev := 0;
       if not gc_User.Local then
       try
-        MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := ListGoodsCDS.FieldByName('ID').AsInteger;
+        MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
         MainCashForm.spSelect_CashListDiffGoods.Execute;
         if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
         begin
@@ -189,7 +191,7 @@ begin
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
         begin
-          if (ListDiffCDS.FieldByName('ID').AsInteger = ListGoodsCDS.FieldByName('ID').AsInteger) then
+          if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
           begin
             if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
             begin
@@ -219,8 +221,35 @@ begin
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + FormatCurr(',0.000', AmountDiffPrev);
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
-      S := 'Препарат: '#13#10 + ListGoodsCDS.FieldByName('GoodsName').AsString + S;
+      S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
       Label1.Caption := S;
+
+      WaitForSingleObject(MutexGoods, INFINITE);
+      try
+        if FileExists(Goods_lcl) then LoadLocalData(ListGoodsCDS, Goods_lcl);
+        if not ListGoodsCDS.Active then ListGoodsCDS.Open;
+      finally
+        ReleaseMutex(MutexGoods);
+      end;
+
+      if ListGoodsCDS.Active and ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) and
+        not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
+      begin
+        if  ListGoodsCDS.FieldByName('ExpirationDate').AsDateTime < IncYear(Date, 1) then
+        begin
+          Label5.Caption := 'СРОК ГОДНОСТИ МЕНЕЕ ГОДА - ' + ListGoodsCDS.FieldByName('ExpirationDate').AsString;
+          Label5.Font.Color := clRed;
+        end else
+        begin
+          Label5.Caption := 'Срок годности - ' + ListGoodsCDS.FieldByName('ExpirationDate').AsString;
+          Label5.Font.Color := clWindowText
+        end;
+      end else
+      begin
+        Label5.Caption := 'СРОК ГОДНОСТИ НЕ НАЙДЕН';
+        Label5.Font.Color := clRed;
+      end;
+
 
     Except ON E:Exception do
       ShowMessage('Ошибка открытия листа отказов:'#13#10 + E.Message);

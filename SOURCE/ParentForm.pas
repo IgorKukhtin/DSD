@@ -147,9 +147,14 @@ begin
     then
         // Если открыта первый раз и всегда перечитываем
         if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh or NeedRefreshOnExecute then
+        begin
            // Перечитываем запросы
            if Assigned(AddOnFormData.RefreshAction) then
               AddOnFormData.RefreshAction.Execute;
+           // Выводим PUSH сообщение
+           if Assigned(AddOnFormData.PUSHMessage) then
+              AddOnFormData.PUSHMessage.Execute
+        end;
   finally
     FisAlreadyOpen := true;
     NeedRefreshOnExecute := false;
@@ -489,6 +494,7 @@ initialization
   RegisterClass (TdsdWebBrowser);
   RegisterClass (TdsdEnterManager);
   RegisterClass (TdsdFileToBase64);
+  RegisterClass (TdsdShowPUSHMessage);
 
 // ДЛЯ ТЕСТА
 
