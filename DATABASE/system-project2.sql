@@ -14,96 +14,100 @@ SELECT * FROM MovementItemProtocol where OperDate > CURRENT_DATE;
 */
 
 -- Protocol...
-VACUUM ANALYZE MovementProtocol;
-VACUUM ANALYZE MovementProtocol_arc;
-VACUUM ANALYZE MovementItemProtocol;
-VACUUM ANALYZE MovementItemProtocol_arc;
 VACUUM MovementProtocol;
 VACUUM MovementProtocol_arc;
 VACUUM MovementItemProtocol;
 VACUUM MovementItemProtocol_arc;
+VACUUM ANALYZE MovementProtocol;
+VACUUM ANALYZE MovementProtocol_arc;
+VACUUM ANALYZE MovementItemProtocol;
+VACUUM ANALYZE MovementItemProtocol_arc;
 
 -- MovementItemContainer
-VACUUM ANALYZE MovementItemContainer;
 VACUUM MovementItemContainer;
+VACUUM ANALYZE MovementItemContainer;
 -- Container
-VACUUM ANALYZE Container;
 VACUUM Container  ;
-VACUUM ANALYZE ContainerLinkObject;
+VACUUM ANALYZE Container;
 VACUUM ContainerLinkObject;
+VACUUM ANALYZE ContainerLinkObject;
 -- Other
-VACUUM ANALYZE HistoryCost;
 VACUUM HistoryCost;
+VACUUM ANALYZE HistoryCost;
 --
-VACUUM ANALYZE SoldTable;
 VACUUM SoldTable;
+VACUUM ANALYZE SoldTable;
 --
-VACUUM ANALYZE ReplObject;
 VACUUM ReplObject;
+VACUUM ANALYZE ReplObject;
+
+VACUUM ResourseProtocol;
+VACUUM ANALYZE ResourseProtocol;
+
 --
--- VACUUM ANALYZE pg_toast.pg_toast_1107196 ;
 -- VACUUM pg_toast.pg_toast_1107196;
+-- VACUUM ANALYZE pg_toast.pg_toast_1107196 ;
 
 
 -- 1.1. - Movement
 
-VACUUM ANALYZE Movement;
 VACUUM Movement;
+VACUUM ANALYZE Movement;
 
-VACUUM ANALYZE MovementBoolean;
 VACUUM MovementBoolean;
+VACUUM ANALYZE MovementBoolean;
 
-VACUUM ANALYZE MovementDate;
 VACUUM MovementDate;
+VACUUM ANALYZE MovementDate;
 
-VACUUM ANALYZE MovementFloat;
 VACUUM MovementFloat;
+VACUUM ANALYZE MovementFloat;
 
-VACUUM ANALYZE MovementString;
 VACUUM MovementString;
+VACUUM ANALYZE MovementString;
 
-VACUUM ANALYZE MovementLinkObject;
 VACUUM MovementLinkObject;
+VACUUM ANALYZE MovementLinkObject;
 
 
 -- 1.2. - MovementItem
 
-VACUUM ANALYZE MovementItem; -- !!!
 VACUUM MovementItem;         -- !!!
+VACUUM ANALYZE MovementItem; -- !!!
 
-VACUUM ANALYZE MovementItemBoolean;
 VACUUM MovementItemBoolean;
+VACUUM ANALYZE MovementItemBoolean;
 
-VACUUM ANALYZE MovementItemDate;
 VACUUM MovementItemDate;
+VACUUM ANALYZE MovementItemDate;
 
-VACUUM ANALYZE MovementItemFloat;
 VACUUM MovementItemFloat;
+VACUUM ANALYZE MovementItemFloat;
 
-VACUUM ANALYZE MovementItemString;
 VACUUM MovementItemString;
+VACUUM ANALYZE MovementItemString;
 
-VACUUM ANALYZE MovementItemLinkObject;
 VACUUM MovementItemLinkObject;
+VACUUM ANALYZE MovementItemLinkObject;
 
 
 
 -- 2. - Object
 
-VACUUM ANALYZE object; -- !!!
 VACUUM object;         -- !!!
+VACUUM ANALYZE object; -- !!!
 
-VACUUM ANALYZE objectBoolean;
 VACUUM objectBoolean;
+VACUUM ANALYZE objectBoolean;
 
-VACUUM ANALYZE ObjectDate;
 VACUUM ObjectDate;
+VACUUM ANALYZE ObjectDate;
 
-VACUUM ANALYZE ObjectFloat;
 VACUUM ObjectFloat;
+VACUUM ANALYZE ObjectFloat;
 
-VACUUM ANALYZE objectString;
 VACUUM objectString ;
+VACUUM ANALYZE objectString;
 
-VACUUM ANALYZE ObjectLink;
 VACUUM ObjectLink;
+VACUUM ANALYZE ObjectLink;

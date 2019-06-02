@@ -1,19 +1,20 @@
 -- Function: gpSelect_MI_WeighingProduction_wms()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (BIGINT, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingProduction_wms (
-    IN inMovementId  Integer      , -- ключ Документа
+    IN inMovementId  BIGINT       , -- ключ Документа
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id BIGINT
              , MovementId_Parent Integer, InvNumber_Parent TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , WmsCode TVarChar
              , LineCode Integer
-             , DateInsert TDateTime, DateUpdate TDateTime
+             , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
               )
 AS
@@ -34,8 +35,8 @@ BEGIN
            , Object_BarCodeBox.ValueData      AS BarCodeBoxName
            , MovementItem.WmsCode
            , MovementItem.LineCode
-           , MovementItem.DateInsert
-           , MovementItem.DateUpdate
+           , MovementItem.InsertDate
+           , MovementItem.UpdateDate
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -58,4 +59,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MI_WeighingProduction_wms(inMovementId := 0 , inIsErased := False ,  inSession := '5');
+-- SELECT * FROM gpSelect_MI_WeighingProduction_wms (inMovementId:= 0, inIsErased:= FALSE, inSession:= '5');

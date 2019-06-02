@@ -175,7 +175,7 @@ BEGIN
 
 
      -- !!!надо определить - есть ли скидка в цене!!!
-      vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у ёр лица есть галка
+     vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у ёр лица есть галка
                     OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()           -- это ЅЌ
                     OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0) -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
                         AND EXISTS (SELECT 1

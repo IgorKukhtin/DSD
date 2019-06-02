@@ -59,7 +59,7 @@ type
     actUpdateMasterDS: TdsdUpdateDataSet;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    DateUpdate: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
     GoodsTypeKindName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -106,7 +106,7 @@ type
     cxLabel12: TcxLabel;
     cxLabel10: TcxLabel;
     edPlaceNumber: TcxCurrencyEdit;
-    DateInsert: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
     spSelectPrintCeh: TdsdStoredProc;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;

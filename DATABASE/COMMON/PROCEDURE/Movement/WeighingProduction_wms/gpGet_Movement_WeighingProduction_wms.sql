@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_WeighingProduction_wms (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction_wms (
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId        BIGINT   , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id BIGINT
              , InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
@@ -32,7 +32,7 @@ BEGIN
      THEN
          RETURN QUERY 
          SELECT
-               0 AS Id
+               0 :: BIGINT AS Id
              , CAST (NEXTVAL ('Movement_WeighingProduction_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
@@ -115,4 +115,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Movement_WeighingProduction_wms(inMovementId := 0 ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_WeighingProduction_wms(inMovementId := 0 ,  inSession := '5');

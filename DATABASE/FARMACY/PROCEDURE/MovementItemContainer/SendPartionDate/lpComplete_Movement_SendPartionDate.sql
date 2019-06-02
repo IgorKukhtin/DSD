@@ -40,9 +40,10 @@ BEGIN
                                            , MovementId_in Integer, PartionId_in Integer
                                            , PartionGoodsId Integer
                                            , ExpirationDate TDateTime
+                                           , ChangePercentMin TFloat, ChangePercent TFloat
                                             ) ON COMMIT DROP;
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate)
+     INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, ChangePercentMin, ChangePercent)
         SELECT MovementItem.Id                    AS MovementItemId
              , MovementItem.ObjectId              AS GoodsId
              , MovementItem.Amount                AS Amount
@@ -51,12 +52,37 @@ BEGIN
              , MIFloat_MovementId.ValueData       AS MovementId_in
              , CLO_MI.ObjectId                    AS PartionId_in
              , 0                                  AS PartionGoodsId
+               -- Дата "срок годности"
              , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+               -- % скидки(срок меньше месяца)
+             , CASE WHEN MIFloat_ChangePercentMin.ValueData <> 0 THEN MIFloat_ChangePercentMin.ValueData
+                    WHEN MF_ChangePercentMin.ValueData      <> 0 THEN MF_ChangePercentMin.ValueData
+                    ELSE 0
+               END AS ChangePercentMin
+               -- % скидки(срок от 1 мес до 6 мес) 
+             , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 THEN MIFloat_ChangePercent.ValueData
+                    WHEN MF_ChangePercent.ValueData      <> 0 THEN MF_ChangePercent.ValueData
+                    ELSE 0
+               END AS ChangePercent
         FROM MovementItem
             INNER JOIN MovementItem AS MI_Master ON MI_Master.MovementId = inMovementId
                                                 AND MI_Master.DescId     = zc_MI_Master()
                                                 AND MI_Master.Id         = MovementItem.ParentId
                                                 AND MI_Master.isErased   = FALSE
+            LEFT JOIN MovementFloat AS MF_ChangePercent
+                                    ON MF_ChangePercent.MovementId = MovementItem.MovementId
+                                   AND MF_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MF_ChangePercentMin
+                                    ON MF_ChangePercentMin.MovementId = MovementItem.MovementId
+                                   AND MF_ChangePercentMin.DescId     = zc_MovementFloat_ChangePercentMin()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.ParentId
+                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
+                                        ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.ParentId
+                                       AND MIFloat_ChangePercentMin.DescId         = zc_MIFloat_ChangePercentMin()
+
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
@@ -76,8 +102,11 @@ BEGIN
        ;
 
      -- элементы
-     UPDATE _tmpItem_PartionDate SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inMovementId:= _tmpItem_PartionDate.MovementId_in
-                                                                                      , inOperDate  := _tmpItem_PartionDate.ExpirationDate
+     UPDATE _tmpItem_PartionDate SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inMovementId      := _tmpItem_PartionDate.MovementId_in
+                                                                                      , inOperDate        := _tmpItem_PartionDate.ExpirationDate
+                                                                                      , inGoodsId         := _tmpItem_PartionDate.GoodsId
+                                                                                      , inChangePercentMin:= _tmpItem_PartionDate.ChangePercentMin
+                                                                                      , inChangePercent   := _tmpItem_PartionDate.ChangePercent
                                                                                        );
      -- элементы - zc_Container_CountPartionDate
      UPDATE _tmpItem_PartionDate SET ContainerId = lpInsertFind_Container (inContainerDescId   := zc_Container_CountPartionDate()

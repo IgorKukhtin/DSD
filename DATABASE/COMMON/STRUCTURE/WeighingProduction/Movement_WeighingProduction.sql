@@ -4,25 +4,26 @@
     - связей
     - индексов
 */
---drop TABLE Movement_WeighingProduction
+
+-- DROP TABLE Movement_WeighingProduction
 
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE Movement_WeighingProduction(
-   Id                  Integer  NOT NULL PRIMARY KEY, 
-   InvNumber           TVarChar NOT NULL,
-   OperDate            TDateTime,
-   StatusId            Integer ,
-   FromId              Integer ,
-   ToId                Integer ,
-   GoodsId             Integer ,
-   GoodsKindId	       Integer ,
-   MovementDescId      Integer ,
-   MovementDescNumber  Integer ,
-   PlaceNumber         Integer ,
-   UserId              Integer ,
-   StartWeighing       TDateTime ,
-   EndWeighing         TDateTime
+   Id                  BIGSERIAL NOT NULL PRIMARY KEY, 
+   InvNumber           TVarChar  NOT NULL,
+   OperDate            TDateTime NOT NULL,
+   StatusId            Integer   NOT NULL,
+   FromId              Integer   NOT NULL,
+   ToId                Integer   NOT NULL,
+   GoodsId             Integer   NOT NULL,
+   GoodsKindId	       Integer   NOT NULL,
+   MovementDescId      Integer   NOT NULL,
+   MovementDescNumber  Integer   NOT NULL,
+   PlaceNumber         Integer   NOT NULL,
+   UserId              Integer   NOT NULL,
+   StartWeighing       TDateTime NOT NULL,
+   EndWeighing         TDateTime     NULL
    );
 /*-------------------------------------------------------------------------------*/
 

@@ -246,7 +246,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DateUpdate
+              Column = UpdateDate
             end
             item
               Format = ',0.####'
@@ -286,7 +286,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DateUpdate
+              Column = UpdateDate
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -345,17 +345,17 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             Options.Editing = False
             Width = 77
           end
-          object DateInsert: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
-            DataBinding.FieldName = 'DateInsert'
+            DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 103
           end
-          object DateUpdate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
-            DataBinding.FieldName = 'DateUpdate'
+            DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -398,7 +398,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 118
   end
   object cxLabel13: TcxLabel
@@ -415,7 +415,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 8
+    TabOrder = 7
     Width = 157
   end
   object cxLabel14: TcxLabel

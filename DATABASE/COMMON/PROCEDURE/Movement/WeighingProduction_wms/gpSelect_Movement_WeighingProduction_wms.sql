@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_wms (
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
+RETURNS TABLE (Id BIGINT, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescNumber Integer
@@ -92,4 +92,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Movement_WeighingProduction_wms(inStartDate := ('23.05.2019')::TDateTime , inEndDate := ('23.05.2019')::TDateTime , inIsErased := 'True' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_WeighingProduction_wms(inStartDate := ('23.05.2019')::TDateTime , inEndDate := ('23.05.2019')::TDateTime , inIsErased := 'True' , inJuridicalBasisId := 9399 ,  inSession := '5');

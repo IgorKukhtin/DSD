@@ -1366,7 +1366,11 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_Value', '% скидки в партии' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_Value');
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_Value', '% скидки в партии для срок от 1 до 6 мес.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_Value');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_ValueMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_ValueMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_ValueMin', '% скидки в партии для срок от 0 до 1 мес.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_ValueMin');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
