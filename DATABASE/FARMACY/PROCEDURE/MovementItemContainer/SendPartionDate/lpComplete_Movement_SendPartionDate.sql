@@ -11,6 +11,7 @@ AS
 $BODY$
    DECLARE vbUnitId   Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbMonth_6  Integer;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -34,6 +35,34 @@ BEGIN
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
 
+     --
+     vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
+                   FROM Object  AS Object_PartionDateKind
+                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                             AND ObjectFloat_Month.DescId   = zc_ObjectFloat_PartionDateKind_Month()
+                   WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
+                  );
+ 
+     -- Пересчитали MI_Master.Amount - остаток со сроком на начало дня Movement.OperDate
+     PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, inMovementId, tmp.Amount, NULL)
+     FROM (SELECT MI_Master.Id AS MovementItemId, MI_Master.ObjectId AS GoodsId
+                , SUM (CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
+           FROM MovementItem AS MI_Master
+                LEFT JOIN MovementItem ON MI_Master.MovementId  = inMovementId
+                                      AND MovementItem.ParentId = MI_Master.Id
+                                      AND MovementItem.DescId   = zc_MI_Child()
+                                      AND MovementItem.isErased = FALSE
+                LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                           ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                          AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+           WHERE MI_Master.MovementId = inMovementId
+             AND MI_Master.DescId     = zc_MI_Master()
+             AND MI_Master.isErased   = FALSE
+           GROUP BY MI_Master.Id, MI_Master.ObjectId
+          ) AS tmp;
+
+
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_PartionDate (MovementItemId Integer, GoodsId Integer, Amount TFloat
                                            , ContainerId_in Integer, ContainerId Integer
@@ -46,7 +75,7 @@ BEGIN
      INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, ChangePercentMin, ChangePercent)
         SELECT MovementItem.Id                    AS MovementItemId
              , MovementItem.ObjectId              AS GoodsId
-             , MovementItem.Amount                AS Amount
+             , CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END AS Amount
              , MIFloat_ContainerId.ValueData      AS ContainerId_in
              , 0                                  AS ContainerId
              , MIFloat_MovementId.ValueData       AS MovementId_in
@@ -99,6 +128,7 @@ BEGIN
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Child()
           AND MovementItem.isErased   = FALSE
+          AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END <> 0
        ;
 
      -- элементы
