@@ -447,7 +447,7 @@ BEGIN
                                      , MIDate_ExpirationDate.ValueData    AS ExpirationDate
                                      , COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd())  AS ExpirationDate_in
                                      , MovementItem.isErased              AS isErased
-                                FROM  MovementItem
+                                FROM MovementItem
                                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
