@@ -44,7 +44,7 @@ BEGIN
                    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
                   );
  
-     -- Пересчитали MI_Master.Amount - остаток со сроком на начало дня Movement.OperDate
+     -- !!!Пересчитали MI_Master.Amount - остаток со сроком на начало дня Movement.OperDate!!!
      PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, inMovementId, tmp.Amount, NULL)
      FROM (SELECT MI_Master.Id AS MovementItemId, MI_Master.ObjectId AS GoodsId
                 , SUM (CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
@@ -128,7 +128,7 @@ BEGIN
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Child()
           AND MovementItem.isErased   = FALSE
-          AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END <> 0
+          AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END > 0
        ;
 
      -- элементы
