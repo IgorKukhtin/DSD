@@ -33,13 +33,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , CountSP TFloat
              , PriceRetSP TFloat
              , PaymentSP TFloat
-
-             , ContainerId TFloat
-             , ExpirationDate      TDateTime
-             , OperDate_Income     TDateTime
-             , Invnumber_Income    TVarChar
-             , FromName_Income     TVarChar
-             , ContractName_Income TVarChar
+             , PartionDateKindId Integer, PartionDateKindName TVarChar
               )
 AS
 $BODY$
@@ -131,6 +125,11 @@ BEGIN
                     WHERE Movement.Id IN (SELECT DISTINCT tmpContainer.MovementId_Income FROM tmpContainer)
                     )
 
+   , tmpMILO_PartionDateKind AS (SELECT MovementItemLinkObject.*
+                                 FROM MovementItemLinkObject
+                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
+                                )
 
        SELECT
              MovementItem.Id
@@ -165,12 +164,16 @@ BEGIN
            , Null::TFloat                                                        AS PriceRetSP
            , Null::TFloat                                                        AS PaymentSP
 
-           , MIFloat_ContainerId.ContainerId  ::TFloat                           AS ContainerId
+           , Object_PartionDateKind.Id                    AS PartionDateKindId
+           , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
+
+           /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime      AS OperDate_Income
            , COALESCE (tmpPartion.Invnumber, NULL)             :: TVarChar       AS Invnumber_Income
            , COALESCE (tmpPartion.FromName, NULL)              :: TVarChar       AS FromName_Income
-           , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar       AS ContractName_Income                         
+           , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar       AS ContractName_Income
+           */
        FROM tmpMI AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -184,11 +187,17 @@ BEGIN
                                 AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
 
-            LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId
+            -- 
+            LEFT JOIN tmpMILO_PartionDateKind AS MILinkObject_PartionDateKind
+                                              ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MILinkObject_PartionDateKind.ObjectId
+
+            /*LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId
                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
             LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIFloat_ContainerId.ContainerId
             LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
-
+            */
             -- Не делить медикамент на кассах
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
                                     ON ObjectBoolean_DoesNotShare.ObjectId = MovementItem.GoodsId
@@ -203,6 +212,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 03.06.19         *
  25.04.19                                                                                   *
  20.04.19         * 
  31.03.19                                                                                   *

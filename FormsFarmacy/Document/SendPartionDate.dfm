@@ -392,7 +392,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
             DataBinding.FieldName = 'PartionDateKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '0 - '#1087#1088#1086#1089#1088'., 1 - '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089', 2 - '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089
             Options.Editing = False
             Width = 174
           end
@@ -1355,7 +1354,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Left = 734
+    Left = 758
     Top = 200
   end
   inherited spUnErasedMIMaster: TdsdStoredProc

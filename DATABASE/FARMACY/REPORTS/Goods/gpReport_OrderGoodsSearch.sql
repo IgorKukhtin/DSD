@@ -127,7 +127,7 @@ BEGIN
       FROM Movement
         JOIN Object AS Status
                     ON Status.Id = Movement.StatusId
-                   AND Status.Id <> zc_Enum_Status_Erased()
+                   --AND Status.Id <> zc_Enum_Status_Erased()    -- 03.06.2019 -  ןמ ןנמסüבו Ë‏בû
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
