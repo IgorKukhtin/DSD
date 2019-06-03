@@ -59,22 +59,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate_0
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPart_1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate_2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -119,22 +115,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate_0
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPart_1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartionDate_2
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -258,49 +250,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object AmountPartionDate: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
-            DataBinding.FieldName = 'AmountPartionDate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object isExpirationDateDiff: TcxGridDBColumn
+            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'isExpirationDateDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
             Options.Editing = False
-            Width = 52
-          end
-          object AmountPartionDate_0: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
-            DataBinding.FieldName = 'AmountPartionDate_0'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 53
-          end
-          object AmountPart_1: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'. ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
-            DataBinding.FieldName = 'AmountPart_1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
-          object AmountPartionDate_2: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089'. ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
-            DataBinding.FieldName = 'AmountPartionDate_2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
+            Width = 82
           end
         end
       end
@@ -410,14 +367,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Options.Editing = False
             Width = 125
           end
-          object isExpirationDateDiff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'.'
+          object chisExpirationDateDiff: TcxGridDBColumn
+            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'isExpirationDateDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080
+            HeaderHint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
             Options.Editing = False
-            Width = 42
+            Width = 82
           end
           object OperDate_Income: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
@@ -929,6 +886,23 @@ inherited SendPartionDateForm: TSendPartionDateForm
         DataSet = DetailDCS
       end>
     OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 216
     Top = 328
   end
@@ -949,10 +923,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         item
           Visible = True
           ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True
@@ -1558,8 +1528,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 792
-    Top = 112
+    Left = 848
+    Top = 88
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
