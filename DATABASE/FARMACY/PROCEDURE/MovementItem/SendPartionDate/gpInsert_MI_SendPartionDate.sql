@@ -132,19 +132,6 @@ BEGIN
                       --AND MovementItem.IsErased = FALSE
                     )
 
-    /*, tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
-                        , ROUND(Price_Value.ValueData, 2) ::TFloat AS Price
-                   FROM ObjectLink AS ObjectLink_Price_Unit
-                        LEFT JOIN ObjectFloat AS Price_Value
-                                              ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                             AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                        LEFT JOIN ObjectLink AS Price_Goods
-                                             ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                   WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit() 
-                     AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                   )*/
-    
     SELECT COALESCE(MI_Master.Id,0)                         AS Id
           , COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId) AS GoodsId
           , tmpRemains.Amount                               AS Amount
@@ -187,8 +174,8 @@ BEGIN
     
     -- теперь к мастеру сохраним чайлды
     -- выбираем сохр мастер
-    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, PartionDateKindId Integer, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, PartionDateKindId, ExpirationDate)
+    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, ExpirationDate)
     WITH
       MI_Master AS (SELECT MovementItem.Id       AS Id
                          , MovementItem.ObjectId AS GoodsId
@@ -218,11 +205,11 @@ BEGIN
          , tmpRemains.Amount                               AS Amount
          , tmpRemains.ContainerId                 ::Integer
          , tmpRemains.MovementId_Income
-         , CASE WHEN tmpRemains.ExpirationDate <= vbDate0 THEN zc_Enum_PartionDateKind_0()
+         /*, CASE WHEN tmpRemains.ExpirationDate <= vbDate0 THEN zc_Enum_PartionDateKind_0()
                 WHEN tmpRemains.ExpirationDate <= vbDate30 THEN zc_Enum_PartionDateKind_1()
                 WHEN tmpRemains.ExpirationDate <= vbDate180 THEN zc_Enum_PartionDateKind_6()
                 ELSE 0
-           END                                             AS PartionDateKindId
+           END                                             AS PartionDateKindId*/
          , tmpRemains.ExpirationDate
     FROM (SELECT tmpRemains.*
           FROM tmpRemains 
@@ -240,7 +227,7 @@ BEGIN
                                                   , inParentId           := tmpChild.ParentId
                                                   , inMovementId         := inMovementId
                                                   , inGoodsId            := tmpChild.GoodsId  
-                                                  , inPartionDateKindId  := tmpChild.PartionDateKindId
+                                                  ---, inPartionDateKindId  := tmpChild.PartionDateKindId
                                                   , inExpirationDate     := tmpChild.ExpirationDate
                                                   , inAmount             := COALESCE (tmpChild.Amount,0)        :: TFloat
                                                   , inContainerId        := COALESCE (tmpChild.ContainerId,0)   :: TFloat

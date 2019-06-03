@@ -1,27 +1,27 @@
 inherited SendPartionDateForm: TSendPartionDateForm
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082
-  ClientHeight = 553
+  ClientHeight = 546
   ClientWidth = 1048
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 1064
-  ExplicitHeight = 591
+  ExplicitHeight = 584
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
     Width = 1048
-    Height = 430
+    Height = 423
     ExplicitTop = 123
     ExplicitWidth = 1048
     ExplicitHeight = 430
-    ClientRectBottom = 430
+    ClientRectBottom = 423
     ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1048
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 1048
-        Height = 227
+        Height = 220
         ExplicitWidth = 1048
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -263,12 +263,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 235
+        Top = 228
         Width = 1048
         Height = 171
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 235
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -428,12 +429,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 227
+        Top = 220
         Width = 1048
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 227
       end
     end
   end
@@ -1009,6 +1011,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
     object bbOpenFormIncome: TdxBarButton
       Action = actOpenFormIncome
       Category = 0
+    end
+    object bbMIChildProtocolOpenForm: TdxBarButton
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1072#1088#1090#1080#1080'>'
+      Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1072#1088#1090#1080#1080'>'
+      Visible = ivAlways
+      ImageIndex = 34
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1639,14 +1648,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionDateKindId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'PartionDateKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inExpirationDate'
         Value = 'NULL'
         Component = DetailDCS
@@ -1750,50 +1751,5 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end>
     Left = 536
     Top = 192
-  end
-  object spUpdate_ExpirationDate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_SendPartionDate_ExpirationDate'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inExpirationDate'
-        Value = 'NULL'
-        Component = DetailDCS
-        ComponentItem = 'ExpirationDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inExpirationDate_in'
-        Value = 'NULL'
-        Component = DetailDCS
-        ComponentItem = 'ExpirationDate_in'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisExpirationDateDiff'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'isExpirationDateDiff'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 288
-    Top = 472
   end
 end

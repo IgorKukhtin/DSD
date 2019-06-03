@@ -86,7 +86,7 @@ type
     edChangePercent: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     edChangePercentMin: TcxCurrencyEdit;
-    spUpdate_ExpirationDate: TdsdStoredProc;
+    bbMIChildProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

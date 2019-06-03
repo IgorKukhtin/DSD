@@ -290,7 +290,6 @@ BEGIN
               
                  , MI_Child.ContainerId       ::TFloat
                  , ObjectFloat_Month.ValueData         AS Expired
-                 , Object_PartionDateKind.Id                    AS PartionDateKindId
                  , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
 
                  , MI_Child.MovementId_Income    AS MovementId_Income
@@ -298,7 +297,7 @@ BEGIN
                  , tmpIncome.Invnumber           AS Invnumber_Income
                  , tmpIncome.FromName            AS FromName_Income
                  , tmpIncome.ContractName        AS ContractName_Income
-                 
+
                  , CASE WHEN MI_Child.ExpirationDate <> MI_Child.ExpirationDate_in THEN TRUE ELSE FALSE END AS isExpirationDateDiff
 
                  , MI_Child.IsErased             AS isErased
