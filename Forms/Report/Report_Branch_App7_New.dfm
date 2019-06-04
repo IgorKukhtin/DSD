@@ -13,7 +13,6 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
     Width = 1088
     Height = 357
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1088
     ExplicitHeight = 357
     ClientRectBottom = 357
@@ -167,6 +166,16 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Rashod
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -308,6 +317,16 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Rashod
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -490,7 +509,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             Width = 50
           end
           object Amount12: TcxGridDBColumn
-            Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083' (+)'
+            Caption = #1051#1100#1074#1086#1074' (+)'
             DataBinding.FieldName = 'Amount12'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -501,8 +520,30 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             Width = 50
           end
           object Amount12_Rashod: TcxGridDBColumn
-            Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083'  (-)'
+            Caption = #1051#1100#1074#1086#1074' (-)'
             DataBinding.FieldName = 'Amount12_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083' (+)'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_Rashod: TcxGridDBColumn
+            Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083'  (-)'
+            DataBinding.FieldName = 'Amount_Rashod'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -585,6 +626,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
       FormName = 'TReport_Branch_App7DialogForm'
       FormNameParam.Value = 'TReport_Branch_App7DialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -592,6 +634,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -599,6 +642,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -606,6 +650,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -614,6 +659,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -639,12 +685,14 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -653,10 +701,15 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7 '#1053#1086#1074#1086#1077
       ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7 '#1053#1086#1074#1086#1077
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -676,6 +729,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -683,6 +737,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -690,6 +745,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -781,6 +837,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -791,6 +848,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -799,6 +857,7 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 536
   end

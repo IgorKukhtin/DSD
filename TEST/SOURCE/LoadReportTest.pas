@@ -267,10 +267,10 @@ begin
   LoadReportFromFile('Плановая Прибыль', ReportPath + '\Отчеты (производство)\Плановая Прибыль.fr3');
   LoadReportFromFile('Плановая Прибыль (Факт)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт).fr3');
   LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы).fr3');
-  }
+
   LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы) по дате покуп', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы) по дате покуп.fr3');
    exit;
-   {LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы и прайс)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы и прайс).fr3');
+  LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы и прайс)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы и прайс).fr3');
   LoadReportFromFile('Плановая Прибыль (цена себестоимость и расходы)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость и расходы).fr3');
   LoadReportFromFile('Плановая Прибыль (цена себестоимость сравнение)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость сравнение).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен).fr3');
@@ -418,18 +418,19 @@ begin
 
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
 
-  }
   LoadReportFromFile('PrintMovement_PersonalServiceDetail', ReportPath + '\Персонал\PrintMovement_PersonalServiceDetail.fr3');
   exit;
-  {LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
+  LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
+  }
   LoadReportFromFile('Приложение7 Новое', ReportPath + '\Отчеты(филиалы)\Приложение7 Новое.fr3');
-
+  {
   LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');
   LoadReportFromFile('Приложение1_test', ReportPath + '\Отчеты(филиалы)\Приложение1_test.fr3');
   exit;
-
+  }
   LoadReportFromFile('Касса филиалы', ReportPath + '\Отчеты(филиалы)\Касса Филиалы.fr3');
-
+  exit;
+  {
   LoadReportFromFile('PrintObjectHistory_PriceListItem', ReportPath + '\Справочники\PrintObjectHistory_PriceListItem.fr3');
 
   LoadReportFromFile('PrintMovement_SaleJuridicalInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleJuridicalInvoice.fr3');
