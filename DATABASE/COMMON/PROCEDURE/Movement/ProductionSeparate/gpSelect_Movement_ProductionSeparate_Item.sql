@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate_Item(
 )
 RETURNS TABLE (Id Integer, MovementItemId Integer
                , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-               , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
+               , TotalCount TFloat, TotalCountChild TFloat
+               , TotalHeadCount TFloat, TotalHeadCountChild TFloat
+               , PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                , GoodsKindId Integer, GoodsKindName TVarChar
@@ -72,9 +74,12 @@ BEGIN
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
   
-           , MovementFloat_TotalCount.ValueData   AS TotalCount
-           , MovementFloat_TotalCountChild.ValueData   AS TotalCountChild
-           , MovementString_PartionGoods.ValueData AS PartionGoods
+           , MovementFloat_TotalCount.ValueData          AS TotalCount
+           , MovementFloat_TotalCountChild.ValueData     AS TotalCountChild
+           , MovementFloat_TotalHeadCount.ValueData      AS TotalHeadCount
+           , MovementFloat_TotalHeadCountChild.ValueData AS TotalHeadCountChild
+
+           , MovementString_PartionGoods.ValueData       AS PartionGoods
   
            , Object_From.Id                       AS FromId
            , Object_From.ValueData                AS FromName
@@ -106,6 +111,14 @@ BEGIN
                                   ON MovementFloat_TotalCountChild.MovementId =  Movement.Id
                                  AND MovementFloat_TotalCountChild.DescId = zc_MovementFloat_TotalCountChild()
 
+          LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCount
+                                  ON MovementFloat_TotalHeadCount.MovementId = Movement.Id
+                                 AND MovementFloat_TotalHeadCount.DescId = zc_MovementFloat_TotalHeadCount()
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCountChild
+                                  ON MovementFloat_TotalHeadCountChild.MovementId = Movement.Id
+                                 AND MovementFloat_TotalHeadCountChild.DescId = zc_MovementFloat_TotalHeadCountChild()
+
           LEFT JOIN MovementString AS MovementString_PartionGoods
                                    ON MovementString_PartionGoods.MovementId = Movement.Id
                                   AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
@@ -135,6 +148,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.06.19         *
  26.06.18         * MovementItemId
  10.08.17         * add gpSelect_Movement_ProductionSeparate_Item
  05.10.16         * add inJuridicalBasisId

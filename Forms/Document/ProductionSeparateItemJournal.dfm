@@ -22,6 +22,8 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
+        ExplicitLeft = 384
+        ExplicitTop = 32
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -44,6 +46,16 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalHeadCountChild
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -60,6 +72,16 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalHeadCountChild
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -187,6 +209,28 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 88
+          end
+          object TotalHeadCount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074'  ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'TotalHeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074'  ('#1088#1072#1089#1093#1086#1076')'
+            Width = 109
+          end
+          object TotalHeadCountChild: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'TotalHeadCountChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074' ('#1087#1088#1080#1093#1086#1076')'
+            Width = 94
           end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103

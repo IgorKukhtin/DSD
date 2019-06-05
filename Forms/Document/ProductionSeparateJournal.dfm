@@ -947,8 +947,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   object PrintItemsTwoCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 692
-    Top = 70
+    Left = 572
+    Top = 174
   end
   object spInsert_LockUnique: TdsdStoredProc
     StoredProcName = 'gpInsert_LockUnique_byUnion'
