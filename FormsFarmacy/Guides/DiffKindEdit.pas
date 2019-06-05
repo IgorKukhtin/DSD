@@ -31,6 +31,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cbIsClose: TcxCheckBox;
+    ceMaxOrderAmount: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 611
   ClientWidth = 820
+  AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 836
   ExplicitHeight = 650
   PixelsPerInch = 96
@@ -706,6 +707,27 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
       ImageIndex = 53
       ShortCut = 16467
+    end
+    object actPUSH: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH
+      StoredProcList = <
+        item
+          StoredProc = spPUSH
+        end>
+      Caption = 'actPUSH'
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH
+      StoredProcList = <
+        item
+          StoredProc = spPUSH
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -1752,5 +1774,47 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 312
     Top = 435
+  end
+  object spPUSH: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_OrderExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSupplierID'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 450
+    Top = 432
   end
 end

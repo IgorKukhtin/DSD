@@ -3,7 +3,7 @@ object DiffKindForm: TDiffKindForm
   Top = 0
   Caption = #1042#1080#1076' '#1086#1090#1082#1072#1079#1072
   ClientHeight = 282
-  ClientWidth = 498
+  ClientWidth = 585
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object DiffKindForm: TDiffKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 498
+    Width = 585
     Height = 256
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 598
+    ExplicitWidth = 498
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,13 +55,13 @@ object DiffKindForm: TDiffKindForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 146
+        Width = 129
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 341
+        Width = 264
       end
       object IsClose: TcxGridDBColumn
         Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
@@ -70,7 +70,7 @@ object DiffKindForm: TDiffKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 95
+        Width = 76
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -80,6 +80,14 @@ object DiffKindForm: TDiffKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 41
+      end
+      object MaxOrderAmount: TcxGridDBColumn
+        Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '
+        DataBinding.FieldName = 'MaxOrderAmount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

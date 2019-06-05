@@ -1372,9 +1372,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_ValueMin() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_ValueMin', '% скидки в партии для срок от 0 до 1 мес.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_ValueMin');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MaxOrderAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_MaxOrderAmount', 'Максимальная сумма заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmount');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.04.19                                                                                      * zc_ObjectFloat_MaxOrderAmount 
  23.04.19         * zc_ObjectFloat_RetailCostCredit_MinPrice
                     zc_ObjectFloat_RetailCostCredit_Percent
  19.04.19         * zc_ObjectFloat_PartionDateKind_Month

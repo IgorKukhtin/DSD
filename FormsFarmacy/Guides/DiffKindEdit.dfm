@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1042#1080#1076' '#1086#1090#1082#1072#1079#1072
-  ClientHeight = 159
+  ClientHeight = 189
   ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 55
-    Top = 122
+    Top = 152
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 205
-    Top = 122
+    Top = 152
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -67,6 +67,19 @@
     Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
     TabOrder = 6
     Width = 120
+  end
+  object ceMaxOrderAmount: TcxCurrencyEdit
+    Left = 21
+    Top = 121
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 7
+    Width = 90
+  end
+  object cxLabel4: TcxLabel
+    Left = 21
+    Top = 98
+    Caption = ' '#1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '
   end
   object ActionList: TActionList
     Left = 120
@@ -136,6 +149,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaxOrderAmount'
+        Value = Null
+        Component = ceMaxOrderAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -183,6 +204,13 @@
         Value = Null
         Component = cbIsClose
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaxOrderAmount'
+        Value = Null
+        Component = ceMaxOrderAmount
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
