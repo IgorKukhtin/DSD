@@ -36,7 +36,7 @@ BEGIN
    , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                      , MovementItemFloat.ValueData :: Integer AS ContainerId
                                 FROM MovementItemFloat
-                                WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child)
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                   AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                 )
     --

@@ -3,7 +3,7 @@ inherited CheckForm: TCheckForm
   ClientHeight = 600
   ClientWidth = 804
   ExplicitWidth = 820
-  ExplicitHeight = 638
+  ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,18 +11,19 @@ inherited CheckForm: TCheckForm
     Width = 804
     Height = 238
     ExplicitTop = 242
-    ExplicitWidth = 817
-    ExplicitHeight = 198
+    ExplicitWidth = 804
+    ExplicitHeight = 238
     ClientRectBottom = 238
     ClientRectRight = 804
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 817
-      ExplicitHeight = 174
+      ExplicitWidth = 804
+      ExplicitHeight = 214
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 214
-        ExplicitWidth = 817
-        ExplicitHeight = 174
+        ExplicitTop = 2
+        ExplicitWidth = 804
+        ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -240,7 +241,7 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 804
     Height = 216
-    ExplicitWidth = 817
+    ExplicitWidth = 804
     ExplicitHeight = 216
     inherited edInvNumber: TcxTextEdit
       Left = 7
@@ -708,7 +709,6 @@ inherited CheckForm: TCheckForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
-    ExplicitWidth = 817
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -836,8 +836,6 @@ inherited CheckForm: TCheckForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitTop = 440
-    ExplicitWidth = 817
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
@@ -1509,6 +1507,33 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecJackdawsChecks'
     end
+    object actReLinkContainer: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecReLinkContainer
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084
+      Hint = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084
+      ImageIndex = 39
+    end
+    object actExecReLinkContainer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spReLinkContainer
+      StoredProcList = <
+        item
+          StoredProc = spReLinkContainer
+        end>
+      Caption = 'actExecReLinkContainer'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1600,6 +1625,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1660,6 +1689,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton3: TdxBarButton
       Action = actJackdawsChecks
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actReLinkContainer
       Category = 0
     end
   end
@@ -2371,8 +2404,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 674
-    Top = 336
+    Left = 682
+    Top = 328
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -2704,5 +2737,22 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 464
     Top = 536
+  end
+  object spReLinkContainer: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_ReLinkContainer'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 690
+    Top = 456
   end
 end

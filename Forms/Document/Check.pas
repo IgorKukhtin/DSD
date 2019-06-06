@@ -138,6 +138,10 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelect_MI_Child: TdsdStoredProc;
+    spReLinkContainer: TdsdStoredProc;
+    actReLinkContainer: TMultiAction;
+    actExecReLinkContainer: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

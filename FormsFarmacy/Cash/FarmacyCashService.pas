@@ -86,6 +86,8 @@ type
     SUMMCH: Currency;       // Сумма Скидки
     //***19.08.16
     AMOUNTORD: Currency;    // Кол-во заявка
+    //***03.06.19
+    PDKINDID: Integer;      // //Тип срок/не срок
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -1344,6 +1346,8 @@ begin
                     SUMMCH := FieldByName('SUMMCH').asCurrency;
                     // ***19.08.16
                     AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
+                    // ***03.06.19
+                    PDKINDID := FieldByName('PDKINDID').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1504,6 +1508,8 @@ begin
                   dsdSave.Params.AddParam('inSummChangePercent', ftFloat, ptInput, Null);
                   // ***19.08.16
                   // dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
+                  // ***03.06.19
+                  dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1523,6 +1529,8 @@ begin
                     dsdSave.ParamByName('inSummChangePercent').Value := Body[I].SUMMCH;
                     // ***19.08.16
                     // dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
+                    // ***03.06.19
+                    dsdSave.ParamByName('inPartionDateKindID').Value := Body[I].PDKINDID;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //

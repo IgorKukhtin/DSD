@@ -128,6 +128,12 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 57
         end
+        object CheckGridPartionDateKindName: TcxGridDBColumn
+          Caption = #1058#1080#1087' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+          DataBinding.FieldName = 'PartionDateKindName'
+          HeaderAlignmentHorz = taCenter
+          Width = 62
+        end
       end
       object CheckGridLevel: TcxGridLevel
         GridView = CheckGridDBTableView
@@ -2395,22 +2401,6 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'PartionDateKindId'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionDateKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PartionDateKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AmountMonth'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AmountMonth'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -3196,6 +3186,18 @@ inherited MainCashForm2: TMainCashForm2
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = MainColor_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = MainisPartionDateKindName
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = MainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainPartionDateDiscount
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = MainColor_calc
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3635,24 +3637,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'PartionDateKindId'
         Value = Null
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartionDateKindName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountMonth'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 56
   end
   object spSelectCheck: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Check'
+    StoredProcName = 'gpSelect_MovementItem_CheckLoadCash'
     DataSet = CheckCDS
     DataSets = <
       item
@@ -3784,6 +3774,23 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'PaymentSP'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PartionDateKindId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'PartionDateKindName'
+        DataType = ftString
+        Size = 100
+      end
+      item
+        Name = 'PartionDateDiscount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountMonth'
         DataType = ftFloat
       end>
     IndexDefs = <>
@@ -4495,6 +4502,12 @@ inherited MainCashForm2: TMainCashForm2
     Params = <
       item
         Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiffKindID'
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','

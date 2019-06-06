@@ -27,6 +27,13 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
+    -- ≈сли есть распределение по парти€м удал€ем                                
+    IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
+    THEN
+      UPDATE MovementItem SET isErased = True, Amount = 0
+      WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
+    END IF;
+                                
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
