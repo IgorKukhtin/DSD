@@ -396,10 +396,10 @@ begin
 
   LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
   exit;
-
+  }
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
   exit;
 
