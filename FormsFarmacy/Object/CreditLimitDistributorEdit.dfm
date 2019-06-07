@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1088#1077#1076#1080#1090#1085#1099#1081' '#1083#1080#1084#1080#1090' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091'>'
-  ClientHeight = 212
-  ClientWidth = 422
+  ClientHeight = 261
+  ClientWidth = 427
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 41
-    Top = 170
+    Left = 45
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 286
-    Top = 170
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -40,27 +40,20 @@
   object cxLabel4: TcxLabel
     Left = 24
     Top = 54
-    Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+    Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object cxLabel5: TcxLabel
-    Left = 25
-    Top = 104
+    Left = 24
+    Top = 151
     Caption = #1050#1088#1077#1076#1080#1090#1085#1099#1081' '#1083#1080#1084#1080#1090
   end
   object ceCreditLimit: TcxCurrencyEdit
-    Left = 25
-    Top = 127
+    Left = 24
+    Top = 174
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
     Width = 84
-  end
-  object edName: TcxTextEdit
-    Left = 24
-    Top = 77
-    Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 377
   end
   object ceCode: TcxCurrencyEdit
     Left = 24
@@ -68,7 +61,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 106
   end
   object Код: TcxLabel
@@ -76,8 +69,35 @@
     Top = 9
     Caption = #1050#1086#1076
   end
+  object cxLabel1: TcxLabel
+    Left = 24
+    Top = 104
+    Caption = #1070#1088'. '#1083#1080#1094#1086' '#1085#1072#1096#1077
+  end
+  object ceJuridical: TcxButtonEdit
+    Left = 24
+    Top = 127
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
+    Width = 385
+  end
+  object ceProvider: TcxButtonEdit
+    Left = 24
+    Top = 77
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 385
+  end
   object ActionList: TActionList
-    Left = 64
+    Left = 48
     Top = 32
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -109,7 +129,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Juridical_CreditLimitDistributor'
+    StoredProcName = 'gpInsertUpdate_Object_CreditLimitJuridical'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -118,6 +138,29 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProviderId'
+        Value = Null
+        Component = ProviderGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -151,7 +194,7 @@
     Top = 16
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Juridical_CreditLimitDistributor'
+    StoredProcName = 'gpGet_Object_CreditLimitJuridical'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -170,9 +213,32 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
+        Name = 'ProviderId'
         Value = Null
-        Component = edName
+        Component = ProviderGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProviderName'
+        Value = Null
+        Component = ProviderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -199,11 +265,69 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 128
+    Left = 136
     Top = 32
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 328
     Top = 72
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 136
+  end
+  object ProviderGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvider
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProviderGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProviderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 80
   end
 end

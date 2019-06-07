@@ -31,13 +31,11 @@ type
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
     dxBarButton5: TdxBarButton;
-    actOpenJuridical: TOpenChoiceForm;
-    actAdd: TMultiAction;
-    actOpenCreditLimitDistributorEdit: TdsdOpenForm;
     FormParams: TdsdFormParams;
     HeaderSaver: THeaderSaver;
     bbInsertUpdateMovement: TdxBarButton;
     CreditLimit: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

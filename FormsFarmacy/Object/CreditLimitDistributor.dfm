@@ -1,25 +1,25 @@
 inherited CreditLimitDistributorForm: TCreditLimitDistributorForm
   Caption = #1050#1088#1077#1076#1080#1090#1085#1099#1077' '#1083#1080#1084#1080#1090#1099' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091
   ClientHeight = 339
-  ClientWidth = 522
+  ClientWidth = 600
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 538
+  ExplicitWidth = 616
   ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 522
+    Width = 600
     Height = 313
     ExplicitWidth = 522
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 522
+    ClientRectRight = 600
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 522
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 519
+        Width = 597
         Height = 313
         ExplicitLeft = 3
         ExplicitWidth = 519
@@ -42,15 +42,23 @@ inherited CreditLimitDistributorForm: TCreditLimitDistributorForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 49
           end
-          object Name: TcxGridDBColumn
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'Name'
+          object ProviderName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'ProviderName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 323
+            Width = 232
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086' '#1085#1072#1096#1077
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 186
           end
           object CreditLimit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090#1085#1099#1081' '#1083#1080#1084#1080#1090
@@ -147,60 +155,6 @@ inherited CreditLimitDistributorForm: TCreditLimitDistributorForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actAdd: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actOpenJuridical
-        end
-        item
-          Action = actOpenCreditLimitDistributorEdit
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = 'actAdd'
-      ImageIndex = 0
-      ShortCut = 45
-    end
-    object actOpenJuridical: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actOpenJuridical'
-      FormName = 'TJuridicalForm'
-      FormNameParam.Value = 'TJuridicalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOpenCreditLimitDistributorEdit: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actOpenCreditLimitDistributorEdit'
-      FormName = 'TCreditLimitDistributorEditForm'
-      FormNameParam.Value = 'TCreditLimitDistributorEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -211,7 +165,7 @@ inherited CreditLimitDistributorForm: TCreditLimitDistributorForm
     Top = 96
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical_CreditLimitDistributor'
+    StoredProcName = 'gpSelect_Object_CreditLimitJuridical'
     Left = 112
     Top = 64
   end
@@ -306,7 +260,7 @@ inherited CreditLimitDistributorForm: TCreditLimitDistributorForm
       ImageIndex = 7
     end
     object dxBarButton1: TdxBarButton
-      Action = actAdd
+      Action = actInsert
       Category = 0
     end
     object dxBarButton2: TdxBarButton

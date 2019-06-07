@@ -22,35 +22,62 @@ $BODY$
 BEGIN
 
     outShowMessage := False;
+    vbJuridical := (SELECT ObjectLink_Unit_Juridical.ChildObjectId AS RetailId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitID
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
     IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185')  AND
-      EXISTS(SELECT 1 FROM  ObjectFloat AS ObjectFloat_CreditLimit
-             WHERE ObjectFloat_CreditLimit.ObjectId = inSupplierID
-               AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_Juridical_CreditLimit())
+      EXISTS(SELECT  1
+             FROM Object AS Object_CreditLimitJuridical
+                                                                   
+                  INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Provider
+                                        ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id 
+                                       AND ObjectLink_CreditLimitJuridical_Provider.DescId = zc_ObjectLink_CreditLimitJuridical_Provider()
+                                       AND ObjectLink_CreditLimitJuridical_Provider.ChildObjectId = inSupplierID
+
+                  INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Juridical
+                                        ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id 
+                                       AND ObjectLink_CreditLimitJuridical_Juridical.DescId = zc_ObjectLink_CreditLimitJuridical_Juridical()
+                                       AND ObjectLink_CreditLimitJuridical_Juridical.ChildObjectId = vbJuridical
+                                       
+                  INNER JOIN ObjectFloat AS ObjectFloat_CreditLimit
+                                         ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id 
+                                        AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_CreditLimitJuridical_CreditLimit()
+                                        AND COALESCE (ObjectFloat_CreditLimit.ValueData, 0) > 0
+
+             WHERE Object_CreditLimitJuridical.DescId = zc_Object_CreditLimitJuridical())
     THEN
 
       -- Получаем N
-      SELECT Object_Juridical.ValueData          AS Name
-           , ObjectFloat_CreditLimit.ValueData   AS CreditLimit
+      SELECT Object_Provider.ValueData
+           , COALESCE (ObjectFloat_CreditLimit.ValueData, 0)
       INTO vbName
          , vbN
-      FROM Object AS Object_Juridical
+      FROM Object AS Object_CreditLimitJuridical
+                                                                   
+           INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Provider
+                                 ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id 
+                                AND ObjectLink_CreditLimitJuridical_Provider.DescId = zc_ObjectLink_CreditLimitJuridical_Provider()
+                                AND ObjectLink_CreditLimitJuridical_Provider.ChildObjectId = inSupplierID
+           LEFT JOIN Object AS Object_Provider ON Object_Provider.Id = ObjectLink_CreditLimitJuridical_Provider.ChildObjectId
 
-           JOIN ObjectFloat AS ObjectFloat_CreditLimit
-                            ON ObjectFloat_CreditLimit.ObjectId = Object_Juridical.Id
-                           AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_Juridical_CreditLimit()
-
-      WHERE Object_Juridical.Id = inSupplierID;
-
+           INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Juridical
+                                 ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id 
+                                AND ObjectLink_CreditLimitJuridical_Juridical.DescId = zc_ObjectLink_CreditLimitJuridical_Juridical()
+                                AND ObjectLink_CreditLimitJuridical_Juridical.ChildObjectId = vbJuridical
+                                       
+           INNER JOIN ObjectFloat AS ObjectFloat_CreditLimit
+                                  ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id 
+                                 AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_CreditLimitJuridical_CreditLimit()
+                                 AND COALESCE (ObjectFloat_CreditLimit.ValueData, 0) > 0
+ 
+      WHERE Object_CreditLimitJuridical.DescId = zc_Object_CreditLimitJuridical();
+                   
       IF COALESCE(vbN, 0) = 0
       THEN
         RETURN;
       END IF;
-
-      vbJuridical := (SELECT ObjectLink_Unit_Juridical.ChildObjectId AS RetailId
-                     FROM ObjectLink AS ObjectLink_Unit_Juridical
-                     WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitID
-                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbX
@@ -142,8 +169,9 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.06.19                                                       *
  28.05.19                                                       *
 
 */
 
--- SELECT * FROM gpSelect_ShowPUSH_OrderExternal(59610,0,'3')
+-- SELECT * FROM gpSelect_ShowPUSH_OrderExternal(59610, 183292 , '3')

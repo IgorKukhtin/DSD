@@ -26,15 +26,27 @@ BEGIN
     IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185')
     THEN
       outText := '';
-      WITH tmpJuridical AS (SELECT Object_Juridical.Id                 AS Id
-                                 , Object_Juridical.ValueData          AS Name
-                                 , ObjectFloat_CreditLimit.ValueData   AS N
-                            FROM Object AS Object_Juridical
-                                 JOIN ObjectFloat AS ObjectFloat_CreditLimit
-                                                  ON ObjectFloat_CreditLimit.ObjectId = Object_Juridical.Id
-                                                 AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_Juridical_CreditLimit()
-                            WHERE COALESCE (ObjectFloat_CreditLimit.ValueData, 0) <> 0
-                            ORDER BY Object_Juridical.ValueData),
+      WITH tmpJuridical AS (SELECT ObjectLink_CreditLimitJuridical_Provider.ChildObjectId AS Id
+                                 , Object_Provider.ValueData                              AS Name  
+                                 , COALESCE (ObjectFloat_CreditLimit.ValueData, 0)        AS N
+                            FROM Object AS Object_CreditLimitJuridical
+                                                                                   
+                                 INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Provider
+                                                       ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id 
+                                                      AND ObjectLink_CreditLimitJuridical_Provider.DescId = zc_ObjectLink_CreditLimitJuridical_Provider()
+                                 LEFT JOIN Object AS Object_Provider ON Object_Provider.Id = ObjectLink_CreditLimitJuridical_Provider.ChildObjectId
+
+                                 INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Juridical
+                                                       ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id 
+                                                      AND ObjectLink_CreditLimitJuridical_Juridical.DescId = zc_ObjectLink_CreditLimitJuridical_Juridical()
+                                                      AND ObjectLink_CreditLimitJuridical_Juridical.ChildObjectId = vbJuridical
+                                                       
+                                 INNER JOIN ObjectFloat AS ObjectFloat_CreditLimit
+                                                        ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id 
+                                                       AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_CreditLimitJuridical_CreditLimit()
+                                                       AND COALESCE (ObjectFloat_CreditLimit.ValueData, 0) > 0
+
+                            WHERE Object_CreditLimitJuridical.DescId = zc_Object_CreditLimitJuridical()),
 
            tmpX AS (SELECT MovementLinkObject_From.ObjectId as JuridicalID
                          , SUM(MovementFloat_TotalSumm.ValueData) AS X
@@ -136,8 +148,9 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.06.19                                                       *
  28.05.19                                                       *
 
 */
 
--- SELECT * FROM gpSelect_ShowPUSH_OrderInternal(0,'3')
+-- SELECT * FROM gpSelect_ShowPUSH_OrderInternal(183292,'3')
