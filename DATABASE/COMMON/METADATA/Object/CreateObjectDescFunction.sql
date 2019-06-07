@@ -1147,6 +1147,11 @@ CREATE OR REPLACE FUNCTION zc_Object_HelsiEnum() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_HelsiEnum', 'Настройки доступа к сайту Хелси' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_HelsiEnum');
 
+CREATE OR REPLACE FUNCTION zc_Object_CreditLimitJuridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CreditLimitJuridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CreditLimitJuridical', 'Кредитный лимит по дистрибьютору' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CreditLimitJuridical');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1163,6 +1168,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 07.06.19                                                                                        * zc_Object_CreditLimitJuridical
  14.05.19         * zc_Object_ClientKind
  24.04.19                                                                                        * zc_Object_HelsiEnum
  23.04.19         * zc_Object_RetailCostCredit

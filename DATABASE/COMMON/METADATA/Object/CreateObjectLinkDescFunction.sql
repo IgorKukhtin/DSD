@@ -2145,10 +2145,20 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_User_Helsi_Unit', 'Связь с Подразделением для которого зарегестрирован ключ', zc_Object_User(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_Helsi_Unit');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CreditLimitJuridical_Provider() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CreditLimitJuridical_Provider'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CreditLimitJuridical_Provider', 'Поставщик', zc_Object_CreditLimitJuridical(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CreditLimitJuridical_Provider');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CreditLimitJuridical_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CreditLimitJuridical_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CreditLimitJuridical_Juridical', 'Наше юр. лицо', zc_Object_CreditLimitJuridical(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CreditLimitJuridical_Juridical');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 07.06.19                                                                                      * zc_ObjectLink_CreditLimitJuridical_Provider, zc_ObjectLink_CreditLimitJuridical_Juridical
  04.05.19         * zc_ObjectLink_Retail_ClientKind
  27.04.19                                                                                      * zc_ObjectLink_User_Helsi_Unit
  23.04.19         * zc_ObjectLink_RetailCostCredit_Retail

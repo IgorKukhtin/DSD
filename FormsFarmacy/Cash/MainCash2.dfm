@@ -967,7 +967,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       object cbSpec: TcxCheckBox
         Left = 408
-        Top = 5
+        Top = 7
         Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
         Caption = #1063#1077#1082
@@ -3879,8 +3879,8 @@ inherited MainCashForm2: TMainCashForm2
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 472
-    Top = 352
+    Left = 496
+    Top = 312
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>

@@ -1376,11 +1376,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MaxOrderAmount() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_MaxOrderAmount', 'Максимальная сумма заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CreditLimitJuridical_CreditLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CreditLimitJuridical(), 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit', 'Кредитный лимит' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 10.04.19                                                                                      * zc_ObjectFloat_MaxOrderAmount 
+ 07.06.19                                                                                      * zc_ObjectFloat_CreditLimitJuridical_CreditLimit 
+ 05.06.19                                                                                      * zc_ObjectFloat_MaxOrderAmount 
  23.04.19         * zc_ObjectFloat_RetailCostCredit_MinPrice
                     zc_ObjectFloat_RetailCostCredit_Percent
  19.04.19         * zc_ObjectFloat_PartionDateKind_Month
