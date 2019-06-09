@@ -21,6 +21,10 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , isErased Boolean
              , Color_Calc Integer
              , Color_CalcError Integer
+             , PartionDateKindId Integer
+             , PartionDateKindName TVarChar
+             , PartionDateDiscount TFloat
+             , AmountMonth TFloat
               )
 AS
 $BODY$
@@ -100,6 +104,69 @@ BEGIN
                           )
           , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
+           , tmpMovSendPartion AS (SELECT
+                                          Movement.Id                               AS Id
+                                        , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+                                        , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
+                                   FROM Movement
+
+                                        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+                                        LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
+                                                                ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
+                                                               AND MovementFloat_ChangePercentMin.DescId = zc_MovementFloat_ChangePercentMin()
+
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                                   WHERE Movement.DescId = zc_Movement_SendPartionDate()
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                                   ORDER BY Movement.OperDate
+                                   LIMIT 1
+                                  )
+           , tmpMovItemSendPartion AS (SELECT
+                                              MovementItem.ObjectId    AS GoodsId
+                                            , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                                            , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
+
+                                       FROM MovementItem
+
+                                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
+                                                                        ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
+
+                                       WHERE MovementItem.MovementId = (select tmpMovSendPartion.Id from tmpMovSendPartion)
+                                         AND MovementItem.DescId = zc_MI_Master()
+                                         AND (MIFloat_ChangePercent.ValueData is not Null OR MIFloat_ChangePercentMin.ValueData is not Null)
+                                       )
+           , tmpPDChangePercent AS (SELECT Object_PartionDateKind.Id           AS Id,
+                                           CASE Object_PartionDateKind.Id
+                                                WHEN zc_Enum_PartionDateKind_0() THEN tmpMovSendPartion.ChangePercentMin
+                                                WHEN zc_Enum_PartionDateKind_1() THEN tmpMovSendPartion.ChangePercentMin
+                                                WHEN zc_Enum_PartionDateKind_6() THEN tmpMovSendPartion.ChangePercent END AS PartionDateDiscount
+                                    FROM Object AS Object_PartionDateKind
+                                         LEFT JOIN tmpMovSendPartion ON 1 = 1
+                                    WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
+                                    )
+
+           , tmpPDChangePercentGoods AS (SELECT Object_PartionDateKind.Id           AS Id
+                                              , tmpMovItemSendPartion.GoodsId
+                                              , CASE Object_PartionDateKind.Id
+                                                     WHEN zc_Enum_PartionDateKind_0() THEN tmpMovItemSendPartion.ChangePercentMin
+                                                     WHEN zc_Enum_PartionDateKind_1() THEN tmpMovItemSendPartion.ChangePercentMin
+                                                     WHEN zc_Enum_PartionDateKind_6() THEN tmpMovItemSendPartion.ChangePercent END AS PartionDateDiscount
+                                         FROM Object AS Object_PartionDateKind
+                                              LEFT JOIN tmpMovItemSendPartion ON 1 = 1
+                                         WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
+                                         )
+
        -- Результат
        SELECT
              MovementItem.Id          AS Id,
@@ -131,6 +198,11 @@ BEGIN
            , CASE WHEN tmpRemains.GoodsId > 0 THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END  AS Color_CalcError
+           , Object_PartionDateKind.Id                                           AS PartionDateKindId
+           , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
+           , COALESCE(tmpPDChangePercentGoods.PartionDateDiscount,
+                      tmpPDChangePercent.PartionDateDiscount)::TFloat            AS PartionDateDiscount
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat AS AmountMonth
 
        FROM tmpMI_all AS MovementItem
 
@@ -172,6 +244,17 @@ BEGIN
 
           LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
                               AND tmpRemains.UnitId  = MovementItem.UnitId
+          --Типы срок/не срок
+          LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
+                                           ON MI_PartionDateKind.MovementItemId = MovementItem.Id
+                                          AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
+          LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
+          LEFT JOIN tmpPDChangePercent ON tmpPDChangePercent.Id = NULLIF (MI_PartionDateKind.ObjectId, 0)
+          LEFT JOIN tmpPDChangePercentGoods ON tmpPDChangePercentGoods.Id = NULLIF (MI_PartionDateKind.ObjectId, 0)
+                                           AND tmpPDChangePercentGoods.GoodsId = MovementItem.ObjectId
+          LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                               AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
          ;
 
 END;
@@ -187,6 +270,5 @@ ALTER FUNCTION gpSelect_MovementItem_CheckVIP (Boolean, TVarChar) OWNER TO postg
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_MovementItem_CheckVIP (False, '3')
+-- SELECT * FROM gpSelect_MovementItem_CheckVIP (False, '3')
 

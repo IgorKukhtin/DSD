@@ -20,7 +20,6 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
         Width = 313
         Height = 356
         Align = alLeft
-        ExplicitLeft = 2
         ExplicitWidth = 313
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -187,6 +186,7 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 319
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -295,6 +295,14 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object ListPartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
           end
           object Color_Calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'

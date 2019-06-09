@@ -259,6 +259,8 @@ begin
       AddFloatField(LocalDataBaseBody, 'AMOUNTORD'); //Кол-во заявка
       //***10.08.16
       AddStrField(LocalDataBaseBody,   'LIST_UID', 50); //UID строки продажи
+      //***03.06.19
+      AddIntField(LocalDataBaseBody,  'PDKINDID');    //Тип срок/не срок
 
       LocalDataBaseBody.CreateTable;
     end
@@ -281,6 +283,9 @@ begin
         //***10.08.16
         if FindField('LIST_UID') = nil then
           AddStrField(LFieldDefs, 'LIST_UID', 50);
+        //***03.06.19
+        if FindField('PDKINDID') = nil then
+          AddIntField(LFieldDefs, 'PDKINDID');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);

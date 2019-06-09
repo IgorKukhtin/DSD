@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiffKind(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
-             , isErased Boolean) AS
+             , isErased Boolean
+             , MaxOrderAmount TFloat) AS
 $BODY$
 BEGIN
 
@@ -23,18 +24,23 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_DiffKind()) AS Code
            , CAST ('' AS TVarChar)  AS NAME
            , FALSE                  AS isClose
-           , FALSE                  AS isErased;
+           , FALSE                  AS isErased
+           , NULL::TFloat           AS MaxOrderAmount;
    ELSE
        RETURN QUERY 
-       SELECT Object_DiffKind.Id                     AS Id
-            , Object_DiffKind.ObjectCode             AS Code
-            , Object_DiffKind.ValueData              AS Name
-            , ObjectBoolean_DiffKind_Close.ValueData AS isClose
-            , Object_DiffKind.isErased               AS isErased
+       SELECT Object_DiffKind.Id                            AS Id
+            , Object_DiffKind.ObjectCode                    AS Code
+            , Object_DiffKind.ValueData                     AS Name
+            , ObjectBoolean_DiffKind_Close.ValueData        AS isClose
+            , Object_DiffKind.isErased                      AS isErased
+            , ObjectFloat_DiffKind_MaxOrderAmount.ValueData AS MaxOrderAmount
        FROM Object AS Object_DiffKind
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                     ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id 
                                    AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
+                                  ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
+                                 AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 
        WHERE Object_DiffKind.Id = inId;
    END IF;
    
@@ -44,7 +50,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.06.19                                                       * 
  11.12.18         *
 */
 

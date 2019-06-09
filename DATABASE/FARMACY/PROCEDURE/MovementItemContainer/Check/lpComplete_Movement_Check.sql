@@ -76,7 +76,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MI.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-       WHERE MI.MovementId = inMovementId AND MI.Amount > 0 AND MI.isErased = FALSE;
+       WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE;
 
     -- предварительно сохранили остаток
     INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, Amount, OperDate)
@@ -278,7 +278,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
+ 06.06.19                                                                   * 
  11.02.14                        * 
  05.02.14                        * 
 */

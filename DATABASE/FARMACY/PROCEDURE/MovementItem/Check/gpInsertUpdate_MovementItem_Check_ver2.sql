@@ -1,8 +1,9 @@
- -- Function: gpInsertUpdate_MovementItem_Income()
+ -- Function: gpinsertupdate_movementitem_check_ver2()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inPriceSale           TFloat    , -- Цена без скидки
     IN inChangePercent       TFloat    , -- % Скидки
     IN inSummChangePercent   TFloat    , -- Сумма Скидки
+    IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inList_UID            TVarChar  , -- UID строки
     -- IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
@@ -51,8 +53,8 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                     AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                    WHERE MovementItem.MovementId = inMovementId 
-                      AND MovementItem.ObjectId   = inGoodsId 
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
@@ -63,29 +65,29 @@ BEGIN
                          INNER JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                     AND MIFloat_Price.ValueData = inPrice                                                     
-                    WHERE MovementItem.MovementId = inMovementId 
-                      AND MovementItem.ObjectId   = inGoodsId 
+                                                     AND MIFloat_Price.ValueData = inPrice
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
-                   );        
+                   );
         END IF;
         -- если не нашли позицию с нужной ценой, ищем любую другую позицию
         IF COALESCE(ioID, 0) = 0
-        THEN 
+        THEN
             ioId:= (SELECT MovementItem.Id
                     FROM MovementItem
                          INNER JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                      -- отложенные чеки с измененной ценой дублируются
-                                                     -- AND MIFloat_Price.ValueData = inPrice                                                     
-                    WHERE MovementItem.MovementId = inMovementId 
-                      AND MovementItem.ObjectId   = inGoodsId 
+                                                     -- AND MIFloat_Price.ValueData = inPrice
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
                     LIMIT 1
-                   );  
+                   );
         END IF;
 
     END IF;
@@ -98,7 +100,7 @@ BEGIN
 
     -- сохранили свойство <Цена>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     
+
     -- !!!замена!!!
     IF COALESCE (inPriceSale, 0) = 0 AND COALESCE (inChangePercent, 0) = 0 AND COALESCE (inSummChangePercent, 0) = 0 THEN inPriceSale:= inPrice; END IF;
     -- сохранили свойство <Цена без скидки>
@@ -107,8 +109,22 @@ BEGIN
     -- сохранили свойство <% Скидки>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
 
-    -- сохранили свойство <Сумма Скидки>
+    -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, CASE WHEN inAmount = 0 THEN 0 ELSE inSummChangePercent END);
+
+    -- сохранили свойство <Тип срок/не срок>
+    IF COALESCE (inPartionDateKindID, 0) <> 0
+    THEN
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), ioId, inPartionDateKindID);
+      PERFORM lpInsertUpdate_MovementItemLinkContainer(inMovementItemId := ioId, inUserId := vbUserId);
+    ELSE
+      IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = ioId)
+      THEN
+        UPDATE MovementItem SET isErased = True, Amount = 0
+        WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = ioId;
+      END IF;
+    END IF;
+
 
     -- сохранили свойство <UID строки продажи>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_UID(), ioId, inList_UID);
@@ -129,7 +145,7 @@ BEGIN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserSession, inSession, inList_UID;
     END IF;
 
-  
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -139,7 +155,7 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Подмогильный В.В.
  05.05.18                                                                                           *  в чеках может быть один товар в двух позициях
- 03.05.18                                                                                           *  исправил дублирование в отложенных чеках из-за разной цены               
+ 03.05.18                                                                                           *  исправил дублирование в отложенных чеках из-за разной цены
  10.08.16                                                                        *сохранили свойство <UID строки продажи>
  08.08.16                                        *
  03.11.2015                                                                      *
@@ -162,7 +178,7 @@ from Movement
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
-     inner join MovementItem on MovementItem.MovementId = Movement.Id 
+     inner join MovementItem on MovementItem.MovementId = Movement.Id
                                and MovementItem.isErased = false
            inner JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
@@ -176,14 +192,14 @@ from Movement
                                         ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
-where Movement.OperDate between '01.04.2017'  and '01.06.2017' 
+where Movement.OperDate between '01.04.2017'  and '01.06.2017'
   and Movement.DescId = zc_Movement_Check()
--- and MIFloat_SummChangePercent.ValueData <>  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) 
+-- and MIFloat_SummChangePercent.ValueData <>  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0))
 and MIFloat_SummChangePercent.ValueData <>  ROUND (MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) , 4)
 -- and MovementItem .Amount = 0
 
  -- ) as tmp
- -- where MovementItemFloat .MovementItemId = tmp.MovementItemId  and MovementItemFloat .DescId = tmp.DescId 
+ -- where MovementItemFloat .MovementItemId = tmp.MovementItemId  and MovementItemFloat .DescId = tmp.DescId
 
 
 select lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem.Id, MIFloat_Price.ValueData)

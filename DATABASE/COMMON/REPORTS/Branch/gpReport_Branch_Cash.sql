@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_Branch_Cash(
 RETURNS TABLE ( GroupName TVarChar, Color_calc integer
              , InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount2 TFloat, Amount3 TFloat, Amount4 TFloat, Amount5 TFloat
-             , Amount7 TFloat, Amount9 TFloat, Amount11 TFloat, Amount TFloat
+             , Amount7 TFloat, Amount9 TFloat, Amount11 TFloat, Amount12 TFloat
+             , Amount TFloat
                )
 AS
 $BODY$
@@ -49,12 +50,12 @@ BEGIN
                        )
          -- выбираем
        , tmpCashList AS (SELECT Cash_Branch.ObjectId AS CashId 
-                             , _tmpBranch.BranchId
-                       FROM _tmpBranch
-                            INNER JOIN ObjectLink AS Cash_Branch
-                                                  ON Cash_Branch.ChildObjectId = _tmpBranch.BranchId
-                                                 AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                       ) 
+                               , _tmpBranch.BranchId
+                         FROM _tmpBranch
+                              INNER JOIN ObjectLink AS Cash_Branch
+                                                    ON Cash_Branch.ChildObjectId = _tmpBranch.BranchId
+                                                   AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+                         ) 
 
 , tmpAll AS (SELECT 
         CASE WHEN Operation.ContainerId > 0 AND Operation.isSaldo = TRUE THEN 1  
@@ -181,6 +182,7 @@ BEGIN
        , SUM(tmpAllList.Amount7)  ::TFloat AS Amount7
        , SUM(tmpAllList.Amount9)  ::TFloat AS Amount9
        , SUM(tmpAllList.Amount11) ::TFloat AS Amount11
+       , SUM(tmpAllList.Amount12) ::TFloat AS Amount12
        , SUM(tmpAllList.Amount)   ::TFloat AS Amount
  
  FROM 
@@ -216,7 +218,11 @@ BEGIN
                                                         WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
                                                         ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
                  ELSE 0 END   ::TFloat AS Amount11
-          , CASE WHEN tmpAll.BranchCode > 11 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+          , CASE WHEN tmpAll.BranchCode = 12 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                        WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                        ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount12
+          , CASE WHEN tmpAll.BranchCode > 12 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
                                                         WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
                                                         ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
                  ELSE 0 END   ::TFloat AS Amount

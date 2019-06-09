@@ -38,9 +38,13 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel5: TcxLabel;
     ceCreditLimit: TcxCurrencyEdit;
-    edName: TcxTextEdit;
     ceCode: TcxCurrencyEdit;
     Код: TcxLabel;
+    cxLabel1: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    ceProvider: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    ProviderGuides: TdsdGuides;
   private
     { Private declarations }
   public

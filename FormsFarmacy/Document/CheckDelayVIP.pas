@@ -64,6 +64,7 @@ type
     actIsShowAll: TBooleanStoredProcAction;
     PartionDateKindName: TcxGridDBColumn;
     DateDelay: TcxGridDBColumn;
+    ListPartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

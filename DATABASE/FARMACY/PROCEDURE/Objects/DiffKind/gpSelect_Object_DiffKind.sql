@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_DiffKind(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
-             , isErased boolean) AS
+             , isErased boolean
+             , MaxOrderAmount TFloat) AS
 $BODY$
 BEGIN
 
@@ -15,15 +16,19 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_DiffKind());
 
    RETURN QUERY 
-     SELECT Object_DiffKind.Id                     AS Id
-          , Object_DiffKind.ObjectCode             AS Code
-          , Object_DiffKind.ValueData              AS Name
-          , ObjectBoolean_DiffKind_Close.ValueData AS isClose
-          , Object_DiffKind.isErased               AS isErased
+     SELECT Object_DiffKind.Id                             AS Id
+          , Object_DiffKind.ObjectCode                     AS Code
+          , Object_DiffKind.ValueData                      AS Name
+          , ObjectBoolean_DiffKind_Close.ValueData         AS isClose
+          , Object_DiffKind.isErased                       AS isErased
+          , ObjectFloat_DiffKind_MaxOrderAmount.ValueData  AS MaxOrderAmount
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                   ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id
                                  AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()   
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
+                                ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
+                               AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind();
   
 END;
@@ -33,7 +38,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.06.19                                                       * 
  11.12.18         *              
 
 */

@@ -68,6 +68,7 @@ type
     cxSplitter1: TcxSplitter;
     DateDelay: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
+    ListPartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

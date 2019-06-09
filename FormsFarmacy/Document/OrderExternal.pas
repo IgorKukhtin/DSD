@@ -94,6 +94,9 @@ type
     spUpdateisDeferredYes: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
     edOrderSummComment: TcxTextEdit;
+    actPUSH: TdsdShowPUSHMessage;
+    spPUSH: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

@@ -1,17 +1,18 @@
--- Function: gpSelect_CashListDiff()
+-- Function: gpSelect_CashListDiffGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_CashListDiffGoods (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_CashListDiffGoods (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashListDiffGoods (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashListDiffGoods(
     IN inGoodsID       Integer,    -- Медикамент
+    IN inDiffKindID    Integer,    -- Видах отказа
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer, 
                AmountDiffUser   TFloat,
                AmountDiff       TFloat,
                AmountDiffPrev   TFloat,
-               AmountDiffPromo  TFloat,
-               AmountDiffAll    TFloat               
+               AmountDiffKind   TFloat
               )
 
 AS
@@ -46,9 +47,7 @@ BEGIN
                SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat    AS AmountDiff,
                SUM(CASE WHEN Movement.OperDate < CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat     AS AmountDiffPrev,
                SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime AND 
-                   MILO_DiffKind.ObjectId = 9704137 THEN MovementItem.Amount END)::TFloat                          AS AmountDiffPromo,
-               SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime AND 
-                   MILO_DiffKind.ObjectId not in (9572746, 9572747, 9704137) THEN MovementItem.Amount END)::TFloat AS AmountDiffAll
+                   MILO_DiffKind.ObjectId = inDiffKindID THEN MovementItem.Amount END)::TFloat                     AS AmountDiffKind
        FROM Movement 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -76,11 +75,12 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 06.06.19                                                      *
  10.02.19                                                      *
  19.11.18                                                      *
 */
 
 -- тест
 -- 
--- SELECT * FROM gpSelect_CashListDiffGoods (inGoodsID = 1, inSession:= '3')
--- select * from gpSelect_CashListDiffGoods(inGoodsId := 373 ,  inSession := '3354092');
+-- SELECT * FROM gpSelect_CashListDiffGoods (inGoodsID := 1, inSession:= '3')
+-- select * from gpSelect_CashListDiffGoods(inGoodsId := 373 , inDiffKindID := 0,  inSession := '3354092');

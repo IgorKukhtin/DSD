@@ -10,9 +10,11 @@ CREATE OR REPLACE FUNCTION gpReport_Branch_App7_New(
 )
 RETURNS TABLE (NomStr integer, InfoText TVarChar
               , Amount2 TFloat, Amount3 TFloat, Amount4 TFloat, Amount5 TFloat
-             , Amount7 TFloat, Amount9 TFloat, Amount11 TFloat, Amount12 TFloat      
+             , Amount7 TFloat, Amount9 TFloat, Amount11 TFloat, Amount12 TFloat
+             , Amount TFloat      
              , Amount2_Rashod TFloat, Amount3_Rashod TFloat, Amount4_Rashod TFloat, Amount5_Rashod TFloat
              , Amount7_Rashod TFloat, Amount9_Rashod TFloat, Amount11_Rashod TFloat, Amount12_Rashod TFloat       
+             , Amount_Rashod TFloat 
               )
 AS
 $BODY$
@@ -31,7 +33,8 @@ BEGIN
             , SUM (CASE WHEN tmpList.BranchCode = 7 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount7
             , SUM (CASE WHEN tmpList.BranchCode = 9 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount9
             , SUM (CASE WHEN tmpList.BranchCode = 11 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount11
-            , SUM (CASE WHEN tmpList.BranchCode > 11 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount12
+            , SUM (CASE WHEN tmpList.BranchCode = 12 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount12
+            , SUM (CASE WHEN tmpList.BranchCode > 12 THEN tmpList.Amount ELSE 0 END) ::TFloat AS Amount
 
             , SUM (CASE WHEN tmpList.BranchCode = 2 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount2_Rashod
             , SUM (CASE WHEN tmpList.BranchCode = 3 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount3_Rashod
@@ -40,7 +43,8 @@ BEGIN
             , SUM (CASE WHEN tmpList.BranchCode = 7 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount7_Rashod
             , SUM (CASE WHEN tmpList.BranchCode = 9 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount9_Rashod
             , SUM (CASE WHEN tmpList.BranchCode = 11 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount11_Rashod
-            , SUM (CASE WHEN tmpList.BranchCode > 11 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount12_Rashod
+            , SUM (CASE WHEN tmpList.BranchCode = 12 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount12_Rashod
+            , SUM (CASE WHEN tmpList.BranchCode > 12 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount_Rashod
             
        FROM(
             SELECT 1 AS NomStr, '1.Задолженность филиалов на нач.мес.' AS InfoText, tmp.BranchCode, (tmp.GoodsSummStart+tmp.CashSummStart+ tmp.JuridicalSummstart) AS Amount, 0 AS Amount_Rashod  FROM tmp 

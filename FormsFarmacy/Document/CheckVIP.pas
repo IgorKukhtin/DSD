@@ -72,6 +72,7 @@ type
     dxBarButton4: TdxBarButton;
     PartionDateKindName: TcxGridDBColumn;
     DateDelay: TcxGridDBColumn;
+    ListPartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

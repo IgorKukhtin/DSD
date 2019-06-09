@@ -5,13 +5,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Intege
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , --
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
-    IN inPartionDateKindId     Integer   , -- 
+    --IN inPartionDateKindId     Integer   , -- 
     IN inExpirationDate        TDateTime ,
     IN inExpirationDate_in     TDateTime ,
    OUT outisExpirationDateDiff Boolean   ,
@@ -42,7 +43,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_Income);
     
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), ioId, inPartionDateKindId);
+    --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), ioId, inPartionDateKindId);
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);
@@ -62,5 +63,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.19         *
  03.04.19         *
 */

@@ -4,7 +4,7 @@ inherited InventoryForm: TInventoryForm
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 894
-  ExplicitHeight = 682
+  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,7 +205,15 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 259
           end
-          object colRemains_Amount: TcxGridDBColumn [2]
+          object minExpirationDate: TcxGridDBColumn [2]
+            Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object colRemains_Amount: TcxGridDBColumn [3]
             AlternateCaption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains_Amount'
@@ -218,7 +226,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 56
           end
-          object colPrice: TcxGridDBColumn [3]
+          object colPrice: TcxGridDBColumn [4]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -229,7 +237,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 56
           end
-          object colRemains_Summ: TcxGridDBColumn [4]
+          object colRemains_Summ: TcxGridDBColumn [5]
             Caption = 'C'#1091#1084#1084#1072' '#1088#1072#1089#1095'. '#1086#1089#1090'.'
             DataBinding.FieldName = 'Remains_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -240,7 +248,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 50
           end
-          object colSumm: TcxGridDBColumn [5]
+          object colSumm: TcxGridDBColumn [6]
             Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1086#1089#1090'.'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,7 +259,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 50
           end
-          object colAmount: TcxGridDBColumn [6]
+          object colAmount: TcxGridDBColumn [7]
             AlternateCaption = #1048#1090#1086#1075#1086' '#1074#1074#1077#1076#1077#1085#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
@@ -264,7 +272,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 65
           end
-          object colAmountUser: TcxGridDBColumn [7]
+          object colAmountUser: TcxGridDBColumn [8]
             AlternateCaption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082'  ('#1090#1077#1082'.'#1087#1086#1083#1100#1079'.)'
             Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'.'#1087#1086#1083#1100#1079'.)'
             DataBinding.FieldName = 'AmountUser'
@@ -276,7 +284,7 @@ inherited InventoryForm: TInventoryForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082', '#1082#1086#1090#1086#1088#1099#1081' '#1074#1074#1077#1083' "'#1090#1077#1082#1091#1097#1080#1081'" '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             Width = 91
           end
-          object colCountUser: TcxGridDBColumn [8]
+          object colCountUser: TcxGridDBColumn [9]
             AlternateCaption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079'.'
             DataBinding.FieldName = 'CountUser'
@@ -597,6 +605,7 @@ inherited InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = Panel1
+        ExplicitWidth = 8
       end
       object Panel1: TPanel
         Left = 0
@@ -606,7 +615,6 @@ inherited InventoryForm: TInventoryForm
         Align = alTop
         ShowCaption = False
         TabOrder = 0
-        ExplicitTop = 2
         object edBarCode: TcxTextEdit
           Left = 16
           Top = 22
@@ -2138,8 +2146,8 @@ inherited InventoryForm: TInventoryForm
       item
       end>
     SummaryItemList = <>
-    Left = 528
-    Top = 104
+    Left = 560
+    Top = 152
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Inventory_BarCode'
@@ -2163,8 +2171,8 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 104
+    Left = 440
+    Top = 168
   end
   object spInsert_MI_Inventory: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_Inventory'
@@ -2216,8 +2224,8 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 352
-    Top = 123
+    Left = 368
+    Top = 163
   end
   object dsdEnterManager: TdsdEnterManager
     ControlList = <

@@ -13,7 +13,8 @@ uses
   cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
+  cxSplitter;
 
 type
   TCheckForm = class(TAncestorDocumentForm)
@@ -127,7 +128,20 @@ type
     cxLabel29: TcxLabel;
     edPartionDateKind: TcxButtonEdit;
     GuidesPartionDateKind: TdsdGuides;
-    ContainerId: TcxGridDBColumn;
+    DetailDCS: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    DetailDS: TDataSource;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chAmount: TcxGridDBColumn;
+    chisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    spSelect_MI_Child: TdsdStoredProc;
+    spReLinkContainer: TdsdStoredProc;
+    actReLinkContainer: TMultiAction;
+    actExecReLinkContainer: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

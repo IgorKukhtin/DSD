@@ -13,7 +13,6 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
     Width = 1088
     Height = 357
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1088
     ExplicitHeight = 357
     ClientRectBottom = 357
@@ -127,6 +126,11 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount12
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -228,6 +232,11 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount12
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -331,6 +340,17 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
             Options.Editing = False
             Width = 80
           end
+          object Amount12: TcxGridDBColumn
+            Caption = #1051#1100#1074#1086#1074
+            DataBinding.FieldName = 'Amount12'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Amount: TcxGridDBColumn
             Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'Amount'
@@ -422,6 +442,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
       FormName = 'TReport_Branch_CashDialogForm'
       FormNameParam.Value = 'TReport_Branch_CashDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -429,6 +450,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -436,6 +458,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -443,6 +466,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -451,6 +475,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -476,12 +501,14 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -490,10 +517,15 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099
       ReportNameParam.Value = #1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -513,6 +545,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -520,6 +553,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -527,6 +561,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -664,6 +699,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -674,6 +710,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -682,6 +719,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 544
   end

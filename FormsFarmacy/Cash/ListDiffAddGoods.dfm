@@ -13,6 +13,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
+  OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
     403

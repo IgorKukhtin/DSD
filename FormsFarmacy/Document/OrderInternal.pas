@@ -130,6 +130,8 @@ type
     cxLabel6: TcxLabel;
     edOrderInternalPromo: TcxButtonEdit;
     GuidesOrderInternaPromo: TdsdGuides;
+    spPUSH: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

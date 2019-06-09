@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Diff_calc TFloat, DiffSumm_calc TFloat, Diff_diff TFloat, DiffSumm_diff TFloat
              , MIComment TVarChar
              , isAuto Boolean
+             , ExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -84,10 +85,11 @@ BEGIN
                                 SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                                 FROM(
                                         -- остатки
                                         SELECT
-                                             Container.Id
+                                             Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
@@ -109,7 +111,7 @@ BEGIN
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
                                         SELECT
-                                             Container.Id
+                                             Container.Id  AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
@@ -120,7 +122,26 @@ BEGIN
                                             Container.Id
                                            ,Container.ObjectId
                                     ) as T0
-                                GROUP BY ObjectId
+                                    
+                                     -- находим срок годности из прихода
+                                    LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                                  ON CLO_PartionMovementItem.Containerid = T0.ContainerId
+                                                                 AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                    -- элемент прихода
+                                    LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                               
+                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+                                GROUP BY T0.ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
                  -- проводки
@@ -242,6 +263,8 @@ BEGIN
 
               , MovementItem.MIComment                                              AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MovementItem.isAuto, FALSE) ELSE TRUE END :: Boolean AS isAuto
+              
+              , REMAINS.minExpirationDate ::TDateTime
 
             FROM REMAINS
                 FULL JOIN tmpMI AS MovementItem ON MovementItem.ObjectId = REMAINS.ObjectId
@@ -274,10 +297,11 @@ BEGIN
                                 SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                                 FROM(
                                         -- остатки
                                         SELECT
-                                             Container.Id
+                                             Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
@@ -299,7 +323,7 @@ BEGIN
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
                                         SELECT
-                                             Container.Id
+                                             Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
@@ -310,7 +334,26 @@ BEGIN
                                             Container.Id
                                            ,Container.ObjectId
                                     ) as T0
-                                GROUP BY ObjectId
+
+                                     -- находим срок годности из прихода
+                                    LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                                  ON CLO_PartionMovementItem.Containerid = T0.ContainerId
+                                                                 AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                    -- элемент прихода
+                                    LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                               
+                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+                                GROUP BY T0.ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
                  -- проводки
@@ -396,6 +439,8 @@ BEGIN
 
               , MIString_Comment.ValueData                                          AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MIBoolean_isAuto.ValueData, FALSE) ELSE TRUE END :: Boolean AS isAuto
+              
+              , REMAINS.minExpirationDate :: TDateTime
 
             FROM MovementItem
                 LEFT JOIN tmpMI_calc ON tmpMI_calc.MovementItemId = MovementItem.Id
@@ -444,10 +489,11 @@ BEGIN
                                 SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                                 FROM(
                                         -- остатки
                                         SELECT
-                                             Container.Id
+                                             Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
@@ -469,7 +515,7 @@ BEGIN
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
                                         SELECT
-                                             Container.Id
+                                             Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
@@ -480,7 +526,25 @@ BEGIN
                                             Container.Id
                                            ,Container.ObjectId
                                     ) as T0
-                                GROUP BY ObjectId
+
+                                     -- находим срок годности из прихода
+                                    LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                                  ON CLO_PartionMovementItem.Containerid = T0.ContainerId
+                                                                 AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                    -- элемент прихода
+                                    LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                               
+                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                GROUP BY T0.ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
                  -- проводки
@@ -569,6 +633,8 @@ BEGIN
               -- , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MIBoolean_isAuto.ValueData, FALSE) WHEN REMAINS.Amount <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isAuto
               , COALESCE (MIBoolean_isAuto.ValueData, FALSE) AS isAuto
 
+              , REMAINS.minExpirationDate :: TDateTime
+
            FROM Object_Goods_View AS Object_Goods
                 LEFT JOIN REMAINS  ON REMAINS.ObjectId = Object_Goods.Id
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods.Id
@@ -610,6 +676,7 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.   Шаблий О.В.
+ 03.06.19         * , minExpirationDate
  10.04.19                                                                                      *
  12.06.17         *
  05.01.17         *

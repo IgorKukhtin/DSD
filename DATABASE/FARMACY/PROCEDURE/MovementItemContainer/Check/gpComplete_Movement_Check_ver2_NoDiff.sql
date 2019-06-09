@@ -1,4 +1,4 @@
--- Function: gpComplete_Movement_Income()
+-- Function: gpComplete_Movement_Check_ver2_NoDiff()
 
 -- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar);
@@ -25,7 +25,7 @@ $BODY$
   DECLARE vbCashRegisterId Integer;
   DECLARE vbMessageText Text;
 BEGIN
-    if coalesce(inUserSession, '') <> '' then 
+    if coalesce(inUserSession, '') <> '' then
      inSession := inUserSession;
     end if;
     -- проверка прав пользователя на вызов процедуры
@@ -41,7 +41,7 @@ BEGIN
 
         -- Определить
         vbUnitId:= (SELECT MLO_Unit.ObjectId FROM MovementLinkObject AS MLO_Unit WHERE MLO_Unit.MovementId = inMovementId AND MLO_Unit.DescId = zc_MovementLinkObject_Unit());
-        
+
         -- сохранили тип оплаты
         IF inPaidType = 0
         THEN
@@ -82,19 +82,27 @@ BEGIN
         UPDATE CashSessionSnapShot
            SET Remains = CashSessionSnapShot.Remains - MovementItem.Amount
         FROM
-             (SELECT MovementItem.ObjectId, SUM (MovementItem.Amount) AS Amount
+             (SELECT MovementItem.ObjectId,
+                     MILinkObject_PartionDateKind.ObjectId AS PartionDateKindID,
+                     SUM (MovementItem.Amount) AS Amount
               FROM MovementItem
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                    ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.MovementId
+                                                   AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = FALSE
                 AND MovementItem.Amount > 0
                 AND vbMessageText = ''
-              GROUP BY MovementItem.ObjectId
+              GROUP BY MovementItem.ObjectId,
+                       MILinkObject_PartionDateKind.ObjectId
              ) AS MovementItem
         WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
           AND CashSessionSnapShot.ObjectId = MovementItem.ObjectId
-       ;            
-        
+          AND COALESCE(CashSessionSnapShot.PartionDateKindId, 0) = COALESCE(MovementItem.PartionDateKindID, 0)
+       ;
+
     END IF;
 END;
 $BODY$
@@ -104,7 +112,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.  Шаблий О.В
  02.11.18                                                                                                       * add TotalSummPayAdd
- 02.08.18                                                                                       * отгрузка без формирования Diff               
+ 02.08.18                                                                                       * отгрузка без формирования Diff
  10.09.15                                                                       *  CashSession
  06.07.15                                                                       *  Добавлен тип оплаты
  05.02.15                         *

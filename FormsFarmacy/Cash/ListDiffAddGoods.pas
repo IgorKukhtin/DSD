@@ -29,11 +29,10 @@ type
     ListGoodsCDS: TClientDataSet;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormDestroy(Sender: TObject);
   private
     FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
-    FAmountPromo : Currency;
-    FAmountAll : Currency;
   public
 
     property GoodsCDS : TClientDataSet read FGoodsCDS write FGoodsCDS;
@@ -49,7 +48,7 @@ uses CommonData, LocalWorkUnit, MainCash2, ListDiff;
 
 procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-  var nAmount : Currency; bSend : boolean;
+  var nAmount, nAmountDiffKind : Currency; bSend : boolean;
 begin
   if ModalResult <> mrOk then Exit;
 
@@ -81,28 +80,66 @@ begin
     Exit;
   end;
 
-  if (nAmount > 0) and (lcbDiffKind.EditValue <> 9572746) and (lcbDiffKind.EditValue <> 9572747) then
+  if not DiffKindCDS.Locate('Id', lcbDiffKind.EditValue, []) then
   begin
-    if lcbDiffKind.EditValue = 9704137 then
-    begin
-      if ((FAmountPromo + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > 3000 then
+    Action := TCloseAction.caNone;
+    ShowMessage('Ошибка позиционирования на вид отказа...');
+    lcbDiffKind.SetFocus;
+    Exit;
+  end;
+
+  if (nAmount > 0) and (DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency > 0) then
+  begin
+
+    nAmountDiffKind := 0;
+    if not gc_User.Local then
+    try
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := lcbDiffKind.EditValue;
+      MainCashForm.spSelect_CashListDiffGoods.Execute;
+      if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
       begin
-        Action := TCloseAction.caNone;
-        ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
-          #13#10'С видом отказа "Маркетинг" превисит 3000 грн. ...');
-        lcbDiffKind.SetFocus;
-        Exit;
+        nAmountDiffKind := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffKind').AsCurrency;
       end;
-    end else
+    Except
+    end;
+
+    if FileExists(ListDiff_lcl) then
     begin
-      if ((FAmountAll + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > 1000 then
-      begin
-        Action := TCloseAction.caNone;
-        ShowMessage('Сумма заказа по позиции:'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
-          #13#10'С видами отказа не под клиента превисит 1000 грн. ...');
-        lcbDiffKind.SetFocus;
-        Exit;
+      WaitForSingleObject(MutexDiffCDS, INFINITE);
+      try
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      finally
+        ReleaseMutex(MutexDiffCDS);
       end;
+      if not ListDiffCDS.Active then ListDiffCDS.Open;
+
+      ListDiffCDS.First;
+      while not ListDiffCDS.Eof do
+      begin
+        if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+        begin
+          if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
+          begin
+            if not MainCashForm.CashListDiffCDS.Active or not ListDiffCDS.FieldByName('IsSend').AsBoolean then
+            begin
+              if (ListDiffCDS.FieldByName('DiffKindId').AsInteger = lcbDiffKind.EditValue)  then
+                nAmountDiffKind := nAmountDiffKind + ListDiffCDS.FieldByName('Amount').AsCurrency;
+            end;
+          end;
+        end;
+        ListDiffCDS.Next;
+      end;
+    end;
+
+    if ((nAmountDiffKind + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+        #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
+        '" превисит ' + DiffKindCDS.FieldByName('MaxOrderAmount').AsString + ' грн. ...');
+      lcbDiffKind.SetFocus;
+      Exit;
     end;
   end;
 
@@ -140,6 +177,11 @@ begin
 
 end;
 
+procedure TListDiffAddGoodsForm.FormDestroy(Sender: TObject);
+begin
+  if MainCashForm.CashListDiffCDS.Active then MainCashForm.CashListDiffCDS.Close;
+end;
+
 procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
   var AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
       S : string;
@@ -152,6 +194,7 @@ begin
       if not gc_User.Local then
       try
         MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+        MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := 0;
         MainCashForm.spSelect_CashListDiffGoods.Execute;
         if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
         begin
@@ -159,8 +202,6 @@ begin
           AmountDiff := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
           FAmountDay := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
           AmountDiffPrev := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffPrev').AsCurrency;
-          FAmountPromo := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffPromo').AsCurrency;
-          FAmountAll := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffAll').AsCurrency;
         end;
       Except
       end;
@@ -201,12 +242,6 @@ begin
                   AmountDiffUser := AmountDiffUser + ListDiffCDS.FieldByName('Amount').AsCurrency;
                 AmountDiff := AmountDiff + ListDiffCDS.FieldByName('Amount').AsCurrency;
                 FAmountDay := FAmountDay + ListDiffCDS.FieldByName('Amount').AsCurrency;
-                if ListDiffCDS.FieldByName('DiffKindId').AsInteger = 9704137 then
-                  FAmountPromo := FAmountPromo + ListDiffCDS.FieldByName('Amount').AsCurrency;
-                if (ListDiffCDS.FieldByName('DiffKindId').AsInteger <> 9704137) and
-                   (ListDiffCDS.FieldByName('DiffKindId').AsInteger <> 9572746) and
-                   (ListDiffCDS.FieldByName('DiffKindId').AsInteger <> 9572747)  then
-                  FAmountAll := FAmountAll + ListDiffCDS.FieldByName('Amount').AsCurrency;
               end;
             end else if not MainCashForm.CashListDiffCDS.Active then
               AmountDiffPrev := AmountDiffPrev + ListDiffCDS.FieldByName('Amount').AsCurrency;
@@ -256,7 +291,6 @@ begin
     end;
   finally
     ReleaseMutex(MutexDiffCDS);
-    if MainCashForm.CashListDiffCDS.Active then MainCashForm.CashListDiffCDS.Close;
   end;
 end;
 

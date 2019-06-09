@@ -1,28 +1,29 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
-  ClientHeight = 523
-  ClientWidth = 817
-  ExplicitWidth = 833
-  ExplicitHeight = 561
+  ClientHeight = 600
+  ClientWidth = 804
+  ExplicitWidth = 820
+  ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 242
-    Width = 817
-    Height = 281
+    Width = 804
+    Height = 238
     ExplicitTop = 242
-    ExplicitWidth = 817
-    ExplicitHeight = 281
-    ClientRectBottom = 281
-    ClientRectRight = 817
+    ExplicitWidth = 804
+    ExplicitHeight = 238
+    ClientRectBottom = 238
+    ClientRectRight = 804
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 817
-      ExplicitHeight = 257
+      ExplicitWidth = 804
+      ExplicitHeight = 214
       inherited cxGrid: TcxGrid
-        Width = 817
-        Height = 257
-        ExplicitWidth = 817
-        ExplicitHeight = 257
+        Width = 804
+        Height = 214
+        ExplicitTop = 2
+        ExplicitWidth = 804
+        ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -219,73 +220,28 @@ inherited CheckForm: TCheckForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
             Options.Editing = False
-            Width = 50
+            Width = 60
+          end
+          object PartionDateKindName: TcxGridDBColumn [13]
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-          end
-          object ExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'ExpirationDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 125
-          end
-          object OperDate_Income: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'OperDate_Income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object Invnumber_Income: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'Invnumber_Income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ContainerId: TcxGridDBColumn
-            Caption = #1048#1076#1080#1085#1090'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'ContainerId'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1076#1080#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1087#1072#1088#1090#1080#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object FromName_Income: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'FromName_Income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ContractName_Income: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
-            DataBinding.FieldName = 'ContractName_Income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 80
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 817
+    Width = 804
     Height = 216
-    ExplicitWidth = 817
+    ExplicitWidth = 804
     ExplicitHeight = 216
     inherited edInvNumber: TcxTextEdit
       Left = 7
@@ -745,6 +701,142 @@ inherited CheckForm: TCheckForm
     TabOrder = 30
     Width = 218
   end
+  object cxGrid1: TcxGrid [27]
+    Left = 0
+    Top = 488
+    Width = 804
+    Height = 112
+    Align = alBottom
+    PopupMenu = PopupMenu
+    TabOrder = 31
+    object cxGridDBTableView1: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DetailDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chAmount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chAmount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.FocusCellOnCycle = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.DataRowSizing = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object chAmount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 84
+      end
+      object chExpirationDate: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'ExpirationDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 125
+      end
+      object chOperDate_Income: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'OperDate_Income'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 110
+      end
+      object chInvnumber_Income: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'Invnumber_Income'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 125
+      end
+      object chContainerId: TcxGridDBColumn
+        Caption = #1048#1076#1077#1085#1090'. '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'ContainerId'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1087#1072#1088#1090#1080#1080
+        Options.Editing = False
+        Width = 155
+      end
+      object chFromName_Income: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'FromName_Income'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 160
+      end
+      object chContractName_Income: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'ContractName_Income'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object chisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGridDBTableView1
+    end
+  end
+  object cxSplitter1: TcxSplitter [28]
+    Left = 0
+    Top = 480
+    Width = 804
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = cxGrid1
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
   end
@@ -753,6 +845,21 @@ inherited CheckForm: TCheckForm
   end
   inherited ActionList: TActionList
     Top = 348
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
+    end
     inherited actMISetErased: TdsdUpdateErased
       Enabled = False
     end
@@ -1400,6 +1507,33 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecJackdawsChecks'
     end
+    object actReLinkContainer: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecReLinkContainer
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084
+      Hint = #1055#1077#1088#1077#1082#1088#1077#1087#1080#1090#1100' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1082' '#1087#1072#1088#1090#1080#1103#1084
+      ImageIndex = 39
+    end
+    object actExecReLinkContainer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spReLinkContainer
+      StoredProcList = <
+        item
+          StoredProc = spReLinkContainer
+        end>
+      Caption = 'actExecReLinkContainer'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1491,6 +1625,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1551,6 +1689,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton3: TdxBarButton
       Action = actJackdawsChecks
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actReLinkContainer
       Category = 0
     end
   end
@@ -2037,8 +2179,8 @@ inherited CheckForm: TCheckForm
     Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 408
-    Top = 389
+    Left = 424
+    Top = 357
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 500
@@ -2262,8 +2404,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 674
-    Top = 336
+    Left = 682
+    Top = 328
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -2536,5 +2678,81 @@ inherited CheckForm: TCheckForm
       end>
     Left = 584
     Top = 192
+  end
+  object DetailDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 80
+    Top = 544
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    SearchAsFilter = False
+    Left = 318
+    Top = 529
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailDCS
+    Left = 168
+    Top = 544
+  end
+  object spSelect_MI_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Check_Child'
+    DataSet = DetailDCS
+    DataSets = <
+      item
+        DataSet = DetailDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 536
+  end
+  object spReLinkContainer: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_ReLinkContainer'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 690
+    Top = 456
   end
 end

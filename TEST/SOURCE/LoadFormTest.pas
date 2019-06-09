@@ -1322,18 +1322,19 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateItemJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
+  }
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
@@ -2185,10 +2186,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7DialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7_NewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7_NewForm');
-  }
+  {
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1_NewForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1_NewForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1Form'));
@@ -2197,12 +2198,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1DialogForm');
 
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_CashDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
