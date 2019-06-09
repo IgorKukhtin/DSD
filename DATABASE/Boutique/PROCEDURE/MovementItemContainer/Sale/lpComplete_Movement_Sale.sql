@@ -604,7 +604,7 @@ BEGIN
      -- проверка: ОСТАТОК должен быть
      IF vbId_err > 0 AND 1=1
      THEN
-        RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>.'
+        RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>. Кол-во = <%>'
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
                       , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
@@ -619,6 +619,8 @@ BEGIN
                                                               AND Container.Amount        > 0
                                                               AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                                                            ), 0))
+                      -- , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.ContainerId_Goods = vbId_err), 0))
+                      , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem), 0))
                        ;
      END IF;
 

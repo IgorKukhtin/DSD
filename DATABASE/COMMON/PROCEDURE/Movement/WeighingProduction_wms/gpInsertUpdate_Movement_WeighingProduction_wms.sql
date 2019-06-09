@@ -1,9 +1,10 @@
 -- Function: gpInsertUpdate_Movement_WeighingProduction_wms()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction_wms(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+ INOUT ioId                  BigInt    , -- Ключ объекта <Документ>
 --  IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
 --  IN inStartWeighing       TDateTime , -- Протокол начало взвешивания
@@ -17,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction_wms(
     IN inGoodsKindId         Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS BigInt
 AS
 $BODY$
    DECLARE vbUserId   Integer;
@@ -31,12 +32,12 @@ BEGIN
      -- проверка
      IF COALESCE (inGoodsId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар не определн.';
+         RAISE EXCEPTION 'Ошибка.Товар не определен.';
      END IF;
      -- проверка
      IF COALESCE (inGoodsKindId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Вид товара не определн.';
+         RAISE EXCEPTION 'Ошибка.Вид товара не определен.';
      END IF;
 
 

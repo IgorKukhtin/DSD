@@ -615,7 +615,7 @@ BEGIN
                                          , tmpContainerList.Amount
                                   HAVING tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                                       OR SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                                                        THEN MIContainer.Amount
+                                                        THEN ABS (MIContainer.Amount)
                                                    ELSE 0
                                               END) <> 0
                                  )
@@ -1133,13 +1133,13 @@ BEGIN
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
        ;
 
-/*
+/*/
 if inSession = '5' 
 then
     RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth
-, (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453)
-, (select min (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453 and _tmpItemSumm.OperSumm <> 0)
-, (select max (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453 and _tmpItemSumm.OperSumm <> 0)
+ , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItem.GoodsId =  2066 )
+ , (select _tmpRemainsCount.OperCount_find from _tmpRemainsCount where _tmpRemainsCount.GoodsId =  2066 )
+ , (select _tmpItem.OperCount from _tmpItem where _tmpItem.GoodsId =  2066 )
 -- , (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 2261046)
 -- , (select _tmpRemainsSumm.InfoMoneyId_Detail from _tmpRemainsSumm where _tmpRemainsSumm.ContainerId = 695905)
 -- , zc_Enum_InfoMoney_80401() -- (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 0 and _tmpItemSumm.MovementItemId = 121243281)

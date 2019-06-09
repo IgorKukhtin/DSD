@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_BankAccount()
+-- Function: gpSelect_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
@@ -43,6 +43,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName_Mobile TVarChar
              , PositionName_Mobile TVarChar
              , GUID TVarChar
+             , CurrencyId_x  Integer
+             , MovementId_x  Integer
+             , AmountSumm_x  TFloat
               )
 AS
 $BODY$
@@ -232,7 +235,8 @@ BEGIN
             -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
        -- Результат
-       SELECT
+      , tmpRes AS
+      (SELECT
              tmpMovement.Id
            , tmpMovement.InvNumber
            , tmpMovement.OperDate
@@ -315,6 +319,10 @@ BEGIN
            , Object_Unit_mobile.ValueData           AS UnitName_Mobile
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position_mobile.ValueData ELSE '' END :: TVarChar AS PositionName_Mobile
            , MovementString_GUID.ValueData          AS GUID
+           
+           , MILinkObject_Currency.ObjectId     AS CurrencyId_x
+           , MovementItem.MovementId            AS MovementId_x
+           , MovementFloat_AmountSumm.ValueData AS AmountSumm_x
 
        FROM tmpMovement
 
@@ -353,7 +361,8 @@ BEGIN
                                                 ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
                                                AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
 
-            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
+         -- INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
+            LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                  --  AND MovementItem.DescId = zc_MI_Master()
                                  --  AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
@@ -423,9 +432,10 @@ BEGIN
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
             -- Ограничили - Только одной валютой
-            INNER JOIN tmpMILO AS MILinkObject_Currency
-                               ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                              AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+         -- INNER JOIN tmpMILO AS MILinkObject_Currency
+            LEFT JOIN tmpMILO AS MILinkObject_Currency
+                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                             AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
 
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
@@ -470,8 +480,16 @@ BEGIN
                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN Object AS Object_Unit_Car ON Object_Unit_Car.Id = ObjectLink_Car_Unit.ChildObjectId
             --
-       WHERE MILinkObject_Currency.ObjectId = inCurrencyId
-          OR (inCurrencyId = zc_Enum_Currency_Basis() AND MovementFloat_AmountSumm.ValueData <> 0)
+    -- WHERE MILinkObject_Currency.ObjectId = inCurrencyId
+    --    OR (inCurrencyId = zc_Enum_Currency_Basis() AND MovementFloat_AmountSumm.ValueData <> 0)
+      )
+      
+       SELECT *
+       FROM tmpRes
+       WHERE (tmpRes.CurrencyId_x = inCurrencyId
+           OR (inCurrencyId = zc_Enum_Currency_Basis() AND tmpRes.AmountSumm_x <> 0)
+             )
+          AND tmpRes.MovementId_x > 0
        ;
 
 END;

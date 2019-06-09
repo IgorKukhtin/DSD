@@ -106,7 +106,8 @@ BEGIN
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , (CASE WHEN Movement_Invoice.StatusId = zc_Enum_Status_Erased() THEN '***УДАЛЕН ' WHEN Movement_Invoice.StatusId = zc_Enum_Status_UnComplete() THEN '*не проведен ' ELSE '' END || zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate)
+             ) :: TVarChar AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM tmpStatus

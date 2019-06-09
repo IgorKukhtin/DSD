@@ -1,12 +1,14 @@
 -- Function: gpGet_Movement_WeighingProduction_wms(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_WeighingProduction_wms (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_WeighingProduction_wms (BigInt, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction_wms (
-    IN inMovementId        BIGINT   , -- ключ Документа
+    IN inMovementId        BigInt   , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id BIGINT
+RETURNS TABLE (Id Integer
+          -- , Id BigInt
              , InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
@@ -32,7 +34,8 @@ BEGIN
      THEN
          RETURN QUERY 
          SELECT
-               0 :: BIGINT AS Id
+               0 :: Integer AS Id
+           --  0 :: BigInt AS Id
              , CAST (NEXTVAL ('Movement_WeighingProduction_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
@@ -63,14 +66,14 @@ BEGIN
      ELSE
        RETURN QUERY 
          SELECT
-               Movement.Id
-             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+               Movement.Id :: Integer
+             , Movement.InvNumber                   AS InvNumber
              , Movement.OperDate                    AS OperDate
              , Object_Status.ObjectCode             AS StatusCode
              , Object_Status.ValueData              AS StatusName
 
-             , MovementDate_StartWeighing.ValueData AS StartWeighing  
-             , MovementDate_EndWeighing.ValueData   AS EndWeighing
+             , Movement.StartWeighing  
+             , Movement.EndWeighing
 
              , Movement.MovementDescNumber          AS MovementDescNumber
              , MovementDesc.Id                      AS MovementDescId

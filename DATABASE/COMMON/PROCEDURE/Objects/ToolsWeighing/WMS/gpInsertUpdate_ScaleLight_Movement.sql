@@ -1,9 +1,10 @@
--- Function: gpInsertUpdate_ScaleCeh_Movement_wms()
+-- Function: gpInsertUpdate_ScaleLight_Movement()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement_wms (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement_wms(
-    IN inId                  Integer   , -- Ключ объекта <Документ>
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleLight_Movement (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleLight_Movement(
+    IN inId                  BigInt    , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inMovementDescId      Integer   , -- Вид документа
     IN inMovementDescNumber  Integer   , -- Вид документа
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement_wms(
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
+          -- , Id        BigInt
              , InvNumber TVarChar
              , OperDate  TDateTime
               )
@@ -47,7 +49,7 @@ BEGIN
                                                            );
      -- Результат
      RETURN QUERY
-       SELECT Movement.Id
+       SELECT Movement.Id :: Integer
             , Movement.InvNumber
             , Movement.OperDate
        FROM Movement_WeighingProduction AS Movement
@@ -65,4 +67,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_ScaleCeh_Movement_wms (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_ScaleLight_Movement (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

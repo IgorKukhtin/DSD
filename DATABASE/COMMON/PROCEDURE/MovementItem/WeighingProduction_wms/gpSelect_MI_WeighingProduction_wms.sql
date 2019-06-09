@@ -1,14 +1,15 @@
 -- Function: gpSelect_MI_WeighingProduction_wms()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (BIGINT, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (BigInt, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingProduction_wms (
-    IN inMovementId  BIGINT       , -- ключ Документа
+    IN inMovementId  BigInt       , -- ключ Документа
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id BIGINT
+RETURNS TABLE (Id Integer
+          -- , Id BigInt
              , MovementId_Parent Integer, InvNumber_Parent TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
@@ -26,13 +27,13 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             MovementItem.Id
-           , Movement_Parent.Id               AS MovementId_Parent
+             MovementItem.Id :: Integer
+           , Movement_Parent.Id                   AS MovementId_Parent
            , Movement_Parent.InvNumber ::TVarChar AS InvNumber_Parent
-           , Object_GoodsTypeKind.Id          AS GoodsTypeKindId
-           , Object_GoodsTypeKind.ValueData   AS GoodsTypeKindName
-           , Object_BarCodeBox.Id             AS BarCodeBoxId
-           , Object_BarCodeBox.ValueData      AS BarCodeBoxName
+           , Object_GoodsTypeKind.Id              AS GoodsTypeKindId
+           , Object_GoodsTypeKind.ValueData       AS GoodsTypeKindName
+           , Object_BarCodeBox.Id                 AS BarCodeBoxId
+           , Object_BarCodeBox.ValueData          AS BarCodeBoxName
            , MovementItem.WmsCode
            , MovementItem.LineCode
            , MovementItem.InsertDate

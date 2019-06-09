@@ -11,25 +11,25 @@ RETURNS TABLE (Id Integer, Code Integer
              , Weight TFloat
              , isErased Boolean
              ) AS
-$BODY$BEGIN
-
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_BarCodeBox());
 
-   RETURN QUERY 
+   RETURN QUERY
        SELECT
              Object_BarCodeBox.Id         AS Id
            , Object_BarCodeBox.ObjectCode AS Code
-                      
-           , Object_Box.Id         AS BoxId 
-           , Object_Box.ObjectCode AS BoxCode
-           , Object_Box.ValueData  AS BoxName            
 
-           , ObjectString_BarCode.ValueData  AS BarCode
+           , Object_Box.Id         AS BoxId
+           , Object_Box.ObjectCode AS BoxCode
+           , Object_Box.ValueData  AS BoxName
+
+           , Object_BarCodeBox.ValueData     AS BarCode
            , ObjectFloat_Weight.ValueData    AS Weight
 
            , Object_BarCodeBox.isErased   AS isErased
-           
+
        FROM Object AS Object_BarCodeBox
             LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box
                                  ON ObjectLink_BarCodeBox_Box.ObjectId = Object_BarCodeBox.Id
@@ -40,15 +40,11 @@ $BODY$BEGIN
                                   ON ObjectFloat_Weight.ObjectId = Object_BarCodeBox.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_BarCodeBox_Weight()
 
-            LEFT JOIN ObjectString AS ObjectString_BarCode
-                                   ON ObjectString_BarCode.ObjectId = Object_BarCodeBox.Id
-                                  AND ObjectString_BarCode.DescId = zc_ObjectString_BarCodeBox_BarCode()
+      WHERE Object_BarCodeBox.DescId = zc_Object_BarCodeBox();
 
-   WHERE Object_BarCodeBox.DescId = zc_Object_BarCodeBox();
-  
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

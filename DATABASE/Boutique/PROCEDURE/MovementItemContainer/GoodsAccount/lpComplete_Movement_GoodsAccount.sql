@@ -869,6 +869,7 @@ BEGIN
              tmpContainer AS (SELECT _tmpItem.PartionId_MI, Container.ObjectId AS GoodsId, Container.Amount
                               FROM _tmpItem
                                    INNER JOIN Container ON Container.PartionId = _tmpItem.PartionId
+                                                       AND Container.ObjectId  = _tmpItem.GoodsId
                                                        AND Container.DescId    = zc_Container_Count()
                                    INNER JOIN ContainerLinkObject AS CLO_PartionMI
                                                                   ON CLO_PartionMI.ContainerId = Container.Id
@@ -882,6 +883,10 @@ BEGIN
                                                                   ON CLO_Unit.ContainerId = Container.Id
                                                                  AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                  AND CLO_Unit.ObjectId    = vbUnitId
+                                   INNER JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                                  ON CLO_GoodsSize.ContainerId = Container.Id
+                                                                 AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
+                                                                 AND CLO_GoodsSize.ObjectId    = _tmpItem.GoodsSizeId
                              )
         -- Результат
         SELECT tmp.MovementItemId

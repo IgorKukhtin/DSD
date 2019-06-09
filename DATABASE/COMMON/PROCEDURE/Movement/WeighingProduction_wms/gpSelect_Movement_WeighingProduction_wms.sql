@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_wms (
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id BIGINT, InvNumber Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer
+          -- , Id BigInt
+             , InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescNumber Integer
@@ -39,7 +41,7 @@ BEGIN
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
 
-       SELECT  Movement.Id
+       SELECT  Movement.Id :: Integer
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate                    AS OperDate
              , Object_Status.ObjectCode             AS StatusCode
