@@ -105,13 +105,14 @@ end if;
         WHERE COALESCE (inBranchId, 0) <= 0
           -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374   -- 4. филиал Одесса
-                                                     , 301310 -- 11. филиал Запорожье
-                                                     , 8373   -- 3. филиал Николаев (Херсон)
-                                                     , 8375   -- 5. филиал Черкассы (Кировоград)
-                                                     , 8377   -- 7. филиал Кр.Рог
-                                                     , 8381   -- 9. филиал Харьков
-                                                     , 8379   -- 2. филиал Киев
+          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374    -- 4. филиал Одесса
+                                                     , 301310  -- 11. филиал Запорожье
+                                                     , 8373    -- 3. филиал Николаев (Херсон)
+                                                     , 8375    -- 5. филиал Черкассы (Кировоград)
+                                                     , 8377    -- 7. филиал Кр.Рог
+                                                     , 8381    -- 9. филиал Харьков
+                                                     , 8379    -- 2. филиал Киев
+                                                     , 3080683 -- филиал Львов
                                                       )
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
@@ -120,6 +121,26 @@ end if;
           AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
        ;
+
+     -- таблица - остальные филиалы
+     CREATE TEMP TABLE _tmpUnit_branch_oth (UnitId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_branch_oth (UnitId)
+        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
+        FROM ObjectLink AS ObjectLink_Unit_Branch
+        WHERE inBranchId > 0
+          AND ObjectLink_Unit_Branch.ObjectId NOT IN (SELECT _tmpUnit_branch.UnitId FROM _tmpUnit_branch)
+          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374    -- 4. филиал Одесса
+                                                     , 301310  -- 11. филиал Запорожье
+                                                     , 8373    -- 3. филиал Николаев (Херсон)
+                                                     , 8375    -- 5. филиал Черкассы (Кировоград)
+                                                     , 8377    -- 7. филиал Кр.Рог
+                                                     , 8381    -- 9. филиал Харьков
+                                                     , 8379    -- 2. филиал Киев
+                                                     , 3080683 -- филиал Львов
+                                                      )
+       ;
+
      -- таблица - филиал Одесса + филиал Запорожье
      CREATE TEMP TABLE _tmpContainer_branch (ContainerId Integer) ON COMMIT DROP;
      INSERT INTO _tmpContainer_branch (ContainerId)
@@ -359,8 +380,48 @@ end if;
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE /*MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummOut
 
                      -- <> Транзит + товар в пути
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountIn_Cost
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummIn_Cost
+                   , SUM (CASE WHEN Container.DescId = zc_Container_Count()
+                               THEN CASE /*WHEN MIContainer.WhereObjectId_Analyzer IN (SELECT _tmpUnit_branch.UnitId     FROM _tmpUnit_branch)
+                                          AND MIContainer.ObjectExtId_Analyzer   IN (SELECT _tmpUnit_branch_oth.UnitId FROM _tmpUnit_branch_oth)
+                                          AND MIContainer.isActive               = FALSE
+                                              THEN 0*/
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                          AND inBranchId                         = 8379    -- филиал Киев
+                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                          AND inBranchId                         = 3080683 -- филиал Львов
+                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+                                         WHEN 1=1
+                                         THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
+                                         ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
+                                    END
+                               ELSE 0
+                          END) AS SendOnPriceCountIn_Cost
+                   , SUM (CASE WHEN Container.DescId = zc_Container_Summ()
+                               THEN CASE /*WHEN MIContainer.WhereObjectId_Analyzer IN (SELECT _tmpUnit_branch.UnitId     FROM _tmpUnit_branch)
+                                          AND MIContainer.ObjectExtId_Analyzer   IN (SELECT _tmpUnit_branch_oth.UnitId FROM _tmpUnit_branch_oth)
+                                          AND MIContainer.isActive               = FALSE
+                                              THEN 0*/
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                          AND inBranchId                         = 8379    -- филиал Киев
+                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                          AND inBranchId                         = 3080683 -- филиал Львов
+                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+                                         WHEN 1=1
+                                         THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
+                                         ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
+                                    END
+                               ELSE 0
+                          END) AS SendOnPriceSummIn_Cost
 
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountOut_Cost
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummOut_Cost

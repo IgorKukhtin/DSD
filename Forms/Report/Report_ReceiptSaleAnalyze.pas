@@ -128,6 +128,8 @@ type
     Color_Profit: TcxGridDBColumn;
     actPrint_Profit: TdsdPrintAction;
     bbPrint_Profit: TdxBarButton;
+    GoodsCode_isCost: TcxGridDBColumn;
+    GoodsName_isCost: TcxGridDBColumn;
   private
     { Private declarations }
   public

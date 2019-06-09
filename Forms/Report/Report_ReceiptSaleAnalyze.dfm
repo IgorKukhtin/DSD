@@ -3,8 +3,9 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
   ClientHeight = 405
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -340
   ExplicitWidth = 1146
-  ExplicitHeight = 443
+  ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -865,6 +866,22 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object GoodsCode_isCost: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1079#1072#1090#1088'.)'
+            DataBinding.FieldName = 'GoodsCode_isCost'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object GoodsName_isCost: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1079#1072#1090#1088#1072#1090#1110')'
+            DataBinding.FieldName = 'GoodsName_isCost'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055

@@ -262,6 +262,7 @@ BEGIN
                         )
         , tmpAll AS
            (SELECT COALESCE (tmpReceipt.ReceiptId, 0) AS ReceiptId
+                 , 0 AS GoodsId_isCost
                  , tmpMIContainer.GoodsId
                  , tmpMIContainer.GoodsKindId
                  , SUM (tmpMIContainer.OperCount_sale)         AS OperCount_sale
@@ -290,6 +291,7 @@ BEGIN
 
            UNION ALL
             SELECT tmp.ReceiptId
+                 , MAX (tmp.GoodsId_isCost) AS GoodsId_isCost
                  , tmpMI.GoodsId
                  , tmpMI.GoodsKindId
                  , 0 AS OperCount_sale
@@ -308,6 +310,7 @@ BEGIN
                  , SUM (tmp.Summ3_cost) AS Summ3_cost
                  , SUM (tmp.Summ4_cost) AS Summ4_cost
             FROM (SELECT tmpChildReceiptTable.ReceiptId
+                       , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.GoodsId_out ELSE 0 END) AS GoodsId_isCost
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1) AS Summ1
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2) AS Summ2
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3) AS Summ3
@@ -335,6 +338,7 @@ BEGIN
 
         , tmpResult AS
            (SELECT CASE WHEN inIsGoodsKind = TRUE THEN tmpAll.ReceiptId ELSE tmpAll.GoodsId END AS ReceiptId
+                 , MAX (tmpAll.GoodsId_isCost)                                                  AS GoodsId_isCost
                  , tmpAll.GoodsId
                  , tmpAll.GoodsKindId
                  , CASE WHEN SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) = 0 THEN NULL ELSE SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) END :: TFloat AS Value_receipt
@@ -364,6 +368,7 @@ BEGIN
 
             FROM
            (SELECT tmpAll.ReceiptId
+                 , MAX (tmpAll.GoodsId_isCost) AS GoodsId_isCost
                  , tmpAll.GoodsId
                  , CASE WHEN inIsGoodsKind = TRUE THEN tmpAll.GoodsKindId ELSE 0 END AS GoodsKindId
                  , SUM (tmpAll.OperCount_sale)         AS OperCount_sale
@@ -451,6 +456,9 @@ BEGIN
            , Object_Goods.ValueData                      AS GoodsName
            , Object_GoodsKind.ValueData                  AS GoodsKindName
            , Object_Measure.ValueData                    AS MeasureName
+
+           , Object_Goods_isCost.ObjectCode              AS GoodsCode_isCost
+           , Object_Goods_isCost.ValueData               AS GoodsName_isCost
 
            , Object_Receipt_Parent.ObjectCode      AS Code_Parent
            , ObjectString_Code_Parent.ValueData    AS ReceiptCode_Parent
@@ -664,6 +672,9 @@ BEGIN
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
+            LEFT JOIN Object AS Object_Goods_isCost ON Object_Goods_isCost.Id = tmpResult.GoodsId_isCost
+
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -853,11 +864,9 @@ BEGIN
 
      RETURN NEXT Cursor2;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -866,4 +875,4 @@ ALTER FUNCTION gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, I
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2017', inEndDate:= '01.06.2017', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2019', inEndDate:= '01.06.2019', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())

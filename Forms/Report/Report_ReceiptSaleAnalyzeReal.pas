@@ -127,6 +127,8 @@ type
     bbPrint_Calc_PriceListExcel: TdxBarButton;
     actRefreshStart: TdsdDataSetRefresh;
     spGetParams: TdsdStoredProc;
+    GoodsCode_isCost: TcxGridDBColumn;
+    GoodsName_isCost: TcxGridDBColumn;
   private
     { Private declarations }
   public
