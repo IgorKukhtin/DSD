@@ -91,6 +91,7 @@ type
     outSumm_ZP_pl: TcxGridDBColumn;
     cbPrice: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
+    outSumm_Income: TcxGridDBColumn;
   private
   public
   end;

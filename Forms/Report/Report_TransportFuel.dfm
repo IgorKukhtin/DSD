@@ -166,6 +166,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_ZP_pl
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Income
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -297,6 +302,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_ZP_pl
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Income
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -442,6 +452,17 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object outSumm_Income: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1089'/'#1089' '#1074' '#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'outSumm_Income'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1089'/'#1089' '#1074' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+        Width = 70
+      end
       object outSumm_ZP: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076'  '#1089#1091#1084#1084#1072' ('#1047#1055')'
         DataBinding.FieldName = 'outSumm_ZP'
@@ -537,7 +558,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     Width = 1004
     Height = 57
     Align = alTop
-    TabOrder = 5
+    TabOrder = 4
     object deStart: TcxDateEdit
       Left = 114
       Top = 5

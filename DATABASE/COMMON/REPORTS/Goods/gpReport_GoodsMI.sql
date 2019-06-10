@@ -185,6 +185,13 @@ BEGIN
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
            WHERE Object.DescId = zc_Object_Goods()
              AND COALESCE (inGoodsGroupId, 0) = 0
+        UNION
+           SELECT Object.Id AS GoodsId, 0 AS InfoMoneyId, 0 AS TradeMarkId
+                , 0 AS MeasureId
+                , 0 AS Weight
+           FROM Object
+           WHERE Object.DescId = zc_Object_Asset()
+             AND COALESCE (inGoodsGroupId, 0) = 0
          UNION
            SELECT Object.Id AS GoodsId, 0 AS InfoMoneyId, 0 AS TradeMarkId, 0 AS MeasureId, 0 AS Weight FROM Object WHERE Object.DescId = zc_Object_Fuel()
          )

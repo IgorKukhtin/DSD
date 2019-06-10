@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_byMovement ()
+ -- Function: gpReport_GoodsMI_byMovement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
@@ -92,6 +92,13 @@ BEGIN
                                       ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
            WHERE Object_Goods.DescId = zc_Object_Goods()
+             AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+        UNION
+           SELECT Object.Id AS GoodsId
+                , 0 AS MeasureId
+                , 0 AS Weight
+           FROM Object
+           WHERE Object.DescId = zc_Object_Asset()
              AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
           )
 
