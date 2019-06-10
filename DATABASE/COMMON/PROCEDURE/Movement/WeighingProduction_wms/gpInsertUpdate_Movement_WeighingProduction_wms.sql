@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_WeighingProduction_wms()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction_wms(
  INOUT ioId                  BigInt    , -- Ключ объекта <Документ>
@@ -14,6 +13,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction_wms(
     IN inPlaceNumber         Integer   , -- номер рабочего места
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inGoodsTypeKindId_1   Integer   , -- Признак - 1-ая линия
+    IN inGoodsTypeKindId_2   Integer   , -- Признак - 2-ая линия
+    IN inGoodsTypeKindId_3   Integer   , -- Признак - 3-ья линия
+    IN inBarCodeBoxId_1      Integer   , -- Id для Ш/К ящика
+    IN inBarCodeBoxId_2      Integer   , -- Id для Ш/К ящика
+    IN inBarCodeBoxId_3      Integer   , -- Id для Ш/К ящика
     IN inGoodsId             Integer   , -- 
     IN inGoodsKindId         Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -39,16 +44,35 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Вид товара не определен.';
      END IF;
+     -- проверка
+     IF COALESCE (inGoodsTypeKindId_1, 0) = 0 OR COALESCE (inGoodsTypeKindId_2, 0) = 0 OR COALESCE (inGoodsTypeKindId_3, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определен Признак линии.';
+     END IF;
+     -- проверка
+     IF COALESCE (inBarCodeBoxId_1, 0) = 0 OR COALESCE (inBarCodeBoxId_2, 0) = 0 OR COALESCE (inBarCodeBoxId_3, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определен Ключ Ш/К ящика.';
+     END IF;
 
 
      IF COALESCE (ioId, 0) = 0 THEN
         -- создали <Документ>
-        INSERT INTO Movement_WeighingProduction (InvNumber, OperDate, StatusId, FromId, ToId, GoodsId, GoodsKindId, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing)
+        INSERT INTO Movement_WeighingProduction (InvNumber, OperDate, StatusId, FromId, ToId
+                                               , GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3, BarCodeBoxId_1, BarCodeBoxId_2, BarCodeBoxId_3
+                                               , GoodsId, GoodsKindId, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing
+                                                )
                VALUES (CAST (NEXTVAL ('Movement_WeighingProduction_wms_seq') AS TVarChar)
                      , inOperDate
                      , zc_Enum_Status_UnComplete()
                      , inFromId
                      , inToId
+                     , inGoodsTypeKindId_1
+                     , inGoodsTypeKindId_2
+                     , inGoodsTypeKindId_3
+                     , inBarCodeBoxId_1
+                     , inBarCodeBoxId_2
+                     , inBarCodeBoxId_3
                      , inGoodsId
                      , inGoodsKindId
                      , inMovementDescId
@@ -66,6 +90,12 @@ BEGIN
               -- , InvNumber            = inInvNumber
                  , FromId               = inFromId
                  , ToId                 = inToId
+                 , GoodsTypeKindId_1    = inGoodsTypeKindId_1
+                 , GoodsTypeKindId_2    = inGoodsTypeKindId_2
+                 , GoodsTypeKindId_3    = inGoodsTypeKindId_3
+                 , BarCodeBoxId_1       = inBarCodeBoxId_1
+                 , BarCodeBoxId_2       = inBarCodeBoxId_2
+                 , BarCodeBoxId_3       = inBarCodeBoxId_3
                  , GoodsId              = inGoodsId
                  , GoodsKindId          = inGoodsKindId
                  , MovementDescId       = inMovementDescId
