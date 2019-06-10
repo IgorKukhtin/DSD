@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxSplitter;
 
 type
   TSendForm = class(TAncestorDocumentForm)
@@ -103,6 +103,25 @@ type
     spInsert_Send_WriteRestFromPoint: TdsdStoredProc;
     spWriteRestFromPoint: TdsdExecStoredProc;
     actWriteRestFromPoint: TMultiAction;
+    DetailDCS: TClientDataSet;
+    DetailDS: TDataSource;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelect_MI_Child: TdsdStoredProc;
+    cxSplitter1: TcxSplitter;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chAmount: TcxGridDBColumn;
+    chExpirationDate: TcxGridDBColumn;
+    chOperDate_Income: TcxGridDBColumn;
+    chInvnumber_Income: TcxGridDBColumn;
+    chContainerId: TcxGridDBColumn;
+    chFromName_Income: TcxGridDBColumn;
+    chContractName_Income: TcxGridDBColumn;
+    chisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxLabel29: TcxLabel;
+    edPartionDateKind: TcxButtonEdit;
+    GuidesPartionDateKind: TdsdGuides;
   private
     { Private declarations }
   public

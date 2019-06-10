@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummFrom TFloat, TotalSummTo TFloat
              , FromId Integer, FromName TVarChar, ProvinceCityName_From TVarChar
              , ToId Integer, ToName TVarChar, ProvinceCityName_To TVarChar
+             , PartionDateKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
@@ -99,6 +100,7 @@ BEGIN
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
            , tmpProvinceCity_To.ProvinceCityName    AS ProvinceCityName_To
+           , Object_PartionDateKind.ValueData                   :: TVarChar AS PartionDateKindName
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
            , MovementFloat_MCSPeriod.ValueData      AS MCSPeriod
@@ -211,6 +213,11 @@ BEGIN
                                           AND MLM_ReportUnLiquid.DescId = zc_MovementLinkMovement_ReportUnLiquid()
             LEFT JOIN Movement AS Movement_ReportUnLiquid ON Movement_ReportUnLiquid.Id = MLM_ReportUnLiquid.MovementChildId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                         ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
+
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND  (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
         
@@ -225,6 +232,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.06.19         *
  27.02.19                                                                                      * vbUnitId
  08.11.17         * Deferred
  21.03.17         * add zc_MovementFloat_TotalSummFrom

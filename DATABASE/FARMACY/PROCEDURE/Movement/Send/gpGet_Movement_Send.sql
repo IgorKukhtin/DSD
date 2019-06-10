@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
+             , PartionDateKindId Integer, PartionDateKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean
@@ -39,6 +41,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS FromName
              , 0                     		                AS ToId
              , CAST ('' AS TVarChar) 			        AS ToName
+             , 0                                                AS PartionDateKindId
+             , CAST ('' AS TVarChar) 			        AS PartionDateKindName
              , CAST ('' AS TVarChar) 		                AS Comment
              , FALSE                                            AS isAuto
              , CAST (0 AS TFloat)                               AS MCSPeriod
@@ -62,6 +66,8 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
+           , Object_PartionDateKind.Id                          AS PartionDateKindId
+           , Object_PartionDateKind.ValueData                   AS PartionDateKindName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean  AS isAuto
            , COALESCE (MovementFloat_MCSPeriod.ValueData,0)     ::TFloat   AS MCSPeriod
@@ -85,6 +91,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                         ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -125,6 +136,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.06.19         * PartionDateKind
  08.11.17         * Deferred
  15.11.16         * add isComplete
  15.06.16         * CURRENT_DATE::TDateTime 
@@ -134,4 +146,4 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1,inOperDate:='01.01.2019' :: TDateTime, inSession:= '9818')
