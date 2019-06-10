@@ -22,7 +22,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Left = 0
     Top = 0
     Width = 1021
-    Height = 100
+    Height = 137
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -205,26 +205,30 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 163
     Width = 1021
-    Height = 336
+    Height = 299
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 336
+    ExplicitTop = 126
+    ExplicitHeight = 336
+    ClientRectBottom = 299
     ClientRectRight = 1021
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1021
-        Height = 312
+        Height = 275
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -415,7 +419,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
+    TabOrder = 6
     Width = 157
   end
   object cxLabel14: TcxLabel

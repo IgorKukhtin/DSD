@@ -2,7 +2,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
-  ClientHeight = 398
+  ClientHeight = 423
   ClientWidth = 1004
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,15 +13,15 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 83
     Width = 1004
-    Height = 315
+    Height = 340
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -558,7 +558,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     Width = 1004
     Height = 57
     Align = alTop
-    TabOrder = 4
+    TabOrder = 1
     object deStart: TcxDateEdit
       Left = 114
       Top = 5
@@ -638,22 +638,21 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       TabOrder = 9
       Width = 126
     end
-    object cbCar: TcxCheckBox
-      Left = 217
-      Top = 32
-      Action = actRefreshCar
-      Caption = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084' / '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
-      Properties.ReadOnly = False
-      TabOrder = 10
-      Width = 168
-    end
     object cbPartner: TcxCheckBox
       Left = 391
       Top = 32
       Action = actRefreshPartner
       Properties.ReadOnly = False
+      TabOrder = 10
+      Width = 114
+    end
+    object cbisCar: TcxCheckBox
+      Left = 217
+      Top = 30
+      Action = actRefreshCar
+      Properties.ReadOnly = False
       TabOrder = 11
-      Width = 112
+      Width = 168
     end
   end
   object cbPrice: TcxCheckBox
@@ -848,6 +847,20 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     Images = dmMain.ImageList
     Left = 32
     Top = 208
+    object actRefreshCar: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084' / '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Hint = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084' / '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshPartner: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -858,20 +871,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         end>
       Caption = #1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       Hint = #1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshCar: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084
-      Hint = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -930,7 +929,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Name = 'isDetail'
           Value = Null
-          Component = cbCar
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1079,7 +1077,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Name = 'isMember'
           Value = Null
-          Component = cbCar
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1088,6 +1085,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Name = 'isPartner'
           Value = Null
           Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCar'
+          Value = Null
+          Component = cbisCar
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1148,7 +1153,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       item
         Name = 'inIsCar'
         Value = Null
-        Component = cbCar
+        Component = cbisCar
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1176,8 +1181,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 304
-    Top = 296
+    Left = 392
+    Top = 304
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216
@@ -1215,8 +1220,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
-    Top = 3
+    Left = 584
+    Top = 65531
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1235,8 +1240,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       item
         Component = GuidesBranch
       end>
-    Left = 328
-    Top = 192
+    Left = 344
+    Top = 208
   end
   object GuidesFuel: TdsdGuides
     KeyField = 'Id'
@@ -1265,8 +1270,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 343
-    Top = 65535
+    Left = 399
+    Top = 63
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
@@ -1297,5 +1302,10 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       end>
     Left = 760
     Top = 3
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 240
+    Top = 232
   end
 end

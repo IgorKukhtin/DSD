@@ -80,8 +80,6 @@ type
     dxBarStatic: TdxBarButton;
     FromName: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
-    cbCar: TcxCheckBox;
-    actRefreshCar: TdsdDataSetRefresh;
     cbPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
     outSumm_Juridical: TcxGridDBColumn;
@@ -92,6 +90,9 @@ type
     cbPrice: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     outSumm_Income: TcxGridDBColumn;
+    actRefreshCar: TdsdDataSetRefresh;
+    FormParams: TdsdFormParams;
+    cbisCar: TcxCheckBox;
   private
   public
   end;
