@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PartionDateKindId Integer, PartionDateKindName TVarChar
+             
              , Amount TFloat, AmountRemains TFloat, AmountCheck TFloat
              , PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
@@ -19,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
              , MinExpirationDate TDateTime
+             
              , isErased Boolean
              , GoodsGroupName TVarChar
              , NDSKindName    TVarChar
@@ -142,7 +145,8 @@ BEGIN
                                       , MovementItem_Send.ObjectId
                                       , MovementItem_Send.Amount
                                       , MovementItem_Send.IsErased 
-                                      , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId          
+                                      , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+                                      , MILinkObject_PartionDateKind.ObjectId   AS PartionDateKindId
                                       
                                       , SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount)  AS PriceIn
                                       , ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))                           AS SumPriceIn
@@ -155,7 +159,7 @@ BEGIN
                                       , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
                                       , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
-                                     
+                                      
                                    FROM MovementItem AS MovementItem_Send
                                        -- цена подразделений записанная при автоматическом распределении 
                                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
@@ -179,7 +183,11 @@ BEGIN
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                                         ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
                                                                        AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
-                                       
+                                       -- 
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                                        ON MILinkObject_PartionDateKind.MovementItemId = MovementItem_Send.Id
+                                                                       AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
+
                                        LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                            ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                                           AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -276,11 +284,13 @@ BEGIN
               , Object_Goods.Id                                   AS GoodsId
               , Object_Goods.ObjectCode                           AS GoodsCode
               , Object_Goods.ValueData                            AS GoodsName
+              , Object_PartionDateKind.Id                         AS PartionDateKindId
+              , Object_PartionDateKind.ValueData      :: TVarChar AS PartionDateKindName
               , MovementItem_Send.Amount                          AS Amount
               , tmpRemains.Amount::TFloat                         AS AmountRemains
               , tmpCheck.Amount::TFloat                           AS AmountCheck
-              , COALESCE(MovementItem_Send.PriceIn, tmpRemains.PriceIn)::TFloat           AS PriceIn
-              , COALESCE(MovementItem_Send.SumPriceIn, (MovementItem_Send.Amount * tmpRemains.PriceIn))      ::TFloat  AS SumPriceIn
+              , COALESCE (MovementItem_Send.PriceIn, tmpRemains.PriceIn)::TFloat           AS PriceIn
+              , COALESCE (MovementItem_Send.SumPriceIn, (MovementItem_Send.Amount * tmpRemains.PriceIn))      ::TFloat  AS SumPriceIn
               , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
               , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
@@ -294,21 +304,21 @@ BEGIN
 
               , MovementItem_Send.AmountManual
               , MovementItem_Send.AmountStorage
-              , (COALESCE(MovementItem_Send.AmountManual,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountDiff
-              , (COALESCE(MovementItem_Send.AmountStorage,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountStorageDiff
-              , Object_ReasonDifferences.Id                               AS ReasonDifferencesId
-              , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
-              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+              , (COALESCE (MovementItem_Send.AmountManual,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountDiff
+              , (COALESCE (MovementItem_Send.AmountStorage,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountStorageDiff
+              , Object_ReasonDifferences.Id                                AS ReasonDifferencesId
+              , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
+              , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
               , tmpRemains.MinExpirationDate   
-              , COALESCE(MovementItem_Send.IsErased,FALSE)                AS isErased
+              , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
-              , tmpGoodsParam.GoodsGroupName                              AS GoodsGroupName
-              , tmpGoodsParam.NDSKindName                                 AS NDSKindName
-              , tmpGoodsParam.NDS                                         AS NDS
-              , COALESCE(tmpGoodsParam.isClose, False)        :: Boolean  AS isClose
-              , COALESCE(tmpGoodsParam.isTOP, false)          :: Boolean  AS isTOP
-              , COALESCE(tmpGoodsParam.isFirst, FALSE)        :: Boolean  AS isFirst
-              , COALESCE(tmpGoodsParam.isSecond, FALSE)       :: Boolean  AS isSecond
+              , tmpGoodsParam.GoodsGroupName                               AS GoodsGroupName
+              , tmpGoodsParam.NDSKindName                                  AS NDSKindName
+              , tmpGoodsParam.NDS                                          AS NDS
+              , COALESCE(tmpGoodsParam.isClose, False)        :: Boolean   AS isClose
+              , COALESCE(tmpGoodsParam.isTOP, false)          :: Boolean   AS isTOP
+              , COALESCE(tmpGoodsParam.isFirst, FALSE)        :: Boolean   AS isFirst
+              , COALESCE(tmpGoodsParam.isSecond, FALSE)       :: Boolean   AS isSecond
 
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -321,6 +331,7 @@ BEGIN
                                   AND Object_Price_To.UnitId = vbUnitToId
 
                 LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MovementItem_Send.ReasonDifferencesId
+                LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementItem_Send.PartionDateKindId
                                   
                 LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
                 -- условия хранения
@@ -341,7 +352,8 @@ BEGIN
                                       , MovementItem.ObjectId
                                       , MovementItem.Amount
                                       , MovementItem.IsErased  
-                                      , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId 
+                                      , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+                                      , MILinkObject_PartionDateKind.ObjectId   AS PartionDateKindId
                                                    
                                       , COALESCE(MIFloat_PriceFrom.ValueData,0)      ::TFloat  AS PriceFrom
                                       , COALESCE(MIFloat_PriceTo.ValueData,0)        ::TFloat  AS PriceTo        
@@ -365,6 +377,9 @@ BEGIN
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                                       ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                                      ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -552,6 +567,9 @@ BEGIN
            , Object_Goods.ObjectCode                           AS GoodsCode
            , Object_Goods.ValueData                            AS GoodsName
 
+           , Object_PartionDateKind.Id                         AS PartionDateKindId
+           , Object_PartionDateKind.ValueData      :: TVarChar AS PartionDateKindName
+
            , MovementItem_Send.Amount                          AS Amount
            , tmpRemains.Amount ::TFloat                        AS AmountRemains
            , tmpCheck.Amount   ::TFloat                        AS AmountCheck
@@ -600,7 +618,8 @@ BEGIN
                                ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                               AND Object_Price_To.UnitId = vbUnitToId
 
-             LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MovementItem_Send.ReasonDifferencesId
+            LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MovementItem_Send.ReasonDifferencesId
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementItem_Send.PartionDateKindId
 
             LEFT JOIN tmpMIContainer ON  tmpMIContainer.Id = MovementItem_Send.Id 
 
@@ -627,6 +646,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.06.19         *
  19.04.19         *
  05.02.19         * add AmountStorage 
  21.03.17         *
