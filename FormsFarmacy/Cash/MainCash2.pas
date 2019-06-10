@@ -630,7 +630,7 @@ implementation
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
-     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessage,
+     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit;
 
 const
@@ -1391,7 +1391,7 @@ begin
   if RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0' then
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
-    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').Value;
+    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsInteger;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
     try
@@ -1605,7 +1605,7 @@ begin
   try
     if FPUSHStart then
     begin
-      ShowPUSHMessage('Уважаемые коллеги!'#13#10 +
+      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10 +
                   '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
                   '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
                   '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
@@ -1617,7 +1617,7 @@ begin
       not UnitConfigCDS.FieldByName('TimePUSHFinal2').IsNull and (TimeOf(FPUSHEnd) < TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime)) and
       (TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime) < TimeOf(Now))) then
     begin
-      ShowPUSHMessage('Уважаемые коллеги!'#13#10 +
+      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10 +
                       '1. Не забудьте сделать X-отчет!!! Вынесите необходимую сумму наличных средств из кассы согласно Х-отчета за минусом 100,00 грн !!!'#13#10 +
                       '2. Еще раз сделайте х-отчет!!! Убедитесь, что наличных в кассе 100,00 грн!!!'#13#10 +
                       '3. Сделайте z-отчет!!!'#13#10 +
@@ -1632,7 +1632,7 @@ begin
         TimerPUSH.Interval := 1000;
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
-          if ShowPUSHMessage(PUSHDS.FieldByName('Text').AsString) then
+          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value := PUSHDS.FieldByName('Id').AsInteger;
@@ -1640,7 +1640,7 @@ begin
             except ON E:Exception do Add_Log('Marc_PUSH err=' + E.Message);
             end;
           end;
-        end else if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowMessage(PUSHDS.FieldByName('Text').AsString);
+        end else if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString);
       finally
          PUSHDS.Delete;
       end;

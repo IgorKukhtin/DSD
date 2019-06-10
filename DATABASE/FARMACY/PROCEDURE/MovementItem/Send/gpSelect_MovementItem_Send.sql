@@ -219,6 +219,7 @@ BEGIN
                                           , COALESCE(MIFloat_PriceTo.ValueData,0) 
                                           , COALESCE(MIFloat_AmountManual.ValueData,0) 
                                           , COALESCE(MIFloat_AmountStorage.ValueData,0) 
+                                          , MILinkObject_PartionDateKind.ObjectId
                                 )
 
           , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId

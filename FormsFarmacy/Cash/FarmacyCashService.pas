@@ -1726,13 +1726,8 @@ begin
         End;
       End;
 
-      // получаем Diff через отдельный таймер
-      if TimerNeedRemainsDiff.Enabled then
-      begin
-        TimerNeedRemainsDiff.Enabled := False;
-        TimerNeedRemainsDiff.Interval := 1000;
-        TimerNeedRemainsDiff.Enabled := True;
-      end else TimerNeedRemainsDiff.Interval := 1000;
+      // Получаем Diff
+      actCashRemainsExecute(Nil);
 
 //      if not ExistNotCompletedCheck and FirstRemainsReceived then
 //      begin
