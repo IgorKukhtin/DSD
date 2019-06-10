@@ -224,6 +224,9 @@
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+				<Form>PUSHMessageForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

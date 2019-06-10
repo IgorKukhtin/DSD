@@ -289,10 +289,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\PUSHMessage.pas">
-            <Form>PUSHMessageForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterRecipeNumber.pas">
             <Form>EnterRecipeNumberForm</Form>
             <FormType>dfm</FormType>
@@ -305,6 +301,14 @@
             <Form>CheckHelsiSignAllUnitForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+            <Form>PUSHMessageForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\PUSHMessageCash.pas">
+            <Form>PUSHMessageCashForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
