@@ -126,7 +126,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 9
+      Left = 8
       Top = 61
       Enabled = False
       Properties.Buttons = <
@@ -146,7 +146,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 14
-      Width = 180
+      Width = 181
     end
     object cxLabel9: TcxLabel
       Left = 401
@@ -212,15 +212,12 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 126
-    ExplicitHeight = 336
     ClientRectBottom = 299
     ClientRectRight = 1021
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -228,7 +225,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Height = 275
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -436,8 +432,161 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 11
+    TabOrder = 8
     Width = 95
+  end
+  object cxLabel15: TcxLabel
+    Left = 8
+    Top = 84
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 1'
+  end
+  object edGoodsTypeKind_1: TcxButtonEdit
+    Left = 8
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 106
+  end
+  object cxLabel16: TcxLabel
+    Left = 120
+    Top = 84
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 2'
+  end
+  object edGoodsTypeKind_2: TcxButtonEdit
+    Left = 120
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 106
+  end
+  object cxLabel17: TcxLabel
+    Left = 232
+    Top = 84
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 3'
+  end
+  object edGoodsTypeKind_3: TcxButtonEdit
+    Left = 232
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 14
+    Width = 106
+  end
+  object edBarCodeBox_1: TcxButtonEdit
+    Left = 444
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 16
+    Width = 120
+  end
+  object cxLabel18: TcxLabel
+    Left = 444
+    Top = 84
+    Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 1'
+  end
+  object cxLabel19: TcxLabel
+    Left = 666
+    Top = 84
+    Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 2'
+  end
+  object edBarCodeBox_2: TcxButtonEdit
+    Left = 666
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 120
+  end
+  object cxLabel20: TcxLabel
+    Left = 888
+    Top = 84
+    Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 3'
+  end
+  object edBarCodeBox_3: TcxButtonEdit
+    Left = 888
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 21
+    Width = 120
+  end
+  object cxLabel21: TcxLabel
+    Left = 347
+    Top = 84
+    Caption = #1071#1097#1080#1082' 1'
+  end
+  object edBox_1: TcxButtonEdit
+    Left = 347
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 23
+    Width = 91
+  end
+  object cxLabel22: TcxLabel
+    Left = 569
+    Top = 84
+    Caption = #1071#1097#1080#1082' 2'
+  end
+  object edBox_2: TcxButtonEdit
+    Left = 569
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 26
+    Width = 91
+  end
+  object cxLabel23: TcxLabel
+    Left = 791
+    Top = 84
+    Caption = #1071#1097#1080#1082' 3'
+  end
+  object edBox_3: TcxButtonEdit
+    Left = 791
+    Top = 101
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 91
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1177,6 +1326,141 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxId_1'
+        Value = Null
+        Component = GuidesBarCodeBox1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxName_1'
+        Value = Null
+        Component = GuidesBarCodeBox1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxId_2'
+        Value = Null
+        Component = GuidesBarCodeBox2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxName_2'
+        Value = Null
+        Component = GuidesBarCodeBox2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxId_3'
+        Value = Null
+        Component = GuidesBarCodeBox3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxName_3'
+        Value = Null
+        Component = GuidesBarCodeBox3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindId_1'
+        Value = Null
+        Component = GuidesGoodsTypeKind1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindName_1'
+        Value = Null
+        Component = GuidesGoodsTypeKind1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindId_2'
+        Value = Null
+        Component = GuidesGoodsTypeKind2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindName_2'
+        Value = Null
+        Component = GuidesGoodsTypeKind2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindId_3'
+        Value = Null
+        Component = GuidesGoodsTypeKind3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindName_3'
+        Value = Null
+        Component = GuidesGoodsTypeKind3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxId_1'
+        Value = Null
+        Component = GuidesBox1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxName_1'
+        Value = Null
+        Component = GuidesBox1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxId_2'
+        Value = Null
+        Component = GuidesBox2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxName_2'
+        Value = Null
+        Component = GuidesBox2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxId_3'
+        Value = Null
+        Component = GuidesBox3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxName_3'
+        Value = Null
+        Component = GuidesBox3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1333,8 +1617,8 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 863
-    Top = 56
+    Left = 839
+    Top = 32
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
@@ -1411,8 +1695,8 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 72
+    Left = 672
+    Top = 24
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -1472,5 +1756,275 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         MultiSelectSeparator = ','
       end>
     Left = 963
+  end
+  object GuidesGoodsTypeKind1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsTypeKind_1
+    FormNameParam.Value = 'TGoodsTypeKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsTypeKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsTypeKind1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsTypeKind1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 80
+    Top = 88
+  end
+  object GuidesGoodsTypeKind2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsTypeKind_2
+    FormNameParam.Value = 'TGoodsTypeKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsTypeKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsTypeKind2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsTypeKind2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 161
+    Top = 96
+  end
+  object GuidesGoodsTypeKind3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsTypeKind_3
+    FormNameParam.Value = 'TGoodsTypeKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsTypeKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsTypeKind3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsTypeKind3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 276
+    Top = 88
+  end
+  object GuidesBarCodeBox1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBarCodeBox_1
+    FormNameParam.Value = 'TBarCodeBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBarCodeBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBarCodeBox1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBarCodeBox1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 471
+    Top = 96
+  end
+  object GuidesBarCodeBox2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBarCodeBox_2
+    FormNameParam.Value = 'TBarCodeBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBarCodeBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBarCodeBox2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBarCodeBox2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 714
+    Top = 96
+  end
+  object GuidesBarCodeBox3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBarCodeBox_3
+    FormNameParam.Value = 'TBarCodeBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBarCodeBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBarCodeBox3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBarCodeBox3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 925
+    Top = 88
+  end
+  object GuidesBox1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBox_1
+    FormNameParam.Value = 'TBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBox1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBox1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 375
+    Top = 96
+  end
+  object GuidesBox2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBox_2
+    FormNameParam.Value = 'TBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBox2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBox2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 578
+    Top = 96
+  end
+  object GuidesBox3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBox_3
+    FormNameParam.Value = 'TBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBox3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBox3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 813
+    Top = 88
   end
 end

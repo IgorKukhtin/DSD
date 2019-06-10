@@ -26,7 +26,10 @@ RETURNS TABLE (Id Integer
              , GoodsTypeKindId_3 Integer, GoodsTypeKindName_3 TVarChar
              , BarCodeBoxId_1 Integer, BarCodeBoxName_1 TVarChar
              , BarCodeBoxId_2 Integer, BarCodeBoxName_2 TVarChar
-             , BarCodeBoxId_3 Integer, BarCodeBoxName_3 TVarChar             
+             , BarCodeBoxId_3 Integer, BarCodeBoxName_3 TVarChar
+             , BoxId_1 Integer, BoxName_1 TVarChar
+             , BoxId_2 Integer, BoxName_2 TVarChar
+             , BoxId_3 Integer, BoxName_3 TVarChar
              , UserId Integer, UserName TVarChar
               )
 AS
@@ -83,7 +86,13 @@ BEGIN
              , Object_BarCodeBox_2.ValueData    AS BarCodeBoxName_2
              , Object_BarCodeBox_3.Id           AS BarCodeBoxId_3
              , Object_BarCodeBox_3.ValueData    AS BarCodeBoxName_3
-
+             , Object_Box1.Id                   AS BoxId_1
+             , Object_Box1.ValueData            AS BoxName_1
+             , Object_Box2.Id                   AS BoxId_2
+             , Object_Box2.ValueData            AS BoxName_2
+             , Object_Box3.Id                   AS BoxId_3
+             , Object_Box3.ValueData            AS BoxName_3
+             
              , Object_User.Id                       AS UserId
              , Object_User.ValueData                AS UserName
        FROM tmpStatus
@@ -107,6 +116,21 @@ BEGIN
             LEFT JOIN Object AS Object_BarCodeBox_1 ON Object_BarCodeBox_1.Id = Movement.BarCodeBoxId_1
             LEFT JOIN Object AS Object_BarCodeBox_2 ON Object_BarCodeBox_2.Id = Movement.BarCodeBoxId_2
             LEFT JOIN Object AS Object_BarCodeBox_3 ON Object_BarCodeBox_3.Id = Movement.BarCodeBoxId_3
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box1
+                                 ON ObjectLink_BarCodeBox_Box1.ObjectId = Object_BarCodeBox_1.Id
+                                AND ObjectLink_BarCodeBox_Box1.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box1 ON Object_Box1.Id = ObjectLink_BarCodeBox_Box1.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box2
+                                 ON ObjectLink_BarCodeBox_Box2.ObjectId = Object_BarCodeBox_2.Id
+                                AND ObjectLink_BarCodeBox_Box2.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box2 ON Object_Box2.Id = ObjectLink_BarCodeBox_Box2.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box3
+                                 ON ObjectLink_BarCodeBox_Box3.ObjectId = Object_BarCodeBox_3.Id
+                                AND ObjectLink_BarCodeBox_Box3.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = ObjectLink_BarCodeBox_Box3.ChildObjectId
        ;
   
 END;

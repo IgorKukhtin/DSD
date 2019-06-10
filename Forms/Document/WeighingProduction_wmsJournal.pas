@@ -94,6 +94,12 @@ type
     bbProtocol: TdxBarButton;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
+    GoodsTypeKindName_1: TcxGridDBColumn;
+    GoodsTypeKindName_2: TcxGridDBColumn;
+    GoodsTypeKindName_3: TcxGridDBColumn;
+    BarCodeBoxName_2: TcxGridDBColumn;
+    BarCodeBoxName_3: TcxGridDBColumn;
+    BarCodeBoxName_1: TcxGridDBColumn;
   private
   public
   end;

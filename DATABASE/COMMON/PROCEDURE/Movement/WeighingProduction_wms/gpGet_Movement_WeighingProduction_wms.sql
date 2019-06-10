@@ -19,6 +19,15 @@ RETURNS TABLE (Id Integer
              , ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , GoodsTypeKindId_1 Integer, GoodsTypeKindName_1 TVarChar
+             , GoodsTypeKindId_2 Integer, GoodsTypeKindName_2 TVarChar
+             , GoodsTypeKindId_3 Integer, GoodsTypeKindName_3 TVarChar
+             , BarCodeBoxId_1 Integer, BarCodeBoxName_1 TVarChar
+             , BarCodeBoxId_2 Integer, BarCodeBoxName_2 TVarChar
+             , BarCodeBoxId_3 Integer, BarCodeBoxName_3 TVarChar
+             , BoxId_1 Integer, BoxName_1 TVarChar
+             , BoxId_2 Integer, BoxName_2 TVarChar
+             , BoxId_3 Integer, BoxName_3 TVarChar
              , UserId Integer, UserName TVarChar
 
               )
@@ -59,6 +68,26 @@ BEGIN
              , 0                      AS GoodsKindId
              , CAST ('' as TVarChar)  AS GoodsKindName
 
+             , 0                      AS GoodsTypeKindId_1
+             , CAST ('' as TVarChar)  AS GoodsTypeKindName_1
+             , 0                      AS GoodsTypeKindId_2
+             , CAST ('' as TVarChar)  AS GoodsTypeKindName_2
+             , 0                      AS GoodsTypeKindId_3
+             , CAST ('' as TVarChar)  AS GoodsTypeKindName_3
+             , 0                      AS BarCodeBoxId_1
+             , CAST ('' as TVarChar)  AS BarCodeBoxName_1
+             , 0                      AS BarCodeBoxId_2
+             , CAST ('' as TVarChar)  AS BarCodeBoxName_2
+             , 0                      AS BarCodeBoxId_3
+             , CAST ('' as TVarChar)  AS BarCodeBoxName_3
+
+             , 0                      AS BoxId_1
+             , CAST ('' as TVarChar)  AS BoxName_1
+             , 0                      AS BoxId_2
+             , CAST ('' as TVarChar)  AS BoxName_2
+             , 0                      AS BoxId_3
+             , CAST ('' as TVarChar)  AS BoxName_3
+
              , 0                      AS UserId
              , CAST ('' as TVarChar)  AS UserName
              
@@ -90,6 +119,26 @@ BEGIN
              , Object_GoodsKind.Id                  AS GoodsKindId
              , Object_GoodsKind.ValueData           AS GoodsKindName
 
+             , Object_GoodsTypeKind_1.Id            AS GoodsTypeKindId_1
+             , Object_GoodsTypeKind_1.ValueData     AS GoodsTypeKindName_1
+             , Object_GoodsTypeKind_2.Id            AS GoodsTypeKindId_2
+             , Object_GoodsTypeKind_2.ValueData     AS GoodsTypeKindName_2
+             , Object_GoodsTypeKind_3.Id            AS GoodsTypeKindId_3
+             , Object_GoodsTypeKind_3.ValueData     AS GoodsTypeKindName_3
+             , Object_BarCodeBox_1.Id               AS BarCodeBoxId_1
+             , Object_BarCodeBox_1.ValueData        AS BarCodeBoxName_1
+             , Object_BarCodeBox_2.Id               AS BarCodeBoxId_2
+             , Object_BarCodeBox_2.ValueData        AS BarCodeBoxName_2
+             , Object_BarCodeBox_3.Id               AS BarCodeBoxId_3
+             , Object_BarCodeBox_3.ValueData        AS BarCodeBoxName_3
+
+             , Object_Box1.Id                   AS BoxId_1
+             , Object_Box1.ValueData            AS BoxName_1
+             , Object_Box2.Id                   AS BoxId_2
+             , Object_Box2.ValueData            AS BoxName_2
+             , Object_Box3.Id                   AS BoxId_3
+             , Object_Box3.ValueData            AS BoxName_3
+
              , Object_User.Id                       AS UserId
              , Object_User.ValueData                AS UserName
 
@@ -103,6 +152,28 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Movement.GoodsKindId
+
+            LEFT JOIN Object AS Object_GoodsTypeKind_1 ON Object_GoodsTypeKind_1.Id = Movement.GoodsTypeKindId_1
+            LEFT JOIN Object AS Object_GoodsTypeKind_2 ON Object_GoodsTypeKind_2.Id = Movement.GoodsTypeKindId_2
+            LEFT JOIN Object AS Object_GoodsTypeKind_3 ON Object_GoodsTypeKind_3.Id = Movement.GoodsTypeKindId_3
+            LEFT JOIN Object AS Object_BarCodeBox_1    ON Object_BarCodeBox_1.Id = Movement.BarCodeBoxId_1
+            LEFT JOIN Object AS Object_BarCodeBox_2    ON Object_BarCodeBox_2.Id = Movement.BarCodeBoxId_2
+            LEFT JOIN Object AS Object_BarCodeBox_3    ON Object_BarCodeBox_3.Id = Movement.BarCodeBoxId_3
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box1
+                                 ON ObjectLink_BarCodeBox_Box1.ObjectId = Object_BarCodeBox_1.Id
+                                AND ObjectLink_BarCodeBox_Box1.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box1 ON Object_Box1.Id = ObjectLink_BarCodeBox_Box1.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box2
+                                 ON ObjectLink_BarCodeBox_Box2.ObjectId = Object_BarCodeBox_2.Id
+                                AND ObjectLink_BarCodeBox_Box2.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box2 ON Object_Box2.Id = ObjectLink_BarCodeBox_Box2.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box3
+                                 ON ObjectLink_BarCodeBox_Box3.ObjectId = Object_BarCodeBox_3.Id
+                                AND ObjectLink_BarCodeBox_Box3.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = ObjectLink_BarCodeBox_Box3.ChildObjectId
 
        WHERE Movement.Id =  inMovementId;
        --  AND Movement.DescId = zc_Movement_WeighingProduction();
