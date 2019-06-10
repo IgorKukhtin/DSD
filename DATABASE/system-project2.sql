@@ -1,3 +1,6 @@
+-- TRUNCATE TABLE SoldTable;
+-- TRUNCATE TABLE MovementItemContainer;
+
 -- SELECT COUNT(*) FROM MovementProtocol 
 -- SELECT COUNT(*) FROM MovementItemProtocol
 
