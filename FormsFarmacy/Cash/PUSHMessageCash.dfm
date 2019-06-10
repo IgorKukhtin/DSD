@@ -1,4 +1,4 @@
-object PUSHMessageForm: TPUSHMessageForm
+object PUSHMessageCashForm: TPUSHMessageCashForm
   Left = 0
   Top = 0
   Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077

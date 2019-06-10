@@ -835,7 +835,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
-  dsdExportToXLSAction, dsdExportToXMLAction;
+  dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage;
 
 procedure Register;
 begin
@@ -3426,15 +3426,16 @@ begin
           end else MessageType := FPUSHMessageType;
 
           case MessageType of
-            pmtWarning : MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, [mbOK], 0);
+            pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning);
             pmtError : begin
-                         raise Exception.Create(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value);
+                         ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtError);
+                         raise Exception.Create('Выполнение операции прервано...');
                          Result := False;
                          Exit;
                        end;
-            pmtInformation : MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, [mbOK], 0);
-            pmtConfirmation : if MessageDlg(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                #13#10#13#10'Продолжит выполнение ?...', mtConfirmation, mbYesNo, 0) <> mrYes then
+            pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation);
+            pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
+                                #13#10#13#10'Продолжит выполнение ?...', mtConfirmation) then
                               begin
                                 raise Exception.Create('Выполнение операции прервано...');
                                 Result := False;

@@ -27,6 +27,13 @@ RETURNS TABLE (Id                Integer
              , ContractName      TVarChar   -- ƒоговор (по которому найдена миним цена)
              , ExpirationDate    TDateTime -- срок годности (по которому найдена миним цена)
 
+             , Remains_1         TFloat    -- ќстаток до мес€ца (с учетом резерва)
+             , Price_unit_1      TFloat -- цена аптеки
+             , Price_unit_sale_1 TFloat -- цена аптеки со скидкой
+
+             , Remains_6         TFloat    -- ќстаток более мес€ца до 6 (с учетом резерва)
+             , Price_unit_6      TFloat -- цена аптеки
+             , Price_unit_sale_6 TFloat -- цена аптеки со скидкой
               )
 AS
 $BODY$
@@ -482,6 +489,17 @@ BEGIN
              , MinPrice_List.ContractId
              , Object_Contract.ValueData       AS ContractName
              , MinPrice_List.PartionGoodsDate  AS ExpirationDate
+             
+             , Null::TFloat                    AS Remains_1
+             , Price_Unit.Price                AS Price_unit_1
+             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit.Price
+                        ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale_1
+
+             , Null::TFloat                    AS Remains_6
+             , Price_Unit.Price                AS Price_unit_6
+             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit.Price
+                        ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale_6
+             
 
         FROM _tmpList AS tmpList -- _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
              -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1

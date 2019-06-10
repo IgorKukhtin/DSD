@@ -1,4 +1,4 @@
-unit PUSHMessage;
+unit PUSHMessageCash;
 
 interface
 
@@ -10,7 +10,7 @@ uses
   cxTextEdit, cxMemo;
 
 type
-  TPUSHMessageForm = class(TForm)
+  TPUSHMessageCashForm = class(TForm)
     bbCancel: TcxButton;
     bbOk: TcxButton;
     Memo: TcxMemo;
@@ -24,32 +24,32 @@ type
     { Public declarations }
   end;
 
-  function ShowPUSHMessage(AMessage : string) : boolean;
+  function ShowPUSHMessageCash(AMessage : string) : boolean;
 
 implementation
 
 {$R *.dfm}
 
-procedure TPUSHMessageForm.FormCreate(Sender: TObject);
+procedure TPUSHMessageCashForm.FormCreate(Sender: TObject);
 begin
   Memo.Style.Font.Size := Memo.Style.Font.Size + 4;
 end;
 
-procedure TPUSHMessageForm.MemoKeyDown(Sender: TObject; var Key: Word;
+procedure TPUSHMessageCashForm.MemoKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_Return then ModalResult := mrOk;
 end;
 
-function ShowPUSHMessage(AMessage : string) : boolean;
-  var PUSHMessageForm : TPUSHMessageForm;
+function ShowPUSHMessageCash(AMessage : string) : boolean;
+  var PUSHMessageCashForm : TPUSHMessageCashForm;
 begin
-  PUSHMessageForm := TPUSHMessageForm.Create(Screen.ActiveControl);
+  PUSHMessageCashForm := TPUSHMessageCashForm.Create(Screen.ActiveControl);
   try
-    PUSHMessageForm.Memo.Lines.Text := AMessage;
-    Result := PUSHMessageForm.ShowModal = mrOk;
+    PUSHMessageCashForm.Memo.Lines.Text := AMessage;
+    Result := PUSHMessageCashForm.ShowModal = mrOk;
   finally
-    PUSHMessageForm.Free;
+    PUSHMessageCashForm.Free;
   end;
 end;
 

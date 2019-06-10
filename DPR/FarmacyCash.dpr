@@ -19,7 +19,7 @@ uses
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  FormStorage in  '..\SOURCE\FormStorage.pas',
+  FormStorage in '..\SOURCE\FormStorage.pas',
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   UnilWin in '..\SOURCE\UnilWin.pas',
   cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
@@ -108,10 +108,11 @@ uses
   Helsi in '..\FormsFarmacy\Cash\Helsi.pas',
   Cash_IKC_C651T in '..\FormsFarmacy\Cash\Cash_IKC_C651T.pas',
   ChoiceHelsiUserName in '..\FormsFarmacy\Cash\ChoiceHelsiUserName.pas' {ChoiceHelsiUserNameForm: TParentForm},
-  PUSHMessage in '..\FormsFarmacy\Cash\PUSHMessage.pas' {PUSHMessageForm},
   EnterRecipeNumber in '..\FormsFarmacy\Cash\EnterRecipeNumber.pas' {EnterRecipeNumberForm},
   CheckHelsiSign in '..\FormsFarmacy\Cash\CheckHelsiSign.pas' {CheckHelsiSignForm},
-  CheckHelsiSignAllUnit in '..\FormsFarmacy\Cash\CheckHelsiSignAllUnit.pas' {CheckHelsiSignAllUnitForm: TParentForm};
+  CheckHelsiSignAllUnit in '..\FormsFarmacy\Cash\CheckHelsiSignAllUnit.pas' {CheckHelsiSignAllUnitForm: TParentForm},
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  PUSHMessageCash in '..\FormsFarmacy\Cash\PUSHMessageCash.pas' {PUSHMessageCashForm};
 
 {$R *.res}
 
