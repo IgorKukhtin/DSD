@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_WeighingProduction_wms()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_WeighingProduction_wms (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_WeighingProduction_wms (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_WeighingProduction_wms(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_WeighingProduction_wms(
     IN inLineCode            Integer   , --
     IN inDateInsert          TDateTime , --
     IN inDateUpdate          TDateTime , --
+    IN inAmount              TFloat    , --
+    IN inRealWeight          TFloat    , --
     IN inWmsCode             TVarChar  , --
     IN inUserId              Integer    -- сесси€ пользовател€
 )                              
@@ -33,6 +36,8 @@ BEGIN
                   , LineCode          = inLineCode
                   , DateInsert        = inDateInsert
                   , DateUpdate        = inDateUpdate
+                  , Amount            = inAmount
+                  , RealWeight        = inRealWeight
                   , WmsCode           = inWmsCode
          WHERE MI_WeighingProduction.Id = ioId;    
     

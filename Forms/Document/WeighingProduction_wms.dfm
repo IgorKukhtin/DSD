@@ -231,11 +231,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
-              Position = spFooter
-              Column = LineCode
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -246,7 +241,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UpdateDate
             end
             item
               Format = ',0.####'
@@ -255,17 +249,17 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = LineCode
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = RealWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = LineCode
             end
             item
               Format = ',0.####'
@@ -278,19 +272,25 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = UpdateDate
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeight
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsTypeKindName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -311,7 +311,15 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 126
+            Width = 121
+          end
+          object BoxName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1103#1097#1080#1082#1072
+            DataBinding.FieldName = 'BoxName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
           end
           object BarCodeBoxName: TcxGridDBColumn
             Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072
@@ -319,7 +327,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 154
+            Width = 148
           end
           object InvNumber_Parent: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
@@ -327,7 +335,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 130
+            Width = 123
           end
           object WmsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057
@@ -335,7 +343,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 122
+            Width = 117
           end
           object LineCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1083#1080#1085#1080#1080
@@ -343,7 +351,24 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 77
+            Width = 74
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object RealWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'RealWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -351,7 +376,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 103
+            Width = 98
           end
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
@@ -359,7 +384,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 117
+            Width = 112
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -483,7 +508,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 14
+    TabOrder = 13
     Width = 106
   end
   object edBarCodeBox_1: TcxButtonEdit
@@ -517,7 +542,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 19
+    TabOrder = 18
     Width = 120
   end
   object cxLabel20: TcxLabel
@@ -534,7 +559,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 21
+    TabOrder = 20
     Width = 120
   end
   object cxLabel21: TcxLabel
@@ -551,7 +576,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 23
+    TabOrder = 22
     Width = 91
   end
   object cxLabel22: TcxLabel
@@ -568,7 +593,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 26
+    TabOrder = 25
     Width = 91
   end
   object cxLabel23: TcxLabel

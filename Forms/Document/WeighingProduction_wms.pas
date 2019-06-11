@@ -150,6 +150,9 @@ type
     cxLabel23: TcxLabel;
     edBox_3: TcxButtonEdit;
     GuidesBox3: TdsdGuides;
+    Amount: TcxGridDBColumn;
+    RealWeight: TcxGridDBColumn;
+    BoxName: TcxGridDBColumn;
   private
   public
   end;
