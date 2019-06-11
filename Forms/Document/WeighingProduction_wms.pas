@@ -123,6 +123,36 @@ type
     edGoodsKind: TcxButtonEdit;
     GuidesGoodsKind: TdsdGuides;
     InvNumber_Parent: TcxGridDBColumn;
+    GuidesGoodsTypeKind1: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edGoodsTypeKind_1: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    edGoodsTypeKind_2: TcxButtonEdit;
+    GuidesGoodsTypeKind2: TdsdGuides;
+    cxLabel17: TcxLabel;
+    edGoodsTypeKind_3: TcxButtonEdit;
+    GuidesGoodsTypeKind3: TdsdGuides;
+    edBarCodeBox_1: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    GuidesBarCodeBox1: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edBarCodeBox_2: TcxButtonEdit;
+    GuidesBarCodeBox2: TdsdGuides;
+    cxLabel20: TcxLabel;
+    edBarCodeBox_3: TcxButtonEdit;
+    GuidesBarCodeBox3: TdsdGuides;
+    cxLabel21: TcxLabel;
+    edBox_1: TcxButtonEdit;
+    GuidesBox1: TdsdGuides;
+    cxLabel22: TcxLabel;
+    edBox_2: TcxButtonEdit;
+    GuidesBox2: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edBox_3: TcxButtonEdit;
+    GuidesBox3: TdsdGuides;
+    Amount: TcxGridDBColumn;
+    RealWeight: TcxGridDBColumn;
+    BoxName: TcxGridDBColumn;
   private
   public
   end;

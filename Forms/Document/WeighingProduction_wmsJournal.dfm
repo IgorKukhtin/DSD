@@ -63,6 +63,7 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 176
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -224,6 +225,78 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 91
+      end
+      object GoodsTypeKindName_1: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 1'
+        DataBinding.FieldName = 'GoodsTypeKindName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object GoodsTypeKindName_2: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 2'
+        DataBinding.FieldName = 'GoodsTypeKindName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object GoodsTypeKindName_3: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' 3'
+        DataBinding.FieldName = 'GoodsTypeKindName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BoxName_1: TcxGridDBColumn
+        Caption = #1071#1097#1080#1082' 1'
+        DataBinding.FieldName = 'BoxName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BarCodeBoxName_1: TcxGridDBColumn
+        Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 1'
+        DataBinding.FieldName = 'BarCodeBoxName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BoxName_2: TcxGridDBColumn
+        Caption = #1071#1097#1080#1082' 2'
+        DataBinding.FieldName = 'BoxName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BarCodeBoxName_2: TcxGridDBColumn
+        Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 2'
+        DataBinding.FieldName = 'BarCodeBoxName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BoxName_3: TcxGridDBColumn
+        Caption = #1071#1097#1080#1082' 3'
+        DataBinding.FieldName = 'BoxName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
+      end
+      object BarCodeBoxName_3: TcxGridDBColumn
+        Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072' 3'
+        DataBinding.FieldName = 'BarCodeBoxName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 90
       end
     end
     object cxGridLevel: TcxGridLevel

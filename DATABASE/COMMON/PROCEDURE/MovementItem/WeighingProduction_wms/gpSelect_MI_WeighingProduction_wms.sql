@@ -13,8 +13,10 @@ RETURNS TABLE (Id Integer
              , MovementId_Parent Integer, InvNumber_Parent TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
+             , BoxId Integer, BoxName TVarChar
              , WmsCode TVarChar
              , LineCode Integer
+             , Amount TFloat, RealWeight TFloat
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
               )
@@ -34,8 +36,12 @@ BEGIN
            , Object_GoodsTypeKind.ValueData       AS GoodsTypeKindName
            , Object_BarCodeBox.Id                 AS BarCodeBoxId
            , Object_BarCodeBox.ValueData          AS BarCodeBoxName
+           , Object_Box.Id                        AS BoxId
+           , Object_Box.ValueData                 AS BoxName
            , MovementItem.WmsCode
            , MovementItem.LineCode
+           , COALESCE (MovementItem.Amount, 1) :: TFloat AS Amount
+           , MovementItem.RealWeight           :: TFloat
            , MovementItem.InsertDate
            , MovementItem.UpdateDate
            , MovementItem.isErased
@@ -48,6 +54,11 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent      ON Movement_Parent.Id      = MovementItem.ParentId
             LEFT JOIN Object   AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = MovementItem.GoodsTypeKindId
             LEFT JOIN Object   AS Object_BarCodeBox    ON Object_BarCodeBox.Id    = MovementItem.BarCodeBoxId
+
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box
+                                 ON ObjectLink_BarCodeBox_Box.ObjectId = MovementItem.BarCodeBoxId
+                                AND ObjectLink_BarCodeBox_Box.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = ObjectLink_BarCodeBox_Box.ChildObjectId
 ;
 
 END;
