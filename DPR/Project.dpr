@@ -1,7 +1,6 @@
 program Project;
 
 uses
-//MidasLib,
   Windows,
   Vcl.Forms,
   Controls,
@@ -90,7 +89,8 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   BarCodeBoxEdit in '..\Forms\Guides\BarCodeBoxEdit.pas' {BarCodeBoxEditForm: TParentForm},
-  BarCodeBox in '..\Forms\Guides\BarCodeBox.pas' {BarCodeBoxForm: TParentForm};
+  BarCodeBox in '..\Forms\Guides\BarCodeBox.pas' {BarCodeBoxForm: TParentForm},
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

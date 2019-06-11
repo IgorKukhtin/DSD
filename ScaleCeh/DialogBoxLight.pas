@@ -63,11 +63,11 @@ type
   public
     function Execute (isNEW: Boolean; inGoodsId, inGoodsKindId : Integer): Boolean; virtual;
   end;
-
-  const msc_BoxMove   = 1500;
-  const msc_BoxMove_l = 2500;
-  const msc_Blink     = 700;
-  const msc_Blink_l   = 100;
+  //время ожидания
+  const msc_BoxMove   = 1000; // ждем переход на ОК и закрытие
+  const msc_BoxMove_l = 2500; // ждем переход на след. ящик
+  const msc_Blink     = 700;  // частота мигания пока в ячейке еще не набрали ш/к ящика
+  const msc_Blink_l   = 100;  // частота мигания - ш/к ящика набрали, но еще не перешли дальше
 
 var
    DialogBoxLightForm: TDialogBoxLightForm;
@@ -86,13 +86,43 @@ begin
    //
    with ParamsLight_local do
    begin
+     //
+     // вывели BarCode по ящикам в контролы
+     if ParamByName('BoxBarCode_1').asString <> ''
+     then begin
+               BoxCode1Label.Caption:= '(' + ParamByName('BoxCode_1').asString + ')';
+               Box1Edit.Text        := ParamByName('BoxBarCode_1').asString;
+          end
+     else begin
+               BoxCode1Label.Caption:= '(-)'; Box1Edit.Text:= '';
+          end;
+
+     if ParamByName('BoxBarCode_2').asString <> ''
+     then begin
+               BoxCode2Label.Caption:= '(' + ParamByName('BoxCode_2').asString + ')';
+               Box2Edit.Text        := ParamByName('BoxBarCode_2').asString;
+          end
+     else begin
+               BoxCode2Label.Caption:= '(-)'; Box2Edit.Text:= '';
+          end;
+
+     if ParamByName('BoxBarCode_3').asString <> ''
+     then begin
+               BoxCode3Label.Caption:= '(' + ParamByName('BoxCode_3').asString + ')';
+               Box3Edit.Text        := ParamByName('BoxBarCode_3').asString;
+          end
+     else begin
+               BoxCode3Label.Caption:= '(-)'; Box3Edit.Text:= '';
+          end;
+     //
+     //
      if (isNEW = TRUE)
      or ((ParamByName('GoodsTypeKindId_Sh').AsInteger  = 0)
       and(ParamByName('GoodsTypeKindId_Nom').AsInteger = 0)
       and(ParamByName('GoodsTypeKindId_Ves').AsInteger = 0))
      then begin
             // в первый раз - gpGet
-            Result:= DMMainScaleCehForm.gpGet_Scale_GoodsLight(ParamsLight_local, inGoodsId, inGoodsKindId);
+            Result:= DMMainScaleCehForm.gpGet_ScaleLight_Goods(ParamsLight_local, inGoodsId, inGoodsKindId);
             if not Result then exit;
             //
             is_Sh := FALSE;
@@ -101,27 +131,22 @@ begin
      end
      else begin
             is_Sh := (ParamByName('GoodsTypeKindId_Sh').AsInteger > 0)
-                 and ((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
+                 and (((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)and(trim(ParamByName('BoxBarCode_1').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)and(trim(ParamByName('BoxBarCode_2').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)and(trim(ParamByName('BoxBarCode_3').AsString) <> ''))
                      );
             is_Nom:= (ParamByName('GoodsTypeKindId_Nom').AsInteger > 0)
-                 and ((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
+                 and (((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)and(trim(ParamByName('BoxBarCode_1').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)and(trim(ParamByName('BoxBarCode_2').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)and(trim(ParamByName('BoxBarCode_3').AsString) <> ''))
                      );
             is_Ves:= (ParamByName('GoodsTypeKindId_Ves').AsInteger > 0)
-                 and ((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
-                    or(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
+                 and (((ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)and(trim(ParamByName('BoxBarCode_1').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)and(trim(ParamByName('BoxBarCode_2').AsString) <> ''))
+                    or((ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)and(trim(ParamByName('BoxBarCode_3').AsString) <> ''))
                      );
      end;
      //
-     // Главное сообщение - сколько ящиков
-     ParamByName('Count_box').AsInteger:=0;
-     if ParamByName('GoodsTypeKindId_Sh').AsInteger  > 0 then ParamByName('Count_box').AsInteger:= ParamByName('Count_box').AsInteger + 1;
-     if ParamByName('GoodsTypeKindId_Nom').AsInteger > 0 then ParamByName('Count_box').AsInteger:= ParamByName('Count_box').AsInteger + 1;
-     if ParamByName('GoodsTypeKindId_Ves').AsInteger > 0 then ParamByName('Count_box').AsInteger:= ParamByName('Count_box').AsInteger + 1;
      //
      if ParamByName('Count_box').AsInteger = 1 then
      begin
@@ -132,8 +157,8 @@ begin
        // мигающее сообщение - какая линия заполняется
        //WriteMsgBlink(1);
        //
-       MsgMainLabel.Caption:= 'нужно = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                             +' ящик ' + ParamByName('BoxName_1').asString
+       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                             +' вид = ' + ParamByName('BoxName_1').asString
                              +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
      end
      else begin
@@ -156,33 +181,10 @@ begin
                //WriteMsgBlink(3);
              end;
              //
-             MsgMainLabel.Caption:= 'нужен = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                                      +' ящик ' + ParamByName('BoxName_1').asString
-                                      +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
+             MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                                   +' вид = ' + ParamByName('BoxName_1').asString
+                                   +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
      end;
-     //
-     // вывели BarCode по ящикам в контролы
-     if ParamByName('BoxBarCode_1').asString <> ''
-     then begin
-               BoxCode1Label.Caption:= '(' + ParamByName('BoxCode_1').asString + ')';
-               Box1Edit.Text        := ParamByName('BoxBarCode_1').asString;
-          end
-     else begin BoxCode1Label.Caption:= '(-)'; Box1Edit.Text:= ''; end;
-
-     if ParamByName('BoxBarCode_2').asString <> ''
-     then begin
-               BoxCode2Label.Caption:= '(' + ParamByName('BoxCode_2').asString + ')';
-               Box2Edit.Text        := ParamByName('BoxBarCode_2').asString;
-          end
-     else begin BoxCode2Label.Caption:= '(-)'; Box2Edit.Text:= ''; end;
-
-     if ParamByName('BoxBarCode_3').asString <> ''
-     then begin
-               BoxCode3Label.Caption:= '(' + ParamByName('BoxCode_3').asString + ')';
-               Box3Edit.Text        := ParamByName('BoxBarCode_3').asString;
-          end
-     else begin BoxCode3Label.Caption:= '(-)'; Box3Edit.Text:= ''; end;
-
    end;
    //
    fStartWrite:= false;
@@ -208,6 +210,7 @@ begin
    {if num = 1 then MsgBlinkLabel.Style.BorderColor:= SettingMain.LightColor_1;
    if num = 2 then MsgBlinkLabel.Style.BorderColor:= SettingMain.LightColor_2;
    if num = 3 then MsgBlinkLabel.Style.BorderColor:= SettingMain.LightColor_3;}
+
    if num = 1 then MsgBlinkLabel.Style.Color:= SettingMain.LightColor_1;
    if num = 2 then MsgBlinkLabel.Style.Color:= SettingMain.LightColor_2;
    if num = 3 then MsgBlinkLabel.Style.Color:= SettingMain.LightColor_3;
@@ -310,50 +313,54 @@ begin
          Id_check:= ParamByName('GoodsTypeKindId_Sh').AsInteger;
          if Id_check > 0 then
             Result:= Result
-            and ((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)
+            and (is_Sh = TRUE)
+            and (((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)and(trim(Box1Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)and(trim(Box2Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)and(trim(Box3Edit.Text)<>''))
                  );
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Sh+'>.');
-              if (Box1Edit.Enabled) and (trim (Box1Edit.Text) = '') then ActiveControl:= Box1Edit;
-              if (Box2Edit.Enabled) and (trim (Box2Edit.Text) = '') then ActiveControl:= Box2Edit;
-              if (Box3Edit.Enabled) and (trim (Box3Edit.Text) = '') then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
               exit;
          end;
          //1.2.Nom
          Id_check:= ParamByName('GoodsTypeKindId_Nom').AsInteger;
          if Id_check > 0 then
             Result:= Result
-            and ((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)
+            and (is_Nom = TRUE)
+            and (((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)and(trim(Box1Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)and(trim(Box2Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)and(trim(Box3Edit.Text)<>''))
                 );
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Nom+'>.');
-              if (Box1Edit.Enabled) and (trim (Box1Edit.Text) = '') then ActiveControl:= Box1Edit;
-              if (Box2Edit.Enabled) and (trim (Box2Edit.Text) = '') then ActiveControl:= Box2Edit;
-              if (Box3Edit.Enabled) and (trim (Box3Edit.Text) = '') then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
               exit;
          end;
          //1.3.Ves
          Id_check:= ParamByName('GoodsTypeKindId_Ves').AsInteger;
          if Id_check > 0 then
             Result:= Result
-            and ((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)
-               or(ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)
+            and (is_Ves = TRUE)
+            and (((ParamByName('GoodsTypeKindId_1').AsInteger = Id_check)and(trim(Box1Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_2').AsInteger = Id_check)and(trim(Box2Edit.Text)<>''))
+               or((ParamByName('GoodsTypeKindId_3').AsInteger = Id_check)and(trim(Box3Edit.Text)<>''))
                 );
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Ves+'>.');
-              if (Box1Edit.Enabled) and (trim (Box1Edit.Text) = '') then ActiveControl:= Box1Edit;
-              if (Box2Edit.Enabled) and (trim (Box2Edit.Text) = '') then ActiveControl:= Box2Edit;
-              if (Box3Edit.Enabled) and (trim (Box3Edit.Text) = '') then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
               exit;
          end;
+         //
          //
          //2.проверка что в значениях ящиках то что надо
          //2.1. Line-1
@@ -405,32 +412,44 @@ begin
               exit;
          end;
          //
-         // если ШТ. нет, кому-то зальем -1
-         if ParamByName('GoodsTypeKindId_Sh').AsInteger = 0 then
-           if ParamByName('GoodsTypeKindId_1').AsInteger = 0
-           then ParamByName('GoodsTypeKindId_1').AsInteger:= -1
-           else if ParamByName('GoodsTypeKindId_2').AsInteger = 0
-                then ParamByName('GoodsTypeKindId_2').AsInteger:= -1
-                else if ParamByName('GoodsTypeKindId_3').AsInteger = 0
-                     then ParamByName('GoodsTypeKindId_3').AsInteger:= -1;
-         // если НОМ. нет, кому-то зальем -2
-         if ParamByName('GoodsTypeKindId_Nom').AsInteger = 0 then
-           if ParamByName('GoodsTypeKindId_1').AsInteger = 0
-           then ParamByName('GoodsTypeKindId_1').AsInteger:= -2
-           else if ParamByName('GoodsTypeKindId_2').AsInteger = 0
-                then ParamByName('GoodsTypeKindId_2').AsInteger:= -2
-                else if ParamByName('GoodsTypeKindId_3').AsInteger = 0
-                     then ParamByName('GoodsTypeKindId_3').AsInteger:= -2;
-         // если ВЕС нет, кому-то зальем -3
-         if ParamByName('GoodsTypeKindId_Ves').AsInteger = 0 then
-           if ParamByName('GoodsTypeKindId_1').AsInteger = 0
-           then ParamByName('GoodsTypeKindId_1').AsInteger:= -3
-           else if ParamByName('GoodsTypeKindId_2').AsInteger = 0
-                then ParamByName('GoodsTypeKindId_2').AsInteger:= -3
-                else if ParamByName('GoodsTypeKindId_3').AsInteger = 0
-                     then ParamByName('GoodsTypeKindId_3').AsInteger:= -3;
-
-
+         //
+         //3.проверка что разные ящики (!!!ПОВТОРНАЯ!!!)
+         // для 2+1
+         Result:= Result
+         and ((ParamByName('BoxBarCode_1').AsString <> ParamByName('BoxBarCode_2').AsString)
+           or (ParamByName('BoxBarCode_1').AsString = '')
+           or (ParamByName('BoxBarCode_2').AsString = '')
+             );
+         if not Result then
+         begin
+              ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box2Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+ParamByName('BoxBarCode_1').AsString+'>');
+              ActiveControl:= Box2Edit;
+              exit;
+         end;
+         // для 3+1
+         Result:= Result
+         and ((ParamByName('BoxBarCode_1').AsString  <> ParamByName('BoxBarCode_3').AsString)
+           or (ParamByName('BoxBarCode_1').AsString = '')
+           or (ParamByName('BoxBarCode_3').AsString = '')
+             );
+         if not Result then
+         begin
+              ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+ParamByName('BoxBarCode_1').AsString+'>');
+              ActiveControl:= Box3Edit;
+              exit;
+         end;
+         // для 3+2
+         Result:= Result
+         and ((ParamByName('BoxBarCode_2').AsString  <> ParamByName('BoxBarCode_3').AsString)
+           or (ParamByName('BoxBarCode_2').AsString = '')
+           or (ParamByName('BoxBarCode_3').AsString = '')
+             );
+         if not Result then
+         begin
+              ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box2Label.Caption+'> = <'+ParamByName('BoxBarCode_2').AsString+'>');
+              ActiveControl:= Box3Edit;
+              exit;
+         end;
      end;
      //
      // если все ОК - вернули новые параметры
@@ -440,6 +459,17 @@ end;
 procedure TDialogBoxLightForm.Box1EditChange(Sender: TObject);
 begin
      if (fStartWrite = TRUE) then exit;
+     //
+     // убрали активацию
+     with ParamsLight_local do
+       if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger
+       then is_Sh := FALSE
+       else
+           if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger
+           then is_Nom := FALSE
+           else
+               if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
+               then is_Ves := FALSE;
      //
      if trim (Box1Edit.Text) = ''
      then
@@ -461,19 +491,15 @@ end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box1EditExit(Sender: TObject);
 var lBoxBarCode : String;
-    lBoxCode : Integer;
 begin
    if (fStartWrite = TRUE) or (ActiveControl = bbCancel) then exit;
    if fBoxMove = TRUE then begin ActiveControl:= Box1Edit; exit;end;
    //
    //
-   lBoxBarCode := TRIM (Box1Edit.Text);
-   lBoxCode    := 1;
-   //
    with ParamsLight_local do
    begin
       // если надо обнулить
-      if lBoxBarCode = '' then
+      if TRIM (Box1Edit.Text) = '' then
       begin
            ShowMessage('Ошибка.Необходимо заполнить');
            ActiveControl:=Box1Edit;
@@ -486,13 +512,30 @@ begin
                 if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger then is_Nom:= FALSE;
                 if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger then is_Ves:= FALSE;
                 //обнулили в 1
-                ParamByName('GoodsTypeKindId_1').AsInteger := 0;
+                //ParamByName('GoodsTypeKindId_1').AsInteger := 0;
                 ParamByName('BoxCode_1').AsInteger         := 0;
                 ParamByName('BoxBarCode_1').AsString       := '';
            end;
       end
+      else if trim(Box1Edit.Text) = trim(Box2Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box1Label.Caption+'>  и <'+Box2Label.Caption+'> = <'+trim(Box1Edit.Text)+'>');
+           ActiveControl:= Box1Edit;
+           exit;
+      end
+      else if trim(Box1Edit.Text) = trim(Box3Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box1Label.Caption+'>  и <'+Box3Label.Caption+'> = <'+trim(Box1Edit.Text)+'>');
+           ActiveControl:= Box1Edit;
+           exit;
+      end
       else begin
-          //если что-то было - сначала освободить
+          //
+          ParamByName('BoxBarCode_1').AsString:= TRIM (Box1Edit.Text);
+          // нашли/проверили и если надо - вставили Ш/К в справочник
+          if not DMMainScaleCehForm.gpGet_ScaleLight_BarCodeBox (1, ParamsLight_local) then begin ActiveControl:=Box1Edit; exit; end;
+          //
+          //
           if (ParamByName('GoodsTypeKindId_1').AsInteger > 0) and (ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then is_Sh := FALSE;
           if (ParamByName('GoodsTypeKindId_1').AsInteger > 0) and (ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
@@ -501,28 +544,31 @@ begin
           then is_Ves:= FALSE;
           // если еще НЕ заполнен и нужны ШТУКИ
           if (is_Sh = FALSE) and (ParamByName('GoodsTypeKindId_Sh').AsInteger > 0)
+             and (ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then begin
               //в 1 будут ШТУКИ
-              ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
+              //ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
               //заполнили что ШТУКИ готовы
               is_Sh:= TRUE;
           end
           else
             // если еще НЕ заполнен и нужен НОМИНАЛ
             if (is_Nom = FALSE) and (ParamByName('GoodsTypeKindId_Nom').AsInteger > 0)
+               and (ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
             then begin
                 //в 1 будут НОМ.
-                ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
+                //ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
                 //заполнили что НОМ. готов
                 is_Nom:= TRUE;
             end
             else
-              // если еще НЕ заполнен и нужен НЕНОМИНАЛ
+              // если еще НЕ заполнен и нужен ВЕС
               if (is_Ves = FALSE) and (ParamByName('GoodsTypeKindId_Ves').AsInteger > 0)
+                  and (ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
               then begin
-                  //в 1 будут НЕНОМИНАЛ
-                  ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
-                  //заполнили что НЕНОМИНАЛ готов
+                  //в 1 будут ВЕС
+                  //ParamByName('GoodsTypeKindId_1').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
+                  //заполнили что ВЕС готов
                   is_Ves:= TRUE;
               end
               else begin
@@ -531,9 +577,11 @@ begin
                   ActiveControl:= Box1Edit;
                   exit;
               end;
-          // заполнили остальное
-          ParamByName('BoxCode_1').AsInteger         := lBoxCode;
-          ParamByName('BoxBarCode_1').AsString       := lBoxBarCode;
+          //
+          fStartWrite:= true;
+          BoxCode1Label.Caption:= '(' + ParamByName('BoxCode_1').asString + ')';
+          Box1Edit.Text:= ParamByName('BoxBarCode_1').AsString;
+          fStartWrite:= false;
       end;
    end;
 end;
@@ -545,9 +593,10 @@ begin
      if Key = 13 then
      begin
           ActiveControl:= bbOk;
-          //
+          // если будет закрытие
           if ActiveControl= bbOk then
           begin
+             // остаемся пока в 1
              ActiveControl:= Box1Edit;
              try
                fBoxMove:= true;
@@ -556,6 +605,7 @@ begin
              finally
                fBoxMove:= false;
              end;
+             // закрыли
              bbOkClick(Self);
           end;
      end;
@@ -570,6 +620,17 @@ end;
 procedure TDialogBoxLightForm.Box2EditChange(Sender: TObject);
 begin
      if (fStartWrite = TRUE) then exit;
+     //
+     // убрали активацию
+     with ParamsLight_local do
+       if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger
+       then is_Sh := FALSE
+       else
+           if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger
+           then is_Nom := FALSE
+           else
+               if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
+               then is_Ves := FALSE;
      //
      if trim (Box2Edit.Text) = ''
      then
@@ -590,20 +651,15 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box2EditExit(Sender: TObject);
-var lBoxBarCode : String;
-    lBoxCode : Integer;
 begin
    if (fStartWrite = TRUE) or (ActiveControl = bbCancel) then exit;
    if fBoxMove = TRUE then begin ActiveControl:= Box2Edit; exit;end;
    //
    //
-   lBoxBarCode := Box2Edit.Text;
-   lBoxCode    := 2;
-   //
    with ParamsLight_local do
    begin
       // если надо обнулить
-      if lBoxBarCode = '' then
+      if trim(Box2Edit.Text) = '' then
       begin
            ShowMessage('Ошибка.Необходимо заполнить');
            ActiveControl:=Box2Edit;
@@ -616,12 +672,29 @@ begin
                 if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger then is_Nom:= FALSE;
                 if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger then is_Ves:= FALSE;
                 //обнулили в 2
-                ParamByName('GoodsTypeKindId_2').AsInteger := 0;
+                //ParamByName('GoodsTypeKindId_2').AsInteger := 0;
                 ParamByName('BoxCode_2').AsInteger         := 0;
                 ParamByName('BoxBarCode_2').AsString       := '';
            end;
       end
+      else if trim(Box2Edit.Text) = trim(Box3Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box2Label.Caption+'>  и <'+Box3Label.Caption+'> = <'+trim(Box2Edit.Text)+'>');
+           ActiveControl:= Box2Edit;
+           exit;
+      end
+      else if trim(Box2Edit.Text) = trim(Box1Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box2Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+trim(Box2Edit.Text)+'>');
+           ActiveControl:= Box2Edit;
+           exit;
+      end
       else begin
+          //
+          ParamByName('BoxBarCode_2').AsString:= trim(Box2Edit.Text);
+          // нашли/проверили и если надо - вставили Ш/К в справочник
+          if not DMMainScaleCehForm.gpGet_ScaleLight_BarCodeBox (2, ParamsLight_local) then begin ActiveControl:=Box2Edit; exit; end;
+          //
           //если что-то было - сначала освободить
           if (ParamByName('GoodsTypeKindId_2').AsInteger > 0) and (ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then is_Sh := FALSE;
@@ -631,28 +704,31 @@ begin
           then is_Ves:= FALSE;
           // если еще НЕ заполнен и нужны ШТУКИ
           if (is_Sh = FALSE) and (ParamByName('GoodsTypeKindId_Sh').AsInteger > 0)
+              and(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then begin
               //в 2 будут ШТУКИ
-              ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
+              //ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
               //заполнили что ШТУКИ готовы
               is_Sh:= TRUE;
           end
           else
             // если еще НЕ заполнен и нужен НОМИНАЛ
             if (is_Nom = FALSE) and (ParamByName('GoodsTypeKindId_Nom').AsInteger > 0)
+               and(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
             then begin
                 //в 2 будут НОМ.
-                ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
+                //ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
                 //заполнили что НОМ. готов
                 is_Nom:= TRUE;
             end
             else
-              // если еще НЕ заполнен и нужен НЕНОМИНАЛ
+              // если еще НЕ заполнен и нужен ВЕС
               if (is_Ves = FALSE) and (ParamByName('GoodsTypeKindId_Ves').AsInteger > 0)
+                 and(ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
               then begin
-                  //в 2 будут НЕНОМИНАЛ
-                  ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
-                  //заполнили что НЕНОМИНАЛ готов
+                  //в 2 будут ВЕС
+                  //ParamByName('GoodsTypeKindId_2').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
+                  //заполнили что ВЕС готов
                   is_Ves:= TRUE;
               end
               else begin
@@ -661,9 +737,11 @@ begin
                   ActiveControl:= Box2Edit;
                   exit;
               end;
-          // заполнили остальное
-          ParamByName('BoxCode_2').AsInteger         := lBoxCode;
-          ParamByName('BoxBarCode_2').AsString       := lBoxBarCode;
+          //
+          fStartWrite:= true;
+          BoxCode2Label.Caption:= '(' + ParamByName('BoxCode_2').asString + ')';
+          Box2Edit.Text:= ParamByName('BoxBarCode_2').AsString;
+          fStartWrite:= false;
       end;
    end;
 end;
@@ -679,8 +757,10 @@ begin
           //
           if ActiveControl= bbOk
           then
+              // если переход будет в 1
               if Box1Edit.Enabled then
               begin
+                    // остаемся пока в 2
                     ActiveControl:= Box2Edit;
                     try
                       fBoxMove:= true;
@@ -689,9 +769,12 @@ begin
                     finally
                       fBoxMove:= false;
                     end;
+                    // перешли в 1
                     ActiveControl:=Box1Edit;
               end
+              // если будет закрытие
               else begin
+                    // остаемся пока в 2
                     ActiveControl:= Box2Edit;
                     try
                       fBoxMove:= true;
@@ -700,6 +783,7 @@ begin
                     finally
                       fBoxMove:= false;
                     end;
+                    // закрыли
                     bbOkClick(Self);
               end;
      end;
@@ -714,6 +798,17 @@ end;
 procedure TDialogBoxLightForm.Box3EditChange(Sender: TObject);
 begin
      if (fStartWrite = TRUE) then exit;
+     //
+     // убрали активацию
+     with ParamsLight_local do
+       if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger
+       then is_Sh := FALSE
+       else
+           if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger
+           then is_Nom := FALSE
+           else
+               if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
+               then is_Ves := FALSE;
      //
      if trim (Box3Edit.Text) = ''
      then
@@ -734,20 +829,15 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box3EditExit(Sender: TObject);
-var lBoxBarCode : String;
-    lBoxCode : Integer;
 begin
    if (fStartWrite = TRUE) or (ActiveControl = bbCancel) then exit;
    if fBoxMove = TRUE then begin ActiveControl:= Box3Edit; exit;end;
    //
    //
-   lBoxBarCode := Box3Edit.Text;
-   lBoxCode    := 3;
-   //
    with ParamsLight_local do
    begin
       // если надо обнулить
-      if lBoxBarCode = '' then
+      if trim(Box3Edit.Text) = '' then
       begin
            ShowMessage('Ошибка.Необходимо заполнить');
            ActiveControl:=Box3Edit;
@@ -760,12 +850,29 @@ begin
                 if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger then is_Nom:= FALSE;
                 if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger then is_Ves:= FALSE;
                 //обнулили в 3
-                ParamByName('GoodsTypeKindId_3').AsInteger := 0;
+                //ParamByName('GoodsTypeKindId_3').AsInteger := 0;
                 ParamByName('BoxCode_3').AsInteger         := 0;
                 ParamByName('BoxBarCode_3').AsString       := '';
            end;
       end
+      else if trim(Box3Edit.Text) = trim(Box2Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box2Label.Caption+'> = <'+trim(Box3Edit.Text)+'>');
+           ActiveControl:= Box3Edit;
+           exit;
+      end
+      else if trim(Box3Edit.Text) = trim(Box1Edit.Text) then
+      begin
+           ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+trim(Box3Edit.Text)+'>');
+           ActiveControl:= Box3Edit;
+           exit;
+      end
       else begin
+          //
+          ParamByName('BoxBarCode_3').AsString:= trim(Box3Edit.Text);
+          // нашли/проверили и если надо - вставили Ш/К в справочник
+          if not DMMainScaleCehForm.gpGet_ScaleLight_BarCodeBox (3, ParamsLight_local) then begin ActiveControl:=Box3Edit; exit; end;
+          //
           //если что-то было - сначала освободить
           if (ParamByName('GoodsTypeKindId_3').AsInteger > 0) and (ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then is_Sh := FALSE;
@@ -775,28 +882,31 @@ begin
           then is_Ves:= FALSE;
           // если еще НЕ заполнен и нужны ШТУКИ
           if (is_Sh = FALSE) and (ParamByName('GoodsTypeKindId_Sh').AsInteger > 0)
+             and(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger)
           then begin
               //в 3 будут ШТУКИ
-              ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
+              //ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Sh').AsInteger;
               //заполнили что ШТУКИ готовы
               is_Sh:= TRUE;
           end
           else
             // если еще НЕ заполнен и нужен НОМИНАЛ
             if (is_Nom = FALSE) and (ParamByName('GoodsTypeKindId_Nom').AsInteger > 0)
+               and(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Nom').AsInteger)
             then begin
                 //в 3 будут НОМ.
-                ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
+                //ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Nom').AsInteger;
                 //заполнили что НОМ. готов
                 is_Nom:= TRUE;
             end
             else
-              // если еще НЕ заполнен и нужен НЕНОМИНАЛ
+              // если еще НЕ заполнен и нужен ВЕС
               if (is_Ves = FALSE) and (ParamByName('GoodsTypeKindId_Ves').AsInteger > 0)
+                 and(ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)
               then begin
-                  //в 3 будут НЕНОМИНАЛ
-                  ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
-                  //заполнили что НЕНОМИНАЛ готов
+                  //в 3 будут ВЕС
+                  //ParamByName('GoodsTypeKindId_3').AsInteger := ParamByName('GoodsTypeKindId_Ves').AsInteger;
+                  //заполнили что ВЕС готов
                   is_Ves:= TRUE;
               end
               else begin
@@ -805,9 +915,11 @@ begin
                   ActiveControl:= Box3Edit;
                   exit;
               end;
-          // заполнили остальное
-          ParamByName('BoxCode_3').AsInteger         := lBoxCode;
-          ParamByName('BoxBarCode_3').AsString       := lBoxBarCode;
+          //
+          fStartWrite:= true;
+          BoxCode3Label.Caption:= '(' + ParamByName('BoxCode_3').asString + ')';
+          Box3Edit.Text:= ParamByName('BoxBarCode_3').AsString;
+          fStartWrite:= false;
       end;
    end;
 end;
@@ -823,8 +935,10 @@ begin
           //
           if ActiveControl= bbOk
           then
+              // если переход будет в 2
               if Box2Edit.Enabled then
               begin
+                    // остаемся пока в 3
                     ActiveControl:= Box3Edit;
                     try
                       fBoxMove:= true;
@@ -833,11 +947,14 @@ begin
                     finally
                       fBoxMove:= false;
                     end;
+                    // перешли в 2
                     ActiveControl:=Box2Edit;
               end
               else
+              // если переход будет в 1
               if Box1Edit.Enabled then
               begin
+                    // остаемся пока в 3
                     ActiveControl:= Box3Edit;
                     try
                       fBoxMove:= true;
@@ -846,9 +963,12 @@ begin
                     finally
                       fBoxMove:= false;
                     end;
+                    // перешли в 1
                     ActiveControl:=Box1Edit;
               end
+              // если будет закрытие
               else begin
+                    // остаемся пока в 3
                     ActiveControl:= Box3Edit;
                     try
                       fBoxMove:= true;
@@ -857,6 +977,7 @@ begin
                     finally
                       fBoxMove:= false;
                     end;
+                    // закрыли
                     bbOkClick(Self);
               end;
      end;

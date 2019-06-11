@@ -45,6 +45,9 @@ type
     function gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkStorageLine(MovementId : Integer): String;
+    //ScaleCeh - Light
+    function gpGet_ScaleLight_Goods(var execParamsLight : TParams; inGoodsId, inGoodsKindId : Integer): Boolean;
+    function gpGet_ScaleLight_BarCodeBox (num : Integer; execParamsLight : TParams):Boolean;
 
   end;
 
@@ -63,12 +66,12 @@ procedure TDMMainScaleCehForm.DataModuleCreate(Sender: TObject);
 begin
     //  gpInitialize_ParamsMovement;
     //
-    Create_ParamsMovement(ParamsMovement);
+//!    Create_ParamsMovement(ParamsMovement);
     //
-    gpGet_Scale_OperDate(ParamsMovement);
+//!    gpGet_Scale_OperDate(ParamsMovement);
     //
     ///////Result:=
-    DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
+//!    DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;
 {------------------------------------------------------------------------}
 {function gpInitialize_ParamsMovement: Boolean;
@@ -86,52 +89,170 @@ function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement(var execParamsMovement:TPar
 begin
     Result:=false;
 
-    with spSelect do
-    begin
-       StoredProcName:='gpGet_ScaleCeh_Movement';
-       OutputType:=otDataSet;
-       Params.Clear;
+    if (SettingMain.isModeSorting = TRUE) // and (1=0)
+    then
+      with spSelect do begin
+         StoredProcName:='gpGet_ScaleLight_Movement';
+         OutputType:=otDataSet;
+         Params.Clear;
 
-       if (isNext = TRUE)or(isLast = FALSE)//так сложно, т.к. при isLast = FALSE надо обработать MovementId
-       then Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger)
-       else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
+         if (isNext = TRUE)or(isLast = FALSE)//так сложно, т.к. при isLast = FALSE надо обработать MovementId
+         then Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger)
+         else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+         Params.AddParam('inPlaceNumber', ftInteger, ptInput, SettingMain.PlaceNumber);
+         Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+         Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
 
-       //try
-         Execute;
+         //try
+           Execute;
 
-       //!!!выход, пока обрабатывается эта ошибка только в одном месте!!!
-       if DataSet.RecordCount<>1 then begin Result:=false;exit;end;
+         //!!!выход, пока обрабатывается эта ошибка только в одном месте!!!
+         if DataSet.RecordCount<>1 then begin Result:=false;exit;end;
+
+         with execParamsMovement do
+         begin
+           ParamByName('MovementId_begin').AsInteger:= 0;
+
+           ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+           ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+           ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
+
+           ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+
+           ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+           ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+           ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+           ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;
+           ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+           ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+           ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
+           // !!!ParamsLight!!!
+           ParamsLight.ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').asInteger;
+           ParamsLight.ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').asInteger;
+           ParamsLight.ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
+           ParamsLight.ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').AsInteger;
+           ParamsLight.ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').asInteger;
+           ParamsLight.ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+           ParamsLight.ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').AsInteger;
+           ParamsLight.ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').asInteger;
+           ParamsLight.ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+           // Главное сообщение - сколько ящиков
+           ParamsLight.ParamByName('Count_box').AsInteger:= DataSet.FieldByName('Count_box').AsInteger;
+           // Id - есть ли ШТ.
+           ParamsLight.ParamByName('GoodsTypeKindId_Sh').AsInteger := DataSet.FieldByName('GoodsTypeKindId_Sh').AsInteger;
+           // Id - есть ли НОМ.
+           ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger:= DataSet.FieldByName('GoodsTypeKindId_Nom').AsInteger;
+           // Id - есть ли ВЕС
+           ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger:= DataSet.FieldByName('GoodsTypeKindId_Ves').AsInteger;
+           // Код ВМС
+           ParamsLight.ParamByName('WmsCode_Sh').asString := DataSet.FieldByName('WmsCode_Sh').asString;
+           ParamsLight.ParamByName('WmsCode_Nom').asString:= DataSet.FieldByName('WmsCode_Nom').asString;
+           ParamsLight.ParamByName('WmsCode_Ves').asString:= DataSet.FieldByName('WmsCode_Ves').asString;
+           // минимальный вес 1шт.
+           ParamsLight.ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+           // максимальный вес 1шт.
+           ParamsLight.ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+
+           //1-ая линия - Всегда этот цвет
+           ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;
+           ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger    := DataSet.FieldByName('BarCodeBoxId_1').AsInteger;
+           ParamsLight.ParamByName('BoxCode_1').AsInteger         := DataSet.FieldByName('BoxCode_1').AsInteger;
+           ParamsLight.ParamByName('BoxBarCode_1').AsString       := DataSet.FieldByName('BoxBarCode_1').AsString;
+        // ParamsLight.ParamByName('WeightOnBoxTotal_1').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+        // ParamsLight.ParamByName('CountOnBoxTotal_1').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+        // ParamsLight.ParamByName('WeightTotal_1').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('CountTotal_1').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('BoxTotal_1').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+           ParamsLight.ParamByName('BoxId_1').AsInteger           := DataSet.FieldByName('BoxId_1').AsInteger;
+           ParamsLight.ParamByName('BoxName_1').asString          := DataSet.FieldByName('BoxName_1').asString;
+           ParamsLight.ParamByName('BoxWeight_1').asFloat         := DataSet.FieldByName('BoxWeight_1').asFloat;   // Вес самого ящика
+           ParamsLight.ParamByName('WeightOnBox_1').asFloat       := DataSet.FieldByName('WeightOnBox_1').asFloat; // вложенность - Вес
+           ParamsLight.ParamByName('CountOnBox_1').asFloat        := DataSet.FieldByName('CountOnBox_1').asFloat;  // Вложенность - шт (информативно?)
+
+           //2-ая линия - Всегда этот цвет
+           ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger := DataSet.FieldByName('GoodsTypeKindId_2').AsInteger;
+           ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger    := DataSet.FieldByName('BarCodeBoxId_2').AsInteger;
+           ParamsLight.ParamByName('BoxCode_2').AsInteger         := DataSet.FieldByName('BoxCode_2').AsInteger;
+           ParamsLight.ParamByName('BoxBarCode_2').AsString       := DataSet.FieldByName('BoxBarCode_2').AsString;
+        // ParamsLight.ParamByName('WeightOnBoxTotal_2').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+        // ParamsLight.ParamByName('CountOnBoxTotal_2').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+        // ParamsLight.ParamByName('WeightTotal_2').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('CountTotal_2').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('BoxTotal_2').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+           ParamsLight.ParamByName('BoxId_2').AsInteger           := DataSet.FieldByName('BoxId_2').AsInteger;
+           ParamsLight.ParamByName('BoxName_2').asString          := DataSet.FieldByName('BoxName_2').asString;
+           ParamsLight.ParamByName('BoxWeight_2').asFloat         := DataSet.FieldByName('BoxWeight_2').asFloat;   // Вес самого ящика
+           ParamsLight.ParamByName('WeightOnBox_2').asFloat       := DataSet.FieldByName('WeightOnBox_2').asFloat; // вложенность - Вес
+           ParamsLight.ParamByName('CountOnBox_2').asFloat        := DataSet.FieldByName('CountOnBox_2').asFloat;  // Вложенность - шт (информативно?)
+
+            //3-ья линия - Всегда этот цвет
+           ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger := DataSet.FieldByName('GoodsTypeKindId_3').AsInteger;
+           ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger    := DataSet.FieldByName('BarCodeBoxId_3').AsInteger;
+           ParamsLight.ParamByName('BoxCode_3').AsInteger         := DataSet.FieldByName('BoxCode_3').AsInteger;
+           ParamsLight.ParamByName('BoxBarCode_3').AsString       := DataSet.FieldByName('BoxBarCode_3').AsString;
+        // ParamsLight.ParamByName('WeightOnBoxTotal_3').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+        // ParamsLight.ParamByName('CountOnBoxTotal_3').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+        // ParamsLight.ParamByName('WeightTotal_3').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('CountTotal_3').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+        // ParamsLight.ParamByName('BoxTotal_3').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+           ParamsLight.ParamByName('BoxId_3').AsInteger           := DataSet.FieldByName('BoxId_3').AsInteger;
+           ParamsLight.ParamByName('BoxName_3').asString          := DataSet.FieldByName('BoxName_3').asString;
+           ParamsLight.ParamByName('BoxWeight_3').asFloat         := DataSet.FieldByName('BoxWeight_3').asFloat;   // Вес самого ящика
+           ParamsLight.ParamByName('WeightOnBox_3').asFloat       := DataSet.FieldByName('WeightOnBox_3').asFloat; // вложенность - Вес
+           ParamsLight.ParamByName('CountOnBox_3').asFloat        := DataSet.FieldByName('CountOnBox_3').asFloat;  // Вложенность - шт (информативно?)
+
+         end;
+      end
+    else
+      with spSelect do
+      begin
+         StoredProcName:='gpGet_ScaleCeh_Movement';
+         OutputType:=otDataSet;
+         Params.Clear;
+
+         if (isNext = TRUE)or(isLast = FALSE)//так сложно, т.к. при isLast = FALSE надо обработать MovementId
+         then Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger)
+         else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+         Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+         Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
+
+         //try
+           Execute;
+
+         //!!!выход, пока обрабатывается эта ошибка только в одном месте!!!
+         if DataSet.RecordCount<>1 then begin Result:=false;exit;end;
 
 
-       with execParamsMovement do
-       begin
-         ParamByName('MovementId_begin').AsInteger:= 0;
+         with execParamsMovement do
+         begin
+           ParamByName('MovementId_begin').AsInteger:= 0;
 
-         ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
-         ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
-         ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
+           ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+           ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+           ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
 
-         ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+           ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
-         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
-         ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
-         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
-         ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;
-         ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
-         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
-         ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
+           ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+           ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+           ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+           ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;
+           ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+           ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+           ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
 
-       end;
+         end;
 
-       {except
-         result.Code := Code;
-         result.Id   := 0;
-         result.Name := '';
-         ShowMessage('Ошибка получения - gpMovementDesc');
-       end;}
-    end;
+         {except
+           result.Code := Code;
+           result.Id   := 0;
+           result.Name := '';
+           ShowMessage('Ошибка получения - gpMovementDesc');
+         end;}
+      end;
 
     Result:=true;
 end;
@@ -327,28 +448,61 @@ end;
 function TDMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
-    with spSelect do begin
-       StoredProcName:='gpInsertUpdate_ScaleCeh_Movement';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
-       Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
-       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
-       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
-       Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
-       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       //try
-         Execute;
-         execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
-         execParamsMovement.ParamByName('InvNumber').AsString:=DataSet.FieldByName('InvNumber').AsString;
-         execParamsMovement.ParamByName('OperDate_Movement').AsString:=DataSet.FieldByName('OperDate').AsString;
-       {except
-         Result := '';
-         ShowMessage('Ошибка получения - gpInsertUpdate_ScaleCeh_Movement');
-       end;}
-    end;
+    if SettingMain.isModeSorting = TRUE
+    then
+      with spSelect do begin
+         StoredProcName:='gpInsertUpdate_ScaleLight_Movement';
+         OutputType:=otDataSet;
+         Params.Clear;
+         Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+         Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+         Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+         Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
+         Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+         Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+         Params.AddParam('inGoodsTypeKindId_1', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger);
+         Params.AddParam('inGoodsTypeKindId_2', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger);
+         Params.AddParam('inGoodsTypeKindId_3', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger);
+         Params.AddParam('inBarCodeBoxId_1', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger);
+         Params.AddParam('inBarCodeBoxId_2', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger);
+         Params.AddParam('inBarCodeBoxId_3', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger);
+         Params.AddParam('inGoodsId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId').AsInteger);
+         Params.AddParam('inGoodsKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId').AsInteger);
+         Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+         Params.AddParam('inPlaceNumber', ftInteger, ptInput, SettingMain.PlaceNumber);
+         //try
+           Execute;
+           execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
+           execParamsMovement.ParamByName('InvNumber').AsString:=DataSet.FieldByName('InvNumber').AsString;
+           execParamsMovement.ParamByName('OperDate_Movement').AsString:=DataSet.FieldByName('OperDate').AsString;
+         {except
+           Result := '';
+           ShowMessage('Ошибка получения - gpInsertUpdate_ScaleCeh_Movement');
+         end;}
+      end
+    else
+      with spSelect do begin
+         StoredProcName:='gpInsertUpdate_ScaleCeh_Movement';
+         OutputType:=otDataSet;
+         Params.Clear;
+         Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+         Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+         Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+         Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
+         Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+         Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+         Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
+         Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+         //try
+           Execute;
+           execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
+           execParamsMovement.ParamByName('InvNumber').AsString:=DataSet.FieldByName('InvNumber').AsString;
+           execParamsMovement.ParamByName('OperDate_Movement').AsString:=DataSet.FieldByName('OperDate').AsString;
+         {except
+           Result := '';
+           ShowMessage('Ошибка получения - gpInsertUpdate_ScaleCeh_Movement');
+         end;}
+      end;
     Result:=true;
 end;
 {------------------------------------------------------------------------}
@@ -358,40 +512,65 @@ begin
     then Result:= gpInsertUpdate_ScaleCeh_Movement(execParamsMovement)
     else Result:= true;
     //
-    if Result then
-    with spSelect do begin
-       StoredProcName:='gpInsert_ScaleCeh_MI';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inId', ftInteger, ptInput, 0);
-       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
-       Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
-       Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
-       Params.AddParam('inStorageLineId', ftInteger, ptInput, execParamsMI.ParamByName('StorageLineId').AsInteger);
-       Params.AddParam('inIsStartWeighing', ftBoolean, ptInput, execParamsMI.ParamByName('isStartWeighing').AsBoolean);
-       Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
-       Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);
-       Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
-       Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
-       Params.AddParam('inLiveWeight', ftFloat, ptInput, execParamsMI.ParamByName('LiveWeight').AsFloat);
-       Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
-       Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
-       Params.AddParam('inCountPack', ftFloat, ptInput, execParamsMI.ParamByName('CountPack').AsFloat);
-       Params.AddParam('inCountSkewer1', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer1').AsFloat);
-       Params.AddParam('inWeightSkewer1', ftFloat, ptInput, SettingMain.WeightSkewer1);
-       Params.AddParam('inCountSkewer2', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer2').AsFloat);
-       Params.AddParam('inWeightSkewer2', ftFloat, ptInput, SettingMain.WeightSkewer2);
-       Params.AddParam('inWeightOther', ftFloat, ptInput, execParamsMI.ParamByName('WeightOther').AsFloat);
-       Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
-       Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
-       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       //try
-         Execute;
-       {except
-         Result := '';
-         ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
-       end;}
-    end;
+    if Result
+    then
+      if SettingMain.isModeSorting = TRUE
+      then
+        with spSelect do begin
+           StoredProcName:='gpInsert_ScaleLight_MI';
+           OutputType:=otDataSet;
+           Params.Clear;
+           Params.AddParam('inId', ftInteger, ptInput, 0);
+           Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+           Params.AddParam('inGoodsTypeKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId').AsInteger);
+           Params.AddParam('inBarCodeBoxId', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId').AsInteger);
+           Params.AddParam('inLineCode', ftInteger, ptInput, ParamsLight.ParamByName('LineCode').AsInteger);
+           Params.AddParam('inAmount', ftFloat, ptInput, ParamsLight.ParamByName('Amount').AsFloat);
+           Params.AddParam('inRealWeight', ftFloat, ptInput, ParamsLight.ParamByName('RealWeight').AsFloat);
+           Params.AddParam('inWmsCode', ftInteger, ptInput, ParamsLight.ParamByName('WmsCode').AsString);
+           Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+           //try
+             Execute;
+           {except
+             Result := '';
+             ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
+           end;}
+
+        end
+      else
+        with spSelect do begin
+           StoredProcName:='gpInsert_ScaleCeh_MI';
+           OutputType:=otDataSet;
+           Params.Clear;
+           Params.AddParam('inId', ftInteger, ptInput, 0);
+           Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+           Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
+           Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
+           Params.AddParam('inStorageLineId', ftInteger, ptInput, execParamsMI.ParamByName('StorageLineId').AsInteger);
+           Params.AddParam('inIsStartWeighing', ftBoolean, ptInput, execParamsMI.ParamByName('isStartWeighing').AsBoolean);
+           Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
+           Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);
+           Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
+           Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
+           Params.AddParam('inLiveWeight', ftFloat, ptInput, execParamsMI.ParamByName('LiveWeight').AsFloat);
+           Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
+           Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
+           Params.AddParam('inCountPack', ftFloat, ptInput, execParamsMI.ParamByName('CountPack').AsFloat);
+           Params.AddParam('inCountSkewer1', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer1').AsFloat);
+           Params.AddParam('inWeightSkewer1', ftFloat, ptInput, SettingMain.WeightSkewer1);
+           Params.AddParam('inCountSkewer2', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer2').AsFloat);
+           Params.AddParam('inWeightSkewer2', ftFloat, ptInput, SettingMain.WeightSkewer2);
+           Params.AddParam('inWeightOther', ftFloat, ptInput, execParamsMI.ParamByName('WeightOther').AsFloat);
+           Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
+           Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
+           Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+           //try
+             Execute;
+           {except
+             Result := '';
+             ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
+           end;}
+        end;
 
 end;
 {------------------------------------------------------------------------}
@@ -522,7 +701,7 @@ begin
     if (trim (inBarCode) = '') or (trim (inBarCode) = '0') then
     begin
          Result:=false;
-         exit
+         exit;
     end;
     //
     with spSelect do
@@ -574,6 +753,173 @@ begin
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Goods');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleLight_BarCodeBox (num : Integer; execParamsLight : TParams):Boolean;
+begin
+    with spSelect do begin
+       StoredProcName:='gpGet_ScaleLight_BarCodeBox';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsLight.ParamByName('GoodsId').AsInteger);
+       Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsLight.ParamByName('GoodsKindId').AsInteger);
+       if num = 1 then
+       begin
+           Params.AddParam('inBoxId',      ftInteger, ptInput, execParamsLight.ParamByName('BoxId_1').AsInteger);
+           Params.AddParam('inBoxBarCode', ftString,  ptInput, execParamsLight.ParamByName('BoxBarCode_1').AsString);
+       end
+       else
+         if num = 2 then
+         begin
+             Params.AddParam('inBoxId',      ftInteger, ptInput, execParamsLight.ParamByName('BoxId_2').AsInteger);
+             Params.AddParam('inBoxBarCode', ftString,  ptInput, execParamsLight.ParamByName('BoxBarCode_2').AsString);
+         end
+         else
+           if num = 3 then
+           begin
+               Params.AddParam('inBoxId',      ftInteger, ptInput, execParamsLight.ParamByName('BoxId_3').AsInteger);
+               Params.AddParam('inBoxBarCode', ftString,  ptInput, execParamsLight.ParamByName('BoxBarCode_3').AsString);
+           end;
+       //
+       try
+         Result:= false;
+         Execute;
+         Result:= true;
+       except
+           on E: Exception do
+             if pos('context', AnsilowerCase(E.Message)) = 0 then
+               ShowMessage(E.Message)
+             else
+               // Выбрасываем все что после Context
+               ShowMessage(Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1));
+       end;
+       //
+       if Result then
+         if num = 1 then
+         begin
+             execParamsLight.ParamByName('BarCodeBoxId_1').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
+             execParamsLight.ParamByName('BoxCode_1').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
+             execParamsLight.ParamByName('BoxBarCode_1').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+         end
+         else
+           if num = 2 then
+           begin
+               execParamsLight.ParamByName('BarCodeBoxId_2').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
+               execParamsLight.ParamByName('BoxCode_2').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
+               execParamsLight.ParamByName('BoxBarCode_2').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+           end
+           else
+             if num = 3 then
+             begin
+                 execParamsLight.ParamByName('BarCodeBoxId_3').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
+                 execParamsLight.ParamByName('BoxCode_3').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
+                 execParamsLight.ParamByName('BoxBarCode_3').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+             end;
+
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleLight_Goods(var execParamsLight:TParams; inGoodsId, inGoodsKindId : Integer): Boolean;
+begin
+    //
+    //!!!ModeSorting!!!
+    //
+    if (SettingMain.isModeSorting = TRUE) then
+    with spSelect do
+    begin
+       //
+       StoredProcName:='gpGet_ScaleLight_Goods';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inGoodsId', ftInteger, ptInput, inGoodsId);
+       Params.AddParam('inGoodsKindId', ftInteger, ptInput, inGoodsKindId);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+
+       with execParamsLight do
+       begin
+         ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').AsInteger;
+         ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').asInteger;
+         ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
+         ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').AsInteger;
+         ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').asInteger;
+         ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+         ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').AsInteger;
+         ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').asInteger;
+         ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+         // Главное сообщение - сколько ящиков
+         ParamByName('Count_box').AsInteger          := DataSet.FieldByName('Count_box').AsInteger;
+         // Id - есть ли ШТ.
+         ParamByName('GoodsTypeKindId_Sh').AsInteger := DataSet.FieldByName('GoodsTypeKindId_Sh').AsInteger;
+         // Id - есть ли НОМ.
+         ParamByName('GoodsTypeKindId_Nom').AsInteger:= DataSet.FieldByName('GoodsTypeKindId_Nom').AsInteger;
+         // Id - есть ли ВЕС
+         ParamByName('GoodsTypeKindId_Ves').AsInteger:= DataSet.FieldByName('GoodsTypeKindId_Ves').AsInteger;
+         // Код ВМС
+         ParamByName('WmsCode_Sh').asString := DataSet.FieldByName('WmsCode_Sh').asString;
+         ParamByName('WmsCode_Nom').asString:= DataSet.FieldByName('WmsCode_Nom').asString;
+         ParamByName('WmsCode_Ves').asString:= DataSet.FieldByName('WmsCode_Ves').asString;
+         // минимальный вес 1шт.
+         ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+         // максимальный вес 1шт.
+         ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+
+         //1-ая линия - Всегда этот цвет
+         ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;
+         ParamByName('BarCodeBoxId_1').AsInteger    := 0;
+         ParamByName('BoxCode_1').AsInteger         := 0;
+         ParamByName('BoxBarCode_1').AsString       := '';
+         ParamByName('WeightOnBoxTotal_1').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+         ParamByName('CountOnBoxTotal_1').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+         ParamByName('WeightTotal_1').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('CountTotal_1').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('BoxTotal_1').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+         ParamByName('BoxId_1').AsInteger           := DataSet.FieldByName('BoxId_1').AsInteger;
+         ParamByName('BoxName_1').asString          := DataSet.FieldByName('BoxName_1').asString;
+         ParamByName('BoxWeight_1').asFloat         := DataSet.FieldByName('BoxWeight_1').asFloat;   // Вес самого ящика
+         ParamByName('WeightOnBox_1').asFloat       := DataSet.FieldByName('WeightOnBox_1').asFloat; // вложенность - Вес
+         ParamByName('CountOnBox_1').asFloat        := DataSet.FieldByName('CountOnBox_1').asFloat;  // Вложенность - шт (информативно?)
+
+         //2-ая линия - Всегда этот цвет
+         ParamByName('GoodsTypeKindId_2').AsInteger := DataSet.FieldByName('GoodsTypeKindId_2').AsInteger;
+         ParamByName('BarCodeBoxId_2').AsInteger    := 0;
+         ParamByName('BoxCode_2').AsInteger         := 0;
+         ParamByName('BoxBarCode_2').AsString       := '';
+         ParamByName('WeightOnBoxTotal_2').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+         ParamByName('CountOnBoxTotal_2').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+         ParamByName('WeightTotal_2').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('CountTotal_2').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('BoxTotal_2').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+         ParamByName('BoxId_2').AsInteger           := DataSet.FieldByName('BoxId_2').AsInteger;
+         ParamByName('BoxName_2').asString          := DataSet.FieldByName('BoxName_2').asString;
+         ParamByName('BoxWeight_2').asFloat         := DataSet.FieldByName('BoxWeight_2').asFloat;   // Вес самого ящика
+         ParamByName('WeightOnBox_2').asFloat       := DataSet.FieldByName('WeightOnBox_2').asFloat; // вложенность - Вес
+         ParamByName('CountOnBox_2').asFloat        := DataSet.FieldByName('CountOnBox_2').asFloat;  // Вложенность - шт (информативно?)
+
+          //3-ья линия - Всегда этот цвет
+         ParamByName('GoodsTypeKindId_3').AsInteger := DataSet.FieldByName('GoodsTypeKindId_3').AsInteger;
+         ParamByName('BarCodeBoxId_3').AsInteger    := 0;
+         ParamByName('BoxCode_3').AsInteger         := 0;
+         ParamByName('BoxBarCode_3').AsString       := '';
+         ParamByName('WeightOnBoxTotal_3').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+         ParamByName('CountOnBoxTotal_3').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+         ParamByName('WeightTotal_3').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('CountTotal_3').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+         ParamByName('BoxTotal_3').asFloat          := 0; // ящиков итого (закрытых) - информативно
+
+         ParamByName('BoxId_3').AsInteger           := DataSet.FieldByName('BoxId_3').AsInteger;
+         ParamByName('BoxName_3').asString          := DataSet.FieldByName('BoxName_3').asString;
+         ParamByName('BoxWeight_3').asFloat         := DataSet.FieldByName('BoxWeight_3').asFloat;   // Вес самого ящика
+         ParamByName('WeightOnBox_3').asFloat       := DataSet.FieldByName('WeightOnBox_3').asFloat; // вложенность - Вес
+         ParamByName('CountOnBox_3').asFloat        := DataSet.FieldByName('CountOnBox_3').asFloat;  // Вложенность - шт (информативно?)
+
+       end;
+
     end;
 end;
 {------------------------------------------------------------------------}
@@ -741,6 +1087,34 @@ begin
          Execute;
          zc_Object_Unit:=DataSet.FieldByName('Value').asInteger;
 
+         //ModeSorting
+         // назв - Штучный
+         Params.ParamByName('inSqlText').Value:='SELECT ValueData FROM Object WHERE Id = zc_Enum_GoodsTypeKind_Sh()';
+         Execute;
+         SettingMain.Name_Sh:=DataSet.FieldByName('Value').asString;
+         // назв - Номинальный
+         Params.ParamByName('inSqlText').Value:='SELECT ValueData FROM Object WHERE Id = zc_Enum_GoodsTypeKind_Nom()';
+         Execute;
+         SettingMain.Name_Nom:=DataSet.FieldByName('Value').asString;
+         // назв - Неноминальный
+         Params.ParamByName('inSqlText').Value:='SELECT ValueData FROM Object WHERE Id = zc_Enum_GoodsTypeKind_Ves()';
+         Execute;
+         SettingMain.Name_Ves:=DataSet.FieldByName('Value').asString;
+         // назв - Штучный
+         Params.ParamByName('inSqlText').Value:='SELECT COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = zc_Enum_GoodsTypeKind_Sh() AND DescId = zc_ObjectString_GoodsTypeKind_ShortName() AND ValueData <> '+chr(39)+''+chr(39)+'), '+chr(39)+'ШТ.'+chr(39)+' :: TVarChar)';
+         Execute;
+         SettingMain.ShName_Sh:=DataSet.FieldByName('Value').asString;
+         // назв - Номинальный
+         Params.ParamByName('inSqlText').Value:='SELECT COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = zc_Enum_GoodsTypeKind_Nom() AND DescId = zc_ObjectString_GoodsTypeKind_ShortName() AND ValueData <> '+chr(39)+''+chr(39)+'), '+chr(39)+'НОМ.'+chr(39)+' :: TVarChar)';
+         Execute;
+         SettingMain.ShName_Nom:=DataSet.FieldByName('Value').asString;
+         // назв - Неноминальный
+         Params.ParamByName('inSqlText').Value:='SELECT COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = zc_Enum_GoodsTypeKind_Ves() AND DescId = zc_ObjectString_GoodsTypeKind_ShortName() AND ValueData <> '+chr(39)+''+chr(39)+'), '+chr(39)+'ВЕС.'+chr(39)+' :: TVarChar)';
+         Execute;
+         SettingMain.ShName_Ves:=DataSet.FieldByName('Value').asString;
+
+
+
        {except
          result.Code := Code;
          result.Id   := 0;
@@ -781,6 +1155,9 @@ begin
   //
   SettingMain.BranchCode:=Ini.ReadInteger('Main','BranchCode',1);
   if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BranchCode',1);
+  //PlaceNumber
+  SettingMain.PlaceNumber:=Ini.ReadInteger('Main','PlaceNumber',0);
+  if SettingMain.PlaceNumber=0 then begin SettingMain.PlaceNumber:= 1; Ini.WriteInteger('Main','PlaceNumber',1);end;
 
   SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCehCOMPort',1);
   if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCehCOMPort',1);
@@ -842,6 +1219,11 @@ begin
        SettingMain.UnitName3:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId3);
        SettingMain.UnitName4:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId4);
        SettingMain.UnitName5:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId5);
+
+       //ModeSorting - Color
+       try SettingMain.LightColor_1:= StrToInt(GetArrayList_Value_byName(Default_Array,'LightColor_1')); except SettingMain.LightColor_1:= 0; end;
+       try SettingMain.LightColor_2:= StrToInt(GetArrayList_Value_byName(Default_Array,'LightColor_2')); except SettingMain.LightColor_1:= 0; end;
+       try SettingMain.LightColor_3:= StrToInt(GetArrayList_Value_byName(Default_Array,'LightColor_3')); except SettingMain.LightColor_1:= 0; end;
 
   end;
   //

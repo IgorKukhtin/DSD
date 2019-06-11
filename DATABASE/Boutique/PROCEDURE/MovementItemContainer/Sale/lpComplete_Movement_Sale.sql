@@ -584,6 +584,7 @@ BEGIN
 
      -- проверка: ОСТАТОК должен быть
      IF inUserId <> zc_User_Sybase()
+     -- AND inUserId <> 1017903 -- 
      THEN
          vbId_err:= (WITH tmpContainer AS (SELECT Container.Id, Container.Amount
                                            FROM _tmpItem
@@ -620,7 +621,7 @@ BEGIN
                                                               AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                                                            ), 0))
                       -- , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.ContainerId_Goods = vbId_err), 0))
-                      , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem), 0))
+                      , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.PartionId = vbId_err), 0))
                        ;
      END IF;
 

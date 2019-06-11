@@ -63,8 +63,13 @@ type
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
     UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
 
+    LightColor_1, LightColor_2, LightColor_3 : Integer;
+    Name_Sh, Name_Nom, Name_Ves : String;
+    ShName_Sh, ShName_Nom, ShName_Ves : String;
+
     BranchCode:Integer;
     BranchName:String;
+    PlaceNumber:Integer;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
     LightCOMPort:Integer;
@@ -93,6 +98,7 @@ type
 
   procedure Create_ParamsMovement(var Params:TParams);
   procedure Create_ParamsMI(var Params:TParams);
+  procedure Create_ParamsLight(var Params:TParams);
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
   procedure Create_ParamsPersonal_Stick(var Params:TParams; idx:String);
   procedure Create_ParamsPersonalComplete(var Params:TParams);
@@ -122,6 +128,7 @@ var
   SettingMain   : TSettingMain;
   ParamsMovement: TParams;
   ParamsMI: TParams;
+  ParamsLight: TParams;
 
   StickerFile_Array   :TArrayStickerFileList;
   Scale_Array         :TArrayListScale;
@@ -172,6 +179,8 @@ var
   zc_BarCodePref_Object  :String;
   zc_BarCodePref_Movement:String;
   zc_BarCodePref_MI      :String;
+
+const ErrLight : Boolean = false;
 
 implementation
 //uses DMMainScale;
@@ -281,6 +290,97 @@ begin
      ParamAdd(Params,'isMovementId_check',ftBoolean);//локальный параметр, Insert или Update в TDialogMovementDescForm
 
      ParamAdd(Params,'TotalSumm',ftFloat);
+
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsLight(var Params:TParams);
+begin
+     Params:=nil;
+     if SettingMain.isModeSorting = TRUE then
+     begin
+          //Всегда цвет - 1-ая линия
+          //ParamAdd(Params,'Color_1',ftInteger);
+          //Всегда цвет - 2-ая линия
+          //ParamAdd(Params,'Color_2',ftInteger);
+          //Всегда цвет - 3-ья линия
+          //ParamAdd(Params,'Color_3',ftInteger);
+          //
+          // локально
+          ParamAdd(Params,'Count_box',ftInteger);   // сколько линий для ящиков - 1,2 или 3
+          //
+          ParamAdd(Params,'GoodsId',ftInteger);       // Товар
+          ParamAdd(Params,'GoodsCode',ftInteger);     // Товар
+          ParamAdd(Params,'GoodsName',ftString);      // Товар
+          ParamAdd(Params,'GoodsKindId',ftInteger);   // Вид товара
+          ParamAdd(Params,'GoodsKindCode',ftInteger); // Вид товара
+          ParamAdd(Params,'GoodsKindName',ftString);  // Вид товара
+          ParamAdd(Params,'MeasureId',ftInteger);     // Ед.изм.
+          ParamAdd(Params,'MeasureCode',ftInteger);   // Ед.изм.
+          ParamAdd(Params,'MeasureName',ftString);    // Ед.изм.
+
+          ParamAdd(Params,'GoodsTypeKindId_Sh',ftInteger); // Id - есть ли ШТ.
+          ParamAdd(Params,'GoodsTypeKindId_Nom',ftInteger);// Id - есть ли НОМ.
+          ParamAdd(Params,'GoodsTypeKindId_Ves',ftInteger);// Id - есть ли ВЕС
+          ParamAdd(Params,'WmsCode_Sh',ftString);          // Код ВМС - ШТ.
+          ParamAdd(Params,'WmsCode_Nom',ftString);         // Код ВМС - НОМ.
+          ParamAdd(Params,'WmsCode_Ves',ftString);         // Код ВМС - ВЕС
+          ParamAdd(Params,'WeightMin',ftFloat);            // минимальный вес 1шт.
+          ParamAdd(Params,'WeightMax',ftFloat);            // максимальный вес 1шт.
+
+          //1-ая линия - Всегда этот цвет
+          ParamAdd(Params,'GoodsTypeKindId_1',ftInteger);// выбранный тип для этого ЦВЕТА
+          ParamAdd(Params,'BarCodeBoxId_1',ftInteger);   // Id для Ш/К ящика
+          ParamAdd(Params,'BoxCode_1',ftInteger);        // код для Ш/К ящика
+          ParamAdd(Params,'BoxBarCode_1',ftString);      // Ш/К ящика
+          ParamAdd(Params,'WeightOnBoxTotal_1',ftFloat); // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+          ParamAdd(Params,'CountOnBoxTotal_1',ftFloat);  // шт итого накопительно (в незакрытом ящике) - информативно?
+          ParamAdd(Params,'WeightTotal_1',ftFloat);      // Вес итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'CountTotal_1',ftFloat);       // шт итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'BoxTotal_1',ftFloat);         // ящиков итого (закрытых) - информативно
+          ParamAdd(Params,'isFull_1',ftBoolean);         // ящик заполнен - т.е. надо его закрыть (сформировать zc_Movement_WeighingProduction + просканировать новый ящик)
+
+          ParamAdd(Params,'BoxId_1',ftInteger);          // Id ящика
+          ParamAdd(Params,'BoxName_1',ftString);         // название ящика Е2 или Е3
+          ParamAdd(Params,'BoxWeight_1',ftFloat);        // Вес самого ящика
+          ParamAdd(Params,'WeightOnBox_1',ftFloat);      // вложенность - Вес
+          ParamAdd(Params,'CountOnBox_1',ftFloat);       // Вложенность - шт (информативно?)
+
+          //2-ая линия - Всегда этот цвет
+          ParamAdd(Params,'GoodsTypeKindId_2',ftInteger);// выбранный тип для этого ЦВЕТА
+          ParamAdd(Params,'BarCodeBoxId_2',ftInteger);   // Id для Ш/К ящика
+          ParamAdd(Params,'BoxCode_2',ftInteger);        // код для Ш/К ящика
+          ParamAdd(Params,'BoxBarCode_2',ftString);      // Ш/К ящика
+          ParamAdd(Params,'WeightOnBoxTotal_2',ftFloat); // Вес итого накопительный - при достижении будет сброс
+          ParamAdd(Params,'CountOnBoxTotal_2',ftFloat);  // шт итого накопительно - информативно?
+          ParamAdd(Params,'WeightTotal_2',ftFloat);      // Вес итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'CountTotal_2',ftFloat);       // шт итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'BoxTotal_2',ftFloat);         // ящиков итого (закрытых) - информативно
+          ParamAdd(Params,'isFull_2',ftBoolean);         // ящик заполнен - т.е. надо его закрыть (сформировать zc_Movement_WeighingProduction + просканировать новый ящик)
+
+          ParamAdd(Params,'BoxId_2',ftInteger);          // Id ящика
+          ParamAdd(Params,'BoxName_2',ftString);         // название ящика Е2 или Е3
+          ParamAdd(Params,'BoxWeight_2',ftFloat);        // Вес самого ящика
+          ParamAdd(Params,'WeightOnBox_2',ftFloat);      // вложенность - Вес
+          ParamAdd(Params,'CountOnBox_2',ftFloat);       // Вложенность - шт (информативно?)
+
+          //3-ья линия - Всегда этот цвет
+          ParamAdd(Params,'GoodsTypeKindId_3',ftInteger);// выбранный тип для этого ЦВЕТА
+          ParamAdd(Params,'BarCodeBoxId_3',ftInteger);   // Id для Ш/К ящика
+          ParamAdd(Params,'BoxCode_3',ftInteger);        // код для Ш/К ящика
+          ParamAdd(Params,'BoxBarCode_3',ftString);      // Ш/К ящика
+          ParamAdd(Params,'WeightOnBoxTotal_3',ftFloat); // Вес итого накопительный - при достижении будет сброс
+          ParamAdd(Params,'CountOnBoxTotal_3',ftFloat);  // шт итого накопительно - информативно?
+          ParamAdd(Params,'WeightTotal_3',ftFloat);      // Вес итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'CountTotal_3',ftFloat);       // шт итого накопительный (в закрытых ящиках) - информативно
+          ParamAdd(Params,'BoxTotal_3',ftFloat);         // ящиков итого (закрытых) - информативно
+          ParamAdd(Params,'isFull_3',ftBoolean);         // ящик заполнен - т.е. надо его закрыть (сформировать zc_Movement_WeighingProduction + просканировать новый ящик)
+
+          ParamAdd(Params,'BoxId_3',ftInteger);          // Id ящика
+          ParamAdd(Params,'BoxName_3',ftString);         // название ящика Е2 или Е3
+          ParamAdd(Params,'BoxWeight_3',ftFloat);        // Вес самого ящика
+          ParamAdd(Params,'WeightOnBox_3',ftFloat);      // вложенность - Вес
+          ParamAdd(Params,'CountOnBox_3',ftFloat);       // Вложенность - шт (информативно?)
+     end;
 
 end;
 {------------------------------------------------------------------------}

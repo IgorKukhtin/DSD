@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsId             Integer
              , GoodsKindCode       Integer
              , GoodsKindName       TVarChar
 
+             , BarCodeBoxId        Integer  --
              , BoxCode             Integer  --
              , BoxBarCode          TVarChar --
              , BoxId               Integer  --
@@ -85,7 +86,7 @@ BEGIN
      
      
 
-     -- нашли Ш/К
+     -- нашли zc_Object_BarCodeBox
      IF vbBoxCode > 0
      THEN
          -- по коду
@@ -138,6 +139,7 @@ BEGIN
            , Object_GoodsKind.ObjectCode AS GoodsKindCode
            , Object_GoodsKind.ValueData  AS GoodsKindName
 
+           , Object_BarCodeBox.Id             AS BarCodeBoxId
            , Object_BarCodeBox.ObjectCode     AS BoxCode
            , Object_BarCodeBox.ValueData      AS BoxBarCode
              -- Ящик

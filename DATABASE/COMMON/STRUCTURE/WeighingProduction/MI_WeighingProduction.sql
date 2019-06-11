@@ -17,6 +17,8 @@ CREATE TABLE MI_WeighingProduction(
    BarCodeBoxId        Integer   NOT NULL,
    WmsCode             TVarChar  NOT NULL,
    LineCode            Integer   NOT NULL,
+   Amount              TFloat    NOT NULL,
+   RealWeight          TFloat    NOT NULL,
    InsertDate          TDateTime NOT NULL,
    UpdateDate          TDateTime     NULL,
    IsErased            Boolean   NOT NULL

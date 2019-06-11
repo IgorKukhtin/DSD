@@ -14,8 +14,8 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
   inherited bbPanel: TPanel
     Top = 175
     Width = 374
-    ExplicitTop = 223
-    ExplicitWidth = 256
+    ExplicitTop = 175
+    ExplicitWidth = 374
     inherited bbOk: TBitBtn
       Left = 51
       Top = 9
@@ -38,9 +38,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 3
-    ExplicitWidth = 256
-    ExplicitHeight = 223
     object Box3Panel: TPanel
       Left = 0
       Top = 41
@@ -48,8 +45,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       Height = 41
       Align = alTop
       TabOrder = 0
-      ExplicitTop = 35
-      ExplicitWidth = 325
       object Box3Label: TcxLabel
         Left = 38
         Top = 11
@@ -91,9 +86,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       Height = 41
       Align = alTop
       TabOrder = 1
-      ExplicitLeft = 24
-      ExplicitTop = 5
-      ExplicitWidth = 185
       object MsgBlinkLabel: TcxLabel
         Left = 1
         Top = 19
@@ -111,8 +103,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
-        ExplicitTop = 16
-        ExplicitWidth = 323
         AnchorX = 187
       end
       object MsgMainLabel: TcxLabel
@@ -130,7 +120,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
         Style.Shadow = False
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
-        ExplicitWidth = 323
         AnchorX = 187
       end
     end
@@ -141,9 +130,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       Height = 41
       Align = alTop
       TabOrder = 2
-      ExplicitLeft = -8
-      ExplicitTop = 25
-      ExplicitWidth = 325
       object Box1Label: TcxLabel
         Left = 38
         Top = 11
@@ -185,8 +171,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       Height = 41
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 76
-      ExplicitWidth = 325
       object Box2Label: TcxLabel
         Left = 38
         Top = 11

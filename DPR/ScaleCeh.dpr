@@ -93,7 +93,8 @@ uses
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   ModLink in '..\ScaleCeh\Util\Oven\ModLink.pas',
   Oven in '..\ScaleCeh\Util\Oven\Oven.pas',
-  DialogBoxLight in '..\ScaleCeh\DialogBoxLight.pas' {DialogBoxLightForm};
+  DialogBoxLight in '..\ScaleCeh\DialogBoxLight.pas' {DialogBoxLightForm},
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 

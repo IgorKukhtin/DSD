@@ -17,7 +17,8 @@ RETURNS TABLE (GoodsId             Integer
              , MeasureId           Integer
              , MeasureCode         Integer
              , MeasureName         TVarChar
-
+             
+             , Count_box           Integer  -- сколько линий для ящиков - 1,2 или 3
              , GoodsTypeKindId_Sh  Integer  -- Id - есть ли ШТ.  - ШТУКИ
              , GoodsTypeKindId_Nom Integer  -- Id - есть ли НОМ. - НОМИНАЛ
              , GoodsTypeKindId_Ves Integer  -- Id - есть ли ВЕС  - ВЕС
@@ -29,6 +30,7 @@ RETURNS TABLE (GoodsId             Integer
              , WeightMax           TFloat   -- максимальный вес 1шт.
 
              , GoodsTypeKindId_1   Integer  -- Признак - 1-ая линия
+          -- , BarCodeBoxId_1      Integer  --
           -- , BoxCode_1           Integer  --
           -- , BoxBarCode_1        TVarChar --
           -- , WeightOnBoxTotal_1  TFloat   --
@@ -40,6 +42,7 @@ RETURNS TABLE (GoodsId             Integer
              , CountOnBox_1        TFloat   -- Вложенность - шт (информативно?)
 
              , GoodsTypeKindId_2   Integer  -- Признак - 2-ая линия
+          -- , BarCodeBoxId_2      Integer  --
           -- , BoxCode_2           Integer  --
           -- , BoxBarCode_2        TVarChar --
           -- , WeightOnBoxTotal_2  TFloat   --
@@ -51,6 +54,7 @@ RETURNS TABLE (GoodsId             Integer
              , CountOnBox_2        TFloat   -- Вложенность - шт (информативно?)
 
              , GoodsTypeKindId_3   Integer  -- Признак - 3-ья линия
+          -- , BarCodeBoxId_3      Integer  --
           -- , BoxCode_3           Integer  --
           -- , BoxBarCode_3        TVarChar --
           -- , WeightOnBoxTotal_3  TFloat   --
@@ -122,6 +126,7 @@ BEGIN
                 
                              -- Признак - 1-ая линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_1
+                        -- , 0  :: Integer  AS BarCodeBoxId_1
                         -- , 0  :: Integer  AS BoxCode_1
                         -- , '' :: TVarChar AS BoxBarCode_1
                         -- , 0  :: TFloat   AS WeightOnBoxTotal_1
@@ -138,6 +143,7 @@ BEGIN
                 
                              -- Признак - 2-ая линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_2
+                        -- , 0  :: Integer  AS BarCodeBoxId_2
                         -- , 0  :: Integer  AS BoxCode_2
                         -- , '' :: TVarChar AS BoxBarCode_2
                         -- , 0  :: TFloat   AS WeightOnBoxTotal_2
@@ -154,6 +160,7 @@ BEGIN
                 
                              -- Признак - 3-ья линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_3
+                        -- , 0  :: Integer  AS BarCodeBoxId_3
                         -- , 0  :: Integer  AS BoxCode_3
                         -- , '' :: TVarChar AS BoxBarCode_3
                         -- , 0  :: TFloat   AS WeightOnBoxTotal_3
@@ -219,6 +226,7 @@ BEGIN
                                                 AND OL_GoodsPropertyBox_Box.ChildObjectId IN (zc_Box_E2(), zc_Box_E3())
 
                            LEFT JOIN Object AS Object_Box ON Object_Box.Id = OL_GoodsPropertyBox_Box.ChildObjectId
+                           -- Вес самого ящика
                            LEFT JOIN ObjectFloat AS ObjectFloat_Box_Weight
                                                  ON ObjectFloat_Box_Weight.ObjectId = Object_Box.Id
                                                 AND ObjectFloat_Box_Weight.DescId   = zc_ObjectFloat_Box_Weight()
@@ -257,6 +265,12 @@ BEGIN
            , tmpRes.MeasureCode
            , tmpRes.MeasureName
 
+             -- сколько линий для ящиков - 1,2 или 3
+           , (CASE WHEN tmpRes.GoodsTypeKindId_Sh  > 0 THEN 1 ELSE 0 END
+            + CASE WHEN tmpRes.GoodsTypeKindId_Nom > 0 THEN 1 ELSE 0 END
+            + CASE WHEN tmpRes.GoodsTypeKindId_Ves > 0 THEN 1 ELSE 0 END
+             ) :: Integer AS Count_box
+
              -- Id - есть ли ШТ.
            , tmpRes.GoodsTypeKindId_Sh
              -- Id - есть ли НОМ.
@@ -280,10 +294,14 @@ BEGIN
            , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 1)
                      , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 3)
                       ) :: Integer  AS GoodsTypeKindId_1
+        -- , 0  :: Integer  AS BarCodeBoxId_1
         -- , 0  :: Integer  AS BoxCode_1
         -- , '' :: TVarChar AS BoxBarCode_1
         -- , 0  :: TFloat   AS WeightOnBoxTotal_1
         -- , 0  :: TFloat   AS CountOnBoxTotal_1
+        -- , 0  :: TFloat   AS WeightTotal_1
+        -- , 0  :: TFloat   AS CountTotal_1
+        -- , 0  :: TFloat   AS BoxTotal_1
              -- Ящик
            , tmpRes.BoxId_1
            , tmpRes.BoxName_1
@@ -298,10 +316,14 @@ BEGIN
            , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 2)
                      , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 2)
                       ) :: Integer  AS GoodsTypeKindId_2
+        -- , 0  :: Integer  AS BarCodeBoxId_2
         -- , 0  :: Integer  AS BoxCode_2
         -- , '' :: TVarChar AS BoxBarCode_2
         -- , 0  :: TFloat   AS WeightOnBoxTotal_2
         -- , 0  :: TFloat   AS CountOnBoxTotal_2
+        -- , 0  :: TFloat   AS WeightTotal_1
+        -- , 0  :: TFloat   AS CountTotal_1
+        -- , 0  :: TFloat   AS BoxTotal_1
              -- Ящик
            , tmpRes.BoxId_2
            , tmpRes.BoxName_2
@@ -316,10 +338,14 @@ BEGIN
            , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 3)
                      , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 1)
                       ) :: Integer  AS GoodsTypeKindId_3
+        -- , 0  :: Integer  AS BarCodeBoxId_3
         -- , 0  :: Integer  AS BoxCode_3
         -- , '' :: TVarChar AS BoxBarCode_3
         -- , 0  :: TFloat   AS WeightOnBoxTotal_3
         -- , 0  :: TFloat   AS CountOnBoxTotal_3
+        -- , 0  :: TFloat   AS WeightTotal_1
+        -- , 0  :: TFloat   AS CountTotal_1
+        -- , 0  :: TFloat   AS BoxTotal_1
              -- Ящик
            , tmpRes.BoxId_3
            , tmpRes.BoxName_3

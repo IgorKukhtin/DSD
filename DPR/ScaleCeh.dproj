@@ -234,6 +234,9 @@
 			<DCCReference Include="..\ScaleCeh\DialogBoxLight.pas">
 				<Form>DialogBoxLightForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+				<Form>PUSHMessageForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

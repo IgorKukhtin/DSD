@@ -715,15 +715,15 @@ BEGIN
                      FROM tmpInfoMoney
                           JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                           ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
-                                         AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                          JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                         AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                          JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_Goods_InfoMoney.ObjectId
                                                      AND Object_Goods.isErased = FALSE
                                                      AND (Object_Goods.ObjectCode <> 0 OR inBranchCode BETWEEN 301 AND 310)
                           LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.Id
                           LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                           LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
                      WHERE (tmpGoods_Return.GoodsId > 0
-                         -- OR inBranchCode BETWEEN 302 AND 310
+                         OR inBranchCode BETWEEN 302 AND 310
                          OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310)
                          OR tmpInfoMoney.isTare = TRUE
                            )

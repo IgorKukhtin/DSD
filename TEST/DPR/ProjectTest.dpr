@@ -1084,7 +1084,8 @@ uses
   BarCodeBoxEdit in '..\..\Forms\Guides\BarCodeBoxEdit.pas' {BarCodeBoxEditForm: TParentForm},
   WeighingProduction_wmsJournal in '..\..\Forms\Document\WeighingProduction_wmsJournal.pas' {WeighingProduction_wmsJournalForm: TParentForm},
   WeighingProduction_wms in '..\..\Forms\Document\WeighingProduction_wms.pas' {WeighingProduction_wmsForm: TParentForm},
-  GoodsByGoodsKind_wms in '..\..\Forms\Guides\GoodsByGoodsKind_wms.pas' {GoodsByGoodsKind_wmsForm: TParentForm};
+  GoodsByGoodsKind_wms in '..\..\Forms\Guides\GoodsByGoodsKind_wms.pas' {GoodsByGoodsKind_wmsForm: TParentForm},
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

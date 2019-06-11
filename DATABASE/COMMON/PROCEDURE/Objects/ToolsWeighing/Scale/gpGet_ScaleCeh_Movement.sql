@@ -30,7 +30,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpMovement_find AS (-- или последний не закрытый
+       WITH tmpMovement_find AS (-- если inMovementId = 0, тогда - последний не закрытый
                                  SELECT MAX (Movement.Id) AS Id
                                  FROM (SELECT (inOperDate - INTERVAL '3 DAY') AS StartDate, (inOperDate + INTERVAL '3 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
                                       INNER JOIN Movement
@@ -40,10 +40,10 @@ BEGIN
                                       INNER JOIN MovementLinkObject
                                               AS MovementLinkObject_User
                                               ON MovementLinkObject_User.MovementId = Movement.Id
-                                             AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                                             AND MovementLinkObject_User.ObjectId = vbUserId
+                                             AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
+                                             AND MovementLinkObject_User.ObjectId   = vbUserId
                                 UNION
-                                 -- или "следующий" не закрытый
+                                 -- или "следующий" не закрытый, т.е. <> inMovementId, для inIsNext = TRUE
                                  SELECT Movement.Id AS Id
                                  FROM (SELECT (inOperDate - INTERVAL '1 DAY') AS StartDate, (inOperDate + INTERVAL '1 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
                                       INNER JOIN Movement
@@ -58,7 +58,7 @@ BEGIN
                                  WHERE Movement.Id <> inMovementId
                                  -- LIMIT 2 -- если больше 1-ого то типа ошибка
                                 UNION
-                                 -- или inMovementId если он тоже не закрытый
+                                 -- или inMovementId если он тоже не закрытый, для inIsNext = FALSE
                                  SELECT Movement.Id
                                  FROM (SELECT inMovementId AS MovementId WHERE inMovementId > 0 AND inIsNext = FALSE) AS tmp
                                       INNER JOIN Movement
@@ -126,5 +126,5 @@ ALTER FUNCTION gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
 -- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())

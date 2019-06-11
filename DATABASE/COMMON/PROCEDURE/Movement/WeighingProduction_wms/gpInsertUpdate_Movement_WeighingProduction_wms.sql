@@ -47,12 +47,14 @@ BEGIN
      -- проверка
      IF COALESCE (inGoodsTypeKindId_1, 0) = 0 OR COALESCE (inGoodsTypeKindId_2, 0) = 0 OR COALESCE (inGoodsTypeKindId_3, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не определен Признак линии.';
+         RAISE EXCEPTION 'Ошибка.Не определен Признак линии: 1, 2 или 3.';
      END IF;
      -- проверка
-     IF COALESCE (inBarCodeBoxId_1, 0) = 0 OR COALESCE (inBarCodeBoxId_2, 0) = 0 OR COALESCE (inBarCodeBoxId_3, 0) = 0
+     IF  (inGoodsTypeKindId_1 > 0 AND COALESCE (inBarCodeBoxId_1, 0) = 0)
+      OR (inGoodsTypeKindId_2 > 0 AND COALESCE (inBarCodeBoxId_2, 0) = 0)
+      OR (inGoodsTypeKindId_3 > 0 AND COALESCE (inBarCodeBoxId_3, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Не определен Ключ Ш/К ящика.';
+         RAISE EXCEPTION 'Ошибка.Не определен Ключ Ш/К ящика. <>';
      END IF;
 
 
@@ -101,11 +103,11 @@ BEGIN
                  , MovementDescId       = inMovementDescId
                  , MovementDescNumber   = inMovementDescNumber
                  , PlaceNumber          = inPlaceNumber
-                 , UserId               = inUserId
+                 , UserId               = vbUserId
               -- , StartWeighing        = inStartWeighing
               -- , EndWeighing          = inEndWeighing
-         WHERE Id = ioId
-           RETURNING StatusId INTO vbStatusId;
+        WHERE Id = ioId
+          RETURNING StatusId INTO vbStatusId;
    
         --
         IF NOT FOUND
