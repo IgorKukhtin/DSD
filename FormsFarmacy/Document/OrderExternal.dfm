@@ -681,6 +681,9 @@ inherited OrderExternalForm: TOrderExternalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actPUSH
+        end
+        item
           Action = actExportStoredproc
         end
         item
@@ -711,20 +714,21 @@ inherited OrderExternalForm: TOrderExternalForm
     object actPUSH: TdsdShowPUSHMessage
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spPUSH
+      StoredProc = spPUSHError
       StoredProcList = <
         item
-          StoredProc = spPUSH
+          StoredProc = spPUSHError
         end>
       Caption = 'actPUSH'
+      PUSHMessageType = pmtError
     end
     object actPUSHInfo: TdsdShowPUSHMessage
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spPUSH
+      StoredProc = spPUSHInfo
       StoredProcList = <
         item
-          StoredProc = spPUSH
+          StoredProc = spPUSHInfo
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
@@ -1775,7 +1779,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Left = 312
     Top = 435
   end
-  object spPUSH: TdsdStoredProc
+  object spPUSHInfo: TdsdStoredProc
     StoredProcName = 'gpSelect_ShowPUSH_OrderExternal'
     DataSets = <>
     OutputType = otResult
@@ -1816,5 +1820,47 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 450
     Top = 432
+  end
+  object spPUSHError: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSHError_OrderExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSupplierID'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 450
+    Top = 488
   end
 end

@@ -65,7 +65,8 @@ type
 
 implementation
 
-uses cxGridDBTableView, SysUtils, cxCheckListBox, cxPivotGridStrs, cxDBPivotGrid, cxLookAndFeelPainters, cxClasses;
+uses cxGridDBTableView, SysUtils, cxCheckListBox, cxPivotGridStrs, cxDBPivotGrid,
+     cxLookAndFeelPainters, cxClasses, dxCore;
 
 { TSetValues }
 constructor TSetValues.Create(ASender: TcxDataSummary);

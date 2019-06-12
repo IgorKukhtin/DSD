@@ -479,6 +479,11 @@ begin   //yes
         SaveUserHelsi;
         //Получение остатков
         bError := SaveCashRemains;
+        if bError then
+        begin
+         // посылаем сообщение о ошибке получения полных остатков
+         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
+        end;
         //Проверка обновления программ
         if not gc_User.Local then SecureUpdateVersion;
         //Получение ВИП чеков и сохранение в локальной базе
