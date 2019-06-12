@@ -916,7 +916,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 98
   end
   object cxLabel7: TcxLabel
@@ -928,7 +928,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 1261
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 98
   end
   object cxLabel21: TcxLabel
@@ -1307,6 +1307,9 @@ object WeighingPartnerForm: TWeighingPartnerForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
