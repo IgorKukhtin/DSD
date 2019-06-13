@@ -21,6 +21,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, Goods
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
+             , LightColor Integer
               )
 AS
 $BODY$
@@ -193,6 +194,8 @@ BEGIN
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
 
            , tmpMI.isErased
+
+           , 0 :: Integer AS LightColor
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId

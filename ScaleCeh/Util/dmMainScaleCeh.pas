@@ -522,12 +522,54 @@ begin
            Params.Clear;
            Params.AddParam('inId', ftInteger, ptInput, 0);
            Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
-           Params.AddParam('inGoodsTypeKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId').AsInteger);
-           Params.AddParam('inBarCodeBoxId', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId').AsInteger);
-           Params.AddParam('inLineCode', ftInteger, ptInput, ParamsLight.ParamByName('LineCode').AsInteger);
-           Params.AddParam('inAmount', ftFloat, ptInput, ParamsLight.ParamByName('Amount').AsFloat);
-           Params.AddParam('inRealWeight', ftFloat, ptInput, ParamsLight.ParamByName('RealWeight').AsFloat);
-           Params.AddParam('inWmsCode', ftInteger, ptInput, ParamsLight.ParamByName('WmsCode').AsString);
+           Params.AddParam('inGoodsId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId').AsInteger);
+           Params.AddParam('inGoodsKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId').AsInteger);
+           Params.AddParam('inMeasureId', ftInteger, ptInput, ParamsLight.ParamByName('MeasureId').AsInteger);
+
+           Params.AddParam('inWmsCode_Sh',  ftString, ptInput, ParamsLight.ParamByName('WmsCode_Sh').AsString);
+           Params.AddParam('inWmsCode_Nom', ftString, ptInput, ParamsLight.ParamByName('WmsCode_Nom').AsString);
+           Params.AddParam('inWmsCode_Ves', ftString, ptInput, ParamsLight.ParamByName('WmsCode_Ves').AsString);
+           // Id - есть ли ШТ.
+           Params.AddParam('inGoodsTypeKindId_Sh', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_Sh').AsInteger);
+           // Id - есть ли НОМ.
+           Params.AddParam('inGoodsTypeKindId_Nom', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger);
+           // Id - есть ли ВЕС
+           Params.AddParam('inGoodsTypeKindId_Ves', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger);
+
+           //1-ая линия - Всегда этот цвет
+           Params.AddParam('inGoodsTypeKindId_1', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger);
+           Params.AddParam('inBarCodeBoxId_1', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger);
+           Params.AddParam('inLineCode_1', ftInteger, ptInput, 1);
+           // вложенность - Вес
+           Params.AddParam('inWeightOnBox_1', ftFloat, ptInput, ParamsLight.ParamByName('WeightOnBox_1').asFloat);
+           // Вложенность - шт (информативно?)
+           Params.AddParam('inCountOnBox_1', ftFloat, ptInput, ParamsLight.ParamByName('CountOnBox_1').asFloat);
+
+           //2-ая линия - Всегда этот цвет
+           Params.AddParam('inGoodsTypeKindId_2', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger);
+           Params.AddParam('inBarCodeBoxId_2', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger);
+           Params.AddParam('inLineCode_2', ftInteger, ptInput, 2);
+           // вложенность - Вес
+           Params.AddParam('inWeightOnBox_2', ftFloat, ptInput, ParamsLight.ParamByName('WeightOnBox_2').asFloat);
+           // Вложенность - шт (информативно?)
+           Params.AddParam('inCountOnBox_2', ftFloat, ptInput, ParamsLight.ParamByName('CountOnBox_2').asFloat);
+
+            //3-ья линия - Всегда этот цвет
+           Params.AddParam('inGoodsTypeKindId_3', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger);
+           Params.AddParam('inBarCodeBoxId_3', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger);
+           Params.AddParam('inLineCode_3', ftInteger, ptInput, 2);
+           // вложенность - Вес
+           Params.AddParam('inWeightOnBox_3', ftFloat, ptInput, ParamsLight.ParamByName('WeightOnBox_3').asFloat);
+           // Вложенность - шт (информативно?)
+           Params.AddParam('inCountOnBox_3', ftFloat, ptInput, ParamsLight.ParamByName('CountOnBox_3').asFloat);
+
+           // минимальный вес 1шт.
+           Params.AddParam('inWeightMin', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin').AsFloat);
+           // максимальный вес 1шт.
+           Params.AddParam('inWeightMax', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin').AsFloat);
+
+           Params.AddParam('inAmount', ftFloat, ptInput, 1);
+           Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
            Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
            //try
              Execute;

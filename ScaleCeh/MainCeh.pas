@@ -258,6 +258,7 @@ type
     BarCodeOnBox_2Label: TcxLabel;
     BarCodeOnBox_1Label: TcxLabel;
     Panel1: TPanel;
+    LightColor: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1006,6 +1007,8 @@ procedure TMainCehForm.WriteParamsLight;
     end;
 
 begin
+   if SettingMain.isModeSorting = FALSE then exit;
+   //
    with ParamsLight do
    begin
      InfoBoxLabel.Caption:= ' = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
@@ -1904,10 +1907,6 @@ begin
   TimerProtocol_isProcess.Enabled:= TRUE;
 
 
-  SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
-  if SettingMain.isModeSorting = TRUE
-  then Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>'
-  else Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
@@ -1920,10 +1919,23 @@ begin
   Create_ParamsMI(ParamsMI);
   Create_ParamsLight(ParamsLight);
 
-
     Create_ParamsMovement(ParamsMovement);
     DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement);
     DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
+
+  SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
+  if SettingMain.isModeSorting = TRUE
+  then Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>'
+  else begin
+       Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
+       DBViewAddOn.ColorRuleList.Clear;
+       {TColorRule(DBViewAddOn.ColorRuleList.Items[0]).BackGroundValueColumn:=nil;
+       TColorRule(DBViewAddOn.ColorRuleList.Items[0]).ColorColumn:=nil;
+       TColorRule(DBViewAddOn.ColorRuleList.Items[1]).BackGroundValueColumn:=nil;
+       TColorRule(DBViewAddOn.ColorRuleList.Items[1]).ColorColumn:=nil;
+       TColorRule(DBViewAddOn.ColorRuleList.Items[2]).BackGroundValueColumn:=nil;
+       TColorRule(DBViewAddOn.ColorRuleList.Items[2]).ColorColumn:=nil;}
+  end;
 
   //global Initialize
   Create_Scale;
@@ -1937,10 +1949,13 @@ begin
   Initialize_afterSave_MI;
   //local visible Columns
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=(SettingMain.isGoodsComplete = TRUE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  // or isModeSorting = Movement.OperDate
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=(SettingMain.isGoodsComplete = TRUE)  or (SettingMain.isModeSorting = TRUE);
+  // or isModeSorting = WmsCode
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  // or isModeSorting = LineCode
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountOneWeight').Index].Visible     :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
@@ -1954,8 +1969,21 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightOther').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
 
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isStartWeighing').Index].Visible     :=(SettingMain.isModeSorting = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          :=(SettingMain.isModeSorting = FALSE);
+  // or isModeSorting = RealWeight
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          :=(1=1) or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          :=(SettingMain.isModeSorting = FALSE);
+  //
+  //rename Columns
+  if SettingMain.isModeSorting = TRUE then
+  begin
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsName')       .Index].Caption:= 'Категория';    // GoodsTypeKind
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName')   .Index].Caption:= 'Ш/К ящика';    // BarCodeBox
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Caption:= 'Партия ДАТА';  // Movement.OperDate
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods')    .Index].Caption:= 'Ш/К единицы';  // WmsCode
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count')           .Index].Caption:= '№ линии';      // LineCode
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight')      .Index].Caption:= 'Вес единицы';  // RealWeight
+  //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount')          .Index].Caption:= 'Кол-во';       // Amount
+  end;
   //
   infoPanelTotalSumm.Visible :=(SettingMain.isModeSorting = FALSE);
   infoPanelTotalSorting.Visible :=(SettingMain.isModeSorting = TRUE);
@@ -2009,12 +2037,23 @@ begin
   //
   //
   with spSelect do
-  begin
-       StoredProcName:='gpSelect_ScaleCeh_MI';
-       OutputType:=otDataSet;
-       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput,SettingMain.isGoodsComplete);
-       Params.AddParam('inMovementId', ftInteger, ptInput,0);
-  end;
+    if (SettingMain.isModeSorting = TRUE) then
+    begin
+         StoredProcName:='gpSelect_ScaleLight_MI';
+         OutputType:=otDataSet;
+         Params.AddParam('inMovementId', ftInteger, ptInput,0);
+         Params.AddParam('inBranchCode', ftInteger, ptInput,SettingMain.BranchCode);
+         Params.AddParam('inColor_1', ftInteger, ptInput,SettingMain.LightColor_1);
+         Params.AddParam('inColor_2', ftInteger, ptInput,SettingMain.LightColor_2);
+         Params.AddParam('inColor_3', ftInteger, ptInput,SettingMain.LightColor_3);
+    end
+    else
+    begin
+         StoredProcName:='gpSelect_ScaleCeh_MI';
+         OutputType:=otDataSet;
+         Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput,SettingMain.isGoodsComplete);
+         Params.AddParam('inMovementId', ftInteger, ptInput,0);
+    end;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.WriteParamsMovement;
@@ -2047,11 +2086,21 @@ end;
 procedure TMainCehForm.RefreshDataSet;
 begin
   with spSelect do
-  begin
+    if (SettingMain.isModeSorting = TRUE) then
+    begin
+       Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
+       Params.ParamByName('inBranchCode').Value:=SettingMain.BranchCode;
+       Params.ParamByName('inColor_1').Value:=SettingMain.LightColor_1;
+       Params.ParamByName('inColor_2').Value:=SettingMain.LightColor_2;
+       Params.ParamByName('inColor_3').Value:=SettingMain.LightColor_3;
+       Execute;
+    end
+    else
+    begin
        Params.ParamByName('inIsGoodsComplete').Value:=SettingMain.isGoodsComplete;
        Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
        Execute;
-  end;
+    end;
   //
   CDS.First;
   //

@@ -26,7 +26,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL IMMUTABLE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

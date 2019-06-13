@@ -935,6 +935,12 @@ object MainCehForm: TMainCehForm
           Options.Editing = False
           Width = 50
         end
+        object LightColor: TcxGridDBColumn
+          DataBinding.FieldName = 'LightColor'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 55
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -2809,10 +2815,26 @@ object MainCehForm: TMainCehForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = GoodsName
+        BackGroundValueColumn = LightColor
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsKindName
+        BackGroundValueColumn = LightColor
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Count
+        BackGroundValueColumn = LightColor
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    KeepSelectColor = True
     Left = 408
     Top = 392
   end

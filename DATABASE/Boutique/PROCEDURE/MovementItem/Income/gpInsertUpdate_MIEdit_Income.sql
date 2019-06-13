@@ -548,5 +548,16 @@ WHERE Object_PartionGoods.PeriodYear = 2019
 order by 3, Object_GoodsSize.ValueData
 -- ) as tmp
 */
+/*
+-- !!!ERROR!!!
+select distinct Object_PartionGoods.GoodsSizeId, CLO.ObjectId, *
+from Container 
+join Object_PartionGoods on Object_PartionGoods.MovementItemId = Container.PartionId
+left join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id and CLO.DescId = 14 -- zc_ContainerLinkObject_GoodsSize
+-- inner join MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+ where Container.Id = 2431697
+ and coalesce (Object_PartionGoods.GoodsSizeId, 0) <> coalesce (CLO.ObjectId, 0)
+-- where coalesce (Object_PartionGoods.GoodsSizeId, 0) <> coalesce (CLO.ObjectId, 0)
+*/
 -- тест
 -- SELECT * FROMgpInsertUpdate_MIEdit_Income()

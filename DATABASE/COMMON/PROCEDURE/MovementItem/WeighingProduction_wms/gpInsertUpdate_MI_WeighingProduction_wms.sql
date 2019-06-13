@@ -46,7 +46,7 @@ BEGIN
      -- проверка
      IF COALESCE (inBarCodeBoxId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Категория товара не определена.<%>', inGoodsTypeKindId;
+         RAISE EXCEPTION 'Ошибка. Ш/К для ящика не определен.<%>', inBarCodeBoxId;
      END IF;
 
      -- проверка
@@ -59,7 +59,7 @@ BEGIN
      IF COALESCE (ioId, 0) = 0 THEN
         -- создали
         INSERT INTO MI_WeighingProduction (MovementId, ParentId, GoodsTypeKindId, BarCodeBoxId, LineCode
-                                         , Amount, RealWeight, DateInsert, DateUpdate, WmsCode, IsErased
+                                         , Amount, RealWeight, InsertDate, UpdateDate, WmsCode, IsErased
                                           )
                VALUES (inMovementId
                      , NULL
@@ -84,8 +84,8 @@ BEGIN
                   , LineCode          = inLineCode
                   , Amount            = inAmount
                   , RealWeight        = inRealWeight
-               -- , DateInsert        = inDateInsert
-                  , DateUpdate        = CURRENT_TIMESTAMP
+               -- , InsertDate        = inInsertDate
+                  , UpdateDate        = CURRENT_TIMESTAMP
                   , WmsCode           = inWmsCode
         WHERE MI_WeighingProduction.Id = ioId;    
     
