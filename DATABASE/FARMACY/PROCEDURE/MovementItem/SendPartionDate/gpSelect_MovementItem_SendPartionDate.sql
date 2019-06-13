@@ -287,7 +287,7 @@ BEGIN
                  , MI_Child.ExpirationDate_in ::TDateTime
                  , MI_Child.Amount            ::TFloat AS Amount
                  , tmpCountPartionDate.Amount ::TFloat AS AmountPartionDate
-              
+
                  , MI_Child.ContainerId       ::TFloat
                  , ObjectFloat_Month.ValueData         AS Expired
                  , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName

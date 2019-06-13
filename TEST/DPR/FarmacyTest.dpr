@@ -691,7 +691,10 @@ uses
   RetailCostCreditEdit in '..\..\FormsFarmacy\Guides\RetailCostCreditEdit.pas' {RetailCostCreditEditForm: TParentForm},
   UserHelsiEdit in '..\..\FormsFarmacy\Guides\UserHelsiEdit.pas' {UserHelsiEditForm},
   GoodsPromoChoice in '..\..\FormsFarmacy\Guides\GoodsPromoChoice.pas' {GoodsPromoChoiceForm: TParentForm},
-  ReturnOutPharmacyJournal in '..\..\FormsFarmacy\Document\ReturnOutPharmacyJournal.pas' {ReturnOutPharmacyJournalForm: TParentForm};
+  ReturnOutPharmacyJournal in '..\..\FormsFarmacy\Document\ReturnOutPharmacyJournal.pas' {ReturnOutPharmacyJournalForm: TParentForm},
+  Report_GoodsPartionDateDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionDateDialog.pas' {Report_GoodsPartionDateDialogForm: TParentForm},
+  Report_GoodsPartionDate in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate.pas' {Report_GoodsPartionDateForm: TParentForm},
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

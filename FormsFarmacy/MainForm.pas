@@ -514,6 +514,8 @@ type
     miRetailCostCredit: TMenuItem;
     actReturnOutPharmacy: TdsdOpenForm;
     miReturnOutPharmacy: TMenuItem;
+    actReport_GoodsPartionDate: TdsdOpenForm;
+    miReport_GoodsPartionDate: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -721,6 +721,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateDialogForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');

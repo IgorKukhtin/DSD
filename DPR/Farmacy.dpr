@@ -1,13 +1,11 @@
 program Farmacy;
 
 uses
-  //MidasLib,
   Windows,
   Vcl.Forms,
   Controls,
   SysUtils,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
@@ -84,7 +82,9 @@ uses
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
-  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 
@@ -107,7 +107,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
 
