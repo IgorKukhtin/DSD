@@ -1,8 +1,8 @@
--- Function: gpSelect_ShowPUSH_OrderExternal(TVarChar)
+-- Function: gpSelect_ShowPUSHError_OrderExternal(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_ShowPUSH_OrderExternal(integer,integer,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ShowPUSHError_OrderExternal(integer,integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_OrderExternal(
+CREATE OR REPLACE FUNCTION gpSelect_ShowPUSHError_OrderExternal(
     IN inSupplierID   integer,          -- Поставщик
     IN inUnitID       integer,          -- Подразделение
    OUT outShowMessage Boolean,          -- Показыват сообщение
@@ -154,13 +154,16 @@ BEGIN
         AND MovementLinkObject_Juridical.ObjectId = vbJuridical
         AND MLO_From.ObjectId = inSupplierID;
 
-      outShowMessage := True;
-      outPUSHType := 3;
-      outText := 'Лимит по контрагенту:'||CHR(13)||'<'||vbName||'>'||CHR(13)||CHR(13)||
-        'Кредит (Приход) X: '||to_char(COALESCE(vbX, 0), 'G999G999G999G999D99')||' с НДС'||CHR(13)||
-        'Дебет (Оплата)  Y: '||to_char(COALESCE(vbY, 0), 'G999G999G999G999D99')||' с НДС'||CHR(13)||
-        'Лимит           N: '||to_char(vbN, 'G999G999G999G999D99')||' с НДС'||CHR(13)||CHR(13)||
-        'Лимит     N-(X-Y): '||to_char(vbN - COALESCE(vbX, 0) + COALESCE(vbY, 0), 'G999G999G999G999D99')||' с НДС';
+      IF (vbN - COALESCE(vbX, 0) + COALESCE(vbY, 0)) < 0 
+      THEN
+        outShowMessage := True;
+        outPUSHType := 3;
+        outText := 'Лимит по контрагенту:'||CHR(13)||'<'||vbName||'>'||CHR(13)||CHR(13)||
+          'Кредит (Приход) X: '||to_char(COALESCE(vbX, 0), 'G999G999G999G999D99')||' с НДС'||CHR(13)||
+          'Дебет (Оплата)  Y: '||to_char(COALESCE(vbY, 0), 'G999G999G999G999D99')||' с НДС'||CHR(13)||
+          'Лимит           N: '||to_char(vbN, 'G999G999G999G999D99')||' с НДС'||CHR(13)||CHR(13)||
+          'Лимит     N-(X-Y): '||to_char(vbN - COALESCE(vbX, 0) + COALESCE(vbY, 0), 'G999G999G999G999D99')||' с НДС';
+      END IF;
     END IF;
 
 
@@ -177,4 +180,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
--- SELECT * FROM gpSelect_ShowPUSH_OrderExternal(59610, 183292 , '3')
+-- SELECT * FROM gpSelect_ShowPUSHError_OrderExternal(59610, 183292 , '3')

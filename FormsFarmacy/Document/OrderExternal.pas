@@ -95,8 +95,9 @@ type
     cxLabel13: TcxLabel;
     edOrderSummComment: TcxTextEdit;
     actPUSH: TdsdShowPUSHMessage;
-    spPUSH: TdsdStoredProc;
+    spPUSHInfo: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
+    spPUSHError: TdsdStoredProc;
   private
     { Private declarations }
   public

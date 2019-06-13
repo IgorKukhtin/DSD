@@ -1,6 +1,6 @@
 -- View: Object_ImportExportLink_View
 
--- DROP VIEW IF EXISTS Object_Bank_View CASCADE;
+-- DROP VIEW IF EXISTS Object_ImportExportLink_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_ImportExportLink_View AS
   SELECT 

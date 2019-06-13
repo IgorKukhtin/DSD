@@ -23,7 +23,10 @@ BEGIN
                     WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitID
                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
-    IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185')
+    IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185', 
+                                         '8688630', '7670317', '11262719',
+                                         '10642587', '10362758', '10642315',
+                                         '8539679', '7670307', '9909730')
     THEN
       outText := '';
       WITH tmpJuridical AS (SELECT ObjectLink_CreditLimitJuridical_Provider.ChildObjectId AS Id

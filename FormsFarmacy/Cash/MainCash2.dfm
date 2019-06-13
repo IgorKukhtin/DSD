@@ -2555,14 +2555,6 @@ inherited MainCashForm2: TMainCashForm2
       Caption = 'actServiseRun'
       OnExecute = actServiseRunExecute
     end
-    object actSetMemdataFromDBF: TAction
-      Caption = 'actSetMemdataFromDBF'
-      OnExecute = actSetMemdataFromDBFExecute
-    end
-    object actSetUpdateFromMemdata: TAction
-      Caption = 'actSetUpdateFromMemdata'
-      OnExecute = actSetUpdateFromMemdataExecute
-    end
     object actSetSP: TAction
       Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1057#1055
       Hint = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1057#1055
@@ -4332,6 +4324,9 @@ inherited MainCashForm2: TMainCashForm2
     Top = 32
     object mdCheckID: TIntegerField
       FieldName = 'ID'
+    end
+    object mdCheckPDKINDID: TIntegerField
+      FieldName = 'PDKINDID'
     end
     object mdCheckAMOUNT: TCurrencyField
       FieldName = 'AMOUNT'
