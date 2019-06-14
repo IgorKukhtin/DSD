@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 902
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -355,11 +355,17 @@ inherited GoodsForm: TGoodsForm
             Width = 60
           end
           object DoesNotShare: TcxGridDBColumn
-            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
             DataBinding.FieldName = 'DoesNotShare'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object AllowDivision: TcxGridDBColumn
+            Caption = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            DataBinding.FieldName = 'AllowDivision'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object GoodsAnalog: TcxGridDBColumn
             Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
@@ -561,6 +567,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_DoesNotShare
+        end
+        item
+          StoredProc = spUpdate_Goods_AllowDivision
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1364,7 +1373,7 @@ inherited GoodsForm: TGoodsForm
     Params = <>
     PackSize = 1
     Left = 808
-    Top = 152
+    Top = 128
   end
   object spUpdate_Goods_isNotUploadSites: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isNotUploadSites'
@@ -1463,5 +1472,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 360
     Top = 128
+  end
+  object spUpdate_Goods_AllowDivision: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_AllowDivision'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAllowDivision'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AllowDivision'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 328
   end
 end

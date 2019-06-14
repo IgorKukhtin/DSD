@@ -16,6 +16,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -47,7 +48,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inNormOfManDays           Integer   ,    -- Норма человекодней в месяце
     IN inPartnerMedicalId        Integer   ,    -- Мед.учреждение для пкму 1303
     IN inPharmacyItem            Boolean   ,    -- Аптечный пункт
-    IN inisGoodsCategory         Boolean   ,    -- 
+    IN inisGoodsCategory         Boolean   ,    -- Для Ассортиментной матрица
+    IN inDividePartionDate       Boolean   ,    -- Разбивать товар по партиям на кассах
+    IN inRedeemByHandSP          Boolean   ,    -- Погашать через сайт вручную (без использования API)
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -67,6 +70,13 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   
+   if COALESCE((SELECT FROM ObjectBoolean FROM ObjectBoolean.DescId = zc_ObjectBoolean_Unit_DividePartionDate() and ObjectBoolean.ObjectId = ioId), False) <> 
+     inDividePartionDate)
+     AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+   THEN
+      RAISE EXCEPTION 'Ошибка.Изменение признака <Разбивать товар по партиям на кассах> разрешено только администратору.';   
+   END IF;
    
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
@@ -211,6 +221,11 @@ BEGIN
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_GoodsCategory(), ioId, inisGoodsCategory);
 
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_DividePartionDate(), ioId, inDividePartionDate);
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_RedeemByHandSP(), ioId, inRedeemByHandSP);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -224,6 +239,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 14.06.19                                                        *
  20.03.19         *
  15.02.19         * inGoodsCategory
  09.02.19                                                        * add PharmacyItem

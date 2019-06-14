@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MorionCode Integer, BarCode TVarChar--, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
-             , isNotUploadSites Boolean, DoesNotShare Boolean
+             , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar
               ) AS
 $BODY$ 
@@ -295,6 +295,7 @@ BEGIN
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
            , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false) AS DoesNotShare
+           , COALESCE(ObjectBoolean_AllowDivision.ValueData, false) AS AllowDivision
            , Object_GoodsAnalog.ValueData                          AS GoodsAnalog
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
@@ -362,6 +363,10 @@ BEGIN
                                    ON ObjectBoolean_DoesNotShare.ObjectId = Object_Goods_View.Id 
                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_AllowDivision
+                                   ON ObjectBoolean_AllowDivision.ObjectId = Object_Goods_View.Id 
+                                  AND ObjectBoolean_AllowDivision.DescId = zc_ObjectBoolean_Goods_AllowDivision()
+
            -- Аналоги товара
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
                                 ON ObjectLink_Goods_GoodsAnalog.ObjectId = Object_Goods_View.Id
@@ -382,7 +387,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
- 01.04.19                                                                     * add DoesNotShare
+ 14.06.19                                                                     * add AllowDivision
  15.03.19                                                                     * add DoesNotShare
  11.02.19         * признак Товары соц-проект берем и документа
  24.05.18                                                                     * add isNotUploadSites

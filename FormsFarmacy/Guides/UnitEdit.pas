@@ -96,6 +96,8 @@ type
     edStartSP: TcxDateEdit;
     edEndSP: TcxDateEdit;
     cxLabel24: TcxLabel;
+    cbDividePartionDate: TcxCheckBox;
+    cbRedeemByHandSP: TcxCheckBox;
   private
     { Private declarations }
   public
