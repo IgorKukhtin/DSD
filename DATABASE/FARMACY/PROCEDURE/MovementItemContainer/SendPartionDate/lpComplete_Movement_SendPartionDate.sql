@@ -138,6 +138,12 @@ BEGIN
           AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END > 0
        ;
 
+    -- проверка - Остатки Мастер и Чайлд должны совпадать, если нет - то корректировали не правильно или задним числом съехал остаток
+    IF NOT EXISTS (SELECT 1 FROM _tmpItem_PartionDate WHERE _tmpItem_PartionDate.Amount > 0)
+    THEN
+        RAISE EXCEPTION 'Error. Нет сроковых товаров.';
+    END IF;
+
      -- элементы
      UPDATE _tmpItem_PartionDate SET PartionGoodsId = lpInsertFind_Object_PartionGoods (-- Документ "Приход от поставщика"
                                                                                         inMovementId      := _tmpItem_PartionDate.MovementId_in
@@ -187,6 +193,9 @@ BEGIN
               , _tmpItem_PartionDate.PartionId_in   AS ObjectIntId_analyzer
          FROM _tmpItem_PartionDate;
 
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
