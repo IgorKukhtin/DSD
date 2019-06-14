@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1079#1099#1082'>'
-  ClientHeight = 569
+  ClientHeight = 596
   ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@
     Top = 101
     Caption = #1055#1077#1088#1077#1074#1086#1076' :'
     TabOrder = 18
-    Height = 404
+    Height = 444
     Width = 409
   end
   object edName: TcxTextEdit
@@ -36,8 +36,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 531
+    Left = 88
+    Top = 563
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -46,8 +46,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 531
+    Left = 232
+    Top = 563
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -99,7 +99,7 @@
   object edValue2: TcxTextEdit
     Left = 226
     Top = 155
-    TabOrder = 7
+    TabOrder = 6
     Width = 181
   end
   object cxLabel5: TcxLabel
@@ -110,7 +110,7 @@
   object edValue3: TcxTextEdit
     Left = 40
     Top = 202
-    TabOrder = 9
+    TabOrder = 7
     Width = 174
   end
   object cxLabel6: TcxLabel
@@ -121,7 +121,7 @@
   object edValue4: TcxTextEdit
     Left = 226
     Top = 202
-    TabOrder = 11
+    TabOrder = 8
     Width = 181
   end
   object cxLabel7: TcxLabel
@@ -132,7 +132,7 @@
   object edValue6: TcxTextEdit
     Left = 226
     Top = 253
-    TabOrder = 13
+    TabOrder = 10
     Width = 181
   end
   object cxLabel8: TcxLabel
@@ -232,6 +232,39 @@
     Left = 226
     Top = 300
     TabOrder = 36
+    Width = 181
+  end
+  object cxLabel17: TcxLabel
+    Left = 226
+    Top = 455
+    Caption = #1074#1091#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1110#1083#1100#1096#1077
+  end
+  object edValue15: TcxTextEdit
+    Left = 226
+    Top = 473
+    TabOrder = 38
+    Width = 181
+  end
+  object cxLabel18: TcxLabel
+    Left = 40
+    Top = 497
+    Caption = #1075#1088
+  end
+  object edValue16: TcxTextEdit
+    Left = 40
+    Top = 515
+    TabOrder = 40
+    Width = 174
+  end
+  object cxLabel19: TcxLabel
+    Left = 226
+    Top = 497
+    Caption = #1082#1044#1078
+  end
+  object edValue17: TcxTextEdit
+    Left = 226
+    Top = 515
+    TabOrder = 42
     Width = 181
   end
   object ActionList: TActionList
@@ -413,6 +446,30 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue15'
+        Value = Null
+        Component = edValue15
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue16'
+        Value = Null
+        Component = edValue16
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue17'
+        Value = Null
+        Component = edValue17
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -564,6 +621,27 @@
         Name = 'Value14'
         Value = Null
         Component = edValue14
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value15'
+        Value = Null
+        Component = edValue15
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value16'
+        Value = Null
+        Component = edValue16
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value17'
+        Value = Null
+        Component = edValue17
         DataType = ftString
         MultiSelectSeparator = ','
       end>

@@ -967,8 +967,6 @@ uses
   StickerPropertyEdit in '..\..\Forms\Guides\StickerPropertyEdit.pas' {StickerPropertyEditForm: TParentForm},
   StickerPackEdit in '..\..\Forms\Guides\StickerPackEdit.pas' {StickerPackEditForm: TParentForm},
   StickerPack in '..\..\Forms\Guides\StickerPack.pas' {StickerPackForm: TParentForm},
-  LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
-  Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
   StickerSkinEdit in '..\..\Forms\Guides\StickerSkinEdit.pas' {StickerSkinEditForm: TParentForm},
   StickerSkin in '..\..\Forms\Guides\StickerSkin.pas' {StickerSkinForm: TParentForm},
   JuridicalRetailPartner_Object in '..\..\Forms\Guides\JuridicalRetailPartner_Object.pas' {JuridicalRetailPartner_ObjectForm: TParentForm},
@@ -1085,7 +1083,9 @@ uses
   WeighingProduction_wmsJournal in '..\..\Forms\Document\WeighingProduction_wmsJournal.pas' {WeighingProduction_wmsJournalForm: TParentForm},
   WeighingProduction_wms in '..\..\Forms\Document\WeighingProduction_wms.pas' {WeighingProduction_wmsForm: TParentForm},
   GoodsByGoodsKind_wms in '..\..\Forms\Guides\GoodsByGoodsKind_wms.pas' {GoodsByGoodsKind_wmsForm: TParentForm},
-  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
+  LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

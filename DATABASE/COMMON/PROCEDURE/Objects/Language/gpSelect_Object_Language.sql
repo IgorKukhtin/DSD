@@ -22,6 +22,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Value12 TVarChar
              , Value13 TVarChar
              , Value14 TVarChar
+             , Value15 TVarChar
+             , Value16 TVarChar
+             , Value17 TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -55,6 +58,9 @@ BEGIN
            , ObjectString_Value12.ValueData AS Value12
            , ObjectString_Value13.ValueData AS Value13
            , ObjectString_Value14.ValueData AS Value14
+           , ObjectString_Value15.ValueData AS Value15
+           , ObjectString_Value16.ValueData AS Value16
+           , ObjectString_Value17.ValueData AS Value17
 
            , Object_Language.isErased    AS isErased
 
@@ -109,6 +115,15 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Value14
                                    ON ObjectString_Value14.ObjectId = Object_Language.Id
                                   AND ObjectString_Value14.DescId = zc_ObjectString_Language_Value14()
+            LEFT JOIN ObjectString AS ObjectString_Value15
+                                   ON ObjectString_Value15.ObjectId = Object_Language.Id
+                                  AND ObjectString_Value15.DescId = zc_ObjectString_Language_Value15()
+            LEFT JOIN ObjectString AS ObjectString_Value16
+                                   ON ObjectString_Value16.ObjectId = Object_Language.Id
+                                  AND ObjectString_Value16.DescId = zc_ObjectString_Language_Value16()
+            LEFT JOIN ObjectString AS ObjectString_Value17
+                                   ON ObjectString_Value17.ObjectId = Object_Language.Id
+                                  AND ObjectString_Value17.DescId = zc_ObjectString_Language_Value17()
        ORDER BY Object_Language.ObjectCode
     ;
 
@@ -119,6 +134,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.06.19         *
  10.10.18         *
  23.10.17         *
 */

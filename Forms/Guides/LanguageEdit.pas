@@ -61,6 +61,12 @@ type
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edValue14: TcxTextEdit;
+    cxLabel17: TcxLabel;
+    edValue15: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edValue16: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edValue17: TcxTextEdit;
   private
     { Private declarations }
   public

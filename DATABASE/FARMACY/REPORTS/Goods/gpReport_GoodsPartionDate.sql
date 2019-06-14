@@ -92,11 +92,13 @@ BEGIN
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
                                                                    ON CLO_PartionGoods.ContainerId = Container.Id
                                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                                     LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
+                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ObjectId = CLO_PartionGoods.ObjectId
+                                     
+                                     /*LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
                                                                    ON CLO_PartionMovementItem.ContainerId = Container.Id
-                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()*/
                
-                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = Object_PartionGoods.ObjectCode--CLO_PartionMovementItem.ObjectId
                                      -- элемент прихода
                                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
                                      -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика

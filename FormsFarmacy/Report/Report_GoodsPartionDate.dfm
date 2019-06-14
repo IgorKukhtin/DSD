@@ -26,6 +26,28 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
         ExplicitWidth = 824
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -56,7 +78,7 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Width = 67
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1089#1090#1072#1090#1086#1082')'

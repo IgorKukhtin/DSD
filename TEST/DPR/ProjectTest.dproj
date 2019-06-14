@@ -3217,14 +3217,6 @@
 				<Form>StickerPackForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\LanguageEdit.pas">
-				<Form>LanguageEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Language.pas">
-				<Form>LanguageForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\StickerSkinEdit.pas">
 				<Form>StickerSkinEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3676,6 +3668,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\PUSHMessage.pas">
 				<Form>PUSHMessageForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Language.pas">
+				<Form>LanguageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\LanguageEdit.pas">
+				<Form>LanguageEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
