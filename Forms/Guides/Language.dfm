@@ -190,6 +190,30 @@ object LanguageForm: TLanguageForm
         Options.Editing = False
         Width = 75
       end
+      object Value15: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 15'
+        DataBinding.FieldName = 'Value15'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value16: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 16'
+        DataBinding.FieldName = 'Value16'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value17: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 17'
+        DataBinding.FieldName = 'Value17'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

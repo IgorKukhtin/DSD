@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Language(
    INOUT ioId                       Integer,     -- ид
@@ -23,6 +24,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Language(
       IN inValue12                  TVarChar, 
       IN inValue13                  TVarChar, 
       IN inValue14                  TVarChar,
+      IN inValue15                  TVarChar,
+      IN inValue16                  TVarChar,
+      IN inValue17                  TVarChar,
       IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
@@ -78,8 +82,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value13(), ioId, inValue13);
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value14(), ioId, inValue14);
-
-
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value15(), ioId, inValue15);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value16(), ioId, inValue16);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value17(), ioId, inValue17);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -90,6 +99,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.06.19         *
  10.10.18         *
  23.10.17         *
 */
