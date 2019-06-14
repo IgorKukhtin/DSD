@@ -370,6 +370,7 @@ inherited GoodsForm: TGoodsForm
           object GoodsAnalog: TcxGridDBColumn
             Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsAnalog'
+            PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -570,6 +571,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_AllowDivision
+        end
+        item
+          StoredProc = spUpdate_Goods_Analog
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1498,5 +1502,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 496
     Top = 328
+  end
+  object spUpdate_Goods_Analog: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Analog'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAnalog'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsAnalog'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 336
   end
 end

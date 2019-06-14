@@ -294,9 +294,9 @@ BEGIN
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
-           , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false) AS DoesNotShare
+           , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false)  AS DoesNotShare
            , COALESCE(ObjectBoolean_AllowDivision.ValueData, false) AS AllowDivision
-           , Object_GoodsAnalog.ValueData                          AS GoodsAnalog
+           , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -368,10 +368,10 @@ BEGIN
                                   AND ObjectBoolean_AllowDivision.DescId = zc_ObjectBoolean_Goods_AllowDivision()
 
            -- Аналоги товара
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
-                                ON ObjectLink_Goods_GoodsAnalog.ObjectId = Object_Goods_View.Id
-                               AND ObjectLink_Goods_GoodsAnalog.DescId = zc_ObjectLink_Goods_GoodsAnalog()
-           LEFT JOIN Object AS Object_GoodsAnalog ON Object_GoodsAnalog.Id = ObjectLink_Goods_GoodsAnalog.ChildObjectId
+           LEFT JOIN ObjectString AS ObjectString_Goods_Analog
+                                  ON ObjectString_Goods_Analog.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
+           
 
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;
