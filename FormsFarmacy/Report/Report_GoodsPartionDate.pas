@@ -14,7 +14,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView, cxGrid, cxPC,
   cxPCdxBarPopupMenu, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxImageComboBox;
 
 type
   TReport_GoodsPartionDateForm = class(TAncestorReportForm)
@@ -42,6 +42,7 @@ type
     cbDetail: TcxCheckBox;
     ContractName_Income: TcxGridDBColumn;
     DescName_Income: TcxGridDBColumn;
+    StatusCode_SendPartionDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

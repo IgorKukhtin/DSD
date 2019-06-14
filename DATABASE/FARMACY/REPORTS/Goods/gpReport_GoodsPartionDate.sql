@@ -20,6 +20,11 @@ RETURNS TABLE (ContainerId      Integer   --ИД
              , Invnumber_Income    TVarChar
              , FromName_Income     TVarChar
              , ContractName_Income TVarChar
+             , MovementId_SendPartionDate Integer  
+             , DescName_SendPartionDate   TVarChar 
+             , OperDate_SendPartionDate   TDateTime
+             , Invnumber_SendPartionDate  TVarChar
+             , StatusCode_SendPartionDate Integer
              , isDiff              Boolean
              )
 AS
@@ -69,8 +74,11 @@ BEGIN
     RETURN QUERY
         WITH 
         tmpCountPartionDate AS (SELECT Container.Id                                               AS ContainerId
+                                     , Container.ParentId                                         AS ParentId_Container
                                      , Container.ObjectId                                         AS GoodsId
                                      , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
+                                     , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MI_Id_Income
+                                     , ObjectFloat_PartionGoods_MovementId.ValueData   :: Integer AS MovementId_SendPartionDate
                                      --, SUM (Container.Amount)                                     AS AmountRemains
                                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180  THEN Container.Amount ELSE 0 END) AS Amount     -- итого со сроком
                                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN Container.Amount ELSE 0 END) AS Amount_0   -- просрочено
@@ -92,13 +100,17 @@ BEGIN
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
                                                                    ON CLO_PartionGoods.ContainerId = Container.Id
                                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ObjectId = CLO_PartionGoods.ObjectId
+
+                                     -- документ срок/не срок
+                                     INNER JOIN ObjectFloat AS ObjectFloat_PartionGoods_MovementId 
+                                                           ON ObjectFloat_PartionGoods_MovementId.DescId = zc_ObjectFloat_PartionGoods_MovementId()
+                                                          AND ObjectFloat_PartionGoods_MovementId.ObjectId = CLO_PartionGoods.ObjectId
                                      
-                                     /*LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
+                                     LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
                                                                    ON CLO_PartionMovementItem.ContainerId = Container.Id
-                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()*/
+                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
                
-                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = Object_PartionGoods.ObjectCode--CLO_PartionMovementItem.ObjectId
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
                                      -- элемент прихода
                                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
                                      -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
@@ -117,13 +129,18 @@ BEGIN
                                        , Container.ObjectId
                                        , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                        , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                                       , COALESCE (MI_Income_find.Id,MI_Income.Id)
+                                       , Container.ParentId
+                                       , ObjectFloat_PartionGoods_MovementId.ValueData
                                 )
 
       , tmpData AS (SELECT tmpCountPartionDate.GoodsId
                          , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.ContainerId ELSE 0 END AS ContainerId
-                         , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.MovementId_Income ELSE 0 END AS MovementId_Income
-                         , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.PartionDateKindId ELSE 0 END AS PartionDateKindId
-                         , MIN (tmpCountPartionDate.ExpirationDate) AS ExpirationDate
+                         , tmpCountPartionDate.MovementId_Income
+                         , tmpCountPartionDate.MovementId_SendPartionDate
+                         , tmpCountPartionDate.MI_Id_Income
+                         , tmpCountPartionDate.PartionDateKindId
+                         , MIN ( tmpCountPartionDate.ExpirationDate) AS ExpirationDate
                          , SUM ( tmpCountPartionDate.Amount)        AS Amount
                          , SUM ( tmpCountPartionDate.Amount_0)      AS Amount_0
                          , SUM ( tmpCountPartionDate.Amount_1)      AS Amount_1
@@ -131,13 +148,15 @@ BEGIN
                          , SUM ( COALESCE (Container.Amount,0))     AS AmountRemains
 
                     FROM tmpCountPartionDate
-                         LEFT JOIN Container ON Container.Id = tmpCountPartionDate.ContainerId
-                                            AND Container.DescId = zc_Container_CountPartionDate()
+                         LEFT JOIN Container ON Container.Id = tmpCountPartionDate.ParentId_Container
+                                            AND Container.DescId = zc_Container_Count()
                     --WHERE COALESCE (tmpCountPartionDate.AmountTerm,0) <> 0
                     GROUP BY tmpCountPartionDate.GoodsId
                            , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.ContainerId ELSE 0 END
-                           , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.MovementId_Income ELSE 0 END
-                           , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.PartionDateKindId ELSE 0 END
+                           , tmpCountPartionDate.MovementId_Income
+                           , tmpCountPartionDate.PartionDateKindId
+                           , tmpCountPartionDate.MovementId_SendPartionDate
+                           , tmpCountPartionDate.MI_Id_Income
                     )
 
       , tmpIncome AS (SELECT Movement.Id
@@ -163,6 +182,18 @@ BEGIN
                            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
                       WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_Income FROM tmpData)
                       )
+
+      , tmpSendPartionDate AS (SELECT Movement.Id              AS Id
+                                    , MovementDesc.ItemName    AS DescName
+                                    , Movement.InvNumber       AS InvNumber
+                                    , Movement.OperDate        AS OperDate
+                                    , Object_Status.ObjectCode AS StatusCode
+                                    , Object_Status.ValueData  AS StatusName
+                               FROM Movement
+                                    LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                    LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                               WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_SendPartionDate FROM tmpData)
+                               )
                                    
         -- результат
         SELECT
@@ -182,12 +213,19 @@ BEGIN
           , tmpIncome.Invnumber           AS Invnumber_Income
           , tmpIncome.FromName            AS FromName_Income
           , tmpIncome.ContractName        AS ContractName_Income
+          
+          , tmpSendPartionDate.Id          AS MovementId_SendPartionDate
+          , tmpSendPartionDate.DescName    AS DescName_SendPartionDate
+          , tmpSendPartionDate.OperDate    AS OperDate_SendPartionDate
+          , tmpSendPartionDate.Invnumber   AS Invnumber_SendPartionDate
+          , tmpSendPartionDate.StatusCode  AS StatusCode_SendPartionDate
                  
           , CASE WHEN tmpData.Amount <> tmpData.AmountRemains THEN TRUE ELSE FALSE END AS isDiff
         FROM tmpData 
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
            LEFT JOIN tmpIncome ON tmpIncome.Id = tmpData.MovementId_Income 
+           LEFT JOIN tmpSendPartionDate ON tmpSendPartionDate.Id = tmpData.MovementId_SendPartionDate
 
            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpData.PartionDateKindId
         ;
