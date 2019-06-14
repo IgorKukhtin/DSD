@@ -48,6 +48,7 @@ BEGIN
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
                                                                 , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
+                                                                , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
                                                                 , zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                                                                  )
                             )

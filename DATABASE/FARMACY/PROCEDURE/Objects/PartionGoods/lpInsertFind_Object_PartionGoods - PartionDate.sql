@@ -2,21 +2,24 @@
 
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime, TFloat, TFloat);
-DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime, Integer, TFloat, TFloat);
+-- DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime, Integer, TFloat, TFloat);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, TDateTime, Integer, Integer, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inMovementId       Integer,   --
-    IN inOperDate         TDateTime, -- Дата "срок годности" - ExpirationDate
-    IN inGoodsId          Integer,   --
+    IN inMovementId       Integer,   -- Документ "Приход от поставщика"
+    IN inMovementId_send  Integer,   -- Документ zc_Movement_SendPartionDate
+    IN inOperDate         TDateTime, -- срок годности - по нему учет - ExpirationDate
+    IN inUnitId           Integer,   -- Подразделение
+    IN inGoodsId          Integer,   -- товар
     IN inChangePercentMin TFloat,    -- % скидки(срок меньше месяца)
     IN inChangePercent    TFloat     -- % скидки(срок от 1 мес до 6 мес)
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbPartionGoodsId      Integer;
-   DECLARE vbPartionGoodsId_find Integer;
-   DECLARE vbOperDate_str        TVarChar;
+   DECLARE vbPartionGoodsId  Integer;
+   DECLARE vbcontainerid_err Integer;
+   DECLARE vbOperDate_str    TVarChar;
 BEGIN
      -- меняем параметр
      IF COALESCE (inOperDate, zc_DateEnd()) = zc_DateEnd()
@@ -29,67 +32,156 @@ BEGIN
      END IF;
 
 
-     -- Находим по св-вам: Полное значение партии + Вид товара(готовая продукция)
+     -- Проверка - партия inMovementId в сроках может формироваться только в одном документе срок
+     IF EXISTS (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
+                                           FROM Object
+                                                INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                      ON ObjectLink_Goods.ObjectId      = Object.Id
+                                                                     AND ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
+                                                                     AND ObjectLink_Goods.ChildObjectId = inGoodsId
+                                                /*INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                      ON ObjectLink_Unit.ObjectId      = Object.Id
+                                                                     AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
+                                                                     AND ObjectLink_Unit.ChildObjectId = inUnitId*/
+                                                INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                               ON CLO_PartionGoods.ObjectId = Object.Id
+                                                                              AND CLO_PartionGoods.DescId   = zc_ContainerLinkObject_PartionGoods()
+                                           WHERE -- по партии "Приход от поставщика"
+                                                 Object.ObjectCode = inMovementId
+                                             AND Object.DescId     = zc_Object_PartionGoods()
+                                          -- !!! без !!! "срок годности"
+                                          -- AND Object.ValueData  = vbOperDate_str
+                                          )
+                --
+                SELECT Container.Id
+                FROM Container
+                     INNER JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.ContainerId     = Container.Id
+                                                     AND MIContainer.MovementDescId  = zc_Movement_SendPartionDate()
+                                                  -- AND MIContainer.MovementId      <> inMovementId_send
+                WHERE Container.Id            IN (SELECT DISTINCT tmpObject_Partion.ContainerId FROM tmpObject_Partion)
+                  AND Container.DescId        = zc_Container_CountPartionDate()
+                  AND Container.WhereObjectId = inUnitId
+               )
+     THEN 
+         vbContainerId_err:=  (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
+                                                          FROM Object
+                                                               INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                                     ON ObjectLink_Goods.ObjectId      = Object.Id
+                                                                                    AND ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
+                                                                                    AND ObjectLink_Goods.ChildObjectId = inGoodsId
+                                                               /*INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                                     ON ObjectLink_Unit.ObjectId      = Object.Id
+                                                                                    AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
+                                                                                    AND ObjectLink_Unit.ChildObjectId = inUnitId*/
+                                                               INNER JOIN ObjectFloat AS ObjectFloat_MovementId
+                                                                                      ON ObjectFloat_MovementId.ObjectId = Object.Id
+                                                                                     AND ObjectFloat_MovementId.DescId    = zc_ObjectFloat_PartionGoods_MovementId()
+                                                               INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                                              ON CLO_PartionGoods.ObjectId    = tmpObject_Partion.PartinonId
+                                                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                                          WHERE -- по партии "Приход от поставщика"
+                                                                Object.ObjectCode = inMovementId
+                                                            AND Object.DescId     = zc_Object_PartionGoods()
+                                                         -- !!! без !!! "срок годности"
+                                                         -- AND Object.ValueData  = vbOperDate_str
+                                                         )
+                               SELECT Container.Id
+                               FROM Container
+                                    INNER JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.ContainerId     = Container.Id
+                                                                    AND MIContainer.MovementDescId  = zc_Movement_SendPartionDate()
+                                                                 -- AND MIContainer.MovementId      <> inMovementId_send
+                               WHERE Container.Id            IN (SELECT DISTINCT tmpObject_Partion.ContainerId FROM tmpObject_Partion)
+                                 AND Container.DescId        = zc_Container_CountPartionDate()
+                                 AND Container.WhereObjectId = inUnitId
+                               LIMIT 1
+                              );
+         --
+         RAISE EXCEPTION 'Ошибка.Для <%> и партией прихода от поставщика № <%> от <%> уже сформирована партия срок в № <%> от <%>.'
+                        , lfGet_Object_ValueData (inGoodsId)
+                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = (SELECT Object.ObjectCode FROM ContainerLinkObject AS CLO_PG JOIN Object ON Object.Id = CLO_PG.ObjectId WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        , (SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT Object.ObjectCode FROM ContainerLinkObject AS CLO_PG JOIN Object ON Object.Id = CLO_PG.ObjectId WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        , (SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        ;
+     END IF;
+
+
+     -- Проверка - может быть только одна партия
+     IF 1 < (SELECT COUNT(*)
+             FROM Object
+                  INNER JOIN ObjectLink AS ObjectLink_Goods
+                                        ON ObjectLink_Goods.ObjectId      = Object.Id
+                                       AND ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
+                                       AND ObjectLink_Goods.ChildObjectId = inGoodsId
+                  INNER JOIN ObjectLink AS ObjectLink_Unit
+                                        ON ObjectLink_Unit.ObjectId      = Object.Id
+                                       AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
+                                       AND ObjectLink_Unit.ChildObjectId = inUnitId
+                                       
+                  INNER JOIN ObjectFloat AS ObjectFloat_MovementId
+                                         ON ObjectFloat_MovementId.ObjectId = Object.Id
+                                        AND ObjectFloat_MovementId.DescId    = zc_ObjectFloat_PartionGoods_MovementId()
+             WHERE -- по партии "Приход от поставщика"
+                   Object.ObjectCode = inMovementId
+                  -- по "срок годности"
+               AND Object.ValueData  = vbOperDate_str
+               AND Object.DescId     = zc_Object_PartionGoods()
+            )
+     THEN 
+         RAISE EXCEPTION 'Ошибка.Найдено несколько партий с одинаковым inMovementId = <%> + OperDate =  <%>.', inMovementId, vbOperDate_str;
+     END IF;
+
+
+     -- Находим по св-вам: Полное значение партии
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object
                               INNER JOIN ObjectLink AS ObjectLink_Goods
                                                     ON ObjectLink_Goods.ObjectId      = Object.Id
                                                    AND ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                    AND ObjectLink_Goods.ChildObjectId = inGoodsId
-                              LEFT JOIN ObjectFloat AS ObjectFloat_ValueMin
-                                                    ON ObjectFloat_ValueMin.ObjectId  = Object.Id
-                                                   AND ObjectFloat_ValueMin.DescId    = zc_ObjectFloat_PartionGoods_ValueMin()
-                              LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                    ON ObjectFloat_Value.ObjectId  = Object.Id
-                                                   AND ObjectFloat_Value.DescId    = zc_ObjectFloat_PartionGoods_Value()
-                         WHERE Object.ObjectCode = inMovementId
-                           AND Object.ValueData  = vbOperDate_str
+                              INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.ObjectId      = Object.Id
+                                                   AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
+                                                   AND ObjectLink_Unit.ChildObjectId = inUnitId
+                              INNER JOIN ObjectFloat AS ObjectFloat_MovementId
+                                                     ON ObjectFloat_MovementId.ObjectId = Object.Id
+                                                    AND ObjectFloat_MovementId.DescId    = zc_ObjectFloat_PartionGoods_MovementId()
+                         WHERE -- по партии "Приход от поставщика"
+                               Object.ObjectCode = inMovementId
                            AND Object.DescId     = zc_Object_PartionGoods()
-                           AND COALESCE (ObjectFloat_ValueMin.ValueData, 0) = inChangePercentMin
-                           AND COALESCE (ObjectFloat_Value.ValueData, 0)    = inChangePercent
+                              -- по "срок годности"
+                           AND Object.ValueData  = vbOperDate_str
                         );
-
-     -- Проверка что у inGoodsId + inMovementId - если уже такие есть, inChangePercentMin + inChangePercent должны соответствовать
-     /*vbPartionGoodsId_find:= (SELECT Object.Id
-                              FROM Object
-                                   INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                         ON ObjectLink_Goods.ObjectId      = Object.Id
-                                                        AND ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
-                                                        AND ObjectLink_Goods.ChildObjectId = inGoodsId
-                              WHERE Object.ObjectCode = inMovementId
-                                AND Object.DescId     = zc_Object_PartionGoods()
-                             );
-     -- Проверка
-     IF vbPartionGoodsId_find > 0 AND COALESCE (vbPartionGoodsId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка. Для товара <%> с партией = № <%> от <%> и срок годности = <%> процент скидки должен быть = <%> и <%>. (%)(%)(%)(%)(%)'
-                        , lfGet_Object_ValueData (inGoodsId)
-                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-                        , zfConvert_DateToString ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId))
-                        , zfConvert_DateToString ((SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = vbPartionGoodsId_find AND OD.DescId = zc_ObjectDate_PartionGoods_Value()))
-                        , COALESCE((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbPartionGoodsId_find AND OFl.DescId = zc_ObjectFloat_PartionGoods_ValueMin()), 0)
-                        , COALESCE((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbPartionGoodsId_find AND OFl.DescId = zc_ObjectFloat_PartionGoods_Value()), 0)
-                        , inGoodsId, inMovementId, inChangePercentMin, inChangePercent, vbOperDate_str
-                        ;
-         
-     END IF;*/
+                        
 
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
      THEN
-         -- Если нашли по "основным" параметрам, тогда будет UPDATE
-         IF vbPartionGoodsId_find > 0 THEN vbPartionGoodsId:= vbPartionGoodsId_find; END IF;
-         
          -- сохранили <Полное значение партии>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), inMovementId, vbOperDate_str);
 
          -- сохранили <товар>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, inGoodsId);
+         -- сохранили <Подразделение>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Unit(), vbPartionGoodsId, inUnitId);
+         
 
-         -- сохранили
+         -- сохранили - срок годности - по нему учет - ExpirationDate
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
 
+         -- сохранили - % скидки(срок меньше месяца)
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueMin(), vbPartionGoodsId, inChangePercentMin);
+
+         -- сохранили - % скидки(срок от 1 мес до 6 мес)
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Value(), vbPartionGoodsId, inChangePercent);
+
+         -- сохранили - Партия документа Срок
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_MovementId(), vbPartionGoodsId, inMovementId_send);
+
+     ELSE
          -- сохранили - % скидки(срок меньше месяца)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueMin(), vbPartionGoodsId, inChangePercentMin);
 

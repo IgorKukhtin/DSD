@@ -501,8 +501,9 @@ BEGIN
          IF vbDocumentKindId = zc_Enum_DocumentKind_PackDiff()
          THEN
              INSERT INTO _tmpScale_receipt (GoodsId_from, GoodsId_to, GoodsKindId_to)
-                SELECT MovementItem.ObjectId AS GoodsId_from
-                     , ObjectLink_DocumentKind_Goods.ChildObjectId AS GoodsId_to
+                SELECT DISTINCT
+                       MovementItem.ObjectId                           AS GoodsId_from
+                     , ObjectLink_DocumentKind_Goods.ChildObjectId     AS GoodsId_to
                      , ObjectLink_DocumentKind_GoodsKind.ChildObjectId AS GoodsKindId_to
                 FROM MovementItem
                      INNER JOIN ObjectLink AS ObjectLink_DocumentKind_Goods
@@ -516,7 +517,8 @@ BEGIN
                   AND MovementItem.isErased   = FALSE;
          ELSE
              INSERT INTO _tmpScale_receipt (GoodsId_from, GoodsId_to)
-                SELECT MovementItem.ObjectId AS GoodsId_from, MAX (ObjectLink_Receipt_Goods.ChildObjectId) AS GoodsId_to
+                SELECT MovementItem.ObjectId                        AS GoodsId_from
+                     , MAX (ObjectLink_Receipt_Goods.ChildObjectId) AS GoodsId_to
                 FROM MovementItem
                      INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                            ON ObjectLink_ReceiptChild_Goods.ChildObjectId = MovementItem.ObjectId

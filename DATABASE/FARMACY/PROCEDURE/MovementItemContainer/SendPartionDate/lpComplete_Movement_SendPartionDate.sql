@@ -35,6 +35,13 @@ BEGIN
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
 
+     -- Проверка
+     IF COALESCE (vbUnitId, 0) = 0
+     THEN 
+         RAISE EXCEPTION 'Ошибка.Подразделение не установлено.';
+     END IF;
+
+
      --
      vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
                    FROM Object  AS Object_PartionDateKind
@@ -132,10 +139,19 @@ BEGIN
        ;
 
      -- элементы
-     UPDATE _tmpItem_PartionDate SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inMovementId      := _tmpItem_PartionDate.MovementId_in
+     UPDATE _tmpItem_PartionDate SET PartionGoodsId = lpInsertFind_Object_PartionGoods (-- Документ "Приход от поставщика"
+                                                                                        inMovementId      := _tmpItem_PartionDate.MovementId_in
+                                                                                        -- Документ zc_Movement_SendPartionDate
+                                                                                      , inMovementId_send := inMovementId
+                                                                                        -- срок годности - по нему учет
                                                                                       , inOperDate        := _tmpItem_PartionDate.ExpirationDate
+                                                                                        -- Подразделение
+                                                                                      , inUnitId          := vbUnitId
+                                                                                        -- товар
                                                                                       , inGoodsId         := _tmpItem_PartionDate.GoodsId
+                                                                                        -- % скидки на срок от 0 мес. до 1 мес.
                                                                                       , inChangePercentMin:= _tmpItem_PartionDate.ChangePercentMin
+                                                                                        -- % скидки на срок от 1 мес. до 6 мес.
                                                                                       , inChangePercent   := _tmpItem_PartionDate.ChangePercent
                                                                                        );
      -- элементы - zc_Container_CountPartionDate
