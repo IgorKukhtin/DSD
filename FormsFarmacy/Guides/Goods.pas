@@ -88,6 +88,8 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    AllowDivision: TcxGridDBColumn;
+    spUpdate_Goods_AllowDivision: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -388,8 +388,8 @@
     Width = 100
   end
   object cbGoodsCategory: TcxCheckBox
-    Left = 16
-    Top = 214
+    Left = 15
+    Top = 202
     Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
     Caption = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
     TabOrder = 48
@@ -397,14 +397,14 @@
   end
   object cbSp: TcxCheckBox
     Left = 16
-    Top = 545
+    Top = 535
     Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
     Caption = #1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
-    TabOrder = 49
+    TabOrder = 50
     Width = 89
   end
   object cxLabel22: TcxLabel
-    Left = 119
+    Left = 142
     Top = 535
     Hint = #1044#1072#1090#1072' '#1085#1072#1095'.'#1088#1072#1073#1086#1090#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072#1084
     Caption = #1044#1072#1090#1072' '#1085#1072#1095'.'
@@ -412,13 +412,13 @@
     ShowHint = True
   end
   object edDateSp: TcxDateEdit
-    Left = 119
+    Left = 142
     Top = 554
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 51
+    TabOrder = 52
     Width = 90
   end
   object cxLabel23: TcxLabel
@@ -438,7 +438,7 @@
     Properties.Kind = ckDateTime
     Properties.Nullstring = ' '
     Properties.YearsInMonthList = False
-    TabOrder = 53
+    TabOrder = 54
     Width = 100
   end
   object edEndSP: TcxDateEdit
@@ -450,13 +450,29 @@
     Properties.DateButtons = [btnNow]
     Properties.DisplayFormat = 'HH:MM'
     Properties.Kind = ckDateTime
-    TabOrder = 54
+    TabOrder = 55
     Width = 100
   end
   object cxLabel24: TcxLabel
     Left = 367
     Top = 535
     Caption = #1054#1082#1086#1085'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
+  end
+  object cbDividePartionDate: TcxCheckBox
+    Left = 15
+    Top = 221
+    Hint = #1056#1072#1079#1073#1080#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+    Caption = #1056#1072#1079#1073#1080#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+    TabOrder = 49
+    Width = 234
+  end
+  object cbRedeemByHandSP: TcxCheckBox
+    Left = 16
+    Top = 555
+    Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090' '#1074#1088#1091#1095#1085#1091#1102' ('#1073#1077#1079' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103' API)'
+    Caption = #1055#1086#1075#1072#1096#1072#1090#1100' '#1074#1088#1091#1095#1085#1091#1102
+    TabOrder = 57
+    Width = 125
   end
   object ActionList: TActionList
     Left = 356
@@ -734,6 +750,22 @@
         Name = 'inisGoodsCategory'
         Value = Null
         Component = cbGoodsCategory
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDividePartionDate'
+        Value = Null
+        Component = cbDividePartionDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRedeemByHandSP'
+        Value = Null
+        Component = cbRedeemByHandSP
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1037,6 +1069,20 @@
         Value = 'NULL'
         Component = edEndSP
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DividePartionDate'
+        Value = Null
+        Component = cbDividePartionDate
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RedeemByHandSP'
+        Value = Null
+        Component = cbRedeemByHandSP
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

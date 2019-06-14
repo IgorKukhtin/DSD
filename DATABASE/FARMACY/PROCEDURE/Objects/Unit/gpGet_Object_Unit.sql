@@ -29,7 +29,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DateSP      TDateTime,
                StartTimeSP TDateTime,
                EndTimeSP   TDateTime,
-               isSP        Boolean
+               isSP        Boolean,
+               DividePartionDate Boolean,
+               RedeemByHandSP Boolean
                ) AS
 $BODY$
 BEGIN
@@ -94,6 +96,8 @@ BEGIN
            , CAST (Null as TDateTime) AS StartTimeSP
            , CAST (Null as TDateTime) AS EndTimeSP
            , FALSE                    AS isSP
+           , FALSE                    AS DividePartionDate
+           , FALSE                    AS RedeemByHandSP
 
 ;
    ELSE
@@ -157,6 +161,8 @@ BEGIN
       , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
       , CASE WHEN COALESCE (ObjectDate_EndSP.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_EndSP.ValueData ELSE Null END   :: TDateTime AS EndTimeSP
       , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
+      , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
+      , COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE)  :: Boolean   AS RedeemByHandSP
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -284,6 +290,14 @@ BEGIN
                              ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
+                                ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RedeemByHandSP
+                                ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -299,6 +313,8 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 
+ 14.06.19                                                        * add DividePartionDate
  09.02.19                                                        * add PharmacyItem
  15.01.19         *
  22.10.18         *

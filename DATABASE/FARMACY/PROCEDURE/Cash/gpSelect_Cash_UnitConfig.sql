@@ -1,6 +1,6 @@
 -- Function: gpSelect_Cash_UnitConfig()
 
---DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
@@ -12,7 +12,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
-               FtpDir TVarChar,
+               FtpDir TVarChar, DividePartionDate Boolean,
                Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar
               ) AS
@@ -89,8 +89,12 @@ BEGIN
        , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251) 
          THEN 'Franchise' 
          ELSE '' END::TVarChar                               AS FtpDir
+
+      , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
+
          
-       , Object_Helsi_IdSP.Id                                AS Helsi_IdSP
+      , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
+        ELSE NULL::Integer END                               AS Helsi_IdSP
        , Object_Helsi_Id.ValueData                           AS Helsi_Id
        , Object_Helsi_be.ValueData                           AS Helsi_be
        , Object_Helsi_ClientId.ValueData                     AS Helsi_ClientId
@@ -138,6 +142,10 @@ BEGIN
                              ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
+                                ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+
         LEFT JOIN Object AS Object_Helsi_IdSP ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
                                              AND Object_Helsi_IdSP.ObjectCode  = 1
         LEFT JOIN Object AS Object_Helsi_Id ON Object_Helsi_Id.Id = zc_Enum_Helsi_Id()
@@ -145,6 +153,10 @@ BEGIN
         LEFT JOIN Object AS Object_Helsi_ClientId ON Object_Helsi_ClientId.Id = zc_Enum_Helsi_ClientId()
         LEFT JOIN Object AS Object_Helsi_ClientSecret ON Object_Helsi_ClientSecret.Id = zc_Enum_Helsi_ClientSecret()
         LEFT JOIN Object AS Object_Helsi_IntegrationClient ON Object_Helsi_IntegrationClient.Id = zc_Enum_Helsi_IntegrationClient()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RedeemByHandSP
+                                ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
@@ -160,6 +172,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 14.06.19                                                       *
  21.04.19                                                       *
  05.04.19                                                       *
  22.03.19                                                       *
