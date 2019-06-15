@@ -68,7 +68,7 @@ BEGIN
           -- просрочка
           tmpContainer_PartionDate AS (SELECT DISTINCT Container.ParentId AS ContainerId
                                        FROM Container
-                                       WHERE Container.DescId = zc_Container_CountPartionDate()
+                                       WHERE Container.DescId        = zc_Container_CountPartionDate()
                                          AND Container.WhereObjectId = inUnitId
                                          AND Container.Amount <> 0
                                       )
@@ -105,7 +105,8 @@ BEGIN
                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                   LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                   LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                           AND 1=0
      
                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode

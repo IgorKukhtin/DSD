@@ -181,7 +181,7 @@ BEGIN
                                       , ObjectId_analyzer, WhereObjectId_analyzer, ObjectIntId_analyzer
                                        )
          SELECT zc_MIContainer_CountPartionDate()   AS DescId
-              , zc_Movement_Income()                AS MovementDescId
+              , zc_Movement_SendPartionDate()       AS MovementDescId
               , inMovementId                        AS MovementId
               , _tmpItem_PartionDate.MovementItemId AS MovementItemId
               , _tmpItem_PartionDate.ContainerId    AS ContainerId
