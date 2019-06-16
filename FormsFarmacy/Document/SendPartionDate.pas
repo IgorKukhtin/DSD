@@ -87,6 +87,7 @@ type
     cxLabel3: TcxLabel;
     edChangePercentMin: TcxCurrencyEdit;
     bbMIChildProtocolOpenForm: TdxBarButton;
+    MovementId_Income: TcxGridDBColumn;
   private
     { Private declarations }
   public

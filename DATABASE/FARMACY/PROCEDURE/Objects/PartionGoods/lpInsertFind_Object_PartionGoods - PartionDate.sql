@@ -78,7 +78,7 @@ BEGIN
                                                                                       ON ObjectFloat_MovementId.ObjectId = Object.Id
                                                                                      AND ObjectFloat_MovementId.DescId    = zc_ObjectFloat_PartionGoods_MovementId()
                                                                INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                                                              ON CLO_PartionGoods.ObjectId    = tmpObject_Partion.PartinonId
+                                                                                              ON CLO_PartionGoods.ObjectId    = Object.Id
                                                                                              AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                           WHERE -- по партии "Приход от поставщика"
                                                                 Object.ObjectCode = inMovementId
@@ -101,9 +101,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Для <%> и партией прихода от поставщика № <%> от <%> уже сформирована партия срок в № <%> от <%>.'
                         , lfGet_Object_ValueData (inGoodsId)
                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = (SELECT Object.ObjectCode FROM ContainerLinkObject AS CLO_PG JOIN Object ON Object.Id = CLO_PG.ObjectId WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
-                        , (SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT Object.ObjectCode FROM ContainerLinkObject AS CLO_PG JOIN Object ON Object.Id = CLO_PG.ObjectId WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        , zfConvert_DateToString ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT Object.ObjectCode FROM ContainerLinkObject AS CLO_PG JOIN Object ON Object.Id = CLO_PG.ObjectId WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods())))
                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
-                        , (SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods()))
+                        , zfConvert_DateToString ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods())))
                         ;
      END IF;
 

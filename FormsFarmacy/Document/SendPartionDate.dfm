@@ -3,8 +3,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
   ClientHeight = 546
   ClientWidth = 1048
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
+  ExplicitLeft = -275
+  ExplicitTop = -124
   ExplicitWidth = 1064
-  ExplicitHeight = 584
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +15,17 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Height = 423
     ExplicitTop = 123
     ExplicitWidth = 1048
-    ExplicitHeight = 430
+    ExplicitHeight = 423
     ClientRectBottom = 423
     ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1048
-      ExplicitHeight = 406
+      ExplicitHeight = 399
       inherited cxGrid: TcxGrid
         Width = 1048
         Height = 220
         ExplicitWidth = 1048
-        ExplicitHeight = 227
+        ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -269,7 +271,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 235
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -422,6 +423,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Options.Editing = False
             Width = 70
           end
+          object MovementId_Income: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Income'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -435,7 +444,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 227
       end
     end
   end

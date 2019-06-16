@@ -197,7 +197,7 @@ BEGIN
                FROM MI_Master
                    LEFT JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
-                   LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.GoodsId = MI_Master.GoodsId;
+                   LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.GoodsId = MI_Master.GoodsId AND 1=0;
    
           RETURN NEXT Cursor1;
    
@@ -311,7 +311,7 @@ BEGIN
                                           ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                          AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
 
-                    LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.ContainerId = MI_Child.ContainerId;  
+                    LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.ContainerId = MI_Child.ContainerId AND 1=0;  
    
           RETURN NEXT Cursor2;
 
