@@ -403,7 +403,15 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -448,9 +456,14 @@ object UnitForm: TUnitForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
-    object dxBarButton1: TdxBarButton
+    object bbGridToExcel: TdxBarButton
       Action = actGridToExcel
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = actProtocol
       Category = 0
     end
   end
@@ -622,6 +635,36 @@ object UnitForm: TUnitForm
       Caption = 'actUpdate_HistoryCost'
       ImageIndex = 76
       DataSource = GridDS
+    end
+    object actProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object GridDS: TDataSource

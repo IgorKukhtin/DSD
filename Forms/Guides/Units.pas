@@ -67,7 +67,7 @@ type
     ProfitLossDirectionName: TcxGridDBColumn;
     ParentName: TcxGridDBColumn;
     actGridToExcel: TdsdGridToExcel;
-    dxBarButton1: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
     InvNumber: TcxGridDBColumn;
     Contract_JuridicalName: TcxGridDBColumn;
     Contract_InfomoneyName: TcxGridDBColumn;
@@ -85,6 +85,8 @@ type
     actUnitChoiceForm: TOpenChoiceForm;
     spUpdate_HistoryCost: TdsdStoredProc;
     actUpdate_HistoryCost: TdsdUpdateDataSet;
+    actProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

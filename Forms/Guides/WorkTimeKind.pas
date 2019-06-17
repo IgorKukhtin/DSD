@@ -55,7 +55,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoiceGuide: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     ShortName: TcxGridDBColumn;
     Tax: TcxGridDBColumn;

@@ -67,6 +67,8 @@ type
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
     Address: TcxGridDBColumn;
+    actProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

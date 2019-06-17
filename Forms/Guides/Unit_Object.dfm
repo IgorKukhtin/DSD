@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,7 +26,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -200,6 +199,36 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
     end
+    object actProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -248,7 +277,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
+    object bbProtocol: TdxBarButton
+      Action = actProtocol
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

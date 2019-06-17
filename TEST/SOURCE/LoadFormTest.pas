@@ -2335,16 +2335,18 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;
