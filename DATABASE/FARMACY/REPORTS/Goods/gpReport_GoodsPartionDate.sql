@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsPartionDate(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId      Integer   --ИД 
+             , ContainerId_PartionDate Integer
+             , GoodsId             Integer
              , GoodsCode           Integer
              , GoodsName           TVarChar
              , PartionDateKindName TVarChar
@@ -100,8 +102,8 @@ BEGIN
 
                                      -- документ срок/не срок
                                      INNER JOIN ObjectFloat AS ObjectFloat_PartionGoods_MovementId 
-                                                           ON ObjectFloat_PartionGoods_MovementId.DescId = zc_ObjectFloat_PartionGoods_MovementId()
-                                                          AND ObjectFloat_PartionGoods_MovementId.ObjectId = CLO_PartionGoods.ObjectId
+                                                            ON ObjectFloat_PartionGoods_MovementId.DescId = zc_ObjectFloat_PartionGoods_MovementId()
+                                                           AND ObjectFloat_PartionGoods_MovementId.ObjectId = CLO_PartionGoods.ObjectId
                                      
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
                                                                    ON CLO_PartionMovementItem.ContainerId = Container.Id
@@ -188,7 +190,8 @@ BEGIN
                         )
 
       , tmpData AS (SELECT COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)                             AS GoodsId
-                         , COALESCE (tmpCountPartionDate.ContainerId,0)                                             AS ContainerId
+                         , COALESCE (tmpCountPartionDate.ContainerId,0)                                             AS ContainerId_PartionDate
+                         , tmpContainer.ContainerId                                                                 AS ContainerId
                          , COALESCE (tmpCountPartionDate.MovementId_Income, tmpContainer.MovementId_Income)         AS MovementId_Income
                          , tmpCountPartionDate.MovementId_SendPartionDate                                           AS MovementId_SendPartionDate
                          , COALESCE (tmpCountPartionDate.MI_Id_Income, tmpContainer.MI_Id_Income)                   AS MI_Id_Income
@@ -202,6 +205,7 @@ BEGIN
                                                AND tmpContainer.ContainerId  = tmpCountPartionDate.ParentId_Container
                     GROUP BY COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)
                            , COALESCE (tmpCountPartionDate.ContainerId,0)
+                           , tmpContainer.ContainerId
                            , COALESCE (tmpCountPartionDate.MovementId_Income, tmpContainer.MovementId_Income)
                            , tmpCountPartionDate.MovementId_SendPartionDate
                            , COALESCE (tmpCountPartionDate.MI_Id_Income, tmpContainer.MI_Id_Income)
@@ -247,6 +251,8 @@ BEGIN
         -- результат
         SELECT
             tmpData.ContainerId
+          , tmpData.ContainerId_PartionDate
+          , Object_Goods.Id            AS GoodsId
           , Object_Goods.ObjectCode    AS GoodsCode
           , Object_Goods.ValueData     AS GoodsName
 

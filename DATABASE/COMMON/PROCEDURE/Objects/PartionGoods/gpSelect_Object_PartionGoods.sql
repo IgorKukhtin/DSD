@@ -25,25 +25,25 @@ BEGIN
      RETURN QUERY 
   
   WITH tmpContainer_Count AS (SELECT Container.ObjectId AS GoodsId
-                                     , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                                     , Container.Amount
-                                FROM Container 
-                                     LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
-                                                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                             -- AND CLO_Unit.ObjectId > 0
-                                    
-                                     LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = Container.Id
-                                                                                AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
-                                                                              --  AND CLO_Member.ObjectId > 0
-                                                                                
-                                    LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                   , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                                   , Container.Amount
+                              FROM Container 
+                                   LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
+                                                                            AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                           -- AND CLO_Unit.ObjectId > 0
                                   
-                               WHERE  Container.ObjectId = inGoodsId
-                                  AND Container.DescId = zc_Container_Count()
-                                 AND  ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0 )
-                                  AND (Container.Amount > 0 OR inShowAll = False)
-                               )
+                                   LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = Container.Id
+                                                                              AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                                            --  AND CLO_Member.ObjectId > 0
+                                                                              
+                                  LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                                    AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                
+                             WHERE  Container.ObjectId = inGoodsId
+                                AND Container.DescId = zc_Container_Count()
+                               AND  ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0 )
+                                AND (Container.Amount > 0 OR inShowAll = False)
+                             )
 
      SELECT
              Object_PartionGoods.Id          AS Id

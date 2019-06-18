@@ -3,6 +3,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   ClientHeight = 359
   ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 840
   ExplicitHeight = 397
   PixelsPerInch = 96
@@ -679,7 +680,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
+    Left = 184
     Top = 24
   end
   object GuidesGoods: TdsdGuides
@@ -795,6 +796,15 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods
@@ -803,10 +813,36 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PartyId'
         Value = Null
         Component = GuidesParty
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartyName'
+        Value = Null
+        Component = GuidesParty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

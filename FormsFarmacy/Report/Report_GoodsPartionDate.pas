@@ -43,6 +43,8 @@ type
     ContractName_Income: TcxGridDBColumn;
     DescName_Income: TcxGridDBColumn;
     StatusCode_SendPartionDate: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public
