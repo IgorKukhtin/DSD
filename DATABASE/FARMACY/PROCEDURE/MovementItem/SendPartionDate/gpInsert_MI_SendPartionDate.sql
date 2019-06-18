@@ -89,7 +89,8 @@ BEGIN
                               )
           -- остатки - нашли Срок годности
         , tmpContainer_term AS (SELECT tmp.ContainerId
-                                     , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
+                                  -- , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
+                                     , MI_Income.MovementId                                       AS MovementId_Income
                                      , tmp.GoodsId
                                      , tmp.Amount
                                      , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate        --
@@ -106,7 +107,7 @@ BEGIN
                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                           AND 1=0
+                                                                        -- AND 1=0
      
                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
