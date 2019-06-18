@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel, Vcl.StdCtrls, ExternalLoad;
+  cxButtonEdit, cxLabel, Vcl.StdCtrls, ExternalLoad, cxBlobEdit, cxMemo;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
@@ -90,6 +90,7 @@ type
     bbStartLoad: TdxBarButton;
     AllowDivision: TcxGridDBColumn;
     spUpdate_Goods_AllowDivision: TdsdStoredProc;
+    spUpdate_Goods_Analog: TdsdStoredProc;
   private
     { Private declarations }
   public

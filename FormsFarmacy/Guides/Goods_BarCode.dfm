@@ -1,27 +1,27 @@
 inherited Goods_BarCodeForm: TGoods_BarCodeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080' ('#1080#1079#1084'. '#1096'/'#1082' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103')'
-  ClientHeight = 443
+  ClientHeight = 537
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 481
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 883
-    Height = 417
+    Height = 511
     ExplicitWidth = 883
-    ExplicitHeight = 417
-    ClientRectBottom = 417
+    ExplicitHeight = 511
+    ClientRectBottom = 511
     ClientRectRight = 883
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 883
-      ExplicitHeight = 417
+      ExplicitHeight = 511
       inherited cxGrid: TcxGrid
         Width = 883
-        Height = 417
+        Height = 391
         ExplicitWidth = 883
-        ExplicitHeight = 417
+        ExplicitHeight = 391
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -314,7 +314,94 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
             Options.Editing = False
             Width = 60
           end
+          object isErrorBarCode: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072
+            DataBinding.FieldName = 'isErrorBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object BarCode_Color: TcxGridDBColumn
+            DataBinding.FieldName = 'BarCode_Color'
+            Visible = False
+          end
         end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 399
+        Width = 883
+        Height = 112
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chBarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 162
+          end
+          object chisErrorBarCode: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072
+            DataBinding.FieldName = 'IsErrorBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 125
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 391
+        Width = 883
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
       end
     end
   end
@@ -338,6 +425,13 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
     Top = 255
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_Object_Goods_BarCode
+        end>
     end
     inherited actInsert: TInsertUpdateChoiceAction
       MoveParams = <
@@ -471,6 +565,18 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
+    end
+    object UpdateDataSetDetail: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Goods_BarCode
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Goods_BarCode
+        end>
+      Caption = 'UpdateDataSetDetail'
+      DataSource = DetailDS
     end
   end
   inherited MasterDS: TDataSource
@@ -662,11 +768,21 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         ColorColumn = ConditionsKeepName
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = BarCode
+        ValueColumn = BarCode_Color
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isErrorBarCode
+        ValueColumn = BarCode_Color
+        ColorValueList = <>
       end>
     SearchAsFilter = False
   end
   inherited PopupMenu: TPopupMenu
-    Left = 144
+    Left = 184
     Top = 256
     inherited N4: TMenuItem
       Visible = False
@@ -928,5 +1044,194 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
     PackSize = 1
     Left = 344
     Top = 288
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'IsErrorBarCode'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = IsTop
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PercentMarkup
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Code
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsGroupName
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = IsClose
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isErased
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isFirst
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MeasureName
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MinimumLot
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Name
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NDS
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Price
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isSecond
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isPromo
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isPublished
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RetailCode
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RetailName
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ConditionsKeepName
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 528
+    Top = 440
+  end
+  object spSelect_Object_Goods_BarCode: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Goods_BarCode'
+    DataSet = DetailDCS
+    DataSets = <
+      item
+        DataSet = DetailDCS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 320
+    Top = 448
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailDCS
+    Left = 144
+    Top = 448
+  end
+  object DetailDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'GoodsMainId'
+    MasterFields = 'GoodsMainId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 56
+    Top = 448
+  end
+  object spInsertUpdate_Goods_BarCode: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Goods_BarCode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioBarCodeGoodsId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioGoodsMainId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 464
   end
 end

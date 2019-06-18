@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxSplitter;
 
 type
   TGoods_BarCodeForm = class(TAncestorGuidesForm)
@@ -59,6 +59,20 @@ type
     MorionCode: TcxGridDBColumn;
     BarCode: TcxGridDBColumn;
     OrdBar: TcxGridDBColumn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chBarCode: TcxGridDBColumn;
+    chisErrorBarCode: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelect_Object_Goods_BarCode: TdsdStoredProc;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
+    isErrorBarCode: TcxGridDBColumn;
+    BarCode_Color: TcxGridDBColumn;
+    spInsertUpdate_Goods_BarCode: TdsdStoredProc;
+    UpdateDataSetDetail: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

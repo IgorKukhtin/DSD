@@ -50,9 +50,6 @@ type
     cxLabel14: TcxLabel;
     ceCodeUKTZED: TcxTextEdit;
     dsdExchangeGuides: TdsdGuides;
-    ceGoodsAnalog: TcxButtonEdit;
-    cxLabel15: TcxLabel;
-    GuidesGoodsAnalog: TdsdGuides;
   private
     { Private declarations }
   public

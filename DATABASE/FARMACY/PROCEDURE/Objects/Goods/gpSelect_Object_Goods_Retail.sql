@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
-             , MorionCode Integer, BarCode TVarChar--, OrdBar Integer
+             , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
@@ -199,8 +199,9 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
-                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                   AS GoodsMainId
+                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)  AS BarCode
+                                    , SUM(CASE WHEN zfCheck_BarCode(Object_Goods_BarCode.ValueData, False) THEN 0 ELSE 1 END) AS ErrorBarCode
                                      -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
@@ -288,15 +289,17 @@ BEGIN
 
            , tmpGoodsMorion.MorionCode                     
            , tmpGoodsBarCode.BarCode                       ::TVarChar
+           , CASE WHEN COALESCE (tmpGoodsBarCode.ErrorBarCode, 0) > 0 THEN TRUE ELSE FALSE END
+           , CASE WHEN COALESCE (tmpGoodsBarCode.ErrorBarCode, 0) > 0 THEN zc_Color_Red() ELSE zc_Color_Black() END
            --, tmpGoodsBarCode.Ord        :: Integer AS OrdBar
 
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
-           , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false) AS DoesNotShare
+           , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false)  AS DoesNotShare
            , COALESCE(ObjectBoolean_AllowDivision.ValueData, false) AS AllowDivision
-           , Object_GoodsAnalog.ValueData                          AS GoodsAnalog
+           , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -368,10 +371,10 @@ BEGIN
                                   AND ObjectBoolean_AllowDivision.DescId = zc_ObjectBoolean_Goods_AllowDivision()
 
            -- Аналоги товара
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
-                                ON ObjectLink_Goods_GoodsAnalog.ObjectId = Object_Goods_View.Id
-                               AND ObjectLink_Goods_GoodsAnalog.DescId = zc_ObjectLink_Goods_GoodsAnalog()
-           LEFT JOIN Object AS Object_GoodsAnalog ON Object_GoodsAnalog.Id = ObjectLink_Goods_GoodsAnalog.ChildObjectId
+           LEFT JOIN ObjectString AS ObjectString_Goods_Analog
+                                  ON ObjectString_Goods_Analog.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
+           
 
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;

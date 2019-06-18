@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -21,7 +21,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
     IN inNameUkr             TVarChar  ,    -- Название украинское
     IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
     IN inExchangeId          Integer   ,    -- Од:
-    IN inGoodsAnalogId       Integer   ,    -- Аналоги товара
     IN inObjectId            Integer   ,    -- 
     IN inUserId              Integer        -- Пользователь
 )
@@ -39,7 +38,7 @@ BEGIN
 
      -- сохранили <Товар Торговой сети>
      ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, '',
-                                         True, 0, inNameUkr, inCodeUKTZED, inExchangeId, inGoodsAnalogId   
+                                         True, 0, inNameUkr, inCodeUKTZED, inExchangeId   
                                        --, CASE WHEN inUserId = 3 THEN FALSE ELSE TRUE END -- !!!только когда руками новую сеть!!!
                                         );
 
@@ -85,7 +84,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
