@@ -79,12 +79,9 @@ BEGIN
                                      , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
                                      , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MI_Id_Income
                                      , ObjectFloat_PartionGoods_MovementId.ValueData   :: Integer AS MovementId_SendPartionDate
-                                     --, SUM (Container.Amount)                                     AS AmountRemains
-                                     , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180  THEN Container.Amount ELSE 0 END) AS Amount     -- итого со сроком
-                                     , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN Container.Amount ELSE 0 END) AS Amount_0   -- просрочено
-                                     , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate THEN Container.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
-                                     , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30  THEN Container.Amount ELSE 0 END) AS Amount_2   -- ћеньше 6 мес€ца
-                                     , SUM ( SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180  THEN Container.Amount ELSE 0 END) ) OVER (PARTITION BY Container.ObjectId) AS AmountTerm
+                                     , SUM (Container.Amount)                                     AS Amount
+                                     --, SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN Container.Amount ELSE 0 END) AS Amount     -- итого со сроком
+                                     , SUM ( SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN Container.Amount ELSE 0 END) ) OVER (PARTITION BY Container.ObjectId) AS AmountTerm
                                      
                                      , CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
@@ -96,7 +93,7 @@ BEGIN
                                      INNER JOIN ContainerLinkObject AS CLO_Unit 
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                   --AND CLO_Unit.ObjectId = inUnitId
+                                                                   AND CLO_Unit.ObjectId = inUnitId
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
                                                                    ON CLO_PartionGoods.ContainerId = Container.Id
                                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -125,6 +122,7 @@ BEGIN
                                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                     
                                 WHERE Container.DescId = zc_Container_CountPartionDate()
+                                  AND COALESCE (Container.Amount,0) <> 0
                                 GROUP BY Container.Id
                                        , Container.ObjectId
                                        , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
@@ -134,29 +132,69 @@ BEGIN
                                        , ObjectFloat_PartionGoods_MovementId.ValueData
                                 )
 
-      , tmpData AS (SELECT tmpCountPartionDate.GoodsId
-                         , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.ContainerId ELSE 0 END AS ContainerId
-                         , tmpCountPartionDate.MovementId_Income
+      , tmpContainer AS (SELECT COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
+                              , COALESCE (MI_Income_find.Id,MI_Income.Id)                 AS MI_Id_Income
+                              , tmp.GoodsId
+                              , SUM (tmp.Amount) AS Amount                                                                    -- остаток
+                              , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) ::TDateTime AS ExpirationDate        -- —рок годности
+
+                              , CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
+                                     WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
+                                     WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                                     ELSE 0
+                                END                                                       AS PartionDateKindId
+                         FROM (SELECT Container.Id                           AS ContainerId
+                                    , Container.ObjectId                     AS GoodsId
+                                    , COALESCE (Container.Amount,0) ::TFloat AS Amount
+                               FROM Container
+                               WHERE Container.DescId = zc_Container_Count()
+                                 AND Container.WhereObjectId = inUnitId
+                                 AND COALESCE (Container.Amount,0) <> 0
+                               GROUP BY Container.Id
+                                      , Container.ObjectId   
+                               ) AS tmp
+                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                          ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
+                                                         AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                            -- элемент прихода
+                            LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                            -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                       
+                            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                              ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                         WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
+                         GROUP BY tmp.ContainerId
+                                , tmp.GoodsId
+                                , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                , COALESCE (MI_Income_find.Id,MI_Income.Id)
+                        )
+
+      , tmpData AS (SELECT COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)                             AS GoodsId
+                         , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpCountPartionDate.ContainerId,0) ELSE 0 END AS ContainerId
+                         , COALESCE (tmpCountPartionDate.MovementId_Income, tmpContainer.MovementId_Income)         AS MovementId_Income
                          , tmpCountPartionDate.MovementId_SendPartionDate
-                         , tmpCountPartionDate.MI_Id_Income
-                         , tmpCountPartionDate.PartionDateKindId
-                         , MIN ( tmpCountPartionDate.ExpirationDate) AS ExpirationDate
-                         , SUM ( tmpCountPartionDate.Amount)        AS Amount
-                         , SUM ( tmpCountPartionDate.Amount_0)      AS Amount_0
-                         , SUM ( tmpCountPartionDate.Amount_1)      AS Amount_1
-                         , SUM ( tmpCountPartionDate.Amount_2)      AS Amount_2
-                         , SUM ( COALESCE (Container.Amount,0))     AS AmountRemains
+                         , COALESCE (tmpCountPartionDate.MI_Id_Income, tmpContainer.MI_Id_Income)                   AS MI_Id_Income
+                         , COALESCE (tmpCountPartionDate.PartionDateKindId, tmpContainer.PartionDateKindId)         AS PartionDateKindId
+                         , MIN ( COALESCE (tmpCountPartionDate.ExpirationDate, tmpContainer.ExpirationDate))         AS ExpirationDate
+                         , SUM ( COALESCE (tmpCountPartionDate.Amount,0))      AS Amount
+                         , SUM ( COALESCE (tmpContainer.Amount,0))             AS AmountRemains
 
                     FROM tmpCountPartionDate
-                         LEFT JOIN Container ON Container.Id = tmpCountPartionDate.ParentId_Container
-                                            AND Container.DescId = zc_Container_Count()
-                    --WHERE COALESCE (tmpCountPartionDate.AmountTerm,0) <> 0
-                    GROUP BY tmpCountPartionDate.GoodsId
-                           , CASE WHEN inIsDetail = TRUE THEN tmpCountPartionDate.ContainerId ELSE 0 END
-                           , tmpCountPartionDate.MovementId_Income
-                           , tmpCountPartionDate.PartionDateKindId
+                         FULL JOIN tmpContainer ON tmpContainer.MI_Id_Income = tmpCountPartionDate.MI_Id_Income
+                    GROUP BY COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)
+                           , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpCountPartionDate.ContainerId,0) ELSE 0 END
+                           , COALESCE (tmpCountPartionDate.MovementId_Income, tmpContainer.MovementId_Income)
                            , tmpCountPartionDate.MovementId_SendPartionDate
-                           , tmpCountPartionDate.MI_Id_Income
+                           , COALESCE (tmpCountPartionDate.MI_Id_Income, tmpContainer.MI_Id_Income)
+                           , COALESCE (tmpCountPartionDate.PartionDateKindId, tmpContainer.PartionDateKindId)
                     )
 
       , tmpIncome AS (SELECT Movement.Id
@@ -194,7 +232,7 @@ BEGIN
                                     LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                                WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_SendPartionDate FROM tmpData)
                                )
-                                   
+
         -- результат
         SELECT
             tmpData.ContainerId
@@ -206,7 +244,7 @@ BEGIN
 
           , tmpData.Amount ::TFloat
           , tmpData.AmountRemains ::TFloat
-          
+
           , tmpData.MovementId_Income     AS MovementId_Income
           , tmpIncome.DescName            AS DescName_Income
           , tmpIncome.BranchDate          AS OperDate_Income
