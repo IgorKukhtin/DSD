@@ -30,6 +30,8 @@ type
     ParentName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
+    actProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

@@ -23,7 +23,6 @@ object WorkTimeKindForm: TWorkTimeKindForm
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 614
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -268,7 +267,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
   end
@@ -409,7 +408,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072

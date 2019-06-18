@@ -346,7 +346,7 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId'
+          ComponentItem = 'MovementId_Income'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -605,7 +605,7 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
         Name = 'inMovementId'
         Value = ''
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementId_Income'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
