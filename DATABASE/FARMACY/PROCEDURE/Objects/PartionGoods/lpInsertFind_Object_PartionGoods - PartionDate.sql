@@ -182,6 +182,9 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_MovementId(), vbPartionGoodsId, inMovementId_send);
 
      ELSE
+         -- сохранили - ѕарти€ документа —рок
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_MovementId(), vbPartionGoodsId, inMovementId_send);
+
          -- сохранили - % скидки(срок меньше мес€ца)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueMin(), vbPartionGoodsId, inChangePercentMin);
 
