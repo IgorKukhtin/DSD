@@ -8,8 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -30,7 +30,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inNameUkr             TVarChar  ,    -- Название украинское
     IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
     IN inExchangeId          Integer   ,    -- Од:
-    IN inGoodsAnalogId       Integer   ,    -- Аналоги товара
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Integer
@@ -69,7 +68,16 @@ BEGIN
      -- проверка <Тип НДС>
      IF COALESCE (inNDSKindId, 0) = 0 THEN
         RAISE EXCEPTION 'Тип НДС должен быть определен';
-     END IF; 
+     END IF;
+
+          -- Контроль  штрих-кода
+     IF COALESCE (inBarCode, '') <> '' AND (COALESCE (ioId, 0) = 0
+       OR NOT EXISTS(SELECT Id FROM Object_Goods_View
+          WHERE ObjectId = zc_Enum_GlobalConst_BarCode()
+            AND GoodsName = inBarCode))
+     THEN
+        PERFORM zfCheck_BarCode(inBarCode, True);
+     END IF;
 
      -- <Код>
      IF COALESCE (ioId, 0) = 0
@@ -92,8 +100,8 @@ BEGIN
          -- !!!код не меняется!!!
          vbCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode :: Integer);
      END IF;
-    
-   
+
+
      -- сохранили <Товар Торговой сети>
      /*ioId:= lpInsertUpdate_Object_Goods_Retail (ioId            := ioId
                                               , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
@@ -130,7 +138,6 @@ BEGIN
                                                , inNameUkr       := inNameUkr      :: TVarChar
                                                , inCodeUKTZED    := inCodeUKTZED   :: TVarChar
                                                , inExchangeId    := inExchangeId     :: Integer
-                                               , inGoodsAnalogId := inGoodsAnalogId  :: Integer
                                                , inObjectId      := Object_Retail.Id :: Integer
                                                , inUserId        := vbUserId         :: Integer
                                                 )
@@ -168,12 +175,12 @@ BEGIN
        SELECT Object.Id
        INTO ioId
        FROM ObjectLink
-            JOIN Object ON Object.Id = ObjectLink.ObjectId 
-                       AND Object.DescId = zc_Object_Goods() 
+            JOIN Object ON Object.Id = ObjectLink.ObjectId
+                       AND Object.DescId = zc_Object_Goods()
                        AND Object.ObjectCode = vbCode
        WHERE ObjectLink.ChildObjectId = vbObjectId
          AND ObjectLink.DescId = zc_ObjectLink_Goods_Object();
-     END IF; 
+     END IF;
 
      -- Кусок ниже реализован !!!временно!!! пока работает одна сеть или много сетей !!!но со сквозной синхронизацией!!!
 
@@ -195,62 +202,64 @@ BEGIN
      ;
 
 
-     IF COALESCE (inMorionCode, 0) > 0 
+     IF COALESCE (inMorionCode, 0) > 0
      THEN
           -- Устанавливаем связь с кодом Мариона
 
           SELECT Id INTO vbMorionGoodsId
-          FROM Object_Goods_View 
-          WHERE ObjectId = zc_Enum_GlobalConst_Marion() 
+          FROM Object_Goods_View
+          WHERE ObjectId = zc_Enum_GlobalConst_Marion()
             AND GoodsCodeInt = inMorionCode;
 
-          IF COALESCE (vbMorionGoodsId, 0) = 0 
+          IF COALESCE (vbMorionGoodsId, 0) = 0
           THEN
                 -- Создаем общие коды, которых еще нет
                vbMorionGoodsId:= lpInsertUpdate_Object (0, zc_Object_Goods(), inMorionCode, inName);
                PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), vbMorionGoodsId, zc_Enum_GlobalConst_Marion());
-          END IF;       
-                
-          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View 
-                         WHERE ObjectId = zc_Enum_GlobalConst_Marion() 
-                           AND GoodsId = vbMorionGoodsId 
-                           AND GoodsMainId = vbMainGoodsId) 
+          END IF;
+
+          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View
+                         WHERE ObjectId = zc_Enum_GlobalConst_Marion()
+                           AND GoodsId = vbMorionGoodsId
+                           AND GoodsMainId = vbMainGoodsId)
           THEN
                PERFORM gpInsertUpdate_Object_LinkGoods (0, vbMainGoodsId, vbMorionGoodsId, inSession);
-          END IF;     
-     END IF;          
+          END IF;
+     END IF;
 
-     IF COALESCE (inBarCode, '') <> '' 
+     IF COALESCE (inBarCode, '') <> ''
      THEN
+
           -- Устанавливаем связь со штрих-кодом
-     
+
           SELECT Id INTO vbBarCodeGoodsId
-          FROM Object_Goods_View 
-          WHERE ObjectId = zc_Enum_GlobalConst_BarCode() 
+          FROM Object_Goods_View
+          WHERE ObjectId = zc_Enum_GlobalConst_BarCode()
             AND GoodsName = inBarCode;
 
-          IF COALESCE (vbBarCodeGoodsId, 0) = 0 
+          IF COALESCE (vbBarCodeGoodsId, 0) = 0
           THEN
                -- Создаем штрих коды, которых еще нет
                vbBarCodeGoodsId:= lpInsertUpdate_Object(0, zc_Object_Goods(), 0, inBarCode);
                PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), vbBarCodeGoodsId, zc_Enum_GlobalConst_BarCode());
-          END IF;       
+          END IF;
 
-          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View 
-                         WHERE ObjectId = zc_Enum_GlobalConst_BarCode() 
-                           AND GoodsId = vbBarCodeGoodsId 
-                           AND GoodsMainId = vbMainGoodsId) 
+          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View
+                         WHERE ObjectId = zc_Enum_GlobalConst_BarCode()
+                           AND GoodsId = vbBarCodeGoodsId
+                           AND GoodsMainId = vbMainGoodsId)
           THEN
                PERFORM gpInsertUpdate_Object_LinkGoods(0, vbMainGoodsId, vbBarCodeGoodsId, inSession);
-          END IF;     
-      END IF;          
+          END IF;
+      END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 15.06.16                                                                      *
  01.04.16                                                                      *
  28.09.18                                                                      *
  19.05.17                                                       * MorionCode, BarCode
@@ -262,7 +271,7 @@ $BODY$
  13.11.14                        *
  26.06.14                        *
  24.06.14         *
- 19.06.13                        * 
+ 19.06.13                        *
 
 */
 

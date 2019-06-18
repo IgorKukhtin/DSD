@@ -1,20 +1,24 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 457
+  ClientHeight = 415
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 486
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 413
+    Left = 66
+    Top = 374
     TabOrder = 11
-    ExplicitTop = 413
+    ExplicitLeft = 66
+    ExplicitTop = 374
   end
   inherited bbCancel: TcxButton
-    Top = 413
+    Left = 226
+    Top = 374
     TabOrder = 12
-    ExplicitTop = 413
+    ExplicitLeft = 226
+    ExplicitTop = 374
   end
   object edName: TcxTextEdit [2]
     Left = 9
@@ -203,34 +207,34 @@
   end
   object cxLabel11: TcxLabel [28]
     Left = 9
-    Top = 288
+    Top = 255
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
   end
   object ceBarCode: TcxTextEdit [29]
     Left = 9
-    Top = 306
+    Top = 273
     TabOrder = 29
     Width = 332
   end
   object edNameUkr: TcxTextEdit [30]
     Left = 8
-    Top = 344
+    Top = 311
     TabOrder = 30
     Width = 332
   end
   object cxLabel12: TcxLabel [31]
     Left = 8
-    Top = 326
+    Top = 293
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091#1082#1088#1072#1080#1085#1089#1082#1086#1077
   end
   object cxLabel13: TcxLabel [32]
     Left = 8
-    Top = 363
+    Top = 330
     Caption = #1050#1086#1076' '#1059#1050#1058#1047#1069#1044
   end
   object ceExchange: TcxButtonEdit [33]
     Left = 248
-    Top = 380
+    Top = 347
     Properties.Buttons = <
       item
         Default = True
@@ -242,31 +246,14 @@
   end
   object cxLabel14: TcxLabel [34]
     Left = 248
-    Top = 363
+    Top = 330
     Caption = #1054#1076':'
   end
   object ceCodeUKTZED: TcxTextEdit [35]
     Left = 9
-    Top = 380
+    Top = 347
     TabOrder = 35
     Width = 212
-  end
-  object ceGoodsAnalog: TcxButtonEdit [36]
-    Left = 9
-    Top = 268
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 36
-    Width = 332
-  end
-  object cxLabel15: TcxLabel [37]
-    Left = 9
-    Top = 250
-    Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -426,13 +413,6 @@
         Value = Null
         Component = dsdExchangeGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsAnalogId'
-        Value = Null
-        Component = GuidesGoodsAnalog
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -608,21 +588,6 @@
         Component = dsdExchangeGuides
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsAnalogId'
-        Value = Null
-        Component = GuidesGoodsAnalog
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsAnalogName'
-        Value = Null
-        Component = GuidesGoodsAnalog
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 233
@@ -734,32 +699,5 @@
       end>
     Left = 272
     Top = 369
-  end
-  object GuidesGoodsAnalog: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoodsAnalog
-    FormNameParam.Value = 'TGoodsAnalogForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsAnalogForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoodsAnalog
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoodsAnalog
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 152
-    Top = 258
   end
 end

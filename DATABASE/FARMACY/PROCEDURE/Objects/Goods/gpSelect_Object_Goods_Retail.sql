@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
-             , MorionCode Integer, BarCode TVarChar--, OrdBar Integer
+             , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
@@ -199,8 +199,9 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
-                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                   AS GoodsMainId
+                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)  AS BarCode
+                                    , SUM(CASE WHEN zfCheck_BarCode(Object_Goods_BarCode.ValueData, False) THEN 0 ELSE 1 END) AS ErrorBarCode
                                      -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
@@ -288,6 +289,8 @@ BEGIN
 
            , tmpGoodsMorion.MorionCode                     
            , tmpGoodsBarCode.BarCode                       ::TVarChar
+           , CASE WHEN COALESCE (tmpGoodsBarCode.ErrorBarCode, 0) > 0 THEN TRUE ELSE FALSE END
+           , CASE WHEN COALESCE (tmpGoodsBarCode.ErrorBarCode, 0) > 0 THEN zc_Color_Red() ELSE zc_Color_Black() END
            --, tmpGoodsBarCode.Ord        :: Integer AS OrdBar
 
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList

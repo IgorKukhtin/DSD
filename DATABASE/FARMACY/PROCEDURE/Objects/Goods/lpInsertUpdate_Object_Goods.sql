@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -21,8 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inAreaId              Integer  DEFAULT 0,      -- 
     IN inNameUkr             TVarChar DEFAULT '',     -- Название украинское
     IN inCodeUKTZED          TVarChar DEFAULT '',    -- Код УКТЗЭД
-    IN inExchangeId          Integer  DEFAULT 0,       -- Од:
-    IN inGoodsAnalogId       Integer  DEFAULT 0      -- Аналоги товара
+    IN inExchangeId          Integer  DEFAULT 0       -- Од:
 )
 RETURNS Integer
 AS
@@ -125,8 +124,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
-   -- сохранили свойство <Аналоги товара>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsAnalog(), ioId, inGoodsAnalogId);
 
    -- сохранили протокол - !!!только для "общего справочника"!!!
    IF COALESCE (inObjectId, 0) = 0
@@ -138,7 +135,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
