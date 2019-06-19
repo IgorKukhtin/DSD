@@ -25,11 +25,9 @@ type
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actGet_UserUnit: TdsdExecStoredProc;
-    spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     cxLabel1: TcxLabel;
     edGoods: TcxButtonEdit;

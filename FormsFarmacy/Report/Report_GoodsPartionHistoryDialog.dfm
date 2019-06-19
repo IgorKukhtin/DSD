@@ -13,7 +13,6 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -165,7 +164,7 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -173,7 +172,7 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -224,7 +223,7 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
     Left = 30
     Top = 166
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
@@ -237,7 +236,7 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -246,7 +245,7 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -268,24 +267,11 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actGet_UserUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end>
-      Caption = 'actGet_UserUnit'
-    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end
         item
         end>
@@ -294,30 +280,6 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = '0'
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 231
-    Top = 112
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -377,7 +339,16 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
       item
         Name = 'inUnitId'
         Value = ''
+        Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -385,6 +356,14 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 104

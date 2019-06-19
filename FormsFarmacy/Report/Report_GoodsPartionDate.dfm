@@ -230,6 +230,13 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object PartionGoodsId: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'PartionGoodsId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -491,6 +498,21 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
           Value = 'TRUE'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Invnumber_Income'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

@@ -746,10 +746,26 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 632

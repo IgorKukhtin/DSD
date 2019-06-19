@@ -45,6 +45,7 @@ type
     StatusCode_SendPartionDate: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    PartionGoodsId: TcxGridDBColumn;
   private
     { Private declarations }
   public
