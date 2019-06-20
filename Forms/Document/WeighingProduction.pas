@@ -142,6 +142,17 @@ type
     MovementDescGuides: TdsdGuides;
     edMovementDescName: TcxButtonEdit;
     StorageLineName: TcxGridDBColumn;
+    cxLabel15: TcxLabel;
+    edGoodsTypeKind: TcxButtonEdit;
+    GuidesGoodsTypeKind: TdsdGuides;
+    cxLabel16: TcxLabel;
+    GuidesBarCodeBox: TdsdGuides;
+    edBarCodeBox: TcxButtonEdit;
+    ExecuteDialogUpdateParams: TExecuteDialog;
+    actUpdateParams: TdsdExecStoredProc;
+    macUpdateParams: TMultiAction;
+    spUpdate_Param: TdsdStoredProc;
+    bbUpdateParams: TdxBarButton;
   private
   public
   end;

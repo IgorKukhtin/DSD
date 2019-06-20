@@ -1085,7 +1085,8 @@ uses
   GoodsByGoodsKind_wms in '..\..\Forms\Guides\GoodsByGoodsKind_wms.pas' {GoodsByGoodsKind_wmsForm: TParentForm},
   PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
-  LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm};
+  LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
+  WeighingProductionParamEdit in '..\..\Forms\Document\WeighingProductionParamEdit.pas' {WeighingProductionParamEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
