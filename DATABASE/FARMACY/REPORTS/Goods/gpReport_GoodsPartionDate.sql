@@ -134,7 +134,6 @@ BEGIN
                                        , COALESCE (MI_Income_find.Id,MI_Income.Id)
                                        , Container.ParentId
                                        , CASE WHEN inIsDetail = TRUE THEN ObjectFloat_PartionGoods_MovementId.ValueData ELSE 0 END
-                                       --, CASE WHEN inIsDetail = TRUE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END
                                 )
 
       , tmpExpirationDate AS (SELECT tmpCountPartionDate.ParentId_Container
