@@ -14,6 +14,28 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_SendPartionDate());
 
+    IF EXISTS(SELECT 1 FROM Movement AS MovementCurr
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
+                                              ON MovementLinkObject_UnitCurr.MovementId = MovementCurr.Id
+                                             AND MovementLinkObject_UnitCurr.DescId = zc_MovementLinkObject_Unit()
+
+                 INNER JOIN Movement AS MovementNext
+                                     ON MovementNext.OperDate >= MovementCurr.OperDate
+                                    AND MovementNext.DescId = zc_Movement_SendPartionDate()
+                                    AND MovementNext.StatusId = zc_Enum_Status_Complete()
+                                    AND MovementNext.ID <> inMovementId
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitNext
+                                              ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
+                                             AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
+                                             AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId
+
+              WHERE MovementCurr.ID = inMovementId
+                AND MovementCurr.StatusId = zc_Enum_Status_Complete()
+             )
+    THEN
+        RAISE EXCEPTION 'Ошибка.Распроводить можно только последний документ по подразделению...';
+    END IF;
+
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
@@ -30,7 +52,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 13.08.18                                                       *
  15.08.18         *
 */
 

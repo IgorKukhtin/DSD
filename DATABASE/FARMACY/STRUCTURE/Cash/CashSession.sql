@@ -33,20 +33,22 @@ ALTER TABLE CashSession
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE CashSessionSnapShot
 (
-  CashSessionId     TVarChar    NOT NULL,
-  ObjectId          INTEGER     NOT NULL, -- Товар
-  PartionDateKindId Integer     NOT NULL, -- Типы срок/не срок
-  Price             TFloat      NOT NULL, -- цена
-  Remains           TFloat      NOT NULL, -- Остаток
-  MCSValue          TFloat      NULL,     -- неснижаемый товарный остаток
-  Reserved          TFloat      NULL,     -- в резерве
-  MinExpirationDate TDateTime   NULL,     -- Срок годн. ост.
-  MCSValueOld       TFloat      NULL,     -- НТЗ - значение которое вернется по окончании периода
-  StartDateMCSAuto  TDateTime   NULL,     -- дата нач. периода
-  EndDateMCSAuto    TDateTime   NULL,     -- дата оконч. периода
-  isMCSAuto         Boolean     NULL,     -- Режим - НТЗ выставил фармацевт на период
-  isMCSNotRecalcOld Boolean     NULL,     -- Спецконтроль кода - значение которое вернется по окончании периода
-  AccommodationId   Integer     NULL,     -- Размещение товара
+  CashSessionId       TVarChar    NOT NULL,
+  ObjectId            INTEGER     NOT NULL, -- Товар
+  PartionDateKindId   Integer     NOT NULL, -- Типы срок/не срок
+  Price               TFloat      NOT NULL, -- цена
+  Remains             TFloat      NOT NULL, -- Остаток
+  MCSValue            TFloat      NULL,     -- неснижаемый товарный остаток
+  Reserved            TFloat      NULL,     -- в резерве
+  MinExpirationDate   TDateTime   NULL,     -- Срок годн. ост.
+  MCSValueOld         TFloat      NULL,     -- НТЗ - значение которое вернется по окончании периода
+  StartDateMCSAuto    TDateTime   NULL,     -- дата нач. периода
+  EndDateMCSAuto      TDateTime   NULL,     -- дата оконч. периода
+  isMCSAuto           Boolean     NULL,     -- Режим - НТЗ выставил фармацевт на период
+  isMCSNotRecalcOld   Boolean     NULL,     -- Спецконтроль кода - значение которое вернется по окончании периода
+  AccommodationId     Integer     NULL,     -- Размещение товара
+  PartionDateDiscount TFloat      NULL,     -- Скидка на партионный товар
+  PriceWithVAT        TFloat      NULL,     -- Цена последней закупки
   CONSTRAINT PK_CashSessionSnapShot PRIMARY KEY(CashSessionId,ObjectId,PartionDateKindId)
 );
 

@@ -88,6 +88,8 @@ type
     edChangePercentMin: TcxCurrencyEdit;
     bbMIChildProtocolOpenForm: TdxBarButton;
     MovementId_Income: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    cxGridDBTableView1Column1: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1384,9 +1384,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CreditLimitJuridical_CreditLimit() RET
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CreditLimitJuridical(), 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit', 'Кредитный лимит' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_PriceWithVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_PriceWithVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_PriceWithVAT', 'Цена закупки с НДС.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_PriceWithVAT');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.06.19                                                                                      * zc_ObjectFloat_PartionGoods_PriceWithVAT 
  07.06.19                                                                                      * zc_ObjectFloat_CreditLimitJuridical_CreditLimit 
  05.06.19                                                                                      * zc_ObjectFloat_MaxOrderAmount 
  23.04.19         * zc_ObjectFloat_RetailCostCredit_MinPrice

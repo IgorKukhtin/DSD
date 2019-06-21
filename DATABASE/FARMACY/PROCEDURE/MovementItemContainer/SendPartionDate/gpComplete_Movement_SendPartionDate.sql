@@ -16,6 +16,27 @@ BEGIN
   -- пересчитали Итоговые суммы
   --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
   
+  IF EXISTS(SELECT 1 FROM Movement AS MovementCurr
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
+                                            ON MovementLinkObject_UnitCurr.MovementId = MovementCurr.Id
+                                           AND MovementLinkObject_UnitCurr.DescId = zc_MovementLinkObject_Unit()
+
+               INNER JOIN Movement AS MovementNext
+                                   ON MovementNext.OperDate >= MovementCurr.OperDate
+                                  AND MovementNext.DescId = zc_Movement_SendPartionDate()
+                                  AND MovementNext.StatusId = zc_Enum_Status_Complete()
+                                  AND MovementNext.ID <> inMovementId
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitNext
+                                            ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
+                                           AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
+                                           AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId
+
+            WHERE MovementCurr.ID = inMovementId
+           )
+  THEN
+      RAISE EXCEPTION 'Ошибка.Есть проведеннын документы датой более даты документа...';
+  END IF;
+
   -- собственно проводки
   PERFORM lpComplete_Movement_SendPartionDate(inMovementId, -- ключ Документа
                                         vbUserId);    -- Пользователь 
@@ -29,7 +50,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 13.08.18                                                       *
  15.08.18         *
  */
 
