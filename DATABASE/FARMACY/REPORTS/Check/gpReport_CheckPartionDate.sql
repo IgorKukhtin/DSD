@@ -79,6 +79,7 @@ BEGIN
       , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
                              FROM MovementItemFloat
                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpContainer.MI_Id_Income FROM tmpContainer)
+                               AND MovementItemFloat.DescId = zc_MIFloat_Price()
                              )
 
       , tmpMovementBoolean AS (SELECT MovementBoolean.*
@@ -131,7 +132,7 @@ BEGIN
                          , MIFloat_PriceSale.ValueData AS PriceSale                     -- цена продажи
                          , tmpIncome.PriceIncome * tmpMI_Child.Amount                                                                   AS SumIncome
                          , MIFloat_PriceSale.ValueData * tmpMI_Child.Amount                                                             AS SumSale
-                         , (((MIFloat_PriceSale.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount))  AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
+                         , ( 100 - ((MIFloat_PriceSale.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount) )  AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
                          , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - tmpIncome.PriceIncome * tmpMI_Child.Amount)              AS SummDiff -- сумма потери от продажи ( в денежном эквиваленте)
                     FROM tmpMI_Child
                          LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMI_Child.Id

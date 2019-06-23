@@ -516,6 +516,8 @@ type
     miReturnOutPharmacy: TMenuItem;
     actReport_GoodsPartionDate: TdsdOpenForm;
     miReport_GoodsPartionDate: TMenuItem;
+    actReport_CheckPartionDate: TdsdOpenForm;
+    miReport_CheckPartionDate: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
