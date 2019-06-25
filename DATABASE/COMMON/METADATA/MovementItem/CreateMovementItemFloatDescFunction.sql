@@ -1063,9 +1063,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Expired() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Expired', '0 -просрочен, 1 -меньше 1мес, 2 -меньше 6мес'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Expired');
   
+CREATE OR REPLACE FUNCTION zc_MIFloat_PricePartionDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_PricePartionDate', 'Отпускная цена согласно партии'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePartionDate');
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 23.06.19                                                                                                     * zc_MIFloat_PricePartionDate()
  27.05.19         * zc_MIFloat_ChangePercentMin
  02.04.19         * zc_MIFloat_DefermentPrice
                     zc_MIFloat_PriceExp

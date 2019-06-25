@@ -261,6 +261,8 @@ begin
       AddStrField(LocalDataBaseBody,   'LIST_UID', 50); //UID строки продажи
       //***03.06.19
       AddIntField(LocalDataBaseBody,  'PDKINDID');    //Тип срок/не срок
+      //***24.06.19
+      AddFloatField(LocalDataBaseBody,  'PRICEPD');    //Отпускная цена согласно партии
 
       LocalDataBaseBody.CreateTable;
     end
@@ -286,6 +288,9 @@ begin
         //***03.06.19
         if FindField('PDKINDID') = nil then
           AddIntField(LFieldDefs, 'PDKINDID');
+      //***24.06.19
+        if FindField('PRICEPD') = nil then
+          AddFloatField(LFieldDefs, 'PRICEPD');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -311,6 +316,8 @@ begin
         (FindField('SUMMCH') = nil) or
         //***19.08.16
         (FindField('AMOUNTORD') = nil) or
+        (FindField('PDKINDID') = nil) or
+        (FindField('PRICEPD') = nil) or
         //***10.08.16
         (FindField('LIST_UID') = nil));
 
@@ -350,7 +357,7 @@ begin
       AddIntField(LocalDataBaseDiff,   'ACCOMID'); //
       AddStrField(LocalDataBaseDiff,   'ACCOMNAME',20); //наименование расположения
       AddFloatField(LocalDataBaseDiff, 'AMOUNTMON'); //Месяцев срока
-      AddFloatField(LocalDataBaseDiff, 'PDDISCOUNT'); //Скидка для просроченных товаров
+      AddFloatField(LocalDataBaseDiff, 'PRICEPD'); //Отпускная цена согласно партии
       AddIntField(LocalDataBaseDiff,   'COLORCALC'); //цвет
 
       LocalDataBaseDiff.CreateTable;
