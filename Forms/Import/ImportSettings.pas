@@ -76,6 +76,8 @@ type
     EmailChoiceForm: TOpenChoiceForm;
     isMultiLoad: TcxGridDBColumn;
     colConvertFormatInExcel: TcxGridDBColumn;
+    actProtocolChild: TdsdOpenForm;
+    bbProtocolChild: TdxBarButton;
   private
     { Private declarations }
   public
