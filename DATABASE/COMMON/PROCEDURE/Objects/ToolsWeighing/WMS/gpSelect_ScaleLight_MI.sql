@@ -40,6 +40,7 @@ BEGIN
      RETURN QUERY
        WITH tmpMI AS
             (SELECT MovementItem.Id AS MovementItemId
+                  , MovementItem.ParentId
                   , MovementItem.GoodsTypeKindId
                   , MovementItem.BarCodeBoxId
                   , MovementItem.Amount
@@ -69,7 +70,8 @@ BEGIN
                                                
            , ''                    :: TVarChar  AS StorageLineName
                                                 
-           , FALSE                 :: Boolean   AS isStartWeighing
+           , CASE WHEN tmpMI.ParentId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isStartWeighing
+        -- , CASE WHEN tmpMI.ParentId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isStartWeighing
                                                 
            , tmpMI.Amount          :: TFloat    AS Amount
            , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN tmpMI.RealWeight WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.Amount * ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight

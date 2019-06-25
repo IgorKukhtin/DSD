@@ -145,10 +145,14 @@ begin
                     or((ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)and(trim(ParamByName('BoxBarCode_2').AsString) <> ''))
                     or((ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger)and(trim(ParamByName('BoxBarCode_3').AsString) <> ''))
                      );
+            //
+            if inGoodsId = -1 then begin Box1Edit.Enabled:= true; Box2Edit.Enabled:= false; Box3Edit.Enabled:= false; ActiveControl:= Box1Edit; end;
+            if inGoodsId = -2 then begin Box1Edit.Enabled:= false; Box2Edit.Enabled:= true; Box3Edit.Enabled:= false; ActiveControl:= Box2Edit; end;
+            if inGoodsId = -3 then begin Box1Edit.Enabled:= false; Box2Edit.Enabled:= false; Box3Edit.Enabled:= true; ActiveControl:= Box3Edit; end;
      end;
      //
      //
-     if ParamByName('Count_box').AsInteger = 1 then
+     if (ParamByName('Count_box').AsInteger = 1) and (inGoodsId > 0) then
      begin
        Box1Edit.Enabled:= true;
        Box2Edit.Enabled:= false;
@@ -162,7 +166,7 @@ begin
                              +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
      end
      else begin
-             if ParamByName('Count_box').AsInteger = 2 then
+             if (ParamByName('Count_box').AsInteger = 2) and (inGoodsId > 0) then
              begin
                Box1Edit.Enabled:= true;
                Box2Edit.Enabled:= true;
@@ -171,7 +175,7 @@ begin
                // мигающее сообщение - какая линия заполняется
                //WriteMsgBlink(2);
              end;
-             if ParamByName('Count_box').AsInteger = 3 then
+             if (ParamByName('Count_box').AsInteger = 3) and (inGoodsId > 0) then
              begin
                Box1Edit.Enabled:= true;
                Box2Edit.Enabled:= true;
@@ -199,6 +203,10 @@ begin
    finally
       Timer.Enabled:= false;
       MainCehForm.Set_LightOff_all;
+      //
+      ParamsLight.ParamByName('isFull_1').asBoolean:= FALSE;
+      ParamsLight.ParamByName('isFull_2').asBoolean:= FALSE;
+      ParamsLight.ParamByName('isFull_3').asBoolean:= FALSE;
    end;
 end;
 {------------------------------------------------------------------------------}
@@ -275,6 +283,17 @@ begin
   Light_1Memo.Color:= SettingMain.LightColor_1;
   Light_2Memo.Color:= SettingMain.LightColor_2;
   Light_3Memo.Color:= SettingMain.LightColor_3;
+  //
+  if SettingMain.isLightLEFT_321 = TRUE then
+  begin
+     Box3Label.Caption:= 'Линия 3 :';
+     Box1Label.Caption:= 'Линия 1 :';
+  end
+  else
+  begin
+     Box3Label.Caption:= 'Линия 1 :';
+     Box1Label.Caption:= 'Линия 3 :';
+  end;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.FormDestroy(Sender: TObject);
@@ -321,9 +340,9 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Sh+'>.');
-              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
-              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
-              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then if Box1Edit.Enabled then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then if Box2Edit.Enabled then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then if Box3Edit.Enabled then ActiveControl:= Box3Edit;
               exit;
          end;
          //1.2.Nom
@@ -338,9 +357,9 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Nom+'>.');
-              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
-              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
-              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then if Box1Edit.Enabled then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then if Box2Edit.Enabled then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then if Box3Edit.Enabled then ActiveControl:= Box3Edit;
               exit;
          end;
          //1.3.Ves
@@ -355,9 +374,9 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Необходимо просканировать Ш/К ящика для <'+SettingMain.Name_Ves+'>.');
-              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then ActiveControl:= Box1Edit;
-              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then ActiveControl:= Box2Edit;
-              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then ActiveControl:= Box3Edit;
+              if ParamByName('GoodsTypeKindId_1').AsInteger = Id_check then if Box1Edit.Enabled then ActiveControl:= Box1Edit;
+              if ParamByName('GoodsTypeKindId_2').AsInteger = Id_check then if Box2Edit.Enabled then ActiveControl:= Box2Edit;
+              if ParamByName('GoodsTypeKindId_3').AsInteger = Id_check then if Box3Edit.Enabled then ActiveControl:= Box3Edit;
               exit;
          end;
          //
@@ -423,7 +442,7 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box2Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+ParamByName('BoxBarCode_1').AsString+'>');
-              ActiveControl:= Box2Edit;
+              if Box2Edit.Enabled then ActiveControl:= Box2Edit;
               exit;
          end;
          // для 3+1
@@ -435,7 +454,7 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box1Label.Caption+'> = <'+ParamByName('BoxBarCode_1').AsString+'>');
-              ActiveControl:= Box3Edit;
+              if Box3Edit.Enabled then ActiveControl:= Box3Edit;
               exit;
          end;
          // для 3+2
@@ -447,7 +466,7 @@ begin
          if not Result then
          begin
               ShowMessage('Ошибка.Введен одинаковый Ш/К ящиков для <'+Box3Label.Caption+'>  и <'+Box2Label.Caption+'> = <'+ParamByName('BoxBarCode_2').AsString+'>');
-              ActiveControl:= Box3Edit;
+              if Box3Edit.Enabled then ActiveControl:= Box3Edit;
               exit;
          end;
      end;
@@ -505,7 +524,7 @@ begin
            ActiveControl:=Box1Edit;
            exit;
            //
-           if ParamByName('GoodsTypeKindId_1').AsInteger > 0 then
+           {if ParamByName('GoodsTypeKindId_1').AsInteger > 0 then
            begin
                 //отметили что освободились
                 if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger  then is_Sh := FALSE;
@@ -515,7 +534,7 @@ begin
                 //ParamByName('GoodsTypeKindId_1').AsInteger := 0;
                 ParamByName('BoxCode_1').AsInteger         := 0;
                 ParamByName('BoxBarCode_1').AsString       := '';
-           end;
+           end;}
       end
       else if trim(Box1Edit.Text) = trim(Box2Edit.Text) then
       begin
@@ -665,7 +684,7 @@ begin
            ActiveControl:=Box2Edit;
            exit;
            //
-           if ParamByName('GoodsTypeKindId_2').AsInteger > 0 then
+           {if ParamByName('GoodsTypeKindId_2').AsInteger > 0 then
            begin
                 //отметили что освободились
                 if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger  then is_Sh := FALSE;
@@ -675,7 +694,7 @@ begin
                 //ParamByName('GoodsTypeKindId_2').AsInteger := 0;
                 ParamByName('BoxCode_2').AsInteger         := 0;
                 ParamByName('BoxBarCode_2').AsString       := '';
-           end;
+           end;}
       end
       else if trim(Box2Edit.Text) = trim(Box3Edit.Text) then
       begin
@@ -843,7 +862,7 @@ begin
            ActiveControl:=Box3Edit;
            exit;
            //
-           if ParamByName('GoodsTypeKindId_3').AsInteger > 0 then
+           {if ParamByName('GoodsTypeKindId_3').AsInteger > 0 then
            begin
                 //отметили что освободились
                 if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Sh').AsInteger  then is_Sh := FALSE;
@@ -853,7 +872,7 @@ begin
                 //ParamByName('GoodsTypeKindId_3').AsInteger := 0;
                 ParamByName('BoxCode_3').AsInteger         := 0;
                 ParamByName('BoxBarCode_3').AsString       := '';
-           end;
+           end;}
       end
       else if trim(Box3Edit.Text) = trim(Box2Edit.Text) then
       begin

@@ -101,7 +101,7 @@ BEGIN
        WITH tmpMovement AS (-- если inMovementId = 0, тогда - последний не закрытый
                             SELECT Movement.*
                             FROM (SELECT Movement.*
-                                  FROM (SELECT (inOperDate - INTERVAL '3 DAY') AS StartDate, (inOperDate + INTERVAL '3 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
+                                  FROM (SELECT (inOperDate - INTERVAL '113 DAY') AS StartDate, (inOperDate + INTERVAL '113 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
                                        INNER JOIN Movement_WeighingProduction AS Movement
                                                ON Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
                                               AND Movement.StatusId    = zc_Enum_Status_UnComplete()
@@ -113,7 +113,7 @@ BEGIN
                            UNION
                             -- или "следующий" не закрытый, т.е. <> inMovementId, для inIsNext = TRUE
                             SELECT Movement.*
-                            FROM (SELECT (inOperDate - INTERVAL '1 DAY') AS StartDate, (inOperDate + INTERVAL '1 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
+                            FROM (SELECT (inOperDate - INTERVAL '111 DAY') AS StartDate, (inOperDate + INTERVAL '111 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
                                  INNER JOIN Movement_WeighingProduction AS Movement
                                          ON Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
                                         AND Movement.StatusId    = zc_Enum_Status_UnComplete()

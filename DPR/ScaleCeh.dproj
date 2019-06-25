@@ -237,6 +237,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
 				<Form>PUSHMessageForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\ScaleCeh\DialogGoodsSeparate.pas">
+				<Form>DialogGoodsSeparateForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

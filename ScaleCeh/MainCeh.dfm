@@ -37,7 +37,7 @@ object MainCehForm: TMainCehForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 233
+        Left = 246
         Top = 2
         Width = 31
         Height = 29
@@ -198,7 +198,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbView_allClick
       end
       object bbChangeCount: TSpeedButton
-        Left = 117
+        Left = 146
         Top = 2
         Width = 31
         Height = 29
@@ -236,7 +236,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbChangeLiveWeightClick
       end
       object bbChangeCountPack: TSpeedButton
-        Left = 148
+        Left = 177
         Top = 2
         Width = 31
         Height = 29
@@ -293,7 +293,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbChangePartionGoodsClick
       end
       object bbChangePartionGoodsDate: TSpeedButton
-        Left = 179
+        Left = 208
         Top = 2
         Width = 31
         Height = 29
@@ -355,6 +355,24 @@ object MainCehForm: TMainCehForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbChangeStorageLineClick
+      end
+      object bbInsertPartionGoods_out: TSpeedButton
+        Left = 128
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1055#1040#1056#1058#1048#1048' '#1076#1083#1103' <'#1056#1040#1057#1061#1054#1044'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          88888888778888C88888888191788C4C888888899908CEC4C888888991788C47
+          8888888890888C478888888890888C478888888890888C478888888890888C47
+          8888888890888C478888888890888C478888888890888CC0888888999908CCC4
+          7888888990888EC0888888889888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -1934,6 +1952,24 @@ object MainCehForm: TMainCehForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      object testButton1: TButton
+        Left = 5
+        Top = 2
+        Width = 34
+        Height = 25
+        Caption = '1'
+        TabOrder = 0
+        OnClick = testButton1Click
+      end
+      object testButton2: TButton
+        Left = 45
+        Top = 2
+        Width = 34
+        Height = 25
+        Caption = '2'
+        TabOrder = 1
+        OnClick = testButton2Click
+      end
     end
   end
   object PanelInfo: TPanel
@@ -2817,11 +2853,6 @@ object MainCehForm: TMainCehForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = GoodsName
-        BackGroundValueColumn = LightColor
-        ColorValueList = <>
-      end
-      item
         ColorColumn = GoodsKindName
         BackGroundValueColumn = LightColor
         ColorValueList = <>
@@ -3001,5 +3032,12 @@ object MainCehForm: TMainCehForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'5>'
       OnClick = miReport_GoodsBalance_Unit1Click
     end
+  end
+  object Timer_GetWeight: TTimer
+    Enabled = False
+    Interval = 360000
+    OnTimer = Timer_GetWeightTimer
+    Left = 480
+    Top = 296
   end
 end

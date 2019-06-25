@@ -94,7 +94,8 @@ uses
   ModLink in '..\ScaleCeh\Util\Oven\ModLink.pas',
   Oven in '..\ScaleCeh\Util\Oven\Oven.pas',
   DialogBoxLight in '..\ScaleCeh\DialogBoxLight.pas' {DialogBoxLightForm},
-  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DialogGoodsSeparate in '..\ScaleCeh\DialogGoodsSeparate.pas' {DialogGoodsSeparateForm};
 
 {$R *.res}
 
@@ -117,6 +118,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

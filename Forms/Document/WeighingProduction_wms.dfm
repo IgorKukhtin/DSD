@@ -29,7 +29,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
-      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 95
@@ -43,7 +42,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Left = 193
       Top = 23
       EditValue = 42182d
-      Enabled = False
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -57,24 +56,26 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object edFrom: TcxButtonEdit
       Left = 293
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 212
     end
     object edTo: TcxButtonEdit
       Left = 511
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 242
     end
@@ -102,7 +103,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Left = 293
       Top = 62
       EditValue = 42182d
-      Enabled = False
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
@@ -111,7 +112,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object edMovementDescNumber: TcxTextEdit
       Left = 511
       Top = 62
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 118
     end
@@ -128,7 +129,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object ceStatus: TcxButtonEdit
       Left = 8
       Top = 61
-      Enabled = False
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -157,7 +157,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Left = 401
       Top = 62
       EditValue = 42182d
-      Enabled = False
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 16
@@ -171,12 +171,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object edUser: TcxButtonEdit
       Left = 759
       Top = 62
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 18
       Width = 157
     end
@@ -193,7 +194,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     object edPlaceNumber: TcxCurrencyEdit
       Left = 109
       Top = 23
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -353,22 +353,27 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             Options.Editing = False
             Width = 74
           end
+          object RealWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'RealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
-          end
-          object RealWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089
-            DataBinding.FieldName = 'RealWeight'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 67
+            Width = 50
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -406,7 +411,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Left = 193
     Top = 62
     EditValue = 42182d
-    Enabled = False
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -416,10 +420,10 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edMovementDescName: TcxButtonEdit
     Left = 635
     Top = 62
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -434,12 +438,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edGoods: TcxButtonEdit
     Left = 759
     Top = 23
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 157
   end
@@ -451,12 +456,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edGoodsKind: TcxButtonEdit
     Left = 922
     Top = 23
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 95
   end
@@ -468,12 +474,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edGoodsTypeKind_1: TcxButtonEdit
     Left = 8
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 10
     Width = 106
   end
@@ -485,12 +492,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edGoodsTypeKind_2: TcxButtonEdit
     Left = 120
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 12
     Width = 106
   end
@@ -502,24 +510,26 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edGoodsTypeKind_3: TcxButtonEdit
     Left = 232
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 13
     Width = 106
   end
   object edBarCodeBox_1: TcxButtonEdit
     Left = 444
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 16
     Width = 120
   end
@@ -536,12 +546,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edBarCodeBox_2: TcxButtonEdit
     Left = 666
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 18
     Width = 120
   end
@@ -553,12 +564,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edBarCodeBox_3: TcxButtonEdit
     Left = 888
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 20
     Width = 120
   end
@@ -570,12 +582,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edBox_1: TcxButtonEdit
     Left = 347
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 22
     Width = 91
   end
@@ -587,13 +600,14 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edBox_2: TcxButtonEdit
     Left = 569
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
-    TabOrder = 25
+    Properties.ReadOnly = True
+    TabOrder = 24
     Width = 91
   end
   object cxLabel23: TcxLabel
@@ -604,12 +618,13 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
   object edBox_3: TcxButtonEdit
     Left = 791
     Top = 101
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 29
     Width = 91
   end
@@ -1197,37 +1212,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
-    ControlList = <
-      item
-        Control = edInvNumber
-      end
-      item
-        Control = edOperDate
-      end
-      item
-        Control = edStartWeighing
-      end
-      item
-        Control = edMovementDescNumber
-      end
-      item
-        Control = edFrom
-      end
-      item
-        Control = edTo
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end>
+    ControlList = <>
     GetStoredProc = spGet
     Left = 296
     Top = 217
@@ -1486,6 +1471,36 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1530,7 +1545,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 184
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1555,7 +1569,6 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 224
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1730,7 +1743,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1760,7 +1773,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKind_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1789,7 +1802,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsTypeKindForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1819,7 +1832,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsTypeKindForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1849,7 +1862,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsTypeKindForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1879,7 +1892,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBarCodeBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1909,7 +1922,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBarCodeBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1939,7 +1952,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBarCodeBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1969,7 +1982,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1999,7 +2012,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -2029,7 +2042,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBoxForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

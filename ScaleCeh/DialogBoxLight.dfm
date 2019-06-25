@@ -69,7 +69,7 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       object Box3Edit: TcxTextEdit
         Left = 144
         Top = 10
-        Properties.MaxLength = 13
+        Properties.MaxLength = 128
         Properties.OnChange = Box3EditChange
         TabOrder = 3
         OnEnter = Box3EditEnter
@@ -89,7 +89,7 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       object MsgBlinkLabel: TcxLabel
         Left = 1
         Top = 19
-        Align = alTop
+        Align = alClient
         Caption = #1055#1088#1086#1089#1082#1072#1085#1080#1088#1091#1081#1090#1077' '#1085#1072' '#1082#1072#1082#1086#1081' '#1083#1080#1085#1080#1080' '#1073#1091#1076#1091#1090' '#1064#1058'.'
         ParentColor = False
         ParentFont = False
@@ -103,7 +103,10 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        ExplicitHeight = 19
         AnchorX = 187
+        AnchorY = 30
       end
       object MsgMainLabel: TcxLabel
         Left = 1
@@ -154,7 +157,7 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       object Box1Edit: TcxTextEdit
         Left = 144
         Top = 10
-        Properties.MaxLength = 13
+        Properties.MaxLength = 128
         Properties.OnChange = Box1EditChange
         TabOrder = 3
         OnEnter = Box1EditEnter
@@ -195,7 +198,7 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
       object Box2Edit: TcxTextEdit
         Left = 144
         Top = 10
-        Properties.MaxLength = 13
+        Properties.MaxLength = 128
         Properties.OnChange = Box2EditChange
         TabOrder = 3
         OnEnter = Box2EditEnter

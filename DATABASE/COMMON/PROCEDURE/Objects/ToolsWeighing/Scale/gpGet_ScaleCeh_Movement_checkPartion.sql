@@ -1,17 +1,20 @@
 -- Function: gpGet_ScaleCeh_Movement_checkPartion()
 
 DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement_checkPartion (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement_checkPartion (Integer, Integer, TVarChar, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement_checkPartion (Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement_checkPartion (Integer, Integer, TVarChar, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_ScaleCeh_Movement_checkPartion(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- 
     IN inPartionGoods        TVarChar  , -- <Партия товара> - для условия
     IN inOperCount           TFloat    , --
+    IN inValueStep           Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Code     Integer
+RETURNS TABLE (Code       Integer
              , MessageStr TVarChar
+             , ValueStep  Integer
               )
 AS
 $BODY$
@@ -159,6 +162,7 @@ BEGIN
               RETURN QUERY
                 SELECT 1 AS Code
                      , ('Ошибка.' || CHR(10) || CHR(13) || 'Для товара <' || Object.ValueData || '> Вес = <' || MovementItem.Amount :: TVarChar || '>' || CHR(10) || CHR(13) || 'не установлен <Номер парти>.') :: TVarChar AS MessageStr
+                     , 0 :: Integer AS ValueStep
                 FROM MovementItem
                      LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                 WHERE MovementItem.Id = vbMovementItemId_err;
@@ -168,14 +172,13 @@ BEGIN
 
          -- 1.2. check one PartionStr
          IF EXISTS (SELECT 1
-                    FROM (SELECT MIString_PartionGoods.ValueData AS PartionGoods
+                    FROM (SELECT DISTINCT MIString_PartionGoods.ValueData AS PartionGoods
                           FROM MovementItem
                                LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                             ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                                            AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                           AND MIString_PartionGoods.DescId         = zc_MIString_PartionGoods()
                           WHERE MovementItem.MovementId = inMovementId
-                            AND MovementItem.isErased = FALSE
-                          GROUP BY MIString_PartionGoods.ValueData
+                            AND MovementItem.isErased   = FALSE
                          ) AS tmp
                     HAVING Count(*) > 1)
          THEN
@@ -183,6 +186,7 @@ BEGIN
               RETURN QUERY
                 SELECT 1 AS Code
                      , ('Ошибка.' || CHR(10) || CHR(13) || 'Все взвешивания должны быть с одинаковым номером партии <' || vbPartionGoods || '>.') :: TVarChar AS MessageStr
+                     , 0 :: Integer AS ValueStep
                ;
               -- выход
               RETURN;
@@ -192,12 +196,11 @@ BEGIN
          IF vbIsProductionIn = FALSE
          THEN
              -- 1.3. check one Goods для расхода
-             vbMovementItemId_err:= (SELECT MAX (GoodsId)
-                                     FROM (SELECT MovementItem.ObjectId AS GoodsId
+             vbMovementItemId_err:= (SELECT MAX (tmp.GoodsId)
+                                     FROM (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
                                            FROM MovementItem
                                            WHERE MovementItem.MovementId = inMovementId
-                                             AND MovementItem.isErased = FALSE
-                                           GROUP BY MovementItem.ObjectId
+                                             AND MovementItem.isErased   = FALSE
                                           ) AS tmp
                                      HAVING Count(*) > 1
                                     );
@@ -207,6 +210,7 @@ BEGIN
                   RETURN QUERY
                     SELECT 1 AS Code
                          , ('Ошибка.' || CHR(10) || CHR(13) || 'Все взвешивания должны быть для одного товара  <' || Object.ValueData || '>.') :: TVarChar AS MessageStr
+                         , 0 :: Integer AS ValueStep
                     FROM Object
                     WHERE Object.Id = vbMovementItemId_err
                    ;
@@ -219,11 +223,11 @@ BEGIN
                                      FROM MovementItem
                                           INNER JOIN MovementItem AS MovementItem_find
                                                                   ON MovementItem_find.MovementId = inMovementId
-                                                                 AND MovementItem_find.isErased = FALSE
-                                                                 AND MovementItem_find.ObjectId <> MovementItem.ObjectId
+                                                                 AND MovementItem_find.isErased   = FALSE
+                                                                 AND MovementItem_find.ObjectId   <> MovementItem.ObjectId
                                      WHERE MovementItem.MovementId = vbMovementId_find1
-                                       AND MovementItem.DescId = zc_MI_Master()
-                                       AND MovementItem.isErased = FALSE
+                                       AND MovementItem.DescId     = zc_MI_Master()
+                                       AND MovementItem.isErased   = FALSE
                                      LIMIT 1
                                     );
              IF vbMovementItemId_err <> 0
@@ -232,6 +236,7 @@ BEGIN
                   RETURN QUERY
                     SELECT 1 AS Code
                          , ('Ошибка.' || CHR(10) || CHR(13) || 'В текущем взвешивании для партии <' || vbPartionGoods || '> должен быть только товар  <' || Object.ValueData || '>.') :: TVarChar AS MessageStr
+                         , 0 :: Integer AS ValueStep
                     FROM Object
                     WHERE Object.Id = vbMovementItemId_err
                    ;
@@ -252,6 +257,7 @@ BEGIN
                   RETURN QUERY
                     SELECT 1 AS Code
                          , ('Ошибка.' || CHR(10) || CHR(13) || 'Сформировать приход партии <' || vbPartionGoods || '> возможно только после сформированного расхода.') :: TVarChar AS MessageStr
+                         , (inValueStep + 1) :: Integer AS ValueStep
                    ;
                   -- выход
                   RETURN;
@@ -271,6 +277,7 @@ BEGIN
                          , ('Ошибка.' || CHR(10) || CHR(13) || CASE WHEN vbIsProductionIn = TRUE THEN 'Приход' ELSE 'Расход' END || ' с бойни сформировать нельзя.'
                                       || CHR(10) || CHR(13) || 'Не найден приход от поставщика для партии <' || vbPartionGoods_partner || '>.'
                            ) :: TVarChar AS MessageStr
+                         , 0 :: Integer AS ValueStep
                    ;
                   -- выход
                   RETURN;
@@ -381,6 +388,7 @@ BEGIN
                        || CHR(10) || CHR(13)
                        || 'Продолжить?'
                          ) :: TVarChar AS MessageStr
+                       , 0 :: Integer AS ValueStep
                   FROM _tmpPartionGoods_check
                        LEFT JOIN Object ON Object.Id = _tmpPartionGoods_check.GoodsId
                   LIMIT 1
@@ -388,13 +396,13 @@ BEGIN
            ELSE
                -- Результат - все ок
                RETURN QUERY
-                 SELECT 0 AS Code, '' :: TVarChar AS MessageStr;
+                 SELECT 0 AS Code, '' :: TVarChar AS MessageStr, 0 :: Integer AS ValueStep;
            END IF;
 
      ELSE
          -- Результат - все ок
          RETURN QUERY
-           SELECT 0 AS Code, '' :: TVarChar AS MessageStr;
+           SELECT 0 AS Code, '' :: TVarChar AS MessageStr, 0 :: Integer AS ValueStep;
      END IF;
 
 
@@ -409,4 +417,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_Movement_checkPartion (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_ScaleCeh_Movement_checkPartion (inMovementId:= 1, inGoodsId:= 1, inPartionGoods:= '1', inOperCount:= 1, inValueStep:= 1, inSession:= '2')

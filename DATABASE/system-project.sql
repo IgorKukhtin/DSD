@@ -62,7 +62,7 @@ SELECT COUNT(*) FROM MovementItemFloat  -- 314 383 191
 SELECT COUNT(*) FROM Object       -- 1 078 770
 SELECT COUNT(*) FROM ObjectFloat  -- 1 087 193
 
-integer 4 bytes -- -2147483648 to +214 748 3647
+integer 4 bytes -- -2147483648 to +2 147 483 647
 bigint 8 bytes -- -9223372036854775808 to +9223372036854775807
 serial    -- 1 to 2147483647
 bigserial -- 1 to 9223372036854775807

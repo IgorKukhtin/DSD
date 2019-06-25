@@ -42,7 +42,7 @@ type
     function gpUpdate_ScaleCeh_Movement_ArticleLoss(execParams:TParams): Boolean;
     //
     //ScaleCeh
-    function gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
+    function gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkStorageLine(MovementId : Integer): String;
     //ScaleCeh - Light
@@ -151,7 +151,7 @@ begin
            // минимальный вес 1шт.
            ParamsLight.ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
            // максимальный вес 1шт.
-           ParamsLight.ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+           ParamsLight.ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMax').AsFloat;
 
            //1-ая линия - Всегда этот цвет
            ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;
@@ -169,6 +169,7 @@ begin
            ParamsLight.ParamByName('BoxWeight_1').asFloat         := DataSet.FieldByName('BoxWeight_1').asFloat;   // Вес самого ящика
            ParamsLight.ParamByName('WeightOnBox_1').asFloat       := DataSet.FieldByName('WeightOnBox_1').asFloat; // вложенность - Вес
            ParamsLight.ParamByName('CountOnBox_1').asFloat        := DataSet.FieldByName('CountOnBox_1').asFloat;  // Вложенность - шт (информативно?)
+           ParamsLight.ParamByName('isFull_1').AsBoolean          := FALSE;
 
            //2-ая линия - Всегда этот цвет
            ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger := DataSet.FieldByName('GoodsTypeKindId_2').AsInteger;
@@ -180,6 +181,7 @@ begin
         // ParamsLight.ParamByName('WeightTotal_2').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
         // ParamsLight.ParamByName('CountTotal_2').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
         // ParamsLight.ParamByName('BoxTotal_2').asFloat          := 0; // ящиков итого (закрытых) - информативно
+           ParamsLight.ParamByName('isFull_2').AsBoolean          := FALSE;
 
            ParamsLight.ParamByName('BoxId_2').AsInteger           := DataSet.FieldByName('BoxId_2').AsInteger;
            ParamsLight.ParamByName('BoxName_2').asString          := DataSet.FieldByName('BoxName_2').asString;
@@ -197,6 +199,7 @@ begin
         // ParamsLight.ParamByName('WeightTotal_3').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
         // ParamsLight.ParamByName('CountTotal_3').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
         // ParamsLight.ParamByName('BoxTotal_3').asFloat          := 0; // ящиков итого (закрытых) - информативно
+           ParamsLight.ParamByName('isFull_3').AsBoolean          := FALSE;
 
            ParamsLight.ParamByName('BoxId_3').AsInteger           := DataSet.FieldByName('BoxId_3').AsInteger;
            ParamsLight.ParamByName('BoxName_3').asString          := DataSet.FieldByName('BoxName_3').asString;
@@ -292,7 +295,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
+function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
 begin
     Result:=false;
     with spSelect do begin
@@ -303,9 +306,11 @@ begin
        Params.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
        Params.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
        Params.AddParam('inOperCount', ftFloat, ptInput, OperCount);
+       Params.AddParam('inValueStep', ftInteger, ptInput, ValueStep_obv);
        //try
          Execute;
-         Result:=DataSet.FieldByName('Code').asInteger = 0;
+         Result:=(DataSet.FieldByName('Code').asInteger = 0) or (DataSet.FieldByName('ValueStep').asInteger > 2);
+         if DataSet.FieldByName('ValueStep').asInteger > 0 then ValueStep_obv:= DataSet.FieldByName('ValueStep').asInteger;
          //execParamsMovement.ParamByName('MessageCode').AsInteger:= DataSet.FieldByName('Code').AsInteger;
          //execParamsMovement.ParamByName('MessageStr').AsString:= DataSet.FieldByName('MessageStr').AsString;
        {except
@@ -317,7 +322,9 @@ begin
     if not Result
     then
         if spSelect.DataSet.FieldByName('Code').asInteger = 1
-        then ShowMessage(spSelect.DataSet.FieldByName('MessageStr').AsString)
+        then if ValueStep_obv > 0
+             then ShowMessage('('+IntToStr(ValueStep_obv)+') ' + spSelect.DataSet.FieldByName('MessageStr').AsString)
+             else ShowMessage(spSelect.DataSet.FieldByName('MessageStr').AsString)
         else Result:=MessageDlg(spSelect.DataSet.FieldByName('MessageStr').AsString,mtConfirmation,mbYesNoCancel,0) = 6;
 end;
 {------------------------------------------------------------------------}
@@ -539,7 +546,9 @@ begin
            //1-ая линия - Всегда этот цвет
            Params.AddParam('inGoodsTypeKindId_1', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger);
            Params.AddParam('inBarCodeBoxId_1', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger);
-           Params.AddParam('inLineCode_1', ftInteger, ptInput, 1);
+           if SettingMain.isLightLEFT_321 = TRUE
+           then Params.AddParam('inLineCode_1', ftInteger, ptInput, 1)
+           else Params.AddParam('inLineCode_1', ftInteger, ptInput, 3);
            // вложенность - Вес
            Params.AddParam('inWeightOnBox_1', ftFloat, ptInput, ParamsLight.ParamByName('WeightOnBox_1').asFloat);
            // Вложенность - шт (информативно?)
@@ -557,7 +566,9 @@ begin
             //3-ья линия - Всегда этот цвет
            Params.AddParam('inGoodsTypeKindId_3', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger);
            Params.AddParam('inBarCodeBoxId_3', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger);
-           Params.AddParam('inLineCode_3', ftInteger, ptInput, 2);
+           if SettingMain.isLightLEFT_321 = TRUE
+           then Params.AddParam('inLineCode_3', ftInteger, ptInput, 3)
+           else Params.AddParam('inLineCode_3', ftInteger, ptInput, 1);
            // вложенность - Вес
            Params.AddParam('inWeightOnBox_3', ftFloat, ptInput, ParamsLight.ParamByName('WeightOnBox_3').asFloat);
            // Вложенность - шт (информативно?)
@@ -572,11 +583,58 @@ begin
            Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
            Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
            //try
+             Result:= false;
              Execute;
+             Result:= true;
            {except
              Result := '';
              ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
            end;}
+           //
+           // вернули какой наполнен
+           ParamsLight.ParamByName('isFull_1').asBoolean:= DataSet.FieldByName('isFull_1').asBoolean;
+           ParamsLight.ParamByName('isFull_2').asBoolean:= DataSet.FieldByName('isFull_2').asBoolean;
+           ParamsLight.ParamByName('isFull_3').asBoolean:= DataSet.FieldByName('isFull_3').asBoolean;
+           // вернули № линии, что б подсветить
+           if (SettingMain.isLightLEFT_321 = false) and (DataSet.FieldByName('LineCode').asInteger = 3)
+           then ParamsLight.ParamByName('LineCode_begin').asInteger:= 1
+           else if (SettingMain.isLightLEFT_321 = false) and (DataSet.FieldByName('LineCode').asInteger = 1)
+           then ParamsLight.ParamByName('LineCode_begin').asInteger:= 3
+           else ParamsLight.ParamByName('LineCode_begin').asInteger:=DataSet.FieldByName('LineCode').asInteger;
+           //
+           // если заполнился ящик_1, надо будет спросить для него НОВЫЙ
+           if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then
+           begin
+             ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger    := 0;
+             ParamsLight.ParamByName('BoxCode_1').AsInteger         := 0;
+             ParamsLight.ParamByName('BoxBarCode_1').AsString       := '';
+             // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+             ParamsLight.ParamByName('WeightOnBoxTotal_1').AsFloat:= DataSet.FieldByName('WeightOnBox').AsFloat;
+             // шт итого накопительно (в незакрытом ящике) - информативно?
+             ParamsLight.ParamByName('CountOnBoxTotal_1').AsFloat := DataSet.FieldByName('CountOnBox').AsFloat;
+           end;
+           // если заполнился ящик_2, надо будет спросить для него НОВЫЙ
+           if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then
+           begin
+             ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger    := 0;
+             ParamsLight.ParamByName('BoxCode_2').AsInteger         := 0;
+             ParamsLight.ParamByName('BoxBarCode_2').AsString       := '';
+             // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+             ParamsLight.ParamByName('WeightOnBoxTotal_2').AsFloat:= DataSet.FieldByName('WeightOnBox').AsFloat;
+             // шт итого накопительно (в незакрытом ящике) - информативно?
+             ParamsLight.ParamByName('CountOnBoxTotal_2').AsFloat := DataSet.FieldByName('CountOnBox').AsFloat;
+           end;
+           // если заполнился ящик_3, надо будет спросить для него НОВЫЙ
+           if ParamsLight.ParamByName('isFull_3').asBoolean = TRUE then
+           begin
+             ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger    := 0;
+             ParamsLight.ParamByName('BoxCode_3').AsInteger         := 0;
+             ParamsLight.ParamByName('BoxBarCode_3').AsString       := '';
+             // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+             ParamsLight.ParamByName('WeightOnBoxTotal_3').AsFloat:= DataSet.FieldByName('WeightOnBox').AsFloat;
+             // шт итого накопительно (в незакрытом ящике) - информативно?
+             ParamsLight.ParamByName('CountOnBoxTotal_3').AsFloat := DataSet.FieldByName('CountOnBox').AsFloat;
+           end;
 
         end
       else
@@ -843,6 +901,7 @@ begin
              execParamsLight.ParamByName('BarCodeBoxId_1').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
              execParamsLight.ParamByName('BoxCode_1').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
              execParamsLight.ParamByName('BoxBarCode_1').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+             execParamsLight.ParamByName('isFull_1').asBoolean      := FALSE;
          end
          else
            if num = 2 then
@@ -850,6 +909,7 @@ begin
                execParamsLight.ParamByName('BarCodeBoxId_2').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
                execParamsLight.ParamByName('BoxCode_2').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
                execParamsLight.ParamByName('BoxBarCode_2').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+               execParamsLight.ParamByName('isFull_2').asBoolean      := FALSE;
            end
            else
              if num = 3 then
@@ -857,6 +917,7 @@ begin
                  execParamsLight.ParamByName('BarCodeBoxId_3').AsInteger:= DataSet.FieldByName('BarCodeBoxId').AsInteger;
                  execParamsLight.ParamByName('BoxCode_3').AsInteger     := DataSet.FieldByName('BoxCode').AsInteger;
                  execParamsLight.ParamByName('BoxBarCode_3').AsString   := DataSet.FieldByName('BoxBarCode').AsString;
+                 execParamsLight.ParamByName('isFull_3').asBoolean      := FALSE;
              end;
 
     end;
@@ -914,11 +975,12 @@ begin
          ParamByName('BarCodeBoxId_1').AsInteger    := 0;
          ParamByName('BoxCode_1').AsInteger         := 0;
          ParamByName('BoxBarCode_1').AsString       := '';
-         ParamByName('WeightOnBoxTotal_1').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-         ParamByName('CountOnBoxTotal_1').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
-         ParamByName('WeightTotal_1').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('CountTotal_1').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('BoxTotal_1').asFloat          := 0; // ящиков итого (закрытых) - информативно
+      // ParamByName('WeightOnBoxTotal_1').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+      // ParamByName('CountOnBoxTotal_1').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+      // ParamByName('WeightTotal_1').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('CountTotal_1').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('BoxTotal_1').asFloat          := 0; // ящиков итого (закрытых) - информативно
+         ParamByName('isFull_1').AsBoolean          := FALSE;
 
          ParamByName('BoxId_1').AsInteger           := DataSet.FieldByName('BoxId_1').AsInteger;
          ParamByName('BoxName_1').asString          := DataSet.FieldByName('BoxName_1').asString;
@@ -931,11 +993,12 @@ begin
          ParamByName('BarCodeBoxId_2').AsInteger    := 0;
          ParamByName('BoxCode_2').AsInteger         := 0;
          ParamByName('BoxBarCode_2').AsString       := '';
-         ParamByName('WeightOnBoxTotal_2').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-         ParamByName('CountOnBoxTotal_2').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
-         ParamByName('WeightTotal_2').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('CountTotal_2').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('BoxTotal_2').asFloat          := 0; // ящиков итого (закрытых) - информативно
+      // ParamByName('WeightOnBoxTotal_2').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+      // ParamByName('CountOnBoxTotal_2').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+      // ParamByName('WeightTotal_2').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('CountTotal_2').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('BoxTotal_2').asFloat          := 0; // ящиков итого (закрытых) - информативно
+         ParamByName('isFull_2').AsBoolean          := FALSE;
 
          ParamByName('BoxId_2').AsInteger           := DataSet.FieldByName('BoxId_2').AsInteger;
          ParamByName('BoxName_2').asString          := DataSet.FieldByName('BoxName_2').asString;
@@ -948,11 +1011,12 @@ begin
          ParamByName('BarCodeBoxId_3').AsInteger    := 0;
          ParamByName('BoxCode_3').AsInteger         := 0;
          ParamByName('BoxBarCode_3').AsString       := '';
-         ParamByName('WeightOnBoxTotal_3').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-         ParamByName('CountOnBoxTotal_3').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
-         ParamByName('WeightTotal_3').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('CountTotal_3').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
-         ParamByName('BoxTotal_3').asFloat          := 0; // ящиков итого (закрытых) - информативно
+      // ParamByName('WeightOnBoxTotal_3').asFloat  := 0; // Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
+      // ParamByName('CountOnBoxTotal_3').asFloat   := 0; // шт итого накопительно (в незакрытом ящике) - информативно?
+      // ParamByName('WeightTotal_3').asFloat       := 0; // Вес итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('CountTotal_3').asFloat        := 0; // шт итого накопительный (в закрытых ящиках) - информативно
+      // ParamByName('BoxTotal_3').asFloat          := 0; // ящиков итого (закрытых) - информативно
+         ParamByName('isFull_3').AsBoolean          := FALSE;
 
          ParamByName('BoxId_3').AsInteger           := DataSet.FieldByName('BoxId_3').AsInteger;
          ParamByName('BoxName_3').asString          := DataSet.FieldByName('BoxName_3').asString;
@@ -1206,6 +1270,11 @@ begin
 
   SettingMain.LightCOMPort:=Ini.ReadInteger('Main','DefaultLightCOMPort',0);
   if SettingMain.LightCOMPort=0 then Ini.WriteInteger('Main','DefaultLightCOMPort',4);
+
+  //isLightLEFT_321
+  tmpValue:=Ini.ReadString('Main','isLightLEFT_321','');
+  if tmpValue='' then Ini.WriteString('Main','isLightLEFT_321', 'TRUE');
+  SettingMain.isLightLEFT_321:= AnsiUpperCase(tmpValue) = AnsiUpperCase('TRUE');
 
   SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCehCount',1);
   if SettingMain.ScaleCount=1 then Ini.WriteInteger('Main','ScaleCehCount',1);

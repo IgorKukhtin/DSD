@@ -73,7 +73,7 @@ BEGIN
                            UNION
                              SELECT Object.Id AS UnitId
                              FROM Object
-                             WHERE Object.DescId = zc_Object_Unit() 
+                             WHERE Object.DescId = zc_Object_Unit()
                                AND COALESCE (inUnitId, 0) = 0
                             )
           , tmpContainer AS (SELECT Container.PartionId     AS PartionId
@@ -145,8 +145,8 @@ BEGIN
             , Object_CompositionGroup.ValueData   AS CompositionGroupName
             , Object_GoodsSize.Id                 AS GoodsSizeId
             , Object_GoodsSize.ValueData          AS GoodsSizeName
-            , Object_PartionGoods.isErased        AS isErased
-            , Object_PartionGoods.isArc           AS isArc
+            , COALESCE (Object_PartionGoods.isErased, Object_PartionGoods_er.isErased) AS isErased
+            , COALESCE (Object_PartionGoods.isArc   , Object_PartionGoods_er.isArc)    AS isArc
 
             , COALESCE (tmpDiscount.DiscountTax, 0) :: TFloat AS DiscountTax
 
@@ -158,17 +158,24 @@ BEGIN
                    WHEN tmpContainer.Amount     = 0 THEN zc_Color_UnEnabl()
                    ELSE zc_Color_Black()
               END :: Integer                      AS Color_Calc
-              
+
        FROM tmpContainer
 
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
                                         AND Object_PartionGoods.isErased       = FALSE
                                         -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                         AND Object_PartionGoods.GoodsId        = tmpContainer.GoodsId
+           LEFT JOIN Object_PartionGoods AS Object_PartionGoods_er
+                                         ON Object_PartionGoods_er.MovementItemId = tmpContainer.PartionId
+                                        AND Object_PartionGoods_er.isErased       = TRUE
+                                        -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                        AND Object_PartionGoods_er.GoodsId        = tmpContainer.GoodsId
+                                        --
+                                        AND Object_PartionGoods.MovementItemId IS NULL
 
-           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.PartnerId
-           LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = Object_PartionGoods.UnitId
-           LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = Object_PartionGoods.GoodsId
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (Object_PartionGoods.PartnerId, Object_PartionGoods_er.PartnerId)
+           LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = COALESCE (Object_PartionGoods.UnitId   , Object_PartionGoods_er.UnitId)
+           LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = COALESCE (Object_PartionGoods.GoodsId  , Object_PartionGoods_er.GoodsId)
 
            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                   ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -187,7 +194,7 @@ BEGIN
            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
 
-           LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId
+           LEFT JOIN Movement ON Movement.Id = COALESCE (Object_PartionGoods.MovementId, Object_PartionGoods_er.MovementId)
 
            LEFT JOIN tmpDiscount ON tmpDiscount.GoodsId = tmpContainer.GoodsId
           ;

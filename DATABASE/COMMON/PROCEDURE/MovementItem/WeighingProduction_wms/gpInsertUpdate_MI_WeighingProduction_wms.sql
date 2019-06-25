@@ -46,7 +46,7 @@ BEGIN
      -- проверка
      IF COALESCE (inBarCodeBoxId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Ш/К для ящика не определен.<%>', inBarCodeBoxId;
+         RAISE EXCEPTION 'Ошибка. Ш/К ящика не определен.<%>', inBarCodeBoxId;
      END IF;
 
      -- проверка

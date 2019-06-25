@@ -132,7 +132,7 @@
   object edValue6: TcxTextEdit
     Left = 226
     Top = 253
-    TabOrder = 10
+    TabOrder = 9
     Width = 181
   end
   object cxLabel8: TcxLabel
@@ -170,57 +170,57 @@
   end
   object cxLabel11: TcxLabel
     Left = 40
-    Top = 367
+    Top = 410
     Caption = #1073#1110#1083#1082#1080' '#1085#1077' '#1084#1077#1085#1096#1077
   end
   object edValue9: TcxTextEdit
     Left = 40
-    Top = 387
+    Top = 428
     TabOrder = 26
     Width = 174
   end
   object cxLabel12: TcxLabel
     Left = 226
-    Top = 369
+    Top = 410
     Caption = #1075#1088
   end
   object edValue10: TcxTextEdit
     Left = 226
-    Top = 387
+    Top = 428
     TabOrder = 28
     Width = 181
   end
   object cxLabel13: TcxLabel
     Left = 40
-    Top = 410
+    Top = 455
     Caption = #1078#1080#1088#1080' '#1085#1077' '#1073#1110#1083#1100#1096#1077
   end
   object edValue11: TcxTextEdit
     Left = 40
-    Top = 428
+    Top = 473
     TabOrder = 30
     Width = 174
   end
   object cxLabel14: TcxLabel
     Left = 226
-    Top = 410
+    Top = 455
     Caption = #1075#1088
   end
   object edValue12: TcxTextEdit
     Left = 226
-    Top = 428
+    Top = 473
     TabOrder = 32
     Width = 181
   end
   object edValue13: TcxTextEdit
     Left = 40
-    Top = 473
+    Top = 515
     TabOrder = 33
     Width = 174
   end
   object cxLabel15: TcxLabel
     Left = 40
-    Top = 455
+    Top = 497
     Caption = #1082#1050#1072#1083
   end
   object cxLabel16: TcxLabel
@@ -235,26 +235,26 @@
     Width = 181
   end
   object cxLabel17: TcxLabel
-    Left = 226
-    Top = 455
+    Left = 40
+    Top = 369
     Caption = #1074#1091#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1110#1083#1100#1096#1077
   end
   object edValue15: TcxTextEdit
-    Left = 226
-    Top = 473
+    Left = 40
+    Top = 387
     TabOrder = 38
     Width = 181
   end
   object cxLabel18: TcxLabel
-    Left = 40
-    Top = 497
+    Left = 226
+    Top = 369
     Caption = #1075#1088
   end
   object edValue16: TcxTextEdit
-    Left = 40
-    Top = 515
+    Left = 226
+    Top = 387
     TabOrder = 40
-    Width = 174
+    Width = 181
   end
   object cxLabel19: TcxLabel
     Left = 226

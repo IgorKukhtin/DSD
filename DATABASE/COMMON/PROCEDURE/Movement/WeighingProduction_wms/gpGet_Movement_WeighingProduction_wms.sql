@@ -120,17 +120,17 @@ BEGIN
              , Object_GoodsKind.ValueData           AS GoodsKindName
 
              , Object_GoodsTypeKind_1.Id            AS GoodsTypeKindId_1
-             , Object_GoodsTypeKind_1.ValueData     AS GoodsTypeKindName_1
+             , CASE WHEN Movement.GoodsTypeKindId_1 < 0 THEN Movement.GoodsTypeKindId_1 :: TVarChar ELSE Object_GoodsTypeKind_1.ValueData END AS GoodsTypeKindName_1
              , Object_GoodsTypeKind_2.Id            AS GoodsTypeKindId_2
-             , Object_GoodsTypeKind_2.ValueData     AS GoodsTypeKindName_2
+             , CASE WHEN Movement.GoodsTypeKindId_2 < 0 THEN Movement.GoodsTypeKindId_2 :: TVarChar ELSE Object_GoodsTypeKind_2.ValueData END AS GoodsTypeKindName_2
              , Object_GoodsTypeKind_3.Id            AS GoodsTypeKindId_3
-             , Object_GoodsTypeKind_3.ValueData     AS GoodsTypeKindName_3
+             , CASE WHEN Movement.GoodsTypeKindId_3 < 0 THEN Movement.GoodsTypeKindId_3 :: TVarChar ELSE Object_GoodsTypeKind_3.ValueData END AS GoodsTypeKindName_3
              , Object_BarCodeBox_1.Id               AS BarCodeBoxId_1
-             , Object_BarCodeBox_1.ValueData        AS BarCodeBoxName_1
+             , CASE WHEN Movement.BarCodeBoxId_1 = 0 THEN Movement.BarCodeBoxId_1 :: TVarChar ELSE Object_BarCodeBox_1.ValueData END AS BarCodeBoxName_1
              , Object_BarCodeBox_2.Id               AS BarCodeBoxId_2
-             , Object_BarCodeBox_2.ValueData        AS BarCodeBoxName_2
+             , CASE WHEN Movement.BarCodeBoxId_2 = 0 THEN Movement.BarCodeBoxId_2 :: TVarChar ELSE Object_BarCodeBox_2.ValueData END AS BarCodeBoxName_2
              , Object_BarCodeBox_3.Id               AS BarCodeBoxId_3
-             , Object_BarCodeBox_3.ValueData        AS BarCodeBoxName_3
+             , CASE WHEN Movement.BarCodeBoxId_3 = 0 THEN Movement.BarCodeBoxId_3 :: TVarChar ELSE Object_BarCodeBox_3.ValueData END AS BarCodeBoxName_3
 
              , Object_Box1.Id                   AS BoxId_1
              , Object_Box1.ValueData            AS BoxName_1

@@ -7,6 +7,7 @@ uses
 
 const
     fmtWeight:String = ',0.#### кг.';
+    fmtFloat:String = ',0.####';
     lStickerPackGroupId:Integer = 1;
 type
 {
@@ -63,6 +64,7 @@ type
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
     UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
 
+    isLightLEFT_321 : Boolean;
     LightColor_1, LightColor_2, LightColor_3 : Integer;
     Name_Sh, Name_Nom, Name_Ves : String;
     ShName_Sh, ShName_Nom, ShName_Ves : String;
@@ -306,7 +308,8 @@ begin
           //ParamAdd(Params,'Color_3',ftInteger);
           //
           // локально
-          ParamAdd(Params,'Count_box',ftInteger);   // сколько линий для ящиков - 1,2 или 3
+          ParamAdd(Params,'Count_box',ftInteger);     // сколько линий для ящиков - 1,2 или 3
+          ParamAdd(Params,'LineCode_begin',ftInteger);// вернули № линии, что б подсветить
           //
           ParamAdd(Params,'GoodsId',ftInteger);       // Товар
           ParamAdd(Params,'GoodsCode',ftInteger);     // Товар

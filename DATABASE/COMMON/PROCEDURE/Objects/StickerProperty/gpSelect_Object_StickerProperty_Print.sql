@@ -191,20 +191,23 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH 
-       tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1
-                                 , ObjectString_Value2.ValueData  AS Value2
-                                 , ObjectString_Value3.ValueData  AS Value3
-                                 , ObjectString_Value4.ValueData  AS Value4
-                                 , ObjectString_Value5.ValueData  AS Value5
-                                 , ObjectString_Value6.ValueData  AS Value6
-                                 , ObjectString_Value7.ValueData  AS Value7
-                                 , ObjectString_Value8.ValueData  AS Value8
-                                 , ObjectString_Value9.ValueData  AS Value9
-                                 , ObjectString_Value10.ValueData AS Value10
-                                 , ObjectString_Value11.ValueData AS Value11
-                                 , ObjectString_Value12.ValueData AS Value12
-                                 , ObjectString_Value13.ValueData AS Value13
-                                 , ObjectString_Value14.ValueData AS Value14
+       tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1   -- Склад:
+                                 , ObjectString_Value2.ValueData  AS Value2   -- Умови та термін зберігання:
+                                 , ObjectString_Value3.ValueData  AS Value3   -- за відносної вологості повітря від 
+                                 , ObjectString_Value4.ValueData  AS Value4   -- до
+                                 , ObjectString_Value5.ValueData  AS Value5   -- за температури від
+                                 , ObjectString_Value6.ValueData  AS Value6   -- до
+                                 , ObjectString_Value7.ValueData  AS Value7   -- не більш ніж
+                                 , ObjectString_Value8.ValueData  AS Value8   -- Поживна цінність та калорійність В 100гр.продукта:
+                                 , ObjectString_Value15.ValueData AS Value15  -- вуглеводи не більше
+                                 , ObjectString_Value16.ValueData AS Value16  -- гр
+                                 , ObjectString_Value9.ValueData  AS Value9   -- білки не менше
+                                 , ObjectString_Value10.ValueData AS Value10  -- гр
+                                 , ObjectString_Value11.ValueData AS Value11  -- жири не більше 
+                                 , ObjectString_Value12.ValueData AS Value12  -- гр
+                                 , ObjectString_Value13.ValueData AS Value13  -- кКал 
+                                 , ObjectString_Value14.ValueData AS Value14  -- діб. 
+                                 , ObjectString_Value17.ValueData AS Value17  -- кДж
                             FROM ObjectLink AS ObjectLink_StickerFile_Language
                                  LEFT JOIN ObjectString AS ObjectString_Value1
                                                         ON ObjectString_Value1.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
@@ -248,6 +251,15 @@ BEGIN
                                  LEFT JOIN ObjectString AS ObjectString_Value14
                                                         ON ObjectString_Value14.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
                                                        AND ObjectString_Value14.DescId = zc_ObjectString_Language_Value14()
+                                 LEFT JOIN ObjectString AS ObjectString_Value15
+                                                        ON ObjectString_Value15.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value15.DescId = zc_ObjectString_Language_Value15()
+                                 LEFT JOIN ObjectString AS ObjectString_Value16
+                                                        ON ObjectString_Value16.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value16.DescId = zc_ObjectString_Language_Value16()
+                                 LEFT JOIN ObjectString AS ObjectString_Value17
+                                                        ON ObjectString_Value17.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value17.DescId = zc_ObjectString_Language_Value17()
                             WHERE ObjectLink_StickerFile_Language.ObjectId = vbStickerFileId
                               AND ObjectLink_StickerFile_Language.DescId = zc_ObjectLink_StickerFile_Language()
                            )
@@ -364,9 +376,20 @@ BEGIN
                               || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
                               -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
                               || tmpLanguageParam.Value8 ||': '
+                              -- вуглеводи не більше
+                              || CASE WHEN Sticker_Value1.ValueData <> 0 THEN
+                                 tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
+                                 ELSE '' END
+                              -- білки не менше
                               ||tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
+                              -- жири не більше 
                               ||tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
-                              ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13
+                              -- кКал
+                              ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
+                              -- кДж
+                              || CASE WHEN Sticker_Value5.ValueData <> 0 THEN
+                                                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value5.ValueData, 0)) ||  tmpLanguageParam.Value17 ||''
+                                 ELSE '' END
                                , inIsLength
                                , FALSE -- теперь НЕ используется
                                 ) AS Info
