@@ -87,7 +87,9 @@ type
     //***19.08.16
     AMOUNTORD: Currency;    // Кол-во заявка
     //***03.06.19
-    PDKINDID: Integer;      // //Тип срок/не срок
+    PDKINDID: Integer;      // Тип срок/не срок
+    //***24.06.19
+    PRICEPD: Currency;      // Отпускная цена согласно партии
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -187,7 +189,7 @@ type
     procedure SaveUserSettings;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
-    procedure SaveGoodsAnalog;
+//    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
@@ -420,7 +422,7 @@ begin
       //Получение остатков по партиям
       if not gc_User.Local then SaveGoodsExpirationDate;
       //Получение справочника аналогов
-      if not gc_User.Local then SaveGoodsAnalog;
+//      if not gc_User.Local then SaveGoodsAnalog;
       // Отправка сообщения приложению про надобность обновить остатки из файла
       PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
       // Меняем хинт
@@ -499,7 +501,7 @@ begin   //yes
         //Получение остатков по партиям
         if not gc_User.Local then SaveGoodsExpirationDate;
         //Получение справочника аналогов
-        if not gc_User.Local then SaveGoodsAnalog;
+//        if not gc_User.Local then SaveGoodsAnalog;
 
         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
         // Вывод уведомления сервиса
@@ -1353,6 +1355,8 @@ begin
                     AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
                     // ***03.06.19
                     PDKINDID := FieldByName('PDKINDID').AsInteger;
+                    // ***24.06.19
+                    PRICEPD := FieldByName('PRICEPD').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1382,7 +1386,7 @@ begin
                 dsdSave.Params.AddParam('inId', ftInteger, ptInput, Head.ID);
                 dsdSave.Params.AddParam('outState', ftInteger, ptOutput, Null);
                 dsdSave.Execute(False, False);
-                if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then // проведен
+                if (Head.ID > 0) and (VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2') then // проведен
                 Begin
                   Add_Log('CheckState: Чек '+ IntToStr(Head.ID) +'уже проведен');
                   Head.SAVE := True;
@@ -1413,7 +1417,7 @@ begin
                 else
                 // Если не проведен
                 Begin
-                  if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3' then // Удален
+                  if (Head.ID > 0) and (VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3') then // Удален
                   Begin
                     dsdSave.StoredProcName := 'gpUnComplete_Movement_Check';
                     dsdSave.OutputType := otResult;
@@ -1425,7 +1429,8 @@ begin
                   dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
                   dsdSave.OutputType := otResult;
                   dsdSave.Params.Clear;
-                  dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID);
+                  if Head.ID > 0 then dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID)
+                  else dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
                   dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
                   dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
                   dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
@@ -1515,6 +1520,8 @@ begin
                   // dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
                   // ***03.06.19
                   dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Null);
+                  // ***24.06.19
+                  dsdSave.Params.AddParam('inPricePartionDate', ftFloat, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1536,6 +1543,8 @@ begin
                     // dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
                     // ***03.06.19
                     dsdSave.ParamByName('inPartionDateKindID').Value := Body[I].PDKINDID;
+                    // ***24.06.19
+                    dsdSave.ParamByName('inPricePartionDate').Value := Body[I].PRICEPD;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //
@@ -2130,46 +2139,46 @@ begin
 end;
 
 //Получение справочника аналогов
-procedure TMainCashForm2.SaveGoodsAnalog;
-var
-  sp : TdsdStoredProc;
-  ds : TClientDataSet;
-begin
-  tiServise.Hint := 'Получение аналогов товаров';
-  sp := TdsdStoredProc.Create(nil);
-  try
-    try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
-
-        sp.StoredProcName := 'gpSelect_Object_GoodsAnalog';
-        sp.Params.Clear;
-        sp.Execute;
-        Add_Log('Start MutexGoodsAnalog');
-        WaitForSingleObject(MutexGoodsAnalog, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-        try
-          SaveLocalData(ds,GoodsAnalog_lcl);
-        finally
-          Add_Log('End MutexGoodsAnalog');
-          ReleaseMutex(MutexGoodsAnalog);
-        end;
-
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        Add_Log('SaveGoodsAnalog Exception: ' + E.Message);
-        Exit;
-      end;
-    end;
-  finally
-    freeAndNil(sp);
-  end;
-end;
+//procedure TMainCashForm2.SaveGoodsAnalog;
+//var
+//  sp : TdsdStoredProc;
+//  ds : TClientDataSet;
+//begin
+//  tiServise.Hint := 'Получение аналогов товаров';
+//  sp := TdsdStoredProc.Create(nil);
+//  try
+//    try
+//      ds := TClientDataSet.Create(nil);
+//      try
+//        sp.OutputType := otDataSet;
+//        sp.DataSet := ds;
+//
+//        sp.StoredProcName := 'gpSelect_Object_GoodsAnalog';
+//        sp.Params.Clear;
+//        sp.Execute;
+//        Add_Log('Start MutexGoodsAnalog');
+//        WaitForSingleObject(MutexGoodsAnalog, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+//        try
+//          SaveLocalData(ds,GoodsAnalog_lcl);
+//        finally
+//          Add_Log('End MutexGoodsAnalog');
+//          ReleaseMutex(MutexGoodsAnalog);
+//        end;
+//
+//      finally
+//        ds.free;
+//      end;
+//    except
+//      on E: Exception do
+//      begin
+//        Add_Log('SaveGoodsAnalog Exception: ' + E.Message);
+//        Exit;
+//      end;
+//    end;
+//  finally
+//    freeAndNil(sp);
+//  end;
+//end;
 
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;

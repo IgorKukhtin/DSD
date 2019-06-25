@@ -887,11 +887,11 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
-        object MainisGoodsAnalogName: TcxGridDBColumn
+        object MainisGoodsAnalog: TcxGridDBColumn
           Caption = #1040#1085#1072#1083#1086#1075#1080
-          DataBinding.FieldName = 'GoodsAnalogName'
+          DataBinding.FieldName = 'GoodsAnalog'
+          OnGetProperties = MainisGoodsAnalogGetProperties
           HeaderAlignmentHorz = taCenter
-          Options.Editing = False
           Width = 65
         end
         object MainisPartionDateKindName: TcxGridDBColumn
@@ -901,11 +901,11 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 60
         end
-        object MainPartionDateDiscount: TcxGridDBColumn
-          Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1089#1088#1086#1082#1091
-          DataBinding.FieldName = 'PartionDateDiscount'
+        object MainPricePartionDate: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1089#1088#1086#1082#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'PricePartionDate'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
+          Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -1194,9 +1194,6 @@ inherited MainCashForm2: TMainCashForm2
         Top = 0
         Properties.MaxLength = 8
         TabOrder = 0
-        OnExit = edPromoCodeExit
-        OnKeyDown = edPromoCodeKeyDown
-        OnKeyPress = edPromoCodeKeyPress
         Width = 80
       end
     end
@@ -1826,11 +1823,14 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 11
     Visible = False
+    DesignSize = (
+      820
+      21)
     object Label19: TLabel
       Left = 1
       Top = 1
       Width = 186
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1060#1080#1083#1100#1090#1088' '#1087#1086' '#1072#1085#1072#1083#1086#1075#1091' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1839,10 +1839,11 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label20: TLabel
-      Left = 500
-      Top = 2
+      Left = 211
+      Top = 1
       Width = 40
       Height = 13
       Align = alCustom
@@ -1855,14 +1856,35 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object edAnalogFilter: TcxTextEdit
-      Left = 567
+      Left = 257
       Top = 0
-      Properties.MaxLength = 8
+      Properties.MaxLength = 0
+      Properties.OnChange = edAnalogFilterPropertiesChange
       TabOrder = 0
-      OnExit = edPromoCodeExit
-      OnKeyDown = edPromoCodeKeyDown
-      OnKeyPress = edPromoCodeKeyPress
-      Width = 214
+      OnExit = edAnalogFilterExit
+      Width = 524
+    end
+    object ProgressBar1: TProgressBar
+      Left = 719
+      Top = 9
+      Width = 57
+      Height = 9
+      Anchors = [akTop, akRight]
+      BarColor = clMedGray
+      TabOrder = 1
+      Visible = False
+    end
+    object cxButton7: TcxButton
+      Left = 787
+      Top = 1
+      Width = 32
+      Height = 19
+      Align = alRight
+      OptionsImage.ImageIndex = 52
+      OptionsImage.Images = dmMain.ImageList
+      TabOrder = 2
+      TabStop = False
+      OnClick = cxButton7Click
     end
   end
   object pnlHelsiError: TPanel [12]
@@ -3037,7 +3059,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actGoodsAnalogChoose: TAction
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1072#1085#1072#1083#1086#1075#1080' '#1089' '#1074#1099#1073#1086#1088#1086#1084' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1072#1085#1077#1083#1100' '#1092#1080#1083#1100#1090#1088#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072' '#1072#1085#1072#1083#1086#1075#1086#1074
       ShortCut = 49217
       OnExecute = actGoodsAnalogChooseExecute
     end
@@ -3166,7 +3188,7 @@ inherited MainCashForm2: TMainCashForm2
         ColorValueList = <>
       end
       item
-        ColorColumn = MainPartionDateDiscount
+        ColorColumn = MainPricePartionDate
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = MainColor_calc
         ColorValueList = <>
@@ -3758,7 +3780,7 @@ inherited MainCashForm2: TMainCashForm2
         Size = 100
       end
       item
-        Name = 'PartionDateDiscount'
+        Name = 'PricePartionDate'
         DataType = ftFloat
       end
       item
@@ -4310,8 +4332,8 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataAMOUNTMON: TFloatField
       FieldName = 'AMOUNTMON'
     end
-    object MemDataPDDISCOUNT: TFloatField
-      FieldName = 'PDDISCOUNT'
+    object MemDataPricePD: TFloatField
+      FieldName = 'PRICEPD'
     end
     object MemDataCOLORCALC: TIntegerField
       FieldName = 'COLORCALC'
@@ -4635,8 +4657,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 768
-    Top = 168
+    Left = 752
+    Top = 128
   end
   object spDelete_AccommodationAllID: TdsdStoredProc
     StoredProcName = 'gpDelete_Cash_AccommodationAllId'
@@ -4758,5 +4780,22 @@ inherited MainCashForm2: TMainCashForm2
     OnTimer = TimerDroppedDownTimer
     Left = 472
     Top = 103
+  end
+  object TimerAnalogFilter: TTimer
+    Enabled = False
+    Interval = 50
+    OnTimer = TimerAnalogFilterTimer
+    Left = 528
+    Top = 176
+  end
+  object cxEditRepository1: TcxEditRepository
+    Left = 304
+    Top = 264
+    PixelsPerInch = 96
+    object cxEditRepository1BlobItem1: TcxEditRepositoryBlobItem
+      Properties.BlobEditKind = bekMemo
+      Properties.BlobPaintStyle = bpsText
+      Properties.ReadOnly = True
+    end
   end
 end

@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , UserId Integer, UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
-
+             , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
+             , BarCodeBoxId Integer, BarCodeBoxName TVarChar
               )
 AS
 $BODY$
@@ -64,6 +65,10 @@ BEGIN
 
              , 0                     AS DocumentKindId
              , CAST ('' as TVarChar) AS DocumentKindName
+             , 0                     AS GoodsTypeKindId
+             , CAST ('' as TVarChar) AS GoodsTypeKindName
+             , 0                     AS BarCodeBoxId
+             , CAST ('' as TVarChar) AS BarCodeBoxName
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -100,6 +105,10 @@ BEGIN
 
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
+             , Object_GoodsTypeKind.Id         AS GoodsTypeKindId
+             , Object_GoodsTypeKind.ValueData  AS GoodsTypeKindName
+             , Object_BarCodeBox.Id            AS BarCodeBoxId
+             , Object_BarCodeBox.ValueData     AS BarCodeBoxName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -155,6 +164,16 @@ BEGIN
                                          ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsTypeKind
+                                         ON MovementLinkObject_GoodsTypeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsTypeKind.DescId = zc_MovementLinkObject_GoodsTypeKind()
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = MovementLinkObject_GoodsTypeKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BarCodeBox
+                                         ON MovementLinkObject_BarCodeBox.MovementId = Movement.Id
+                                        AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
+            LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingProduction();

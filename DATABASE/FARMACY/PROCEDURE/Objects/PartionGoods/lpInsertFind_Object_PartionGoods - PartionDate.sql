@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime, TFloat, TFloat);
 -- DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TDateTime, Integer, TFloat, TFloat);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, TDateTime, Integer, Integer, TFloat, TFloat);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, TDateTime, Integer, Integer, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
     IN inMovementId       Integer,   -- Документ "Приход от поставщика"
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
     IN inUnitId           Integer,   -- Подразделение
     IN inGoodsId          Integer,   -- товар
     IN inChangePercentMin TFloat,    -- % скидки(срок меньше месяца)
-    IN inChangePercent    TFloat     -- % скидки(срок от 1 мес до 6 мес)
+    IN inChangePercent    TFloat,    -- % скидки(срок от 1 мес до 6 мес)
+    IN inPriceWithVAT     TFloat     -- Цена закупки с НДС
 )
 RETURNS Integer
 AS
@@ -177,6 +179,9 @@ BEGIN
 
          -- сохранили - % скидки(срок от 1 мес до 6 мес)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Value(), vbPartionGoodsId, inChangePercent);
+         
+         -- сохранили - Цена закупки с НДС
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_PriceWithVAT(), vbPartionGoodsId, inPriceWithVAT);
 
          -- сохранили - Партия документа Срок
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_MovementId(), vbPartionGoodsId, inMovementId_send);
@@ -191,6 +196,8 @@ BEGIN
          -- сохранили - % скидки(срок от 1 мес до 6 мес)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Value(), vbPartionGoodsId, inChangePercent);
 
+         -- сохранили - Цена закупки с НДС
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_PriceWithVAT(), vbPartionGoodsId, inPriceWithVAT);
      END IF;
 
      -- Возвращаем значение

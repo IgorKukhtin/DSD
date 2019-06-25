@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
+             , BarCodeBoxId Integer, BarCodeBoxName TVarChar
 
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , GoodsCode Integer, GoodsName TVarChar
@@ -125,7 +127,11 @@ BEGIN
 
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
-
+             , Object_GoodsTypeKind.Id         AS GoodsTypeKindId
+             , Object_GoodsTypeKind.ValueData  AS GoodsTypeKindName
+             , Object_BarCodeBox.Id            AS BarCodeBoxId
+             , Object_BarCodeBox.ValueData     AS BarCodeBoxName
+             
              , MIDate_StartBegin.ValueData  AS StartBegin
              , MIDate_EndBegin.ValueData    AS EndBegin
              , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
@@ -223,6 +229,16 @@ BEGIN
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsTypeKind
+                                         ON MovementLinkObject_GoodsTypeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsTypeKind.DescId = zc_MovementLinkObject_GoodsTypeKind()
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = MovementLinkObject_GoodsTypeKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BarCodeBox
+                                         ON MovementLinkObject_BarCodeBox.MovementId = Movement.Id
+                                        AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
+            LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
+
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -317,19 +333,19 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             
-                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                             ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
-                                 LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
-                                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
-                                                                       AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
-                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                  ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
-                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                 LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                             ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
-                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                  AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                        ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
 
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;

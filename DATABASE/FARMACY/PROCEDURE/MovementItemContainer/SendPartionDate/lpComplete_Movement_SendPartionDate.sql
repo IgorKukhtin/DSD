@@ -76,10 +76,10 @@ BEGIN
                                            , MovementId_in Integer, PartionId_in Integer
                                            , PartionGoodsId Integer
                                            , ExpirationDate TDateTime
-                                           , ChangePercentMin TFloat, ChangePercent TFloat
+                                           , PriceWithVAT TFloat, ChangePercentMin TFloat, ChangePercent TFloat
                                             ) ON COMMIT DROP;
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, ChangePercentMin, ChangePercent)
+     INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercent)
         SELECT MovementItem.Id                    AS MovementItemId
              , MovementItem.ObjectId              AS GoodsId
              , CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END AS Amount
@@ -90,6 +90,8 @@ BEGIN
              , 0                                  AS PartionGoodsId
                -- Дата "срок годности"
              , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+               -- Цена с НДС
+             , MIFloat_PriceWithVAT.ValueData     AS PriceWithVAT
                -- % скидки(срок меньше месяца)
              , CASE WHEN MIFloat_ChangePercentMin.ValueData <> 0 THEN MIFloat_ChangePercentMin.ValueData
                     WHEN MF_ChangePercentMin.ValueData      <> 0 THEN MF_ChangePercentMin.ValueData
@@ -128,6 +130,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                       AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
             INNER JOIN ContainerLinkObject AS CLO_MI
                                            ON CLO_MI.ContainerId = MIFloat_ContainerId.ValueData :: Integer
                                           AND CLO_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
@@ -159,6 +164,8 @@ BEGIN
                                                                                       , inChangePercentMin:= _tmpItem_PartionDate.ChangePercentMin
                                                                                         -- % скидки на срок от 1 мес. до 6 мес.
                                                                                       , inChangePercent   := _tmpItem_PartionDate.ChangePercent
+                                                                                        -- Цена закупки с НДС
+                                                                                      , inPriceWithVAT    := _tmpItem_PartionDate.PriceWithVAT
                                                                                        );
      -- элементы - zc_Container_CountPartionDate
      UPDATE _tmpItem_PartionDate SET ContainerId = lpInsertFind_Container (inContainerDescId   := zc_Container_CountPartionDate()
@@ -212,7 +219,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 21.06.19                                                       *
  15.08.18         *
 */
 

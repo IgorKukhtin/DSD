@@ -213,10 +213,11 @@ BEGIN
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
                                             ELSE 0
-                                       END                                AS PartionDateKindId
+                                       END                                    AS PartionDateKindId
 
                                      , MIFloat_MovementId.ValueData ::Integer AS MovementId_Income
-                                     , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+                                     , MIDate_ExpirationDate.ValueData        AS ExpirationDate
+                                     , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT
                                      , COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd())  AS ExpirationDate_in
                                      , MovementItem.isErased              AS isErased
                                 FROM MovementItem
@@ -233,6 +234,10 @@ BEGIN
                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                                ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
                                     -- находим срок годности из прихода
                                     LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
@@ -284,6 +289,7 @@ BEGIN
                  , COALESCE (MI_Child.ParentId, 0)  AS ParentId
                  , MI_Child.GoodsId AS GoodsId
                  , MI_Child.ExpirationDate    ::TDateTime
+                 , MI_Child.PriceWithVAT 
                  , MI_Child.ExpirationDate_in ::TDateTime
                  , MI_Child.Amount            ::TFloat AS Amount
                  , tmpCountPartionDate.Amount ::TFloat AS AmountPartionDate

@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
+             , BarCodeBoxId Integer, BarCodeBoxName TVarChar
               )
 AS
 $BODY$
@@ -78,6 +80,12 @@ BEGIN
 
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
+
+             , Object_GoodsTypeKind.Id         AS GoodsTypeKindId
+             , Object_GoodsTypeKind.ValueData  AS GoodsTypeKindName
+
+             , Object_BarCodeBox.Id            AS BarCodeBoxId
+             , Object_BarCodeBox.ValueData     AS BarCodeBoxName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
@@ -139,6 +147,15 @@ BEGIN
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsTypeKind
+                                         ON MovementLinkObject_GoodsTypeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsTypeKind.DescId = zc_MovementLinkObject_GoodsTypeKind()
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = MovementLinkObject_GoodsTypeKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BarCodeBox
+                                         ON MovementLinkObject_BarCodeBox.MovementId = Movement.Id
+                                        AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
+            LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -157,4 +174,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingProduction (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_WeighingProduction (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inJuridicalBasisId :=0, inSession:= zfCalc_UserAdmin())

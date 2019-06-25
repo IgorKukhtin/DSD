@@ -76,6 +76,7 @@ type
     procedure LoadGoodsTypeKindFormTest;
     procedure LoadGoodsPlatformFormTest;
     procedure LoadGoodsSeparateFormTest;
+    procedure LoadGoodsScaleCehFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -539,6 +540,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSeparateEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSeparateEditForm');
 end;
+
+procedure TLoadFormTest.LoadGoodsScaleCehFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsScaleCehForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsScaleCehForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsScaleCehEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsScaleCehEditForm');
+end;
+
 procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingTreeForm'));
@@ -3146,11 +3156,17 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
+  }
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
+
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;

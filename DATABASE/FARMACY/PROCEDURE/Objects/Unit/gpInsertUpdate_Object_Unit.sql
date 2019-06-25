@@ -71,8 +71,8 @@ BEGIN
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
-   if COALESCE((SELECT FROM ObjectBoolean FROM ObjectBoolean.DescId = zc_ObjectBoolean_Unit_DividePartionDate() and ObjectBoolean.ObjectId = ioId), False) <> 
-     inDividePartionDate)
+   if COALESCE((SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Unit_DividePartionDate() and 
+      ObjectBoolean.ObjectId = ioId), False) <> inDividePartionDate
      AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
       RAISE EXCEPTION 'Ошибка.Изменение признака <Разбивать товар по партиям на кассах> разрешено только администратору.';   

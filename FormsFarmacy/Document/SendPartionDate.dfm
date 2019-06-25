@@ -3,29 +3,27 @@ inherited SendPartionDateForm: TSendPartionDateForm
   ClientHeight = 546
   ClientWidth = 1048
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitLeft = -275
-  ExplicitTop = -124
   ExplicitWidth = 1064
-  ExplicitHeight = 581
+  ExplicitHeight = 585
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 133
     Width = 1048
-    Height = 423
-    ExplicitTop = 123
+    Height = 413
+    ExplicitTop = 133
     ExplicitWidth = 1048
-    ExplicitHeight = 423
-    ClientRectBottom = 423
+    ExplicitHeight = 413
+    ClientRectBottom = 413
     ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1048
-      ExplicitHeight = 399
+      ExplicitHeight = 389
       inherited cxGrid: TcxGrid
         Width = 1048
-        Height = 220
+        Height = 210
         ExplicitWidth = 1048
-        ExplicitHeight = 220
+        ExplicitHeight = 210
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -265,7 +263,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 228
+        Top = 218
         Width = 1048
         Height = 171
         Align = alBottom
@@ -431,6 +429,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Options.Editing = False
             Width = 55
           end
+          object cxGridDBTableView1Column1: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -438,7 +444,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 220
+        Top = 210
         Width = 1048
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -449,10 +455,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
   end
   inherited DataPanel: TPanel
     Width = 1048
-    Height = 97
+    Height = 107
     TabOrder = 3
     ExplicitWidth = 1048
-    ExplicitHeight = 97
+    ExplicitHeight = 107
     inherited edInvNumber: TcxTextEdit
       Left = 9
       Top = 22
@@ -597,6 +603,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Properties.ReadOnly = False
       TabOrder = 19
       Width = 142
+    end
+    object cxLabel4: TcxLabel
+      Left = 9
+      Top = 91
+      Caption = 
+        #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' ('#1089#1088#1086#1082' '#1086#1090' 1-6 '#1084#1077#1089'.) '#1079#1072' 100% '#1073#1077#1088#1077#1090#1089#1103' '#1090#1086#1074#1072#1088#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072'.' +
+        ' '#1054#1090' '#1085#1077#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1087#1088#1086#1094#1077#1085#1090' '#1080' '#1074#1099#1095#1080#1090#1072#1077#1090#1089#1103' '#1080#1079' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.  ' +
+        ' '#1044#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1077#1085#1077#1077' '#1084#1077#1089#1103#1094#1072' '#1087#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.'
     end
   end
   object cxLabel3: TcxLabel [2]

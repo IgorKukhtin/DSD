@@ -21,7 +21,7 @@ RETURNS TABLE (
     AccommodationId Integer,
     AccommodationName TVarChar,
     AmountMonth TFloat,
-    PartionDateDiscount TFloat,
+    PricePartionDate TFloat,
     Color_calc Integer
 )
 AS
@@ -41,7 +41,7 @@ $BODY$
    DECLARE vbDate180  TDateTime;
    DECLARE vbDate30   TDateTime;
 
-   DECLARE vbPartion   boolean;
+   DECLARE vbDividePartionDate   boolean;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -84,7 +84,20 @@ BEGIN
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
     vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
 
-    vbPartion := False;
+    IF EXISTS(SELECT FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
+              WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
+                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate())
+    THEN
+
+      SELECT COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)
+      INTO vbDividePartionDate
+      FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
+      WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
+        AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate();
+
+    ELSE
+      vbDividePartionDate := False;
+    END IF;
 
     -- ќбновили дату последнего обращени€ по сессии
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -104,6 +117,8 @@ BEGIN
                            , Reserved  TFloat
                            , NewRow    Boolean
                            , AccommodationId Integer
+                           , PartionDateDiscount TFloat
+                           , PriceWithVAT TFloat
                            , Color_calc Integer) ON COMMIT DROP;
 
     -- ƒанные
@@ -172,68 +187,86 @@ BEGIN
                              )
 
           -- ќстатки по срокам
-       , tmpPDContainer AS (SELECT Container.Id,
-                                   Container.ObjectId,
-                                   Container.Amount                                        AS Amount,
-                                   ReserveContainer.Amount                                 AS Reserve
-                            FROM Container
-                                 LEFT OUTER JOIN ReserveContainer ON ReserveContainer.ContainerID = Container.Id
+       , tmpPDContainerAll AS (SELECT Container.Id,
+                                     Container.ObjectId,
+                                     Container.Amount,
+                                     ContainerLinkObject.ObjectId                       AS PartionGoodsId,
+                                     ReserveContainer.Amount                            AS Reserve
+                              FROM Container
+
+                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                  LEFT OUTER JOIN ReserveContainer ON ReserveContainer.ContainerID = Container.Id
+
                             WHERE Container.DescId = zc_Container_CountPartionDate()
                               AND Container.WhereObjectId = vbUnitId
                               AND (Container.Amount <> 0 OR COALESCE(ReserveContainer.Amount, 0) <> 0)
-                              AND vbPartion = True)
-       , tmpPDCLO AS (SELECT CLO.*
-                    FROM ContainerlinkObject AS CLO
-                    WHERE CLO.ContainerId IN (SELECT DISTINCT tmpPDContainer.Id FROM tmpPDContainer)
-                      AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                   )
-       , tmpPDObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpPDCLO.ObjectId FROM tmpPDCLO))
+                              AND vbDividePartionDate = True)
+       , tmpPDContainer AS (SELECT Container.Id,
+                                   Container.ObjectId,
+                                   Container.Amount,
+                                   ObjectDate_ExpirationDate.ValueData                           AS ExpirationDate,
+                                   COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin,
+                                   COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent,
+                                   COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT,
+                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()  -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- ћеньше 1 мес€ца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- ћеньше 6 мес€ца
+                                        ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId,          -- ¬остановлен с просрочки
 
-       , tmpPDMIDate AS (SELECT MovementItemDate.*
-                       FROM MovementItemDate
-                       WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpPDObject.ObjectCode FROM tmpPDObject)
-                         AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
-                      )
-       , tmpPDMIIncomeFind AS (SELECT MIFloat_MovementItem.MovementItemId        AS MovementItemId
-                                    , MIFloat_MovementItem.ValueData::Integer    AS ID
-                               FROM MovementItemFloat AS MIFloat_MovementItem
-                               WHERE MIFloat_MovementItem.MovementItemId IN (SELECT DISTINCT tmpPDObject.ObjectCode FROM tmpPDObject)
-                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId())
-       , tmpPDMIDateFind AS (SELECT MovementItemDate.*
-                             FROM MovementItemDate
-                             WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpPDMIIncomeFind.ID FROM tmpPDMIIncomeFind)
-                               AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
-                            )
+                                   Container.Reserve                                             AS Reserve
+                            FROM tmpPDContainerAll AS Container
 
-       , tmpPDExpirationDate AS (SELECT tmpPDCLO.ContainerId, COALESCE(MIDate_ExpirationDateFind.ValueData, MIDate_ExpirationDate.ValueData) AS ExpirationDate
-                                 FROM tmpPDCLO
-                                      LEFT JOIN tmpPDObject ON tmpPDObject.Id = tmpPDCLO.ObjectId
-                                      LEFT JOIN tmpPDMIDate AS MIDate_ExpirationDate
-                                                            ON MIDate_ExpirationDate.MovementItemId = tmpPDObject.ObjectCode
-                                      LEFT JOIN tmpPDMIIncomeFind ON tmpPDMIIncomeFind.MovementItemId = tmpPDObject.ObjectCode
-                                      LEFT JOIN tmpPDMIDateFind AS MIDate_ExpirationDateFind
-                                                            ON MIDate_ExpirationDateFind.MovementItemId = tmpPDMIIncomeFind.Id
-                                )
+                                 LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
+
+                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                      ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueMin
+                                                       ON ObjectFloat_PartionGoods_ValueMin.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_ValueMin.DescId = zc_ObjectFloat_PartionGoods_ValueMin()
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
+                                                        ON ObjectFloat_PartionGoods_Value.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_Value.DescId = zc_ObjectFloat_PartionGoods_Value()
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
+                                                        ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
+                                  )
+       , tmpPDPriceWithVAT AS (SELECT ROW_NUMBER()OVER(PARTITION BY Container.ObjectId, Container.PartionDateKindId ORDER BY Container.Id DESC) as ORD
+                                    , Container.ObjectId
+                                    , Container.PartionDateKindId
+                                    , Container.PriceWithVAT
+                               FROM tmpPDContainer AS Container
+                               WHERE COALESCE (Container.PriceWithVAT , 0) <> 0
+                               )
        , tmpPDGoodsRemains AS (SELECT Container.ObjectId
-                                    , Object_PartionDateKind.Id                                         AS PartionDateKindId
+                                    , Container.PartionDateKindId                                       AS PartionDateKindId
                                     , SUM (Container.Amount)                                            AS Remains
                                     , SUM (Container.Reserve)                                           AS Reserve
-                                    , MIN (tmpPDExpirationDate.ExpirationDate)::TDateTime               AS MinExpirationDate
+                                    , MIN (Container.ExpirationDate)::TDateTime                         AS MinExpirationDate
+                                    , MAX (Container.PriceWithVAT)                                      AS PriceWithVAT
+
+                                    , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
+                                                THEN 0
+                                                WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_6()
+                                                THEN Container.Percent
+                                                ELSE Container.PercentMin END)::TFloat                  AS PartionDateDiscount
                                FROM tmpPDContainer AS Container
 
-                                    LEFT JOIN tmpPDExpirationDate ON tmpPDExpirationDate.Containerid = Container.Id
-
-                                    LEFT OUTER JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id =
-                                         CASE WHEN tmpPDExpirationDate.ExpirationDate <= vbDate0 THEN zc_Enum_PartionDateKind_0() ELSE       -- просрочено
-                                         CASE WHEN tmpPDExpirationDate.ExpirationDate <= vbDate30 THEN zc_Enum_PartionDateKind_1() ELSE      -- ћеньше 1 мес€ца
-                                         CASE WHEN tmpPDExpirationDate.ExpirationDate <= vbDate180 THEN zc_Enum_PartionDateKind_6() ELSE     -- ћеньше 6 мес€ца
-                                         NULL END END END
+                                    LEFT JOIN tmpPDPriceWithVAT ON tmpPDPriceWithVAT.ObjectId = Container.ObjectId
+                                                               AND tmpPDPriceWithVAT.PartionDateKindId = Container.PartionDateKindId
+                                                               AND tmpPDPriceWithVAT.Ord = 1
 
                                GROUP BY Container.ObjectId
-                                      , Object_PartionDateKind.Id
-                              )
+                                      , Container.PartionDateKindId
+                               )
        , tmpPDGoodsRemainsAll AS (SELECT tmpPDGoodsRemains.ObjectId
                                        , SUM (tmpPDGoodsRemains.Remains)                                                         AS Remains
+                                       , SUM (tmpPDGoodsRemains.Reserve)                                                         AS Reserve
                                   FROM tmpPDGoodsRemains
                                   GROUP BY tmpPDGoodsRemains.ObjectId
                                  )
@@ -268,41 +301,47 @@ BEGIN
         (
             SELECT MovementItem.ObjectId                       AS GoodsId
                  , Sum(MovementItem.Amount)::TFloat            AS Amount
-                 , MILinkObject_PartionDateKind.ObjectId AS PartionDateKindId
             FROM tmpMov
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
+                                                AND MovementItem.Amount    <> 0
 
-                         LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
-                                                          ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.MovementId
-                                                         AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
-            GROUP BY MovementItem.ObjectId, MILinkObject_PartionDateKind.ObjectId
+            GROUP BY MovementItem.ObjectId
          )
           -- Ќепосредственно остатки
        , GoodsRemains AS (SELECT Container.ObjectId
-                               , Container.Remains - COALESCE(tmpPDGoodsRemainsAll.Remains, 0)  AS Remains
-                               , NULL::TFloat                                                   AS Reserve
+                               , Container.Remains - COALESCE(tmpPDGoodsRemainsAll.Remains, 0)                   AS Remains
+                               , COALESCE(Reserve.Amount, 0) - COALESCE(tmpPDGoodsRemainsAll.Reserve, 0)::TFloat AS Reserve
                                , Container.MinExpirationDate
-                               , NULL                                                           AS PartionDateKindId
+                               , NULL                                                                            AS PartionDateKindId
+                               , NULL                                                                            AS PartionDateDiscount
+                               , NULL                                                                            AS PriceWithVAT
                           FROM tmpGoodsRemains AS Container
                                LEFT JOIN tmpPDGoodsRemainsAll ON tmpPDGoodsRemainsAll.ObjectId = Container.ObjectId
+                               LEFT JOIN Reserve ON Reserve.GoodsId = Container.ObjectId
                           UNION ALL
                           SELECT tmpPDGoodsRemains.ObjectId
                                , tmpPDGoodsRemains.Remains
                                , tmpPDGoodsRemains.Reserve
                                , tmpPDGoodsRemains.MinExpirationDate
                                , tmpPDGoodsRemains.PartionDateKindId
+                               , NULLIF (tmpPDGoodsRemains.PartionDateDiscount, 0)
+                               , tmpPDGoodsRemains.PriceWithVAT
                           FROM tmpPDGoodsRemains
                           UNION ALL
-                          SELECT Reserve.GoodsId                                                   AS GoodsId
-                               , 0::TFloat                                                         AS Remains
-                               , Reserve.Amount::TFloat                                            AS Reserved
-                               , Null::TDateTime                                                   AS MinExpirationDate
-                               , Reserve.PartionDateKindId                                         AS PartionDateKindId
+                          SELECT Reserve.GoodsId                                                       AS GoodsId
+                               , 0::TFloat                                                             AS Remains
+                               , (Reserve.Amount - COALESCE(tmpPDGoodsRemainsAll.Reserve, 0))::TFloat  AS Reserved
+                               , Null::TDateTime                                                       AS MinExpirationDate
+                               , NULL                                                                  AS PartionDateKindId
+                               , NULL                                                                  AS PartionDateDiscount
+                               , NULL                                                                  AS PriceWithVAT
                           FROM Reserve
                              LEFT OUTER JOIN tmpGoodsRemains ON Reserve.GoodsId = tmpGoodsRemains.ObjectId
-                          WHERE COALESCE(tmpGoodsRemains.ObjectId, 0) = 0 AND Reserve.Amount <> 0 
+                             LEFT OUTER JOIN tmpPDGoodsRemainsAll ON tmpPDGoodsRemainsAll.ObjectId = Reserve.GoodsId
+                          WHERE COALESCE(tmpGoodsRemains.ObjectId, 0) = 0
+                            AND (Reserve.Amount - COALESCE(tmpPDGoodsRemainsAll.Reserve, 0)) <> 0
                          )
                  -- состо€ние в сессии
       , SESSIONDATA AS (SELECT CashSessionSnapShot.ObjectId
@@ -313,6 +352,8 @@ BEGIN
                              , CashSessionSnapShot.MinExpirationDate
                              , CashSessionSnapShot.PartionDateKindId
                              , CashSessionSnapShot.AccommodationId
+                             , CashSessionSnapShot.PartionDateDiscount
+                             , CashSessionSnapShot.PriceWithVAT
                         FROM CashSessionSnapShot
                         WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                        )
@@ -369,15 +410,13 @@ BEGIN
 
     -- –≈«”Ћ№“ј“ - заливаем разницу
     INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MinExpirationDate, PartionDateKindId,
-                       MCSValue, Reserved, NewRow, AccommodationId, Color_calc)
+                       MCSValue, Reserved, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT, Color_calc)
        WITH tmpDiff AS (SELECT tmpPrice.ObjectId                                                 AS ObjectId
                              , tmpPrice.Price                                                    AS Price
                              , tmpPrice.MCSValue                                                 AS MCSValue
                              , COALESCE (GoodsRemains.Remains, 0)
-                                         - COALESCE(GoodsRemains.Reserve,0)
-                                         - COALESCE (Reserve.Amount,0)                           AS Remains
-                             , NULLIF (COALESCE(GoodsRemains.Reserve, 0) +
-                                       COALESCE(Reserve.Amount,0), 0)::TFloat                    AS Reserved
+                                         - COALESCE(GoodsRemains.Reserve,0)                      AS Remains
+                             , NULLIF (GoodsRemains.Reserve, 0)::TFloat                          AS Reserved
                              , CASE WHEN SESSIONDATA.ObjectId IS NULL
                                          THEN TRUE
                                      ELSE FALSE
@@ -385,75 +424,54 @@ BEGIN
                              , Accommodation.AccommodationId                                     AS AccommodationID
                              , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
                              , GoodsRemains.PartionDateKindId                                    AS PartionDateKindId
+                             , GoodsRemains.PartionDateDiscount                                  AS PartionDateDiscount
+                             , GoodsRemains.PriceWithVAT                                         AS PriceWithVAT
                         FROM GoodsRemains
                              LEFT JOIN tmpPrice ON tmpPrice.ObjectId = GoodsRemains.ObjectId
                              LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
                                                    AND COALESCE (SESSIONDATA.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
-                             LEFT JOIN RESERVE      ON RESERVE.GoodsId       = GoodsRemains.ObjectId
-                                                   AND COALESCE (RESERVE.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
                              LEFT JOIN AccommodationLincGoods AS Accommodation
                                                               ON Accommodation.UnitId = vbUnitId
                                                              AND Accommodation.GoodsId = GoodsRemains.ObjectId
                         WHERE COALESCE (tmpPrice.Price, 0)    <> COALESCE (SESSIONDATA.Price, 0)
                            OR COALESCE (tmpPrice.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
-                           OR COALESCE (GoodsRemains.Remains, 0) - COALESCE(GoodsRemains.Reserve,0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
-                           OR COALESCE(GoodsRemains.Reserve, 0) + COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
+                           OR COALESCE (GoodsRemains.Remains, 0) - COALESCE(GoodsRemains.Reserve,0) <> COALESCE (SESSIONDATA.Remains, 0)
+                           OR COALESCE(GoodsRemains.Reserve, 0) <> COALESCE (SESSIONDATA.Reserved, 0)
                            OR COALESCE (Accommodation.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
                            OR COALESCE (GoodsRemains.MinExpirationDate, zc_DateEnd()) <> COALESCE (SESSIONDATA.MinExpirationDate, zc_DateEnd())
                            OR COALESCE (GoodsRemains.PartionDateKindId,0) <> COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                           OR COALESCE (GoodsRemains.PartionDateDiscount,0) <> COALESCE (SESSIONDATA.PartionDateDiscount, 0)
+                           OR COALESCE (GoodsRemains.PriceWithVAT,0) <> COALESCE (SESSIONDATA.PriceWithVAT, 0)
                         UNION ALL
-                        SELECT
-                               Reserve.GoodsId                                                   AS GoodsId
-                             , tmpPrice.Price                                                    AS Price
-                             , tmpPrice.MCSValue                                                 AS MCSValue
-                             , (- Reserve.Amount)::TFloat                                        AS Remains
-                             , Reserve.Amount::TFloat                                            AS Reserved
+                        SELECT tmpPrice.ObjectId                                                       AS ObjectId
+                             , tmpPrice.Price                                                          AS Price
+                             , tmpPrice.MCSValue                                                       AS MCSValue
+                             , COALESCE(tmpPDGoodsRemainsAll.Reserve, 0) - COALESCE (Reserve.Amount,0) AS Remains
+                             , COALESCE (Reserve.Amount,0) - COALESCE(tmpPDGoodsRemainsAll.Reserve, 0) AS Reserved
                              , CASE WHEN SESSIONDATA.ObjectId IS NULL
                                          THEN TRUE
                                      ELSE FALSE
-                               END                                                               AS NewRow
-                             , Accommodation.AccommodationId                                     AS AccommodationID
-                             , Null::TDateTime                                                   AS MinExpirationDate
-                             , COALESCE (Reserve.PartionDateKindId, 0)                           AS PartionDateKindId
-                        FROM Reserve
-                             LEFT OUTER JOIN GoodsRemains ON Reserve.GoodsId = GoodsRemains.ObjectId
-                                                         AND COALESCE(Reserve.PartionDateKindId, 0) = COALESCE(GoodsRemains.PartionDateKindId, 0)
-                             LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
-                                                   AND COALESCE (SESSIONDATA.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
-                             LEFT JOIN tmpPrice ON tmpPrice.ObjectId = Reserve.GoodsId
-                             LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
-                                                                    ON Accommodation.UnitId = vbUnitId
-                                                                   AND Accommodation.GoodsId = Reserve.GoodsId
-                        WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0 AND Reserve.Amount <> 0 AND
-                           (COALESCE (tmpPrice.Price, 0)    <> COALESCE (SESSIONDATA.Price, 0)
-                           OR COALESCE (tmpPrice.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
-                           OR COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
-                           OR COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
-                           OR COALESCE (Accommodation.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
-                           OR COALESCE (GoodsRemains.PartionDateKindId,0) <> COALESCE (SESSIONDATA.PartionDateKindId, 0))
-                        UNION ALL
-                        SELECT tmpPrice.ObjectId                                                 AS ObjectId
-                             , tmpPrice.Price                                                    AS Price
-                             , tmpPrice.MCSValue                                                 AS MCSValue
-                             , COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount,0)  AS Remains
-                             , Reserve.Amount                                                    AS Reserved
-                             , CASE WHEN SESSIONDATA.ObjectId IS NULL
-                                         THEN TRUE
-                                     ELSE FALSE
-                               END                                                               AS NewRow
-                             , Accommodation.AccommodationId                                     AS AccommodationID
-                             , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
-                             , GoodsRemains.PartionDateKindId                                    AS PartionDateKindId
+                               END                                                                     AS NewRow
+                             , Accommodation.AccommodationId                                           AS AccommodationID
+                             , SESSIONDATA.MinExpirationDate                                          AS MinExpirationDate
+                             , SESSIONDATA.PartionDateKindId                                          AS PartionDateKindId
+                             , SESSIONDATA.PartionDateDiscount                                        AS PartionDateDiscount
+                             , SESSIONDATA.PriceWithVAT                                               AS PriceWithVAT
                         FROM SESSIONDATA
                              LEFT JOIN GoodsRemains  ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
                                                    AND COALESCE (GoodsRemains.PartionDateKindId, 0) = COALESCE (SESSIONDATA.PartionDateKindId,0)
+                             LEFT JOIN tmpPDGoodsRemainsAll ON tmpPDGoodsRemainsAll.ObjectId = SESSIONDATA.ObjectId
+                                                           AND  COALESCE (SESSIONDATA.PartionDateKindId,0) = 0
                              LEFT JOIN tmpPrice ON tmpPrice.ObjectId = SESSIONDATA.ObjectId
                              LEFT JOIN RESERVE      ON RESERVE.GoodsId       = SESSIONDATA.ObjectId
-                                                   AND COALESCE (RESERVE.PartionDateKindId,0) = COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                                                   AND COALESCE (SESSIONDATA.PartionDateKindId, 0) = 0
                              LEFT JOIN AccommodationLincGoods AS Accommodation
                                                               ON Accommodation.UnitId = vbUnitId
                                                              AND Accommodation.GoodsId = SESSIONDATA.ObjectId
                         WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0
+                          AND COALESCE(tmpPDGoodsRemainsAll.Reserve, 0) - COALESCE (Reserve.Amount,0) <> 0
+                          AND COALESCE (Reserve.Amount,0) - COALESCE(tmpPDGoodsRemainsAll.Reserve, 0) <> 0
+
                        )
        -- –≈«”Ћ№“ј“
        SELECT tmpDiff.ObjectId
@@ -467,6 +485,8 @@ BEGIN
             , tmpDiff.Reserved
             , tmpDiff.NewRow
             , tmpDiff.AccommodationID
+            , tmpDiff.PartionDateDiscount
+            , tmpDiff.PriceWithVAT
             , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
        FROM tmpDiff
             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDiff.ObjectId
@@ -478,13 +498,15 @@ BEGIN
 
     --ќбновл€ем данные в сессии
     UPDATE CashSessionSnapShot SET
-        Price             = _DIFF.Price
-      , Remains           = _DIFF.Remains
-      , MCSValue          = _DIFF.MCSValue
-      , Reserved          = _DIFF.Reserved
-      , AccommodationId   = _DIFF.AccommodationId
-      , MinExpirationDate = _DIFF.MinExpirationDate
-      , PartionDateKindId = COALESCE (_DIFF.PartionDateKindId, 0)
+        Price               = _DIFF.Price
+      , Remains             = _DIFF.Remains
+      , MCSValue            = _DIFF.MCSValue
+      , Reserved            = _DIFF.Reserved
+      , AccommodationId     = _DIFF.AccommodationId
+      , MinExpirationDate   = _DIFF.MinExpirationDate
+      , PartionDateKindId   = COALESCE (_DIFF.PartionDateKindId, 0)
+      , PartionDateDiscount = _DIFF.PartionDateDiscount
+      , PriceWithVAT        = _DIFF.PriceWithVAT
     FROM
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -493,7 +515,8 @@ BEGIN
     ;
 
     --доливаем те, что по€вились
-    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,MinExpirationDate,
+                                    AccommodationId,PartionDateDiscount,PriceWithVAT)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
@@ -503,12 +526,25 @@ BEGIN
        ,_DIFF.MCSValue
        ,_DIFF.Reserved
        ,_DIFF.MinExpirationDate
+       ,_DIFF.AccommodationId
+       ,_DIFF.PartionDateDiscount
+       ,_DIFF.PriceWithVAT
     FROM
         _DIFF
     WHERE
         _DIFF.NewRow = TRUE
     ;
 
+/*    --”дал€ем что ушло
+    DELETE FROM CashSessionSnapShot
+    USING _DIFF
+    WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
+      AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId
+      AND COALESCE (CashSessionSnapShot.PartionDateKindId, 0) = COALESCE (_DIFF.PartionDateKindId, 0)
+      AND COALESCE(_DIFF.Remains, 0) = 0
+      AND COALESCE(_DIFF.Reserved, 0) = 0
+    ;
+*/
 /*
     vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
 
@@ -550,69 +586,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
-              , tmpMovSendPartion AS (SELECT
-                                             Movement.Id                               AS Id
-                                           , MovementFloat_ChangePercent.ValueData     AS ChangePercent
-                                           , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
-                                      FROM Movement
 
-                                           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                                                   ON MovementFloat_ChangePercent.MovementId =  Movement.Id
-                                                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-
-                                           LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
-                                                                   ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
-                                                                  AND MovementFloat_ChangePercentMin.DescId = zc_MovementFloat_ChangePercentMin()
-
-                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-                                      WHERE Movement.DescId = zc_Movement_SendPartionDate()
-                                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                                        AND MovementLinkObject_Unit.ObjectId = vbUnitId
-                                      ORDER BY Movement.OperDate
-                                      LIMIT 1
-                                     )
-              , tmpMovItemSendPartion AS (SELECT
-                                                 MovementItem.ObjectId    AS GoodsId
-                                               , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                               , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
-
-                                          FROM MovementItem
-
-                                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                          AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
-                                                                           ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
-                                                                          AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
-
-                                          WHERE MovementItem.MovementId = (select tmpMovSendPartion.Id from tmpMovSendPartion)
-                                            AND MovementItem.DescId = zc_MI_Master()
-                                            AND (MIFloat_ChangePercent.ValueData is not Null OR MIFloat_ChangePercentMin.ValueData is not Null)
-
-                                         )
-              , tmpPDChangePercent AS (SELECT Object_PartionDateKind.Id           AS Id,
-                                              CASE Object_PartionDateKind.Id
-                                                   WHEN zc_Enum_PartionDateKind_0() THEN tmpMovSendPartion.ChangePercentMin
-                                                   WHEN zc_Enum_PartionDateKind_1() THEN tmpMovSendPartion.ChangePercentMin
-                                                   WHEN zc_Enum_PartionDateKind_6() THEN tmpMovSendPartion.ChangePercent END AS PartionDateDiscount
-                                       FROM Object AS Object_PartionDateKind
-                                            LEFT JOIN tmpMovSendPartion ON 1 = 1
-                                       WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                                       )
-
-              , tmpPDChangePercentGoods AS (SELECT Object_PartionDateKind.Id           AS Id
-                                                 , tmpMovItemSendPartion.GoodsId
-                                                 , CASE Object_PartionDateKind.Id
-                                                        WHEN zc_Enum_PartionDateKind_0() THEN tmpMovItemSendPartion.ChangePercentMin
-                                                        WHEN zc_Enum_PartionDateKind_1() THEN tmpMovItemSendPartion.ChangePercentMin
-                                                        WHEN zc_Enum_PartionDateKind_6() THEN tmpMovItemSendPartion.ChangePercent END AS PartionDateDiscount
-                                            FROM Object AS Object_PartionDateKind
-                                                 LEFT JOIN tmpMovItemSendPartion ON 1 = 1
-                                            WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                                           )
         SELECT
             _DIFF.ObjectId,
             _DIFF.GoodsCode,
@@ -623,20 +597,24 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             _DIFF.Reserved,
             _DIFF.MinExpirationDate,
             NULLIF (_DIFF.PartionDateKindId, 0),
-            Object_PartionDateKind.Name    AS PartionDateKindName,
+            Object_PartionDateKind.Name                              AS PartionDateKindName,
             _DIFF.NewRow,
             _DIFF.AccommodationId,
-            Object_Accommodation.ValueData AS AccommodationName,
-            Object_PartionDateKind.AmountMonth                       AS AmountMonth,
-            COALESCE(tmpPDChangePercentGoods.PartionDateDiscount,
-                     tmpPDChangePercent.PartionDateDiscount)::TFloat AS PartionDateDiscount,
+            Object_Accommodation.ValueData                           AS AccommodationName,
+            CASE WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_Good()
+                 THEN 7 ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
+            CASE _DIFF.PartionDateKindId
+                 WHEN zc_Enum_PartionDateKind_0() THEN ROUND(_DIFF.Price * (100.0 - _DIFF.PartionDateDiscount) / 100, 2)
+                 WHEN zc_Enum_PartionDateKind_1() THEN ROUND(_DIFF.Price * (100.0 - _DIFF.PartionDateDiscount) / 100, 2)
+                 WHEN zc_Enum_PartionDateKind_6() THEN
+                   CASE WHEN _DIFF.Price > COALESCE(_DIFF.PriceWithVAT, 0)
+                   THEN ROUND(_DIFF.Price - (_DIFF.Price - COALESCE(_DIFF.PriceWithVAT, 0)) * _DIFF.PartionDateDiscount / 100, 2)
+                   ELSE _DIFF.Price END
+                 ELSE NULL END::TFloat                                  AS PricePartionDate,
             _DIFF.Color_calc
         FROM _DIFF
             LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (_DIFF.PartionDateKindId, 0)
-            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
-            LEFT JOIN tmpPDChangePercent ON tmpPDChangePercent.Id = NULLIF (_DIFF.PartionDateKindId, 0)
-            LEFT JOIN tmpPDChangePercentGoods ON tmpPDChangePercentGoods.Id = NULLIF (_DIFF.PartionDateKindId, 0)
-                                            AND tmpPDChangePercentGoods.GoodsId = _DIFF.ObjectId;
+            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId;
 
 
 END;

@@ -3,7 +3,7 @@ object WeighingProductionForm: TWeighingProductionForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 462
-  ClientWidth = 1100
+  ClientWidth = 1250
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object WeighingProductionForm: TWeighingProductionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1100
+    Width = 1250
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1100
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -106,7 +107,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
-      Width = 105
+      Width = 102
     end
     object edMovementDescNumber: TcxTextEdit
       Left = 511
@@ -178,7 +179,7 @@ object WeighingProductionForm: TWeighingProductionForm
           Kind = bkEllipsis
         end>
       TabOrder = 18
-      Width = 157
+      Width = 146
     end
     object cxLabel14: TcxLabel
       Left = 109
@@ -216,7 +217,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 80
     end
     object edisIncome: TcxCheckBox
-      Left = 917
+      Left = 910
       Top = 62
       Caption = #1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
       Properties.ReadOnly = True
@@ -227,25 +228,28 @@ object WeighingProductionForm: TWeighingProductionForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1100
+    Width = 1250
     Height = 336
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1100
     ClientRectBottom = 336
-    ClientRectRight = 1100
+    ClientRectRight = 1250
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1100
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1100
+        Width = 1250
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1100
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -566,15 +570,15 @@ object WeighingProductionForm: TWeighingProductionForm
     Enabled = False
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 157
+    Width = 146
   end
   object cxLabel13: TcxLabel
-    Left = 922
+    Left = 910
     Top = 5
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit
-    Left = 922
+    Left = 910
     Top = 23
     Enabled = False
     Properties.Buttons = <
@@ -583,7 +587,7 @@ object WeighingProductionForm: TWeighingProductionForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 170
   end
   object edMovementDescName: TcxButtonEdit
@@ -598,6 +602,42 @@ object WeighingProductionForm: TWeighingProductionForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 122
+  end
+  object cxLabel15: TcxLabel
+    Left = 1086
+    Top = 5
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+  end
+  object edGoodsTypeKind: TcxButtonEdit
+    Left = 1086
+    Top = 23
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 160
+  end
+  object cxLabel16: TcxLabel
+    Left = 1086
+    Top = 45
+    Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
+  end
+  object edBarCodeBox: TcxButtonEdit
+    Left = 1086
+    Top = 62
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 160
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -738,6 +778,14 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateParams'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -818,6 +866,11 @@ object WeighingProductionForm: TWeighingProductionForm
     object bbOpenDocument: TdxBarButton
       Action = actUpdateDocument
       Category = 0
+    end
+    object bbUpdateParams: TdxBarButton
+      Action = macUpdateParams
+      Category = 0
+      ImageIndex = 43
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -944,6 +997,9 @@ object WeighingProductionForm: TWeighingProductionForm
       ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1102,6 +1158,79 @@ object WeighingProductionForm: TWeighingProductionForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object ExecuteDialogUpdateParams: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
+      ImageIndex = 55
+      FormName = 'TWeighingProductionParamEditForm'
+      FormNameParam.Value = 'TWeighingProductionParamEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inBarCodeBoxId'
+          Value = '0'
+          Component = GuidesBarCodeBox
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCodeBoxName'
+          Value = Null
+          Component = GuidesBarCodeBox
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsTypeKindId'
+          Value = '0'
+          Component = GuidesGoodsTypeKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsTypeKindName'
+          Value = ''
+          Component = GuidesGoodsTypeKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Param
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Param
+        end>
+      Caption = 'actExecStoredUpdateUnit'
+      ImageIndex = 55
+    end
+    object macUpdateParams: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateParams
+        end
+        item
+          Action = actUpdateParams
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
+      ImageIndex = 55
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1141,8 +1270,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 16
+    Left = 448
+    Top = 104
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1408,6 +1537,36 @@ object WeighingProductionForm: TWeighingProductionForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindId'
+        Value = Null
+        Component = GuidesGoodsTypeKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsTypeKindName'
+        Value = Null
+        Component = GuidesGoodsTypeKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxId'
+        Value = Null
+        Component = GuidesBarCodeBox
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCodeBoxName'
+        Value = Null
+        Component = GuidesBarCodeBox
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1593,8 +1752,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1008
-    Top = 16
+    Left = 960
+    Top = 24
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
@@ -1673,5 +1832,96 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     Left = 696
     Top = 64
+  end
+  object GuidesGoodsTypeKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsTypeKind
+    FormNameParam.Value = 'TGoodsTypeKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsTypeKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsTypeKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsTypeKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1160
+    Top = 8
+  end
+  object GuidesBarCodeBox: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBarCodeBox
+    FormNameParam.Value = 'TBarCodeBoxForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBarCodeBoxForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBarCodeBox
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBarCodeBox
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1168
+    Top = 56
+  end
+  object spUpdate_Param: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_WeighingProduction_Param'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCodeBoxId'
+        Value = '0'
+        Component = GuidesBarCodeBox
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsTypeKindId'
+        Value = '0'
+        Component = GuidesGoodsTypeKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 522
+    Top = 344
   end
 end

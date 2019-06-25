@@ -62,8 +62,8 @@ BEGIN
 
 
     -- остатки по подразделению
-    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate)
+    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
+          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate, PriceWithVAT)
           WITH
           -- просрочка
           tmpContainer_PartionDate AS (SELECT DISTINCT Container.ParentId AS ContainerId
@@ -94,6 +94,8 @@ BEGIN
                                      , tmp.GoodsId
                                      , tmp.Amount
                                      , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate        --
+                                     , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MovementItemId_Income
+                                     , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)  AS MovementItemMovementId_Income
                                 FROM tmpContainer_all AS tmp
                                    LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                  ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
@@ -108,7 +110,7 @@ BEGIN
                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
                                                                         -- AND 1=0
-     
+
                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
@@ -120,6 +122,8 @@ BEGIN
                                 , tmpContainer_term.GoodsId
                                 , tmpContainer_term.Amount
                                 , tmpContainer_term.ExpirationDate
+                                , ROUND(CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN MIFloat_Price.ValueData
+                                       ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) END, 2)::TFloat  AS PriceWithVAT
                            FROM (SELECT DISTINCT tmpContainer_term.GoodsId
                                  FROM tmpContainer_term
                                  -- !!!ограничили!!!
@@ -128,6 +132,19 @@ BEGIN
                                 LEFT JOIN tmpContainer_term        ON tmpContainer_term.GoodsId = tmpContainer.GoodsId
                                  -- !!!отбросили!!!
                                 LEFT JOIN tmpContainer_PartionDate ON tmpContainer_PartionDate.ContainerId = tmpContainer_term.ContainerId
+                                 -- закупочная цена
+                                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                            ON MIFloat_Price.MovementItemId = tmpContainer_term.MovementItemId_Income
+                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                          ON MovementBoolean_PriceWithVAT.MovementId = tmpContainer_term.MovementItemMovementId_Income
+                                                         AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                             ON MovementLinkObject_NDSKind.MovementId = tmpContainer_term.MovementItemMovementId_Income
+                                                            AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                            WHERE tmpContainer_PartionDate.ContainerId IS NULL
                           )
           SELECT tmpContainer.ContainerId
@@ -135,6 +152,7 @@ BEGIN
                , tmpContainer.GoodsId
                , tmpContainer.Amount
                , tmpContainer.ExpirationDate
+               , tmpContainer.PriceWithVAT
           FROM tmpContainer
          ;
 
@@ -202,8 +220,8 @@ BEGIN
 
 
     -- собрали чайлд
-    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, ExpirationDate TDateTime, isErased Boolean) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, ExpirationDate, isErased)
+    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, ExpirationDate TDateTime, PriceWithVAT TFloat, isErased Boolean) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, ExpirationDate, PriceWithVAT, isErased)
        WITH -- существующие - Master
             MI_Master AS (SELECT MovementItem.Id       AS Id
                                , MovementItem.ObjectId AS GoodsId
@@ -217,6 +235,7 @@ BEGIN
                               , MovementItem.ObjectId              AS GoodsId
                               , MIFloat_ContainerId.ValueData      AS ContainerId
                               , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+                              , MIFloat_PriceWithVAT.ValueData     AS PriceWithVAT
                               , MovementItem.Amount                AS Amount
                          FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -225,6 +244,9 @@ BEGIN
                               LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                          ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                                         AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                          ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId     = zc_MI_Child()
                            AND MovementItem.isErased   = FALSE
@@ -240,6 +262,7 @@ BEGIN
                 , tmpRemains.MovementId_Income
                   -- сохранили тот Срок годности, который корректировали
                 , COALESCE (MI_Child.ExpirationDate, tmpRemains.ExpirationDate) AS ExpirationDate
+                , tmpRemains.PriceWithVAT                         AS PriceWithVAT
                   -- удалим если лишний
                 , CASE WHEN tmpRemains.GoodsId > 0 THEN FALSE ELSE TRUE END AS isErased
            FROM tmpRemains
@@ -255,6 +278,7 @@ BEGIN
                                                   , inMovementId         := inMovementId
                                                   , inGoodsId            := tmpChild.GoodsId
                                                   , inExpirationDate     := tmpChild.ExpirationDate
+                                                  , inPriceWithVAT       := COALESCE (tmpChild.PriceWithVAT, 0)
                                                   , inAmount             := COALESCE (tmpChild.Amount,0)        :: TFloat
                                                   , inContainerId        := COALESCE (tmpChild.ContainerId,0)   :: TFloat
                                                   , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0):: TFloat
@@ -271,7 +295,7 @@ BEGIN
     SELECT tmp.Id, tmp.Amount_master, tmp.Amount_child
            INTO vbId_err, vbAmount_master_err, vbAmount_child_err
     FROM (WITH -- существующие - Master
-               MI_Master AS (SELECT MovementItem.Id 
+               MI_Master AS (SELECT MovementItem.Id
                                   , COALESCE (MIFloat_AmountRemains.ValueData, 0) AS Amount
                              FROM MovementItem
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
@@ -293,7 +317,7 @@ BEGIN
           SELECT COALESCE (MI_Child.ParentId, MI_Master.Id) AS Id
                , COALESCE (MI_Master.Amount, 0)             AS Amount_master
                , COALESCE (MI_Child.Amount, 0)              AS Amount_child
-          FROM MI_Master 
+          FROM MI_Master
                FULL JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
           WHERE COALESCE (MI_Master.Amount, 0) <>  COALESCE (MI_Child.Amount, 0)
          ) AS tmp;
@@ -314,7 +338,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 21.06.19                                                      *
  27.05.19         *
  05.04.19         *
 */

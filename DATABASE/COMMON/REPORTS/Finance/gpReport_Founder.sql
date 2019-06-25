@@ -173,15 +173,20 @@ BEGIN
                  , Operation_all.AnalyzerId
          ) AS Operation
 
-     LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
-     LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
-     LEFT JOIN Object AS Object_by ON Object_by.Id = Operation.ObjectId
-     LEFT JOIN ObjectDesc AS ObjectDesc_by ON ObjectDesc_by.Id = Object_by.DescId
-     LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
-     LEFT JOIN Object AS Object_Founder ON Object_Founder.Id = Operation.FounderId
-     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+         LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
+         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
+         LEFT JOIN Object AS Object_by ON Object_by.Id = Operation.ObjectId
+         LEFT JOIN ObjectDesc AS ObjectDesc_by ON ObjectDesc_by.Id = Object_by.DescId
+         LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
+         LEFT JOIN Object AS Object_Founder ON Object_Founder.Id = Operation.FounderId
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
 
-     -- WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
+     WHERE (Operation.StartAmount <> 0 
+         OR Operation.EndAmount <> 0 
+         OR Operation.DebetSumm <> 0 
+         OR Operation.KreditSumm <> 0 
+         OR Operation.MoneySumm <> 0 
+         OR Operation.ServiceSumm <> 0)
     ;
 
 

@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer
              , PaymentSP TFloat
              , PartionDateKindId Integer
              , PartionDateKindName TVarChar
+             , PricePartionDate TFloat
              , PartionDateDiscount TFloat
              , AmountMonth TFloat
               )
@@ -101,27 +102,6 @@ BEGIN
                                  AND MovementItem.DescId = zc_MI_Master()
                                  AND (MIFloat_ChangePercent.ValueData is not Null OR MIFloat_ChangePercentMin.ValueData is not Null)
                                )
-   , tmpPDChangePercent AS (SELECT Object_PartionDateKind.Id           AS Id,
-                                   CASE Object_PartionDateKind.Id
-                                        WHEN zc_Enum_PartionDateKind_0() THEN tmpMovSendPartion.ChangePercentMin
-                                        WHEN zc_Enum_PartionDateKind_1() THEN tmpMovSendPartion.ChangePercentMin
-                                        WHEN zc_Enum_PartionDateKind_6() THEN tmpMovSendPartion.ChangePercent END AS PartionDateDiscount
-                            FROM Object AS Object_PartionDateKind
-                                 LEFT JOIN tmpMovSendPartion ON 1 = 1
-                            WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                            )
-
-   , tmpPDChangePercentGoods AS (SELECT Object_PartionDateKind.Id           AS Id
-                                      , tmpMovItemSendPartion.GoodsId
-                                      , CASE Object_PartionDateKind.Id
-                                             WHEN zc_Enum_PartionDateKind_0() THEN tmpMovItemSendPartion.ChangePercentMin
-                                             WHEN zc_Enum_PartionDateKind_1() THEN tmpMovItemSendPartion.ChangePercentMin
-                                             WHEN zc_Enum_PartionDateKind_6() THEN tmpMovItemSendPartion.ChangePercent END AS PartionDateDiscount
-                                 FROM Object AS Object_PartionDateKind
-                                      LEFT JOIN tmpMovItemSendPartion ON 1 = 1
-                                 WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                                 )
-
 
        SELECT
              MovementItem.Id
@@ -151,10 +131,14 @@ BEGIN
            , Null::TFloat                                                        AS PaymentSP
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
-           , COALESCE(tmpPDChangePercentGoods.PartionDateDiscount,
-                      tmpPDChangePercent.PartionDateDiscount)::TFloat            AS PartionDateDiscount
-           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat AS AmountMonth
+           , MIFloat_MovementItem.ValueData                                      AS PricePartionDate
+           , Null::TFloat                                                        AS PartionDateDiscount
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
        FROM tmpMI AS MovementItem
+
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                        ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_PricePartionDate()
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child
                                   ON ObjectLink_Child.ChildObjectId = MovementItem.GoodsId
@@ -175,9 +159,6 @@ BEGIN
                                              ON MI_PartionDateKind.MovementItemId = MovementItem.Id
                                             AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
-            LEFT JOIN tmpPDChangePercent ON tmpPDChangePercent.Id = NULLIF (MI_PartionDateKind.ObjectId, 0)
-            LEFT JOIN tmpPDChangePercentGoods ON tmpPDChangePercentGoods.Id = NULLIF (MI_PartionDateKind.ObjectId, 0)
-                                             AND tmpPDChangePercentGoods.GoodsId = MovementItem.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                   ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
@@ -191,7 +172,7 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
  25.04.19                                                                                   *
- /
+ */
 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 3959328 ,  inSession := '3');

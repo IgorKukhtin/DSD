@@ -360,6 +360,22 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Options.Editing = False
         Width = 77
       end
+      object GoodsTypeKindName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsTypeKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 77
+      end
+      object BarCodeBoxName: TcxGridDBColumn
+        Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
+        DataBinding.FieldName = 'BarCodeBoxName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 77
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'

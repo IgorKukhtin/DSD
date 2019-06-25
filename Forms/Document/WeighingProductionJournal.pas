@@ -98,6 +98,25 @@ type
     FormParams: TdsdFormParams;
     actMovementProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    actSimpleReCompleteList: TMultiAction;
+    spReCompete: TdsdExecStoredProc;
+    spMovementReComplete: TdsdStoredProc;
+    macReCompleteList: TMultiAction;
+    N5: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    spCompete: TdsdExecStoredProc;
+    spErased: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actSimpleErased: TMultiAction;
+    actCompleteList: TMultiAction;
+    actSetErasedList: TMultiAction;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
   private
   public
   end;
