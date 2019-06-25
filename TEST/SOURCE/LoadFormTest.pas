@@ -2385,10 +2385,13 @@ end; }
 
 procedure TLoadFormTest.LoadInfoMoneyFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectDescForm'));
@@ -2396,8 +2399,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectDescForm'));
@@ -2405,12 +2410,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectDescForm');
+  }
 end;
 
 procedure TLoadFormTest.Load1CLinkFormTest;
@@ -2441,8 +2449,10 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroup_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroup_ObjectDescForm'));
@@ -2450,48 +2460,57 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirection_ObjectForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirection_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirection_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirection_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirection_ObjectDescForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectDescForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadProfitLossFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroup_ObjectForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroup_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroup_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirection_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirection_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLoss_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLoss_ObjectForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadProfitLossServiceFormTest;

@@ -57,6 +57,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProfitLossGroupCode: TcxGridDBColumn;
     ProfitLossGroupName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

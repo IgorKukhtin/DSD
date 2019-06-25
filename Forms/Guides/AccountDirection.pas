@@ -55,6 +55,8 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

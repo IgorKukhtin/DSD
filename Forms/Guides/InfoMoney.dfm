@@ -198,14 +198,6 @@ object InfoMoneyForm: TInfoMoneyForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -215,6 +207,14 @@ object InfoMoneyForm: TInfoMoneyForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True

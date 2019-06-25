@@ -265,7 +265,7 @@ object ArticleLossForm: TArticleLossForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbProtocolOpen'
         end
         item
           Visible = True
@@ -278,6 +278,10 @@ object ArticleLossForm: TArticleLossForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -321,6 +325,10 @@ object ArticleLossForm: TArticleLossForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbProtocolOpen: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -505,6 +513,36 @@ object ArticleLossForm: TArticleLossForm
           Component = ClientDataSet
           ComponentItem = 'BusinessName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False

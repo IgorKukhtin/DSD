@@ -68,6 +68,8 @@ type
     isPrintDetail: TcxGridDBColumn;
     spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

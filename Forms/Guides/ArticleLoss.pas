@@ -69,6 +69,8 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     BusinessName: TcxGridDBColumn;
     BusinessChoiceForm: TOpenChoiceForm;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public
