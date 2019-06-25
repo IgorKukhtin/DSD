@@ -1086,7 +1086,9 @@ uses
   PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
   LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
-  WeighingProductionParamEdit in '..\..\Forms\Document\WeighingProductionParamEdit.pas' {WeighingProductionParamEditForm: TParentForm};
+  WeighingProductionParamEdit in '..\..\Forms\Document\WeighingProductionParamEdit.pas' {WeighingProductionParamEditForm: TParentForm},
+  GoodsScaleCeh in '..\..\Forms\Guides\GoodsScaleCeh.pas' {GoodsScaleCehForm: TParentForm},
+  GoodsScaleCehEdit in '..\..\Forms\Guides\GoodsScaleCehEdit.pas' {GoodsScaleCehEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
