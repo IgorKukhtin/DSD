@@ -336,6 +336,7 @@ type
     procedure Timer_GetWeightTimer(Sender: TObject);
     procedure testButton1Click(Sender: TObject);
     procedure testButton2Click(Sender: TObject);
+    procedure bbInsertPartionGoods_outClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -392,7 +393,7 @@ uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPri
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport
     ,IdIPWatch, LookAndFillSettings
-    ,DialogBoxLight;
+    ,DialogBoxLight, DialogGoodsSeparate;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -493,6 +494,9 @@ function TMainCehForm.GetOldRealWeight:Double;
 var bm:TBookMark;
 begin
      Result:=0;
+     //
+     if (SettingMain.isModeSorting = TRUE) then exit;
+     //
      with CDS do begin
          if (BOF)and(EOF)then exit;
          //
@@ -2782,6 +2786,43 @@ begin
                    RefreshDataSet;
                    WriteParamsMovement;
               end
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbInsertPartionGoods_outClick(Sender: TObject);
+var TotalCount : Double;
+    bm:TBookMark;
+begin
+     with CDS do begin
+         //
+         bm:=GetBookMark;
+         DisableControls;
+         First;
+         TotalCount:= 0;
+         while(not EOF) do
+         begin
+            if FieldByName('isErased').AsBoolean = FALSE
+            then TotalCount:= TotalCount + FieldByName('Amount').AsFloat;
+            Next;
+         end;
+         GotoBookMark(bm);
+         EnableControls;
+         //
+         if (RecordCount > 0) and (FieldByName('isErased').AsBoolean = FALSE)
+         then DialogGoodsSeparateForm.Execute(FieldByName('GoodsId').AsInteger
+                                            , FieldByName('GoodsCode').AsInteger
+                                            , FieldByName('GoodsName').AsString
+                                            , FieldByName('PartionGoods').AsString
+                                            , TotalCount
+                                            , DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
+                                            )
+         else DialogGoodsSeparateForm.Execute(0
+                                            , 0
+                                            , ''
+                                            , EditPartionGoods.Text
+                                            , TotalCount
+                                            , DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
+                                            )
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.actExitExecute(Sender: TObject);

@@ -50,8 +50,8 @@ uses MainCeh, UtilScale, dmMainScaleCeh;
 function TDialogGoodsSeparateForm.Execute (inGoodsId, inGoodsCode : Integer; inGoodsName, inPartionGoods : String; TotalCount : Double; OperDate : TDateTime) : Boolean;
 begin
       //
-      GoodsLabel.Caption:= ' Товар : ('+IntToStr(inGoodsCode)+') ' + inGoodsName + ' / ' + DateToStr(OperDate);
-      PartionLabel.Caption:= ' Партия : <'+inPartionGoods+'> / ' + FormatFloat(fmtWeight, TotalCount);
+      GoodsLabel.Caption:= ' Товар : ('+IntToStr(inGoodsCode)+') ' + inGoodsName + ' за ' + DateToStr(OperDate);
+      PartionLabel.Caption:= ' Партия : <'+inPartionGoods+'> Итого : ' + FormatFloat(fmtWeight, TotalCount) + ' / ' + FormatFloat(fmtWeight, TotalCount);
       //
       Result:= inherited Execute;
       //

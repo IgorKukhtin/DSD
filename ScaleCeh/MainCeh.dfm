@@ -373,6 +373,7 @@ object MainCehForm: TMainCehForm
           7888888990888EC0888888889888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
+        OnClick = bbInsertPartionGoods_outClick
       end
     end
     object infoPanelTotalSumm: TPanel

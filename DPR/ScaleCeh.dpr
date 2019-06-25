@@ -118,7 +118,6 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
-  Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -135,6 +134,7 @@ begin
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
+         Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
   end
   else
 
@@ -167,6 +167,7 @@ begin
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
+         Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
 
   end;
   //

@@ -36,8 +36,6 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 374
-    ExplicitHeight = 175
     object NullPanel: TPanel
       Left = 0
       Top = 46
@@ -76,7 +74,6 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
       Height = 46
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 374
       object PartionLabel: TcxLabel
         Left = 1
         Top = 19
@@ -95,8 +92,8 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taLeftJustify
         Properties.Alignment.Vert = taVCenter
-        ExplicitWidth = 372
-        ExplicitHeight = 19
+        ExplicitTop = 22
+        ExplicitHeight = 23
         AnchorY = 32
       end
       object GoodsLabel: TcxLabel
