@@ -39,7 +39,6 @@ type
     PositionName: TcxGridDBBandedColumn;
     DateIn: TcxGridDBBandedColumn;
     LateTimeRatio: TcxGridDBBandedColumn;
-    CorrectAnswers: TcxGridDBBandedColumn;
     NumberAttempts: TcxGridDBBandedColumn;
     ExamPercentage: TcxGridDBBandedColumn;
     IT_ExamRatio: TcxGridDBBandedColumn;

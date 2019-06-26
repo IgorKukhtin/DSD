@@ -68,28 +68,26 @@ begin
 end;
 
 function TForm1.LoadResult : boolean;
-  var sl, sh, so: TStringList; I : integer;
+  var sl, so: TStringList; I : integer;
 begin
   Add_Log('Начало загрузки результатов');
   Result := False;
   btnExportUser.Enabled := False;
   btnLoadResult.Enabled := False;
   sl := TStringList.Create;
-  sh := TStringList.Create;
   so:= TStringList.Create;
   try
     try
-      if FileExists(FilePath + 'Export.xml') then
+      if FileExists(FilePath + 'Results.xml') then
       begin
-        sl.LoadFromFile(FilePath + 'Export.xml');
+        sl.LoadFromFile(FilePath + 'Results.xml');
         for I := 0 to sl.Count - 1 do
-          if (Pos('<Header', sl.Strings[I]) = 1) or (Pos('</Header', sl.Strings[I]) = 1) then sh.Add(sl.Strings[I])
-          else if (Pos('<Offer', sl.Strings[I]) = 1) or (Pos('</Offer', sl.Strings[I]) = 1) then so.Add(sl.Strings[I]);
+          if (Pos('<Offers', Trim(sl.Strings[I])) = 1) or (Pos('</Offers', Trim(sl.Strings[I])) = 1) or (Pos('<Offer', Trim(sl.Strings[I])) = 1) then so.Add(Trim(sl.Strings[I]));
 
-        qrygpInsertUpdateLoadTestingXML.Params.ParamByName('XMLH').Value := sh.Text;
-        qrygpInsertUpdateLoadTestingXML.Params.ParamByName('XMLS').Value := so.Text;
+        qrygpInsertUpdateLoadTestingXML.Params.ParamByName('OperDate').Value := Date;
+        qrygpInsertUpdateLoadTestingXML.Params.ParamByName('XMLS').Value := StringReplace(so.Text, ',', '.', [rfReplaceAll]);
         qrygpInsertUpdateLoadTestingXML.ExecSQL;
-      end else Add_Log('Файл ' + FilePath + 'Export.xml не найден.');
+      end else Add_Log('Файл ' + FilePath + 'Results.xml не найден.');
     except ON E:Exception DO
       Begin
         Add_Log(E.Message);
@@ -99,7 +97,6 @@ begin
     Result := True;
   finally
     sl.Free;
-    sh.Free;
     so.Free;
     btnExportUser.Enabled := True;
     btnLoadResult.Enabled := True;

@@ -360,17 +360,6 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
-          object CorrectAnswers: TcxGridDBBandedColumn
-            Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
-            DataBinding.FieldName = 'CorrectAnswers'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-            Position.BandIndex = 6
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
           object ExamPercentage: TcxGridDBBandedColumn
             Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1072#1074#1077#1083#1085'.'
             DataBinding.FieldName = 'ExamPercentage'
@@ -381,7 +370,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Options.Editing = False
             Width = 56
             Position.BandIndex = 6
-            Position.ColIndex = 1
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object NumberAttempts: TcxGridDBBandedColumn
@@ -392,7 +381,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Options.Editing = False
             Width = 58
             Position.BandIndex = 6
-            Position.ColIndex = 2
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object ExamResult: TcxGridDBBandedColumn
@@ -403,7 +392,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Options.Editing = False
             Width = 59
             Position.BandIndex = 6
-            Position.ColIndex = 3
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object IT_ExamRatio: TcxGridDBBandedColumn
@@ -413,7 +402,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Width = 39
             Position.BandIndex = 6
-            Position.ColIndex = 4
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object ComplaintsRatio: TcxGridDBBandedColumn

@@ -11,18 +11,19 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
     Top = 59
     Width = 731
     Height = 445
+    ExplicitTop = 59
     ExplicitWidth = 731
-    ExplicitHeight = 447
+    ExplicitHeight = 445
     ClientRectBottom = 445
     ClientRectRight = 731
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 731
-      ExplicitHeight = 447
+      ExplicitHeight = 445
       inherited cxGrid: TcxGrid
         Width = 731
         Height = 445
         ExplicitWidth = 731
-        ExplicitHeight = 447
+        ExplicitHeight = 445
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -74,20 +75,12 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
             Width = 160
           end
           object Result: TcxGridDBColumn
-            Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1072#1074#1077#1083#1085'. '#1086#1090#1074#1077#1090#1086#1074
             DataBinding.FieldName = 'Result'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 62
-          end
-          object ExamPercentage: TcxGridDBColumn
-            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1072#1074#1077#1083#1085'.'
-            DataBinding.FieldName = 'ExamPercentage'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
           end
           object Attempts: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1087#1099#1090#1086#1082
@@ -379,16 +372,19 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
       end
       item
         Name = 'Version'
+        Value = Null
         Component = edVersion
         MultiSelectSeparator = ','
       end
       item
         Name = 'Question'
+        Value = Null
         Component = edQuestion
         MultiSelectSeparator = ','
       end
       item
         Name = 'MaxAttempts'
+        Value = Null
         Component = edMaxAttempts
         MultiSelectSeparator = ','
       end>

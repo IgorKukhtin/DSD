@@ -26,7 +26,6 @@ type
     bbExecuteDialog: TdxBarButton;
     DateTimeTest: TcxGridDBColumn;
     Attempts: TcxGridDBColumn;
-    ExamPercentage: TcxGridDBColumn;
     Status: TcxGridDBColumn;
     edVersion: TcxTextEdit;
     cxLabel16: TcxLabel;
