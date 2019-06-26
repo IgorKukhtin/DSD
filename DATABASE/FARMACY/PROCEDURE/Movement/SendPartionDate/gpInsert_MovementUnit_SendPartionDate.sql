@@ -24,8 +24,13 @@ BEGIN
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
+                              LEFT JOIN MovementBoolean AS MovementBoolean_Transfer
+                                                        ON MovementBoolean_Transfer.MovementId = Movement.Id
+                                                       AND MovementBoolean_Transfer.DescId = zc_MovementBoolean_Transfer()
+
                          WHERE Movement.DescId = zc_Movement_SendPartionDate()
-                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.StatusId = zc_Enum_Status_Complete() 
+                           AND COALESCE(MovementBoolean_Transfer.ValueData, False) = False
                          GROUP BY MovementLinkObject_Unit.ObjectId)
 
     SELECT Object_Unit.Id AS UnitID
@@ -48,6 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.06.19                                                       *
  18.06.19                                                       *
 */
 

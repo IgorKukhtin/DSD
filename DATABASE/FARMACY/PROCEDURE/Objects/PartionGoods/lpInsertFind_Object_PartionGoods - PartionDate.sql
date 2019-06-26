@@ -33,9 +33,9 @@ BEGIN
          vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
      END IF;
 
-
      -- Проверка - партия inMovementId в сроках может формироваться только в одном документе срок
-     IF EXISTS (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
+     IF NOT EXISTS(SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId_send AND MB.DescId = zc_MovementBoolean_Transfer() AND MB.ValueData = TRUE) AND
+         EXISTS (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
                                            FROM Object
                                                 INNER JOIN ObjectLink AS ObjectLink_Goods
                                                                       ON ObjectLink_Goods.ObjectId      = Object.Id
@@ -52,7 +52,7 @@ BEGIN
                                                  Object.ObjectCode = inMovementId
                                              AND Object.DescId     = zc_Object_PartionGoods()
                                           -- !!! без !!! "срок годности"
-                                          -- AND Object.ValueData  = vbOperDate_str
+                                          --   AND Object.ValueData  = vbOperDate_str
                                           )
                 --
                 SELECT Container.Id
@@ -209,7 +209,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.06.19                                                       *
  19.04.19                                        *
 */
 

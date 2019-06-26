@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ChangePercent TFloat, ChangePercentMin TFloat
              , UnitId Integer, UnitName TVarChar, ProvinceCityName TVarChar
              , Comment TVarChar
+             , Transfer Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -84,6 +85,7 @@ BEGIN
            , tmpProvinceCity.ProvinceCityName     AS ProvinceCityName
 
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_Transfer.ValueData, False)           AS Transfer
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -124,6 +126,10 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Transfer
+                                      ON MovementBoolean_Transfer.MovementId = Movement.Id
+                                      AND MovementBoolean_Transfer.DescId = zc_MovementBoolean_Transfer()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -150,7 +156,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.06.19                                                       *
  27.05.19         *
  02.04.19         *
 */

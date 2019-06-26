@@ -4,7 +4,7 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 516
+  ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -161,11 +161,18 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object Transfer: TcxGridDBColumn [1]
+            Caption = #1048#1079#1084'. '#1089#1088#1086#1082#1072
+            DataBinding.FieldName = 'Transfer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 47
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             HeaderAlignmentHorz = taCenter
             Width = 64
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 65
