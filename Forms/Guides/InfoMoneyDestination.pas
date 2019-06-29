@@ -57,6 +57,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     InfoMoneyGroupCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

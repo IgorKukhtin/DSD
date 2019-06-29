@@ -11,8 +11,7 @@ RETURNS TABLE (
        , Code           Integer
        , MemberName     TVarChar
        , UnitName       TVarChar
-       , Result         Integer
-       , ExamPercentage TFloat
+       , Result         TFloat
        , Attempts       Integer
        , Status         TVarChar
        , DateTimeTest   TDateTime
@@ -36,24 +35,21 @@ BEGIN
                        ),
         tmpResult AS (SELECT
                              MovementItem.ObjectId                                          AS UserID
-                           , MovementItem.Amount::Integer                                   AS Result
-                           , CASE WHEN COALESCE (MovementFloat.ValueData, 0) > 0 THEN
-                             Round(MovementItem.Amount / MovementFloat.ValueData * 100, 2)
-                             ELSE 0 END::TFloat                                             AS ExamPercentage
+                           , MovementItem.Amount                                            AS Result
                            , MovementItemFloat.ValueData::Integer                           AS Attempts
                            , MovementItemDate.ValueData                                     AS DateTimeTest
                       FROM Movement
 
-                           INNER JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
+                           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                                    AND MovementFloat.DescId = zc_MovementFloat_TestingUser_Question()
 
-                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                   AND MovementItem.DescId = zc_MI_Master()
 
-                           INNER JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
+                           LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                                       AND MovementItemDate.DescId = zc_MIDate_TestingUser()
 
-                           INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                           LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
                                                        AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
 
                       WHERE Movement.DescId = zc_Movement_TestingUser()
@@ -65,11 +61,10 @@ BEGIN
        , Object_Member.ValueData                      AS MemberName
        , Object_Unit.ValueData                        AS UnitName
        , tmpResult.Result                             AS Result
-       , tmpResult.ExamPercentage                     AS ExamPercentage
        , tmpResult.Attempts                           AS Attempts
-       , CASE WHEN tmpResult.ExamPercentage IS NULL
+       , CASE WHEN COALESCE (tmpResult.Attempts, 0) = 0
          THEN NULL ELSE
-         CASE WHEN tmpResult.ExamPercentage >= 80
+         CASE WHEN tmpResult.Result >= 85
          THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS Status
        , tmpResult.DateTimeTest                       AS DateTimeTest
    FROM Object AS Object_User
@@ -97,9 +92,10 @@ ALTER FUNCTION gpReport_TestingUser (TDateTime, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 25.06.19        *
  15.10.18         *
  11.09.18         *
 */
 
 -- тест
--- SELECT * FROM gpReport_TestingUser ('20181001', '3')
+-- SELECT * FROM gpReport_TestingUser ('20190601', '3')

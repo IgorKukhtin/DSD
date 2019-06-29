@@ -27,17 +27,17 @@ BEGIN
         , MovementFloat_MaxAttempts.ValueData::Integer  AS  MaxAttempts
    FROM Movement
 
-        INNER JOIN MovementFloat AS MovementFloat_Version
-                                 ON MovementFloat_Version.MovementId = Movement.Id
-                                AND MovementFloat_Version.DescId = zc_MovementFloat_TestingUser_Version()
+        LEFT JOIN MovementFloat AS MovementFloat_Version
+                                ON MovementFloat_Version.MovementId = Movement.Id
+                               AND MovementFloat_Version.DescId = zc_MovementFloat_TestingUser_Version()
                                 
-        INNER JOIN MovementFloat AS MovementFloat_Question
-                                 ON MovementFloat_Question.MovementId = Movement.Id
-                                AND MovementFloat_Question.DescId = zc_MovementFloat_TestingUser_Question()
+        LEFT JOIN MovementFloat AS MovementFloat_Question
+                                ON MovementFloat_Question.MovementId = Movement.Id
+                               AND MovementFloat_Question.DescId = zc_MovementFloat_TestingUser_Question()
 
-        INNER JOIN MovementFloat AS MovementFloat_MaxAttempts
-                                 ON MovementFloat_MaxAttempts.MovementId = Movement.Id
-                                AND MovementFloat_MaxAttempts.DescId = zc_MovementFloat_TestingUser_MaxAttempts()
+        LEFT JOIN MovementFloat AS MovementFloat_MaxAttempts
+                                ON MovementFloat_MaxAttempts.MovementId = Movement.Id
+                               AND MovementFloat_MaxAttempts.DescId = zc_MovementFloat_TestingUser_MaxAttempts()
 
    WHERE Movement.DescId = zc_Movement_TestingUser()
      AND Movement.OperDate = vbDateStart;
@@ -52,6 +52,7 @@ ALTER FUNCTION gpGet_Movement_TestingUser (TDateTime, TVarChar) OWNER TO postgre
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 25.06.19        *
  15.10.18         *
 */
 

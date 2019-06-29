@@ -49,6 +49,7 @@ type
     bbDeferredNo: TdxBarButton;
     ChangePercent: TcxGridDBColumn;
     ChangePercentMin: TcxGridDBColumn;
+    Transfer: TcxGridDBColumn;
   private
     { Private declarations }
   public

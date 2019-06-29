@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , ChangePercent TFloat, ChangePercentMin TFloat
              , Comment TVarChar
+             , Transfer Boolean
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , UpdateId Integer, UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -38,6 +39,7 @@ BEGIN
              , CAST (0  AS TFloat)                              AS ChangePercent
              , CAST (0  AS TFloat)                              AS ChangePercentMin
              , CAST ('' AS TVarChar) 		                AS Comment
+             , False                		                AS Transfer
              , Object_Insert.Id                                 AS InsertId
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP                   :: TDateTime AS InsertDate
@@ -61,6 +63,7 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData     AS ChangePercent
            , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
            , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
+           , COALESCE (MovementBoolean_Transfer.ValueData, False)           AS Transfer
            , Object_Insert.Id                     AS InsertId
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -91,6 +94,10 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Transfer
+                                      ON MovementBoolean_Transfer.MovementId = Movement.Id
+                                      AND MovementBoolean_Transfer.DescId = zc_MovementBoolean_Transfer()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -118,7 +125,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.06.19                                                       *
  27.05.19         *
  02.04.19         *
  */

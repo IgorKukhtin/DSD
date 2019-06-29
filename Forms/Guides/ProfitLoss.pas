@@ -63,6 +63,8 @@ type
     OnComplete: TcxGridDBColumn;
     ProfitLossGroupCode: TcxGridDBColumn;
     ProfitLossDirectionCode: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

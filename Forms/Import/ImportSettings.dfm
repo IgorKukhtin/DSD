@@ -10,23 +10,20 @@ inherited ImportSettingsForm: TImportSettingsForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1184
-    Height = 311
-    ExplicitTop = 28
+    Height = 313
     ExplicitWidth = 1184
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 1180
+    ExplicitHeight = 313
+    ClientRectBottom = 313
+    ClientRectRight = 1184
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 1176
-      ExplicitHeight = 303
+      ExplicitWidth = 1184
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 697
-        Height = 303
+        Height = 313
         Align = alLeft
         ExplicitWidth = 697
-        ExplicitHeight = 303
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
           Styles.Content = nil
@@ -222,8 +219,8 @@ inherited ImportSettingsForm: TImportSettingsForm
       object cxGrid1: TcxGrid
         Left = 700
         Top = 0
-        Width = 476
-        Height = 303
+        Width = 484
+        Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -305,7 +302,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Left = 697
         Top = 0
         Width = 3
-        Height = 303
+        Height = 313
         AutoPosition = False
         Control = cxGrid
       end
@@ -615,6 +612,36 @@ inherited ImportSettingsForm: TImportSettingsForm
       RefreshOnTabSetChanges = False
       DataSet = MasterCDS
     end
+    object actProtocolChild: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1053#1072#1079#1074#1072#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1053#1072#1079#1074#1072#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'UserParamName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actProtocolMaster: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -706,7 +733,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -764,6 +791,14 @@ inherited ImportSettingsForm: TImportSettingsForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -797,6 +832,11 @@ inherited ImportSettingsForm: TImportSettingsForm
     end
     object bbProtocolMaster: TdxBarButton
       Action = actProtocolMaster
+      Category = 0
+    end
+    object bbProtocolChild: TdxBarButton
+      Action = actProtocolChild
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1076#1077#1090#1072#1083#1080'>'
       Category = 0
     end
   end
@@ -1036,6 +1076,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       end
       item
         Name = 'inConvertFormatInExcel'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ConvertFormatInExcel'
         DataType = ftBoolean
