@@ -2789,39 +2789,44 @@ begin
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbInsertPartionGoods_outClick(Sender: TObject);
-var TotalCount : Double;
-    bm:TBookMark;
+var GoodsId_check, GoodsCode_check:Integer;
+    GoodsName_check, PartionGoods_check : String;
 begin
      with CDS do begin
          //
-         bm:=GetBookMark;
-         DisableControls;
-         First;
-         TotalCount:= 0;
-         while(not EOF) do
+         if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
          begin
-            if FieldByName('isErased').AsBoolean = FALSE
-            then TotalCount:= TotalCount + FieldByName('Amount').AsFloat;
-            Next;
+              ShowMessage('Ошибка.Код товара не определен.');
+              exit;
          end;
-         GotoBookMark(bm);
-         EnableControls;
+         if trim(EditPartionGoods.Text) = '' then
+         begin
+              ShowMessage('Ошибка.Значение партии не определено.');
+              exit;
+         end;
          //
-         if (RecordCount > 0) and (FieldByName('isErased').AsBoolean = FALSE)
-         then DialogGoodsSeparateForm.Execute(FieldByName('GoodsId').AsInteger
-                                            , FieldByName('GoodsCode').AsInteger
-                                            , FieldByName('GoodsName').AsString
-                                            , FieldByName('PartionGoods').AsString
-                                            , TotalCount
-                                            , DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
-                                            )
-         else DialogGoodsSeparateForm.Execute(0
-                                            , 0
-                                            , ''
-                                            , EditPartionGoods.Text
-                                            , TotalCount
-                                            , DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
-                                            )
+         if (1=0) and ((RecordCount > 0) and (FieldByName('isErased').AsBoolean = FALSE)) then
+         begin
+           GoodsId_check     := FieldByName('GoodsId').AsInteger;
+           GoodsCode_check   := FieldByName('GoodsCode').AsInteger;
+           GoodsName_check   := FieldByName('GoodsName').AsString;
+           PartionGoods_check:= FieldByName('PartionGoods').AsString
+         end
+         else
+         begin
+           GoodsId_check     := ParamsMI.ParamByName('GoodsId').AsInteger;
+           GoodsCode_check   := ParamsMI.ParamByName('GoodsCode').AsInteger;
+           GoodsName_check   := ParamsMI.ParamByName('GoodsName').AsString;
+           PartionGoods_check:= EditPartionGoods.Text;
+         end;
+         //
+         DialogGoodsSeparateForm.Execute(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
+                                       , ParamsMovement.ParamByName('MovementId').AsInteger
+                                       , GoodsId_check
+                                       , GoodsCode_check
+                                       , GoodsName_check
+                                       , PartionGoods_check
+                                        );
      end;
 end;
 {------------------------------------------------------------------------}

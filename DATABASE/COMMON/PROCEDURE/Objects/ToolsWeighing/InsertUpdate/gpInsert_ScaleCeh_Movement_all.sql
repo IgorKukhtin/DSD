@@ -164,7 +164,7 @@ BEGIN
      -- для zc_Movement_ProductionUnion + если Обвалка - !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
      IF 1=0 AND vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
      THEN
-           -- определили <Приход или Расход>, нужен только для Обвалка
+           -- определили <Приход или Расход>, нужен для Обвалка
            vbIsProductionIn:= (SELECT MB_isIncome.ValueData FROM MovementBoolean AS MB_isIncome WHERE MB_isIncome.MovementId = inMovementId AND MB_isIncome.DescId = zc_MovementBoolean_isIncome());
 
            -- поиск существующего документа <Производство> по ВСЕМ параметрам
@@ -201,7 +201,7 @@ BEGIN
                vbPartionGoods_partner:= zfFormat_PartionGoods (vbPartionGoods);
            END IF;
 
-           -- определили <Приход или Расход>, нужен только для zc_Movement_ProductionSeparate
+           -- определили <Приход или Расход>, нужен для zc_Movement_ProductionSeparate
            vbIsProductionIn:= (SELECT MB_isIncome.ValueData FROM MovementBoolean AS MB_isIncome WHERE MB_isIncome.MovementId = inMovementId AND MB_isIncome.DescId = zc_MovementBoolean_isIncome());
 
            -- Проверка

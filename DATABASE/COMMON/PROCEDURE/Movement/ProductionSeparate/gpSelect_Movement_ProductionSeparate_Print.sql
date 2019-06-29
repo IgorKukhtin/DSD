@@ -74,22 +74,8 @@ BEGIN
                             , Movement.OperDate                     AS OperDate
                             , MovementString_PartionGoods.ValueData AS PartionGoods
 
-                            , CASE WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4)) IS NOT NULL
-                                        THEN zfConvert_StringToNumber (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3))
-                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3)) IS NOT NULL
-                                        THEN zfConvert_StringToNumber (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2))
-                                   ELSE NULL
-                              END AS PartnerCode_partion
-                            , CASE WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4)) IS NOT NULL
-                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4))
-                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3)) IS NOT NULL
-                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3))
-                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2)) IS NOT NULL
-                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2))
-                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 1)) IS NOT NULL
-                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 1))
-                                   ELSE NULL
-                              END AS OperDate_partion
+                            , zfCalc_PartionGoods_PartnerCode (MovementString_PartionGoods.ValueData) AS PartnerCode_partion
+                            , zfCalc_PartionGoods_OperDate (MovementString_PartionGoods.ValueData)    AS OperDate_partion
 
                         FROM Movement
                              LEFT JOIN MovementString AS MovementString_PartionGoods

@@ -35,6 +35,16 @@ type
     //
     // +++ScaleCeh+++
     function gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
+    function gpGet_ScaleCeh_GoodsSeparate(inOperDate: TDateTime; inMovementId, inGoodsId : Integer; inPartionGoods : String;
+                                      var TotalCount_in, TotalCount_null, TotalCount_MO, TotalCount_OB, TotalCount_PR, TotalCount_P : Double;
+                                      var HeadCount_in, HeadCount_null, HeadCount_MO, HeadCount_OB, HeadCount_PR, HeadCount_P : Double;
+                                      var PartionGoods_null, PartionGoods_MO, PartionGoods_OB, PartionGoods_PR, PartionGoods_P : String
+                                         ):Boolean;
+    function gpInsert_ScaleCeh_GoodsSeparate(retMovementId_begin, retMovementId : Integer;
+                                             execParamsMovement:TParams;
+                                             inOperDate: TDateTime; inGoodsId : Integer; inPartionGoods : String;
+                                             inAmount, inHeadCount : Double
+                                            ):Boolean;
     // +++ScaleCeh+++
     function gpInsertUpdate_ScaleCeh_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_ScaleCeh_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
@@ -920,6 +930,108 @@ begin
                  execParamsLight.ParamByName('isFull_3').asBoolean      := FALSE;
              end;
 
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpInsert_ScaleCeh_GoodsSeparate(retMovementId_begin, retMovementId : Integer;
+                                                             execParamsMovement:TParams;
+                                                             inOperDate: TDateTime; inGoodsId : Integer; inPartionGoods : String;
+                                                             inAmount, inHeadCount : Double
+                                                            ):Boolean;
+begin
+    Result:=false;
+    //
+    with spSelect do
+    begin
+       //
+       StoredProcName:='gpInsert_ScaleCeh_GoodsSeparate';
+       OutputType:=otDataSet;
+       Params.Clear;
+
+       Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, inOperDate);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
+       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inGoodsId', ftInteger,  ptInput, inGoodsId);
+       Params.AddParam('inPartionGoods',ftString,   ptInput, inPartionGoods);
+       Params.AddParam('inAmount', ftFloat, ptInput, inAmount);
+       Params.AddParam('inHeadCount', ftFloat, ptInput, inHeadCount);
+       //try
+         Execute;
+         //
+         retMovementId_begin:= DataSet.FieldByName('MovementId_begin').asInteger;
+         retMovementId      := DataSet.FieldByName('MovementId').asInteger;
+    end;
+    //
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleCeh_GoodsSeparate(inOperDate: TDateTime; inMovementId, inGoodsId : Integer; inPartionGoods : String;
+                                                      var TotalCount_in, TotalCount_null, TotalCount_MO, TotalCount_OB, TotalCount_PR, TotalCount_P : Double;
+                                                      var HeadCount_in, HeadCount_null, HeadCount_MO, HeadCount_OB, HeadCount_PR, HeadCount_P : Double;
+                                                      var PartionGoods_null, PartionGoods_MO, PartionGoods_OB, PartionGoods_PR, PartionGoods_P : String
+                                                         ):Boolean;
+begin
+    with spSelect do
+    begin
+       //
+       StoredProcName:='gpGet_ScaleCeh_GoodsSeparate';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inOperDate',    ftDateTime, ptInput, inOperDate);
+       Params.AddParam('inMovementId',  ftInteger,  ptInput, inMovementId);
+       Params.AddParam('inGoodsId',     ftInteger,  ptInput, inGoodsId);
+       Params.AddParam('inPartionGoods',ftString,   ptInput, inPartionGoods);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+       //
+       if Result then
+         with DataSet do
+         begin
+           First;
+           TotalCount_in  := 0;
+           TotalCount_null:= 0;
+           TotalCount_MO  := 0;
+           TotalCount_OB  := 0;
+           TotalCount_PR  := 0;
+           TotalCount_P   := 0;
+           //
+           HeadCount_in  := 0;
+           HeadCount_null:= 0;
+           HeadCount_MO  := 0;
+           HeadCount_OB  := 0;
+           HeadCount_PR  := 0;
+           HeadCount_P   := 0;
+           //
+           PartionGoods_null:= DataSet.FieldByName('PartionGoods_null').asString;
+           PartionGoods_MO  := DataSet.FieldByName('PartionGoods_MO').asString;
+           PartionGoods_OB  := DataSet.FieldByName('PartionGoods_OB').asString;
+           PartionGoods_PR  := DataSet.FieldByName('PartionGoods_PR').asString;
+           PartionGoods_P   := DataSet.FieldByName('PartionGoods_P').asString;
+           while not EOF do
+           begin
+             TotalCount_in  := TotalCount_in   + DataSet.FieldByName('TotalCount_in').asFloat;
+             TotalCount_null:= TotalCount_null + DataSet.FieldByName('TotalCount_null').asFloat;
+             TotalCount_MO  := TotalCount_MO   + DataSet.FieldByName('TotalCount_MO').asFloat;
+             TotalCount_OB  := TotalCount_OB   + DataSet.FieldByName('TotalCount_OB').asFloat;
+             TotalCount_PR  := TotalCount_PR   + DataSet.FieldByName('TotalCount_PR').asFloat;
+             TotalCount_P   := TotalCount_P    + DataSet.FieldByName('TotalCount_P').asFloat;
+             //
+             HeadCount_in  := HeadCount_in   + DataSet.FieldByName('HeadCount_in').asFloat;
+             HeadCount_null:= HeadCount_null + DataSet.FieldByName('HeadCount_null').asFloat;
+             HeadCount_MO  := HeadCount_MO   + DataSet.FieldByName('HeadCount_MO').asFloat;
+             HeadCount_OB  := HeadCount_OB   + DataSet.FieldByName('HeadCount_OB').asFloat;
+             HeadCount_PR  := HeadCount_PR   + DataSet.FieldByName('HeadCount_PR').asFloat;
+             HeadCount_P   := HeadCount_P    + DataSet.FieldByName('HeadCount_P').asFloat;
+             Next;
+           end;
+         end;
     end;
 end;
 {------------------------------------------------------------------------}

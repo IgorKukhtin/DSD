@@ -234,8 +234,9 @@ BEGIN
                                  ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END
                                 AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
            LEFT JOIN ObjectFloat AS ObjectFloat_Contract_DayTaxSummary
-                                 ON ObjectFloat_Contract_DayTaxSummary.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
-                                AND ObjectFloat_Contract_DayTaxSummary.DescId = zc_ObjectFloat_Contract_DayTaxSummary()
+                                 ON ObjectFloat_Contract_DayTaxSummary.ObjectId  = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
+                                AND ObjectFloat_Contract_DayTaxSummary.DescId    = zc_ObjectFloat_Contract_DayTaxSummary()
+                                AND ObjectFloat_Contract_DayTaxSummary.ValueData <> 0
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)

@@ -107,9 +107,7 @@ BEGIN
      -- формируются Партии для Сырья
      PERFORM lpInsertUpdate_MovementItemString (inDescId:= zc_MIString_PartionGoodsCalc()
                                               , inMovementItemId:= MovementItem.Id
-                                              , inValueData:= CAST (COALESCE (Object_Goods.ObjectCode, 0) AS TVarChar)
-                                                    || '-' || CAST (COALESCE (Object_Partner.ObjectCode, 0) AS TVarChar)
-                                                    || '-' || TO_CHAR (Movement.OperDate, 'DD.MM.YYYY')
+                                              , inValueData:= zfCalc_PartionGoods (Object_Goods.ObjectCode, Object_Partner.ObjectCode, Movement.OperDate)
                                                )
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId

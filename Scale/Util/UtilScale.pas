@@ -6,8 +6,9 @@ uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,Forms,Vcl.StdCtrls;
 
 const
-    fmtWeight:String = ',0.#### Í„.';
-    fmtFloat:String = ',0.####';
+    fmtWeight:String = ',0.##### Í„.';
+    fmtFloat:String = ',0.#####';
+    fmtHead:String = ',0.##### „ÓÎ.';
     lStickerPackGroupId:Integer = 1;
 type
 {
