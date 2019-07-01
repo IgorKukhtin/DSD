@@ -251,6 +251,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 77
       end
+      object isAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+        DataBinding.FieldName = 'isAuto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
       object BarCodeBoxName: TcxGridDBColumn
         Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
         DataBinding.FieldName = 'BarCodeBoxName'

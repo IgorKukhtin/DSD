@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                , TotalCount TFloat, TotalCountChild TFloat, TotalHeadCount TFloat, TotalHeadCountChild TFloat
                , PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-               , isCalculated Boolean
+               , isCalculated Boolean, isAuto Boolean
                , UnionName TVarChar
                , UnionDate TDateTime
                )
@@ -52,6 +52,7 @@ BEGIN
           , Object_To.Id                         AS ToId
           , Object_To.ValueData                  AS ToName
           , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
+          , COALESCE(MovementBoolean_isAuto.ValueData, False)      :: Boolean AS isAuto
 
           , Object_Union.ValueData               AS UnionName
           , MovementDate_Union.ValueData         AS UnionDate
@@ -89,6 +90,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
                                     ON MovementBoolean_Calculated.MovementId = Movement.Id
                                    AND MovementBoolean_Calculated.DescId = zc_MovementBoolean_Calculated()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id

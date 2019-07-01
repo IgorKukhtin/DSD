@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer
                , GoodsKindId Integer, GoodsKindName TVarChar
                , StorageLineId_old Integer, StorageLineId Integer, StorageLineName TVarChar
                , Amount TFloat
+               , isAuto Boolean
                )
 AS
 $BODY$
@@ -96,6 +97,8 @@ BEGIN
            , Object_StorageLine.ValueData         AS StorageLineName
                                                
            , tmpMI_Master.Amount        :: TFloat AS Amount
+           
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
      FROM tmpMovement
 
@@ -122,6 +125,10 @@ BEGIN
           LEFT JOIN MovementString AS MovementString_PartionGoods
                                    ON MovementString_PartionGoods.MovementId = Movement.Id
                                   AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id

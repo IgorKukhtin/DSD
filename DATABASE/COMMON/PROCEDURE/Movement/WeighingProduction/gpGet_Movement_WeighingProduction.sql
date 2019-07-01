@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumber_Parent TVarChar, MovementId_parent Integer, OperDate_Parent TDateTime
-             , isProductionIn Boolean
+             , isProductionIn Boolean, isAuto Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer
              , MovementDesc Integer, MovementDescName TVarChar
@@ -38,37 +38,38 @@ BEGIN
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
              
-             , CAST ('' as TVarChar)            AS Parent
+             , CAST ('' AS TVarChar)            AS Parent
              , 0                                AS MovementId_Parent
-             , CAST (Null as TDateTime)         AS OperDate_Parent
+             , CAST (Null AS TDateTime)         AS OperDate_Parent
 
-             , FALSE AS isProductionIn
-             , CAST (CURRENT_DATE as TDateTime) AS StartWeighing
-             , CAST (CURRENT_DATE as TDateTime) AS EndWeighing
+             , FALSE                 AS isProductionIn
+             , FALSE                 AS isAuto
+             , CAST (CURRENT_DATE AS TDateTime) AS StartWeighing
+             , CAST (CURRENT_DATE AS TDateTime) AS EndWeighing
 
              , 0                     AS MovementDescNumber
              , 0                     AS MovementDesc
-             , CAST ('' as TVarChar) AS MovementDescName
+             , CAST ('' AS TVarChar) AS MovementDescName
 
-             , CAST (0 as TFloat)    AS WeighingNumber
+             , CAST (0 AS TFloat)    AS WeighingNumber
 
-             , CAST ('' as TVarChar) AS PartionGoods
+             , CAST ('' AS TVarChar) AS PartionGoods
 
              , 0                     AS FromId
-             , CAST ('' as TVarChar) AS FromName
+             , CAST ('' AS TVarChar) AS FromName
              , 0                     AS ToId
-             , CAST ('' as TVarChar) AS ToName
+             , CAST ('' AS TVarChar) AS ToName
 
              , 0                     AS UserId
-             , CAST ('' as TVarChar) AS UserName
+             , CAST ('' AS TVarChar) AS UserName
 
 
              , 0                     AS DocumentKindId
-             , CAST ('' as TVarChar) AS DocumentKindName
+             , CAST ('' AS TVarChar) AS DocumentKindName
              , 0                     AS GoodsTypeKindId
-             , CAST ('' as TVarChar) AS GoodsTypeKindName
+             , CAST ('' AS TVarChar) AS GoodsTypeKindName
              , 0                     AS BarCodeBoxId
-             , CAST ('' as TVarChar) AS BarCodeBoxName
+             , CAST ('' AS TVarChar) AS BarCodeBoxName
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -85,6 +86,8 @@ BEGIN
              , Movement_Parent.OperDate          AS OperDate_Parent
               
              , MovementBoolean_isIncome.ValueData    AS isProductionIn
+             , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
@@ -115,34 +118,38 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                      ON MovementBoolean_isIncome.MovementId = Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
-                                   ON MovementDate_StartWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
                                   AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
-                                   ON MovementDate_EndWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
-                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDescNumber.MovementId = Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                    ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData 
             
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                    ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementString AS MovementString_PartionGoods
-                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                     ON MovementString_PartionGoods.MovementId = Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From

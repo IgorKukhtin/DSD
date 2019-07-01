@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              --, TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PartionGoods TVarChar
-             , isCalculated Boolean
+             , isCalculated Boolean, isAuto Boolean
              )
 AS
 $BODY$
@@ -29,20 +29,19 @@ BEGIN
      THEN
      RETURN QUERY
          SELECT
-               0                                                AS Id
+               0                        AS Id
              , CAST (NEXTVAL ('movement_productionseparate_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
-             , Object_Status.Code                               AS StatusCode
-             , Object_Status.Name                               AS StatusName
---             , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
-             , CAST ('' AS TVarChar) 				            AS PartionGoods
-
-             , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
-
+             , inOperDate               AS OperDate
+             , Object_Status.Code       AS StatusCode
+             , Object_Status.Name       AS StatusName
+--             , CAST (0 AS TFloat)     AS TotalCount
+             , 0                     	AS FromId
+             , CAST ('' AS TVarChar) 	AS FromName
+             , 0                     	AS ToId
+             , CAST ('' AS TVarChar) 	AS ToName
+             , CAST ('' AS TVarChar) 	AS PartionGoods
+             , FALSE                    AS isCalculated
+             , FALSE                    AS isAuto
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -59,6 +58,7 @@ BEGIN
          , Object_To.ValueData                                  AS ToName
          , MovementString_PartionGoods.ValueData                AS PartionGoods
          , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
+         , COALESCE(MovementBoolean_isAuto.ValueData, False)      :: Boolean AS isAuto
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 /*
@@ -83,6 +83,9 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
                                     ON MovementBoolean_Calculated.MovementId = Movement.Id
                                    AND MovementBoolean_Calculated.DescId = zc_MovementBoolean_Calculated()
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionSeparate();

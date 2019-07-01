@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
-             , isProductionIn Boolean
+             , isProductionIn Boolean, isAuto Boolean
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
-             , StartWeighingMI Boolean
+             , StartWeighingMI Boolean, isAutoMI Boolean
              , InsertDate TDateTime, UpdateDate TDateTime
              , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat
              , HeadCount TFloat, Count TFloat, CountPack TFloat
@@ -116,6 +116,7 @@ BEGIN
                END :: TVarChar AS PartionGoods
 
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
+             , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
@@ -145,6 +146,8 @@ BEGIN
            , MovementItem.Amount
 
            , MIBoolean_StartWeighing.ValueData AS StartWeighingMI
+           , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean AS isAutoMI
+
            , MIDate_Insert.ValueData           AS InsertDate
            , MIDate_Update.ValueData           AS UpdateDate
            
@@ -178,35 +181,40 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
-                                   ON MovementDate_StartWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
                                   AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
-                                   ON MovementDate_EndWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
-                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDescNumber.MovementId = Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                    ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
             
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                    ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                      ON MovementBoolean_isIncome.MovementId = Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
             LEFT JOIN MovementString AS MovementString_PartionGoods
-                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                     ON MovementString_PartionGoods.MovementId = Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
-                                    ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCountTare.MovementId = Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -253,6 +261,9 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_StartWeighing
                                           ON MIBoolean_StartWeighing.MovementItemId = MovementItem.Id
                                          AND MIBoolean_StartWeighing.DescId = zc_MIBoolean_StartWeighing()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
             LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                        ON MIDate_StartBegin.MovementItemId = MovementItem.Id

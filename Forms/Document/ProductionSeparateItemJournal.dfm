@@ -22,8 +22,6 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = 384
-        ExplicitTop = 32
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -142,6 +140,15 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 57
           end
           object StorageLineId_old: TcxGridDBColumn
             Caption = #1048#1044' '#1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
