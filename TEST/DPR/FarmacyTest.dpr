@@ -696,7 +696,11 @@ uses
   Report_GoodsPartionDate in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate.pas' {Report_GoodsPartionDateForm: TParentForm},
   PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   Report_CheckPartionDate in '..\..\FormsFarmacy\Report\Report_CheckPartionDate.pas' {Report_CheckPartionDateForm: TParentForm},
-  Report_CheckPartionDateDialog in '..\..\FormsFarmacy\Report\Report_CheckPartionDateDialog.pas' {Report_CheckPartionDateDialogForm: TParentForm};
+  Report_CheckPartionDateDialog in '..\..\FormsFarmacy\Report\Report_CheckPartionDateDialog.pas' {Report_CheckPartionDateDialogForm: TParentForm},
+  OverdueJournal in '..\..\FormsFarmacy\Cash\OverdueJournal.pas' {OverdueJournalForm: TParentForm},
+  OverdueDialog in '..\..\FormsFarmacy\Cash\OverdueDialog.pas' {OverdueDialogForm: TParentForm},
+  Report_GoodsRemainsCash in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCash.pas' {Report_GoodsRemainsCashForm: TParentForm},
+  Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

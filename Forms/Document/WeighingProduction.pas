@@ -153,6 +153,7 @@ type
     macUpdateParams: TMultiAction;
     spUpdate_Param: TdsdStoredProc;
     bbUpdateParams: TdxBarButton;
+    edIsAuto: TcxCheckBox;
   private
   public
   end;

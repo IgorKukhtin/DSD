@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Check(
     IN inMovementId        Integer  , -- ключ Документа
    OUT outMessageText      Text     ,
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS Text
 AS
 $BODY$
@@ -27,6 +27,75 @@ $BODY$
    DECLARE curSale refcursor;
 BEGIN
 
+     -- Проверим чтоб сроковый товар был прикреплен к партиям и был остаток
+     IF EXISTS(SELECT 1
+               FROM MovementItem AS MI
+                    INNER JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                      ON MILinkObject_PartionDateKind.MovementItemId   = MI.Id
+                                                     AND MILinkObject_PartionDateKind.DescId           = zc_MILinkObject_PartionDateKind()
+                    LEFT JOIN MovementItem AS MIChild
+                                           ON MIChild.MovementId = MI.MovementId
+                                          AND MIChild.ParentId   = MI.Id
+                                          AND MIChild.DescId     = zc_MI_Child()
+                                          AND MIChild.Amount     > 0
+                                          AND MIChild.isErased   = FALSE
+                    LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                ON MIFloat_ContainerId.MovementItemId = MIChild.Id
+                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                    LEFT JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+               WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE
+               GROUP BY MI.Id, MI.Amount
+               HAVING MI.Amount <> COALESCE(SUM(MIChild.Amount), 0)
+                   OR MI.Amount <> COALESCE(SUM(CASE WHEN COALESCE(Container.Amount, 0) < COALESCE(MIChild.Amount, 0) THEN COALESCE(Container.Amount, 0) ELSE COALESCE(MIChild.Amount, 0) END), 0))
+     THEN
+           -- Ошибка расч/факт остаток :
+           outMessageText:= '' || (SELECT STRING_AGG (tmp.Value, ' (***) ')
+                                     FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') ||
+                                                  ' в чеке: ' || zfConvert_FloatToString (MI.Amount) || COALESCE (Object_Measure.ValueData, '') ||
+                                                  '; распределено: ' || zfConvert_FloatToString (COALESCE(SUM(MIChild.Amount), 0)) || COALESCE (Object_Measure.ValueData, '') ||
+                                                  '; остаток: ' || zfConvert_FloatToString (COALESCE(SUM(CASE WHEN COALESCE(Container.Amount, 0) < COALESCE(MIChild.Amount, 0) THEN COALESCE(Container.Amount, 0) ELSE COALESCE(MIChild.Amount, 0) END), 0)) || COALESCE (Object_Measure.ValueData, '') AS Value
+                                           FROM MovementItem AS MI
+                                                INNER JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                                                  ON MILinkObject_PartionDateKind.MovementItemId   = MI.Id
+                                                                                 AND MILinkObject_PartionDateKind.DescId           = zc_MILinkObject_PartionDateKind()
+                                                LEFT JOIN MovementItem AS MIChild
+                                                                        ON MIChild.MovementId = MI.MovementId
+                                                                       AND MIChild.ParentId   = MI.Id
+                                                                       AND MIChild.DescId     = zc_MI_Child()
+                                                                       AND MIChild.Amount     > 0
+                                                                       AND MIChild.isErased   = FALSE
+                                                LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                            ON MIFloat_ContainerId.MovementItemId = MIChild.Id
+                                                                           AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                                LEFT JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+                                                LEFT JOIN Object ON Object.Id = MI.ObjectId
+                                                LEFT JOIN ObjectLink ON ObjectLink.ObjectId = MI.ObjectId
+                                                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure()
+                                                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink.ChildObjectId
+                                           WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE
+                                           GROUP BY MI.Id, MI.Amount, Object.ObjectCode, Object.ValueData, Object_Measure.ValueData
+                                           HAVING MI.Amount <> COALESCE(SUM(MIChild.Amount), 0)
+                                               OR MI.Amount <> COALESCE(SUM(CASE WHEN COALESCE(Container.Amount, 0) < COALESCE(MIChild.Amount, 0) THEN COALESCE(Container.Amount, 0) ELSE COALESCE(MIChild.Amount, 0) END), 0)
+                                         ) AS tmp
+                                    )
+                         || '';
+
+           -- Сохранили ошибку
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, outMessageText :: TVarChar);
+
+           -- Ошибка расч/факт остаток :
+           outMessageText:= 'Ошибка.Партионного товара: ' || outMessageText;
+
+           -- кроме Админа
+           IF 0 = 1 OR inUserId <> 3
+           THEN
+               -- больше ничего не делаем
+               RETURN;
+           END IF;
+
+
+     END IF;
+
      -- создаются временные таблицы - для формирование данных для проводок
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMIContainer_insert'))
      THEN
@@ -46,14 +115,14 @@ BEGIN
 
     -- Определить
     vbAccountId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000()         -- Запасы
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад 
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад
                                              , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
     -- Определить
     vbUnitId:= (SELECT MovementLinkObject.ObjectId
-                FROM MovementLinkObject 
-                WHERE MovementLinkObject.MovementId = inMovementId 
+                FROM MovementLinkObject
+                WHERE MovementLinkObject.MovementId = inMovementId
                   AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit());
 
 
@@ -76,7 +145,17 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MI.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-       WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE;
+            LEFT JOIN MovementItem AS MIChild
+                                   ON MIChild.MovementId = MI.MovementId
+                                  AND MIChild.ParentId   = MI.Id
+                                  AND MIChild.DescId     = zc_MI_Child()
+                                  AND MIChild.Amount     > 0
+                                  AND MIChild.isErased   = FALSE
+            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                        ON MIFloat_ContainerId.MovementItemId = MIChild.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+       WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE
+         AND COALESCE (MIChild.Id, 0) = 0;
 
     -- предварительно сохранили остаток
     INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, Amount, OperDate)
@@ -90,6 +169,12 @@ BEGIN
                                 AND Container.WhereObjectId = vbUnitId
                                 AND Container.ObjectId = tmp.ObjectId
                                 AND Container.Amount > 0
+            LEFT JOIN Container AS PDContainer
+                                ON PDContainer.DescId = zc_Container_CountPartionDate()
+                               AND PDContainer.ParentId = Container.Id
+                               AND PDContainer.WhereObjectId = vbUnitId
+                               AND PDContainer.ObjectId = tmp.ObjectId
+                               AND PDContainer.Amount > 0
             -- партия
             INNER JOIN ContainerLinkObject AS CLI_MI
                                            ON CLI_MI.ContainerId = Container.Id
@@ -102,10 +187,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                         ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+            WHERE COALESCE (PDContainer.id, 0) = 0
            ;
 
 
-    -- Проверим что б БЫЛ остаток
+    -- Проверим что б БЫЛ остаток в целом
     IF EXISTS (SELECT 1 FROM (SELECT ObjectId AS GoodsId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0))
     THEN
            -- Ошибка расч/факт остаток :
@@ -134,7 +220,6 @@ BEGIN
            END IF;
 
      END IF;
-
 
     -- !!!Только если товар дублируется - Распределим по старинке!!!
     IF EXISTS (SELECT 1 FROM _tmpItem GROUP BY ObjectId HAVING COUNT (*) > 1)
@@ -232,7 +317,8 @@ BEGIN
                                       , SUM (Container.Amount) OVER (PARTITION BY Container.GoodsId ORDER BY Container.OperDate, Container.ContainerId, MI_Sale.MovementItemId) AS ContainerAmountSUM
                                       , ROW_NUMBER() OVER (PARTITION BY /*MI_Sale.ObjectId*/ MI_Sale.MovementItemId ORDER BY Container.OperDate DESC, Container.ContainerId DESC, MI_Sale.MovementItemId DESC) AS DOrd
                                  FROM _tmpItem AS MI_Sale
-                                      INNER JOIN _tmpItem_remains AS Container ON Container.GoodsId = MI_Sale.ObjectId
+                                      INNER JOIN _tmpItem_remains AS Container
+                                                                  ON Container.GoodsId = MI_Sale.ObjectId
                                 )
            -- Результат
            SELECT zc_MIContainer_Count()
@@ -262,11 +348,110 @@ BEGIN
                    ) AS tmpItem;
 
     END IF;
-    
+
+        -- !!!Сразу!!! - Результат - проводки кол-во по сроковым документам
+    IF EXISTS(SELECT 1 FROM MovementItem AS MIChild
+              WHERE MIChild.MovementId = inMovementId
+                AND MIChild.DescId     = zc_MI_Child()
+                AND MIChild.Amount     > 0
+                AND MIChild.isErased   = FALSE)
+    THEN
+        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
+                                          , ObjectId_analyzer, WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
+                                           )
+           -- Результат
+           SELECT zc_MIContainer_Count()
+                , zc_Movement_Check()
+                , inMovementId
+                , MI.ParentId
+                , Container.ParentId
+                , vbAccountId
+                , -1 * MI.Amount
+                , vbOperDate
+                , MI.ObjectId                    AS ObjectId_analyzer
+                , vbUnitId                       AS WhereObjectId_analyzer
+                , CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0
+                      THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS AnalyzerId
+                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer
+                   WHERE MIContainer.MovementItemId =  CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0
+                      THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END
+                      AND MIContainer.DescId = zc_MIContainer_Count()
+                      AND MIContainer.ObjectIntId_analyzer <> 0) AS ObjectIntId_analyzer
+                , COALESCE (MIFloat_Price.ValueData, 0)
+           FROM MovementItem AS MI
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = MI.ParentId
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                        ON MIFloat_ContainerId.MovementItemId = MI.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                LEFT JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+
+                -- партия
+                INNER JOIN ContainerLinkObject AS CLI_MI
+                                               ON CLI_MI.ContainerId = Container.ParentId
+                                              AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                -- элемент прихода
+                INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                            ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+           WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.Amount > 0 AND MI.isErased = FALSE;
+
+
+        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
+                                          , ObjectId_analyzer, WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
+                                           )
+           -- Результат
+           SELECT zc_MIContainer_CountPartionDate()
+                , zc_Movement_Check()
+                , inMovementId
+                , MI.Id
+                , Container.ID
+                , NULL
+                , -1 * MI.Amount
+                , vbOperDate
+                , MI.ObjectId                    AS ObjectId_analyzer
+                , vbUnitId                       AS WhereObjectId_analyzer
+                , CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0
+                      THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS AnalyzerId
+                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer
+                   WHERE MIContainer.MovementItemId =  CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0
+                      THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END
+                      AND MIContainer.DescId = zc_MIContainer_Count()
+                      AND MIContainer.ObjectIntId_analyzer <> 0) AS ObjectIntId_analyzer
+                , COALESCE (MIFloat_Price.ValueData, 0)
+           FROM MovementItem AS MI
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = MI.ParentId
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                        ON MIFloat_ContainerId.MovementItemId = MI.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                LEFT JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+
+                -- партия
+                INNER JOIN ContainerLinkObject AS CLI_MI
+                                               ON CLI_MI.ContainerId = Container.ParentId
+                                              AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                -- элемент прихода
+                INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                            ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+           WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.Amount > 0 AND MI.isErased = FALSE;
+    END IF;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-    
+
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Check()
@@ -279,9 +464,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
- 06.06.19                                                                   * 
- 11.02.14                        * 
- 05.02.14                        * 
+ 06.06.19                                                                   *
+ 11.02.14                        *
+ 05.02.14                        *
 */
 
 -- тест

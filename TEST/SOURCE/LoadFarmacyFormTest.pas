@@ -317,6 +317,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashGoodsOneToExpirationDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashGoodsOneToExpirationDateForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;
@@ -721,6 +729,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateDialogForm'));

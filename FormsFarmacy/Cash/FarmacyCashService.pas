@@ -804,7 +804,7 @@ begin
   finally
     Add_Log('End MutexRemains 335');
     ReleaseMutex(MutexRemains);
-    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+//    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
   end;
 end;
 

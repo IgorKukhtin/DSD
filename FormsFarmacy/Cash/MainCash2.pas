@@ -376,6 +376,11 @@ type
     cxButton7: TcxButton;
     cxEditRepository1: TcxEditRepository;
     cxEditRepository1BlobItem1: TcxEditRepositoryBlobItem;
+    pmOverdueJournal: TMenuItem;
+    actOverdueJournal: TdsdOpenForm;
+    N30: TMenuItem;
+    actReport_GoodsRemainsCash: TdsdOpenForm;
+    actReportGoodsRemainsCash1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -4968,6 +4973,8 @@ begin
     spGet_User_IsAdmin.Execute;
     pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True;
   End;
+  actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
+  actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во врем€ пробити€ чека через Ё  ј

@@ -1,26 +1,26 @@
 inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
-  ClientWidth = 903
-  ExplicitWidth = 919
+  ClientWidth = 913
+  ExplicitWidth = 929
   ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Width = 903
+    Width = 913
     Height = 556
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 903
     ExplicitHeight = 556
     ClientRectBottom = 556
-    ClientRectRight = 903
+    ClientRectRight = 913
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 903
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
-        Width = 903
+        Width = 913
         Height = 224
         ExplicitWidth = 903
         ExplicitHeight = 224
@@ -190,7 +190,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       inherited cxGridChild: TcxGrid
         Top = 229
-        Width = 903
+        Width = 913
         ExplicitTop = 229
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -379,14 +379,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 224
-        Width = 903
+        Width = 913
         ExplicitTop = 224
         ExplicitWidth = 903
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 903
+    Width = 913
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
@@ -411,6 +411,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Properties.ReadOnly = True
       TabOrder = 12
       Width = 335
+    end
+    object edIsAuto: TcxCheckBox
+      Left = 766
+      Top = 23
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 143
     end
   end
   inherited ActionList: TActionList
@@ -969,6 +977,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Name = 'isCalculated'
         Value = Null
         Component = cbCalculated
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsAuto'
+        Value = Null
+        Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

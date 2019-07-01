@@ -324,6 +324,14 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
       Top = 43
       Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
     end
+    object edIsAuto: TcxCheckBox
+      Left = 490
+      Top = 61
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 157
+    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -817,8 +825,10 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'IsAuto'
         Value = Null
-        ParamType = ptUnknown
+        Component = edIsAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 288

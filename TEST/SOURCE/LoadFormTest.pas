@@ -1335,7 +1335,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateItemJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
 
@@ -1344,7 +1344,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
-  }
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
@@ -3182,10 +3181,12 @@ end;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
+
   //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
-
+  }
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;

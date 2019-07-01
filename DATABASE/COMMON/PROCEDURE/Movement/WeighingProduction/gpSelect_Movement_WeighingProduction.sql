@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
-             , isProductionIn Boolean
+             , isProductionIn Boolean, isAuto Boolean
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
@@ -69,6 +69,7 @@ BEGIN
 
              , MovementString_PartionGoods.ValueData      AS PartionGoods
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
+             , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
@@ -113,9 +114,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId =  Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()

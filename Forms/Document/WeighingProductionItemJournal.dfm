@@ -376,6 +376,23 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Options.Editing = False
         Width = 77
       end
+      object isAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+        DataBinding.FieldName = 'isAuto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
+      object isAutoMI: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1090#1086#1074#1072#1088')'
+        DataBinding.FieldName = 'isAutoMI'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1089#1090#1088#1086#1082#1072')'
+        Options.Editing = False
+        Width = 57
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'

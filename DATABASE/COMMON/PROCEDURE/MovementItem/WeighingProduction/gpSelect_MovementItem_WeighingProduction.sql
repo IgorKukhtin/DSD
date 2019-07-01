@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingProduction(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
-             , StartWeighing Boolean
+             , StartWeighing Boolean, isAuto Boolean
              , InsertDate TDateTime, UpdateDate TDateTime
              , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat
              , HeadCount TFloat, Count TFloat, CountPack TFloat
@@ -43,6 +43,8 @@ BEGIN
            , MovementItem.Amount
 
            , MIBoolean_StartWeighing.ValueData AS StartWeighing
+           , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
+           
            , MIDate_Insert.ValueData           AS InsertDate
            , MIDate_Update.ValueData           AS UpdateDate
            
@@ -92,6 +94,9 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_StartWeighing
                                           ON MIBoolean_StartWeighing.MovementItemId = MovementItem.Id
                                          AND MIBoolean_StartWeighing.DescId = zc_MIBoolean_StartWeighing()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id

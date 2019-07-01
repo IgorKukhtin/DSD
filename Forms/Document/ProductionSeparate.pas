@@ -67,6 +67,7 @@ type
     actUpdate_StorageLineByChild: TdsdExecStoredProc;
     macUpdate_StorageLineByChild: TMultiAction;
     bbUpdate_StorageLineByChild: TdxBarButton;
+    edIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public
