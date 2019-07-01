@@ -267,6 +267,50 @@ BEGIN
       ,IsActive
     FROM tmpSumm;
 
+      -- Проводки если затронуты контейнера сроков
+    IF EXISTS(SELECT 1 FROM Container WHERE Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
+                                                                   WHERE _tmpMIContainer_insert.DescId = zc_Container_Count()))
+    THEN
+
+      WITH DD AS (
+         SELECT
+            _tmpMIContainer_insert.MovementItemId
+          , _tmpMIContainer_insert.Amount
+          , Container.Amount AS ContainerAmount
+          , vbSendDate       AS OperDate
+          , Container.Id     AS ContainerId
+          , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id)
+          FROM Container
+               JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId
+                                          AND _tmpMIContainer_insert.DescId = zc_Container_Count()
+          WHERE Container.DescId = zc_Container_CountPartionDate()
+            AND Container.Amount > 0.0
+            AND _tmpMIContainer_insert.Amount < 0.0
+         )
+
+       , tmpItem AS (SELECT ContainerId     AS Id
+		                    , MovementItemId  AS MovementItemId
+                            , OperDate
+			                , CASE WHEN -Amount - SUM > 0.0 THEN ContainerAmount
+                                 ELSE -Amount - SUM + ContainerAmount
+                                 END AS Amount
+                       FROM DD
+                       WHERE (Amount < 0 AND -Amount - (SUM - ContainerAmount) >= 0))
+
+        INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+          SELECT
+                 zc_Container_CountPartionDate()
+               , zc_Movement_Send()
+               , inMovementId
+               , tmpItem.MovementItemId
+               , tmpItem.Id
+               , Null
+               , -Amount
+               , OperDate
+            FROM tmpItem;
+
+    END IF;
+
 
      -- ФИНИШ - Обязательно сохранили
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

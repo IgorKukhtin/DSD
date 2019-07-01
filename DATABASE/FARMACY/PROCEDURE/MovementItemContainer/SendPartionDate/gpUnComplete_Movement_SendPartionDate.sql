@@ -31,9 +31,13 @@ BEGIN
                                               ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
                                              AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
                                              AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId
+                 LEFT JOIN MovementBoolean AS MovementBoolean_TransferNext
+                                           ON MovementBoolean_TransferNext.MovementId = MovementNext.Id
+                                           AND MovementBoolean_TransferNext.DescId = zc_MovementBoolean_Transfer()
 
               WHERE MovementCurr.ID = inMovementId
                 AND COALESCE (MovementBoolean_Transfer.ValueData, False) = False
+                AND COALESCE (MovementBoolean_TransferNext.ValueData, False) = False
                 AND MovementCurr.StatusId = zc_Enum_Status_Complete()
              )
     THEN
