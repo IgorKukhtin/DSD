@@ -1494,10 +1494,6 @@
 				<Form>Unit_byReportBadmForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
-				<Form>Unit_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\DataTimeDialog.pas">
 				<Form>DataTimeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2390,14 +2386,16 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas">
-				<Form>Report_GoodsPartionMoveCashDialogForm</Form>
-				<FormType>dfm</FormType>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCash.pas">
 				<Form>Report_GoodsPartionMoveCashForm</Form>
-				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas">
+				<Form>Report_GoodsPartionMoveCashDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

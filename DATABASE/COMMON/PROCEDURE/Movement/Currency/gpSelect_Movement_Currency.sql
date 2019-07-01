@@ -80,7 +80,7 @@ BEGIN
 
            , MovementItem.Amount             AS Amount
            , MIFloat_ParValue.ValueData      AS ParValue
-           , COALESCE (tmpMIContainer.Amount_Currency, 0) :: TFloat AS Amount_Currency
+           , COALESCE (-1 * tmpMIContainer.Amount_Currency, 0) :: TFloat AS Amount_Currency
 
            , MIString_Comment.ValueData      AS Comment
 
