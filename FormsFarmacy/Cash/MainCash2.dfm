@@ -3056,7 +3056,6 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1054#1089#1090#1072#1090#1086#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
       Enabled = False
       Hint = #1054#1089#1090#1072#1090#1086#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
-      ShortCut = 16467
       OnExecute = actCashGoodsOneToExpirationDateExecute
     end
     object actOpenDelayVIPForm: TdsdOpenForm
