@@ -1,13 +1,13 @@
 -- Function: gpGet_ScaleCeh_GoodsSeparate()
 
-DROP FUNCTION IF EXISTS gpGet_ScaleCeh_GoodsSeparate (TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_ScaleCeh_GoodsSeparate (TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_ScaleCeh_GoodsSeparate (TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_ScaleCeh_GoodsSeparate(
     IN inOperDate              TDateTime   , --
     IN inMovementId            Integer     , --
     IN inGoodsId               Integer     , --
     IN inPartionGoods          TVarChar    , --
+    IN inIsClose               Boolean     , --
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId          Integer
@@ -35,6 +35,9 @@ RETURNS TABLE (MovementId          Integer
              , HeadCount_PR        TFloat
              , HeadCount_P         TFloat
              , HeadCount_in        TFloat   -- все кол-во, которое будет распределяться: или из Обв-приход или из текущего взвешивания
+
+             , TotalCount_isOpen   TFloat
+             , HeadCount_isOpen    TFloat
 
              , PartionGoods_null   TVarChar
              , PartionGoods_MO     TVarChar
@@ -105,11 +108,14 @@ BEGIN
                                              WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS HeadCount_null
 
                                    -- точно соответствует партии
-                                 , SUM (CASE WHEN MovementString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
+                                 , SUM (CASE WHEN inIsClose = TRUE AND MovementString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
                                               AND MovementItem.DescId = zc_MI_Child()  THEN MovementItem.Amount ELSE 0 END) AS TotalCount_in
                                    -- точно соответствует партии
-                                 , SUM (CASE WHEN MovementString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
+                                 , SUM (CASE WHEN inIsClose = TRUE AND MovementString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
                                               AND MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS HeadCount_in
+
+                                 , 0 AS TotalCount_isOpen
+                                 , 0 AS HeadCount_isOpen
 
                              FROM Movement
                                   LEFT JOIN MovementString AS MovementString_PartionGoods
@@ -159,13 +165,22 @@ BEGIN
                                  , 0 AS TotalCount_null
                                  , 0 AS HeadCount_null
                                  , SUM (MovementItem.Amount)                       AS TotalCount_in
-                                 , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
+                                 , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount_in
+                                 , SUM (CASE WHEN MIBoolean_isAuto.ValueData = TRUE THEN 0 ELSE MovementItem.Amount                       END) AS TotalCount_isOpen
+                                 , SUM (CASE WHEN MIBoolean_isAuto.ValueData = TRUE THEN 0 ELSE COALESCE (MIFloat_HeadCount.ValueData, 0) END) AS HeadCount_isOpen
 
                              FROM Movement
+                                  INNER JOIN MovementBoolean AS MovementBoolean_isIncome
+                                                             ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                                            AND MovementBoolean_isIncome.DescId     = zc_MovementBoolean_isIncome()
+                                                            AND MovementBoolean_isIncome.ValueData  = TRUE
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          AND MovementItem.ObjectId   = inGoodsId
                                                          AND MovementItem.isErased   = FALSE
+                                  LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                                                ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                                               AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
                                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                              AND MIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
@@ -181,6 +196,7 @@ BEGIN
                              WHERE Movement.Id = inMovementId
                                -- точно соответствует партии
                                AND MIString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
+                               AND inIsClose = FALSE
                             GROUP BY Movement.Id
                                    , Movement.StatusId
                                    , Movement.InvNumber
@@ -218,6 +234,9 @@ BEGIN
             , tmpMovement.HeadCount_P     :: TFloat AS HeadCount_P
             , tmpMovement.HeadCount_in    :: TFloat AS HeadCount_in
 
+            , tmpMovement.TotalCount_isOpen    :: TFloat   AS TotalCount_isOpen
+            , tmpMovement.HeadCount_isOpen     :: TFloat   AS HeadCount_isOpen
+
             , tmp.PartionGoods_calc            :: TVarChar AS PartionGoods_null
             , ('мо-' || tmp.PartionGoods_calc) :: TVarChar AS PartionGoods_MO
             , ('об-' || tmp.PartionGoods_calc) :: TVarChar AS PartionGoods_OB
@@ -249,4 +268,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_GoodsSeparate (inOperDate:= '25.06.2019', inMovementId:= 1, inGoodsId:= 4261, inPartionGoods:= 'мо-4218-11956-25.06.2019', inSession:= zfCalc_UserAdmin()) -- 4134;"СВИНИНА н/к в/ш 2кат_*"
+-- SELECT * FROM gpGet_ScaleCeh_GoodsSeparate (inOperDate:= '25.06.2019', inMovementId:= 1, inGoodsId:= 4261, inPartionGoods:= 'мо-4218-11956-25.06.2019', inIsClose:= FALSE, inSession:= zfCalc_UserAdmin()) -- 4134;"СВИНИНА н/к в/ш 2кат_*"

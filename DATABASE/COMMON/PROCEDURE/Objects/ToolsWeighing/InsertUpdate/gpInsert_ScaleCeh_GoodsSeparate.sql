@@ -1,8 +1,9 @@
 -- Function: gpInsert_ScaleCeh_GoodsSeparate()
 
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_GoodsSeparate (TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_GoodsSeparate (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, TVarChar, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_GoodsSeparate(
+    IN inMovementId          Integer   , -- 
     IN inOperDate            TDateTime , -- Дата документа
     IN inMovementDescId      Integer   , -- Вид документа
     IN inMovementDescNumber  Integer   , -- Вид документа
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_GoodsSeparate(
     IN inPartionGoods        TVarChar  , --
     IN inAmount              TFloat    , --
     IN inHeadCount           TFloat    , --
+    IN inIsClose             Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (MovementId        Integer
@@ -34,11 +36,59 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- сохранили
+     -- Проверка
      IF inMovementDescId <> zc_Movement_ProductionSeparate()
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный код операции <%>.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId);
      END IF;
+
+     -- Проверка
+     IF inIsClose = FALSE AND COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет сохраненных партий.';
+     END IF;
+
+     -- Проверка - если по текущему взвешиванию, кол-во которое будет закрыто MovementItem в должно соответствовать inAmount
+     IF inIsClose = FALSE AND inAmount <> COALESCE((SELECT SUM (MovementItem.Amount)
+                                                    FROM MovementItem
+                                                         LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                                                                       ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                                                                      AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
+                                                    WHERE MovementItem.MovementId = inMovementId
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.ObjectId   = inGoodsId
+                                                      AND MovementItem.isErased   = FALSE
+                                                      AND COALESCE (MIBoolean_isAuto.ValueData, FALSE) = FALSE
+                                                   ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не соответствует кол-во для расхода = <%> и текущее взвешивание приход = <%> .'
+                       , inAmount
+                       , COALESCE((SELECT SUM (MovementItem.Amount)
+                                   FROM MovementItem
+                                        LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                                                      ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.DescId     = zc_MI_Master()
+                                     AND MovementItem.ObjectId   = inGoodsId
+                                     AND MovementItem.isErased   = FALSE
+                                     AND COALESCE (MIBoolean_isAuto.ValueData, FALSE) = FALSE
+                                  ), 0)
+                       ;
+     END IF;
+
+
+     -- сохранили свойство <Автоматически> - закрыли MovementItem
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), MovementItem.Id, TRUE)
+     FROM MovementItem
+          LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                        ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.ObjectId   = inGoodsId
+       AND MovementItem.isErased   = FALSE
+       AND COALESCE (MIBoolean_isAuto.ValueData, FALSE) = FALSE;
 
 
      -- новый документ zc_Movement_WeighingProduction
@@ -59,11 +109,14 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);
 
      -- новый элемент zc_Movement_WeighingProduction
-     PERFORM gpInsert_ScaleCeh_MI (ioId                  := 0
+     PERFORM gpInsert_ScaleCeh_MI (inId                  := 0
                                  , inMovementId          := vbMovementId
                                  , inGoodsId             := inGoodsId
-                                 , inAmount              := inAmount
+                                 , inGoodsKindId         := zc_GoodsKind_Basis()
+                                 , inStorageLineId       := NULL
                                  , inIsStartWeighing     := TRUE
+                                 , inIsPartionGoodsDate  := FALSE
+                                 , inOperCount           := inAmount
                                  , inRealWeight          := inAmount
                                  , inWeightTare          := 0
                                  , inLiveWeight          := 0
@@ -77,14 +130,12 @@ BEGIN
                                  , inWeightOther         := 0
                                  , inPartionGoodsDate    := NULL
                                  , inPartionGoods        := inPartionGoods
-                                 , inMovementItemId      := 0
-                                 , inGoodsKindId         := zc_GoodsKind_Basis()
-                                 , inStorageLineId       := NULL
+                                 , inBranchCode          := inBranchCode
                                  , inSession             := inSession
                                   );
 
      -- сохранили zc_Movement_ProductionSeparate
-     vbMovementId_begin:= (SELECT tmp.Id
+     vbMovementId_begin:= (SELECT tmp.MovementId_begin
                            FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= inBranchCode
                                                               , inMovementId:= vbMovementId
                                                               , inOperDate  := inOperDate

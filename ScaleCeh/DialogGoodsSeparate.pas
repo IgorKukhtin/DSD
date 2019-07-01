@@ -44,9 +44,10 @@ type
     lPartionGoods, lPartionGoods_null, lPartionGoods_MO, lPartionGoods_OB, lPartionGoods_PR, lPartionGoods_P : String;
     lOperDate : TDateTime;
     lGoodsId : Integer;
+    lIsClose : Boolean;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute (inOperDate : TDateTime; inMovementId, inGoodsId, inGoodsCode : Integer; inGoodsName, inPartionGoods : String): Boolean; virtual;
+    function Execute (inOperDate : TDateTime; inMovementId, inGoodsId, inGoodsCode : Integer; inGoodsName, inPartionGoods : String; inIsClose : Boolean): Boolean; virtual;
   end;
 
 var
@@ -56,18 +57,24 @@ implementation
 {$R *.dfm}
 uses MainCeh, UtilScale, dmMainScaleCeh, UtilPrint;
 {------------------------------------------------------------------------------}
-function TDialogGoodsSeparateForm.Execute (inOperDate : TDateTime; inMovementId, inGoodsId, inGoodsCode : Integer; inGoodsName, inPartionGoods : String) : Boolean;
+function TDialogGoodsSeparateForm.Execute (inOperDate : TDateTime; inMovementId, inGoodsId, inGoodsCode : Integer; inGoodsName, inPartionGoods : String; inIsClose : Boolean) : Boolean;
 var tmpTotalCount_in, tmpHeadCount_in : Double;
+    tmpTotalCount_isOpen, tmpHeadCount_isOpen : Double;
 begin
       Result:= false;
       //
+      if inIsClose = TRUE then Self.Caption:= 'Разделение Закрытой ПАРТИИ для <РАСХОД>'
+                          else Self.Caption:= 'Разделение Текущей ПАРТИИ для <РАСХОД>';
+      //
       lOperDate    :=inOperDate;
       lPartionGoods:= inPartionGoods;
-      lGoodsId     :=inGoodsId;
+      lGoodsId     := inGoodsId;
+      lIsClose     := inIsClose;
       //
       if not DMMainScaleCehForm.gpGet_ScaleCeh_GoodsSeparate(inOperDate, inMovementId, inGoodsId, inPartionGoods
-                                                           , tmpTotalCount_in, lTotalCount_null, lTotalCount_MO, lTotalCount_OB, lTotalCount_PR, lTotalCount_P
-                                                           , tmpHeadCount_in, lHeadCount_null, lHeadCount_MO, lHeadCount_OB, lHeadCount_PR, lHeadCount_P
+                                                           , inIsClose
+                                                           , tmpTotalCount_in, tmpTotalCount_isOpen, lTotalCount_null, lTotalCount_MO,lTotalCount_OB, lTotalCount_PR, lTotalCount_P
+                                                           , tmpHeadCount_in, tmpHeadCount_isOpen, lHeadCount_null, lHeadCount_MO, lHeadCount_OB, lHeadCount_PR, lHeadCount_P
                                                            , lPartionGoods_null, lPartionGoods_MO, lPartionGoods_OB, lPartionGoods_PR, lPartionGoods_P
                                                             )
       then exit;
@@ -78,8 +85,18 @@ begin
            // exit;
       end;
       //
-      lTotalCount_in:= tmpTotalCount_in - lTotalCount_null - lTotalCount_MO - lTotalCount_OB - lTotalCount_PR - lTotalCount_P;
-      lHeadCount_in := tmpHeadCount_in - lHeadCount_null - lHeadCount_MO - lHeadCount_OB - lHeadCount_PR - lHeadCount_P;
+      if inIsClose = TRUE then
+      begin
+        // для закрытых считаем приход минус все расходы
+        lTotalCount_in:= tmpTotalCount_in - lTotalCount_null - lTotalCount_MO - lTotalCount_OB - lTotalCount_PR - lTotalCount_P;
+        lHeadCount_in := tmpHeadCount_in - lHeadCount_null - lHeadCount_MO - lHeadCount_OB - lHeadCount_PR - lHeadCount_P;
+      end
+      else
+      begin
+        // для открытых считаем текущие взвешивания если они открыты
+        lTotalCount_in:= tmpTotalCount_isOpen;
+        lHeadCount_in := tmpHeadCount_isOpen;
+      end;
       //
       NullEdit.Text:= '(' + FormatFloat(fmtHead, lHeadCount_null) + ') ' + FormatFloat(fmtWeight, lTotalCount_null);
       MOEdit.Text  := '(' + FormatFloat(fmtHead, lHeadCount_MO)   + ') ' + FormatFloat(fmtWeight, lTotalCount_MO);
@@ -227,7 +244,7 @@ begin
           exit;
      end;
      //
-     Result:= DMMainScaleCehForm.gpInsert_ScaleCeh_GoodsSeparate(retMovementId_begin, retMovementId, ParamsMovement, lOperDate, lGoodsId, PartionGoods_calc, lTotalCount_in, lHeadCount_in);
+     Result:= DMMainScaleCehForm.gpInsert_ScaleCeh_GoodsSeparate(retMovementId_begin, retMovementId, ParamsMovement, lOperDate, lGoodsId, PartionGoods_calc, lTotalCount_in, lHeadCount_in, lIsClose);
      if Result then
      begin
        Print_Movement (ParamsMovement.ParamByName('MovementDescId').AsInteger

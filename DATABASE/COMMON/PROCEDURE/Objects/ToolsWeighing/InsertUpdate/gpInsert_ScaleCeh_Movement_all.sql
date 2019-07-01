@@ -31,14 +31,21 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
      vbUserId:= lpGetUserBySession (inSession);
 
-     --
-     CREATE TEMP TABLE _tmpScale_receipt (GoodsId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer) ON COMMIT DROP;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
+
+     --
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpScale_receipt'))
+     THEN
+         DELETE FROM _tmpScale_receipt;
+     ELSE
+         CREATE TEMP TABLE _tmpScale_receipt (GoodsId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer) ON COMMIT DROP;
+     END IF;
+
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()) :: Integer;
@@ -550,7 +557,7 @@ BEGIN
      -- сохранили <строчная часть>
      SELECT MAX (tmpId) INTO vbId_tmp
      FROM (-- элементы документа (были сохранены раньше)
-           WITH tmpMI AS 
+           WITH tmpMI AS
                      (SELECT MovementItem.Id                                     AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
@@ -820,7 +827,7 @@ BEGIN
                                   WHEN inBranchCode = 101 -- если Упаковка
                                    AND vbMovementDescId = zc_Movement_Send()
                                        THEN MovementItem.Id -- не надо суммировать
-                                  
+
                                   WHEN inBranchCode <> 201 -- если НЕ Обвалка
                                        THEN 0 -- можно суммировать
                                   -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
@@ -1256,6 +1263,99 @@ BEGIN
           END IF;
 
      END IF;*/
+
+
+     -- теперь еще zc_Movement_ProductionSeparate - автоматом некоторые позиции
+     IF vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = TRUE AND vbUserId = 5
+     THEN
+         -- для каждой позиции - новые документы 1)zc_Movement_WeighingProduction + 2)zc_Movement_ProductionSeparate
+         PERFORM gpInsert_ScaleCeh_GoodsSeparate (inMovementId          := inMovementId
+                                                , inOperDate            := tmp.OperDate
+                                                , inMovementDescId      := tmp.MovementDescId     :: Integer
+                                                , inMovementDescNumber  := tmp.MovementDescNumber :: Integer
+                                                , inFromId              := tmp.FromId
+                                                , inToId                := tmp.ToId
+                                                , inIsProductionIn      := FALSE        -- всегда РАСХОД
+                                                , inBranchCode          := inBranchCode --
+                                                , inGoodsId             := tmp.GoodsId
+                                                , inPartionGoods        := (COALESCE (GoodsCode, 0) :: TVarChar
+                                                                           || '-' || TO_CHAR (inOperDate, 'DD.MM.YYYY')) :: TVarChar
+                                                , inAmount              := tmp.Amount
+                                                , inHeadCount           := 0 :: TFloat
+                                                , inIsClose             := FALSE
+                                                , inSession             := inSession
+                                                 )
+         FROM (WITH tmpMovement AS (SELECT Movement.OperDate                          AS OperDate
+                                         , MovementLinkObject_From.ObjectId           AS FromId
+                                         , MovementLinkObject_To.ObjectId             AS ToId
+                                         , MovementFloat_MovementDesc.ValueData       AS MovementDescId
+                                         , MovementFloat_MovementDescNumber.ValueData AS MovementDescNumber
+                                    FROM Movement
+                                         LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                                                 ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                                                AND MovementFloat_MovementDescNumber.DescId     = zc_MovementFloat_MovementDescNumber()
+                                         LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                                 ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                                AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                     ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+    
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                    WHERE Movement.Id = inMovementId
+                                   )
+                  , tmpGoodsScaleCeh AS (SELECT tmpMovement.OperDate
+                                              , tmpMovement.FromId
+                                              , tmpMovement.ToId
+                                              , tmpMovement.MovementDescId
+                                              , tmpMovement.MovementDescNumber
+                                              , Object_Goods.Id         AS GoodsId
+                                              , Object_Goods.ObjectCode AS GoodsCode
+                                         FROM Object AS Object_GoodsScaleCeh
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsScaleCeh_Goods
+                                                                   ON ObjectLink_GoodsScaleCeh_Goods.ObjectId = Object_GoodsScaleCeh.Id
+                                                                  AND ObjectLink_GoodsScaleCeh_Goods.DescId = zc_ObjectLink_GoodsScaleCeh_Goods()
+                                              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsScaleCeh_Goods.ChildObjectId
+                              
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsScaleCeh_From
+                                                                   ON ObjectLink_GoodsScaleCeh_From.ObjectId = Object_GoodsScaleCeh.Id
+                                                                  AND ObjectLink_GoodsScaleCeh_From.DescId   = zc_ObjectLink_GoodsScaleCeh_From()
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsScaleCeh_To
+                                                                   ON ObjectLink_GoodsScaleCeh_To.ObjectId = Object_GoodsScaleCeh.Id
+                                                                  AND ObjectLink_GoodsScaleCeh_To.DescId   = zc_ObjectLink_GoodsScaleCeh_To()
+
+                                              INNER JOIN tmpMovement ON tmpMovement.FromId = ObjectLink_GoodsScaleCeh_From.ChildObjectId
+                                                                    AND tmpMovement.ToId   = ObjectLink_GoodsScaleCeh_To.ChildObjectId
+                                         WHERE Object_GoodsScaleCeh.DescId   = zc_Object_GoodsScaleCeh()
+                                           AND Object_GoodsScaleCeh.isErased = FALSE
+                                        )
+               -- Результат
+               SELECT tmpGoodsScaleCeh.OperDate
+                    , tmpGoodsScaleCeh.FromId
+                    , tmpGoodsScaleCeh.ToId
+                    , tmpGoodsScaleCeh.MovementDescId
+                    , tmpGoodsScaleCeh.MovementDescNumber
+                    , tmpGoodsScaleCeh.GoodsId
+                    , tmpGoodsScaleCeh.GoodsCode
+                    , SUM (MovementItem.Amount) AS Amount
+               FROM MovementItem
+                    INNER JOIN tmpGoodsScaleCeh ON tmpGoodsScaleCeh.GoodsId = MovementItem.ObjectId
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.isErased   = FALSE
+               GROUP BY tmpGoodsScaleCeh.OperDate
+                      , tmpGoodsScaleCeh.FromId
+                      , tmpGoodsScaleCeh.ToId
+                      , tmpGoodsScaleCeh.MovementDescId
+                      , tmpGoodsScaleCeh.MovementDescNumber
+                      , tmpGoodsScaleCeh.GoodsId
+                      , tmpGoodsScaleCeh.GoodsCode
+              ) AS tmp;
+
+     END IF;
+
 
 if inSession = '5' AND 1=1
 then

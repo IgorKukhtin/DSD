@@ -262,7 +262,8 @@ type
     Timer_GetWeight: TTimer;
     testButton1: TButton;
     testButton2: TButton;
-    bbInsertPartionGoods_out: TSpeedButton;
+    bbInsertPartionGoodsOpen_out: TSpeedButton;
+    bbInsertPartionGoodsClose_out: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -336,7 +337,8 @@ type
     procedure Timer_GetWeightTimer(Sender: TObject);
     procedure testButton1Click(Sender: TObject);
     procedure testButton2Click(Sender: TObject);
-    procedure bbInsertPartionGoods_outClick(Sender: TObject);
+    procedure bbInsertPartionGoodsOpen_outClick(Sender: TObject);
+    procedure bbInsertPartionGoodsClose_outClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -2316,7 +2318,8 @@ begin
   bbChangeHeadCount.Visible:=PanelPartionGoods.Visible;
   bbChangeLiveWeight.Visible:=PanelPartionGoods.Visible;
   bbChangePartionGoods.Visible:=PanelPartionGoods.Visible;
-  bbInsertPartionGoods_out.Visible:=PanelPartionGoods.Visible;
+  bbInsertPartionGoodsOpen_out.Visible:=PanelPartionGoods.Visible;
+  bbInsertPartionGoodsClose_out.Visible:=PanelPartionGoods.Visible;
   bbChangeCount.Visible:=not PanelPartionGoods.Visible;
   bbChangeCountPack.Visible:=not PanelPartionGoods.Visible;;
   bbChangePartionGoodsDate.Visible:=not PanelPartionGoods.Visible;
@@ -2788,7 +2791,7 @@ begin
               end
 end;
 {------------------------------------------------------------------------}
-procedure TMainCehForm.bbInsertPartionGoods_outClick(Sender: TObject);
+procedure TMainCehForm.bbInsertPartionGoodsClose_outClick(Sender: TObject);
 var GoodsId_check, GoodsCode_check:Integer;
     GoodsName_check, PartionGoods_check : String;
 begin
@@ -2826,6 +2829,50 @@ begin
                                        , GoodsCode_check
                                        , GoodsName_check
                                        , PartionGoods_check
+                                       , TRUE
+                                        );
+     end;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbInsertPartionGoodsOpen_outClick(Sender: TObject);
+var GoodsId_check, GoodsCode_check:Integer;
+    GoodsName_check, PartionGoods_check : String;
+begin
+     with CDS do begin
+         //
+         if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
+         begin
+              ShowMessage('Ошибка.Код товара не определен.');
+              exit;
+         end;
+         if trim(EditPartionGoods.Text) = '' then
+         begin
+              ShowMessage('Ошибка.Значение партии не определено.');
+              exit;
+         end;
+         //
+         if (1=0) and ((RecordCount > 0) and (FieldByName('isErased').AsBoolean = FALSE)) then
+         begin
+           GoodsId_check     := FieldByName('GoodsId').AsInteger;
+           GoodsCode_check   := FieldByName('GoodsCode').AsInteger;
+           GoodsName_check   := FieldByName('GoodsName').AsString;
+           PartionGoods_check:= FieldByName('PartionGoods').AsString
+         end
+         else
+         begin
+           GoodsId_check     := ParamsMI.ParamByName('GoodsId').AsInteger;
+           GoodsCode_check   := ParamsMI.ParamByName('GoodsCode').AsInteger;
+           GoodsName_check   := ParamsMI.ParamByName('GoodsName').AsString;
+           PartionGoods_check:= EditPartionGoods.Text;
+         end;
+         //
+         DialogGoodsSeparateForm.Execute(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement)
+                                       , ParamsMovement.ParamByName('MovementId').AsInteger
+                                       , GoodsId_check
+                                       , GoodsCode_check
+                                       , GoodsName_check
+                                       , PartionGoods_check
+                                       , FALSE
                                         );
      end;
 end;

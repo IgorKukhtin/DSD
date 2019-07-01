@@ -56,7 +56,7 @@ BEGIN
      -- данные по движению "Цех Копчения" + найденные MovementItemId
      INSERT INTO _tmpResult (MovementId, MovementItemId_child, MovementItemId_master, ContainerId, OperCount_child, OperCount_master, isDelete)
              WITH tmpMI AS (-- получаем движение
-                            SELECT MIContainer.ContainerId
+                            SELECT MIContainer.ContainerId, MIContainer.ObjectId_Analyzer AS GoodsId
                                    -- приход, он будет zc_MI_Child в zc_Movement_ProductionUnion
                                  , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.Amount ELSE 0 END) AS OperCount_child
                                    -- расход, он будет zc_MI_Master в zc_Movement_ProductionUnion
@@ -66,7 +66,7 @@ BEGIN
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_Send()
-                            GROUP BY MIContainer.ContainerId
+                            GROUP BY MIContainer.ContainerId, MIContainer.ObjectId_Analyzer
                            )
            , tmpRemains AS (-- остатки
                             SELECT tmpMI.ContainerId
@@ -78,7 +78,7 @@ BEGIN
                             WHERE tmpMI.OperCount_master <> 0
                             GROUP BY tmpMI.ContainerId, Container.Amount
                            )
-            , tmpMI_all AS (-- существующие "пересортицы" для isAuto = TRUE - !!!за 1 День!!!
+            , tmpMI_all AS (-- существующие "пересортицы" где isAuto = TRUE - !!!за 1 День!!!
                             SELECT MIContainer.MovementId
                                  , MIContainer.ContainerId
                                  , MIContainer.MovementItemId

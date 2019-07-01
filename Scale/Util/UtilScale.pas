@@ -8,7 +8,7 @@ uses
 const
     fmtWeight:String = ',0.##### кг.';
     fmtFloat:String = ',0.#####';
-    fmtHead:String = ',0.##### гол.';
+    fmtHead:String = ',0.##### глв.';
     lStickerPackGroupId:Integer = 1;
 type
 {

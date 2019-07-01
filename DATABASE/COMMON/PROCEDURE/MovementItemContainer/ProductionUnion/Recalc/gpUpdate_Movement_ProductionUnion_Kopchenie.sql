@@ -18,12 +18,13 @@ BEGIN
 
 
     -- Пересчет
-    PERFORM lpUpdate_Movement_ProductionUnion_Kopchenie (inIsUpdate  := TRUE
-                                                       , inStartDate := inStartDate
-                                                       , inEndDate   := inEndDate
-                                                       , inUnitId    := inUnitId
-                                                       , inUserId    := zc_Enum_Process_Auto_Kopchenie()
-                                                        );
+ -- PERFORM lpUpdate_Movement_ProductionUnion_Kopchenie (inIsUpdate  := TRUE
+    PERFORM lpUpdate_Movement_ProductionUnion_KopchenieAll (inIsUpdate  := TRUE
+                                                          , inStartDate := inStartDate
+                                                          , inEndDate   := inEndDate
+                                                          , inUnitId    := inUnitId
+                                                          , inUserId    := zc_Enum_Process_Auto_Kopchenie()
+                                                           );
 
 
     -- !!!Удалили, временно пока Пересчет Send здесь!!!
