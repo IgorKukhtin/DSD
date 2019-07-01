@@ -700,7 +700,9 @@ uses
   OverdueJournal in '..\..\FormsFarmacy\Cash\OverdueJournal.pas' {OverdueJournalForm: TParentForm},
   OverdueDialog in '..\..\FormsFarmacy\Cash\OverdueDialog.pas' {OverdueDialogForm: TParentForm},
   Report_GoodsRemainsCash in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCash.pas' {Report_GoodsRemainsCashForm: TParentForm},
-  Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm};
+  Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm},
+  Report_GoodsPartionMoveCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas' {Report_GoodsPartionMoveCashDialogForm: TParentForm},
+  Report_GoodsPartionMoveCash in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCash.pas' {Report_GoodsPartionMoveCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

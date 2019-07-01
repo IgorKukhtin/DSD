@@ -733,6 +733,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashDialogForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveCashForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveCashForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveCashDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveCashDialogForm');
     exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateForm'));

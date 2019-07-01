@@ -85,7 +85,8 @@ inherited Report_GoodsRemainsCashForm: TReport_GoodsRemainsCashForm
   end
   inherited ActionList: TActionList
     inherited actOpenPartionReport: TdsdOpenForm
-      Enabled = False
+      FormName = 'TReport_GoodsPartionMoveCashForm'
+      FormNameParam.Value = 'TReport_GoodsPartionMoveCashForm'
     end
     inherited ExecuteDialog: TExecuteDialog
       FormName = 'TReport_GoodsRemainsCashDialogForm'

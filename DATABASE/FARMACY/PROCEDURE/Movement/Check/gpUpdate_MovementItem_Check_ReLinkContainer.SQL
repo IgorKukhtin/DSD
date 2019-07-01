@@ -41,8 +41,8 @@ BEGIN
     -- ≈сли есть распределение по парти€м удал€ем                                
     IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
     THEN
-      UPDATE MovementItem SET isErased = True, Amount = 0
-      WHERE MovementItem.MovementId = inId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
+      PERFORM lpSetErased_MovementItem(MovementItem.ID, vbUserId)
+      FROM MovementItem WHERE MovementItem.MovementId = inId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
     END IF;
     
     PERFORM lpInsertUpdate_MovementItemLinkContainer(inMovementItemId := MovementItem.Id, inUserId := vbUserId) 

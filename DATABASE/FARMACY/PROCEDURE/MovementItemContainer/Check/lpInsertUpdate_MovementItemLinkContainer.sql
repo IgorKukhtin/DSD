@@ -86,8 +86,8 @@ BEGIN
       RETURN;
     END IF;
 
-    UPDATE MovementItem SET ObjectId = vbGoodsID, isErased = TRUE, Amount = 0
-    WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = inMovementItemId;
+    PERFORM lpSetErased_MovementItem(MovementItem.ID, inUserId)
+    FROM MovementItem WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = inMovementItemId;
   END IF;
 
 
@@ -203,14 +203,15 @@ BEGIN
       INTO vbMovChildId
       FROM MovementItem WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DescID = zc_MI_Child()
                           AND MovementItem.ParentId = inMovementItemId AND MovementItem.isErased = TRUE;
-    ELSE
-      INSERT INTO MovementItem (MovementId, DescID, ObjectId, ParentId, isErased, Amount)
-      VALUES (vbMovementId, zc_MI_Child(), vbGoodsID, inMovementItemId, FALSE, 0)
-      RETURNING Id INTO vbMovChildId;
-    END IF;
 
-    UPDATE MovementItem SET ObjectId = vbGoodsID, isErased = FALSE, Amount = CASE WHEN vbAmount > vbContainerAmount THEN vbContainerAmount ELSE vbAmount END
-    WHERE ID = vbMovChildId;
+      PERFORM lpSetUnErased_MovementItem(vbMovChildId, inUserId);
+      vbMovChildId := lpInsertUpdate_MovementItem (vbMovChildId, zc_MI_Child(), vbGoodsID, vbMovementId,
+                                                   CASE WHEN vbAmount > vbContainerAmount THEN vbContainerAmount ELSE vbAmount END, inMovementItemId);
+    ELSE
+
+      vbMovChildId := lpInsertUpdate_MovementItem (0, zc_MI_Child(), vbGoodsID, vbMovementId,
+                                                   CASE WHEN vbAmount > vbContainerAmount THEN vbContainerAmount ELSE vbAmount END, inMovementItemId);
+    END IF;
 
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), vbMovChildId, vbContainerId);
 

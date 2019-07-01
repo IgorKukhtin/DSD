@@ -23,17 +23,18 @@ BEGIN
         vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
     END IF;
 
+    -- Если есть распределение по партиям удаляем
+    IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
+    THEN
+      PERFORM lpSetErased_MovementItem(MovementItem.Id, vbUserId)
+      FROM MovementItem
+      WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
+    END IF;
+
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
-    -- Если есть распределение по партиям удаляем                                
-    IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
-    THEN
-      UPDATE MovementItem SET isErased = True, Amount = 0
-      WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
-    END IF;
-                                
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
