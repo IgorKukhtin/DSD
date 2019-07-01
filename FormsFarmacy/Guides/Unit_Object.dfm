@@ -250,6 +250,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object EMail_Member: TcxGridDBColumn
+            Caption = 'E-Mail ('#1084#1077#1085#1077#1076#1078#1077#1088')'
+            DataBinding.FieldName = 'EMail_Member'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object Phone_Member: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1077#1085#1077#1076#1078#1077#1088')'
+            DataBinding.FieldName = 'Phone_Member'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
           object UnitRePriceName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085'. '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094'.'
             DataBinding.FieldName = 'UnitRePriceName'

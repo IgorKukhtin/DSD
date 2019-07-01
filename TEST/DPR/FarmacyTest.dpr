@@ -466,7 +466,6 @@ uses
   Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm},
   Report_Badm in '..\..\FormsFarmacy\Report\Report_Badm.pas' {Report_BadmForm: TParentForm},
   Unit_byReportBadm in '..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas' {Unit_byReportBadmForm: TParentForm},
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
   MarginCategory_Cross in '..\..\FormsFarmacy\Object\MarginCategory_Cross.pas' {MarginCategory_CrossForm: TParentForm},
   MarginCategory_Total in '..\..\FormsFarmacy\Object\MarginCategory_Total.pas' {MarginCategory_TotalForm: TParentForm},
@@ -700,7 +699,8 @@ uses
   OverdueJournal in '..\..\FormsFarmacy\Cash\OverdueJournal.pas' {OverdueJournalForm: TParentForm},
   OverdueDialog in '..\..\FormsFarmacy\Cash\OverdueDialog.pas' {OverdueDialogForm: TParentForm},
   Report_GoodsRemainsCash in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCash.pas' {Report_GoodsRemainsCashForm: TParentForm},
-  Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm};
+  Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm},
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

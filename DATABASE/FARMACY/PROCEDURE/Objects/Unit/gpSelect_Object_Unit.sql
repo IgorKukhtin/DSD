@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProvinceCityId Integer, ProvinceCityName TVarChar
              , ParentId Integer, ParentName TVarChar
              , UserManagerId Integer, UserManagerName TVarChar, MemberName TVarChar
+             , EMail_Member TVarChar, Phone_Member TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
@@ -64,6 +65,8 @@ BEGIN
       , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
       , Object_UserManager.ValueData                         AS UserManagerName
       , Object_Member.ValueData                              AS MemberName
+      , ObjectString_EMail.ValueData                         AS EMail_Member
+      , ObjectString_Phone.ValueData                         AS Phone_Member
                                                             
       , Object_Juridical.ValueData                           AS JuridicalName
       , Object_MarginCategory.ValueData                      AS MarginCategoryName
@@ -140,6 +143,13 @@ BEGIN
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
         
+        LEFT JOIN ObjectString AS ObjectString_EMail
+                               ON ObjectString_EMail.ObjectId = Object_Member.Id 
+                              AND ObjectString_EMail.DescId = zc_ObjectString_Member_EMail()
+        LEFT JOIN ObjectString AS ObjectString_Phone
+                               ON ObjectString_Phone.ObjectId = Object_Member.Id 
+                              AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
@@ -249,6 +259,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.07.19         *
  20.03.19         *
  15.01.19         * 
  22.10.18         *
