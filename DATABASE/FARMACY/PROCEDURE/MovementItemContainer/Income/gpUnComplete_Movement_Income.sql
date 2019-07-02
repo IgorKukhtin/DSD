@@ -26,6 +26,13 @@ BEGIN
     ELSE
         vbUserId:=inSession::Integer;
     END IF;
+
+    -- Разрешаем только сотрудникам с правами админа    
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+    END IF;
+
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
     -- Проверить, что бы не было переучета позже даты документа
@@ -88,6 +95,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 02.07.19                                                                    *
  18.04.19                                                                    *
  03.07.14                                                       *
 */

@@ -31,7 +31,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                EndTimeSP   TDateTime,
                isSP        Boolean,
                DividePartionDate Boolean,
-               RedeemByHandSP Boolean
+               RedeemByHandSP Boolean,
+               UnitOverdueId  Integer, UnitOverdueName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -98,7 +99,10 @@ BEGIN
            , FALSE                    AS isSP
            , FALSE                    AS DividePartionDate
            , FALSE                    AS RedeemByHandSP
-
+           
+           , CAST (0 as Integer)   AS UnitOverdueId
+           , CAST ('' as TVarChar) AS UnitOverdueName
+           
 ;
    ELSE
        RETURN QUERY 
@@ -163,7 +167,10 @@ BEGIN
       , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
       , COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE)  :: Boolean   AS RedeemByHandSP
-
+      
+      , COALESCE (Object_UnitOverdue.Id,0)          ::Integer  AS UnitOverdueId
+      , COALESCE (Object_UnitOverdue.ValueData, '') ::TVarChar AS UnitOverdueName
+      
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -298,6 +305,11 @@ BEGIN
                                 ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitOverdue
+                             ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()
+        LEFT JOIN Object AS Object_UnitOverdue ON Object_UnitOverdue.Id = ObjectLink_Unit_UnitOverdue.ChildObjectId
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -314,6 +326,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
  
+ 02.07.19                                                        * add UnitOverdue
  14.06.19                                                        * add DividePartionDate
  09.02.19                                                        * add PharmacyItem
  15.01.19         *

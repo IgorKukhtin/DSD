@@ -2168,11 +2168,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CreditLimitJuridical_Juridical() RETURN
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_CreditLimitJuridical_Juridical', 'Наше юр. лицо', zc_Object_CreditLimitJuridical(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CreditLimitJuridical_Juridical');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitOverdue() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOverdue'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_UnitOverdue', 'Подразделение для перемещения просроченного товара', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOverdue');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.07.19                                                                                      * zc_ObjectLink_Unit_UnitOverdue
  25.06.19         * zc_ObjectLink_GoodsScaleCeh_From
                     zc_ObjectLink_GoodsScaleCeh_To
                     zc_ObjectLink_GoodsScaleCeh_Goods

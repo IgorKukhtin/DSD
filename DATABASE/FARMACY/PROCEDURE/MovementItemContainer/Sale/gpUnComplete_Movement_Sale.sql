@@ -17,6 +17,12 @@ BEGIN
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Sale());
     vbUserId := inSession::Integer;
 
+     -- Разрешаем только сотрудникам с правами админа    
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+       RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+     END IF;
+
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
         Movement_Sale.OperDate,
@@ -65,6 +71,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А   Шаблий О.В.
+ 02.07.19                                                                                     *
  13.10.15                                                                       *
 */

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 620
+  ClientHeight = 665
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 99
-    Top = 587
+    Top = 628
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 293
-    Top = 587
+    Top = 628
     Width = 75
     Height = 25
     Action = FormClose
@@ -474,6 +474,23 @@
     TabOrder = 57
     Width = 125
   end
+  object edUnitOverdue: TcxButtonEdit
+    Left = 16
+    Top = 601
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 58
+    Width = 449
+  end
+  object cxLabel25: TcxLabel
+    Left = 17
+    Top = 580
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+  end
   object ActionList: TActionList
     Left = 356
     Top = 398
@@ -767,6 +784,14 @@
         Value = Null
         Component = cbRedeemByHandSP
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitOverdueId'
+        Value = Null
+        Component = GuidesUnitOverdue
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1084,6 +1109,21 @@
         Component = cbRedeemByHandSP
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitOverdueID'
+        Value = Null
+        Component = GuidesUnitOverdue
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitOverdueName'
+        Value = Null
+        Component = GuidesUnitOverdue
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -1349,5 +1389,34 @@
       end>
     Left = 233
     Top = 484
+  end
+  object GuidesUnitOverdue: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitOverdue
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitOverdue
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitOverdue
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 377
+    Top = 576
   end
 end
