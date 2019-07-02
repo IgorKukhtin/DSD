@@ -184,10 +184,6 @@
 				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
 				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2396,6 +2392,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas">
 				<Form>Report_GoodsPartionMoveCashDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

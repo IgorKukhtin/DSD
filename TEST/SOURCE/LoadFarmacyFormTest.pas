@@ -1224,7 +1224,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 
-
+    {
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnit_JuridicalAreaForm');
@@ -1238,7 +1238,7 @@ begin
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCategoryEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnitCategoryEditForm');
-  }
+    }
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
