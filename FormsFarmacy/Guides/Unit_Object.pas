@@ -82,6 +82,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    actOpenUser2Form: TOpenChoiceForm;
+    actOpenUser3Form: TOpenChoiceForm;
   private
     { Private declarations }
   public

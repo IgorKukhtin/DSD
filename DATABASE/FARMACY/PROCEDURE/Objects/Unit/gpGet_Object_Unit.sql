@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
+               UserManager2Id Integer, UserManager2Name TVarChar,
+               UserManager3Id Integer, UserManager3Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                AreaId Integer, AreaName TVarChar,
@@ -57,6 +59,12 @@ BEGIN
            
            , CAST (0 as Integer)   AS UserManagerId
            , CAST ('' as TVarChar) AS UserManagerName
+
+           , CAST (0 as Integer)   AS UserManager2Id
+           , CAST ('' as TVarChar) AS UserManager2Name
+
+           , CAST (0 as Integer)   AS UserManager3Id
+           , CAST ('' as TVarChar) AS UserManager3Name
 
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
@@ -122,6 +130,12 @@ BEGIN
 
       , COALESCE (Object_UserManager.Id, 0)                AS UserManagerId
       , COALESCE (Object_Member.ValueData, Object_UserManager.ValueData) AS UserManagerName
+
+      , COALESCE (Object_UserManager2.Id, 0)                AS UserManager2Id
+      , COALESCE (Object_Member2.ValueData, Object_UserManager2.ValueData) AS UserManager2Name
+
+      , COALESCE (Object_UserManager3.Id, 0)                AS UserManager3Id
+      , COALESCE (Object_Member3.ValueData, Object_UserManager3.ValueData) AS UserManager3Name
       
       , Object_Juridical.Id                                AS JuridicalId
       , Object_Juridical.ValueData                         AS JuridicalName
@@ -201,6 +215,26 @@ BEGIN
                              ON ObjectLink_User_Member.ObjectId = Object_UserManager.Id
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager2
+                             ON ObjectLink_Unit_UserManager2.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager2.DescId = zc_ObjectLink_Unit_UserManager2()
+        LEFT JOIN Object AS Object_UserManager2 ON Object_UserManager2.Id = ObjectLink_Unit_UserManager2.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member2
+                             ON ObjectLink_User_Member2.ObjectId = Object_UserManager2.Id
+                            AND ObjectLink_User_Member2.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member2 ON Object_Member2.Id = ObjectLink_User_Member2.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager3
+                             ON ObjectLink_Unit_UserManager3.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager3.DescId = zc_ObjectLink_Unit_UserManager3()
+        LEFT JOIN Object AS Object_UserManager3 ON Object_UserManager3.Id = ObjectLink_Unit_UserManager3.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member3
+                             ON ObjectLink_User_Member3.ObjectId = Object_UserManager3.Id
+                            AND ObjectLink_User_Member3.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = ObjectLink_User_Member3.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
@@ -325,8 +359,8 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
- 
  02.07.19                                                        * add UnitOverdue
+ 02.07.19         *
  14.06.19                                                        * add DividePartionDate
  09.02.19                                                        * add PharmacyItem
  15.01.19         *

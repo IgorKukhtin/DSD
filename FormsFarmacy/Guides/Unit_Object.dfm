@@ -19,6 +19,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       inherited cxGrid: TcxGrid
         Width = 955
         Height = 451
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 955
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -265,6 +267,96 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 61
+          end
+          object UserManager2Name: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 2'
+            DataBinding.FieldName = 'UserManager2Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUser2Form
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object Member2Name: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1052#1077#1085#1077#1076#1078#1077#1088' 2'
+            DataBinding.FieldName = 'Member2Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUser2Form
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object EMail_Member2: TcxGridDBColumn
+            Caption = 'E-Mail ('#1084#1077#1085#1077#1076#1078#1077#1088' 2)'
+            DataBinding.FieldName = 'EMail_Member2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object Phone_Member2: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1077#1085#1077#1076#1078#1077#1088' 2)'
+            DataBinding.FieldName = 'Phone_Member2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object UserManager3Name: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 3'
+            DataBinding.FieldName = 'UserManager3Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUser3Form
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object Member3Name: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1052#1077#1085#1077#1076#1078#1077#1088' 3'
+            DataBinding.FieldName = 'Member3Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUser3Form
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object EMail_Member3: TcxGridDBColumn
+            Caption = 'E-Mail ('#1084#1077#1085#1077#1076#1078#1077#1088' 3)'
+            DataBinding.FieldName = 'EMail_Member3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object Phone_Member3: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1077#1085#1077#1076#1078#1077#1088' 3)'
+            DataBinding.FieldName = 'Phone_Member3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object UnitRePriceName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085'. '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094'.'
@@ -520,6 +612,76 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
       ImageIndex = 58
+    end
+    object actOpenUser2Form: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUserForm'
+      FormName = 'TUserForm'
+      FormNameParam.Value = 'TUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManager2Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManager2Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Member2Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenUser3Form: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUserForm'
+      FormName = 'TUserForm'
+      FormNameParam.Value = 'TUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManager3Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManager3Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Member3Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object macUpdateisOverYes: TMultiAction
       Category = 'DSDLib'
@@ -1122,6 +1284,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUserManager2Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserManager2Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserManager3Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserManager3Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAreaId'
         Value = Null
         Component = MasterCDS
@@ -1138,8 +1316,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 307
+    Left = 304
+    Top = 123
   end
   object spUpdate_GoodsCategory_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isGoodsCategory'

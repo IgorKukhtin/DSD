@@ -1221,7 +1221,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 
 

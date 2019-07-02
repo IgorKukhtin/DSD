@@ -101,6 +101,11 @@ type
     edUnitOverdue: TcxButtonEdit;
     cxLabel25: TcxLabel;
     GuidesUnitOverdue: TdsdGuides;
+    cxLabel25: TcxLabel;
+    edUserManager2: TcxButtonEdit;
+    GuidesUserManager2: TdsdGuides;
+    cxLabel26: TcxLabel;
+    edUserManager3: TcxButtonEdit;
   private
     { Private declarations }
   public
