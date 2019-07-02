@@ -22,15 +22,16 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
     THEN
-        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+
+      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+
+      -- Разрешаем только сотрудникам с правами админа    
+      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      THEN
+        RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+      END IF;
     ELSE
         vbUserId:=inSession::Integer;
-    END IF;
-
-    -- Разрешаем только сотрудникам с правами админа    
-    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-    THEN
-      RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
     END IF;
      
      -- проверка - если <Master> Удален, то <Ошибка>

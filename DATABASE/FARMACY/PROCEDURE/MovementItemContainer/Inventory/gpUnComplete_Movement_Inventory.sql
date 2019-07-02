@@ -17,10 +17,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= inSession; -- lpCheckRight(inSession, zc_Enum_Process_UnComplete_Inventory());
 
-     -- Разрешаем только сотрудникам с правами админа    
-     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      -- Разрешаем только сотрудникам с правами админа    
+     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
      THEN
-       RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+       IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       THEN
+         RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+       END IF;
      END IF;
 
      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser

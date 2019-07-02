@@ -18,10 +18,13 @@ BEGIN
     vbUserId := inSession::Integer;
 
      -- Разрешаем только сотрудникам с правами админа    
-     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-       RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
-     END IF;
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
+    THEN
+      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      THEN
+        RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+      END IF;
+    END IF;
 
     -- Проверить, что бы не было переучета позже даты документа
     SELECT

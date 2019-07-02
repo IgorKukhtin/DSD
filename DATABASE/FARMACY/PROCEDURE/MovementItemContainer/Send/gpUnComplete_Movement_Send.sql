@@ -22,10 +22,13 @@ BEGIN
     -- проверка - если <Master> Удален, то <Ошибка>
     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
 
-    -- Разрешаем только сотрудникам с правами админа    
-    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     -- Разрешаем только сотрудникам с правами админа    
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
     THEN
-      RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      THEN
+        RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+      END IF;
     END IF;
 
     -- Проверить, что бы не было переучета позже даты документа
