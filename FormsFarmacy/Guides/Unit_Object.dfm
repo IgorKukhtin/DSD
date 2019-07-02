@@ -19,8 +19,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       inherited cxGrid: TcxGrid
         Width = 955
         Height = 451
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 955
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView

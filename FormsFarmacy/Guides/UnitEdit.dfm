@@ -221,17 +221,17 @@
     Width = 90
   end
   object edCloseDate: TcxDateEdit
-    Left = 142
+    Left = 140
     Top = 359
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 28
-    Width = 90
+    Width = 92
   end
   object cxLabel12: TcxLabel
-    Left = 142
+    Left = 140
     Top = 339
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
@@ -299,12 +299,12 @@
     Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
   end
   object cxLabel17: TcxLabel
-    Left = 255
-    Top = 243
+    Left = 254
+    Top = 237
     Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object edPhone: TcxTextEdit
-    Left = 255
+    Left = 254
     Top = 260
     TabOrder = 38
     Width = 209
@@ -312,10 +312,7 @@
   object cxLabel18: TcxLabel
     Left = 16
     Top = 442
-    Hint = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
-    Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085'-'#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
-    ParentShowHint = False
-    ShowHint = True
+    Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
   end
   object edUnitRePrice: TcxButtonEdit
     Left = 16
@@ -480,14 +477,6 @@
   object edUnitOverdue: TcxButtonEdit
     Left = 16
     Top = 601
-  object cxLabel25: TcxLabel
-    Left = 255
-    Top = 390
-    Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 2'
-  end
-  object edUserManager2: TcxButtonEdit
-    Left = 255
-    Top = 410
     Properties.Buttons = <
       item
         Default = True
@@ -501,17 +490,15 @@
     Left = 17
     Top = 580
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
-    TabOrder = 59
-    Width = 209
   end
   object cxLabel26: TcxLabel
     Left = 255
-    Top = 438
-    Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 3'
+    Top = 387
+    Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 2'
   end
-  object edUserManager3: TcxButtonEdit
+  object edUserManager2: TcxButtonEdit
     Left = 255
-    Top = 458
+    Top = 410
     Properties.Buttons = <
       item
         Default = True
@@ -519,6 +506,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 61
+    Width = 209
+  end
+  object cxLabel27: TcxLabel
+    Left = 251
+    Top = 438
+    Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 3'
+  end
+  object edUserManager3: TcxButtonEdit
+    Left = 251
+    Top = 458
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 63
     Width = 209
   end
   object ActionList: TActionList
@@ -842,8 +846,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 164
-    Top = 382
+    Left = 148
+    Top = 398
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -1434,8 +1438,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 169
-    Top = 464
+    Left = 145
+    Top = 456
   end
   object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
@@ -1463,66 +1467,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 129
-    Top = 500
-  end
-  object GuidesUserManager2: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUserManager2
-    FormNameParam.Value = 'TUserForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUserForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUserManager2
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        Component = GuidesUserManager2
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 344
-    Top = 389
-  end
-  object GuidesUserManager3: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUserManager3
-    FormNameParam.Value = 'TUserForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUserForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUserManager3
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        Component = GuidesUserManager3
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 352
-    Top = 445
+    Left = 233
+    Top = 484
   end
   object GuidesUnitOverdue: TdsdGuides
     KeyField = 'Id'
@@ -1552,5 +1498,63 @@
       end>
     Left = 377
     Top = 576
+  end
+  object GuidesUserManager2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUserManager2
+    FormNameParam.Value = 'TUserForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUserForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUserManager2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = GuidesUserManager2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 360
+    Top = 394
+  end
+  object GuidesUserManager3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUserManager3
+    FormNameParam.Value = 'TUserForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUserForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUserManager3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = GuidesUserManager3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 356
+    Top = 437
   end
 end
