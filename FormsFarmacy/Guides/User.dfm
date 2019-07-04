@@ -496,6 +496,10 @@ object UserForm: TUserForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
       OneOnRow = True
       Row = 0
@@ -548,6 +552,10 @@ object UserForm: TUserForm
     end
     object dxBarButton1: TdxBarButton
       Action = OpenUserHelsiEditForm
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actClearDefaultUnit
       Category = 0
     end
   end
@@ -920,6 +928,21 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
+    object actClearDefaultUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearDefaultUnit
+      StoredProcList = <
+        item
+          StoredProc = spClearDefaultUnit
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1076#1077#1092#1072#1091#1083#1100#1090#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1076#1077#1092#1072#1091#1083#1100#1090#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      ImageIndex = 76
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1076#1077#1092#1072#1091#1083#1100#1090#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -1247,5 +1270,22 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 120
     Top = 224
+  end
+  object spClearDefaultUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Clear_DefaultUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 120
+    Top = 280
   end
 end

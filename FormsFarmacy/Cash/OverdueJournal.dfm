@@ -1,7 +1,7 @@
 object OverdueJournalForm: TOverdueJournalForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
+  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' Ctrl+S - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' 4'
   ClientHeight = 407
   ClientWidth = 707
   Color = clBtnFace
@@ -31,7 +31,12 @@ object OverdueJournalForm: TOverdueJournalForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Kind = skSum
+          Column = Amount
+          DisplayText = ',0.###'
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -43,10 +48,18 @@ object OverdueJournalForm: TOverdueJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object cxGridDBTableViewColumn1: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'ORD'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 48
+      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'

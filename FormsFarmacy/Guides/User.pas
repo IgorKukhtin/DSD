@@ -105,6 +105,9 @@ type
     isSite: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     OpenUserHelsiEditForm: TdsdOpenForm;
+    spClearDefaultUnit: TdsdStoredProc;
+    actClearDefaultUnit: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

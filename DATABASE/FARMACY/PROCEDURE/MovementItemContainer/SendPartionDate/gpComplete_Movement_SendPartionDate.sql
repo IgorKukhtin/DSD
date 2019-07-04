@@ -16,8 +16,9 @@ BEGIN
   -- пересчитали Итоговые суммы
   --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
   
+                  
   IF EXISTS(SELECT 1 FROM Movement AS MovementCurr
-               LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
+               INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
                                             ON MovementLinkObject_UnitCurr.MovementId = MovementCurr.Id
                                            AND MovementLinkObject_UnitCurr.DescId = zc_MovementLinkObject_Unit()
                LEFT JOIN MovementBoolean AS MovementBoolean_Transfer
@@ -29,7 +30,7 @@ BEGIN
                                   AND MovementNext.DescId = zc_Movement_SendPartionDate()
                                   AND MovementNext.StatusId = zc_Enum_Status_Complete()
                                   AND MovementNext.ID <> inMovementId
-               LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitNext
+               INNER JOIN MovementLinkObject AS MovementLinkObject_UnitNext
                                             ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
                                            AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
                                            AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId

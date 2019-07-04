@@ -62,6 +62,7 @@ type
     MultiAction1: TMultiAction;
     actExecuteOverdueDialog: TExecuteDialog;
     actTransfer_SendPartionDate: TdsdExecStoredProc;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public
