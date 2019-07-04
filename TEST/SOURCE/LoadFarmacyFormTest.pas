@@ -729,6 +729,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashDialogForm'));
@@ -739,19 +740,19 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveCashDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveCashDialogForm');
     exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateDialogForm');
   //  exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));

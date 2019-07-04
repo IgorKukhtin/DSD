@@ -3,7 +3,7 @@ object Report_CheckPartionDateDialogForm: TReport_CheckPartionDateDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 163
+  ClientHeight = 217
   ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_CheckPartionDateDialogForm: TReport_CheckPartionDateDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 127
+    Top = 181
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_CheckPartionDateDialogForm: TReport_CheckPartionDateDialogForm
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 127
+    Top = 181
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -78,6 +78,20 @@ object Report_CheckPartionDateDialogForm: TReport_CheckPartionDateDialogForm
     Properties.ShowTime = False
     TabOrder = 7
     Width = 110
+  end
+  object cbPartionDateKind: TcxCheckBox
+    Left = 19
+    Top = 119
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 8
+    Width = 225
+  end
+  object cbExpirationDate: TcxCheckBox
+    Left = 19
+    Top = 145
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 9
+    Width = 225
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -134,6 +148,22 @@ object Report_CheckPartionDateDialogForm: TReport_CheckPartionDateDialogForm
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isExpirationDate'
+        Value = Null
+        Component = cbExpirationDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartionDateKind'
+        Value = Null
+        Component = cbPartionDateKind
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
