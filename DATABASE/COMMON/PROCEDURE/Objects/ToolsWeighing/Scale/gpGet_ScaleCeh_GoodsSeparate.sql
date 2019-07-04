@@ -134,7 +134,7 @@ BEGIN
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                             WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate
+                             WHERE Movement.OperDate BETWEEN inOperDate - (CASE WHEN vbUserId = 5 THEN '3' ELSE '0' END ||  ' DAY') :: INTERVAL AND inOperDate
                                AND Movement.DescId   = zc_Movement_ProductionSeparate()
                                AND Movement.StatusId <> zc_Enum_Status_Erased()
                                AND MovementString_PartionGoods.ValueData ILIKE ('%' || vbPartionGoods_calc || '%')
@@ -195,7 +195,8 @@ BEGIN
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                              WHERE Movement.Id = inMovementId
                                -- точно соответствует партии
-                               AND MIString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
+                               AND MIString_PartionGoods.ValueData ILIKE (inPartionGoods)
+                            -- AND MIString_PartionGoods.ValueData ILIKE (vbPartionGoods_calc)
                                AND inIsClose = FALSE
                             GROUP BY Movement.Id
                                    , Movement.StatusId

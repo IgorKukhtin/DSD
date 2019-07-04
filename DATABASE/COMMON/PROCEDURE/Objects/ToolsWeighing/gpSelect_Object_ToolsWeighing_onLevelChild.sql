@@ -147,6 +147,9 @@ BEGIN
            UNION SELECT 'UnitId4'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId5'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
+           UNION SELECT 'UnitId1_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+           UNION SELECT 'UnitId2_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+
            UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
            UNION SELECT 'BranchId'               AS Name WHERE inIsCeh = FALSE

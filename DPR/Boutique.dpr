@@ -77,7 +77,8 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 
@@ -86,8 +87,22 @@ begin
   ConnectionPath := '..\INIT\boutique_init.php';
   Logger.Enabled := FindCmdLineSwitch('log');
   gc_ProgramName := 'Boutique.exe';
+  // !!! DEMO
+  //ConnectionPath := 'Demo.php';
+  //gc_ProgramName := 'Boutique_Demo.exe';
 
   TdsdApplication.Create;
+
+  // Процесс аутентификации
+  if gc_ProgramName = 'Boutique_Demo.exe' then
+  begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'demo', 'demo', gc_User);
+     TUpdater.AutomaticUpdateProgram;
+     TUpdater.AutomaticCheckConnect;
+     Application.CreateForm(TdmMain, dmMain);
+    Application.CreateForm(TMainForm, MainFormInstance);
+  end
+  else
 
   with TLoginForm.Create(Application) do
     // Если все хорошо создаем главную форму Application.CreateForm();

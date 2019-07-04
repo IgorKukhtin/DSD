@@ -46,6 +46,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+-- !!!!!!!!!!
+-- !!!!!!!!!!
+-- IF inGoodsKindId IN (196608, 1869768455) THEN inGoodsKindId:= 0; END IF;
+-- !!!!!!!!!!
+-- !!!!!!!!!!
+
+
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 

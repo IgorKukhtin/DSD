@@ -282,6 +282,13 @@ begin
       Instance.FConnectionList.Add(TConnection.Create('http://farmacy-dev2.neboley.dp.ua', ctMain));
       Instance.FConnectionList.Add(TConnection.Create('http://farmacy-dev2.neboley.dp.ua', ctReport));
     end
+    else
+    if gc_ProgramName = 'Boutique_Demo.exe' then
+    begin
+      // !!! DEMO
+      Instance.FConnectionList.Add(TConnection.Create('http://94.27.55.146/bout_demo/index.php', ctMain));
+      Instance.FConnectionList.Add(TConnection.Create('http://94.27.55.146/bout_demo/index.php', ctReport));
+    end
     else begin
 
       if Pos('\farmacy_init.php', ConnectionPath) > 0 then

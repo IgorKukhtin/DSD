@@ -35,6 +35,7 @@ var StoredProc: TdsdStoredProc;
 begin
   // !!! DEMO
   if gc_ProgramName = 'FDemo.exe' then exit;
+  if gc_ProgramName = 'Boutique_Demo.exe' then exit;
 
 
   StoredProc := TdsdStoredProc.Create(nil);

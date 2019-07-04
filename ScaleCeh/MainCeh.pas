@@ -760,6 +760,7 @@ begin
 
      // проверили параметр
      if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+        and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
      then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
           then
               begin
@@ -771,9 +772,10 @@ begin
 
 
      // доопределили параметр
-     if (PanelGoodsKind.Visible)and(rgGoodsKind.ItemIndex>=0)
+     if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
      then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
      else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+
      // доопределили параметр
      try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
      except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
@@ -1723,7 +1725,7 @@ begin
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
           if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
-             and (oldGoodsCode <> GoodsCode_int)
+             and (oldGoodsCode <> GoodsCode_int) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
           then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode_max').AsInteger);
 
           //сохраним что был ГЕТ
@@ -1772,6 +1774,7 @@ begin
            end
       else begin
                 if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+                   and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
                 then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
                      then
                          begin
@@ -2421,6 +2424,7 @@ begin
             PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
             //и выставим вид упаковки
             if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1)
+               and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
             then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsLight.ParamByName('GoodsKindCode').AsInteger);
        end
        else
@@ -2795,6 +2799,14 @@ procedure TMainCehForm.bbInsertPartionGoodsClose_outClick(Sender: TObject);
 var GoodsId_check, GoodsCode_check:Integer;
     GoodsName_check, PartionGoods_check : String;
 begin
+     if ParamsMI.ParamByName('StorageLineId').AsInteger = 0
+     then if (MessageDlg ('Линия производства не выбрана.'+#10+#13+'Хотите исправить?', mtConfirmation, mbYesNoCancel, 0) = 6)
+          then begin
+                    if PanelStorageLine.Visible = false then PanelStorageLine.Visible:= true;
+                    ActiveControl:=EditStorageLine;
+                    exit;
+               end;
+     //
      with CDS do begin
          //
          if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
@@ -2827,17 +2839,29 @@ begin
                                        , ParamsMovement.ParamByName('MovementId').AsInteger
                                        , GoodsId_check
                                        , GoodsCode_check
+                                       , ParamsMI.ParamByName('StorageLineId').AsInteger
                                        , GoodsName_check
                                        , PartionGoods_check
+                                       , ParamsMI.ParamByName('StorageLineName').AsString
                                        , TRUE
                                         );
      end;
+     //
+     PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbInsertPartionGoodsOpen_outClick(Sender: TObject);
 var GoodsId_check, GoodsCode_check:Integer;
     GoodsName_check, PartionGoods_check : String;
 begin
+     if ParamsMI.ParamByName('StorageLineId').AsInteger = 0
+     then if (MessageDlg ('Линия производства не выбрана.'+#10+#13+'Хотите исправить?', mtConfirmation, mbYesNoCancel, 0) = 6)
+          then begin
+                    if PanelStorageLine.Visible = false  then PanelStorageLine.Visible:= true;
+                    ActiveControl:=EditStorageLine;
+                    exit;
+               end;
+     //
      with CDS do begin
          //
          if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
@@ -2870,11 +2894,15 @@ begin
                                        , ParamsMovement.ParamByName('MovementId').AsInteger
                                        , GoodsId_check
                                        , GoodsCode_check
+                                       , ParamsMI.ParamByName('StorageLineId').AsInteger
                                        , GoodsName_check
                                        , PartionGoods_check
+                                       , ParamsMI.ParamByName('StorageLineName').AsString
                                        , FALSE
                                         );
      end;
+     //
+     PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.actExitExecute(Sender: TObject);

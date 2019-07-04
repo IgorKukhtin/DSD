@@ -43,7 +43,8 @@ type
                                          ):Boolean;
     function gpInsert_ScaleCeh_GoodsSeparate(var retMovementId_begin, retMovementId : Integer;
                                              execParamsMovement:TParams;
-                                             inOperDate: TDateTime; inGoodsId : Integer; inPartionGoods : String;
+                                             inOperDate: TDateTime;
+                                             inFromId, inToId, inGoodsId, inStorageLineId : Integer; inPartionGoods : String;
                                              inAmount, inHeadCount : Double;
                                              inIsClose : Boolean
                                             ):Boolean;
@@ -937,7 +938,8 @@ end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpInsert_ScaleCeh_GoodsSeparate(var retMovementId_begin, retMovementId : Integer;
                                                              execParamsMovement:TParams;
-                                                             inOperDate: TDateTime; inGoodsId : Integer; inPartionGoods : String;
+                                                             inOperDate: TDateTime;
+                                                             inFromId, inToId, inGoodsId, inStorageLineId : Integer; inPartionGoods : String;
                                                              inAmount, inHeadCount : Double;
                                                              inIsClose : Boolean
                                                             ):Boolean;
@@ -955,14 +957,15 @@ begin
        Params.AddParam('inOperDate', ftDateTime, ptInput, inOperDate);
        Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
-       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
-       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inFromId', ftInteger, ptInput, inFromId);
+       Params.AddParam('inToId', ftInteger, ptInput, inToId);
        Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inGoodsId', ftInteger,  ptInput, inGoodsId);
        Params.AddParam('inPartionGoods',ftString,   ptInput, inPartionGoods);
        Params.AddParam('inAmount', ftFloat, ptInput, inAmount);
        Params.AddParam('inHeadCount', ftFloat, ptInput, inHeadCount);
+       Params.AddParam('inStorageLineId', ftInteger,  ptInput, inStorageLineId);
        Params.AddParam('inIsClose', ftBoolean, ptInput, inIsClose);
        //try
          Execute;
@@ -1452,6 +1455,11 @@ begin
        SettingMain.UnitName3:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId3);
        SettingMain.UnitName4:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId4);
        SettingMain.UnitName5:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId5);
+
+       try SettingMain.UnitId1_sep:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId1_sep')); except SettingMain.UnitId1_sep:= 0; end;
+       try SettingMain.UnitId2_sep:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId2_sep')); except SettingMain.UnitId2_sep:= 0; end;
+       SettingMain.UnitName1_sep:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId1_sep);
+       SettingMain.UnitName2_sep:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId2_sep);
 
        //ModeSorting - Color
        try SettingMain.LightColor_1:= StrToInt(GetArrayList_Value_byName(Default_Array,'LightColor_1')); except SettingMain.LightColor_1:= 0; end;

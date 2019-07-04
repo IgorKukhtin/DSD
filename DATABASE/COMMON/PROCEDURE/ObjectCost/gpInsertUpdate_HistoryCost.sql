@@ -60,6 +60,7 @@ BEGIN
 
 
      -- IF inBranchId <> 8379 THEN RETURN; END IF; -- филиал Киев
+     -- IF inBranchId <> 3080683 AND inStartDate = '01.06.2019' THEN RETURN; END IF; -- филиал Львов
      -- IF inBranchId <> 0 THEN RETURN; END IF;
 
 
@@ -388,13 +389,15 @@ end if;
                                          WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
                                           AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
-                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                              THEN 0
+                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN MIContainer.Amount
                                          WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
                                           AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
-                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                              THEN 0
+                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN MIContainer.Amount
                                          WHEN 1=1
                                          THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
                                          ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
@@ -409,13 +412,15 @@ end if;
                                          WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
                                           AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
-                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                              THEN 0
+                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN MIContainer.Amount
                                          WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
                                           AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
-                                          AND MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                              THEN 0
+                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN MIContainer.Amount
                                          WHEN 1=1
                                          THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
                                          ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
@@ -1494,4 +1499,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.05.2019', inEndDate:= '07.05.2019', inBranchId:= 8373, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE ContainerId = 695073 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inBranchId:= 3080683, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId = 695073 -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

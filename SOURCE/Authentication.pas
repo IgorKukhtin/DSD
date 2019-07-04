@@ -76,7 +76,7 @@ Begin
     f := TiniFile.Create(AIniFileName);
     try
       try
-        F.WriteString('Common','BoutiqueName','BoutiqueName');
+        F.WriteString('Common','BoutiqueName','');
       Except
         ShowMessage('Пользователь не может получить доступ к файлу настроек:'+#13
                   + AIniFileName+#13
@@ -109,7 +109,8 @@ var IP_str:string;
     f: TIniFile;
 begin
   {создаем XML вызова процедуры на сервере}
-  if AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe')
+  if (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
+     or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'))
   then begin
       //
       if GetIniFile (IniFileName) then
@@ -152,7 +153,8 @@ begin
         Free;
   end;
 
-  if AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe')
+  if (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
+     or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'))
   then
        // для Бутиков - еще 1 параметр
        N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement

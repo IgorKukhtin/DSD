@@ -65,6 +65,9 @@ type
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
     UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
 
+    UnitId1_sep, UnitId2_sep, UnitId3_sep, UnitId4_sep, UnitId5_sep:Integer;
+    UnitName1_sep, UnitName2_sep, UnitName3_sep, UnitName4_sep, UnitName5_sep :String;
+
     isLightLEFT_321 : Boolean;
     LightColor_1, LightColor_2, LightColor_3 : Integer;
     Name_Sh, Name_Nom, Name_Ves : String;

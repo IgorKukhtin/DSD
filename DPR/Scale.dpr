@@ -93,7 +93,8 @@ uses
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
-  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 
@@ -115,8 +116,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  //
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //

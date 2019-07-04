@@ -1,6 +1,7 @@
 -- Function: gpInsert_ScaleCeh_GoodsSeparate()
 
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_GoodsSeparate (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, TVarChar, TFloat, TFloat, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_GoodsSeparate (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, TVarChar, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_GoodsSeparate (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, TVarChar, TFloat, TFloat, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_GoodsSeparate(
     IN inMovementId          Integer   , -- 
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_GoodsSeparate(
     IN inPartionGoods        TVarChar  , --
     IN inAmount              TFloat    , --
     IN inHeadCount           TFloat    , --
+    IN inStorageLineId       Integer   , --
     IN inIsClose             Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -113,7 +115,7 @@ BEGIN
                                  , inMovementId          := vbMovementId
                                  , inGoodsId             := inGoodsId
                                  , inGoodsKindId         := zc_GoodsKind_Basis()
-                                 , inStorageLineId       := NULL
+                                 , inStorageLineId       := inStorageLineId
                                  , inIsStartWeighing     := TRUE
                                  , inIsPartionGoodsDate  := FALSE
                                  , inOperCount           := inAmount

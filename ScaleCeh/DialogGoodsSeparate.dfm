@@ -13,7 +13,7 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     Top = 253
     Width = 468
     ExplicitTop = 253
-    ExplicitWidth = 357
+    ExplicitWidth = 468
     inherited bbOk: TBitBtn
       Left = 51
       Top = 9
@@ -36,17 +36,14 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 357
     object NullPanel: TPanel
       Left = 0
-      Top = 206
+      Top = 236
       Width = 468
       Height = 40
       Align = alTop
       TabOrder = 0
-      ExplicitLeft = -1
-      ExplicitTop = 216
-      ExplicitWidth = 357
+      ExplicitTop = 206
       object cbNull: TCheckBox
         Left = 20
         Top = 12
@@ -75,13 +72,12 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
       Left = 0
       Top = 0
       Width = 468
-      Height = 46
+      Height = 76
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 357
       object PartionLabel: TcxLabel
         Left = 1
-        Top = 19
+        Top = 55
         Align = alClient
         Caption = #1048#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076' :  321 '#1082#1075'.  / '#1056#1072#1089#1093#1086#1076' : 123 '#1082#1075'.'
         ParentColor = False
@@ -97,13 +93,14 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
         Properties.Alignment.Vert = taVCenter
-        ExplicitWidth = 355
+        ExplicitTop = 19
+        ExplicitHeight = 26
         AnchorX = 234
-        AnchorY = 32
+        AnchorY = 65
       end
       object GoodsLabel: TcxLabel
         Left = 1
-        Top = 1
+        Top = 37
         Align = alTop
         Caption = #1058#1086#1074#1072#1088' : '
         ParentFont = False
@@ -117,19 +114,69 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taLeftJustify
         Properties.Alignment.Vert = taVCenter
-        ExplicitWidth = 355
-        AnchorY = 10
+        ExplicitTop = 1
+        AnchorY = 46
+      end
+      object UnitLabel: TcxLabel
+        Left = 1
+        Top = 1
+        Align = alTop
+        AutoSize = False
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' : '
+        ParentFont = False
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.HotTrack = False
+        Style.Shadow = False
+        Style.IsFontAssigned = True
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Height = 36
+        Width = 466
+        AnchorY = 19
+      end
+      object cbUnit1_sep: TCheckBox
+        Left = 281
+        Top = 2
+        Width = 180
+        Height = 17
+        Caption = #1052#1054' -'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 3
+        OnClick = cbUnit1_sepClick
+      end
+      object cbUnit2_sep: TCheckBox
+        Left = 281
+        Top = 19
+        Width = 180
+        Height = 17
+        Caption = #1052#1054' -'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 4
+        OnClick = cbUnit2_sepClick
       end
     end
     object OBPanel: TPanel
       Left = 0
-      Top = 86
+      Top = 116
       Width = 468
       Height = 40
       Align = alTop
       TabOrder = 2
-      ExplicitTop = 126
-      ExplicitWidth = 357
+      ExplicitTop = 86
       object cbOB: TCheckBox
         Left = 20
         Top = 12
@@ -156,13 +203,12 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     end
     object MOPanel: TPanel
       Left = 0
-      Top = 46
+      Top = 76
       Width = 468
       Height = 40
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 86
-      ExplicitWidth = 357
+      ExplicitTop = 46
       object cbMO: TCheckBox
         Left = 20
         Top = 12
@@ -189,13 +235,12 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     end
     object PRPanel: TPanel
       Left = 0
-      Top = 126
+      Top = 156
       Width = 468
       Height = 40
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 166
-      ExplicitWidth = 357
+      ExplicitTop = 126
       object cbPR: TCheckBox
         Left = 20
         Top = 12
@@ -222,13 +267,12 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
     end
     object PPanel: TPanel
       Left = 0
-      Top = 166
+      Top = 196
       Width = 468
       Height = 40
       Align = alTop
       TabOrder = 5
-      ExplicitTop = 206
-      ExplicitWidth = 357
+      ExplicitTop = 166
       object cbP: TCheckBox
         Left = 20
         Top = 12

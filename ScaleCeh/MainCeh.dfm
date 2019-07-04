@@ -1979,6 +1979,7 @@ object MainCehForm: TMainCehForm
         Height = 25
         Caption = '1'
         TabOrder = 0
+        Visible = False
         OnClick = testButton1Click
       end
       object testButton2: TButton
@@ -1988,6 +1989,7 @@ object MainCehForm: TMainCehForm
         Height = 25
         Caption = '2'
         TabOrder = 1
+        Visible = False
         OnClick = testButton2Click
       end
     end
