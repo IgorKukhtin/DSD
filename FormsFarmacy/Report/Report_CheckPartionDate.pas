@@ -53,6 +53,9 @@ type
     bbOpenReportForm: TdxBarButton;
     cbPartionDateKind: TcxCheckBox;
     cbExpirationDate: TcxCheckBox;
+    DaysDiff: TcxGridDBColumn;
+    actRefreshDate: TdsdDataSetRefresh;
+    actRefreshKind: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

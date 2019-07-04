@@ -19,11 +19,14 @@ RETURNS TABLE (MovementId    Integer
              , GoodsName     TVarChar
              , Amount        TFloat
              , PriceIncome   TFloat
+             , Price         TFloat
              , PriceSale     TFloat
              , SumIncome     TFloat
+             , Summ          TFloat
              , SumSale       TFloat
              , Persent       TFloat
              , SummDiff      TFloat
+             , SummSaleDiff  TFloat
              , DaysDiff      TFloat
              , PartionDateKindName TVarChar
              , ExpirationDate      TDateTime
@@ -99,11 +102,14 @@ BEGIN
       , tmpContainer AS (SELECT tmp.MovementItemId
                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
                               , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MI_Id_Income
-                              , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())   AS ExpirationDate
+                              , CASE WHEN inIsExpirationDate = TRUE THEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) ELSE NULL END :: TDateTime AS ExpirationDate
 
-                              , CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
-                                     WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
-                                     WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                              , CASE WHEN inIsPartionDateKind = TRUE 
+                                     THEN CASE WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
+                                               WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
+                                               WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                                               ELSE 0
+                                          END
                                      ELSE 0
                                 END                                                        AS PartionDateKindId
                          FROM tmpMIFloat_ContainerId AS tmp
@@ -120,16 +126,19 @@ BEGIN
                               -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
 
-                              LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_PartionGoods
+                                                            ON ContainerLinkObject_PartionGoods.Containerid = tmp.ContainerId
+                                                           AND ContainerLinkObject_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                              LEFT JOIN ObjectDate AS ObjectDate_PartionGoods
+                                                   ON ObjectDate_PartionGoods.ObjectId = ContainerLinkObject_PartionGoods.ObjectId
+                                                  AND ObjectDate_PartionGoods.DescId = zc_ObjectDate_PartionGoods_Value()
                         )
 
-      , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
-                             FROM MovementItemFloat
-                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpContainer.MI_Id_Income FROM tmpContainer)
-                               AND MovementItemFloat.DescId = zc_MIFloat_Price()
-                             )
+      , tmpMIFloat_Price_In AS (SELECT MovementItemFloat.*
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpContainer.MI_Id_Income FROM tmpContainer)
+                                  AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                                )
 
       , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                FROM MovementBoolean
@@ -159,8 +168,8 @@ BEGIN
                            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                                         ON MovementBoolean_PriceWithVAT.MovementId = tmpContainer.MovementId_Income
 
-                           LEFT JOIN tmpMIFloat_Price AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = tmpContainer.MI_Id_Income
+                           LEFT JOIN tmpMIFloat_Price_In AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = tmpContainer.MI_Id_Income
                         )
 
       , tmpMI_Master AS (SELECT MovementItem.*
@@ -176,16 +185,25 @@ BEGIN
                                    AND MovementItemFloat.DescId = zc_MIFloat_PriceSale()
                                  )
 
+      , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
+                             FROM MovementItemFloat
+                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+                               AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                             )
+
       , tmpData AS (SELECT tmpMI_Child.MovementId      AS MovementId
                          , tmpMI_Child.Id              AS MI_Id_Child
                          , tmpMI_Child.ObjectId        AS GoodsId
                          , tmpMI_Child.Amount          AS Amount
                          , tmpIncome.PriceIncome       AS PriceIncome                   -- цена закупки
                          , MIFloat_PriceSale.ValueData AS PriceSale                     -- цена продажи
+                         , MIFloat_Price.ValueData     AS Price
                          , tmpIncome.PriceIncome * tmpMI_Child.Amount                                                                   AS SumIncome
                          , MIFloat_PriceSale.ValueData * tmpMI_Child.Amount                                                             AS SumSale
-                         , ( 100 - ((MIFloat_PriceSale.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount) )  AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
-                         , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - tmpIncome.PriceIncome * tmpMI_Child.Amount)              AS SummDiff -- сумма потери от продажи ( в денежном эквиваленте)
+                         , MIFloat_Price.ValueData * tmpMI_Child.Amount                                                                 AS Summ
+                         , ( 100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount) )  AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
+                         , (MIFloat_Price.ValueData * tmpMI_Child.Amount - tmpIncome.PriceIncome * tmpMI_Child.Amount)                  AS SummDiff      -- сумма потери от продажи ( в денежном эквиваленте)
+                         , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - MIFloat_Price.ValueData * tmpMI_Child.Amount)            AS SummSaleDiff  -- разница суммы по цене продажи и цене без скидки
                          , tmpIncome.ExpirationDate
                          , tmpIncome.PartionDateKindId
                     FROM tmpMI_Child
@@ -193,6 +211,8 @@ BEGIN
                          LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                          LEFT JOIN tmpMIFloat_PriceSale AS MIFloat_PriceSale
                                                         ON MIFloat_PriceSale.MovementItemId = tmpMI_Master.Id
+                         LEFT JOIN tmpMIFloat_Price AS MIFloat_Price
+                                                    ON MIFloat_Price.MovementItemId = tmpMI_Master.Id
                     )
 
         -- результат
@@ -205,15 +225,18 @@ BEGIN
 
              , tmpData.Amount          :: TFloat
              , tmpData.PriceIncome     :: TFloat
+             , tmpData.Price           :: TFloat
              , tmpData.PriceSale       :: TFloat
              , tmpData.SumIncome       :: TFloat
+             , tmpData.Summ            :: TFloat
              , tmpData.SumSale         :: TFloat
              , tmpData.Persent         :: TFloat
              , tmpData.SummDiff        :: TFloat
+             , tmpData.SummSaleDiff    :: TFloat
 
-             , (tmpData.ExpirationDate - Movement.OperDate) :: TFloat DaysDiff
+             , CASE WHEN inIsExpirationDate = TRUE THEN DATE_PART ('DAY', (tmpData.ExpirationDate - Movement.OperDate)) ELSE 0 END :: TFloat DaysDiff
              , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
-             , tmpData.ExpirationDate
+             , CASE WHEN inIsExpirationDate = TRUE THEN tmpData.ExpirationDate ELSE NULL END :: TDateTime AS ExpirationDate
         FROM tmpData 
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
@@ -233,4 +256,6 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '01.07.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inSession := '3' :: TVarChar);
+--
+--SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.06.2019' ::TDateTime, inIsExpirationDate:= FALSE, inIsPartionDateKind:= FALSE, inSession := '3' :: TVarChar);
+--SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.06.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inSession := '3' :: TVarChar);
