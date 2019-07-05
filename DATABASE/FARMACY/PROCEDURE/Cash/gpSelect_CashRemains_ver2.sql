@@ -97,7 +97,7 @@ BEGIN
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
     vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
 
-    IF EXISTS(SELECT FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
+    IF EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
               WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
                 AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate())
     THEN
@@ -109,7 +109,7 @@ BEGIN
         AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate();
 
     ELSE
-      vbDividePartionDate := True;
+      vbDividePartionDate := False;
     END IF;
 
     -- ќбъ€вили новую сессию кассового места / обновили дату последнего обращени€
@@ -158,29 +158,30 @@ BEGIN
                             AND Container.WhereObjectId = vbUnitId
                             AND Container.Amount <> 0
                          )
-       , tmpCLO AS (SELECT CLO.*
-                    FROM ContainerlinkObject AS CLO
-                    WHERE CLO.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
-                      AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                   )
-       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpCLO.ObjectId FROM tmpCLO))
-
-       , tmpMIDate AS (SELECT MovementItemDate.*
-                       FROM MovementItemDate
-                       WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpObject.ObjectCode FROM tmpObject)
-                         AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
-                      )
-
-       , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
-                               FROM tmpCLO
-                                    INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
-                                    INNER JOIN tmpMIDate AS MIDate_ExpirationDate
-                                                         ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
-                                                        -- AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+       , tmpExpirationDate AS (SELECT tmp.Id       AS ContainerId
+                                    , MIDate_ExpirationDate.ValueData
+                               FROM tmpContainer AS tmp
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = tmp.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+                                   LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                    ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
        , tmpGoodsRemains AS (SELECT Container.ObjectId
                                   , SUM (Container.Amount) AS Remains
-                                  , MIN (COALESCE (tmpExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- —рок годности
+                                  , MIN (COALESCE (CASE WHEN vbDividePartionDate = FALSE OR COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) > vbDate180 
+                                         THEN tmpExpirationDate.ValueData END, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- —рок годности
                              FROM tmpContainer AS Container
                                   -- находим партию
                                   LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
@@ -207,7 +208,7 @@ BEGIN
        , tmpPDContainer AS (SELECT Container.Id,
                                    Container.ObjectId,
                                    Container.Amount,
-                                   ObjectDate_ExpirationDate.ValueData                           AS ExpirationDate,
+                                   COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate,
                                    COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin,
                                    COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent,
                                    COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT,
