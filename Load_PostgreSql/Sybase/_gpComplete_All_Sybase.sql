@@ -21,6 +21,31 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
 
 
+     /*IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Inventory())
+     THEN 
+         -- !!!выход!!!
+         IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId IN (301309 -- Склад ГП ф.Запорожье
+                                                                                                                   , 309599 -- Склад возвратов ф.Запорожье
+                                                                                                                   , 8417   -- Склад ГП ф.Николаев (Херсон)
+                                                                                                                   , 428364 -- Склад возвратов ф.Николаев (Херсон)
+                                                                                                                   , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                                                                                                                   , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+                                                                                                                   , 8413   -- Склад ГП ф.Кривой Рог
+                                                                                                                   , 428366 -- Склад возвратов ф.Кривой Рог
+                                                                                                                   , 8425   -- Склад ГП ф.Харьков
+                                                                                                                   , 409007 -- Склад возвратов ф.Харьков
+                                                                                                                    ))
+         THEN RETURN; END IF;
+    
+         IF inIsNoHistoryCost = FALSE
+            AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId IN (zc_Movement_ReturnIn()
+                                                                                                      , zc_Movement_ProductionUnion()
+                                                                                                      , zc_Movement_ProductionSeparate()
+                                                                                                      , zc_Movement_Send()
+                                                                                                       ))
+         THEN RETURN; END IF;
+     END IF;*/
+
      -- !!!выход!!!
      -- IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
      -- IF vbMovementDescId IN (zc_Movement_Sale()) THEN RETURN; END IF;

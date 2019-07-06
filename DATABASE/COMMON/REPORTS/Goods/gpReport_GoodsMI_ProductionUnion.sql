@@ -92,7 +92,7 @@ BEGIN
                              , MIContainer.DescId                 AS MIContainerDescId
                              , MIContainer.ContainerId            AS ContainerId
                              , MIContainer.ObjectId_Analyzer      AS GoodsId
-                             , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
+                             , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
                              , SUM (MIContainer.Amount)           AS Amount
                         FROM MovementItemContainer AS MIContainer
 			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
@@ -113,7 +113,7 @@ BEGIN
                                , MIContainer.DescId
                                , MIContainer.ContainerId
                                , MIContainer.ObjectId_Analyzer
-                               , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
+                               , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                        )
          , tmpContainer_in AS (SELECT DISTINCT tmpMI_ContainerIn.ContainerId
                                     , tmpMI_ContainerIn.GoodsId

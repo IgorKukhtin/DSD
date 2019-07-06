@@ -65,7 +65,8 @@ BEGIN
                           WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
                              AND ObjectLink.ChildObjectId > 0 
                              AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
-                             -- AND ObjectLink.ChildObjectId = 8379 -- филиал Киев
+                             -- AND ObjectLink.ChildObjectId = 8379    -- филиал Киев
+                             -- AND ObjectLink.ChildObjectId = 3080683 -- филиал Львов
                         /*SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
@@ -461,5 +462,5 @@ create table dba._pgMovementReComlete
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.04.2019', inEndDate:= '30.04.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.04.2019', inEndDate:= '30.04.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
