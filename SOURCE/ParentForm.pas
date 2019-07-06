@@ -470,6 +470,7 @@ initialization
   RegisterClass (TdsdPivotGridCalcFields);
   RegisterClass (TdsdExportToXLS);
   RegisterClass (TdsdExportToXML);
+  RegisterClass (TdsdDuplicateSearchAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

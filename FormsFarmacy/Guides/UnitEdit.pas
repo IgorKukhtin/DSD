@@ -98,6 +98,15 @@ type
     cxLabel24: TcxLabel;
     cbDividePartionDate: TcxCheckBox;
     cbRedeemByHandSP: TcxCheckBox;
+    edUnitOverdue: TcxButtonEdit;
+    cxLabel25: TcxLabel;
+    GuidesUnitOverdue: TdsdGuides;
+    cxLabel26: TcxLabel;
+    edUserManager2: TcxButtonEdit;
+    GuidesUserManager2: TdsdGuides;
+    cxLabel27: TcxLabel;
+    edUserManager3: TcxButtonEdit;
+    GuidesUserManager3: TdsdGuides;
   private
     { Private declarations }
   public

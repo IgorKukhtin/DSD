@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Inventory (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Inventory(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -33,7 +33,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
    vbAccountId := lpInsertFind_Object_Account (inAccountGroupId := zc_Enum_AccountGroup_20000()         -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад 
+                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId);
@@ -43,10 +43,10 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                    ON MovementLinkObject.ObjectId = ObjectLink_Unit_Juridical.ObjectId
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-    WHERE MovementLinkObject.MovementId = inMovementId 
+    WHERE MovementLinkObject.MovementId = inMovementId
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
-      
-    SELECT date_trunc ('day', Movement.OperDate),COALESCE(MovementBoolean_FullInvent.ValueData,False) 
+
+    SELECT date_trunc ('day', Movement.OperDate),COALESCE(MovementBoolean_FullInvent.ValueData,False)
     INTO vbInventoryDate, vbFullInvent
     FROM Movement
         LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
@@ -55,8 +55,8 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
    -- Проводки по суммам документа. Деньги в кассу
-   
-/*   INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
+
+/*   INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)
    SELECT Movement_Income_View.FromId
         , Movement_Income_View.TotalSumm
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()
@@ -68,11 +68,11 @@ BEGIN
         , Movement_Income_View.OperDate
      FROM Movement_Income_View
     WHERE Movement_Income_View.Id =  inMovementId;
-    
+
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
+         SELECT
                 zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_Income()
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_Summ(), -- DescId Остатка
@@ -81,22 +81,22 @@ BEGIN
                           inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
                           inBusinessId := NULL, -- Бизнесы
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL, -- <элемент с/с> - необычная аналитика счета 
+                          inObjectCostId       := NULL, -- <элемент с/с> - необычная аналитика счета
                           inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.ObjectId) 
+                          inObjectId_1        := _tmpItem.ObjectId)
               , AccountId
               , - OperSumm
               , OperDate
            FROM _tmpItem;
-                 
+
            SELECT SUM(OperSumm) INTO vbOperSumm_Partner
              FROM _tmpItem;
 
     -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
+         SELECT
                 zc_Container_SummIncomeMovementPayment()
-              , zc_Movement_Income()  
+              , zc_Movement_Income()
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
@@ -105,13 +105,13 @@ BEGIN
                           inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
                           inBusinessId := NULL, -- Бизнесы
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
+                          inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета)
               , null
               , OperSumm
               , OperDate
            FROM _tmpItem;
 
-  */               
+  */
  /*    CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
@@ -126,14 +126,14 @@ BEGIN
 */
 /*
    DELETE FROM _tmpItem;
-   INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)   
+   INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)
    SELECT
           zc_Movement_Income()
         , MovementItem_Income_View.Id
         , MovementItem_Income_View.GoodsId
         , MovementItem_Income_View.Amount
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId)
@@ -145,11 +145,11 @@ BEGIN
  */
 
     -- А сюда товары
-    
+
     --Добавить в переучет строки, которые есть на остатке, но нет в переучете
     IF vbFullInvent = TRUE
     THEN
-        PERFORM 
+        PERFORM
           lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_isAuto(),
                                              lpInsertUpdate_MovementItem_Inventory(ioId := 0
                                                                                  , inMovementId := inMovementId
@@ -165,18 +165,18 @@ BEGIN
         FROM (SELECT T0.ObjectId     AS ObjectId
                    , SUM (T0.Amount) AS Amount
 
-              FROM (SELECT Container.Id 
+              FROM (SELECT Container.Id
                          , Container.ObjectId --Товар
                          , Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) as Amount  --Тек. остаток - Движение после даты переучета
                     FROM Container
                          JOIN containerlinkObject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
                                                              AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                             AND CLI_Unit.ObjectId = vbUnitId                                   
+                                                             AND CLI_Unit.ObjectId = vbUnitId
                          LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
                                                                -- AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
                                                                AND MovementItemContainer.Operdate >= vbInventoryDate + INTERVAL '1 DAY'
                     WHERE Container.DescID = zc_Container_Count()
-                    GROUP BY Container.Id 
+                    GROUP BY Container.Id
                            , Container.ObjectId
                     HAVING Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) <> 0
                    ) AS T0
@@ -188,7 +188,7 @@ BEGIN
                                          AND MovementItem_Inventory.DescId     = zc_MI_Master()
                                          AND MovementItem_Inventory.isErased   = FALSE
              LEFT OUTER JOIN (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                               FROM ObjectLink AS ObjectLink_Price_Unit
                                    LEFT JOIN ObjectLink AS Price_Goods
                                                         ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -197,28 +197,28 @@ BEGIN
                                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                         AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              ) AS Object_Price ON Object_Price.GoodsId = Saldo.ObjectId
- 
+
         WHERE Saldo.Amount <> 0 -- !!!26.02.2018 - добавил еще если есть с МИНУСОМ!!!
           AND MovementItem_Inventory.Id IS NULL
        ;
     END IF;
-    
+
 
     WITH -- расч. Остаток на конец vbInventoryDate (т.е. после даты переучета)
-         tmpRemains AS (SELECT Container.Id 
+         tmpRemains AS (SELECT Container.Id
                              , Container.ObjectId -- Товар
                              , (Container.Amount - COALESCE (SUM (MovementItemContainer.amount), 0.0)) :: TFloat AS Amount
                         FROM Container
                              INNER JOIN containerlinkObject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
                                                                        AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                       AND CLI_Unit.ObjectId = vbUnitId                                   
+                                                                       AND CLI_Unit.ObjectId = vbUnitId
                              LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                   AND MovementItemContainer.Operdate >= vbInventoryDate + INTERVAL '1 DAY'
                         WHERE Container.DescId = zc_Container_Count()
-                        GROUP BY Container.Id 
-                               , Container.Amount 
+                        GROUP BY Container.Id
+                               , Container.Amount
                                , Container.ObjectId
                        )
       -- разница в остатке = переучет(факт) - расчет : (-)недостача, (+)Излишек
@@ -234,19 +234,19 @@ BEGIN
                         AND COALESCE(MovementItem.Amount, 0.0) <> COALESCE(Saldo.Amount, 0.0)
                      )
 , DD AS (-- для "недостачи" - поиск партий
-         SELECT 
-            DiffRemains.MovementItemId 
-          , DiffRemains.Amount 
-          , Container.Amount AS ContainerAmount 
-          , vbInventoryDate  AS OperDate 
+         SELECT
+            DiffRemains.MovementItemId
+          , DiffRemains.Amount
+          , Container.Amount AS ContainerAmount
+          , vbInventoryDate  AS OperDate
           , Container.Id     AS ContainerId
-          , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id) 
-          FROM tmpRemains AS Container 
-               JOIN DiffRemains ON DiffRemains.ObjectId = Container.ObjectId 
+          , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id)
+          FROM tmpRemains AS Container
+               JOIN DiffRemains ON DiffRemains.ObjectId = Container.ObjectId
                JOIN containerlinkObject AS CLI_MI
                                         ON CLI_MI.containerid = Container.Id
                                        AND CLI_MI.descid     = zc_ContainerLinkObject_PartionMovementItem()
-               JOIN containerlinkObject AS CLI_Unit 
+               JOIN containerlinkObject AS CLI_Unit
 		                        ON CLI_Unit.containerid = Container.Id
                                        AND CLI_Unit.descid      = zc_ContainerLinkObject_Unit()
                                        AND CLI_Unit.ObjectId    = vbUnitId
@@ -258,12 +258,12 @@ BEGIN
           WHERE Container.Amount > 0.0
             AND DiffRemains.Amount < 0.0
          )
-  
-       , tmpItem AS (-- 
+
+       , tmpItem AS (--
 		     SELECT ContainerId     AS Id
 		          , MovementItemId  AS MovementItemId
 			  , OperDate
-			  , CASE WHEN -Amount - SUM > 0.0 THEN ContainerAmount 
+			  , CASE WHEN -Amount - SUM > 0.0 THEN ContainerAmount
                                  ELSE -Amount - SUM + ContainerAmount
                             END AS Amount
                      FROM DD
@@ -290,9 +290,9 @@ BEGIN
 
 
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
+         SELECT
                 zc_Container_Count()
-              , zc_Movement_Inventory()  
+              , zc_Movement_Inventory()
               , inMovementId
               , tmpItem.MovementItemId
               , tmpItem.Id
@@ -300,17 +300,59 @@ BEGIN
               , -Amount
               , OperDate
            FROM tmpItem;
-    
+
+      -- Проводки если затронуты контейнера сроков
+    IF EXISTS(SELECT 1 FROM Container WHERE Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert))
+    THEN
+
+      WITH DD AS (
+         SELECT
+            _tmpMIContainer_insert.MovementItemId
+          , _tmpMIContainer_insert.Amount
+          , Container.Amount AS ContainerAmount
+          , vbInventoryDate  AS OperDate
+          , Container.Id     AS ContainerId
+          , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id)
+          FROM Container
+               JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId
+          WHERE Container.DescId = zc_Container_CountPartionDate()
+            AND Container.Amount > 0.0
+            AND _tmpMIContainer_insert.Amount < 0.0
+         )
+
+       , tmpItem AS (SELECT ContainerId     AS Id
+		                    , MovementItemId  AS MovementItemId
+                            , OperDate
+			                , CASE WHEN -Amount - SUM > 0.0 THEN ContainerAmount
+                                 ELSE -Amount - SUM + ContainerAmount
+                                 END AS Amount
+                       FROM DD
+                       WHERE (Amount < 0 AND -Amount - (SUM - ContainerAmount) >= 0))
+
+        INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+          SELECT
+                 zc_Container_CountPartionDate()
+               , zc_Movement_Inventory()
+               , inMovementId
+               , tmpItem.MovementItemId
+               , tmpItem.Id
+               , Null
+               , -Amount
+               , OperDate
+            FROM tmpItem;
+
+    END IF;
+
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
     --                                         , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
     -- ну и наконец-то суммы
  /*   INSERT INTO _tmpMIContainer_insert(AnalyzerId, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, AccountId, Amount, OperDate)
-         SELECT 
+         SELECT
                 0
               , zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_Income()
               , inMovementId
               , _tmpItem.MovementItemId
               , lpInsertFind_Container(
@@ -324,27 +366,27 @@ BEGIN
                           inDescId_1          := zc_ContainerLinkObject_Goods(), -- DescId для 1-ой Аналитики
                           inObjectId_1        := _tmpItem.ObjectId,
                           inDescId_2          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
-                          inObjectId_2        := _tmpItem.UnitId) 
+                          inObjectId_2        := _tmpItem.UnitId)
               , nULL
               , _tmpItem.AccountId
               ,  CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem_Income_View.AmountSumm
                       ELSE MovementItem_Income_View.AmountSumm * (1 + Movement_Income_View.NDS/100)
-                 END::NUMERIC(16, 2)     
+                 END::NUMERIC(16, 2)
               , _tmpItem.OperDate
-           FROM _tmpItem 
+           FROM _tmpItem
                 JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.MovementItemId = _tmpItem.MovementItemId
                 LEFT JOIN MovementItem_Income_View ON MovementItem_Income_View.Id = _tmpItem.MovementItemId
                 LEFT JOIN Movement_Income_View ON Movement_Income_View.Id = MovementItem_Income_View.MovementId;
 
-     
+
      SELECT SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
- 
+
      IF (vbOperSumm_Partner <> vbOperSumm_Partner_byItem) THEN
         UPDATE _tmpMIContainer_insert SET Amount = Amount - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
-         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0 
+         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0
                       AND Amount IN (SELECT MAX (Amount) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0)
                                  );
-      END IF;    
+      END IF;
    */
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -428,8 +470,8 @@ $BODY$
  12.06.17         * ушли от Object_Price_View
  14.03.16                                        * !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
  03.08.15                                                                  *Добавить в переучет строки, которые есть на остатке, но нет в переучете
- 11.02.14                        * 
- 05.02.14                        * 
+ 11.02.14                        *
+ 05.02.14                        *
 */
 
 -- тест

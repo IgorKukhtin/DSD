@@ -238,6 +238,9 @@ type
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
     FKeepSelectColor: boolean;
+    FGroupByBox: boolean;
+    FGroupIndex: integer;
+
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
     procedure OnBeforeOpen(ADataSet: TDataSet);
@@ -282,6 +285,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    // процедура ищет дубликаты заначений по активному столбику и если есть устанавливает фильтр
+    procedure ActionDuplicateSearch;
+    procedure ClearDuplicateSearch;
   published
     // Ссылка на контрол с датой, если надо при создании показать текущую дату/время
     property DateEdit: TcxDateEdit read FDateEdit write SetDateEdit;
@@ -993,6 +1000,9 @@ begin
 
   SearchAsFilter := true;
   FKeepSelectColor := false;
+
+  FGroupByBox := False;
+  FGroupIndex := -1;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -1432,6 +1442,80 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.ClearDuplicateSearch;
+begin
+  if not Assigned(View) then Exit;
+
+  if FGroupIndex >= 0 then
+  begin
+    View.DataController.Filter.Clear;
+    View.Columns[FGroupIndex].GroupIndex := -1;
+    if not FGroupByBox then FView.OptionsView.GroupByBox := False;
+    FGroupIndex := -1;
+  end;
+end;
+
+
+procedure TdsdDBViewAddOn.ActionDuplicateSearch;
+  var I, J : Integer; lOne, lFilter : TStringList;
+begin
+  if not Assigned(View) then Exit;
+
+  if FGroupIndex >= 0 then
+  begin
+    ClearDuplicateSearch;
+    Exit;
+  end;
+
+  if not Assigned(View.Controller.FocusedColumn) then Exit;
+
+  lOne := TStringList.Create;
+  lOne.Sorted := True;
+  lFilter := TStringList.Create;
+  lFilter.Sorted := True;
+  try
+    for i := 0 to View.DataController.FilteredRecordCount - 1 do
+    begin
+      if (View.DataController.Values[I, View.Controller.FocusedColumnIndex] <> Null) and
+        (VarToStr(View.DataController.Values[I, View.Controller.FocusedColumnIndex]) <> '') then
+         if lOne.Find(VarToStr(View.DataController.Values[I, View.Controller.FocusedColumnIndex]), J) then
+         begin
+           if not lFilter.Find(VarToStr(View.DataController.Values[I, View.Controller.FocusedColumnIndex]), J) then
+             lFilter.Add(VarToStr(View.DataController.Values[I, View.Controller.FocusedColumnIndex]));
+         end else lOne.Add(VarToStr(View.DataController.Values[I, View.Controller.FocusedColumnIndex]));
+    end;
+
+    if lFilter.Count < 1 then
+    begin
+      ShowMessage('По столбику <' + View.Controller.FocusedColumn.Caption + '>'#13#10'повторяющихся не пустых значений не найдено.');
+      Exit;
+    end;
+
+    with View.DataController.Filter do
+    begin
+      BeginUpdate;
+      try
+        Clear;
+        root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboOr;
+        for I := 0 to lFilter.Count - 1 do
+        begin
+          root.AddItem(View.Controller.FocusedColumn, TcxFilterOperatorKind.foEqual, lFilter.Strings[I], lFilter.Strings[I]);
+        end;
+        Active := true;
+        FView.OptionsView.GroupByBox := True;
+        FGroupIndex := View.Controller.FocusedColumnIndex;
+        if View.OptionsView.GroupByBox then View.Controller.FocusedColumn.GroupIndex := 0;
+      finally
+        EndUpdate;
+      end;
+    end;
+
+  finally
+    lOne.Free;
+    lFilter.Free;
+  end;
+end;
+
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -1445,6 +1529,11 @@ begin
   end;
   if Key = VK_F11 then
      SearchAsFilter := not SearchAsFilter;
+  if (Key = 68) and (ssCtrl in Shift) then
+  begin
+    ActionDuplicateSearch;
+    Key := 0;
+  end;
   inherited;
 end;
 
@@ -1520,6 +1609,8 @@ begin
           FAfterOpen := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen;
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen := OnAfterOpen;
      end;
+     FGroupByBox := FView.OptionsView.GroupByBox;
+     FGroupIndex := -1;
   end;
 end;
 
@@ -1659,6 +1750,10 @@ begin
      FormName := TParentForm(Owner).FormClassName
   else
      FormName := Owner.ClassName;
+
+  for I := 0 to Owner.ComponentCount - 1 do
+    if Owner.Components[I] is TdsdDBViewAddOn then TdsdDBViewAddOn(Owner.Components[I]).ClearDuplicateSearch;
+
   TempStream :=  TStringStream.Create;
   try
     xml := '<root>';

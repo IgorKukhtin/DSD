@@ -142,6 +142,11 @@ type
     actReLinkContainer: TMultiAction;
     actExecReLinkContainer: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
+    actExec_MovementIten_PartionDateKind: TdsdExecStoredProc;
+    spUpdate_MovementIten_PartionDateKind: TdsdStoredProc;
+    actUpdate_MovementIten_PartionDateKind: TMultiAction;
+    dxBarButton5: TdxBarButton;
+    astChoicePartionDateKind: TOpenChoiceForm;
   private
     { Private declarations }
   public

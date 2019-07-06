@@ -823,6 +823,19 @@ type
     property PUSHMessageType : TPUSHMessageType read FPUSHMessageType write FPUSHMessageType default pmtResult;
   end;
 
+  TdsdDuplicateSearchAction = class(TdsdCustomAction)
+  private
+  protected
+    function LocalExecute: Boolean; override;
+  public
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+  end;
+
 
 procedure Register;
 
@@ -871,6 +884,7 @@ begin
   RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
   RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
   RegisterActions('DSDLib', [TdsdShowPUSHMessage], TdsdShowPUSHMessage);
+  RegisterActions('DSDLib', [TdsdDuplicateSearchAction], TdsdDuplicateSearchAction);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -3445,6 +3459,19 @@ begin
         end;
       end;
 end;
+
+{ TdsdDuplicateSearchAction }
+
+function TdsdDuplicateSearchAction.LocalExecute: Boolean;
+begin
+  Result := False;
+
+//  if Screen.ActiveControl is   then
+
+//  ActionDuplicateSearch;
+
+end;
+
 
 end.
 

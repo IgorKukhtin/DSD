@@ -62,7 +62,6 @@ uses
   Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
   BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
-  UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
@@ -702,7 +701,8 @@ uses
   Report_GoodsRemainsCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas' {Report_GoodsRemainsCashDialogForm: TParentForm},
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   Report_GoodsPartionMoveCash in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCash.pas' {Report_GoodsPartionMoveCashForm: TParentForm},
-  Report_GoodsPartionMoveCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas' {Report_GoodsPartionMoveCashDialogForm: TParentForm};
+  Report_GoodsPartionMoveCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas' {Report_GoodsPartionMoveCashDialogForm: TParentForm},
+  UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

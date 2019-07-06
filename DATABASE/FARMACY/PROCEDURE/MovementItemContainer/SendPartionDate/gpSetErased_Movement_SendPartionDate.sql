@@ -15,25 +15,29 @@ BEGIN
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_SendPartionDate());
 
     IF EXISTS(SELECT 1 FROM Movement AS MovementCurr
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
-                                              ON MovementLinkObject_UnitCurr.MovementId = MovementCurr.Id
-                                             AND MovementLinkObject_UnitCurr.DescId = zc_MovementLinkObject_Unit()
+                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCurr
+                                               ON MovementLinkObject_UnitCurr.MovementId = MovementCurr.Id
+                                              AND MovementLinkObject_UnitCurr.DescId = zc_MovementLinkObject_Unit()
                  LEFT JOIN MovementBoolean AS MovementBoolean_Transfer
                                            ON MovementBoolean_Transfer.MovementId = MovementCurr.Id
-                                           AND MovementBoolean_Transfer.DescId = zc_MovementBoolean_Transfer()
+                                          AND MovementBoolean_Transfer.DescId = zc_MovementBoolean_Transfer()
 
                  INNER JOIN Movement AS MovementNext
                                      ON MovementNext.OperDate >= MovementCurr.OperDate
                                     AND MovementNext.DescId = zc_Movement_SendPartionDate()
                                     AND MovementNext.StatusId = zc_Enum_Status_Complete()
                                     AND MovementNext.ID <> inMovementId
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitNext
-                                              ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
-                                             AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
-                                             AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId
+                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitNext
+                                               ON MovementLinkObject_UnitNext.MovementId = MovementNext.Id
+                                              AND MovementLinkObject_UnitNext.DescId = zc_MovementLinkObject_Unit()
+                                              AND MovementLinkObject_UnitNext.ObjectId = MovementLinkObject_UnitCurr.ObjectId
 
+                 LEFT JOIN MovementBoolean AS MovementBoolean_TransferNext
+                                           ON MovementBoolean_TransferNext.MovementId = MovementNext.Id
+                                           AND MovementBoolean_TransferNext.DescId = zc_MovementBoolean_Transfer()
               WHERE MovementCurr.ID = inMovementId
                 AND COALESCE (MovementBoolean_Transfer.ValueData, False) = False
+                AND COALESCE (MovementBoolean_TransferNext.ValueData, False) = False
                 AND MovementCurr.StatusId = zc_Enum_Status_Complete()
              )
     THEN

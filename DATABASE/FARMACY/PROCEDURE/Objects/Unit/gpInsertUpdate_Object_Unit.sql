@@ -1,5 +1,10 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, 
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime, 
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
@@ -17,6 +22,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , TVarChar, Boolean, Boolean, Boolean, Boolean, Integer);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, 
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime, 
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, 
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime, 
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -43,6 +60,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
     IN inProvinceCityId          Integer   ,    -- ссылка на Район
     IN inUserManagerId           Integer   ,    -- ссылка на менеджер
+    IN inUserManager2Id          Integer   ,    -- ссылка на менеджер 2
+    IN inUserManager3Id          Integer   ,    -- ссылка на менеджер 3
     IN inUnitCategoryId          Integer   ,    -- ссылка на категорию 
     IN inUnitRePriceId           Integer   ,    -- ссылка на подразделение 
     IN inNormOfManDays           Integer   ,    -- Норма человекодней в месяце
@@ -51,6 +70,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inisGoodsCategory         Boolean   ,    -- Для Ассортиментной матрица
     IN inDividePartionDate       Boolean   ,    -- Разбивать товар по партиям на кассах
     IN inRedeemByHandSP          Boolean   ,    -- Погашать через сайт вручную (без использования API)
+    IN inUnitOverdueId           Integer   ,    -- Подразделение для перемещения просроченного товара
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -185,10 +205,14 @@ BEGIN
    
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), ioId, inUserManagerId);
-   
+   -- сохранили связь с <менеджер 2>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager2(), ioId, inUserManager2Id);
+   -- сохранили связь с <менеджер 3>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager3(), ioId, inUserManager3Id);
+
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
-   
+
    -- сохранили связь с подразделением
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitRePrice(), ioId, inUnitRePriceId);
    
@@ -226,6 +250,9 @@ BEGIN
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_RedeemByHandSP(), ioId, inRedeemByHandSP);
 
+   -- сохранили связь с подразделением
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitOverdue(), ioId, inUnitOverdueId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -239,6 +266,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.07.19                                                        * UnitOverdue
+ 02.07.19         *
  14.06.19                                                        *
  20.03.19         *
  15.02.19         * inGoodsCategory

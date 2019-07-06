@@ -102,7 +102,9 @@ BEGIN
           THEN MovementDate_Delay.ValueData
           ELSE CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
                THEN MovementDate_UserConfirmedKind.ValueData
-               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '4 DAY') AS Movement;
+               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '4 DAY' 
+       OR MovementDate_Delay.ValueData is Null AND MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
+      AND Movement.OperDate <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '12 DAY') AS Movement;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -110,6 +112,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Øàáëèé Î.Â.
+ 04.07.19                                                                    *
  18.04.19                                                                    *
  04.04.19                                                                    *
 */

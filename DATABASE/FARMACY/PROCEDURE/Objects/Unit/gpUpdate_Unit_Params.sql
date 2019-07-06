@@ -3,12 +3,15 @@
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
  INOUT ioCreateDate          TDateTime ,    -- дата создания точки
  INOUT ioCloseDate           TDateTime ,    -- дата закрытия точки
     IN inUserManagerId       Integer   ,    -- ссылка на менеджер
+    IN inUserManager2Id      Integer   ,    -- ссылка на менеджер 2
+    IN inUserManager3Id      Integer   ,    -- ссылка на менеджер 3
     IN inAreaId              Integer   ,    -- регион
     IN inUnitRePriceId       Integer   ,    -- ссылка на подразделение 
     IN inSession             TVarChar       -- текущий пользователь
@@ -42,6 +45,11 @@ BEGIN
 
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), inId, inUserManagerId);
+   -- сохранили связь с <менеджер 2>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager2(), inId, inUserManager2Id);
+   -- сохранили связь с <менеджер 3>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager3(), inId, inUserManager3Id);
+
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), inId, inAreaId);
    
@@ -85,7 +93,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.07.19         *
  20.09.17         *
  15.09.17         *
 */

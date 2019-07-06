@@ -21,7 +21,6 @@ inherited CheckForm: TCheckForm
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 214
-        ExplicitTop = 2
         ExplicitWidth = 804
         ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1534,6 +1533,53 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecReLinkContainer'
     end
+    object actUpdate_MovementIten_PartionDateKind: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = astChoicePartionDateKind
+        end
+        item
+          Action = actExec_MovementIten_PartionDateKind
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1090#1080#1087#1072' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082' '#1091' '#1087#1086#1079#1080#1094#1080#1080' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1090#1080#1087#1072' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082' '#1091' '#1087#1086#1079#1080#1094#1080#1080' '#1095#1077#1082#1072
+      ImageIndex = 35
+    end
+    object astChoicePartionDateKind: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'astChoicePartionDateKind'
+      FormName = 'TPartionDateKindForm'
+      FormNameParam.Value = 'TPartionDateKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExec_MovementIten_PartionDateKind: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MovementIten_PartionDateKind
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementIten_PartionDateKind
+        end>
+      Caption = 'actExec_MovementIten_PartionDateKind'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1629,6 +1675,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1693,6 +1743,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton4: TdxBarButton
       Action = actReLinkContainer
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_MovementIten_PartionDateKind
       Category = 0
     end
   end
@@ -1766,6 +1820,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'JackdawsChecks'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionDateKindId'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -2623,7 +2682,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 360
-    Top = 176
+    Top = 144
   end
   object spUpdateJackdawsChecks: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_JackdawsChecks'
@@ -2647,8 +2706,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 378
-    Top = 184
+    Left = 450
+    Top = 144
   end
   object GuidesPartionDateKind: TdsdGuides
     KeyField = 'Id'
@@ -2754,5 +2813,38 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 690
     Top = 456
+  end
+  object spUpdate_MovementIten_PartionDateKind: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementIten_Check_PartionDateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemID'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionDateKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PartionDateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 370
+    Top = 440
   end
 end

@@ -33,6 +33,7 @@ BEGIN
          vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
      END IF;
 
+/*   -- Заремил т.к. по приходу и медикаменту может быть несколько партий
      -- Проверка - партия inMovementId в сроках может формироваться только в одном документе срок
      IF NOT EXISTS(SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId_send AND MB.DescId = zc_MovementBoolean_Transfer() AND MB.ValueData = TRUE) AND
          EXISTS (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
@@ -108,7 +109,7 @@ BEGIN
                         , zfConvert_DateToString ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = (SELECT ObjectFloat.ValueData :: Integer FROM ContainerLinkObject AS CLO_PG JOIN ObjectFloat ON ObjectFloat.ObjectId = CLO_PG.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_PartionGoods_MovementId() WHERE CLO_PG.ContainerId = vbContainerId_err AND CLO_PG.DescId = zc_ContainerLinkObject_PartionGoods())))
                         ;
      END IF;
-
+*/
 
      -- Проверка - может быть только одна партия
      IF 1 < (SELECT COUNT(*)

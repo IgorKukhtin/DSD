@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Cash_Overdue (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Cash_Overdue (
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (id Integer,
+RETURNS TABLE (ORD Integer, id Integer,
                GoodsID Integer, GoodsCode Integer, GoodsName TVarChar,
                Amount TFloat, PriceWithVAT TFloat, ValueMin TFloat,
                ExpirationDate TDateTime,
@@ -29,7 +29,8 @@ BEGIN
 
 
   RETURN QUERY
-  SELECT Container.ID
+  SELECT ROW_NUMBER()OVER(ORDER BY Object_Goods.ValueData)::Integer  AS ORD
+       , Container.ID
        , Object_Goods.ID                                    AS GoodsID
        , Object_Goods.ObjectCode                            AS GoodsCode
        , Object_Goods.ValueData                             AS GoodsName
@@ -81,7 +82,7 @@ BEGIN
        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
   WHERE Container.DescId    = zc_Container_CountPartionDate()
-    AND Container.WhereObjectId = 183292
+    AND Container.WhereObjectId = vbUnitId
     AND ObjectFloat_PartionGoods_ExpirationDate.ValueData <= CURRENT_DATE
     AND Container.Amount > 0
   ORDER BY Object_Goods.ValueData;
@@ -100,4 +101,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_Overdue('308120')
+-- SELECT * FROM gpSelect_Cash_Overdue('3')

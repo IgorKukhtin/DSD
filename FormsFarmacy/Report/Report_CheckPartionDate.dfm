@@ -1,30 +1,30 @@
 inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
-  ClientHeight = 359
+  ClientHeight = 364
   ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 840
-  ExplicitHeight = 397
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 67
+    Top = 99
     Width = 824
-    Height = 292
+    Height = 265
     TabOrder = 3
-    ExplicitTop = 67
+    ExplicitTop = 99
     ExplicitWidth = 824
-    ExplicitHeight = 292
-    ClientRectBottom = 292
+    ExplicitHeight = 265
+    ClientRectBottom = 265
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
-      ExplicitHeight = 292
+      ExplicitHeight = 265
       inherited cxGrid: TcxGrid
         Width = 824
-        Height = 292
+        Height = 265
         ExplicitWidth = 824
-        ExplicitHeight = 292
+        ExplicitHeight = 265
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -50,6 +50,16 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSaleDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -80,6 +90,16 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSaleDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -105,6 +125,21 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentVert = vaCenter
             Width = 179
           end
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 129
+          end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
           object Amount: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090'.'
             DataBinding.FieldName = 'Amount'
@@ -128,8 +163,19 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 89
           end
           object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -146,19 +192,29 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             Options.Editing = False
             Width = 89
           end
           object SumSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SumSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             Options.Editing = False
             Width = 89
           end
@@ -181,9 +237,27 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             Options.Editing = False
             Width = 89
+          end
+          object SummSaleDiff: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' ('#1094#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' - '#1094#1077#1085#1072'), '#1075#1088#1085
+            DataBinding.FieldName = 'SummSaleDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object DaysDiff: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1076#1086' '#1089#1088#1086#1082#1072
+            DataBinding.FieldName = 'DaysDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -191,47 +265,47 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
   end
   inherited Panel: TPanel
     Width = 824
-    Height = 41
+    Height = 73
     ExplicitWidth = 824
-    ExplicitHeight = 41
+    ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 107
-      Top = 9
+      Left = 120
+      Top = 10
       EditValue = 43831d
-      ExplicitLeft = 107
-      ExplicitTop = 9
+      ExplicitLeft = 120
+      ExplicitTop = 10
       ExplicitWidth = 81
       Width = 81
     end
     inherited deEnd: TcxDateEdit
-      Left = 305
-      Top = 9
+      Left = 121
+      Top = 36
       EditValue = 43831d
-      ExplicitLeft = 305
-      ExplicitTop = 9
+      ExplicitLeft = 121
+      ExplicitTop = 36
       ExplicitWidth = 80
       Width = 80
     end
     inherited cxLabel1: TcxLabel
-      Left = 13
-      Top = 10
-      ExplicitLeft = 13
-      ExplicitTop = 10
+      Left = 26
+      Top = 11
+      ExplicitLeft = 26
+      ExplicitTop = 11
     end
     inherited cxLabel2: TcxLabel
-      Left = 194
-      Top = 10
-      ExplicitLeft = 194
-      ExplicitTop = 10
+      Left = 10
+      Top = 37
+      ExplicitLeft = 10
+      ExplicitTop = 37
     end
     object cxLabel4: TcxLabel
-      Left = 395
-      Top = 10
+      Left = 219
+      Top = 11
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 484
-      Top = 9
+      Left = 308
+      Top = 10
       Properties.Buttons = <
         item
           Default = True
@@ -240,6 +314,24 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 299
+    end
+    object cbPartionDateKind: TcxCheckBox
+      Left = 219
+      Top = 37
+      Action = actRefreshKind
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+      Width = 180
+    end
+    object cbExpirationDate: TcxCheckBox
+      Left = 405
+      Top = 37
+      Action = actRefreshDate
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+      Width = 146
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -262,6 +354,33 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshDate: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshKind: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1058#1080#1087#1099' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -376,6 +495,22 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionDateKind'
+          Value = Null
+          Component = cbPartionDateKind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExpirationDate'
+          Value = Null
+          Component = cbExpirationDate
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -499,6 +634,22 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisExpirationDate'
+        Value = Null
+        Component = cbExpirationDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionDateKind'
+        Value = Null
+        Component = cbPartionDateKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 136
   end
@@ -599,8 +750,8 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 24
+    Left = 568
+    Top = 16
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -624,7 +775,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       end>
     PackSize = 1
     Left = 440
-    Top = 128
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <

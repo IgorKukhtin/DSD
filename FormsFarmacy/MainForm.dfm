@@ -3,8 +3,9 @@ inherited MainForm: TMainForm
   ClientHeight = 171
   ClientWidth = 666
   KeyPreview = True
+  OnCreate = nil
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1529,6 +1530,10 @@ inherited MainForm: TMainForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    inherited actExit: TFileExit
+      Caption = #1042#1099#1093#1086#1076
+      ShortCut = 0
     end
     object actOrderInternalLite: TdsdOpenForm [123]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099

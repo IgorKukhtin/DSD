@@ -13,6 +13,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , UserManagerId Integer, UserManagerName TVarChar, MemberName TVarChar
              , EMail_Member TVarChar, Phone_Member TVarChar
+             , UserManager2Id Integer, UserManager2Name TVarChar, Member2Name TVarChar
+             , EMail_Member2 TVarChar, Phone_Member2 TVarChar
+             , UserManager3Id Integer, UserManager3Name TVarChar, Member3Name TVarChar
+             , EMail_Member3 TVarChar, Phone_Member3 TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
@@ -58,21 +62,33 @@ BEGIN
 
       , Object_ProvinceCity.Id                               AS ProvinceCityId
       , Object_ProvinceCity.ValueData                        AS ProvinceCityName
-                                                            
+
       , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)     AS ParentId
       , Object_Parent.ValueData                              AS ParentName
-                                                            
+
       , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
       , Object_UserManager.ValueData                         AS UserManagerName
       , Object_Member.ValueData                              AS MemberName
       , ObjectString_EMail.ValueData                         AS EMail_Member
       , ObjectString_Phone.ValueData                         AS Phone_Member
-                                                            
+
+      , COALESCE (Object_UserManager2.Id, 0)                 AS UserManager2Id
+      , Object_UserManager2.ValueData                        AS UserManager2Name
+      , Object_Member2.ValueData                             AS Member2Name
+      , ObjectString_EMail2.ValueData                        AS EMail_Member2
+      , ObjectString_Phone2.ValueData                        AS Phone_Member2
+
+      , COALESCE (Object_UserManager3.Id, 0)                 AS UserManager3Id
+      , Object_UserManager3.ValueData                        AS UserManager3Name
+      , Object_Member3.ValueData                             AS Member3Name
+      , ObjectString_EMail3.ValueData                        AS EMail_Member3
+      , ObjectString_Phone3.ValueData                        AS Phone_Member3
+
       , Object_Juridical.ValueData                           AS JuridicalName
       , Object_MarginCategory.ValueData                      AS MarginCategoryName
       , ObjectBoolean_isLeaf.ValueData                       AS isLeaf
       , Object_Unit.isErased                                 AS isErased
-                                                            
+
       , 0                                                    AS RouteId
       , ''::TVarChar                                         AS RouteName
       , 0                                                    AS RouteSortingId
@@ -149,6 +165,40 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Phone
                                ON ObjectString_Phone.ObjectId = Object_Member.Id 
                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager2
+                             ON ObjectLink_Unit_UserManager2.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager2.DescId = zc_ObjectLink_Unit_UserManager2()
+        LEFT JOIN Object AS Object_UserManager2 ON Object_UserManager2.Id = ObjectLink_Unit_UserManager2.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member2
+                             ON ObjectLink_User_Member2.ObjectId = Object_UserManager2.Id
+                            AND ObjectLink_User_Member2.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member2 ON Object_Member2.Id = ObjectLink_User_Member2.ChildObjectId
+        
+        LEFT JOIN ObjectString AS ObjectString_EMail2
+                               ON ObjectString_EMail2.ObjectId = Object_Member2.Id 
+                              AND ObjectString_EMail2.DescId = zc_ObjectString_Member_EMail()
+        LEFT JOIN ObjectString AS ObjectString_Phone2
+                               ON ObjectString_Phone2.ObjectId = Object_Member2.Id 
+                              AND ObjectString_Phone2.DescId = zc_ObjectString_Member_Phone()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager3
+                             ON ObjectLink_Unit_UserManager3.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager3.DescId = zc_ObjectLink_Unit_UserManager3()
+        LEFT JOIN Object AS Object_UserManager3 ON Object_UserManager3.Id = ObjectLink_Unit_UserManager3.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member3
+                             ON ObjectLink_User_Member3.ObjectId = Object_UserManager3.Id
+                            AND ObjectLink_User_Member3.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = ObjectLink_User_Member3.ChildObjectId
+        
+        LEFT JOIN ObjectString AS ObjectString_EMail3
+                               ON ObjectString_EMail3.ObjectId = Object_Member3.Id 
+                              AND ObjectString_EMail3.DescId = zc_ObjectString_Member_EMail()
+        LEFT JOIN ObjectString AS ObjectString_Phone3
+                               ON ObjectString_Phone3.ObjectId = Object_Member3.Id 
+                              AND ObjectString_Phone3.DescId = zc_ObjectString_Member_Phone()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
@@ -259,7 +309,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 01.07.19         *
+ 02.07.19         *
  20.03.19         *
  15.01.19         * 
  22.10.18         *
