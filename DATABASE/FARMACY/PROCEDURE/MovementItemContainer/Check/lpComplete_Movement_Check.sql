@@ -31,8 +31,9 @@ BEGIN
      IF EXISTS(SELECT 1
                FROM MovementItem AS MI
                     INNER JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
-                                                      ON MILinkObject_PartionDateKind.MovementItemId   = MI.Id
-                                                     AND MILinkObject_PartionDateKind.DescId           = zc_MILinkObject_PartionDateKind()
+                                                      ON MILinkObject_PartionDateKind.MovementItemId        = MI.Id
+                                                     AND MILinkObject_PartionDateKind.DescId                = zc_MILinkObject_PartionDateKind()
+                                                     AND COALESCE(MILinkObject_PartionDateKind.ObjectId, 0) <> 0
                     LEFT JOIN MovementItem AS MIChild
                                            ON MIChild.MovementId = MI.MovementId
                                           AND MIChild.ParentId   = MI.Id
@@ -56,8 +57,9 @@ BEGIN
                                                   '; остаток: ' || zfConvert_FloatToString (COALESCE(SUM(CASE WHEN COALESCE(Container.Amount, 0) < COALESCE(MIChild.Amount, 0) THEN COALESCE(Container.Amount, 0) ELSE COALESCE(MIChild.Amount, 0) END), 0)) || COALESCE (Object_Measure.ValueData, '') AS Value
                                            FROM MovementItem AS MI
                                                 INNER JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
-                                                                                  ON MILinkObject_PartionDateKind.MovementItemId   = MI.Id
-                                                                                 AND MILinkObject_PartionDateKind.DescId           = zc_MILinkObject_PartionDateKind()
+                                                                                  ON MILinkObject_PartionDateKind.MovementItemId   =    MI.Id
+                                                                                 AND MILinkObject_PartionDateKind.DescId                = zc_MILinkObject_PartionDateKind()
+                                                                                 AND COALESCE(MILinkObject_PartionDateKind.ObjectId, 0) <> 0
                                                 LEFT JOIN MovementItem AS MIChild
                                                                         ON MIChild.MovementId = MI.MovementId
                                                                        AND MIChild.ParentId   = MI.Id

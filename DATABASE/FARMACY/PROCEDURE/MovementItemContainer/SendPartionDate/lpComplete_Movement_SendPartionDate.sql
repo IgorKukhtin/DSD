@@ -55,14 +55,19 @@ BEGIN
                   );
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_PartionDate (MovementItemId Integer, GoodsId Integer, Amount TFloat
-                                           , ContainerId_in Integer, ContainerId Integer
-                                           , MovementId_in Integer, PartionId_in Integer
-                                           , PartionGoodsId Integer
-                                           , ExpirationDate TDateTime
-                                           , PriceWithVAT TFloat, ChangePercentMin TFloat, ChangePercent TFloat
-                                           , ContainerId_Transfer Integer
-                                            ) ON COMMIT DROP;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_PartionDate'))
+     THEN
+         DELETE FROM _tmpItem_PartionDate;
+     ELSE
+         CREATE TEMP TABLE _tmpItem_PartionDate (MovementItemId Integer, GoodsId Integer, Amount TFloat
+                                               , ContainerId_in Integer, ContainerId Integer
+                                               , MovementId_in Integer, PartionId_in Integer
+                                               , PartionGoodsId Integer
+                                               , ExpirationDate TDateTime
+                                               , PriceWithVAT TFloat, ChangePercentMin TFloat, ChangePercent TFloat
+                                               , ContainerId_Transfer Integer
+                                                ) ON COMMIT DROP;
+     END IF;    
 
      -- !!!Пересчитали MI_Master.Amount - остаток со сроком на начало дня Movement.OperDate!!!
      IF vbTransfer = FALSE
@@ -323,6 +328,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.07.19                                                      *
  27.06.19                                                       *
  21.06.19                                                       *
  15.08.18         *

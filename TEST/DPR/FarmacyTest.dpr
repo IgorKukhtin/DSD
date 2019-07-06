@@ -702,7 +702,8 @@ uses
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   Report_GoodsPartionMoveCash in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCash.pas' {Report_GoodsPartionMoveCashForm: TParentForm},
   Report_GoodsPartionMoveCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas' {Report_GoodsPartionMoveCashDialogForm: TParentForm},
-  UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm};
+  UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
+  OverdueChangeJournal in '..\..\FormsFarmacy\Document\OverdueChangeJournal.pas' {OverdueChangeJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
