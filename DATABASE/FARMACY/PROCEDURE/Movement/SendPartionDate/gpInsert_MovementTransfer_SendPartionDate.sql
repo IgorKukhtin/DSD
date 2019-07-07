@@ -20,6 +20,7 @@ $BODY$
 BEGIN
 
   vbUserId:= lpGetUserBySession (inSession);
+  inExpirationDate := DATE_TRUNC ('DAY', inExpirationDate);
 
   IF NOT EXISTS(SELECT 1 FROM Container
                 WHERE Container.DescId    = zc_Container_CountPartionDate()

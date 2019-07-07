@@ -5233,7 +5233,7 @@ begin
           begin
             result := False;
             ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
-              'Чек анулирован...');
+              'Чек анулирован...'#13#10'(Перезагрузите свой кассовый аппарат и перезайдите в программу)');
             Cash.Anulirovt;
           end
         end else if not result and Assigned(Cash) AND not Cash.AlwaysSold then

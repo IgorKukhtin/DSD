@@ -27,8 +27,6 @@ type
   TOverdueChangeJournalForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -48,7 +46,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    Amount: TcxGridDBColumn;
+    AmountPG: TcxGridDBColumn;
     spTransfer_SendPartionDate: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbProtocolOpenForm: TdxBarButton;
@@ -62,14 +60,14 @@ type
     MultiAction1: TMultiAction;
     actExecuteOverdueDialog: TExecuteDialog;
     actTransfer_SendPartionDate: TdsdExecStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     Panel: TPanel;
     edUnitName: TcxTextEdit;
     lblCashMember: TcxLabel;
-    edGoodsId: TcxTextEdit;
+    edGoodsCode: TcxTextEdit;
     cxLabel1: TcxLabel;
     edGoodsName: TcxTextEdit;
+    ExpirationDatePG: TcxGridDBColumn;
   private
     { Private declarations }
   public

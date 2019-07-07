@@ -37,13 +37,12 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       DataController.Summary.FooterSummaryItems = <
         item
           Kind = skSum
-          Column = Amount
+          Column = AmountPG
           DisplayText = ',0.###'
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = GoodsName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -53,46 +52,15 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'ORD'
+      object Invnumber: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'Invnumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 48
-      end
-      object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 59
-      end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 192
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 76
-      end
-      object ExpirationDate: TcxGridDBColumn
-        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-        DataBinding.FieldName = 'ExpirationDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 93
+        Width = 89
       end
       object BranchDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
@@ -101,12 +69,29 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
-      object Invnumber: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076
-        DataBinding.FieldName = 'Invnumber'
+      object ExpirationDate: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+        DataBinding.FieldName = 'ExpirationDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 89
+        Width = 74
+      end
+      object ExpirationDatePG: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'ExpirationDatePG'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 83
+      end
+      object AmountPG: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+        DataBinding.FieldName = 'AmountPG'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 76
       end
       object FromName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -149,7 +134,7 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       Top = 1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
-    object edGoodsId: TcxTextEdit
+    object edGoodsCode: TcxTextEdit
       Left = 271
       Top = 18
       TabStop = False
@@ -381,8 +366,8 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actExecuteOverdueDialog'
-      FormName = 'TOverdueDialogForm'
-      FormNameParam.Value = 'TOverdueDialogForm'
+      FormName = 'TOverdueChangeDialogForm'
+      FormNameParam.Value = 'TOverdueChangeDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -419,13 +404,29 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_Overdue'
+    StoredProcName = 'gpSelect_Cash_OverdueChange'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 48
     Top = 224
@@ -435,7 +436,7 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
     Top = 160
   end
   object spTransfer_SendPartionDate: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementTransfer_SendPartionDate'
+    StoredProcName = 'gpInsert_MovementTransferMeneger_SendPartionDate'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -443,7 +444,15 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
         Name = 'inContainerID'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'ContainerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContainerPGID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContainerPGID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -515,7 +524,7 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       item
         Name = 'GoodsCode'
         Value = Null
-        Component = edGoodsId
+        Component = edGoodsCode
         MultiSelectSeparator = ','
       end
       item

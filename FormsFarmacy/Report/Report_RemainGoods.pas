@@ -52,6 +52,8 @@ type
     cbJuridical: TcxCheckBox;
     isSP: TcxGridDBColumn;
     cbVendorminPrices: TcxCheckBox;
+    actOverdueChange: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
