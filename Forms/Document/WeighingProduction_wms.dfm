@@ -754,6 +754,14 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
@@ -829,6 +837,10 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     end
     object bbPrintSticker: TdxBarButton
       Action = actPrintSticker
+      Category = 0
+    end
+    object bbPrintNoGroup: TdxBarButton
+      Action = actPrintNoGroup
       Category = 0
     end
   end
@@ -969,6 +981,42 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPrintNoGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProduction'
+      ReportNameParam.Value = 'PrintMovement_WeighingProduction'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2138,5 +2186,29 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     PackSize = 1
     Left = 719
     Top = 336
+  end
+  object spSelectPrintNoGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 360
   end
 end

@@ -63,6 +63,8 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -775,6 +777,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -841,6 +851,10 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbPrintNoGroup: TdxBarButton
+      Action = actPrintNoGroup
       Category = 0
     end
   end
@@ -1083,6 +1097,42 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actPrintNoGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProduction'
+      ReportNameParam.Value = 'PrintMovement_WeighingProduction'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1401,5 +1451,41 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Params = <>
     Left = 400
     Top = 200
+  end
+  object spSelectPrintNoGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 783
+    Top = 192
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 484
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 412
+    Top = 222
   end
 end

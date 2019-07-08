@@ -120,6 +120,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
   {

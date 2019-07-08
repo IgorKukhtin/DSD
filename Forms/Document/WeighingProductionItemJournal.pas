@@ -108,6 +108,11 @@ type
     StartBegin: TcxGridDBColumn;
     EndBegin: TcxGridDBColumn;
     diffBegin_sec: TcxGridDBColumn;
+    spSelectPrintNoGroup: TdsdStoredProc;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
   private
   public
   end;

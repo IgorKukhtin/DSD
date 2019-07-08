@@ -117,6 +117,11 @@ type
     N6: TMenuItem;
     N7: TMenuItem;
     N8: TMenuItem;
+    spSelectPrintNoGroup: TdsdStoredProc;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
   private
   public
   end;

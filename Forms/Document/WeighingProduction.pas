@@ -154,6 +154,9 @@ type
     spUpdate_Param: TdsdStoredProc;
     bbUpdateParams: TdxBarButton;
     edIsAuto: TcxCheckBox;
+    spSelectPrintNoGroup: TdsdStoredProc;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
   private
   public
   end;
