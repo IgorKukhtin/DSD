@@ -201,7 +201,10 @@ BEGIN
                          , tmpIncome.PriceIncome * tmpMI_Child.Amount                                                                   AS SumIncome
                          , MIFloat_PriceSale.ValueData * tmpMI_Child.Amount                                                             AS SumSale
                          , MIFloat_Price.ValueData * tmpMI_Child.Amount                                                                 AS Summ
-                         , ( 100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount) )  AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
+                         , CASE WHEN COALESCE (tmpIncome.PriceIncome * tmpMI_Child.Amount, 0) <> 0
+                                THEN (100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount))
+                                ELSE 0
+                           END                         AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
                          , (MIFloat_Price.ValueData * tmpMI_Child.Amount - tmpIncome.PriceIncome * tmpMI_Child.Amount)                  AS SummDiff      -- сумма потери от продажи ( в денежном эквиваленте)
                          , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - MIFloat_Price.ValueData * tmpMI_Child.Amount)            AS SummSaleDiff  -- разница суммы по цене продажи и цене без скидки
                          , tmpIncome.ExpirationDate
