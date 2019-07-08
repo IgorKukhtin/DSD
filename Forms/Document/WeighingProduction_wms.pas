@@ -153,6 +153,9 @@ type
     Amount: TcxGridDBColumn;
     RealWeight: TcxGridDBColumn;
     BoxName: TcxGridDBColumn;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
   private
   public
   end;

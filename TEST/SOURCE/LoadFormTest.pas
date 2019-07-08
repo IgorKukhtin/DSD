@@ -3193,6 +3193,7 @@ end;
  begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsJournalForm');
   //
