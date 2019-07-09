@@ -988,7 +988,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       object btnCheck: TcxButton
         Left = 510
-        Top = 6
+        Top = 7
         Width = 35
         Height = 22
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074

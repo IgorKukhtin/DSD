@@ -5,60 +5,60 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoadPriceList_JSON(
     IN inContractId          Integer   , -- Договор
     IN inAreaId              Integer   , -- Регион
     IN inNDSinPrice          Boolean   , -- цена с ндс
-    IN inJSON                Text      , -- json 
+    IN inJSON                Text      , -- json
     IN inPriceNum            Integer   , -- номер цены для нескольких контрактов
     IN inUserId              Integer     -- пользователь
 )
 RETURNS VOID
 AS
 $BODY$
-   
+
     DECLARE vbLoadPriceListId Integer;
     DECLARE vbAreaId_find Integer;
     DECLARE vbConditionalPercent TFloat;
-    
+
 BEGIN
     -- из JSON в таблицу
     DROP TABLE IF EXISTS tblJSON;
-    CREATE TABLE tblJSON 
+    CREATE TABLE tblJSON
     (
-     GoodsID			   Integer   ,	
+     GoodsID			   Integer   ,
      PriceOriginal         TFloat    ,
      isSpecCondition       Boolean   ,
-     
-     inCommonCode          Integer   , 
-     inBarCode             TVarChar  , 
-     inGoodsCode           TVarChar  , 
-     inGoodsName           TVarChar  , 
-     inGoodsNDS            TVarChar  , 
-     inPrice               TFloat    ,  
+
+     inCommonCode          Integer   ,
+     inBarCode             TVarChar  ,
+     inGoodsCode           TVarChar  ,
+     inGoodsName           TVarChar  ,
+     inGoodsNDS            TVarChar  ,
+     inPrice               TFloat    ,
      inPrice1              TFloat    ,
      inPrice2              TFloat    ,
      inPrice3              TFloat    ,
-     inRemains             TFloat    ,  
-     inExpirationDate      TDateTime , 
-     inPackCount           TVarChar  ,  
-     inProducerName        TVarChar  ,      
-     inCodeUKTZED          TVarChar  
+     inRemains             TFloat    ,
+     inExpirationDate      TDateTime ,
+     inPackCount           TVarChar  ,
+     inProducerName        TVarChar  ,
+     inCodeUKTZED          TVarChar
     );
-    
+
     DROP TABLE IF EXISTS tblJSON_temp;
     CREATE TABLE tblJSON_temp
     (
-      inJSON                Text -- json 
+      inJSON                Text -- json
     );
-    
+
     INSERT INTO tblJSON_temp
-    SELECT inJSON;    
-    
+    SELECT inJSON;
+
     INSERT INTO tblJSON
     SELECT *
     FROM json_populate_recordset(null::tblJSON, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
     --FROM json_populate_recordset(null::tblJSON, inJSON::json);
-    
+
     CREATE INDEX idx_tblJSON_CommonCode ON tblJSON USING btree (inCommonCode);
-    CREATE INDEX idx_tblJSON_BarCode ON tblJSON USING btree (inBarCode);     
-    
+    CREATE INDEX idx_tblJSON_BarCode ON tblJSON USING btree (inBarCode);
+
     -- Проверка что передано таки Договор а не Юр лицо
     IF COALESCE (inContractId, 0) <> 0 THEN
        IF (SELECT DescId FROM Object WHERE Id = inContractId) <> zc_Object_Contract() THEN
@@ -159,18 +159,18 @@ BEGIN
          UPDATE LoadPriceList SET isMoved = FALSE, Date_Update = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;
          /*-- иначе в протокол запишем что типа Insert
          UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
-    END IF; 
-    
+    END IF;
+
     -- ищем по общему коду
     WITH tmpCommonCode AS
     (
-        SELECT 
-            tmpGoods.GoodsId, 
+        SELECT
+            tmpGoods.GoodsId,
             tmpGoods.isSpecCondition,
             tmpGoods.CommonCode
 
         FROM (WITH tmp AS (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-                                , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition                            
+                                , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
                            FROM ObjectLink AS ObjectLink_Goods_Object
                                 JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
@@ -199,10 +199,10 @@ BEGIN
                                          ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
                                         AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
                    LEFT JOIN tmp ON tmp.GoodsId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                   INNER JOIN 
-                    (SELECT DISTINCT inCommonCode FROM tblJSON) 
-                                         AS tblJSON 
-                                         ON Object_Goods.ObjectCode = tblJSON.inCommonCode 
+                   INNER JOIN
+                    (SELECT DISTINCT inCommonCode FROM tblJSON)
+                                         AS tblJSON
+                                         ON Object_Goods.ObjectCode = tblJSON.inCommonCode
               WHERE Object_Goods.DescId = zc_Object_Goods() and tblJSON.inCommonCode > 0
              ) AS tmpGoods
     )
@@ -211,9 +211,29 @@ BEGIN
         isSpecCondition = tmpCommonCode.isSpecCondition
     FROM tmpCommonCode
     WHERE inCommonCode = tmpCommonCode.CommonCode;
-    
+
+    -- Если пусто коод поставщика и нашли в предыдущем исправляем код поставщика
+    WITH tmpGoodsCode AS
+    (SELECT DISTINCT
+           LoadPriceListItem.CommonCode
+         , LoadPriceListItem.GoodsCode
+    FROM LoadPriceListItem
+    WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId
+      AND COALESCE (LoadPriceListItem.CommonCode, 0) <> 0
+      AND (LoadPriceListItem.GoodsCode <> '0' AND COALESCE(LoadPriceListItem.GoodsCode, '') <> '')
+    )
+    UPDATE tblJSON
+      SET inGoodsCode = tmpGoodsCode.GoodsCode
+    FROM tmpGoodsCode
+    WHERE inCommonCode = tmpGoodsCode.CommonCode AND inCommonCode > 0
+      AND (tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '');
+
+    -- удаляем с нулевыми кодами поставщика по просьбе Любы
+    DELETE FROM tblJSON
+    WHERE tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '';
+
     -- ищем по штрихкоду
-    WITH tmpBarCode AS 
+    WITH tmpBarCode AS
     (
         SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
                    , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
@@ -232,22 +252,23 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                      ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
-             INNER JOIN 
-                (SELECT DISTINCT inBarCode 
-                    FROM tblJSON 
-                    WHERE inBarCode <> '' AND COALESCE(GoodsID, 0) = 0) 
-                                   AS tblJSON 
+             INNER JOIN
+                (SELECT DISTINCT inBarCode
+                    FROM tblJSON
+                    WHERE inBarCode <> '' AND COALESCE(GoodsID, 0) = 0)
+                                   AS tblJSON
                                    ON Object_Goods.ValueData = tblJSON.inBarCode
         WHERE Object_Goods.DescId = zc_Object_Goods()
-    )     
+    )
     UPDATE tblJSON
     SET GoodsID = tmpBarCode.GoodsID,
         isSpecCondition = tmpBarCode.isSpecCondition
     FROM tmpBarCode
     WHERE inBarCode = tmpBarCode.BarCode;
-    
+
+
     -- ищем по коду и inJuridicalId
-    WITH tmpGoodsCode AS 
+    WITH tmpGoodsCode AS
     (
         SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
                  , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
@@ -271,11 +292,11 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
                                     ON ObjectLink_Goods_Area.ObjectId = ObjectString.ObjectId
                                    AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
-               INNER JOIN 
-                    (SELECT DISTINCT inGoodsCode 
-                        FROM tblJSON 
-                        WHERE COALESCE(GoodsID, 0) = 0 and tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '') 
-                                   AS tblJSON 
+               INNER JOIN
+                    (SELECT DISTINCT inGoodsCode
+                        FROM tblJSON
+                        WHERE COALESCE(GoodsID, 0) = 0 and tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '')
+                                   AS tblJSON
                                    ON ObjectString.ValueData = tblJSON.inGoodsCode
 
           WHERE ObjectString.DescId    = zc_ObjectString_Goods_Code()
@@ -287,97 +308,97 @@ BEGIN
               OR (vbAreaId_find = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
                 )
             AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId IN (SELECT Object.id FROM Object WHERE iserased = False)
-    )            
+    )
     UPDATE tblJSON
     SET GoodsID = tmpGoodsCode.GoodsID,
         isSpecCondition = tmpGoodsCode.isSpecCondition
     FROM tmpGoodsCode
     WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '' AND ORD = 1;
-    
+
     -- !!!замена параметра!!!
     UPDATE tblJSON
     SET inExpirationDate = zc_DateEnd()
     WHERE inExpirationDate IS NULL OR inExpirationDate = CURRENT_DATE;
-    
+
     --!!!проверка!!!
     IF EXISTS(SELECT * FROM tblJSON WHERE IsSpecCondition = TRUE)
        AND
-       (SELECT COUNT(DISTINCT ObjectFloat_ConditionalPercent.ValueData) 
+       (SELECT COUNT(DISTINCT ObjectFloat_ConditionalPercent.ValueData)
         FROM ObjectFloat AS ObjectFloat_ConditionalPercent
         WHERE ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId
           AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()) > 1
     THEN
         RAISE EXCEPTION 'По поставщику <%> более одного доп. условия по прайсу', inJuridicalId;
     END IF;
-    
+
     SELECT ObjectFloat_ConditionalPercent.ValueData
     INTO vbConditionalPercent
     FROM ObjectFloat AS ObjectFloat_ConditionalPercent
     WHERE ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId
       AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent();
-      
+
     --!!!важно - запомнили!!!
     IF inPriceNum = 0 THEN
-        UPDATE tblJSON 
+        UPDATE tblJSON
         SET PriceOriginal = inPrice;
     ELSIF inPriceNum = 1 THEN
-        UPDATE tblJSON 
+        UPDATE tblJSON
         SET PriceOriginal = inPrice1,
             inPrice = inPrice1;
     ELSIF inPriceNum = 2 THEN
-        UPDATE tblJSON 
+        UPDATE tblJSON
         SET PriceOriginal = inPrice2,
             inPrice = inPrice2;
     ELSIF inPriceNum = 3 THEN
-        UPDATE tblJSON 
+        UPDATE tblJSON
         SET PriceOriginal = inPrice3,
             inPrice = inPrice3;
     END IF;
-    
+
     --!!!важно - замена!!!
     IF COALESCE(vbConditionalPercent, 0) <> 0 THEN
-    
+
         UPDATE tblJSON
         SET inPrice = (inPrice * (1 + vbConditionalPercent / 100))::NUMERIC (16, 2)
         WHERE IsSpecCondition = TRUE;
 
     END IF;
-    
+
     -- удаляем нулевые цены
-    DELETE FROM tblJSON 
+    DELETE FROM tblJSON
     WHERE COALESCE(inPrice, 0) = 0;
-    
-    -- обновляем старое    
+
+    -- обновляем старое
     UPDATE LoadPriceListItem
     SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = COALESCE(inBarCode, ''), CodeUKTZED = COALESCE(inCodeUKTZED, ''), GoodsNDS = inGoodsNDS, GoodsId = tblJSON.GoodsId,
         Price = inPrice, PriceOriginal = tblJSON.PriceOriginal, ExpirationDate = inExpirationDate, PackCount = COALESCE(inPackCount, ''), ProducerName = COALESCE(inProducerName, '')
       , Remains = tblJSON.inRemains
-    FROM tblJSON 
+    FROM tblJSON
     WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode) AND COALESCE (inPrice, 0) <> 0;
-    
-    
+
+
     -- добавляем новое
     INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName, Remains)
     /*
     SELECT LoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, inPackCount, inProducerName
     FROM
     (
-        SELECT 
-            vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, 
+        SELECT
+            vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId,
             inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName,
             ROW_NUMBER() OVER(PARTITION BY GoodsId ORDER BY inExpirationDate, inCommonCode DESC) as RN
         FROM tblJSON
         WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode)
     ) T
-    WHERE RN = 1;   
-    */  
-    SELECT 
-        vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, 
+    WHERE RN = 1;
+    */
+    SELECT
+        vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId,
         inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName
       , tblJSON.inRemains
     FROM tblJSON
-    WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode));    
-    
+    WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode));
+
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;

@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit, cxButtonEdit;
+  cxCurrencyEdit, cxButtonEdit, cxSplitter, Vcl.ExtCtrls;
 
 type
   TCheckVIP_ErrorForm = class(TAncestorDBGridForm)
@@ -60,6 +60,33 @@ type
     N3: TMenuItem;
     Color_CalcError: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    spUpdate_MovementIten_PartionDateKind: TdsdStoredProc;
+    spReLinkContainer: TdsdStoredProc;
+    PartionDateKindName: TcxGridDBColumn;
+    actReLinkContainer: TMultiAction;
+    actUpdate_MovementIten_PartionDateKind: TMultiAction;
+    actExecReLinkContainer: TdsdExecStoredProc;
+    actExec_MovementIten_PartionDateKind: TdsdExecStoredProc;
+    astChoicePartionDateKind: TOpenChoiceForm;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    Panel: TPanel;
+    cxSplitter1: TcxSplitter;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    chAmount: TcxGridDBColumn;
+    chExpirationDate: TcxGridDBColumn;
+    chOperDate_Income: TcxGridDBColumn;
+    chInvnumber_Income: TcxGridDBColumn;
+    chContainerId: TcxGridDBColumn;
+    chFromName_Income: TcxGridDBColumn;
+    chContractName_Income: TcxGridDBColumn;
+    chisErased: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    spSelectMIChild: TdsdStoredProc;
+    DataSource2: TDataSource;
+    ClientDataSet2: TClientDataSet;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

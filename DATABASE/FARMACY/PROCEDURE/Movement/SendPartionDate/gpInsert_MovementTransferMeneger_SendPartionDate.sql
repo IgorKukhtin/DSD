@@ -117,11 +117,6 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Срок не изменился.';
   END IF;
 
-  IF inExpirationDate < CURRENT_DATE
-  THEN
-    RAISE EXCEPTION 'Ошибка. Изменять срок можно только на непросроченный.';
-  END IF;
-
   IF NOT EXISTS(SELECT 1  FROM Movement
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
