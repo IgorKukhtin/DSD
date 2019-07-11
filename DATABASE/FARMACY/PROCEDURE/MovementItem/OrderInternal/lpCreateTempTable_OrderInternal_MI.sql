@@ -42,6 +42,9 @@ BEGIN
              , SendAmount       TFloat
              , AmountDeferred   TFloat
              , ListDiffAmount   TFloat
+             , AmountReal       TFloat
+             , SendSUNAmount    TFloat
+             , RemainsSUN       TFloat
              , isClose          Boolean
              , isFirst          Boolean
              , isSecond         Boolean
@@ -150,6 +153,19 @@ BEGIN
                               FROM tmpMIF
                               WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                              )
+        , tmpMIF_AmountReal AS (SELECT tmpMIF.*
+                                FROM tmpMIF
+                                WHERE tmpMIF.DescId = zc_MIFloat_AmountReal()
+                               )
+        , tmpMIF_SendSUN AS (SELECT tmpMIF.*
+                             FROM tmpMIF
+                             WHERE tmpMIF.DescId = zc_MIFloat_SendSUN()
+                            )
+        , tmpMIF_RemainsSUN AS (SELECT tmpMIF.*
+                                FROM tmpMIF
+                                WHERE tmpMIF.DescId = zc_MIFloat_RemainsSUN()
+                               )
+
         , tmpMI_LO AS (SELECT MovementItemLinkObject.*
                        FROM MovementItemLinkObject
                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
@@ -186,6 +202,10 @@ BEGIN
             , MIFloat_Send.ValueData               AS SendAmount
             , MIFloat_AmountDeferred.ValueData     AS AmountDeferred
             , MIFloat_ListDiff.ValueData           AS ListDiffAmount
+
+            , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
+            , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
+            , MIFloat_RemainsSUN.ValueData :: TFloat  AS RemainsSUN
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
@@ -240,6 +260,9 @@ BEGIN
               LEFT JOIN tmpMIF_Send           AS MIFloat_Send           ON MIFloat_Send.MovementItemId           = MovementItem.Id
               LEFT JOIN tmpMIF_AmountDeferred AS MIFloat_AmountDeferred ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
               LEFT JOIN tmpMIF_ListDiff       AS MIFloat_ListDiff       ON MIFloat_ListDiff.MovementItemId       = MovementItem.Id
+              LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
+              LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id
+              LEFT JOIN tmpMIF_RemainsSUN     AS MIFloat_RemainsSUN     ON MIFloat_RemainsSUN.MovementItemId     = MovementItem.Id
 ;
 
 END;
