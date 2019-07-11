@@ -1959,10 +1959,6 @@
 				<Form>Report_GoodsMI_PackageForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
-				<Form>Report_GoodsMI_ProductionUnionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMeat\System\GlobalConst.pas">
 				<Form>GlobalConstForm</Form>
 				<FormType>dfm</FormType>
@@ -3687,6 +3683,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsScaleCehEdit.pas">
 				<Form>GoodsScaleCehEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
+				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

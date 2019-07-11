@@ -648,7 +648,6 @@ uses
   InfoMoneyDestination_Object in '..\..\Forms\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
   InfoMoneyGroup_Object in '..\..\Forms\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
   Report_GoodsMI_Package in '..\..\Forms\Report\Report_GoodsMI_Package.pas' {Report_GoodsMI_PackageForm: TParentForm},
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
   GlobalConst in '..\..\FormsMeat\System\GlobalConst.pas' {GlobalConstForm: TParentForm},
   BankAccount_Personal in '..\..\Forms\Document\BankAccount_Personal.pas' {BankAccount_PersonalForm: TParentForm},
   BankAccount_PersonalJournal in '..\..\Forms\Document\BankAccount_PersonalJournal.pas' {BankAccount_PersonalJournalForm: TParentForm},
@@ -1088,7 +1087,8 @@ uses
   LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
   WeighingProductionParamEdit in '..\..\Forms\Document\WeighingProductionParamEdit.pas' {WeighingProductionParamEditForm: TParentForm},
   GoodsScaleCeh in '..\..\Forms\Guides\GoodsScaleCeh.pas' {GoodsScaleCehForm: TParentForm},
-  GoodsScaleCehEdit in '..\..\Forms\Guides\GoodsScaleCehEdit.pas' {GoodsScaleCehEditForm: TParentForm};
+  GoodsScaleCehEdit in '..\..\Forms\Guides\GoodsScaleCehEdit.pas' {GoodsScaleCehEditForm: TParentForm},
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
