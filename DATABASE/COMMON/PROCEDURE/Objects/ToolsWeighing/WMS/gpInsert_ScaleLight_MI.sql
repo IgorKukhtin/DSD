@@ -267,7 +267,7 @@ BEGIN
                      ELSE FALSE
                 END;
      
-     -- !!!если НАДО ЗАКРЫТЬ 1 ящик!!!
+     -- !!!если НАДО ЗАКРЫТЬ ОДИН ящик!!!
      IF vbIsFull = TRUE
      THEN
          -- Создали Документ zc_Movement_WeighingProduction

@@ -92,15 +92,15 @@ BEGIN
       AND NOT EXISTS (SELECT 1 FROM gpSelect_Object_ImportSettingsItems (inImportSettingsId := ioId, inSession:= inSession) AS tmp WHERE tmp.Id > 0)
    THEN
        PERFORM gpInsertUpdate_Object_ImportSettingsItems (ioId                      := 0     	-- ключ объекта <>
-                                                        , inName                    := tmp.Name
+                                                        , inName                    := tmp.ParamValue
                                                         , inImportSettingsId        := ioId
                                                         , inImportTypeItemsId       := tmp.Id
                                                         , inDefaultValue            := ''
                                                         , inConvertFormatInExcel    := FALSE
                                                         , inSession                 := inSession
                                                          )
-       FROM (SELECT * FROM gpSelect_Object_ImportTypeItems (inSession:= inSession) AS tmp 
-             WHERE ImportTypeId = inImportTypeId
+       FROM (-- Приход ММО Бадм
+             SELECT * FROM gpSelect_Object_ImportSettingsItems(inImportSettingsId := 2365877, inSession:= inSession) AS tmp
              ORDER BY tmp.ParamNumber
             ) AS tmp;
    END IF;

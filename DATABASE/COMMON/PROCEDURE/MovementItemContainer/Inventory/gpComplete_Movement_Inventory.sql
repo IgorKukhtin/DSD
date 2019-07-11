@@ -840,6 +840,10 @@ BEGIN
 
      -- Проверка
      IF 1 = 1 AND EXISTS (SELECT 1 FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1)
+        AND (vbPriceListId > 0 -- OR vbUnitId IN (8458 -- Склад База ГП
+                               --               , 8459 -- Склад Реализации
+                               --                )
+            )
      THEN
           RAISE EXCEPTION 'Ошибка.Остаток для партии товара <%> <%> <%> <%> не уникален.<%>', lfGet_Object_ValueData ((SELECT GoodsId FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
                                                                                            , lfGet_Object_ValueData ((SELECT GoodsKindId FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
@@ -895,7 +899,7 @@ BEGIN
               WHERE vbPriceListId   <> 0 -- !!!
                 AND vbIsLastOnMonth = FALSE
              UNION ALL
-              -- 1.1. это введенные остатки
+              -- 1.1. это введенные остатки - их добавим
               SELECT _tmpItem.MovementItemId
                    , CASE WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                            AND COALESCE (ContainerLinkObject_InfoMoney.ObjectId, 0)       <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
@@ -942,7 +946,6 @@ BEGIN
                                                    AND vbOperDate IN ('31.10.2015', '31.12.2015') -- в 1-ый раз для филиалов
                                                    AND vbPriceListId <> 0
 
-                   LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0) 
@@ -1037,7 +1040,8 @@ BEGIN
                    , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
-                   LEFT JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpRemainsCount.ContainerId_Goods
+                   LEFT JOIN (SELECT _tmpItem.ContainerId_Goods, SUM (_tmpItem.OperCount) AS OperCount FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                             ) AS _tmpItem ON _tmpItem.ContainerId_Goods = _tmpRemainsCount.ContainerId_Goods
 
               WHERE vbIsLastOnMonth = TRUE
                 AND COALESCE (_tmpItem.OperCount, 0) = 0 AND COALESCE (_tmpRemainsCount.OperCount_find, 0) = 0

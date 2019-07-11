@@ -2261,6 +2261,9 @@ begin
   //rename Columns
   if SettingMain.isModeSorting = TRUE then
   begin
+    testButton1.Visible:= true;
+    testButton2.Visible:= true;
+    //
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsCode')       .Index].Visible:= FALSE;
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count')           .Index].Index  := 0;
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsName')       .Index].Width  := 100;

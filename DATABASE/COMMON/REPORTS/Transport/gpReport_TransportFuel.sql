@@ -166,13 +166,6 @@ BEGIN
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS IncomeSumm
-                        -- Сумма затраты в ПРИХОДЕ
-                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
-                                   AND (View_Account.AccountGroupId = zc_Enum_AccountGroup_20000() -- Запасы
-                                       )
-                                       THEN MIContainer.Amount
-                                  ELSE 0
-                             END) AS outSumm_Income
                         -- Сумма расход на ЗП (т.е. сотрудник заправлялся в счет ЗП)
                       , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
                                    AND (View_Account.AccountDirectionId = zc_Enum_AccountDirection_70500() -- Кредиторы     + Сотрудники + ???Заработная плата???
@@ -240,7 +233,9 @@ BEGIN
       -- расход по путевым - данные по ContainerId
     , tmpTransport AS (SELECT tmpMIContainer.ContainerId_main
                             , SUM (CASE WHEN tmpMIContainer.DescId = zc_Container_Count() THEN -1 * tmpMIContainer.Amount ELSE 0 END) AS outCount_Transport
-                            , SUM (CASE WHEN tmpMIContainer.DescId = zc_Container_Summ()  THEN -1 * tmpMIContainer.Amount ELSE 0 END) AS outSumm_Transport
+                            , SUM (CASE WHEN tmpMIContainer.DescId = zc_Container_Summ() AND tmpMIContainer.AccountId_Analyzer = zc_Enum_Account_100301() THEN -1 * tmpMIContainer.Amount ELSE 0 END) AS outSumm_Transport
+                              -- Сумма затраты в Расходы будущих периодов
+                            , SUM (CASE WHEN tmpMIContainer.DescId = zc_Container_Summ() AND COALESCE (tmpMIContainer.AccountId_Analyzer, 0) <> zc_Enum_Account_100301() THEN -1 * tmpMIContainer.Amount ELSE 0 END) AS outSumm_Income
                        FROM tmpMIContainer
                        WHERE tmpMIContainer.OperDate BETWEEN inStartDate AND inEndDate
                          AND tmpMIContainer.MovementDescId = zc_Movement_Transport()
@@ -302,7 +297,7 @@ BEGIN
                              , COALESCE (tmpOut.OutCount, 0) + COALESCE (tmpTransport.outCount_Transport, 0) AS OutAmount
                              -- , COALESCE (tmpOut.IncomeSumm, 0)              AS InSumm
                              , COALESCE (tmpOut.IncomeSumm, 0) - COALESCE (tmpOut.outSumm_virt, 0) AS InSumm
-                             , COALESCE (tmpOut.outSumm_Income, 0)          AS outSumm_Income
+                             , COALESCE (tmpTransport.outSumm_Income, 0)    AS outSumm_Income
                              , COALESCE (tmpOut.outSumm_ZP, 0)              AS outSumm_ZP
                              , COALESCE (tmpOut.outSumm_ZP_pl, 0)           AS outSumm_ZP_pl
                              , COALESCE (tmpOut.outSumm_Zatraty, 0)         AS outSumm_Zatraty
@@ -460,4 +455,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_TransportFuel (inStartDate:= '31.07.2018', inEndDate:= '31.07.2018', inFuelId:= 0, inCarId:= 0, inBranchId:= 0, inIsCar:= FALSE, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_TransportFuel (inStartDate:= '01.06.2019', inEndDate:= '01.06.2019', inFuelId:= 0, inCarId:= 0, inBranchId:= 0, inIsCar:= FALSE, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());

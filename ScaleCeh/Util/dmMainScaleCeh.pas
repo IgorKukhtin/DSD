@@ -447,21 +447,39 @@ end;
 function TDMMainScaleCehForm.gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
-    with spSelect do begin
-       StoredProcName:='gpInsert_ScaleCeh_Movement_all';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
-       //try
-         Execute;
-         execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
-       {except
-         Result := '';
-         ShowMessage('Ошибка получения - gpInsert_ScaleCeh_Movement_all');
-       end;}
-    end;
+    if SettingMain.isModeSorting = TRUE
+    then
+       with spSelect do begin
+           StoredProcName:='gpInsert_ScaleLight_Movement_all';
+           OutputType:=otDataSet;
+           Params.Clear;
+           Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+           Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+           Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+           //try
+             Execute;
+             execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
+           {except
+             Result := '';
+             ShowMessage('Ошибка получения - gpInsert_ScaleCeh_Movement_all');
+           end;}
+        end
+      else
+        with spSelect do begin
+           StoredProcName:='gpInsert_ScaleCeh_Movement_all';
+           OutputType:=otDataSet;
+           Params.Clear;
+           Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+           Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+           Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+           //try
+             Execute;
+             execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
+           {except
+             Result := '';
+             ShowMessage('Ошибка получения - gpInsert_ScaleCeh_Movement_all');
+           end;}
+        end;
     Result:=true;
 end;
 {------------------------------------------------------------------------}
