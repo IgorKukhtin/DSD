@@ -518,6 +518,8 @@ type
     miReport_GoodsPartionDate: TMenuItem;
     actReport_CheckPartionDate: TdsdOpenForm;
     miReport_CheckPartionDate: TMenuItem;
+    actSendMenegerJournal: TdsdOpenForm;
+    N185: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

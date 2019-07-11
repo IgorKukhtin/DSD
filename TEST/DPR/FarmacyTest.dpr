@@ -704,7 +704,9 @@ uses
   Report_GoodsPartionMoveCashDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCashDialog.pas' {Report_GoodsPartionMoveCashDialogForm: TParentForm},
   UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   OverdueChangeJournal in '..\..\FormsFarmacy\Document\OverdueChangeJournal.pas' {OverdueChangeJournalForm: TParentForm},
-  OverdueChangeDialog in '..\..\FormsFarmacy\Document\OverdueChangeDialog.pas' {OverdueChangeDialogForm: TParentForm};
+  OverdueChangeDialog in '..\..\FormsFarmacy\Document\OverdueChangeDialog.pas' {OverdueChangeDialogForm: TParentForm},
+  SendMenegerJournal in '..\..\FormsFarmacy\Document\SendMenegerJournal.pas' {SendMenegerJournalForm: TParentForm},
+  SendMeneger in '..\..\FormsFarmacy\Document\SendMeneger.pas' {SendMenegerForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
