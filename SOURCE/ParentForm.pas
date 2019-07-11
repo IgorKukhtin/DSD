@@ -54,6 +54,9 @@ type
     property AddOnFormData: TAddOnFormData read FAddOnFormData write FAddOnFormData;
   end;
 
+  // Функция перевода формы
+  procedure TranslateForm(Form : TForm);
+
 implementation
 
 uses
@@ -67,10 +70,135 @@ uses
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
-  cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction, 
-  dsdExportToXMLAction{DataModul};
+  cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction,
+  dsdExportToXMLAction {DataModul};
 
 {$R *.dfm}
+
+type
+
+  // Для перевода форм
+  TLocalizerForm = class(TObject)
+  private
+    FName : String;
+    FLocale : Integer;
+
+    FValue: TStringList;
+    FTransfer: TStringList;
+
+  protected
+  public
+    { Public declarations }
+    constructor Create(AName : String; ALocale : Integer);
+    destructor Destroy; override;
+
+    procedure AddTransfer(AValue, ATransfer : string);
+    function Transfer(AValue : string) : string;
+
+    property Name : String read FName;
+    property Locale : Integer read FLocale;
+  end;
+
+constructor TLocalizerForm.Create(AName : String; ALocale : Integer);
+begin
+  FName := AName;
+  FLocale := ALocale;
+  FValue := TStringList.Create;
+  FValue.Sorted := True;
+  FTransfer := TStringList.Create;
+end;
+
+destructor TLocalizerForm.Destroy;
+begin
+  FValue.Free;
+  FTransfer.Free;
+  inherited;
+end;
+
+procedure TLocalizerForm.AddTransfer(AValue, ATransfer : string);
+  var I : integer;
+begin
+  if not FValue.Find(AValue, I) then
+    FValue.AddObject(AValue, TObject(FTransfer.Add(ATransfer)));
+end;
+
+function TLocalizerForm.Transfer(AValue : string) : string;
+  var I : integer;
+begin
+  if FValue.Find(AValue, I) then
+    Result := FTransfer.Strings[Integer(FValue.Objects[I])]
+  else Result := AValue;
+end;
+
+var LocalizerForm : TLocalizerForm;
+
+procedure InitLocalizer;
+  var cFile, cValue, cTransfer : string; I, nLocale : integer;
+      sINI : TStringList;
+begin
+  LocalizerForm := Nil;
+  cFile := ChangeFileExt(Application.exeName, '.LNG');
+  if not FileExists(cFile) then Exit;
+  sINI := TStringList.Create;
+  try
+    sINI.LoadFromFile(cFile);
+    if sINI.Count < 3 then Exit;
+    if Pos(LowerCase('codepage='), LowerCase(sINI.Strings[1])) <> 1 then Exit;
+    if not TryStrToInt(Copy(sINI.Strings[1], 10, Length(sINI.Strings[1])), nLocale) then Exit;
+    LocalizerForm := TLocalizerForm.Create(sINI.Strings[0], nLocale);
+
+    for I := 2 to sINI.Count - 1 do
+    begin
+      if Pos(LowerCase('"="'), LowerCase(sINI.Strings[I])) <= 1 then Continue;
+
+      cValue := Copy(sINI.Strings[I], 2, Pos(LowerCase('"="'), LowerCase(sINI.Strings[I])) - 2);
+      cTransfer := Copy(sINI.Strings[I], Pos(LowerCase('"="'), LowerCase(sINI.Strings[I])) + 3, Length(sINI.Strings[I]));
+      SetLength(cTransfer, Length(cTransfer) - 1);
+      LocalizerForm.AddTransfer(cValue, cTransfer);
+    end;
+
+  finally
+    sINI.Free;
+  end;
+
+end;
+
+procedure DestroyLocalizer;
+begin
+  if Assigned(LocalizerForm) then FreeAndNil(LocalizerForm);
+end;
+
+  // Функция перевода формы
+procedure TranslateForm(Form : TForm);
+  var I : Integer;
+begin
+  if not Assigned(LocalizerForm) then Exit;
+  Form.Caption := LocalizerForm.Transfer(Form.Caption);
+  for I := 0 to Form.ComponentCount - 1 do
+    if Form.Components[I] is TcxLabel then
+      TcxLabel(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxLabel(Form.Components[I]).Caption)
+    else if Form.Components[I] is TcxButton then
+    begin
+      TcxButton(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Caption);
+      TcxButton(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Hint);
+    end else if Form.Components[I] is TCustomAction then
+    begin
+      TCustomAction(Form.Components[I]).Caption := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Caption);
+      TCustomAction(Form.Components[I]).Hint := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Hint);
+    end else if Form.Components[I] is TMenuItem then
+    begin
+      TMenuItem(Form.Components[I]).Caption := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Caption);
+      TMenuItem(Form.Components[I]).Hint := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Hint);
+    end else if Form.Components[I] is TcxCheckBox then
+    begin
+      TcxCheckBox(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Caption);
+      TcxCheckBox(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Hint);
+    end else if Form.Components[I] is TcxGridDBColumn then
+    begin
+      TcxGridDBColumn(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).Caption);
+      TcxGridDBColumn(Form.Components[I]).HeaderHint := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).HeaderHint);
+    end;
+end;
 
 procedure TParentForm.Activate;
 begin
@@ -342,6 +470,7 @@ begin
   if not (csDesigning in ComponentState) then
      if Assigned(AddOnFormData.OnLoadAction) then
         AddOnFormData.OnLoadAction.Execute;
+  TranslateForm(Self);
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;
@@ -501,4 +630,9 @@ initialization
 
   RegisterClass (TDBGrid);
 
+  InitLocalizer;
+
+finalization
+
+  DestroyLocalizer;
 end.

@@ -50,7 +50,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit;
+  Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit, ParentForm;
 
 { TcxComboBoxUser }
 
@@ -150,7 +150,7 @@ begin
 
   AllowLocalConnect := False;
   FOnlyLocal := False;
-
+  TranslateForm(Self);
 end;
 
 function TLoginForm.GetUsers: string;

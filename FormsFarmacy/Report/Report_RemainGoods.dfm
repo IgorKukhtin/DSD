@@ -12,18 +12,17 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Width = 1009
     Height = 300
     TabOrder = 3
-    ExplicitTop = 56
+    ExplicitTop = 64
     ExplicitWidth = 1009
-    ExplicitHeight = 308
+    ExplicitHeight = 300
     ClientRectBottom = 300
     ClientRectRight = 1009
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
-      ExplicitHeight = 308
+      ExplicitHeight = 300
       inherited cxGrid: TcxGrid
         Width = 1009
         Height = 300
-        ExplicitTop = -5
         ExplicitWidth = 1009
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -714,6 +713,56 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOverdueChange: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1086#1074' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1081' '#1090#1086#1074#1072#1088#1072
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1086#1074' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1081' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 42
+      FormName = 'TOverdueChangeJournalForm'
+      FormNameParam.Value = 'TOverdueChangeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -822,6 +871,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbGoodsPartyReport: TdxBarButton
@@ -830,6 +883,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actOverdueChange
       Category = 0
     end
   end

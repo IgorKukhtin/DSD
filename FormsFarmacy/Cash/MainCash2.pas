@@ -1526,10 +1526,11 @@ begin
 end;
 
 function TMainCashForm2.ExistsLessAmountMonth(AGoodsID : Integer; AAmountMonth : Currency) : boolean;
-  var nPos : Integer; cFilter, S : string;
+  var nPos : Integer; cFilter, S : string; GoodsId: Integer; PartionDateKindId : Variant;
 begin
   Result := False;
-  nPos := RemainsCDS.RecNo;
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
   RemainsCDS.DisableControls;
   cFilter := RemainsCDS.Filter;
   RemainsCDS.Filtered := False;
@@ -1557,7 +1558,7 @@ begin
   finally
     RemainsCDS.Filter := cFilter;
     RemainsCDS.Filtered := True;
-    RemainsCDS.RecNo := nPos;
+    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
     RemainsCDS.EnableControls;
   end;
 end;
@@ -4034,6 +4035,7 @@ begin
     exit;
   end;
 
+
   if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
   begin
     if checkCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('Id').asInteger,[]) then
@@ -4285,7 +4287,8 @@ begin
       CheckCDS.Filtered := False;
       // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
       if checkCDS.Locate('GoodsId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger]),[])
-        and (checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) then
+        and ((checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
+            (checkCDS.FieldByName('PartionDateKindId').AsVariant <> SourceClientDataSet.FindField('PartionDateKindId').AsVariant)) then
       Begin
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
           (SourceClientDataSet.FindField('MorionCode') <> nil) then
@@ -4302,6 +4305,44 @@ begin
         checkCDS.FieldByName('PriceSale').asCurrency         := lPriceSale;
         checkCDS.FieldByName('ChangePercent').asCurrency     := lChangePercent;
         checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
+        checkCDS.FieldByName('PartionDateKindId').AsVariant:=SourceClientDataSet.FindField('PartionDateKindId').AsVariant;
+        checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
+        checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
+        checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
+        if RemainsCDS <> SourceClientDataSet then
+        begin
+          RemainsCDS.DisableControls;
+          RemainsCDS.Filtered := False;
+          nRecNo := RemainsCDS.RecNo;
+          try
+            if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger, checkCDS.FieldByName('PartionDateKindId').AsVariant]),[]) and
+              (RemainsCDS.FieldByName('Color_calc').asInteger  <> 0) then
+            begin
+              checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
+              checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+              checkCDS.FieldByName('AccommodationName').AsVariant:=SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
+            end else
+            begin
+              checkCDS.FieldByName('Color_calc').AsInteger := clWhite;
+              checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clBlack;
+            end;
+          finally
+            RemainsCDS.RecNo := nRecNo;
+            RemainsCDS.Filtered := True;
+            RemainsCDS.EnableControls;
+          end;
+        end else
+        begin
+          if SourceClientDataSet.FieldByName('Color_calc').asInteger <> 0 then
+          begin
+            checkCDS.FieldByName('Color_calc').AsInteger:=SourceClientDataSet.FieldByName('Color_calc').asInteger;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=SourceClientDataSet.FieldByName('Color_ExpirationDate').asInteger;
+          end else
+          begin
+            checkCDS.FieldByName('Color_calc').AsInteger:=clWhite;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
+          end;
+        end;
         checkCDS.Post;
       End
       else if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
@@ -5192,7 +5233,7 @@ begin
           begin
             result := False;
             ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
-              'Чек анулирован...');
+              'Чек анулирован...'#13#10'(Перезагрузите свой кассовый аппарат и перезайдите в программу)');
             Cash.Anulirovt;
           end
         end else if not result and Assigned(Cash) AND not Cash.AlwaysSold then

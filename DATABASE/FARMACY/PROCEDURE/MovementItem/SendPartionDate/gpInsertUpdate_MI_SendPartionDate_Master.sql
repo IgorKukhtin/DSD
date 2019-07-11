@@ -146,7 +146,9 @@ BEGIN
            GROUP BY tmp.ContainerId
                   , tmp.GoodsId
                   , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
-                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId);
+                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                  , ROUND(CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN MIFloat_Price.ValueData
+                    ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) END, 2);
     ELSE
       INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate, PriceWithVAT)
            SELECT tmp.ContainerId
@@ -161,7 +163,9 @@ BEGIN
                       , Container.Amount              AS Amount
                  FROM Container
                  WHERE Container.DescId        = zc_Container_Count()
-                   AND Container.Id            = (SELECT Container.ParentId FROM Container WHERE Container.ID = inContainerId)
+                   AND Container.Id            = CASE WHEN EXISTS(SELECT Container.ParentId FROM Container 
+                                                                  WHERE Container.DescId = zc_Container_CountPartionDate() AND Container.ID = inContainerId)
+                                                 THEN (SELECT Container.ParentId FROM Container WHERE Container.ID = inContainerId) ELSE inContainerId END
                  ) AS tmp
               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                             ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId

@@ -24,6 +24,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     Height = 340
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -16
+    ExplicitTop = 195
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -928,7 +930,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         end
         item
           Name = 'isDetail'
-          Value = Null
+          Value = 'True'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end

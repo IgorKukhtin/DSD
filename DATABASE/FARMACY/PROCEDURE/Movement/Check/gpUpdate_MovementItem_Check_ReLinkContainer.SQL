@@ -15,11 +15,11 @@ BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId := lpGetUserBySession (inSession);
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
-    THEN
-      RAISE EXCEPTION 'ѕрикрепление срокового товара к парти€м вам запрещено.';
-    END IF;
+--    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
+--      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
+--    THEN
+--      RAISE EXCEPTION 'ѕрикрепление срокового товара к парти€м вам запрещено.';
+--    END IF;
 
     SELECT 
       StatusId

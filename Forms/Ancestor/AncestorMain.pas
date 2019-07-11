@@ -88,6 +88,7 @@ end;
 procedure TAncestorMainForm.FormCreate(Sender: TObject);
 begin
   UserSettingsStorageAddOn.LoadUserSettings;
+  TranslateForm(Self);
 end;
 
 procedure TAncestorMainForm.FormShow(Sender: TObject);

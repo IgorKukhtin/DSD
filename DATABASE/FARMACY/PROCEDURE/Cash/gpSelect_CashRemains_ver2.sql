@@ -152,45 +152,10 @@ BEGIN
                                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
                               GROUP BY MIFloat_ContainerId.ValueData
                               )
-       , tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
-                          FROM Container
-                          WHERE Container.DescId = zc_Container_Count()
-                            AND Container.WhereObjectId = vbUnitId
-                            AND Container.Amount <> 0
-                         )
-       , tmpExpirationDate AS (SELECT tmp.Id       AS ContainerId
-                                    , MIDate_ExpirationDate.ValueData
-                               FROM tmpContainer AS tmp
-                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                                ON ContainerLinkObject_MovementItem.Containerid = tmp.Id
-                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                  -- элемент прихода
-                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                       -- AND 1=0
-                                   LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                                    ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                               )
-       , tmpGoodsRemains AS (SELECT Container.ObjectId
-                                  , SUM (Container.Amount) AS Remains
-                                  , MIN (COALESCE (CASE WHEN vbDividePartionDate = FALSE OR COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) > vbDate180 
-                                         THEN tmpExpirationDate.ValueData END, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
-                             FROM tmpContainer AS Container
-                                  -- находим партию
-                                  LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
-                                GROUP BY Container.ObjectId
-                             )
-
           -- Остатки по срокам
        , tmpPDContainerAll AS (SELECT Container.Id,
                                      Container.ObjectId,
+                                     Container.ParentId,
                                      Container.Amount,
                                      ContainerLinkObject.ObjectId                       AS PartionGoodsId,
                                      ReserveContainer.Amount                            AS Reserve
@@ -272,6 +237,44 @@ BEGIN
                                   FROM tmpPDGoodsRemains
                                   GROUP BY tmpPDGoodsRemains.ObjectId
                                  )
+          -- Остатки по основным контейнерам
+       , tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count()
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount <> 0
+                         )
+       , tmpExpirationDate AS (SELECT tmp.Id       AS ContainerId
+                                    , MIDate_ExpirationDate.ValueData
+                               FROM tmpContainer AS tmp
+                                  LEFT JOIN  tmpPDContainerAll on tmpPDContainerAll.ParentId = tmp.Id
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = tmp.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+                                   LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                    ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               WHERE COALESCE (tmpPDContainerAll.ParentId, 0) = 0
+                               )
+       , tmpGoodsRemains AS (SELECT Container.ObjectId
+                                  , SUM (Container.Amount) AS Remains
+                                  , MIN (COALESCE (tmpExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
+                             FROM tmpContainer AS Container
+                                  -- находим партию
+                                  LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
+                                GROUP BY Container.ObjectId
+                             )
+
           -- Резервы
         , tmpMov AS (
             SELECT Movement.Id
