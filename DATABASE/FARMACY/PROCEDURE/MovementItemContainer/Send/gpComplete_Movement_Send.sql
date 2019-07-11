@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbGoodsName     TVarChar;
   DECLARE vbAmount        TFloat;
   DECLARE vbAmountManual  TFloat;
+  DECLARE vbAmountStorage TFloat;
   DECLARE vbSaldo         TFloat;
   DECLARE vbUnit_From     Integer;
   DECLARE vbUnit_To       Integer;
@@ -135,22 +136,26 @@ BEGIN
 
     -- Проверка: Не проводить накладные перемещения - у которых колонка - "Кол-во получателя" отличается от кол-ки "Факт кол-во". 
     vbGoodsName := '';
-    SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountManual
-           INTO vbGoodsName, vbAmount, vbAmountManual
-    FROM (SELECT MovementItem.ObjectId     AS GoodsId
-               , SUM (MovementItem.Amount) AS Amount
-               , SUM (COALESCE(MIFloat_AmountManual.ValueData,0)) AS AmountManual
+    SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountManual, tmp.AmountStorage
+    INTO vbGoodsName, vbAmount, vbAmountManual, vbAmountStorage
+    FROM (SELECT MovementItem.ObjectId                             AS GoodsId
+               , SUM (MovementItem.Amount)                         AS Amount
+               , SUM (COALESCE(MIFloat_AmountManual.ValueData,0))  AS AmountManual
+               , SUM (COALESCE(MIFloat_AmountStorage.ValueData,0)) AS AmountStorage
           FROM MovementItem
                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                            ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                           ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId = zc_MI_Master()
             AND MovementItem.isErased = FALSE
           GROUP BY MovementItem.ObjectId
          ) AS tmp
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
-    WHERE tmp.Amount <> tmp.AmountManual
+    WHERE (tmp.Amount <> tmp.AmountManual OR tmp.Amount <> tmp.AmountStorage)
       AND zfCalc_AccessKey_SendAll (vbUserId) = FALSE -- !!!ЭТИМ ПОЛЬЗОВАТЕЛЯМ - РАЗРЕШИЛИ!!!
     LIMIT 1
    ;
@@ -159,7 +164,7 @@ BEGIN
        vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
        )
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва точки-получателя <%> или от Факт кол-ва точки-отправителя <%>.', vbGoodsName, vbAmount, vbAmountManual, vbAmountStorage;
     END IF;
 
     -- Проверить, что бы не было переучета позже даты документа
@@ -267,3 +272,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 29207, inIsCurrentData:= TRUe,  inSession:= '2')
+*/

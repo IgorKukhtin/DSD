@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1015
   ExplicitWidth = 1031
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -803,6 +803,7 @@ inherited SendForm: TSendForm
     Top = 103
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
+    Visible = False
     Width = 223
   end
   object edisComplete: TcxCheckBox [9]
@@ -810,6 +811,7 @@ inherited SendForm: TSendForm
     Top = 103
     Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
     TabOrder = 13
+    Visible = False
     Width = 218
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

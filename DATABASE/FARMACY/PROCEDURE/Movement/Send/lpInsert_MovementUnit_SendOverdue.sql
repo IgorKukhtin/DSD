@@ -60,6 +60,37 @@
                           AND Container.WhereObjectId = inUnitID
                           AND Container.Amount > 0
                           AND ObjectDate_ExpirationDate.ValueData <= vbOperDate)
+         -- Контейнера в не проведенных документах
+       , tmpMovement AS (SELECT DISTINCT MIFloat_ContainerId.ValueData::Integer  AS ContainerId
+                         FROM Movement
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                         ON MovementLinkObject_PartionDateKind.MovementId =  Movement.Id
+                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+                                        AND MovementLinkObject_PartionDateKind.ObjectId = zc_Enum_PartionDateKind_0()
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From.ObjectId = inUnitID
+
+                              INNER JOIN MovementItem AS MovementItemMaster
+                                                      ON MovementItemMaster.MovementId = Movement.Id
+                                                     AND MovementItemMaster.DescId = zc_MI_Master()
+                                                     AND MovementItemMaster.IsErased = FALSE
+
+                              INNER JOIN MovementItem AS MovementItemChild
+                                                      ON MovementItemChild.MovementId = Movement.Id
+                                                     AND MovementItemChild.ParentId = MovementItemMaster.Id
+                                                     AND MovementItemChild.DescId = zc_MI_Child()
+                                                     AND MovementItemChild.IsErased = FALSE
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                        ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                        WHERE Movement.DescId = zc_Movement_Send()
+                          AND Movement.StatusId = zc_Enum_Status_UnComplete())
 
     INSERT INTO tmpContainerOverdue (ID, GoodsID, Amount, ExpirationDate)
     SELECT Container.Id,
@@ -68,7 +99,9 @@
 
            Container.ExpirationDate
 
-    FROM tmpContainer AS Container;
+    FROM tmpContainer AS Container
+         LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id
+    WHERE COALESCE (tmpMovement.ContainerId, 0) = 0;
 
      -- Нечего создать выходим
     IF NOT EXISTS(SELECT 1 FROM tmpContainerOverdue)
@@ -98,7 +131,7 @@
                                               inGoodsId              := tmpContainerOverdue.GoodsId,
                                               inAmount               := SUM(tmpContainerOverdue.Amount)::TFloat,
                                               inAmountManual         := SUM(tmpContainerOverdue.Amount)::TFloat,
-                                              inAmountStorage        := 0,
+                                              inAmountStorage        := SUM(tmpContainerOverdue.Amount)::TFloat,
                                               inReasonDifferencesId  := 0,
                                               inUserId               := vbUserId)
     FROM tmpContainerOverdue

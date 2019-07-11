@@ -81,6 +81,8 @@ object LoginForm: TLoginForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = []
     Style.IsFontAssigned = True
+    Properties.Alignment.Horz = taRightJustify
+    AnchorX = 153
   end
   object cxLabel3: TcxLabel
     Left = 101
@@ -93,6 +95,8 @@ object LoginForm: TLoginForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = []
     Style.IsFontAssigned = True
+    Properties.Alignment.Horz = taRightJustify
+    AnchorX = 153
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
