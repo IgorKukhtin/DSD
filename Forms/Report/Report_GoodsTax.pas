@@ -49,6 +49,7 @@ type
     InvNumber_Tax: TcxGridDBColumn;
     InvNumberPartner_Tax: TcxGridDBColumn;
     OperDate_Tax: TcxGridDBColumn;
+    OperDate_Master: TcxGridDBColumn;
   private
     { Private declarations }
   public

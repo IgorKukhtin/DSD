@@ -3,9 +3,8 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
   ClientHeight = 341
   ClientWidth = 1174
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -520
   ExplicitWidth = 1190
-  ExplicitHeight = 380
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -157,6 +156,27 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object OperDate_Master: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'OperDate_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object InvNumber_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
+          object InvNumberPartner_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'

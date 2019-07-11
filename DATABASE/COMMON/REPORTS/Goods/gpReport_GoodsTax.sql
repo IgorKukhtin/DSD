@@ -17,6 +17,7 @@ RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarCha
               , Amount TFloat, AmountTax TFloat, AmountCorrective TFloat, OperPrice TFloat
               , InvNumber_Tax TVarChar, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
               , LineNumTax Integer
+              , DocumentMasterId Integer, OperDate_Master TDateTime, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar
               )  
 AS
 $BODY$
@@ -61,6 +62,11 @@ BEGIN
         , CASE WHEN tmp_All.MovementDescId = zc_Movement_Tax() THEN Movement.OperDate             ELSE Movement_Child.OperDate             END :: TDateTime AS OperDate_Tax
 
         , tmp_All.LineNumTax 
+        
+        , Movement_DocumentMaster.Id                   AS DocumentMasterId
+        , Movement_DocumentMaster.OperDate             AS OperDate_Master
+        , Movement_DocumentMaster.InvNumber            AS InvNumber_Master
+        , MS_InvNumberPartner_DocumentMaster.ValueData AS InvNumberPartner_Master
 
   FROM (SELECT tmpMI.MovementDescId
              , tmpMI.MovementId
@@ -157,6 +163,14 @@ BEGIN
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmp_All.MovementId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+            --
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = tmp_All.MovementId
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                                          AND MovementDesc.Id = zc_Movement_TaxCorrective()
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentMaster ON MS_InvNumberPartner_DocumentMaster.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                                          AND MS_InvNumberPartner_DocumentMaster.DescId = zc_MovementString_InvNumberPartner()
  ;
     
         
