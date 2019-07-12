@@ -5,6 +5,7 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -232
   ExplicitWidth = 1314
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -48,11 +49,6 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
               Format = ',0.####'
               Kind = skSum
               Column = Summ
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -69,11 +65,6 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountAll
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -201,11 +192,11 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             Width = 83
           end
           object ChildGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'/ ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 62
           end
           object ChildGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
@@ -257,9 +248,9 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object AmountAll: TcxGridDBColumn
+          object AmountDel: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076'/ '#1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'AmountAll'
+            DataBinding.FieldName = 'AmountDel'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
