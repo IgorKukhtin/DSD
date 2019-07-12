@@ -3,7 +3,6 @@ inherited MainForm: TMainForm
   ClientHeight = 171
   ClientWidth = 666
   KeyPreview = True
-  OnCreate = nil
   ExplicitWidth = 682
   ExplicitHeight = 230
   PixelsPerInch = 96
@@ -2784,6 +2783,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSendMenegerJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' ('#1084#1077#1085#1077#1076#1078#1077#1088#1099')'
+      FormName = 'TSendMenegerJournalForm'
+      FormNameParam.Value = 'TSendMenegerJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3156,6 +3166,9 @@ inherited MainForm: TMainForm
       end
       object N57: TMenuItem
         Action = actSendJournal
+      end
+      object N185: TMenuItem
+        Action = actSendMenegerJournal
       end
       object miSendPartionDate: TMenuItem
         Action = actSendPartionDate

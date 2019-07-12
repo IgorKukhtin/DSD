@@ -63,75 +63,80 @@ BEGIN
     WHERE MovementItem.Id = ioId;
 
 
-    -- Для роли "Кассир аптеки"
-    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+    -- Для роли "Безнал" отключаем проверки
+    IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
     THEN
-      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-      IF vbUnitKey = '' THEN
-        vbUnitKey := '0';
-      END IF;
-      vbUserUnitId := vbUnitKey::Integer;
-
-      IF COALESCE (vbUserUnitId, 0) = 0
+      -- Для роли "Кассир аптеки"
+      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
       THEN
-        RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
-      END IF;
-
-      --определяем подразделение отправителя
-      SELECT MovementLinkObject_From.ObjectId AS vbFromId
-             INTO vbFromId
-      FROM MovementLinkObject AS MovementLinkObject_From
-      WHERE MovementLinkObject_From.MovementId = inMovementId
-        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
-
-      IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
-      THEN
-        RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
-      END IF;
-
-      IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
-      THEN
-        IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
-        THEN
-          RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
+        vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+        IF vbUnitKey = '' THEN
+          vbUnitKey := '0';
         END IF;
-      END IF;
+        vbUserUnitId := vbUnitKey::Integer;
 
-      IF COALESCE (vbUnitId, 0) = COALESCE (vbUserUnitId, 0)
-      THEN
-        IF COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0) OR
-         COALESCE (vbAmountStorage, 0) <> COALESCE (vbAmountStorage, 0)
+        IF COALESCE (vbUserUnitId, 0) = 0
         THEN
-          RAISE EXCEPTION 'Ошибка. Изменять <Кол-во, загружаемое в точку-получатель> и <Факт кол-во точки-отправителя> вам запрещено.';
+          RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
         END IF;
-      END IF;
 
-      IF EXISTS(SELECT 1 FROM MovementBoolean
-                WHERE MovementBoolean.MovementId = inMovementId
-                  AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()
-                  AND MovementBoolean.ValueData = TRUE)
-      THEN
+        --определяем подразделение отправителя
+        SELECT MovementLinkObject_From.ObjectId AS vbFromId
+               INTO vbFromId
+        FROM MovementLinkObject AS MovementLinkObject_From
+        WHERE MovementLinkObject_From.MovementId = inMovementId
+          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
-        IF COALESCE (ioId, 0) = 0 OR EXISTS(SELECT 1 FROM MovementItem
-                                            WHERE MovementItem.ID = ioId
-                                              AND MovementItem.Amount < inAmount)
+        IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
         THEN
-          RAISE EXCEPTION 'Ошибка. Увеличивать количество в автоматически сформированных перемещениях вам запрещено.';
+          RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
         END IF;
+
+        IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
+        THEN
+          IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
+          THEN
+            RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
+          END IF;
+        END IF;
+
+        IF COALESCE (vbUnitId, 0) = COALESCE (vbUserUnitId, 0)
+        THEN
+          IF COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0) OR
+           COALESCE (vbAmountStorage, 0) <> COALESCE (vbAmountStorage, 0)
+          THEN
+            RAISE EXCEPTION 'Ошибка. Изменять <Кол-во, загружаемое в точку-получатель> и <Факт кол-во точки-отправителя> вам запрещено.';
+          END IF;
+        END IF;
+
+        IF EXISTS(SELECT 1 FROM MovementBoolean
+                  WHERE MovementBoolean.MovementId = inMovementId
+                    AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()
+                    AND MovementBoolean.ValueData = TRUE)
+        THEN
+
+          IF COALESCE (ioId, 0) = 0 OR EXISTS(SELECT 1 FROM MovementItem
+                                              WHERE MovementItem.ID = ioId
+                                                AND MovementItem.Amount < inAmount)
+          THEN
+            RAISE EXCEPTION 'Ошибка. Увеличивать количество в автоматически сформированных перемещениях вам запрещено.';
+          END IF;
+        END IF;
+
       END IF;
 
-    END IF;
-
-    -- Для менеджеров
-    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
-    THEN
-
-      IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) OR
-       COALESCE (vbAmountStorage, 0) <> COALESCE (inAmountStorage, 0)
+      -- Для менеджеров
+      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
       THEN
-        RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> и <Факт кол-во точки-отправителя> вам запрещено.';
+
+        IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) OR
+         COALESCE (vbAmountStorage, 0) <> COALESCE (inAmountStorage, 0)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> и <Факт кол-во точки-отправителя> вам запрещено.';
+        END IF;
       END IF;
     END IF;
 

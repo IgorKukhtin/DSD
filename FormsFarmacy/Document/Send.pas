@@ -122,6 +122,7 @@ type
     cxLabel29: TcxLabel;
     edPartionDateKind: TcxButtonEdit;
     GuidesPartionDateKind: TdsdGuides;
+    cbSun: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -107,6 +107,7 @@ type
     cxLabel27: TcxLabel;
     edUserManager3: TcxButtonEdit;
     GuidesUserManager3: TdsdGuides;
+    cbSUN: TcxCheckBox;
   private
     { Private declarations }
   public

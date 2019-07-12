@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
-  ClientWidth = 1015
-  ExplicitWidth = 1031
-  ExplicitHeight = 656
+  ClientWidth = 1003
+  ExplicitWidth = 1019
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
-    Width = 1015
+    Width = 1003
     Height = 462
     ExplicitTop = 155
     ExplicitWidth = 1015
     ExplicitHeight = 462
     ClientRectBottom = 462
-    ClientRectRight = 1015
+    ClientRectRight = 1003
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
-        Width = 1015
+        Width = 1003
         Height = 318
         ExplicitWidth = 1015
         ExplicitHeight = 318
@@ -29,30 +29,6 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -114,33 +90,6 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -515,20 +464,22 @@ inherited SendForm: TSendForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 1015
+        Width = 1003
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1015
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 326
-        Width = 1015
+        Width = 1003
         Height = 112
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1015
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -538,20 +489,12 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = chAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -651,10 +594,12 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1015
+    Width = 1003
     Height = 129
     TabOrder = 3
-    ExplicitWidth = 1015
+    ExplicitLeft = -8
+    ExplicitTop = -5
+    ExplicitWidth = 1003
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -728,12 +673,12 @@ inherited SendForm: TSendForm
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
     end
     object cbisDeferred: TcxCheckBox
-      Left = 696
+      Left = 693
       Top = 63
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 71
+      Width = 69
     end
     object cxLabel29: TcxLabel
       Left = 195
@@ -752,6 +697,17 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       TabOrder = 13
       Width = 270
+    end
+    object cbSun: TcxCheckBox
+      Left = 477
+      Top = 103
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 14
+      Width = 133
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -799,20 +755,20 @@ inherited SendForm: TSendForm
     Width = 37
   end
   object ceChecked: TcxCheckBox [8]
-    Left = 696
-    Top = 103
+    Left = 693
+    Top = 108
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
     Visible = False
-    Width = 223
+    Width = 220
   end
   object edisComplete: TcxCheckBox [9]
-    Left = 477
-    Top = 103
+    Left = 693
+    Top = 87
     Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
     TabOrder = 13
     Visible = False
-    Width = 218
+    Width = 214
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 203
@@ -2678,6 +2634,7 @@ inherited SendForm: TSendForm
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -2692,7 +2649,7 @@ inherited SendForm: TSendForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = -1
+        DataSummaryItemIndex = 5
       end>
     SearchAsFilter = False
     Left = 318

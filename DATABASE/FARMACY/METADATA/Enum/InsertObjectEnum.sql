@@ -52,6 +52,16 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_SeniorManager(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_SeniorManager'), inName:= 'Старший менеджер', inEnumName:= 'zc_Enum_Role_SeniorManager');
    END IF;
 
+   -- zc_Enum_Role_Cashless
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Безнал')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Безнал')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_Cashless');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Cashless(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Cashless'), inName:= 'Безнал', inEnumName:= 'zc_Enum_Role_Cashless');
+   END IF;
+
 END $$;
 /*
 DO $$

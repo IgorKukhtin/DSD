@@ -196,7 +196,7 @@
   end
   object ceProvinceCity: TcxButtonEdit
     Left = 255
-    Top = 306
+    Top = 305
     Properties.Buttons = <
       item
         Default = True
@@ -304,7 +304,7 @@
     Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object edPhone: TcxTextEdit
-    Left = 254
+    Left = 255
     Top = 260
     TabOrder = 38
     Width = 209
@@ -484,7 +484,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 58
-    Width = 449
+    Width = 297
   end
   object cxLabel25: TcxLabel
     Left = 17
@@ -498,7 +498,7 @@
   end
   object edUserManager2: TcxButtonEdit
     Left = 255
-    Top = 410
+    Top = 409
     Properties.Buttons = <
       item
         Default = True
@@ -514,7 +514,7 @@
     Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 3'
   end
   object edUserManager3: TcxButtonEdit
-    Left = 251
+    Left = 255
     Top = 458
     Properties.Buttons = <
       item
@@ -524,6 +524,15 @@
     Properties.ReadOnly = True
     TabOrder = 63
     Width = 209
+  end
+  object cbSUN: TcxCheckBox
+    Left = 345
+    Top = 601
+    Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+    Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+    Properties.ReadOnly = True
+    TabOrder = 64
+    Width = 119
   end
   object ActionList: TActionList
     Left = 356
@@ -1204,6 +1213,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSun'
+        Value = Null
+        Component = cbSUN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -1496,8 +1512,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 377
-    Top = 576
+    Left = 225
+    Top = 584
   end
   object GuidesUserManager2: TdsdGuides
     KeyField = 'Id'

@@ -84,6 +84,10 @@ type
     dxBarButton2: TdxBarButton;
     actOpenUser2Form: TOpenChoiceForm;
     actOpenUser3Form: TOpenChoiceForm;
+    spUpdate_Unit_isSUN: TdsdStoredProc;
+    actUpdate_Unit_isSUN: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN: TdxBarButton;
+    isSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

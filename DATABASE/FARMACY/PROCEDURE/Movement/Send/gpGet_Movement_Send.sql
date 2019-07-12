@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean
              , isComplete Boolean
              , isDeferred Boolean
+             , isSUN Boolean
               )
 AS
 $BODY$
@@ -50,6 +51,7 @@ BEGIN
              , FALSE                                            AS Checked
              , FALSE                                            AS isComplete
              , FALSE                                            AS isDeferred
+             , FALSE                                            AS isSUN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -75,6 +77,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) ::Boolean AS Checked
            , COALESCE (MovementBoolean_Complete.ValueData, FALSE)::Boolean AS isComplete
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
+           , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -115,6 +118,10 @@ BEGIN
                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
  
+            LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                      ON MovementBoolean_SUN.MovementId = Movement.Id
+                                     AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -136,6 +143,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 11.07.19         * zc_MovementBoolean_SUN
  09.06.19         * PartionDateKind
  08.11.17         * Deferred
  15.11.16         * add isComplete

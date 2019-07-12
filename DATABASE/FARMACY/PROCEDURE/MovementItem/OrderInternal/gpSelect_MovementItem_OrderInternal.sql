@@ -672,6 +672,11 @@ BEGIN
            , tmpMI.SendAmount                                       AS SendAmount
            , tmpMI.AmountDeferred                                   AS AmountDeferred
            , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
+
+           , tmpMI.AmountReal                           ::TFloat    AS AmountReal
+           , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount
+           , tmpMI.RemainsSUN                           ::TFloat    AS RemainsSUN
+
            , tmpMI.CountPrice
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 
@@ -1674,6 +1679,20 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
+
+      , tmpMIF_AmountReal AS (SELECT tmpMIF.*
+                              FROM tmpMIF
+                              WHERE tmpMIF.DescId = zc_MIFloat_AmountReal()
+                             )
+      , tmpMIF_SendSUN AS (SELECT tmpMIF.*
+                           FROM tmpMIF
+                           WHERE tmpMIF.DescId = zc_MIFloat_SendSUN()
+                          )
+      , tmpMIF_RemainsSUN AS (SELECT tmpMIF.*
+                              FROM tmpMIF
+                              WHERE tmpMIF.DescId = zc_MIFloat_RemainsSUN()
+                             )
+
       , tmpMILinkObject AS (SELECT MILinkObject.*
                             FROM MovementItemLinkObject AS MILinkObject
 --                              INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MILinkObject.MovementItemId
@@ -1762,6 +1781,11 @@ BEGIN
                           * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
                        , MIFloat_AmountManual.ValueData                                   AS AmountManual
                        , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+
+                       , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
+                       , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
+                       , MIFloat_RemainsSUN.ValueData :: TFloat  AS RemainsSUN
+
                        , MovementItem.isErased
 
                        , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
@@ -1800,6 +1824,10 @@ BEGIN
                        LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
+
+                       LEFT JOIN tmpMIF_AmountReal   AS MIFloat_AmountReal   ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
+                       LEFT JOIN tmpMIF_SendSUN      AS MIFloat_SendSUN      ON MIFloat_SendSUN.MovementItemId    = MovementItem.Id
+                       LEFT JOIN tmpMIF_RemainsSUN   AS MIFloat_RemainsSUN   ON MIFloat_RemainsSUN.MovementItemId = MovementItem.Id
 --LIMIT 2
                   )
 
@@ -1838,6 +1866,9 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
+                       , tmpMI_all_MinLot.AmountReal
+                       , tmpMI_all_MinLot.SendSUNAmount
+                       , tmpMI_all_MinLot.RemainsSUN
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
 
@@ -1918,6 +1949,9 @@ BEGIN
                          , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                          , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
                          , tmpMI.ListDiffAmount
+                         , tmpMI.AmountReal
+                         , tmpMI.SendSUNAmount
+                         , tmpMI.RemainsSUN
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
@@ -2335,6 +2369,10 @@ BEGIN
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
+
+           , tmpMI.AmountReal                                   ::TFloat     AS AmountReal
+           , tmpMI.SendSUNAmount                                ::TFloat     AS SendSUNAmount
+           , tmpMI.RemainsSUN                                   ::TFloat     AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 

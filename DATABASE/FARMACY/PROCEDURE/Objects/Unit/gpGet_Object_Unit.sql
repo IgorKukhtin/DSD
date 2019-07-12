@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NormOfManDays Integer,
                PharmacyItem Boolean,
                isGoodsCategory Boolean,
+               isSUN Boolean,
                DateSP      TDateTime,
                StartTimeSP TDateTime,
                EndTimeSP   TDateTime,
@@ -100,6 +101,7 @@ BEGIN
            , CAST (0 as Integer)   AS NormOfManDays
            , False                 AS PharmacyItem
            , False                 AS isGoodsCategory
+           , FALSE                 AS isSUN
 
            , CAST (Null as TDateTime) AS DateSP
            , CAST (Null as TDateTime) AS StartTimeSP
@@ -174,6 +176,7 @@ BEGIN
       , ObjectFloat_NormOfManDays.ValueData::Integer             AS NormOfManDays
       , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False)    AS PharmacyItem
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
+      , COALESCE(ObjectBoolean_SUN.ValueData, FALSE)             AS isSUN
 
       , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
       , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
@@ -311,6 +314,10 @@ BEGIN
                                 ON ObjectBoolean_GoodsCategory.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN 
+                                ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
+
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
                              ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitStart.DescId = zc_ObjectDate_Unit_TaxUnitStart()
@@ -359,6 +366,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 11.07.19         *
  02.07.19                                                        * add UnitOverdue
  02.07.19         *
  14.06.19                                                        * add DividePartionDate

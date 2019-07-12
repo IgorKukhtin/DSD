@@ -131,6 +131,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 56
           end
+          object isSUN: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 70
+          end
           object isRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'isRepriceAuto'
@@ -514,6 +523,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1041#1040#1044#1052
       Hint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 76
+    end
+    object actUpdate_Unit_isSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
     end
     object actUpdateisOver: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -960,6 +981,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateisReport'
         end
         item
@@ -1036,6 +1065,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = dsdSetUnErased
       Category = 0
       ImageIndex = 8
+    end
+    object bbUpdate_Unit_isSUN: TdxBarButton
+      Action = actUpdate_Unit_isSUN
+      Category = 0
+      ImageIndex = 54
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1397,5 +1431,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 224
     Top = 192
+  end
+  object spUpdate_Unit_isSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 307
   end
 end

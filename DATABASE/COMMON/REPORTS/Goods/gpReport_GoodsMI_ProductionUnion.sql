@@ -21,6 +21,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
+             , AmountAll TFloat
              , MainPrice TFloat, ChildPrice TFloat
              )   
 AS
@@ -186,6 +187,8 @@ BEGIN
            
            , tmpOperationGroup.OperCount_out  :: TFloat AS ChildAmount
            , tmpOperationGroup.OperSumm_out   :: TFloat AS ChildSumm
+
+           , (COALESCE (tmpOperationGroup.OperCount,0) - COALESCE (tmpOperationGroup.OperCount_out,0)) :: TFloat AS AmountAll
            
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
