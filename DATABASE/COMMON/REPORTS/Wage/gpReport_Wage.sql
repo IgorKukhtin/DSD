@@ -164,14 +164,26 @@ BEGIN
                    , ModelServiceId, StaffListSummKindId
                     )*/
    (SELECT Report_1.StaffListId, Report_1.DocumentKindId, Report_1.UnitId, Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
-         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date, Report_1.SUM_MemberHours, Report_1.SheetWorkTime_Amount, Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
+         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date
+           -- итого часов всех сотрудников (с этой должностью+...)
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SUM_MemberHours      ELSE 0 END :: TFloat AS SUM_MemberHours
+           -- итого часов сотрудника
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SheetWorkTime_Amount ELSE 0 END :: TFloat AS SheetWorkTime_Amount
+           --
+         , Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
          , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
          , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
-         , Report_1.OperDate, Report_1.Count_Day, Report_1.Count_MemberInDay, Report_1.Gross,Report_1.GrossOnOneMember
+         , Report_1.OperDate
+           -- Отраб. дн. 1 чел (инф.)
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_Day         ELSE 0 END :: Integer AS Count_Day
+           -- Кол-во человек (за 1 д.)
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_MemberInDay ELSE 0 END :: Integer AS Count_MemberInDay
+           --
+         , Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
          , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
     FROM gpSelect_Report_Wage_Model (inStartDate      := inStartDate,

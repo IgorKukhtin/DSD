@@ -31,6 +31,7 @@ RETURNS TABLE(
     ,SheetWorkTime_Date             TDateTime
     ,SUM_MemberHours                TFloat     -- итого часов всех сотрудников (с этой должностью+...) - !!!инф.!!!
     ,SheetWorkTime_Amount           TFloat     -- итого часов сотрудника - !!!инф.!!!
+    ,Ord_SheetWorkTime              Integer    -- № п/п - SheetWorkTime
     ,ServiceModelId                 Integer
     ,ServiceModelCode               Integer
     ,ServiceModelName               TVarChar
@@ -1157,8 +1158,22 @@ AS  (SELECT
        ,COALESCE (Movement_SheetGroup.MemberId,   Movement_Sheet.MemberId)   :: Integer  AS MemberId
        ,COALESCE (Movement_SheetGroup.MemberName, Movement_Sheet.MemberName) :: TVarChar AS MemberName
        ,tmpOperDate.OperDate :: TDateTime        AS SheetWorkTime_Date
-       ,CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN Movement_Sheet.SUM_MemberHours_Trainee ELSE Movement_Sheet.SUM_MemberHours END :: TFloat AS SUM_MemberHours
-       ,CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN Movement_Sheet.Amount_Trainee          ELSE Movement_Sheet.Amount          END :: TFloat AS SheetWorkTime_Amount
+         -- итого часов всех сотрудников (с этой должностью+...)
+       , CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN Movement_Sheet.SUM_MemberHours_Trainee ELSE Movement_Sheet.SUM_MemberHours END :: TFloat AS SUM_MemberHours
+         -- итого часов сотрудника
+       , CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN Movement_Sheet.Amount_Trainee          ELSE Movement_Sheet.Amount          END :: TFloat AS SheetWorkTime_Amount
+         -- № п/п - SheetWorkTime
+       , ROW_NUMBER() OVER (PARTITION BY COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                       , COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                       , CASE WHEN (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
+                                                AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
+                                                   THEN 0
+                                              ELSE Movement_Sheet.StorageLineId
+                                         END
+                                       , Movement_Sheet.OperDate
+                                       , COALESCE (Movement_Sheet.MemberId, 0)
+                           ) :: Integer AS Ord_SheetWorkTime
+        --
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
        ,Setting.ServiceModelName
@@ -1341,8 +1356,9 @@ AS  (SELECT
        ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
        ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
        ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
-       ,0 :: TFloat AS SUM_MemberHours
-       ,0 :: TFloat AS SheetWorkTime_Amount
+       ,0 :: TFloat  AS SUM_MemberHours
+       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: Integer AS Ord_SheetWorkTime
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
        ,Setting.ServiceModelName
@@ -1455,8 +1471,9 @@ AS  (SELECT
        ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
        ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
        ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
-       ,0 :: TFloat AS SUM_MemberHours
-       ,0 :: TFloat AS SheetWorkTime_Amount
+       ,0 :: TFloat  AS SUM_MemberHours
+       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: Integer AS Ord_SheetWorkTime
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
        ,Setting.ServiceModelName
@@ -1559,8 +1576,9 @@ AS  (SELECT
        ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
        ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
        ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
-       ,0 :: TFloat AS SUM_MemberHours
-       ,0 :: TFloat AS SheetWorkTime_Amount
+       ,0 :: TFloat  AS SUM_MemberHours
+       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: Integer AS Ord_SheetWorkTime
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
        ,Setting.ServiceModelName
