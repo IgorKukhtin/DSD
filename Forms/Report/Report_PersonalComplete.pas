@@ -91,6 +91,9 @@ type
     ToName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     TotalCountStick: TcxGridDBColumn;
+    cbDoc: TcxCheckBox;
+    InvNumber: TcxGridDBColumn;
+    actRefreshMov: TdsdDataSetRefresh;
   private
   public
   end;

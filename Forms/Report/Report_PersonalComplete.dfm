@@ -185,11 +185,17 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 79
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
@@ -415,6 +421,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Top = 31
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
+    object cbDoc: TcxCheckBox
+      Left = 472
+      Top = 30
+      Action = actRefreshMov
+      TabOrder = 8
+      Width = 148
+    end
   end
   object cxLabel1: TcxLabel
     Left = 472
@@ -430,7 +443,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 251
   end
   object cbIsMovement: TcxCheckBox
@@ -646,6 +659,19 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Images = dmMain.ImageList
     Left = 256
     Top = 232
+    object actRefreshMov: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -760,6 +786,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Value = Null
           Component = cbIsMovement
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisDoc'
+          Value = Null
+          Component = cbDoc
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1108,6 +1141,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -1413,7 +1454,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 576
-    Top = 16
+    Left = 696
+    Top = 8
   end
 end

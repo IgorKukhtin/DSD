@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PersonalComplete(
     IN inStartDate   TDateTime ,              --
@@ -11,9 +12,10 @@ CREATE OR REPLACE FUNCTION gpReport_PersonalComplete(
     IN inBranchId    Integer   ,              -- филиал
     IN inIsDay       Boolean   ,              -- признак группировки по дням - да/нет
     IN inIsDetail    Boolean   DEFAULT FALSE, -- признак группировки по дням - да/нет
+    IN inisMovement  Boolean   DEFAULT FALSE, -- показать док
     IN inSession     TVarChar  DEFAULT ''      -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime
+RETURNS TABLE (OperDate TDateTime, InvNumber TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
@@ -36,6 +38,7 @@ RETURNS TABLE (OperDate TDateTime
 
              , BranchName  TVarChar
              , FromId Integer, ToId  Integer
+
               )
 AS
 $BODY$
@@ -85,8 +88,14 @@ BEGIN
                            )
         -- Все документы
       , tmpMovement_all AS (SELECT Movement.Id AS MovementId
-                                 , CASE WHEN inIsDetail = TRUE THEN COALESCE (MovementFloat_MovementDesc.ValueData, Movement.DescId) :: Integer ELSE 0 END AS MovementDescId
-                                 , Movement.InvNumber
+                                 , CASE WHEN inIsDetail = TRUE OR inisMovement = TRUE 
+                                        THEN COALESCE (MovementFloat_MovementDesc.ValueData, Movement.DescId) :: Integer 
+                                        ELSE 0 
+                                   END AS MovementDescId
+                                 , CASE WHEN inisMovement = TRUE 
+                                        THEN Movement.InvNumber
+                                        ELSE NULL
+                                   END AS InvNumber
                                  , Movement.OperDate
                                  , MovementLinkObject_Personal.ObjectId                        AS PersonalId
                                  , MovementLinkObject_User.ObjectId                            AS UserId
@@ -176,6 +185,7 @@ BEGIN
                   )
         -- Результат
         SELECT  tmp.OperDate
+              , tmp.InvNumber ::TVarChar
               , tmp.UnitId
               , tmp.UnitCode
               , tmp.UnitName
@@ -210,7 +220,8 @@ BEGIN
               , tmp.ToId
 
         FROM (-- ДЛЯ Комлектовщика
-              SELECT CASE WHEN inIsDay = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+                   , tmpMovement_all.InvNumber
                    , Object_Unit.Id             AS UnitId
                    , Object_Unit.ObjectCode     AS UnitCode
                    , Object_Unit.ValueData      AS UnitName
@@ -250,8 +261,8 @@ BEGIN
 
              UNION ALL
               -- ДЛЯ Пользователя - Кладовщик
-              SELECT CASE WHEN inIsDay = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
-
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+                   , tmpMovement_all.InvNumber
                    , Object_Unit.Id             AS UnitId
                    , Object_Unit.ObjectCode     AS UnitCode
                    , Object_Unit.ValueData      AS UnitName
@@ -279,7 +290,18 @@ BEGIN
                    , tmpMovement_all.ToId
                    , tmpMovement_all.MovementDescId
 
-              FROM (SELECT DISTINCT tmpMovement_all.MovementId, tmpMovement_all.MovementDescId, tmpMovement_all.OperDate, tmpMovement_all.UserId, tmpMovement_all.TotalCount, tmpMovement_all.TotalCountKg, tmpMovement_all.BranchId, tmpMovement_all.FromId, tmpMovement_all.ToId FROM tmpMovement_all) AS tmpMovement_all
+              FROM (SELECT DISTINCT tmpMovement_all.MovementId
+                         , tmpMovement_all.InvNumber
+                         , tmpMovement_all.OperDate
+                         , tmpMovement_all.UserId
+                         , tmpMovement_all.TotalCount
+                         , tmpMovement_all.TotalCountKg
+                         , tmpMovement_all.BranchId
+                         , tmpMovement_all.FromId
+                         , tmpMovement_all.ToId 
+                         , tmpMovement_all.MovementDescId
+                    FROM tmpMovement_all
+                    ) AS tmpMovement_all
                     LEFT JOIN tmpUser_findPersonal ON tmpUser_findPersonal.UserId = tmpMovement_all.UserId
 
                     LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpUser_findPersonal.UnitId
@@ -293,7 +315,8 @@ BEGIN
 
              UNION ALL
               -- ДЛЯ Сотрудник - Стикеровщик
-              SELECT CASE WHEN inIsDay = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+                   , tmpMovement_all.InvNumber
                    , Object_Unit.Id             AS UnitId
                    , Object_Unit.ObjectCode     AS UnitCode
                    , Object_Unit.ValueData      AS UnitName
@@ -373,6 +396,7 @@ BEGIN
             LEFT JOIN MovementDesc ON MovementDesc.Id   = tmp.MovementDescId
 
         GROUP BY tmp.OperDate
+               , tmp.InvNumber
                , tmp.UnitId
                , tmp.UnitCode
                , tmp.UnitName
@@ -398,7 +422,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.07.19         *
  17.12.18         * add PersonalComplete5
  26.11.17                                        * all
  15.12.15         * add Branch
