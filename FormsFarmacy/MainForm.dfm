@@ -3,7 +3,6 @@ inherited MainForm: TMainForm
   ClientHeight = 171
   ClientWidth = 666
   KeyPreview = True
-  OnCreate = nil
   ExplicitWidth = 682
   ExplicitHeight = 230
   PixelsPerInch = 96
