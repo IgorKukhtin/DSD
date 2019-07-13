@@ -132,6 +132,11 @@ type
     GuidesOrderInternaPromo: TdsdGuides;
     spPUSH: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
+    spUpdateRealSun: TdsdStoredProc;
+    actUpdateRealSun: TdsdExecStoredProc;
+    actOpenReport_GoodsPartionDate: TdsdOpenForm;
+    bbOpenReport_GoodsPartionDate: TdxBarButton;
+    bbUpdateRealSun: TdxBarButton;
   private
     { Private declarations }
   public

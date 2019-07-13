@@ -46,6 +46,9 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     PartionGoodsId: TcxGridDBColumn;
+    GuidesGoods: TdsdGuides;
+    edGoods: TcxButtonEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
