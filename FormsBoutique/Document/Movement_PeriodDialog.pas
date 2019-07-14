@@ -21,8 +21,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
+    cxLabelStartDate: TcxLabel;
+    cxLabelEndDate: TcxLabel;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     gpGetDate_Journal: TdsdStoredProc;

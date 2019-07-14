@@ -111,4 +111,64 @@ truncate table MovementProtocol;
 truncate table ObjectProtocol;
 truncate table UserProtocol;
 
+
+select * from Object where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'муж'
+update Object set ValueData = 'Man' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'муж'
+update Object set ValueData = 'Lady' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'жен'
+update Object set ValueData = 'Children' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Детское'
+update Object set ValueData = 'Linen' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Белье'
+update Object set ValueData = 'Other' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Прочие'
+update Object set ValueData = 'Knit' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Трикотаж'
+update Object set ValueData = 'Headgear' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Головные уборы'
+update Object set ValueData = 'Headgear JR' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Головные уборы JR'
+update Object set ValueData = 'Headgear B' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Головные уборы B'
+update Object set ValueData = 'Outerwear' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Верхняя'
+update Object set ValueData = 'Jersey' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Джерси'
+update Object set ValueData = 'Girls' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'дев'
+update Object set ValueData = 'new Girls' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'нов дев'
+update Object set ValueData = 'Boys' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'мальч'
+update Object set ValueData = 'new Boys' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'нов мальч'
+update Object set ValueData = 'Beach' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'пляж'
+update Object set ValueData = 'jeans' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'джинс'
+update Object set ValueData = 'leather' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'кожа'
+update Object set ValueData = 'leather' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Кожгалантерея'
+update Object set ValueData = 'socks' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Чулочно-носочные'
+update Object set ValueData = 'Toys' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Игрушки'
+update Object set ValueData = 'Bijouterie' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Бижутерия'
+update Object set ValueData = 'Newborn' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Новорожд'
+update Object set ValueData = 'New year' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Елочное'
+update Object set ValueData = 'Bags' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Сумки'
+update Object set ValueData = 'Fur' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'мех'
+update Object set ValueData = 'Fuzz' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'пух'
+update Object set ValueData = 'mini' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'мини'
+update Object set ValueData = 'Shorts' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Шорты'
+update Object set ValueData = 'Sport' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'спорт'
+update Object set ValueData = 'Perfumes' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'Парфюмы'
+update Object set ValueData = 'medium' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'средн'
+update Object set ValueData = 'travel' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'дорожная'
+update Object set ValueData = 'figurine' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'статуэтка'
+update Object set ValueData = 'trousers' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'брюч'
+update Object set ValueData = 'long' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'длинн'
+update Object set ValueData = 'long/short' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'д/к'
+update Object set ValueData = 'low/short' where DescId = zc_Object_GoodsGroup() and Valuedata ilike 'н/к'
+
+
+update Object set ValueData = 'UnComplete' where Id = zc_Enum_Status_UnComplete()
+update Object set ValueData = 'Complete' where Id = zc_Enum_Status_Complete()
+update Object set ValueData = 'Erased' where Id = zc_Enum_Status_Erased()
+
+update Object set ValueData = 'not' where Id = zc_Enum_DiscountKind_Not()
+update Object set ValueData = 'const' where Id = zc_Enum_DiscountKind_Const()
+update Object set ValueData = 'summ' where Id = zc_Enum_DiscountKind_Var()
+
+
+select lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ObjectLink.ObjectId, vbGroupNameFull)
+from 
+(select lfGet_Object_TreeNameFull (ChildObjectId , zc_ObjectLink_GoodsGroup_Parent()) as vbGroupNameFull
+      , ChildObjectId 
+ from
+ (select distinct ChildObjectId from ObjectLink where DescId = zc_ObjectLink_Goods_GoodsGroup() ) as a1
+) as a2
+join ObjectLink on ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroup() and ObjectLink.ChildObjectId = a2.ChildObjectId 
+
 */

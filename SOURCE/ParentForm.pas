@@ -71,7 +71,8 @@ uses
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
   cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction,
-  dsdExportToXMLAction {DataModul};
+  dsdExportToXMLAction {DataModul}
+  , StrUtils;
 
 {$R *.dfm}
 
@@ -93,7 +94,7 @@ type
     destructor Destroy; override;
 
     procedure AddTransfer(AValue, ATransfer : string);
-    function Transfer(AValue : string) : string;
+    function Transfer(AValue : string; ComponentName : string) : string;
 
     property Name : String read FName;
     property Locale : Integer read FLocale;
@@ -122,12 +123,16 @@ begin
     FValue.AddObject(AValue, TObject(FTransfer.Add(ATransfer)));
 end;
 
-function TLocalizerForm.Transfer(AValue : string) : string;
+function TLocalizerForm.Transfer(AValue : string; ComponentName : string) : string;
   var I : integer;
 begin
   if FValue.Find(AValue, I) then
     Result := FTransfer.Strings[Integer(FValue.Objects[I])]
-  else Result := AValue;
+  else if ComponentName <> ''
+       then
+          Result := ComponentName
+       else
+          Result := AValue;
 end;
 
 var LocalizerForm : TLocalizerForm;
@@ -171,32 +176,78 @@ end;
   // Функция перевода формы
 procedure TranslateForm(Form : TForm);
   var I : Integer;
+  lRes:String;
 begin
   if not Assigned(LocalizerForm) then Exit;
-  Form.Caption := LocalizerForm.Transfer(Form.Caption);
+  //
+  lRes:= ReplaceStr(Form.Name,'Form_2','');
+  lRes:= ReplaceStr(lRes,'Form','');
+  Form.Caption := LocalizerForm.Transfer(Form.Caption, lRes);
+  //
   for I := 0 to Form.ComponentCount - 1 do
     if Form.Components[I] is TcxLabel then
-      TcxLabel(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxLabel(Form.Components[I]).Caption)
+    begin
+      if Length(TcxLabel(Form.Components[I]).Name) <= 10 then lRes:=''
+      else begin
+        lRes:= ReplaceStr(Form.Components[I].Name,'cxLabel','');
+        lRes:= ReplaceStr(lRes,'Label','');
+      end;
+      TcxLabel(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxLabel(Form.Components[I]).Caption,lRes)
+    end
     else if Form.Components[I] is TcxButton then
     begin
-      TcxButton(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Caption);
-      TcxButton(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Hint);
-    end else if Form.Components[I] is TCustomAction then
+      if Length(TcxLabel(Form.Components[I]).Name) <= 10 then lRes:=''
+      else begin
+        lRes:= ReplaceStr(Form.Components[I].Name,'cxButton','');
+        lRes:= ReplaceStr(lRes,'Button','');
+        lRes:= ReplaceStr(lRes,'bb','');
+      end;
+      TcxButton(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Caption,lRes);
+      TcxButton(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxButton(Form.Components[I]).Hint,'');
+    end
+    else if Form.Components[I] is TdxBarButton then
     begin
-      TCustomAction(Form.Components[I]).Caption := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Caption);
-      TCustomAction(Form.Components[I]).Hint := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Hint);
-    end else if Form.Components[I] is TMenuItem then
+      lRes:= ReplaceStr(Form.Components[I].Name,'dxButton','');
+      lRes:= ReplaceStr(lRes,'Button','');
+      lRes:= ReplaceStr(lRes,'bb','');
+      TdxBarButton(Form.Components[I]).Hint := LocalizerForm.Transfer(TdxBarButton(Form.Components[I]).Hint,lRes);
+    end
+    else if Form.Components[I] is TCustomAction then
     begin
-      TMenuItem(Form.Components[I]).Caption := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Caption);
-      TMenuItem(Form.Components[I]).Hint := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Hint);
-    end else if Form.Components[I] is TcxCheckBox then
+      lRes:= ReplaceStr(Form.Components[I].Name,'action','');
+      lRes:= ReplaceStr(lRes,'act','');
+      TCustomAction(Form.Components[I]).Caption := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Caption,lRes);
+      TCustomAction(Form.Components[I]).Hint := LocalizerForm.Transfer(TCustomAction(Form.Components[I]).Hint,'');
+    end
+    else
+    if Form.Components[I] is TMenuItem then
     begin
-      TcxCheckBox(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Caption);
-      TcxCheckBox(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Hint);
-    end else if Form.Components[I] is TcxGridDBColumn then
+      if TMenuItem(Form.Components[I]).Caption = '-' then lRes:=''
+      else begin
+        lRes:= ReplaceStr(Form.Components[I].Name,'MenuItem','');
+        lRes:= ReplaceStr(lRes,'mi','');
+      end;
+      if TMenuItem(Form.Components[I]).Action = nil then
+      begin
+        TMenuItem(Form.Components[I]).Caption := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Caption,lRes);
+        TMenuItem(Form.Components[I]).Hint := LocalizerForm.Transfer(TMenuItem(Form.Components[I]).Hint,'');
+      end;
+    end
+    else
+    if Form.Components[I] is TcxCheckBox then
     begin
-      TcxGridDBColumn(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).Caption);
-      TcxGridDBColumn(Form.Components[I]).HeaderHint := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).HeaderHint);
+      lRes:= ReplaceStr(Form.Components[I].Name,'CheckBox','');
+      lRes:= ReplaceStr(lRes,'cb','');
+      TcxCheckBox(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Caption,lRes);
+      TcxCheckBox(Form.Components[I]).Hint := LocalizerForm.Transfer(TcxCheckBox(Form.Components[I]).Hint,'');
+    end
+    else
+    if Form.Components[I] is TcxGridDBColumn then
+    begin
+      lRes:= ReplaceStr(Form.Components[I].Name,'GridDBColumn','');
+      lRes:= ReplaceStr(lRes,'DBColumn','');
+      TcxGridDBColumn(Form.Components[I]).Caption := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).Caption,lRes);
+      TcxGridDBColumn(Form.Components[I]).HeaderHint := LocalizerForm.Transfer(TcxGridDBColumn(Form.Components[I]).HeaderHint,'');
     end;
 end;
 

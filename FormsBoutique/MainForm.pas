@@ -212,10 +212,10 @@ type
     actReport_SaleOLAP_Analysis: TdsdOpenForm;
     miReport_SaleOLAP_Analysis: TMenuItem;
     actCashJournal: TdsdOpenForm;
-    N3: TMenuItem;
+    miCashJournal: TMenuItem;
     N4: TMenuItem;
     actReport_Sale_Analysis: TdsdOpenForm;
-    N5: TMenuItem;
+    miReport_Sale_Analysis: TMenuItem;
     N6: TMenuItem;
     actReport_Sale_AnalysisAll: TdsdOpenForm;
     miReport_Sale_AnalysisAll: TMenuItem;

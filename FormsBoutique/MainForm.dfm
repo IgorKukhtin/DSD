@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1172,7 +1172,7 @@ inherited MainForm: TMainForm
       object N4: TMenuItem
         Caption = '-'
       end
-      object N3: TMenuItem
+      object miCashJournal: TMenuItem
         Action = actCashJournal
       end
     end
@@ -1307,7 +1307,7 @@ inherited MainForm: TMainForm
       object N6: TMenuItem
         Caption = '-'
       end
-      object N5: TMenuItem
+      object miReport_Sale_Analysis: TMenuItem
         Action = actReport_Sale_Analysis
       end
       object miReport_Sale_AnalysisAll: TMenuItem

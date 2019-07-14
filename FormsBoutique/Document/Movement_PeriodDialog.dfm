@@ -53,12 +53,12 @@ object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
     TabOrder = 3
     Width = 90
   end
-  object cxLabel6: TcxLabel
+  object cxLabelStartDate: TcxLabel
     Left = 34
     Top = 30
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
   end
-  object cxLabel7: TcxLabel
+  object cxLabelEndDate: TcxLabel
     Left = 15
     Top = 71
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
