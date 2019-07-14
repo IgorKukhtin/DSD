@@ -333,6 +333,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
+          OnCustomDrawCell = MainColCodeCustomDrawCell
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 62
@@ -910,6 +911,13 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 62
+        end
+        object MainNotSold: TcxGridDBColumn
+          Caption = #1053#1077' '#1087#1088#1086#1076#1072#1074#1072#1083#1089#1103' 100 '#1076#1085#1077#1081
+          DataBinding.FieldName = 'NotSold'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 78
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -3124,6 +3132,18 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actSendCashJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1046#1091#1088#1077#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+      Hint = #1046#1091#1088#1077#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+      FormName = 'TSendCashJournalForm'
+      FormNameParam.Value = 'TSendCashJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3143,7 +3163,6 @@ inherited MainCashForm2: TMainCashForm2
       item
         ColorColumn = MainColCode
         ValueColumn = MainColor_ExpirationDate
-        BackGroundValueColumn = MainColor_calc
         ColorValueList = <>
       end
       item
@@ -4824,6 +4843,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object pmOverdueJournal: TMenuItem
       Action = actOverdueJournal
+    end
+    object N31: TMenuItem
+      Action = actSendCashJournal
     end
   end
   object TimerDroppedDown: TTimer

@@ -123,6 +123,11 @@ type
     edPartionDateKind: TcxButtonEdit;
     GuidesPartionDateKind: TdsdGuides;
     cbSun: TcxCheckBox;
+    spUpdate_SendOverdue: TdsdStoredProc;
+    actUpdate_SendOverdue: TMultiAction;
+    actExecUpdate_SendOverdue: TdsdExecStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

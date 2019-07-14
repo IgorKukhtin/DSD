@@ -28,7 +28,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar, GoodsAnalog TVarChar,
                CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
-               PartionDateDiscount TFloat
+               PartionDateDiscount TFloat,
+               NotSold boolean
                )
 AS
 $BODY$
@@ -642,6 +643,12 @@ BEGIN
                                                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
+              ,tmpNotSold AS (SELECT DISTINCT MovementItemContainer.ObjectId_Analyzer   AS GoodsId
+                              FROM MovementItemContainer
+                              WHERE MovementItemContainer.OperDate >= CURRENT_DATE - INTERVAL '100 DAY'
+                                AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
+                             )
 
         -- Результат
         SELECT
@@ -870,13 +877,14 @@ BEGIN
           , CASE CashSessionSnapShot.PartionDateKindId
             WHEN zc_Enum_PartionDateKind_0() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
             WHEN zc_Enum_PartionDateKind_1() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
-            WHEN zc_Enum_PartionDateKind_6() THEN 
+            WHEN zc_Enum_PartionDateKind_6() THEN
               CASE WHEN CashSessionSnapShot.Price > COALESCE(CashSessionSnapShot.PriceWithVAT, 0)
-              THEN ROUND(CashSessionSnapShot.Price -  (CashSessionSnapShot.Price - 
+              THEN ROUND(CashSessionSnapShot.Price -  (CashSessionSnapShot.Price -
                          COALESCE(CashSessionSnapShot.PriceWithVAT, 0)) * CashSessionSnapShot.PartionDateDiscount / 100, 2)
               ELSE CashSessionSnapShot.Price END
             ELSE NULL END::TFloat                                  AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
+          , COALESCE(tmpNotSold.GoodsID, 0) = 0                    AS NotSold
 
          FROM
             CashSessionSnapShot
@@ -941,6 +949,9 @@ BEGIN
 
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
+
+           -- Продажи за последнии 100 дней
+           LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

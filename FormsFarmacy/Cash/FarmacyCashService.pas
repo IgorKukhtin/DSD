@@ -411,6 +411,7 @@ begin
   try
     TimerNeedRemainsDiff.Enabled := False;
     MainCashForm2.tiServise.IconIndex:=1;
+    Application.ProcessMessages;
     if SetFarmacyNameByUser then
     begin
       //Получение конфигурации аптеки
@@ -441,6 +442,7 @@ begin
   finally
     tiServise.Hint := '';
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
     TimerNeedRemainsDiff.Enabled := True;
   end;
 end;
@@ -526,6 +528,7 @@ begin   //yes
     tiServise.Hint := '';
     if not bError then ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
     Add_Log('Refresh all end');
   end;
 end;
@@ -649,23 +652,25 @@ end;
 
 procedure TMainCashForm2.N5Click(Sender: TObject);
 begin
-try
- MainCashForm2.tiServise.IconIndex:=1;
   try
-    spGet_User_IsAdmin.Execute;
-    gc_User.Local := False;
-    tiServise.BalloonHint:='Режим работы: В сети';
-    tiServise.ShowBalloonHint;
-  except
-    Begin
-      gc_User.Local := True;
-      tiServise.BalloonHint:='Режим работы: Автономно';
+    MainCashForm2.tiServise.IconIndex:=1;
+    Application.ProcessMessages;
+    try
+      spGet_User_IsAdmin.Execute;
+      gc_User.Local := False;
+      tiServise.BalloonHint:='Режим работы: В сети';
       tiServise.ShowBalloonHint;
-    End;
+    except
+      Begin
+        gc_User.Local := True;
+        tiServise.BalloonHint:='Режим работы: Автономно';
+        tiServise.ShowBalloonHint;
+      End;
+    end;
+  finally
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
   end;
-finally
- MainCashForm2.tiServise.IconIndex := GetTrayIcon;
-end;
 end;
 
 procedure TMainCashForm2.N7Click(Sender: TObject);
@@ -1097,6 +1102,7 @@ begin
         end;
         tiServise.Hint := 'Локальный режим';
         MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+        Application.ProcessMessages;
       end;
     end;
   finally
@@ -1152,6 +1158,7 @@ begin
     TimerSaveReal.Enabled := false;
     try
       MainCashForm2.tiServise.IconIndex := 4;
+      Application.ProcessMessages;
       bShowDisconnectMsg := not gc_User.Local;
       spGet_User_IsAdmin.Execute;
       if gc_User.Local then
@@ -1185,6 +1192,7 @@ begin
     end;
 
     MainCashForm2.tiServise.IconIndex := 2;
+    Application.ProcessMessages;
     Add_Log('Start MutexRefresh 732');
     WaitForSingleObject(MutexRefresh, INFINITE); // одновременно проведение и обновление всех остатков запрещено
     Add_Log('Start MutexAllowed 734');
@@ -1274,6 +1282,7 @@ begin
                 tiServise.Hint := 'Сохранение VIP чека';
                 MainCashForm2.tiServise.IconIndex := 8;
               end;
+              Application.ProcessMessages;
 
               With Head, FLocalDataBaseHead do
               Begin
@@ -1845,6 +1854,7 @@ begin
     Add_Log('SaveReal end');
     TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
     TimerSaveReal.Enabled := true;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -2276,6 +2286,7 @@ begin
   end;
 
   MainCashForm2.tiServise.IconIndex := 7;
+  Application.ProcessMessages;
     // Отправка файла
   IdFTP := Tidftp.Create(nil);
   try
@@ -2324,6 +2335,7 @@ begin
     IdFTP.Free;
     sl.Free;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
   end;
 end;
 

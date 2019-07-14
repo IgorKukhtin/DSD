@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1003
   ExplicitWidth = 1019
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 1003
     Height = 462
     ExplicitTop = 155
-    ExplicitWidth = 1015
+    ExplicitWidth = 1003
     ExplicitHeight = 462
     ClientRectBottom = 462
     ClientRectRight = 1003
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1015
+      ExplicitWidth = 1003
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
         Width = 1003
         Height = 318
-        ExplicitWidth = 1015
+        ExplicitWidth = 1003
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -469,7 +469,6 @@ inherited SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1015
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -479,7 +478,6 @@ inherited SendForm: TSendForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1015
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -597,8 +595,6 @@ inherited SendForm: TSendForm
     Width = 1003
     Height = 129
     TabOrder = 3
-    ExplicitLeft = -8
-    ExplicitTop = -5
     ExplicitWidth = 1003
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -1197,6 +1193,33 @@ inherited SendForm: TSendForm
       Hint = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080
       ImageIndex = 30
     end
+    object actUpdate_SendOverdue: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecUpdate_SendOverdue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 10
+    end
+    object actExecUpdate_SendOverdue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SendOverdue
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SendOverdue
+        end>
+      Caption = 'actExecUpdate_SendOverdue'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1340,6 +1363,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1392,6 +1419,16 @@ inherited SendForm: TSendForm
     end
     object bbWriteRestFromPoint: TdxBarButton
       Action = actWriteRestFromPoint
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdate_SendOverdue
       Category = 0
     end
   end
@@ -2703,5 +2740,30 @@ inherited SendForm: TSendForm
       end>
     Left = 360
     Top = 64
+  end
+  object spUpdate_SendOverdue: TdsdStoredProc
+    StoredProcName = 'grUpdate_MovementUnit_SendOverdue'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 878
+    Top = 336
   end
 end

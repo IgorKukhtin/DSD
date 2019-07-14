@@ -1803,6 +1803,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
+
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
