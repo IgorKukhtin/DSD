@@ -706,7 +706,8 @@ uses
   OverdueChangeJournal in '..\..\FormsFarmacy\Document\OverdueChangeJournal.pas' {OverdueChangeJournalForm: TParentForm},
   OverdueChangeDialog in '..\..\FormsFarmacy\Document\OverdueChangeDialog.pas' {OverdueChangeDialogForm: TParentForm},
   SendMenegerJournal in '..\..\FormsFarmacy\Document\SendMenegerJournal.pas' {SendMenegerJournalForm: TParentForm},
-  SendMeneger in '..\..\FormsFarmacy\Document\SendMeneger.pas' {SendMenegerForm: TParentForm};
+  SendMeneger in '..\..\FormsFarmacy\Document\SendMeneger.pas' {SendMenegerForm: TParentForm},
+  SendCashJournal in '..\..\FormsFarmacy\Document\SendCashJournal.pas' {SendCashJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -723,7 +724,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 

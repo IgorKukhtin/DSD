@@ -381,6 +381,9 @@ type
     N30: TMenuItem;
     actReport_GoodsRemainsCash: TdsdOpenForm;
     actReportGoodsRemainsCash1: TMenuItem;
+    MainNotSold: TcxGridDBColumn;
+    actSendCashJournal: TdsdOpenForm;
+    N31: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -491,6 +494,9 @@ type
     procedure cxButton7Click(Sender: TObject);
     procedure MainisGoodsAnalogGetProperties(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+    procedure MainColCodeCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -4659,6 +4665,23 @@ begin
   end;
   if Key = VK_TAB then
     ActiveControl:=MainGrid;
+end;
+
+procedure TMainCashForm2.MainColCodeCustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+  var  AText:string;
+begin
+  ACanvas.FillRect(AViewInfo.Bounds);
+  if AViewInfo.GridRecord.Values[MainNotSold.Index] then
+  begin
+    ACanvas.Pen.Color := clRed;
+    ACanvas.Rectangle(Rect(AViewInfo.Bounds.Left + 1, AViewInfo.Bounds.Top + 1, AViewInfo.Bounds.Right - 1, AViewInfo.Bounds.Bottom - 2));
+  end;
+  AText:=AViewInfo.GridRecord.Values[AViewInfo.Item.Index];
+  ACanvas.TextOut(Max(AViewInfo.Bounds.Left + 2, AViewInfo.Bounds.Right - ACanvas.TextWidth(AText) - 4), AViewInfo.Bounds.Top+2, AText);
+  ADone := True;
+//    ACanvas.Font.Style :=  ACanvas.Font.Style + [fsStrikeOut];
 end;
 
 procedure TMainCashForm2.MainColPriceNightGetDisplayText(
