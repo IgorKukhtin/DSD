@@ -3,26 +3,27 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
   ClientHeight = 359
   ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 840
   ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 67
+    Top = 87
     Width = 824
-    Height = 292
+    Height = 272
     TabOrder = 3
     ExplicitTop = 67
     ExplicitWidth = 824
     ExplicitHeight = 292
-    ClientRectBottom = 292
+    ClientRectBottom = 272
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 292
       inherited cxGrid: TcxGrid
         Width = 824
-        Height = 292
+        Height = 272
         ExplicitWidth = 824
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -243,9 +244,9 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
   end
   inherited Panel: TPanel
     Width = 824
-    Height = 41
+    Height = 61
     ExplicitWidth = 824
-    ExplicitHeight = 41
+    ExplicitHeight = 61
     inherited deStart: TcxDateEdit
       Left = 790
       Top = 1
@@ -277,9 +278,9 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
       ExplicitTop = 29
     end
     object cxLabel4: TcxLabel
-      Left = 16
+      Left = 15
       Top = 9
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
       Left = 101
@@ -292,6 +293,23 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 301
+    end
+    object edGoods: TcxButtonEdit
+      Left = 54
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 348
+    end
+    object cxLabel6: TcxLabel
+      Left = 15
+      Top = 35
+      Caption = #1058#1086#1074#1072#1088':'
     end
   end
   object cbDetail: TcxCheckBox [2]
@@ -429,6 +447,23 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -532,6 +567,14 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -650,8 +693,8 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 24
+    Left = 296
+    Top = 8
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -690,6 +733,40 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -731,5 +808,34 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
       end>
     Left = 200
     Top = 128
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 240
+    Top = 16
   end
 end

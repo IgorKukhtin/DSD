@@ -746,13 +746,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateDialogForm');
   //  exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
@@ -1806,7 +1806,7 @@ begin
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
-  }
+
 end;
 
   procedure TLoadFormTest.LoadSendPartionDateFormTest;

@@ -27,6 +27,9 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     cbDetail: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

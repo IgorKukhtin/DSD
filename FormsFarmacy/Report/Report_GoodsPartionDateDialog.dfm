@@ -3,7 +3,7 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 156
+  ClientHeight = 202
   ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 119
+    Top = 167
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 119
+    Top = 167
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,16 +54,33 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cbDetail: TcxCheckBox
-    Left = 8
-    Top = 83
+    Left = 49
+    Top = 124
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 4
     Width = 177
   end
+  object cxLabel6: TcxLabel
+    Left = 8
+    Top = 76
+    Caption = #1058#1086#1074#1072#1088':'
+  end
+  object edGoods: TcxButtonEdit
+    Left = 8
+    Top = 94
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 327
+  end
   object PeriodChoice: TPeriodChoice
     Left = 175
-    Top = 96
+    Top = 144
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
@@ -80,7 +97,7 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 255
-    Top = 68
+    Top = 116
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -106,6 +123,23 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
         Value = Null
         Component = cbDetail
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -178,5 +212,34 @@ object Report_GoodsPartionDateDialogForm: TReport_GoodsPartionDateDialogForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 240
+    Top = 16
   end
 end

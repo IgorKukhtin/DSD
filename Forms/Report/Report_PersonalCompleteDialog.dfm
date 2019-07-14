@@ -3,7 +3,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'>'
-  ClientHeight = 234
+  ClientHeight = 232
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 64
+    Left = 80
     Top = 189
     Width = 75
     Height = 25
@@ -28,7 +28,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 238
+    Left = 254
     Top = 189
     Width = 75
     Height = 25
@@ -37,16 +37,16 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 190
-    Top = 27
+    Left = 232
+    Top = 6
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 82
   end
   object deStart: TcxDateEdit
-    Left = 98
-    Top = 27
+    Left = 77
+    Top = 6
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 3
@@ -54,7 +54,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPosition: TcxButtonEdit
     Left = 98
-    Top = 135
+    Top = 96
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPersonal: TcxButtonEdit
     Left = 98
-    Top = 100
+    Top = 134
     Properties.Buttons = <
       item
         Default = True
@@ -87,18 +87,18 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object cxLabel6: TcxLabel
-    Left = 98
+    Left = 26
     Top = 7
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 190
+    Left = 174
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbinIsDay: TcxCheckBox
-    Left = 11
-    Top = 27
+    Left = 26
+    Top = 33
     Caption = #1087#1086' '#1076#1085#1103#1084
     Properties.ReadOnly = False
     TabOrder = 10
@@ -122,22 +122,29 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     Width = 250
   end
   object cbIsMovement: TcxCheckBox
-    Left = 278
-    Top = 27
+    Left = 114
+    Top = 33
     Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
     Properties.ReadOnly = False
     TabOrder = 13
     Width = 107
   end
+  object cbDoc: TcxCheckBox
+    Left = 232
+    Top = 33
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    TabOrder = 14
+    Width = 148
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 195
-    Top = 183
+    Left = 355
+    Top = 119
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 25
+    Left = 352
+    Top = 57
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -149,8 +156,8 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 363
-    Top = 157
+    Left = 291
+    Top = 149
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -233,6 +240,14 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
         Name = 'inIsMovement'
         Value = Null
         Component = cbIsMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDoc'
+        Value = Null
+        Component = cbDoc
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

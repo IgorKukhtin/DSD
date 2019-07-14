@@ -1,9 +1,11 @@
 -- Function: gpReport_GoodsPartionDate()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsPartionDate (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsPartionDate (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsPartionDate(
     IN inUnitId           Integer  ,  -- Подразделение
+    IN inGoodsId          Integer  ,  -- Товар
     IN inIsDetail         Boolean  ,  -- показать детально
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -127,6 +129,7 @@ BEGIN
                                     
                                 WHERE Container.DescId = zc_Container_CountPartionDate()
                                   AND COALESCE (Container.Amount,0) <> 0
+                                  AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                 GROUP BY CASE WHEN inIsDetail = TRUE THEN Container.Id ELSE 0 END
                                        , Container.ObjectId
                                        , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
@@ -162,6 +165,7 @@ BEGIN
                                WHERE Container.DescId = zc_Container_Count()
                                  AND Container.WhereObjectId = inUnitId
                                  AND COALESCE (Container.Amount,0) <> 0
+                                 AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                GROUP BY Container.Id
                                       , Container.ObjectId
                                ) AS tmp
@@ -303,6 +307,5 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_GoodsPartionDate( inUnitId := 183292 , inIsDetail := False ,  inSession := '3' ::TVarchar);
---select * from gpReport_GoodsPartionDate( inUnitId := 183292 , inIsDetail := False ,  inSession := '3' ::TVarchar)
+--select * from gpReport_GoodsPartionDate( inUnitId := 183292 , inGoodsId := 0, inIsDetail := False ,  inSession := '3' ::TVarchar)
 --order by 3;

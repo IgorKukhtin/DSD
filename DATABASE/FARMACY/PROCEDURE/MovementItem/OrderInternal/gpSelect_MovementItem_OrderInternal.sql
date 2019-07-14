@@ -128,6 +128,7 @@ BEGIN
 --raise notice 'Value: %', 0;
 
 --     OPEN Cursor1 FOR
+
      CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
         --Данные Справочника График заказа/доставки
@@ -1339,6 +1340,26 @@ BEGIN
 --raise notice 'Value: %', 2;
      -- OPEN Cursor1 FOR
      -- OPEN Cursor1 FOR
+
+      --ANALYZE _tmpOrderInternal_MI;
+
+      -- все МИ
+      CREATE TEMP TABLE tmpMI_All ON COMMIT DROP AS
+           SELECT MovementItem.*
+           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.isErased   = tmpIsErased.isErased;
+      ANALYZE tmpMI_All; 
+      
+      CREATE TEMP TABLE tmpMIF ON COMMIT DROP AS
+      SELECT MovementItemFloat.*
+      FROM MovementItemFloat
+        INNER JOIN (SELECT tmpMI_All.Id FROM tmpMI_All) AS test ON test.ID = MovementItemFloat.MovementItemId;
+        
+      ANALYZE tmpMIF;
+
+                          
      CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
      --Данные Справочника График заказа/доставки
@@ -1540,12 +1561,12 @@ BEGIN
                              )
 
 
-      , tmpMI_All AS (SELECT MovementItem.*
+    /*  , tmpMI_All AS (SELECT MovementItem.*
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                         )
+                         )*/
         -- 2.1
       , tmpOF_Goods_MinimumLot AS (SELECT *
                                    FROM ObjectFloat
@@ -1658,11 +1679,11 @@ BEGIN
                                            --     AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                     )
 
-      , tmpMIF AS (SELECT MovementItemFloat.*
+      /*, tmpMIF AS (SELECT MovementItemFloat.*
                    FROM MovementItemFloat
                      INNER JOIN (SELECT tmpMI_Master.Id FROM tmpMI_Master) AS test ON test.ID = MovementItemFloat.MovementItemId
 --                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Master.Id FROM tmpMI_Master)
-                   )
+                   )*/
       , tmpMIF_Summ AS (SELECT tmpMIF.*
                         FROM tmpMIF
                         WHERE tmpMIF.DescId = zc_MIFloat_Summ()

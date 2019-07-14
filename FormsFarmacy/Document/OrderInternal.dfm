@@ -1291,6 +1291,22 @@ inherited OrderInternalForm: TOrderInternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actUpdateRealSun: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateRealSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdateRealSun
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1073#1077#1079' '#1057#1059#1053' '#1080' '#1086#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1073#1077#1079' '#1057#1059#1053' '#1080' '#1054#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093
+      ImageIndex = 60
+    end
     object actUpdatePrioritetPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1331,7 +1347,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
-      ImageIndex = 60
+      ImageIndex = 10
     end
     object mactDeleteLink: TMultiAction
       Category = 'DeleteLink'
@@ -1465,6 +1481,61 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
+    end
+    object actOpenReport_GoodsPartionDate: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 25
+      FormName = 'TReport_GoodsPartionDateForm'
+      FormNameParam.Value = 'TReport_GoodsPartionDateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDetail'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1629,6 +1700,22 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateRealSun'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReport_GoodsPartionDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1715,7 +1802,14 @@ inherited OrderInternalForm: TOrderInternalForm
       Action = actUpdateListDiff
       Align = iaCenter
       Category = 0
-      ImageIndex = 10
+    end
+    object bbOpenReport_GoodsPartionDate: TdxBarButton
+      Action = actOpenReport_GoodsPartionDate
+      Category = 0
+    end
+    object bbUpdateRealSun: TdxBarButton
+      Action = actUpdateRealSun
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2644,5 +2738,30 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 802
     Top = 360
+  end
+  object spUpdateRealSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternal_AmountReal_RemainsSun'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 368
   end
 end
