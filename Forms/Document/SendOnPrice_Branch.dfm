@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1818,12 +1818,12 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Top = 296
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_SendOnPrice_SetErased'
+    StoredProcName = 'gpMovementItem_SendOnPrice_Branch_SetErased'
     Left = 614
     Top = 488
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_SendOnPrice_SetUnErased'
+    StoredProcName = 'gpMovementItem_SendOnPrice_Branch_SetUnErased'
     Left = 614
     Top = 440
   end

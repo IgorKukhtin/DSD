@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionSeparate_StorageLineByChild(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MI_ProductionSeparate_StorageLine());
@@ -68,6 +69,18 @@ BEGIN
                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
                       , zfConvert_DateToString ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId))
                       ;
+     END IF;
+
+
+     -- данные
+     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+     --
+     IF vbStatusId = zc_Enum_Status_Complete()
+     THEN
+          -- Распроводим Документ
+          PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                       , inUserId     := vbUserId);
+
      END IF;
 
      -- данные из мастера
@@ -193,6 +206,17 @@ BEGIN
          WHERE MovementItemContainer.MovementId = inMovementId
            AND tmpMI.MovementItemId_old         = MovementItemContainer.MovementItemId
         ;
+     END IF;
+
+
+     --
+     IF vbStatusId = zc_Enum_Status_Complete()
+     THEN
+          -- Распроводим Документ
+          PERFORM gpComplete_Movement_ProductionSeparate (inMovementId    := inMovementId
+                                                        , inIsLastComplete:= FALSE
+                                                        , inSession       := (-1 * vbUserId) :: TVarChar
+                                                         );
      END IF;
 
 END;
