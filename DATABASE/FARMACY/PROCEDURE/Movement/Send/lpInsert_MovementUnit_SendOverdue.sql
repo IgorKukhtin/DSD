@@ -158,7 +158,7 @@
     FROM tmpContainerOverdue
     WHERE COALESCE(tmpContainerOverdue.MasterID, 0) <> 0;
 
-/*      -- Если есть содержимое проводим
+      -- Если есть содержимое отлаживаем
     IF EXISTS(SELECT MovementItem.Id
               FROM MovementItem
               WHERE MovementItem.MovementId = vbMovementID
@@ -168,7 +168,7 @@
       -- сохранили признак отложен с проведением
       PERFORM gpUpdate_Movement_Send_Deferred (vbMovementID, TRUE, inSession);
     END IF;
-*/
+
   END;
   $BODY$
     LANGUAGE plpgsql VOLATILE;
