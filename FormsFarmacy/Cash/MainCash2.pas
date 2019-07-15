@@ -4673,7 +4673,7 @@ procedure TMainCashForm2.MainColCodeCustomDrawCell(
   var  AText:string;
 begin
   ACanvas.FillRect(AViewInfo.Bounds);
-  if AViewInfo.GridRecord.Values[MainNotSold.Index] then
+  if not VarIsNull(AViewInfo.GridRecord.Values[MainNotSold.Index]) and AViewInfo.GridRecord.Values[MainNotSold.Index] then
   begin
     ACanvas.Pen.Color := clRed;
     ACanvas.Rectangle(Rect(AViewInfo.Bounds.Left + 1, AViewInfo.Bounds.Top + 1, AViewInfo.Bounds.Right - 1, AViewInfo.Bounds.Bottom - 2));

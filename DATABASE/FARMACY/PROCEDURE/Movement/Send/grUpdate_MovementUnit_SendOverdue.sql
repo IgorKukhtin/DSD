@@ -55,6 +55,11 @@
       RAISE EXCEPTION 'Допускаеться запускать только для распроведенных документов.';
     END IF;
 
+    IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+    THEN
+      RAISE EXCEPTION 'Ошибка.Документ отложен, выполненние операции запрещено запрещено!';
+    END IF;
+
       -- Временная таблица для товаров по переводу
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpcontaineoverdue'))
     THEN
@@ -74,11 +79,27 @@
          -- просрочка
          tmpContainer AS (SELECT Container.Id                                         AS Id,
                                  Container.ObjectId                                   AS GoodsID,
-                                 Container.Amount                                     AS Amount
+                                 Container.Amount                                     AS Amount,
+                                 Container.ParentId                                   AS ParentId,
+                                 ContainerLinkObject.ObjectId                         AS PartionGoodsId,
+                                 ObjectDate_ExpirationDate.ValueData                  AS ExpirationDate
+
                           FROM Container
+
+                             LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
+
+                             LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                            AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                             LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+
                           WHERE Container.DescId = zc_Container_CountPartionDate()
-                            AND Container.WhereObjectId = vbUnitID
-                            AND Container.Amount > 0)
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount > 0
+                            AND ObjectDate_ExpirationDate.ValueData <= vbOperDate)
          -- Содержимое документа
        , tmpMovement AS (SELECT
                                 MovementItemMaster.ID                   AS MIMasterID
@@ -100,17 +121,15 @@
                               INNER JOIN MovementItem AS MovementItemMaster
                                                       ON MovementItemMaster.MovementId = Movement.Id
                                                      AND MovementItemMaster.DescId = zc_MI_Master()
-                                                     AND MovementItemMaster.IsErased = FALSE
 
                               INNER JOIN MovementItem AS MovementItemChild
                                                       ON MovementItemChild.MovementId = Movement.Id
                                                      AND MovementItemChild.ParentId = MovementItemMaster.Id
                                                      AND MovementItemChild.DescId = zc_MI_Child()
-                                                     AND MovementItemChild.IsErased = FALSE
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                        ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
-                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                          ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                         AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
                         WHERE Movement.Id = inMovementId)
 
@@ -122,34 +141,67 @@
          , Container.Amount
 
     FROM tmpMovement AS Movement
-         LEFT JOIN tmpContainer AS Container ON Movement.ContainerId = Container.Id
-                                            AND Movement.GoodsId = Container.GoodsId;
+         LEFT JOIN tmpContainer AS Container ON Movement.ContainerId = Container.Id;
 
+/*      -- Востанавливаем все удаленные записи
+    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
+                                             inSession               := inSession)
+    FROM MovementItem
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.IsErased = TRUE;
+*/
+      -- Востанавливаем удаленные записи с остатком MIChildId
+    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
+                                             inSession               := inSession)
+    FROM tmpContainerOverdue
+         INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                AND MovementItem.ID = tmpContainerOverdue.MIChildId
+                                AND MovementItem.IsErased = TRUE
+    WHERE COALESCE(tmpContainerOverdue.Amount) > 0;
+
+      -- Востанавливаем удаленные записи с остатком мастера
+    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItemMaster.Id,
+                                             inSession               := inSession)
+    FROM MovementItem AS MovementItemMaster
+
+         INNER JOIN (SELECT DISTINCT MovementItemChild.ParentId
+                     FROM MovementItem AS MovementItemChild
+                     WHERE MovementItemChild.MovementId = inMovementId
+                       AND MovementItemChild.DescId = zc_MI_Child()
+                       AND MovementItemChild.IsErased = FALSE) AS MovementItemChild
+                                                               ON MovementItemChild.ParentId = MovementItemMaster.ID
+
+    WHERE MovementItemMaster.MovementId = inMovementId
+      AND MovementItemMaster.DescId = zc_MI_Master()
+      AND MovementItemMaster.IsErased = TRUE;
 
       -- Правим данные мастера
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := tmpContainerOverdue.MIMasterID,
                                               inMovementId           := inMovementID,
                                               inGoodsId              := tmpContainerOverdue.GoodsId,
-                                              inAmount               := SUM(tmpContainerOverdue.Amount)::TFloat,
-                                              inAmountManual         := SUM(tmpContainerOverdue.Amount)::TFloat,
-                                              inAmountStorage        := SUM(tmpContainerOverdue.Amount)::TFloat,
+                                              inAmount               := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
                                               inReasonDifferencesId  := 0,
                                               inUserId               := vbUserId)
     FROM tmpContainerOverdue
-    WHERE COALESCE(tmpContainerOverdue.Amount, 0) > 0
-    GROUP BY tmpContainerOverdue.MIMasterID, tmpContainerOverdue.GoodsId
-    HAVING COALESCE(SUM(tmpContainerOverdue.Amount)) > 0;
+         INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                AND MovementItem.ID = tmpContainerOverdue.MIMasterID
+    GROUP BY tmpContainerOverdue.MIMasterID, tmpContainerOverdue.GoodsId, MovementItem.Amount
+    HAVING COALESCE(SUM(tmpContainerOverdue.Amount), 0) <> MovementItem.Amount;
 
       -- Правим данные Child
     PERFORM lpInsertUpdate_MovementItem_Send_Child(ioId            := tmpContainerOverdue.MIChildId,
                                                    inParentId      := tmpContainerOverdue.MIMasterID,
                                                    inMovementId    := inMovementID,
                                                    inGoodsId       := tmpContainerOverdue.GoodsId,
-                                                   inAmount        := tmpContainerOverdue.Amount,
+                                                   inAmount        := COALESCE(tmpContainerOverdue.Amount, 0),
                                                    inContainerId   := tmpContainerOverdue.ContainerId,
                                                    inUserId        := vbUserId)
     FROM tmpContainerOverdue
-    WHERE COALESCE(tmpContainerOverdue.Amount, 0) > 0;
+         INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                AND MovementItem.ID = tmpContainerOverdue.MIChildId
+    WHERE COALESCE(tmpContainerOverdue.Amount, 0) <> MovementItem.Amount;
 
       -- Отмечаем удаленным проданое Child
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := tmpContainerOverdue.MIChildId,
@@ -174,18 +226,6 @@
     GROUP BY MovementItemMaster.ID
     HAVING COALESCE(SUM(MovementItemChild.Amount), 0) = 0;
 
-
-/*      -- Если есть содержимое проводим
-    IF EXISTS(SELECT MovementItem.Id
-              FROM MovementItem
-              WHERE MovementItem.MovementId = inMovementID
-                AND MovementItem.DescId = zc_MI_Master()
-                AND MovementItem.isErased = FALSE)
-    THEN
-      -- сохранили признак отложен с проведением
-      PERFORM gpUpdate_Movement_Send_Deferred (inMovementID, TRUE, inSession);
-    END IF;
-*/
   END;
   $BODY$
     LANGUAGE plpgsql VOLATILE;
@@ -196,4 +236,4 @@
  18.06.19                                                         *
    */
 
-  -- тест SELECT * FROM grUpdate_MovementUnit_SendOverdue (inMovementID := 7784783  , inSession:= '3')
+- тест SELECT * FROM grUpdate_MovementUnit_SendOverdue (inMovementID := 7784783  , inSession:= '3')
