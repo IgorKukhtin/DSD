@@ -9,7 +9,7 @@ RETURNS Text
 AS
 $BODY$
    DECLARE vbRetailId         Integer;
-   DECLARE vbMessageText      TVarChar; 
+   DECLARE vbMessageText      Text; 
 BEGIN
      
      -- Проверяем все ли товары состыкованы. 
@@ -64,11 +64,14 @@ BEGIN
                                                           AND Object_Retail.DescId = zc_Object_Retail()
                                     WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
                                     )
-     
+                        -- Результат
                         SELECT string_agg (lfGet_Object_ValueData (tmpMI.PartnerGoodsId ), ';')
-                        FROM tmpMI
-                            LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
-                        WHERE tmpLink.GoodsId IS NULL
+                        FROM (SELECT tmpMI.PartnerGoodsId
+                              FROM tmpMI
+                                  LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
+                              WHERE tmpLink.GoodsId IS NULL
+                              LIMIT 3
+                             ) AS tmpMI
                         );
     
      IF COALESCE (vbMessageText, '') <> ''
