@@ -390,6 +390,18 @@ BEGIN
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId
         WHERE MovementItemSaved.MovementId = vbMovementId;
     END IF;
+
+
+    -- пересчет для схемы SUN
+    IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
+    THEN
+        PERFORM gpUpdate_MI_OrderInternal_AmountReal_RemainsSun (inMovementId:= inMovementId
+                                                               , inUnitId    := inUnitId
+                                                               , inSession   := inSession
+                                                                );
+    END IF;
+    
+    --
     IF EXISTS(  SELECT Movement.Id
                 FROM Movement
                     JOIN MovementLinkObject AS MovementLinkObject_Unit

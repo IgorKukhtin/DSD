@@ -24,16 +24,30 @@ BEGIN
                , SUM (tmp.Amount)         AS Amount
                , SUM (tmp.AmountRemains)  AS AmountRemains
           FROM gpReport_GoodsPartionDate( inUnitId := inUnitId , inGoodsId := 0, inIsDetail := False ,  inSession := inSession) AS tmp
+          WHERE tmp.Amount <> 0
           GROUP BY tmp.GoodsId;
 
 
      -- строки заказа
-     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-       INSERT INTO _tmp_MI (Id, GoodsId, Amount)
+     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, Amount TFloat, AmountReal TFloat, RemainsSUN TFloat) ON COMMIT DROP;
+       INSERT INTO _tmp_MI (Id, GoodsId, Amount, AmountReal, RemainsSUN)
              SELECT MovementItem.Id
                   , MovementItem.ObjectId AS GoodsId
-                  , MovementItem.Amount
+               -- , MovementItem.Amount
+                  , COALESCE (MIFloat_AmountSecond.ValueData, 0) AS Amount
+                  , COALESCE (MIFloat_AmountReal.ValueData, 0)   AS AmountReal
+                  , COALESCE (MIFloat_RemainsSUN.ValueData, 0)   AS RemainsSUN
              FROM MovementItem
+             
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                              ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountReal
+                                              ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountReal.DescId         = zc_MIFloat_AmountReal()
+                  LEFT JOIN MovementItemFloat AS MIFloat_RemainsSUN
+                                              ON MIFloat_RemainsSUN.MovementItemId = MovementItem.Id
+                                             AND MIFloat_RemainsSUN.DescId         = zc_MIFloat_RemainsSUN()
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE;
@@ -43,13 +57,20 @@ BEGIN
      PERFORM lpInsertUpdate_MI_OrderInternal_SUN (inId             := COALESCE (_tmp_MI.Id, 0)
                                                 , inMovementId     := inMovementId
                                                 , inGoodsId        := _tmp_MI.GoodsId
-                                                , inAmount         := CASE WHEN COALESCE (_tmpRemains.Amount,0) <> 0 THEN 0 ELSE COALESCE (_tmp_MI.Amount,0) END ::TFloat
-                                                , inAmountReal     := CASE WHEN COALESCE (_tmpRemains.Amount,0) <> 0 THEN COALESCE (_tmp_MI.Amount,0) ELSE 0 END ::TFloat
-                                                , inRemainsSUN     := COALESCE (_tmpRemains.Amount,0) ::TFloat
+                                                , inAmount         := CASE WHEN _tmpRemains.Amount <> 0 THEN 0
+                                                                           WHEN _tmp_MI.Amount     <> 0 THEN _tmp_MI.Amount
+                                                                           ELSE _tmp_MI.AmountReal
+                                                                      END :: TFloat
+                                                , inAmountReal     := CASE WHEN _tmpRemains.Amount <> 0 AND _tmp_MI.Amount <> 0 THEN _tmp_MI.Amount
+                                                                           WHEN _tmpRemains.Amount <> 0 THEN _tmp_MI.AmountReal
+                                                                           ELSE 0
+                                                                      END :: TFloat
+                                                , inRemainsSUN     := COALESCE (_tmpRemains.Amount, 0) :: TFloat
                                                 , inUserId         := vbUserId
                                                 )
      FROM _tmp_MI
-         LEFT JOIN _tmpRemainsGoodsPartionDate AS _tmpRemains ON _tmpRemains.GoodsId = _tmp_MI.GoodsId
+          LEFT JOIN _tmpRemainsGoodsPartionDate AS _tmpRemains ON _tmpRemains.GoodsId = _tmp_MI.GoodsId
+          -- AND 1=0
      ;
 
 

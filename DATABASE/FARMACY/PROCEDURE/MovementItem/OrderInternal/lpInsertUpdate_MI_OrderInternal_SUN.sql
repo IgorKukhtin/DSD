@@ -29,10 +29,16 @@ BEGIN
               -- сохранили <Элемент документа>
               inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL); 
           END IF;
+          RAISE EXCEPTION 'Ошибка.%Для товара <%> не найден элемент кол-во заказа = <%>.', CHR (13), lfGet_Object_ValueData (inGoodsId), inAmount;
      END IF;
 
      -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+     -- inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+     -- UPDATE MovementItem SET Amount = inAmount WHERE Id = inId;
+
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), inId, inAmount);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), inId, inAmountReal);

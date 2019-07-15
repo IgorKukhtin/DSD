@@ -110,7 +110,8 @@ BEGIN
 --  raise notice 'Value: %', -1;
 
     -- !!!Только для таких документов!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() AND inSession <> '3' AND inMovementId <> 10804217 AND inMovementId <> 10795784 
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() /*AND inSession <> '3'*/ AND inMovementId <> 10804217 AND inMovementId <> 10795784 
+    AND (inShowAll = FALSE OR inSession <> '3')
     THEN
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
@@ -128,7 +129,6 @@ BEGIN
 --raise notice 'Value: %', 0;
 
 --     OPEN Cursor1 FOR
-
      CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
         --Данные Справочника График заказа/доставки
@@ -1340,26 +1340,6 @@ BEGIN
 --raise notice 'Value: %', 2;
      -- OPEN Cursor1 FOR
      -- OPEN Cursor1 FOR
-
-      --ANALYZE _tmpOrderInternal_MI;
-
-      -- все МИ
-      CREATE TEMP TABLE tmpMI_All ON COMMIT DROP AS
-           SELECT MovementItem.*
-           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                 AND MovementItem.DescId     = zc_MI_Master()
-                                 AND MovementItem.isErased   = tmpIsErased.isErased;
-      ANALYZE tmpMI_All; 
-      
-      CREATE TEMP TABLE tmpMIF ON COMMIT DROP AS
-      SELECT MovementItemFloat.*
-      FROM MovementItemFloat
-        INNER JOIN (SELECT tmpMI_All.Id FROM tmpMI_All) AS test ON test.ID = MovementItemFloat.MovementItemId;
-        
-      ANALYZE tmpMIF;
-
-                          
      CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
      --Данные Справочника График заказа/доставки
@@ -1561,12 +1541,12 @@ BEGIN
                              )
 
 
-    /*  , tmpMI_All AS (SELECT MovementItem.*
+      , tmpMI_All AS (SELECT MovementItem.*
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                         )*/
+                         )
         -- 2.1
       , tmpOF_Goods_MinimumLot AS (SELECT *
                                    FROM ObjectFloat
@@ -1679,11 +1659,11 @@ BEGIN
                                            --     AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                     )
 
-      /*, tmpMIF AS (SELECT MovementItemFloat.*
+      , tmpMIF AS (SELECT MovementItemFloat.*
                    FROM MovementItemFloat
                      INNER JOIN (SELECT tmpMI_Master.Id FROM tmpMI_Master) AS test ON test.ID = MovementItemFloat.MovementItemId
 --                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Master.Id FROM tmpMI_Master)
-                   )*/
+                   )
       , tmpMIF_Summ AS (SELECT tmpMIF.*
                         FROM tmpMIF
                         WHERE tmpMIF.DescId = zc_MIFloat_Summ()
@@ -1700,20 +1680,6 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
-
-      , tmpMIF_AmountReal AS (SELECT tmpMIF.*
-                              FROM tmpMIF
-                              WHERE tmpMIF.DescId = zc_MIFloat_AmountReal()
-                             )
-      , tmpMIF_SendSUN AS (SELECT tmpMIF.*
-                           FROM tmpMIF
-                           WHERE tmpMIF.DescId = zc_MIFloat_SendSUN()
-                          )
-      , tmpMIF_RemainsSUN AS (SELECT tmpMIF.*
-                              FROM tmpMIF
-                              WHERE tmpMIF.DescId = zc_MIFloat_RemainsSUN()
-                             )
-
       , tmpMILinkObject AS (SELECT MILinkObject.*
                             FROM MovementItemLinkObject AS MILinkObject
 --                              INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MILinkObject.MovementItemId
@@ -1802,11 +1768,6 @@ BEGIN
                           * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
                        , MIFloat_AmountManual.ValueData                                   AS AmountManual
                        , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
-
-                       , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
-                       , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
-                       , MIFloat_RemainsSUN.ValueData :: TFloat  AS RemainsSUN
-
                        , MovementItem.isErased
 
                        , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
@@ -1845,10 +1806,6 @@ BEGIN
                        LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
-
-                       LEFT JOIN tmpMIF_AmountReal   AS MIFloat_AmountReal   ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
-                       LEFT JOIN tmpMIF_SendSUN      AS MIFloat_SendSUN      ON MIFloat_SendSUN.MovementItemId    = MovementItem.Id
-                       LEFT JOIN tmpMIF_RemainsSUN   AS MIFloat_RemainsSUN   ON MIFloat_RemainsSUN.MovementItemId = MovementItem.Id
 --LIMIT 2
                   )
 
@@ -1887,9 +1844,6 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
-                       , tmpMI_all_MinLot.AmountReal
-                       , tmpMI_all_MinLot.SendSUNAmount
-                       , tmpMI_all_MinLot.RemainsSUN
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
 
@@ -1970,9 +1924,6 @@ BEGIN
                          , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                          , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
                          , tmpMI.ListDiffAmount
-                         , tmpMI.AmountReal
-                         , tmpMI.SendSUNAmount
-                         , tmpMI.RemainsSUN
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
@@ -2391,9 +2342,9 @@ BEGIN
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
-           , tmpMI.AmountReal                                   ::TFloat     AS AmountReal
-           , tmpMI.SendSUNAmount                                ::TFloat     AS SendSUNAmount
-           , tmpMI.RemainsSUN                                   ::TFloat     AS RemainsSUN
+           , 0                            ::TFloat    AS AmountReal
+           , 0                            ::TFloat    AS SendSUNAmount
+           , 0                            ::TFloat    AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 
