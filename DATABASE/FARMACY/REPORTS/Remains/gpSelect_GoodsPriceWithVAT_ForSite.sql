@@ -1,10 +1,12 @@
--- Function: gpSelect_CashGoodsJuridicalPrice()
+-- Function: gpSelect_GoodsPriceWithVAT_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_CashGoodsJuridicalPrice (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPriceWithVAT_ForSite (Integer, Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashGoodsJuridicalPrice(
+CREATE OR REPLACE FUNCTION gpSelect_GoodsPriceWithVAT_ForSite(
     IN inGoodsID        Integer,    -- Товар
-   OUT outPrece         TFloat,     -- Цена
+    IN inUnitID         Integer,    -- Подразделение
+    IN inPreceWithVAT   TFloat,     -- Цена с НДС
+   OUT outPreceWithVAT  TFloat,     -- Цена с НДС
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TFloat
@@ -18,16 +20,16 @@ $BODY$
   DECLARE vbAreaId     Integer;
 BEGIN
 
+     IF inPreceWithVAT > 15 
+     THEN
+       outPreceWithVAT := inPreceWithVAT;
+       RETURN;
+     END IF;
+     
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
      vbUserId := inSession;
      vbObjectId := COALESCE (lpGet_DefaultValue ('zc_Object_Retail', vbUserId), '0');
-     vbUnitIdStr := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '0');
-     IF vbUnitIdStr <> '' THEN
-        vbUnitId := vbUnitIdStr;
-     ELSE
-     	vbUnitId := 0;
-     END IF;
 
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
@@ -37,8 +39,7 @@ BEGIN
        vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId(inSession));
      END IF;
 
-  outPrece =      
-     (     WITH DD AS (SELECT DISTINCT
+     WITH DD AS (SELECT DISTINCT
             Object_MarginCategoryItem_View.MarginPercent,
             Object_MarginCategoryItem_View.MinPrice,
             Object_MarginCategoryItem_View.MarginCategoryId,
@@ -84,28 +85,17 @@ BEGIN
           , GoodsPriceAll AS 
              (SELECT
                      LinkGoodsObject.GoodsId             AS GoodsId,
-                     LoadPriceList.JuridicalId           AS JuridicalId,
-                     Object_Goods.NDS                    AS NDS,
-                     LoadPriceListItem.Price             AS JuridicalPrice,
-                     CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
-                               THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0))
-                          ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
-                       END                       :: TFloat AS MarginPercent,
-                     LoadPriceListItem.ExpirationDate    AS ExpirationDate,
-
+                     Round(LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100, 2) AS Price,
                      zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                         -- Цена С НДС
-                                       CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                                THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
-                                            ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
-                                       END,                                                                             -- % наценки в КАТЕГОРИИ
-                                       COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),              -- ТОП позиция
-                                       COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
-                                       0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
-                                       ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
-                                     )         :: TFloat AS Price,
-                     ObjectGoodsView.IsClose AS IsClose,
-                     ObjectGoodsView.isFirst AS isFirst,
-                     ObjectGoodsView.isSecond AS isSecond
+                             CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
+                                      THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
+                                  ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
+                             END,                                                                             -- % наценки в КАТЕГОРИИ
+                             COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),              -- ТОП позиция
+                             COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
+                             0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
+                             ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
+                           )         :: TFloat AS PriceOut
 
                    FROM LoadPriceListItem
 
@@ -155,23 +145,17 @@ BEGIN
                          COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis()))
           , GoodsPriceOne AS 
               (SELECT
-                      ROW_NUMBER() OVER (PARTITION BY GoodsPriceAll.GoodsId ORDER BY GoodsPriceAll.Price)::Integer AS Ord,
+                      ROW_NUMBER() OVER (PARTITION BY GoodsPriceAll.GoodsId ORDER BY GoodsPriceAll.PriceOut)::Integer AS Ord,
                       GoodsPriceAll.GoodsId           AS GoodsId,
-                      GoodsPriceAll.JuridicalId       AS JuridicalId,
-                      GoodsPriceAll.NDS               AS NDS,
-                      GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
-                      GoodsPriceAll.MarginPercent     AS MarginPercent,
-                      GoodsPriceAll.ExpirationDate    AS ExpirationDate,
-                      GoodsPriceAll.Price             AS Price,
-                      GoodsPriceAll.isClose           AS isClose,
-                      GoodsPriceAll.isFirst           AS isFirst,
-                      GoodsPriceAll.isSecond          AS isSecond
+                      GoodsPriceAll.Price             AS Price
                FROM GoodsPriceAll)
 
-     SELECT
-              GoodsPriceOne.Price
+     SELECT GoodsPriceOne.Price
+     INTO outPreceWithVAT
      FROM GoodsPriceOne
-     WHERE Ord = 1);
+     WHERE Ord = 1;
+     
+     outPreceWithVAT := COALESCE(outPreceWithVAT, inPreceWithVAT);
 
 END;
 $BODY$
@@ -186,4 +170,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoodsJuridicalPrice (inGoodsID := 5740550, inSession := '3354092');
+-- SELECT * FROM gpSelect_GoodsPriceWithVAT_ForSite (inGoodsID := 5740550, inUnitID := 377610, inPreceWithVAT := 10, inSession := '3354092');

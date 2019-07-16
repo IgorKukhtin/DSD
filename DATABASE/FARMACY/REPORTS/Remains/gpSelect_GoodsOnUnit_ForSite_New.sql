@@ -1,8 +1,8 @@
 -- Function: gpSelect_GoodsOnUnit_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (Text, Text, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_Ol (Text, Text, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite(
+CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite_Ol(
     IN inUnitId_list      Text     ,  -- Список Подразделений, через зпт
     IN inGoodsId_list     Text     ,  -- Список товаров, через зпт
     IN inFrontSite        Boolean  ,  -- Выводить фронт сайта
@@ -27,13 +27,13 @@ RETURNS TABLE (Id                Integer
              , ContractName      TVarChar   -- Договор (по которому найдена миним цена)
              , ExpirationDate    TDateTime -- срок годности (по которому найдена миним цена)
 
-             , Remains_1         TFloat    -- Остаток до месяца (с учетом резерва)
-             , Price_unit_1      TFloat -- цена аптеки
-             , Price_unit_sale_1 TFloat -- цена аптеки со скидкой
+             , Remains_1         TFloat   -- Остаток до месяца (с учетом резерва)
+             , Price_unit_1      TFloat   -- цена аптеки
+             , Price_unit_sale_1 TFloat   -- цена аптеки со скидкой
 
              , Remains_6         TFloat    -- Остаток более месяца до 6 (с учетом резерва)
-             , Price_unit_6      TFloat -- цена аптеки
-             , Price_unit_sale_6 TFloat -- цена аптеки со скидкой
+             , Price_unit_6      TFloat    -- цена аптеки
+             , Price_unit_sale_6 TFloat    -- цена аптеки со скидкой
               )
 AS
 $BODY$
@@ -52,7 +52,17 @@ $BODY$
    DECLARE vbOperDate_Begin4 TDateTime;
    DECLARE vbSiteDiscount TFloat;
    DECLARE vbQueryText Text;
-   
+
+   DECLARE vbDate0    TDateTime;
+   DECLARE vbDate180  TDateTime;
+   DECLARE vbDate30   TDateTime;
+
+   DECLARE vbMonth_0   TFloat;
+   DECLARE vbMonth_1   TFloat;
+   DECLARE vbMonth_6   TFloat;
+   DECLARE vbIsMonth_0 Boolean;
+   DECLARE vbIsMonth_1 Boolean;
+   DECLARE vbIsMonth_6 Boolean;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -66,6 +76,42 @@ BEGIN
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
     vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
+    -- получаем значения из справочника
+    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
+         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
+           INTO vbMonth_0, vbIsMonth_0
+    FROM Object  AS Object_PartionDateKind
+         LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+         LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0();
+    --
+    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
+         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
+           INTO vbMonth_1, vbIsMonth_1
+    FROM Object  AS Object_PartionDateKind
+         LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+         LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1();
+    --
+    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
+         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
+           INTO vbMonth_6, vbIsMonth_6
+    FROM Object  AS Object_PartionDateKind
+         LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+         LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6();
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
     THEN
@@ -81,6 +127,13 @@ BEGIN
     ELSE
         DELETE FROM _tmpUnitMinPrice_List;
     END IF;
+
+    -- даты + 6 месяцев, + 1 месяц
+    vbDate180 := CURRENT_DATE + CASE WHEN vbIsMonth_6 = TRUE THEN vbMonth_6 ||' MONTH'  ELSE vbMonth_6 ||' DAY' END :: INTERVAL;
+    vbDate30  := CURRENT_DATE + CASE WHEN vbIsMonth_1 = TRUE THEN vbMonth_1 ||' MONTH'  ELSE vbMonth_1 ||' DAY' END :: INTERVAL;
+    vbDate0   := CURRENT_DATE + CASE WHEN vbIsMonth_0 = TRUE THEN vbMonth_0 ||' MONTH'  ELSE vbMonth_0 ||' DAY' END :: INTERVAL;
+
+--    raise notice 'Value 05: % % %', vbDate0, vbDate30, vbDate180;
 
     -- парсим подразделения
     vbIndex := 1;
@@ -128,10 +181,10 @@ BEGIN
                              AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                           )
               SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()';
-      
+
       EXECUTE vbQueryText;
     END IF;
-    
+
     -- !!!Оптимизация!!!
     ANALYZE _tmpUnitMinPrice_List;
 
@@ -208,6 +261,133 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCount;
 
+    -- еще оптимизируем - _tmpContainerCountPD
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE _tmpContainerCountPD (UnitId Integer, GoodsId Integer, PartionDateKindId Integer, Remains TFloat, PriceWithVAT TFloat, PartionDateDiscount TFloat, Price TFloat) ON COMMIT DROP;
+    ELSE
+        DELETE FROM _tmpContainerCountPD;
+    END IF;
+    --
+    INSERT INTO _tmpContainerCountPD (UnitId, GoodsId, PartionDateKindId, Remains, PriceWithVAT, PartionDateDiscount)
+      WITH           -- Резервы по срокам
+            ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
+                                      , Sum(MovementItemChild.Amount)::TFloat       AS Amount
+                                 FROM MovementBoolean AS MovementBoolean_Deferred
+                                      INNER JOIN Movement ON Movement.Id       = MovementBoolean_Deferred.MovementId
+                                                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                         AND Movement.DescId   = zc_Movement_Check()
+
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                    ON MovementLinkObject_Unit.movementid = Movement.Id
+                                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.isErased   = FALSE
+
+                                      INNER JOIN MovementItem AS MovementItemMaster
+                                                              ON MovementItemMaster.MovementId = Movement.Id
+                                                             AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                             AND MovementItemMaster.isErased   = FALSE
+
+                                      INNER JOIN MovementItem AS MovementItemChild
+                                                              ON MovementItemChild.MovementId = Movement.Id
+                                                             AND MovementItemChild.ParentId = MovementItemMaster.Id
+                                                             AND MovementItemChild.DescId     = zc_MI_Child()
+                                                             AND MovementItemChild.Amount     > 0
+                                                             AND MovementItemChild.isErased   = FALSE
+
+                                      LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                  ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                                 AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                 WHERE MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                   AND MovementBoolean_Deferred.ValueData = TRUE
+                                 GROUP BY  MIFloat_ContainerId.ValueData
+                                )
+             -- Остатки по срокам
+          , tmpPDContainerAll AS (SELECT Container.Id,
+                                         Container.WhereObjectId,
+                                         Container.ObjectId,
+                                         Container.ParentId,
+                                         Container.Amount - COALESCE(ReserveContainer.Amount, 0) AS Amount,
+                                         ContainerLinkObject.ObjectId                            AS PartionGoodsId,
+                                         ReserveContainer.Amount                                 AS Reserve
+                                  FROM _tmpGoodsMinPrice_List
+
+                                       INNER JOIN Container ON Container.ObjectId = _tmpGoodsMinPrice_List.GoodsId_retail
+                                                           AND Container.DescId = zc_Container_CountPartionDate()
+                                                           AND Container.WhereObjectId IN (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List)
+
+                                       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                       LEFT OUTER JOIN ReserveContainer ON ReserveContainer.ContainerID = Container.Id
+                                  WHERE (Container.Amount - COALESCE(ReserveContainer.Amount, 0)) > 0)
+          , tmpPDContainer AS (SELECT Container.Id,
+                                      Container.WhereObjectId,
+                                      Container.ObjectId,
+                                      Container.Amount,
+                                      COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin,
+                                      COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent,
+                                      COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT,
+                                      CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()  -- просрочено
+                                           WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- Меньше 1 месяца
+                                           WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- Меньше 6 месяца
+                                           ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId           -- Востановлен с просрочки
+                               FROM tmpPDContainerAll AS Container
+
+                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
+
+                                    LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                         ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                                        AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueMin
+                                                          ON ObjectFloat_PartionGoods_ValueMin.ObjectId =  Container.PartionGoodsId
+                                                         AND ObjectFloat_PartionGoods_ValueMin.DescId = zc_ObjectFloat_PartionGoods_ValueMin()
+
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
+                                                          ON ObjectFloat_PartionGoods_Value.ObjectId =  Container.PartionGoodsId
+                                                         AND ObjectFloat_PartionGoods_Value.DescId = zc_ObjectFloat_PartionGoods_Value()
+
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
+                                                          ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
+                                                         AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
+                                )
+          , tmpPDPriceWithVAT AS (SELECT ROW_NUMBER()OVER(PARTITION BY Container.WhereObjectId, Container.ObjectId, Container.PartionDateKindId ORDER BY Container.Id DESC) as ORD
+                                       , Container.WhereObjectId
+                                       , Container.ObjectId
+                                       , Container.PartionDateKindId
+                                       , Container.PriceWithVAT
+                                  FROM tmpPDContainer AS Container
+                                  WHERE COALESCE (Container.PriceWithVAT , 0) <> 0
+                                  )
+        SELECT Container.WhereObjectId
+             , Container.ObjectId
+             , Container.PartionDateKindId                                                  AS PartionDateKindId
+             , SUM (Container.Amount)                                                       AS Remains
+             , gpSelect_GoodsPriceWithVAT_ForSite (Container.ObjectId, 
+               Container.WhereObjectId, MAX (Container.PriceWithVAT), inSession)            AS PriceWithVAT
+             , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
+                         THEN 0
+                         WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_6()
+                         THEN Container.Percent
+                         ELSE Container.PercentMin END)::TFloat                             AS PartionDateDiscount
+        FROM tmpPDContainer AS Container
+
+             LEFT JOIN tmpPDPriceWithVAT ON tmpPDPriceWithVAT.ObjectId = Container.ObjectId
+                                        AND tmpPDPriceWithVAT.WhereObjectId = Container.WhereObjectId
+                                        AND tmpPDPriceWithVAT.PartionDateKindId = Container.PartionDateKindId
+                                        AND tmpPDPriceWithVAT.Ord = 1
+
+        GROUP BY Container.WhereObjectId
+               , Container.ObjectId
+               , Container.PartionDateKindId;
+
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpContainerCountPD;
+
     -- еще оптимизируем - _tmpList
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpList'))
     THEN
@@ -219,7 +399,7 @@ BEGIN
     --
     INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
 
-                SELECT DISTINCT 
+                SELECT DISTINCT
                        _tmpUnitMinPrice_List.UnitId
                      , _tmpUnitMinPrice_List.AreaId
                      , _tmpGoodsMinPrice_List.GoodsId
@@ -321,7 +501,7 @@ BEGIN
           FROM GoodsList_all
                INNER JOIN MinPrice_ForSite AS MinPriceList
                                            ON GoodsList_all.GoodsId = MinPriceList.GoodsId;
-                                           
+
     -- запомнили время после lpSelectMinPrice_List
     vbOperDate_Begin3:= CLOCK_TIMESTAMP();
 
@@ -408,10 +588,10 @@ BEGIN
                      -- Фикс цена для всей Сети
                      LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
                                             ON ObjectFloat_Goods_Price.ObjectId = ObjectLink_Price_Goods.ChildObjectId
-                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                              ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Price_Goods.ChildObjectId
-                                            AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
+                                            AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
@@ -480,7 +660,7 @@ BEGIN
                         ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale
              , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0)      / 100), 2) :: TFloat  AS Price_min
              , ROUND (CASE WHEN vbSiteDiscount = 0 THEN ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0) / 100), 2)
-                        ELSE CEIL(ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0) / 100), 2) * 
+                        ELSE CEIL(ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0) / 100), 2) *
                         (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_min_sale
              , ROUND (MinPrice_List_D.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
 
@@ -489,17 +669,26 @@ BEGIN
              , MinPrice_List.ContractId
              , Object_Contract.ValueData       AS ContractName
              , MinPrice_List.PartionGoodsDate  AS ExpirationDate
-             
-             , Null::TFloat                    AS Remains_1
-             , Price_Unit.Price                AS Price_unit_1
-             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit.Price
-                        ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale_1
 
-             , Null::TFloat                    AS Remains_6
-             , Price_Unit.Price                AS Price_unit_6
-             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit.Price
-                        ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale_6
-             
+             , PDGoodsRemains1.Remains::TFloat AS Remains_1
+             , (CEIL(Price_Unit.Price * (100.0 - PDGoodsRemains1.PartionDateDiscount) / 100 * 10.0) / 10.0)::TFloat AS Price_unit_1
+             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN CEIL(Price_Unit.Price * (100.0 - PDGoodsRemains1.PartionDateDiscount) / 100 * 10.0) / 10.0
+                      ELSE CEIL(CEIL(Price_Unit.Price * (100.0 - PDGoodsRemains1.PartionDateDiscount) / 100 * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2)::TFloat AS Price_unit_sale_1
+
+             , PDGoodsRemains6.Remains::TFloat AS Remains_6
+             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL 
+                     ELSE CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
+                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - PDGoodsRemains6.PriceWithVAT) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+                               ELSE Price_Unit.Price END * 10.0) / 10.0 END::TFloat                AS Price_unit_6
+             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL 
+                     ELSE ROUND (CASE WHEN vbSiteDiscount = 0 THEN
+                 CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
+                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - PDGoodsRemains6.PriceWithVAT) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+                     ELSE Price_Unit.Price END * 10.0) / 10.0
+                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
+                     THEN ROUND(Price_Unit.Price - PDGoodsRemains6.PriceWithVAT * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+                     ELSE Price_Unit.Price END * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) END :: TFloat AS Price_unit_sale_6
+
 
         FROM _tmpList AS tmpList -- _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
              -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1
@@ -535,9 +724,19 @@ BEGIN
              LEFT JOIN MarginCategory_site ON MinPrice_List.Price >= MarginCategory_site.MinPrice AND MinPrice_List.Price < MarginCategory_site.MaxPrice
              LEFT JOIN Object AS Object_MarginCategory      ON Object_MarginCategory.Id      = MarginCategory.MarginCategoryId
              LEFT JOIN Object AS Object_MarginCategory_site ON Object_MarginCategory_site.Id = vbMarginCategoryId_site
+
+             LEFT JOIN _tmpContainerCountPD AS PDGoodsRemains1
+                                            ON PDGoodsRemains1.GoodsId = Object_Goods.Id
+                                           AND PDGoodsRemains1.UnitId = tmpList.UnitId
+                                           AND PDGoodsRemains1.PartionDateKindId = zc_Enum_PartionDateKind_1()
+
+             LEFT JOIN _tmpContainerCountPD AS PDGoodsRemains6
+                                            ON PDGoodsRemains6.GoodsId = Object_Goods.Id
+                                           AND PDGoodsRemains6.UnitId = tmpList.UnitId
+                                           AND PDGoodsRemains6.PartionDateKindId = zc_Enum_PartionDateKind_6()
         ORDER BY Price_Unit.Price
        ;
-       
+
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
 /*     INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -596,4 +795,8 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
 --
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inFrontSite := False, inSession:= zfCalc_UserSite()) ORDER BY 1;
---SELECT * FROM gpSelect_GoodsOnUnit_ForSite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', False, zfCalc_UserSite()) AS p ORDER BY p.price_unit
+--
+--SELECT * FROM gpSelect_GoodsOnUnit_ForSite_Ol('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', False, zfCalc_UserSite()) AS p ORDER BY p.price_unit
+
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377610', inGoodsId_list:= '2149403', inFrontSite := False, inSession:= zfCalc_UserSite());
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_Ol (inUnitId_list:= '377610', inGoodsId_list:= '11407', inFrontSite := False, inSession:= zfCalc_UserSite());

@@ -235,11 +235,15 @@ BEGIN
                                                         ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
                                                       AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
                                   )
+       , tmpCashGoodsPriceWithVAT AS (SELECT * FROM gpSelect_CashGoodsPriceWithVAT('3'))
        , tmpPDPriceWithVAT AS (SELECT ROW_NUMBER()OVER(PARTITION BY Container.ObjectId, Container.PartionDateKindId ORDER BY Container.Id DESC) as ORD
                                     , Container.ObjectId
                                     , Container.PartionDateKindId
-                                    , Container.PriceWithVAT
+                                    , CASE WHEN Container.PriceWithVAT <= 15 
+                                           THEN COALESCE (tmpCashGoodsPriceWithVAT.PriceWithVAT, Container.PriceWithVAT)
+                                           ELSE Container.PriceWithVAT END       AS PriceWithVAT
                                FROM tmpPDContainer AS Container
+                                    LEFT JOIN tmpCashGoodsPriceWithVAT ON tmpCashGoodsPriceWithVAT.ID = Container.ObjectId
                                WHERE COALESCE (Container.PriceWithVAT , 0) <> 0
                                )
        , tmpPDGoodsRemains AS (SELECT Container.ObjectId
@@ -247,7 +251,7 @@ BEGIN
                                     , SUM (Container.Amount)                                            AS Remains
                                     , SUM (Container.Reserve)                                           AS Reserve
                                     , MIN (Container.ExpirationDate)::TDateTime                         AS MinExpirationDate
-                                    , MAX (Container.PriceWithVAT)                                      AS PriceWithVAT
+                                    , MAX (tmpPDPriceWithVAT.PriceWithVAT)                              AS PriceWithVAT
 
                                     , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
                                                 THEN 0
@@ -909,10 +913,9 @@ BEGIN
             WHEN zc_Enum_PartionDateKind_0() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
             WHEN zc_Enum_PartionDateKind_1() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
             WHEN zc_Enum_PartionDateKind_6() THEN
-              CASE WHEN CashSessionSnapShot.Price > COALESCE(CASE WHEN CashSessionSnapShot.PriceWithVAT <= 15 THEN 
-                COALESCE(gpSelect_CashGoodsJuridicalPrice (Goods.Id, inSession), CashSessionSnapShot.PriceWithVAT) ELSE CashSessionSnapShot.PriceWithVAT END, 0)
-              THEN ROUND(CashSessionSnapShot.Price -  (CashSessionSnapShot.Price - COALESCE(CASE WHEN CashSessionSnapShot.PriceWithVAT <= 15 THEN 
-                COALESCE(gpSelect_CashGoodsJuridicalPrice (Goods.Id, inSession), CashSessionSnapShot.PriceWithVAT) ELSE CashSessionSnapShot.PriceWithVAT END, 0)) * CashSessionSnapShot.PartionDateDiscount / 100, 2)
+              CASE WHEN CashSessionSnapShot.Price > CashSessionSnapShot.PriceWithVAT
+              THEN ROUND(CashSessionSnapShot.Price - (CashSessionSnapShot.Price - CashSessionSnapShot.PriceWithVAT) * 
+                         CashSessionSnapShot.PartionDateDiscount / 100, 2)
               ELSE CashSessionSnapShot.Price END
             ELSE NULL END::TFloat                                  AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount

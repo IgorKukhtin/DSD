@@ -117,8 +117,18 @@ BEGIN
     -- и сразу формируем строки чайлд
     --по товару выбираем партии
     -- остатки по подразделению
-    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpChild (Id Integer, ContainerId Integer, MovementId_Income Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpRemains'))
+    THEN
+      DELETE FROM tmpRemains;
+    ELSE
+      CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
+    END IF;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpChild'))
+    THEN
+      DELETE FROM tmpChild;    
+    ELSE
+      CREATE TEMP TABLE tmpChild (Id Integer, ContainerId Integer, MovementId_Income Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
+    END IF;
 
     IF COALESCE (inContainerId, 0) = 0
     THEN
