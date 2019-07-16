@@ -23,11 +23,13 @@ $BODY$
   DECLARE vbMonth_1  TFloat;
   DECLARE vbMonth_6  TFloat;
 
+  DECLARE vbDay_0  Integer;
+  DECLARE vbDay_1  Integer;
+  DECLARE vbDay_6  Integer;
+
   DECLARE vbOperDate TDateTime;
   DECLARE vbDate180  TDateTime;
   DECLARE vbDate30   TDateTime;
-
-  DECLARE vbPartion   boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -42,7 +44,7 @@ BEGIN
      END IF;
 
     -- получаем значения из справочника для разделения по срокам
-    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
+/*    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
                   FROM Object  AS Object_PartionDateKind
                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
@@ -64,9 +66,32 @@ BEGIN
     -- даты + 6 месяцев, + 1 месяц
     vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
-    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
+    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL; */
 
-    vbPartion := False;
+    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+    -- даты + 6 месяцев, + 1 месяц
+    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
+    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
+    vbOperDate:= CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+
 
      RETURN QUERY
      WITH tmpContainer AS (SELECT Container.Id, 
@@ -116,9 +141,9 @@ BEGIN
                                    Container.ParentID,
                                    Container.Amount,
                                    COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate,
-                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbOperDate   THEN zc_Enum_PartionDateKind_0()  -- просрочено
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- Меньше 1 месяца
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- Меньше 6 месяца
+                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbOperDate THEN zc_Enum_PartionDateKind_0()  -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30   THEN zc_Enum_PartionDateKind_1()  -- Меньше 1 месяца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180  THEN zc_Enum_PartionDateKind_6()  -- Меньше 6 месяца
                                         ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId           -- Востановлен с просрочки
 
                             FROM tmpPDContainerAll AS Container
@@ -178,6 +203,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 15.07.19                                                                                     * 
  28.03.19                                                                                     *
 */
 

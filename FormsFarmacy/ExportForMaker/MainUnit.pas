@@ -614,7 +614,7 @@ begin
        if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
        begin
          DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-         DateStart := StartOfTheMonth(DateEnd);
+         DateStart := IncDay(StartOfTheMonth(DateEnd), 14);
 
          FormAddFile := True;
          DateEndAdd := DateEnd;
@@ -622,7 +622,7 @@ begin
        end else
        begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-         DateEnd := IncDay(DateStart, 14);
+         DateEnd := IncDay(DateStart, 13);
        end;
      end else if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
      begin

@@ -12,9 +12,10 @@
      DECLARE vbMovementID Integer;
      DECLARE vbDate180  TDateTime;
      DECLARE vbMonth_6  TFloat;
+     DECLARE vbDay_6  Integer;
   BEGIN
 
-      vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
+/*      vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
                     FROM Object  AS Object_PartionDateKind
                          LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                                ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
@@ -22,7 +23,18 @@
                     WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
 
       -- даты + 6 месяцев, + 1 месяц
-      vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
+      vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL; */
+
+      vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                             ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+      -- даты + 6 месяцев, + 1 месяц
+      vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
+
 
       IF NOT EXISTS(
             WITH
@@ -129,6 +141,7 @@
   /*
    ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                  Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.07.19                                                         * 
  18.06.19                                                         *
    */
 

@@ -43,6 +43,10 @@ $BODY$
    DECLARE vbMonth_1  TFloat;
    DECLARE vbMonth_6  TFloat;
 
+   DECLARE vbDay_0  Integer;
+   DECLARE vbDay_1  Integer;
+   DECLARE vbDay_6  Integer;
+
    DECLARE vbDate0    TDateTime;
    DECLARE vbDate180  TDateTime;
    DECLARE vbDate30   TDateTime;
@@ -74,6 +78,7 @@ BEGIN
     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
     -- получаем значения из справочника для разделения по срокам
+/*
     vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
                   FROM Object  AS Object_PartionDateKind
                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
@@ -97,6 +102,32 @@ BEGIN
     vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
     vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
+*/
+
+    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+    -- даты + 6 месяцев, + 1 месяц
+    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
+    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
+    vbDate0   := CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+
 
     IF EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
               WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
@@ -636,11 +667,11 @@ BEGIN
               , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
                                             , Object_PartionDateKind.ObjectCode   AS Code
                                             , Object_PartionDateKind.ValueData    AS Name
-                                            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat AS AmountMonth
+                                            , COALESCE (ObjectFloatDay.ValueData / 30, 0) :: TFLoat AS AmountMonth
                                        FROM Object AS Object_PartionDateKind
-                                            LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                                                  ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                                                 AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                            LEFT JOIN ObjectFloat AS ObjectFloatDay
+                                                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
+                                                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
               ,tmpNotSold AS (SELECT DISTINCT MovementItemContainer.ObjectId_Analyzer   AS GoodsId
@@ -873,14 +904,15 @@ BEGIN
           , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
           , tmpGoodsSP.PaymentSP                                   AS PaymentSP
           , CASE WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_Good()
-            THEN 7 ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
+            THEN vbDay_6 / 30.0 + 1.0 ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
           , CASE CashSessionSnapShot.PartionDateKindId
             WHEN zc_Enum_PartionDateKind_0() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
             WHEN zc_Enum_PartionDateKind_1() THEN ROUND(CashSessionSnapShot.Price * (100.0 - CashSessionSnapShot.PartionDateDiscount) / 100, 2)
             WHEN zc_Enum_PartionDateKind_6() THEN
-              CASE WHEN CashSessionSnapShot.Price > COALESCE(CashSessionSnapShot.PriceWithVAT, 0)
-              THEN ROUND(CashSessionSnapShot.Price -  (CashSessionSnapShot.Price -
-                         COALESCE(CashSessionSnapShot.PriceWithVAT, 0)) * CashSessionSnapShot.PartionDateDiscount / 100, 2)
+              CASE WHEN CashSessionSnapShot.Price > COALESCE(CASE WHEN CashSessionSnapShot.PriceWithVAT <= 15 THEN 
+                COALESCE(gpSelect_CashGoodsJuridicalPrice (Goods.Id, inSession), CashSessionSnapShot.PriceWithVAT) ELSE CashSessionSnapShot.PriceWithVAT END, 0)
+              THEN ROUND(CashSessionSnapShot.Price -  (CashSessionSnapShot.Price - COALESCE(CASE WHEN CashSessionSnapShot.PriceWithVAT <= 15 THEN 
+                COALESCE(gpSelect_CashGoodsJuridicalPrice (Goods.Id, inSession), CashSessionSnapShot.PriceWithVAT) ELSE CashSessionSnapShot.PriceWithVAT END, 0)) * CashSessionSnapShot.PartionDateDiscount / 100, 2)
               ELSE CashSessionSnapShot.Price END
             ELSE NULL END::TFloat                                  AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
@@ -966,6 +998,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 15.07.19                                                                                                    * 
  28.05.19                                                                                                    * PartionDateKindId
  13.05.19                                                                                                    *
  24.04.19                                                                                                    * Helsi

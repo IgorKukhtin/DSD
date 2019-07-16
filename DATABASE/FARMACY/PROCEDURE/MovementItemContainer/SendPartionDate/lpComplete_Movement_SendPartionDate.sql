@@ -12,6 +12,8 @@ $BODY$
    DECLARE vbUnitId   Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbMonth_6  Integer;
+   DECLARE vbDay_6  Integer;
+   DECLARE vbDate180 TDateTime;
    DECLARE vbTransfer Boolean;
 BEGIN
 
@@ -46,13 +48,27 @@ BEGIN
 
 
      --
-     vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
+/*     vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
                    FROM Object  AS Object_PartionDateKind
                         LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                              AND ObjectFloat_Month.DescId   = zc_ObjectFloat_PartionDateKind_Month()
                    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
                   );
+
+      -- даты + 6 месяцев, + 1 месяц
+      vbDate180 := vbOperDate+ (vbMonth_6||' MONTH' ) ::INTERVAL; */
+
+      vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                  FROM Object  AS Object_PartionDateKind
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                             ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                            AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+      -- даты + 6 месяцев, + 1 месяц
+      vbDate180 := vbOperDate + (vbDay_6||' DAY' ) ::INTERVAL;
+
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_PartionDate'))
@@ -74,7 +90,7 @@ BEGIN
      THEN
        PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, inMovementId, tmp.Amount, NULL)
        FROM (SELECT MI_Master.Id AS MovementItemId, MI_Master.ObjectId AS GoodsId
-                  , SUM (CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
+                  , SUM (CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
              FROM MovementItem AS MI_Master
                   LEFT JOIN MovementItem ON MI_Master.MovementId  = inMovementId
                                         AND MovementItem.ParentId = MI_Master.Id
@@ -93,7 +109,7 @@ BEGIN
        INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercent, ContainerId_Transfer)
           SELECT MovementItem.Id                    AS MovementItemId
                , MovementItem.ObjectId              AS GoodsId
-               , CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END AS Amount
+               , CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
                , MIFloat_ContainerId.ValueData      AS ContainerId_in
                , 0                                  AS ContainerId
                , MIFloat_MovementId.ValueData       AS MovementId_in
@@ -152,7 +168,7 @@ BEGIN
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased   = FALSE
-            AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbOperDate + (vbMonth_6||' MONTH' ) :: INTERVAL THEN MovementItem.Amount ELSE 0 END > 0
+            AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN MovementItem.Amount ELSE 0 END > 0
          ;
      ELSE
 
@@ -328,7 +344,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 07.07.19                                                      *
+ 15.07.19                                                       * 
+ 07.07.19                                                       *
  27.06.19                                                       *
  21.06.19                                                       *
  15.08.18         *
