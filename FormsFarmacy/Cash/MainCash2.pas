@@ -3191,7 +3191,17 @@ begin
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 9) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) + ')';
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 12) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 14) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 16) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 18) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 12) + ')';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -3321,6 +3331,16 @@ begin
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 7) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 9) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 12) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 14) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 16) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 18) +
+          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 10) + ')';
         RemainsCDS.Filtered := True;
       except
