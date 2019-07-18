@@ -60,6 +60,13 @@ object OverdueJournalForm: TOverdueJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 48
       end
+      object Cat_5: TcxGridDBColumn
+        Caption = '5 '#1082#1072#1090'.'
+        DataBinding.FieldName = 'Cat_5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -204,6 +211,10 @@ object OverdueJournalForm: TOverdueJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -283,6 +294,10 @@ object OverdueJournalForm: TOverdueJournalForm
     end
     object dxBarButton2: TdxBarButton
       Action = MultiAction1
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_Cat_5
       Category = 0
     end
   end
@@ -370,6 +385,23 @@ object OverdueJournalForm: TOverdueJournalForm
         end>
       Caption = 'actTransfer_SendPartionDate'
     end
+    object Action1: TAction
+      Caption = 'Action1'
+    end
+    object actUpdate_Cat_5: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Cat_5
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Cat_5
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
+      ImageIndex = 12
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080') ?'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Cash_Overdue'
@@ -445,5 +477,39 @@ object OverdueJournalForm: TOverdueJournalForm
     SummaryItemList = <>
     Left = 168
     Top = 224
+  end
+  object spUpdate_Cat_5: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PartionGoods_Cat_5'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCat_5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Cat_5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCat_5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Cat_5'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 240
   end
 end

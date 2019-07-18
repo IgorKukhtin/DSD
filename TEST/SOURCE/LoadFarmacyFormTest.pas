@@ -1812,12 +1812,14 @@ begin
 
 end;
 
-  procedure TLoadFormTest.LoadSendPartionDateFormTest;
+procedure TLoadFormTest.LoadSendPartionDateFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDate_UpdatePercentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDate_UpdatePercentDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

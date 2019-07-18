@@ -707,7 +707,8 @@ uses
   OverdueChangeDialog in '..\..\FormsFarmacy\Document\OverdueChangeDialog.pas' {OverdueChangeDialogForm: TParentForm},
   SendMenegerJournal in '..\..\FormsFarmacy\Document\SendMenegerJournal.pas' {SendMenegerJournalForm: TParentForm},
   SendMeneger in '..\..\FormsFarmacy\Document\SendMeneger.pas' {SendMenegerForm: TParentForm},
-  SendCashJournal in '..\..\FormsFarmacy\Document\SendCashJournal.pas' {SendCashJournalForm: TParentForm};
+  SendCashJournal in '..\..\FormsFarmacy\Document\SendCashJournal.pas' {SendCashJournalForm: TParentForm},
+  SendPartionDate_UpdatePercentDialog in '..\..\FormsFarmacy\Document\SendPartionDate_UpdatePercentDialog.pas' {SendPartionDate_UpdatePercentDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

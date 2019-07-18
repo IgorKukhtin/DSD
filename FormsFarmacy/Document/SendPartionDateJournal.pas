@@ -50,6 +50,11 @@ type
     ChangePercent: TcxGridDBColumn;
     ChangePercentMin: TcxGridDBColumn;
     Transfer: TcxGridDBColumn;
+    actUpdatePercent: TMultiAction;
+    actExecuteUpdatePercent: TExecuteDialog;
+    actExecUpdatePercent: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    spExecUpdatePercent: TdsdStoredProc;
   private
     { Private declarations }
   public

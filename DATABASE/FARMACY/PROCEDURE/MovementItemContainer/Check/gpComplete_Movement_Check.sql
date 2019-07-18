@@ -22,6 +22,8 @@ BEGIN
                     THEN 0
                 WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Card()
                     THEN 1
+                WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_CardAdd()
+                    THEN 2
            END as PaidType 
          , Movement_Check.CashRegisterId
 

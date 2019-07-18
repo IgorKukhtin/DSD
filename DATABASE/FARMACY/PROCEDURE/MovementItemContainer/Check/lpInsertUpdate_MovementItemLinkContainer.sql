@@ -169,8 +169,15 @@ BEGIN
                                                        ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
                                                       AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                          ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  Container.PartionGoodsId
+                                                         AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5() 
+                                                         
                                   LEFT OUTER JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id =
-                                       CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 THEN zc_Enum_PartionDateKind_0()       -- просрочено
+                                       CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 AND
+                                                 COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE 
+                                                                                                THEN zc_Enum_PartionDateKind_Cat_5()   -- 5 кат (просрочка без наценки)
+                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 THEN zc_Enum_PartionDateKind_0()       -- просрочено
                                             WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30 THEN zc_Enum_PartionDateKind_1()      -- ћеньше 1 мес€ца
                                             WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()     -- ћеньше 6 мес€ца
                                             ELSE zc_Enum_PartionDateKind_Good() END                                                    -- ¬остановлен с просрочки

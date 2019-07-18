@@ -231,10 +231,13 @@ BEGIN
                                    COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin,
                                    COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent,
                                    COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT,
-                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()  -- просрочено
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- ћеньше 1 мес€ца
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- ћеньше 6 мес€ца
-                                        ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId,          -- ¬остановлен с просрочки
+                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 AND 
+                                             COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE 
+                                                                                              THEN zc_Enum_PartionDateKind_Cat_5() -- 5 кат (просрочка без наценки)
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()     -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()     -- ћеньше 1 мес€ца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()     -- ћеньше 6 мес€ца
+                                        ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId,             -- ¬остановлен с просрочки
 
                                    Container.Reserve                                             AS Reserve
                             FROM tmpPDContainerAll AS Container
@@ -256,6 +259,10 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
                                                         ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
                                                       AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  Container.PartionGoodsId
+                                                        AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5() 
                                   )
        , tmpCashGoodsPriceWithVAT AS (SELECT * FROM gpSelect_CashGoodsPriceWithVAT('3'))
        , tmpPDPriceWithVAT AS (SELECT ROW_NUMBER()OVER(PARTITION BY Container.ObjectId, Container.PartionDateKindId ORDER BY Container.Id DESC) as ORD
@@ -277,7 +284,7 @@ BEGIN
 
                                     , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
                                                 THEN 0
-                                                WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_6()
+                                                WHEN Container.PartionDateKindId in (zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
                                                 THEN Container.Percent
                                                 ELSE Container.PercentMin END)::TFloat                  AS PartionDateDiscount
                                FROM tmpPDContainer AS Container
@@ -638,12 +645,18 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             _DIFF.NewRow,
             _DIFF.AccommodationId,
             Object_Accommodation.ValueData                           AS AccommodationName,
-            CASE WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_Good()
-                 THEN 7 ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
+            CASE _DIFF.PartionDateKindId 
+                 WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0  
+                 WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0 
+                 ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
             CASE _DIFF.PartionDateKindId
                  WHEN zc_Enum_PartionDateKind_0() THEN ROUND(_DIFF.Price * (100.0 - _DIFF.PartionDateDiscount) / 100, 2)
                  WHEN zc_Enum_PartionDateKind_1() THEN ROUND(_DIFF.Price * (100.0 - _DIFF.PartionDateDiscount) / 100, 2)
                  WHEN zc_Enum_PartionDateKind_6() THEN
+                    CASE WHEN _DIFF.Price > _DIFF.PriceWithVAT
+                    THEN ROUND(_DIFF.Price - (_DIFF.Price - _DIFF.PriceWithVAT) * _DIFF.PartionDateDiscount / 100, 2)
+                    ELSE _DIFF.Price END
+                 WHEN zc_Enum_PartionDateKind_Cat_5() THEN
                     CASE WHEN _DIFF.Price > _DIFF.PriceWithVAT
                     THEN ROUND(_DIFF.Price - (_DIFF.Price - _DIFF.PriceWithVAT) * _DIFF.PartionDateDiscount / 100, 2)
                     ELSE _DIFF.Price END

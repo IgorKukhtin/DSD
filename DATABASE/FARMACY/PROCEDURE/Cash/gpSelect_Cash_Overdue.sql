@@ -10,7 +10,9 @@ RETURNS TABLE (ORD Integer, id Integer,
                Amount TFloat, PriceWithVAT TFloat, ValueMin TFloat,
                ExpirationDate TDateTime,
                BranchDate TDateTime, Invnumber TVarChar, FromName TVarChar, ContractName TVarChar,
-               ExpirationDateDialog TDateTime, AmountDialog TFloat
+               PartionGoodsId Integer,
+               ExpirationDateDialog TDateTime, AmountDialog TFloat,
+               Cat_5 boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -42,9 +44,11 @@ BEGIN
        , Movement_Income.Invnumber                          AS Invnumber
        , Object_From.ValueData                              AS FromName
        , Object_Contract.ValueData                          AS ContractName
+       , ContainerLinkObject.ObjectId                       AS PartionGoodsId 
 
-       , ObjectFloat_PartionGoods_ExpirationDate.ValueData  AS ExpirationDateDialog
-       , Container.Amount                                   AS AmountDialog
+       , ObjectFloat_PartionGoods_ExpirationDate.ValueData            AS ExpirationDateDialog
+       , Container.Amount                                             AS AmountDialog
+       , COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE)  AS Cat_5
   FROM Container
 
        LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
@@ -64,6 +68,10 @@ BEGIN
        LEFT JOIN ObjectDate AS ObjectFloat_PartionGoods_ExpirationDate
                             ON ObjectFloat_PartionGoods_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
                            AND ObjectFloat_PartionGoods_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                               ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  ContainerLinkObject.ObjectId
+                              AND ObjectBoolean_PartionGoods_Cat_5.DescId = zc_ObjectBoolean_PartionGoods_Cat_5()
 
        LEFT JOIN Movement AS Movement_Income ON Movement_Income.ID = Object_PartionGoods.ObjectCode
 
@@ -97,6 +105,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 17.07.19                                                       *
  28.06.19                                                       *
 */
 

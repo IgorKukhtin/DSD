@@ -16,7 +16,7 @@ uses
   IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
-  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit;
+  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ;
 
 type
   TMainForm = class(TForm)
@@ -1023,11 +1023,31 @@ begin
 end;
 
 procedure TMainForm.btnSendMailClick(Sender: TObject);
+  var vExt : string;
+
+  function GetFileSizeByName(AFileName: string): DWord;
+  var
+    Handle: THandle;
+  begin
+    if not FileExists(AFilename) then exit;
+    Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
+    Result := GetFileSize(Handle, nil);
+    CloseHandle(Handle);
+  end;
+
 begin
 
   if not FileExists(SavePath + FileName + '.xls') then Exit;
 
   Add_Log('Начало отправки отчета: ' + SavePath + FileName + '.xls');
+  vExt := '.xls';
+
+  if GetFileSizeByName(SavePath + FileName + '.xls') > 10000000 then
+  begin
+    vExt := '.zip';
+    Add_Log('Архивирование отчета: ' + SavePath + FileName + vExt);
+    GZCompressFile(SavePath + FileName + '.xls', SavePath + FileName + vExt);
+  end;
 
   if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
        qryMailParam.FieldByName('Mail_Port').AsInteger,
@@ -1037,10 +1057,11 @@ begin
        qryMailParam.FieldByName('Mail_From').AsString,
        Subject,
        '',
-       [SavePath + FileName + '.xls']) then
+       [SavePath + FileName + vExt]) then
   begin
     try
       DeleteFile(SavePath + FileName + '.xls');
+      if FileExists(SavePath + FileName + vExt) then DeleteFile(SavePath + FileName + vExt);
     except
       on E: Exception do
       begin
