@@ -2424,6 +2424,19 @@
 				<Form>SendPartionDate_UpdatePercentDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PartionGoodsList.pas">
+				<Form>PartionGoodsListForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Overdue_UpdateRangeCat5Dialog.pas">
+				<Form>Overdue_UpdateRangeCat5DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ChoiceDeferredCheck.pas">
+				<Form>ChoiceDeferredCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

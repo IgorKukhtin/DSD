@@ -65,7 +65,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   object cxLabel1: TcxLabel
     Left = 8
     Top = 65
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
   end
   object edChangePercent: TcxCurrencyEdit
     Left = 8
@@ -80,7 +80,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   object cxLabel9: TcxLabel
     Left = 8
     Top = 117
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1-6 '#1084#1077#1089')'
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 286

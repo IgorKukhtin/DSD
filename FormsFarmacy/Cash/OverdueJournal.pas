@@ -68,6 +68,13 @@ type
     Action1: TAction;
     actUpdate_Cat_5: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    actUpdateRangeCat5: TMultiAction;
+    actExecuteDialogUpdateRangeCat5: TExecuteDialog;
+    actExecUpdateRangeCat5: TdsdExecStoredProc;
+    spUpdateRangeCat5: TdsdStoredProc;
+    dxBarButton4: TdxBarButton;
+    FormParams: TdsdFormParams;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

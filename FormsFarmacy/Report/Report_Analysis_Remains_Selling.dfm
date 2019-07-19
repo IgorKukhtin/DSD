@@ -13,6 +13,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
   KeyPreview = True
   OldCreateOrder = False
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -422,8 +423,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 252
     TabOrder = 8
-    ExplicitLeft = 2
-    ExplicitTop = 56
     object cxDBPivotGridField1: TcxDBPivotGridField
       AreaIndex = 0
       AllowedAreas = [faColumn, faRow, faFilter]
@@ -958,6 +957,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       item
         ShortCut = 13
       end>
+    ColorRuleList = <>
+    SummaryList = <>
     Left = 456
     Top = 264
   end

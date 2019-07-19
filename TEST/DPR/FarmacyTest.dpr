@@ -708,7 +708,10 @@ uses
   SendMenegerJournal in '..\..\FormsFarmacy\Document\SendMenegerJournal.pas' {SendMenegerJournalForm: TParentForm},
   SendMeneger in '..\..\FormsFarmacy\Document\SendMeneger.pas' {SendMenegerForm: TParentForm},
   SendCashJournal in '..\..\FormsFarmacy\Document\SendCashJournal.pas' {SendCashJournalForm: TParentForm},
-  SendPartionDate_UpdatePercentDialog in '..\..\FormsFarmacy\Document\SendPartionDate_UpdatePercentDialog.pas' {SendPartionDate_UpdatePercentDialogForm: TParentForm};
+  SendPartionDate_UpdatePercentDialog in '..\..\FormsFarmacy\Document\SendPartionDate_UpdatePercentDialog.pas' {SendPartionDate_UpdatePercentDialogForm: TParentForm},
+  PartionGoodsList in '..\..\FormsFarmacy\Document\PartionGoodsList.pas' {PartionGoodsListForm: TParentForm},
+  Overdue_UpdateRangeCat5Dialog in '..\..\FormsFarmacy\Document\Overdue_UpdateRangeCat5Dialog.pas' {Overdue_UpdateRangeCat5DialogForm: TParentForm},
+  ChoiceDeferredCheck in '..\..\FormsFarmacy\Guides\ChoiceDeferredCheck.pas' {ChoiceDeferredCheckForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

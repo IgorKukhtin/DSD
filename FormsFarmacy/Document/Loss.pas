@@ -53,6 +53,11 @@ type
     bbComplete: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
     actComplete: TdsdExecStoredProc;
+    actLoadDeferredCheck: TMultiAction;
+    actOpenChoiceDeferredCheck: TOpenChoiceForm;
+    actExecSPAddDeferredCheck: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    spAddDeferredCheck: TdsdStoredProc;
   private
     { Private declarations }
   public

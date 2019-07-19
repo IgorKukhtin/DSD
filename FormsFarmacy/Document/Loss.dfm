@@ -4,7 +4,7 @@ inherited LossForm: TLossForm
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
   ExplicitWidth = 816
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -354,6 +354,61 @@ inherited LossForm: TLossForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       ImageIndex = 12
     end
+    object actLoadDeferredCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceDeferredCheck
+        end
+        item
+          Action = actExecSPAddDeferredCheck
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1095#1077#1082
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1095#1077#1082
+      ImageIndex = 29
+    end
+    object actOpenChoiceDeferredCheck: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceDeferredCheck'
+      FormName = 'TChoiceDeferredCheckForm'
+      FormNameParam.Value = 'TChoiceDeferredCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSPAddDeferredCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spAddDeferredCheck
+      StoredProcList = <
+        item
+          StoredProc = spAddDeferredCheck
+        end>
+      Caption = 'actExecSPAddDeferredCheck'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -458,6 +513,10 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -503,6 +562,10 @@ inherited LossForm: TLossForm
     end
     object bbComplete: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actLoadDeferredCheck
       Category = 0
     end
   end
@@ -572,6 +635,11 @@ inherited LossForm: TLossForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckID'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -1227,6 +1295,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'outOperDate'
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1234,5 +1303,30 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 72
     Top = 376
+  end
+  object spAddDeferredCheck: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Loss_AddDeferredCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 494
+    Top = 520
   end
 end

@@ -325,6 +325,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOverdueDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdue_UpdateRangeCat5DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdue_UpdateRangeCat5DialogForm');
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;
@@ -348,9 +351,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
-  exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');

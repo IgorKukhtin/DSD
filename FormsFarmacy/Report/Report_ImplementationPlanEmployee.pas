@@ -107,7 +107,6 @@ type
     dxBarButton1: TdxBarButton;
     actConsider: TAction;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormShow(Sender: TObject);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
     procedure FormCreate(Sender: TObject);
@@ -681,17 +680,13 @@ begin
   FUnitCategory := TStringList.Create;
   FCountO := 0;
   FUnitCalck := 0;
+  UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.FormDestroy(Sender: TObject);
 begin
   FUnit.Free;
   FUnitCategory.Free;
-end;
-
-procedure TReport_ImplementationPlanEmployeeForm.FormShow(Sender: TObject);
-begin
-  UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
 end.

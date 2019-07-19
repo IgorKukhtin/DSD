@@ -50,7 +50,7 @@ object OverdueJournalForm: TOverdueJournalForm
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object cxGridDBTableViewColumn1: TcxGridDBColumn
@@ -90,6 +90,15 @@ object OverdueJournalForm: TOverdueJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 76
+      end
+      object Price: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1086#1090#1087#1091#1089#1082#1085#1072#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 78
       end
       object ExpirationDate: TcxGridDBColumn
         Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
@@ -215,6 +224,10 @@ object OverdueJournalForm: TOverdueJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -298,6 +311,10 @@ object OverdueJournalForm: TOverdueJournalForm
     end
     object dxBarButton3: TdxBarButton
       Action = actUpdate_Cat_5
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdateRangeCat5
       Category = 0
     end
   end
@@ -397,10 +414,68 @@ object OverdueJournalForm: TOverdueJournalForm
         item
           StoredProc = spUpdate_Cat_5
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
       ImageIndex = 12
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1077#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080') ?'
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080') ?'
+    end
+    object actUpdateRangeCat5: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialogUpdateRangeCat5
+        end
+        item
+          Action = actExecUpdateRangeCat5
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086' '#1094#1077#1085#1077
+      Hint = #1055#1077#1088#1077#1074#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086' '#1094#1077#1085#1077
+      ImageIndex = 38
+    end
+    object actExecuteDialogUpdateRangeCat5: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUpdateRangeCat5'
+      FormName = 'TOverdue_UpdateRangeCat5DialogForm'
+      FormNameParam.Value = 'TOverdue_UpdateRangeCat5DialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceMax'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'PriceMax'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceMin'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'PriceMin'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecUpdateRangeCat5: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateRangeCat5
+      StoredProcList = <
+        item
+          StoredProc = spUpdateRangeCat5
+        end>
+      Caption = 'actExecUpdateRangeCat5'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -509,7 +584,53 @@ object OverdueJournalForm: TOverdueJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 480
-    Top = 240
+    Left = 472
+    Top = 160
+  end
+  object spUpdateRangeCat5: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Range_Cat_5'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPriceMin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceMax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 232
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PriceMax'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceMin'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 470
+    Top = 97
   end
 end
