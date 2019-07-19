@@ -711,7 +711,9 @@ uses
   SendPartionDate_UpdatePercentDialog in '..\..\FormsFarmacy\Document\SendPartionDate_UpdatePercentDialog.pas' {SendPartionDate_UpdatePercentDialogForm: TParentForm},
   PartionGoodsList in '..\..\FormsFarmacy\Document\PartionGoodsList.pas' {PartionGoodsListForm: TParentForm},
   Overdue_UpdateRangeCat5Dialog in '..\..\FormsFarmacy\Document\Overdue_UpdateRangeCat5Dialog.pas' {Overdue_UpdateRangeCat5DialogForm: TParentForm},
-  ChoiceDeferredCheck in '..\..\FormsFarmacy\Guides\ChoiceDeferredCheck.pas' {ChoiceDeferredCheckForm: TParentForm};
+  ChoiceDeferredCheck in '..\..\FormsFarmacy\Guides\ChoiceDeferredCheck.pas' {ChoiceDeferredCheckForm: TParentForm},
+  Report_GoodsNotSalePast in '..\..\FormsFarmacy\Report\Report_GoodsNotSalePast.pas' {Report_GoodsNotSalePastForm: TParentForm},
+  Report_GoodsNotSalePastDialog in '..\..\FormsFarmacy\Report\Report_GoodsNotSalePastDialog.pas' {Report_GoodsNotSalePastDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

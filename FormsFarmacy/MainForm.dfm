@@ -2794,6 +2794,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsNotSalePast: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+      Hint = #1058#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+      FormName = 'TReport_GoodsNotSalePastForm'
+      FormNameParam.Value = 'TReport_GoodsNotSalePastForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3295,6 +3307,9 @@ inherited MainForm: TMainForm
       end
       object N104: TMenuItem
         Action = actReport_MovementCheckUnLiquid
+      end
+      object actReportGoodsNotSalePast1: TMenuItem
+        Action = actReport_GoodsNotSalePast
       end
       object miReport_RemainsOverGoods: TMenuItem
         Action = actReport_RemainsOverGoods

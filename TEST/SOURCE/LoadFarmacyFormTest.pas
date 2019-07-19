@@ -756,6 +756,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
      }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsNotSalePastDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsNotSalePastForm');
+    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
