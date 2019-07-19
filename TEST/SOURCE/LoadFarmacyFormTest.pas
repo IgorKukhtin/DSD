@@ -325,6 +325,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOverdueDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdue_UpdateRangeCat5DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdue_UpdateRangeCat5DialogForm');
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;
@@ -348,9 +351,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
-  exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
@@ -747,6 +756,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
      }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsNotSalePastDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsNotSalePastForm');
+    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
@@ -1812,12 +1826,14 @@ begin
 
 end;
 
-  procedure TLoadFormTest.LoadSendPartionDateFormTest;
+procedure TLoadFormTest.LoadSendPartionDateFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDate_UpdatePercentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDate_UpdatePercentDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

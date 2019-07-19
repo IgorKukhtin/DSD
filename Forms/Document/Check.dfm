@@ -1580,6 +1580,35 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExec_MovementIten_PartionDateKind'
     end
+    object actPartionGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      ImageIndex = 28
+      FormName = 'TPartionGoodsListForm'
+      FormNameParam.Value = 'TPartionGoodsListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1679,6 +1708,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1747,6 +1780,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton5: TdxBarButton
       Action = actUpdate_MovementIten_PartionDateKind
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actPartionGoods
       Category = 0
     end
   end

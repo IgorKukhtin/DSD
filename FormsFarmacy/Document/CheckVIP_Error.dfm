@@ -10,18 +10,17 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
   inherited PageControl: TcxPageControl
     Width = 648
     Height = 381
-    ExplicitWidth = 668
-    ExplicitHeight = 356
+    ExplicitWidth = 648
+    ExplicitHeight = 381
     ClientRectBottom = 381
     ClientRectRight = 648
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 668
-      ExplicitHeight = 356
+      ExplicitWidth = 648
+      ExplicitHeight = 381
       inherited cxGrid: TcxGrid
         Width = 369
         Height = 381
         Align = alLeft
-        ExplicitLeft = -6
         ExplicitWidth = 369
         ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -116,8 +115,6 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
         Caption = 'Panel'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = 375
-        ExplicitTop = -32
         object cxGrid1: TcxGrid
           Left = 1
           Top = 1
@@ -126,8 +123,6 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitLeft = 6
-          ExplicitTop = -5
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DataSource1
@@ -264,9 +259,6 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
           Align = alBottom
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitLeft = 0
-          ExplicitTop = 488
-          ExplicitWidth = 804
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DataSource2
@@ -683,6 +675,35 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
         end>
       Caption = 'actExec_MovementIten_PartionDateKind'
     end
+    object actPartionGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      ImageIndex = 28
+      FormName = 'TPartionGoodsListForm'
+      FormNameParam.Value = 'TPartionGoodsListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -759,6 +780,10 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
         item
           Visible = True
           ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -795,6 +820,12 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
     object dxBarButton5: TdxBarButton
       Action = actUpdate_MovementIten_PartionDateKind
       Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

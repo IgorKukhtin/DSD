@@ -16,9 +16,12 @@ $BODY$
     DECLARE vbDate180  TDateTime;
     DECLARE vbDate30   TDateTime;
 
-   DECLARE vbMonth_0  TFloat;
-   DECLARE vbMonth_1  TFloat;
-   DECLARE vbMonth_6  TFloat;
+    DECLARE vbMonth_0  TFloat;
+    DECLARE vbMonth_1  TFloat;
+    DECLARE vbMonth_6  TFloat;
+    DECLARE vbDay_0  Integer;
+    DECLARE vbDay_1  Integer;
+    DECLARE vbDay_6  Integer;
    
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -38,7 +41,7 @@ BEGIN
     --vbDate30  := CURRENT_DATE + INTERVAL '1 MONTH';
 
     -- получаем значения из справочника 
-    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
+/*    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
                   FROM Object  AS Object_PartionDateKind
                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
@@ -60,7 +63,32 @@ BEGIN
     -- даты + 6 месяцев, + 1 месяц
     vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
-    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
+    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL; */
+
+    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+    -- даты + 6 месяцев, + 1 месяц
+    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
+    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
+    vbOperDate:= CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+
 
     -- текущие остатки по подразделению
     CREATE TEMP TABLE tmpCountPartionDate (ContainerId Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Amount_0 TFloat, Amount_1 TFloat, Amount_2 TFloat) ON COMMIT DROP;
@@ -327,7 +355,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 15.07.19                                                      * 
  27.05.19         *
  03.04.19         *
 */

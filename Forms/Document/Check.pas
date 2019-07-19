@@ -147,6 +147,8 @@ type
     actUpdate_MovementIten_PartionDateKind: TMultiAction;
     dxBarButton5: TdxBarButton;
     astChoicePartionDateKind: TOpenChoiceForm;
+    actPartionGoods: TdsdOpenForm;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

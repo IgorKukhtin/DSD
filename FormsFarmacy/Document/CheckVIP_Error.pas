@@ -87,6 +87,8 @@ type
     DataSource2: TDataSource;
     ClientDataSet2: TClientDataSet;
     FormParams: TdsdFormParams;
+    dxBarButton6: TdxBarButton;
+    actPartionGoods: TdsdOpenForm;
   private
     { Private declarations }
   public

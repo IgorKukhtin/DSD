@@ -13,6 +13,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
   KeyPreview = True
   OldCreateOrder = False
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

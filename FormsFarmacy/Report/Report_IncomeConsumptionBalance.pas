@@ -123,8 +123,8 @@ type
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormShow(Sender: TObject);
     procedure actAddGoodsExecute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
   public
   end;
@@ -223,9 +223,9 @@ begin
   Action:=caFree;
 end;
 
-procedure TReport_IncomeConsumptionBalanceForm.FormShow(Sender: TObject);
+procedure TReport_IncomeConsumptionBalanceForm.FormCreate(Sender: TObject);
 begin
-  UserSettingsStorageAddOn.LoadUserSettings
+  UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
 end.

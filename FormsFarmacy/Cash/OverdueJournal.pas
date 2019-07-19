@@ -63,6 +63,18 @@ type
     actExecuteOverdueDialog: TExecuteDialog;
     actTransfer_SendPartionDate: TdsdExecStoredProc;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    Cat_5: TcxGridDBColumn;
+    spUpdate_Cat_5: TdsdStoredProc;
+    Action1: TAction;
+    actUpdate_Cat_5: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
+    actUpdateRangeCat5: TMultiAction;
+    actExecuteDialogUpdateRangeCat5: TExecuteDialog;
+    actExecUpdateRangeCat5: TdsdExecStoredProc;
+    spUpdateRangeCat5: TdsdStoredProc;
+    dxBarButton4: TdxBarButton;
+    FormParams: TdsdFormParams;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

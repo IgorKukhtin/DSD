@@ -198,7 +198,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 53
           end
           object Amount_1: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'.'
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'..'
             DataBinding.FieldName = 'Amount_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -209,7 +209,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 52
           end
           object Amount_2: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089'.'
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 200 '#1076#1085'..'
             DataBinding.FieldName = 'Amount_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -220,7 +220,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 52
           end
           object Amount_all: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1073#1086#1083#1077#1077' 6 '#1084#1077#1089'.'
+            Caption = #1057#1088#1086#1082' '#1073#1086#1083#1077#1077' 200 '#1076#1085'.'
             DataBinding.FieldName = 'Amount_all'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -231,7 +231,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 49
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1076#1086' 6 '#1084#1077#1089')'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -241,7 +241,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 78
           end
           object ChangePercentMin: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
             DataBinding.FieldName = 'ChangePercentMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -593,7 +593,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
     object cxLabel9: TcxLabel
       Left = 221
       Top = 46
-      Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1-6 '#1084#1077#1089')'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
     end
     object edChangePercent: TcxCurrencyEdit
       Left = 221
@@ -602,15 +602,15 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 142
+      Width = 164
     end
     object cxLabel4: TcxLabel
       Left = 9
       Top = 91
       Caption = 
-        #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' ('#1089#1088#1086#1082' '#1086#1090' 1-6 '#1084#1077#1089'.) '#1079#1072' 100% '#1073#1077#1088#1077#1090#1089#1103' '#1090#1086#1074#1072#1088#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072'.' +
+        #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.) '#1079#1072' 100% '#1073#1077#1088#1077#1090#1089#1103' '#1090#1086#1074#1072#1088#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072'.' +
         ' '#1054#1090' '#1085#1077#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1087#1088#1086#1094#1077#1085#1090' '#1080' '#1074#1099#1095#1080#1090#1072#1077#1090#1089#1103' '#1080#1079' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.  ' +
-        ' '#1044#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1077#1085#1077#1077' '#1084#1077#1089#1103#1094#1072' '#1087#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.'
+        ' '#1044#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'. '#1087#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.'
     end
     object cbTransfer: TcxCheckBox
       Left = 72
@@ -627,18 +627,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
     end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 369
+    Left = 391
     Top = 46
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
   end
   object edChangePercentMin: TcxCurrencyEdit [3]
-    Left = 369
+    Left = 391
     Top = 64
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
     TabOrder = 7
-    Width = 167
+    Width = 149
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
@@ -1792,6 +1792,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
       item
       end>
     Left = 536
-    Top = 192
+    Top = 200
   end
 end
