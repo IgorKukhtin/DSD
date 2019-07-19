@@ -106,6 +106,7 @@ type
     MoneySummCash: TcxGridDBColumn;
     SummNalogRet: TcxGridDBColumn;
     BusinessName: TcxGridDBColumn;
+    SummHoliday_inf: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -23,7 +23,9 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
            -- , Age_work      TVarChar
             , Month_work    TFloat
-            , Day_calendar  TFloat
+            , Day_calendar  TFloat -- Рабоч. дней
+            , Day_real      TFloat -- Календ. дней
+            , Day_Hol       TFloat -- Больничн. дней
             , Day_vacation  TFloat
             , Day_holiday   TFloat
             , Day_diff      TFloat
@@ -102,17 +104,50 @@ BEGIN
           WHERE t2.MemberId IS NULL
           GROUP BY t1.DateOut_Calc, t1.MemberId
          )
+    -- табель - кто в какие дни работал
+  , MI_SheetWorkTime AS
+          (SELECT DISTINCT
+                  Movement.OperDate
+                , MI_SheetWorkTime.ObjectId AS MemberId
+           FROM Movement
+                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+                INNER JOIN MovementItem AS MI_SheetWorkTime 
+                                        ON MI_SheetWorkTime.MovementId = Movement.Id
+                                       AND MI_SheetWorkTime.isErased = FALSE
+                INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                  ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
+                                                 AND MIObject_WorkTimeKind.DescId         = zc_MILinkObject_WorkTimeKind()
+                                                 AND MIObject_WorkTimeKind.ObjectId       IN (zc_Enum_WorkTimeKind_Holiday() -- Отпуск
+                                                                                            , 1580416                        -- Отпуск без сохр.ЗП
+                                                                                             )
+           WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+             AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+          )
    -- расчет отработанных месяцев и календарных дней
   , tmpWork AS (SELECT tmp.MemberId
                      , SUM (tmp.Month_work)   AS Month_work
-                     , SUM (tmp.Day_calendar) AS Day_calendar
+                  -- , SUM (tmp.Day_calendar) AS Day_calendar -- Рабоч. дней
+                     , SUM (tmp.Day_real)     AS Day_real     -- Календ. дней
+                  -- , SUM (tmp.Day_Hol)      AS Day_Hol      -- Праздничные дни
                 FROM (SELECT tmp1.MemberId
-                            -- кол-во календарных дней без праздничных
-                           , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
-                              FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect) :: TFloat AS Day_calendar
+                             -- кол-во календарных дней без праздничных
+                        -- , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
+                        --    FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect
+                        --   ) :: TFloat AS Day_calendar
+                             -- кол-во календарных дней
+                           , (SELECT COUNT (*)
+                              FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect
+                             ) :: TFloat AS Day_real
+                             -- кол-во Праздничных дней
+                        -- , (SELECT SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
+                        --    FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect
+                        --   ) :: TFloat AS Day_Hol
 
-                           , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc + interval '1 day', tmp1.DateIn_Calc)) * 12 
-                                                + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc+ interval '1 day', tmp1.DateIn_Calc))  AS Month_work 
+                           , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc  + interval '1 day', tmp1.DateIn_Calc)) * 12 
+                           + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc + interval '1 day', tmp1.DateIn_Calc))  AS Month_work
                       FROM tmp1
                            JOIN tmp2 ON tmp1.ord = tmp2.ord
                                     AND tmp2.MemberId = tmp1.MemberId
@@ -123,11 +158,11 @@ BEGIN
    -- колво положенных дней отпуска  (14 дней в год, 1 отпуск - после 6 м. непрерывного стажа)      
    -- считаем положенные дни отпуска, если отработано более 6 месяцев          
   , tmpVacation AS (SELECT *
-                         , CASE WHEN tmpWork.Month_work >= vbMonthHoliday THEN CAST (vbDayHoliday * tmpWork.Month_work / 12 AS NUMERIC (16,0)) ELSE 0 END  AS Day_vacation 
+                         , CASE WHEN tmpWork.Month_work >= vbMonthHoliday THEN CAST (vbDayHoliday * tmpWork.Month_work / 12 AS NUMERIC (16,0)) ELSE 0 END  AS Day_vacation
                     FROM tmpWork
                    )
                    
-  --выбираем документы отпусков
+    -- выбираем документы отпусков
   , tmpMov_Holiday AS (SELECT Movement.Id
                             , Movement.InvNumber
                             , Movement.OperDate                            
@@ -208,7 +243,13 @@ BEGIN
          , tmpPersonal.isOfficial
          --, tmpPersonal.Age_work      :: TVarChar
          , tmpVacation.Month_work    :: TFloat
-         , tmpVacation.Day_calendar  :: TFloat
+           -- так считаются - Рабоч. дней
+         , (tmpVacation.Day_real - COALESCE (MI_SheetWorkTime.Day_bol, 0)) :: TFloat AS Day_calendar
+           -- Календ. дней
+         , tmpVacation.Day_real                                            :: TFloat AS Day_real
+           -- Больничн. дней
+         , COALESCE (MI_SheetWorkTime.Day_bol, 0)                          :: TFloat AS Day_Hol
+           --
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation 
          , tmpHoliday.Day_holiday    :: TFloat                                                                       -- использовано 
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff   -- не использовано   
@@ -222,9 +263,12 @@ BEGIN
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
 
          LEFT JOIN tmpMemberPersonal ON tmpMemberPersonal.MemberId = tmpVacation.MemberId
-         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpVacation.MemberId
+         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId   = tmpVacation.MemberId
                               AND tmpPersonal.PositionId = tmpMemberPersonal.PositionId
-                              AND tmpPersonal.UnitId = tmpMemberPersonal.UnitId
+                              AND tmpPersonal.UnitId     = tmpMemberPersonal.UnitId
+         LEFT JOIN (SELECT COUNT(*) AS Day_bol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
+                   ) AS MI_SheetWorkTime ON MI_SheetWorkTime.MemberId = tmpVacation.MemberId
+         
                               
     ORDER BY tmpPersonal.UnitName
            , tmpPersonal.PersonalName
@@ -236,6 +280,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- select * from gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);
-
-
+-- SELECT * FROM gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);

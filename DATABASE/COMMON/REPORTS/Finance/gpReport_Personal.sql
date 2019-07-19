@@ -28,7 +28,7 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , MoneySumm TFloat, MoneySummCard TFloat, MoneySummCardSecond TFloat, MoneySummCash TFloat
-             , ServiceSumm TFloat, ServiceSumm_inf TFloat, ServiceSumm_dif TFloat
+             , ServiceSumm TFloat, ServiceSumm_inf TFloat, SummHoliday_inf TFloat, ServiceSumm_dif TFloat
              , IncomeSumm TFloat
              , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat, SummNalogRet TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
@@ -141,6 +141,7 @@ BEGIN
 
    , tmpMIFloat_SummService AS (SELECT tmp.ContainerId
                                      , SUM (COALESCE (MIFloat_SummService.ValueData,0)) AS  SummService_inf
+                                     , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0)) AS  SummHoliday_inf
                                 FROM (SELECT DISTINCT MIContainer.ContainerId
                                            , MIContainer.MovementItemId
                                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
@@ -154,7 +155,10 @@ BEGIN
                                      ) AS tmp
                                       LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                                                   ON MIFloat_SummService.MovementItemId = tmp.MovementItemId
-                                                                 AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                                                 AND MIFloat_SummService.DescId         = zc_MIFloat_SummService()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                                  ON MIFloat_SummHoliday.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummHoliday.DescId         = zc_MIFloat_SummHoliday()
                                 WHERE tmp.Ord = 1
                                 GROUP BY tmp.ContainerId
                                 )
@@ -222,6 +226,7 @@ BEGIN
                            , SUM (Operation_all.MoneySummCash)       AS MoneySummCash
                            , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
                            , SUM (tmpMIFloat_SummService.SummService_inf) AS ServiceSumm_inf
+                           , SUM (tmpMIFloat_SummService.SummHoliday_inf) AS SummHoliday_inf
                            , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
                            , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                            , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
@@ -276,6 +281,7 @@ BEGIN
 
         Operation.ServiceSumm :: TFloat                                                             AS ServiceSumm,
         Operation.ServiceSumm_inf :: TFloat                                                         AS ServiceSumm_inf,
+        Operation.SummHoliday_inf :: TFloat                                                         AS SummHoliday_inf,
         (COALESCE (Operation.ServiceSumm,0) - COALESCE (Operation.ServiceSumm_inf,0)) :: TFloat     AS ServiceSumm_dif,
         Operation.IncomeSumm :: TFloat                                                              AS IncomeSumm,
         Operation.SummTransportAdd :: TFloat                                                        AS SummTransportAdd,

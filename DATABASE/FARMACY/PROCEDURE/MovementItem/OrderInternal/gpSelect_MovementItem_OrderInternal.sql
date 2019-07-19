@@ -2342,9 +2342,9 @@ BEGIN
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
-           , 0                            ::TFloat    AS AmountReal
-           , 0                            ::TFloat    AS SendSUNAmount
-           , 0                            ::TFloat    AS RemainsSUN
+--           , 0                            ::TFloat    AS AmountReal
+--           , 0                            ::TFloat    AS SendSUNAmount
+--           , 0                            ::TFloat    AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 

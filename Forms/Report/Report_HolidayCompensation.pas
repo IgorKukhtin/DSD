@@ -77,6 +77,8 @@ type
     UnitName: TcxGridDBColumn;
     AmountCompensation: TcxGridDBColumn;
     SummaCompensation: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Day_calendar: TcxGridDBColumn;
   private
   public
   end;

@@ -25,9 +25,6 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Height = 434
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 80
-    ExplicitWidth = 945
-    ExplicitHeight = 416
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -48,6 +45,21 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
           Format = ',0.##'
           Kind = skSum
           Column = Day_vacation
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_calendar
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_real
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_Hol
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -69,6 +81,21 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = PersonalName
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_calendar
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_real
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_Hol
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -209,6 +236,36 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 80
+      end
+      object Day_calendar: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1095'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_calendar'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Day_real: TcxGridDBColumn
+        Caption = #1050#1072#1083#1077#1085#1076'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_real'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Day_Hol: TcxGridDBColumn
+        Caption = #1041#1086#1083#1100#1085#1080#1095#1085'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_Hol'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object InvNumber: TcxGridDBColumn

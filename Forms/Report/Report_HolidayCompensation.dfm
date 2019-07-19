@@ -40,6 +40,16 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Format = ',0.####'
           Kind = skSum
           Column = SummaCompensation
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Day_calendar
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -51,6 +61,16 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Format = ',0.####'
           Kind = skSum
           Column = SummaCompensation
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Day_calendar
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -188,7 +208,6 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 82
       end
@@ -199,9 +218,27 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082
         Options.Editing = False
+        Width = 90
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1047#1055' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1086' + '#1054#1090#1087#1091#1089#1082#1085#1099#1077
+        Width = 90
+      end
+      object Day_calendar: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1095'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_calendar'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 90
       end
     end

@@ -4,7 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 917
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -136,6 +136,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = ServiceSumm_dif
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummHoliday_inf
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -247,6 +252,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = ServiceSumm_dif
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummHoliday_inf
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -466,6 +476,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' '#1086#1090' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092'.)'
             Options.Editing = False
+            Width = 45
+          end
+          object SummHoliday_inf: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummHoliday_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object IncomeSumm: TcxGridDBColumn

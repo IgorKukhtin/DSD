@@ -78,6 +78,9 @@ type
     UnitName: TcxGridDBColumn;
     cbDetail: TcxCheckBox;
     InvNumber: TcxGridDBColumn;
+    Day_calendar: TcxGridDBColumn;
+    Day_real: TcxGridDBColumn;
+    Day_Hol: TcxGridDBColumn;
   private
   public
   end;

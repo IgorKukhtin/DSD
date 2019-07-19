@@ -23,7 +23,8 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , Day_diff      TFloat
             , AmountCompensation TFloat
             , SummaCompensation  TFloat
-            , Day_calendar  TFloat
+            , Day_calendar       TFloat -- Рабоч. дней
+            , Amount             TFloat -- Сумма ЗП за период (Сумма Начислено + Отпускные) 
             )
 AS
 $BODY$
@@ -122,14 +123,15 @@ BEGIN
                    )
 
   , tmpMovement AS (SELECT Movement.Id
-                    FROM Movement
-                    WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate - INTERVAL '1 DAY' 
-                      AND Movement.DescId = zc_Movement_PersonalService()
-                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                    )
-  
-  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId          AS MemberId
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS Amount
+                    FROM MovementDate
+                         INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
+                                            AND Movement.DescId   = zc_Movement_PersonalService()
+                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                    WHERE MovementDate.ValueData BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate - INTERVAL '1 DAY' 
+                      AND MovementDate.DescId = zc_MIDate_ServiceDate()
+                   )
+  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS Amount
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -153,11 +155,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                                             ON MIFloat_SummService.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
-
-                                /*LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
-                                                            ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()*/
-
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                            ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            )
@@ -184,7 +184,8 @@ BEGIN
 
          , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
          , (tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END) :: TFloat AS SummaCompensation
-         , tmpReport.Day_calendar :: TFloat
+         , tmpReport.Day_calendar    :: TFloat
+         , tmpPersonalService.Amount :: TFloat
     FROM tmpReport
          LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpReport.MemberId
                                      AND COALESCE (tmpPersonalService.Amount, 0) > 0
@@ -204,4 +205,4 @@ $BODY$
  25.12.18         *
 */
 -- тест
--- select * from gpReport_HolidayCompensation(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 442269 ,  inSession := '5');
+-- SELECT * FROM gpReport_HolidayCompensation(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 442269 ,  inSession := '5');

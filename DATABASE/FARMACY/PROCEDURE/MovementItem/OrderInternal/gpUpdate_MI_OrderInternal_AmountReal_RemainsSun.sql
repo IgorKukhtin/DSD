@@ -25,6 +25,7 @@ BEGIN
                , SUM (tmp.AmountRemains)  AS AmountRemains
           FROM gpReport_GoodsPartionDate( inUnitId := inUnitId , inGoodsId := 0, inIsDetail := False ,  inSession := inSession) AS tmp
           WHERE tmp.Amount <> 0
+            AND tmp.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_6())
           GROUP BY tmp.GoodsId;
 
 
