@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 995
-  ExplicitHeight = 602
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -53,7 +53,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 51
+            Width = 64
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -61,7 +61,22 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 340
+            Width = 328
+          end
+          object GoodsGroupPromoName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1099' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'GoodsGroupPromoName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsGroupPromo
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 126
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -71,6 +86,7 @@ inherited PromoForm: TPromoForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 88
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1057#1048#1055
@@ -79,6 +95,7 @@ inherited PromoForm: TPromoForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1057#1048#1055
@@ -88,14 +105,14 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
+            Width = 101
           end
           object isChecked: TcxGridDBColumn
             Caption = #1054#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
             DataBinding.FieldName = 'isChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 84
           end
           object isReport: TcxGridDBColumn
             Caption = #1054#1090#1084'. '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
@@ -103,7 +120,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 84
           end
         end
       end
@@ -201,8 +218,10 @@ inherited PromoForm: TPromoForm
       ExplicitLeft = 8
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 0
+      Top = 0
+      ExplicitLeft = 0
+      ExplicitTop = 0
     end
     inherited edOperDate: TcxDateEdit
       Left = 108
@@ -1018,6 +1037,59 @@ inherited PromoForm: TPromoForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' - '#1044#1040
       ImageIndex = 76
     end
+    object actGoodsGroupPromo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceGoodsGroupPromo
+        end
+        item
+          Action = actExecUpdate_GoodsGroupPromo
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'actGoodsGroupPromo'
+    end
+    object actOpenChoiceGoodsGroupPromo: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceGoodsGroupPromo'
+      FormName = 'TGoodsGroupPromoForm'
+      FormNameParam.Value = 'TGoodsGroupPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsGroupPromoID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsGroupPromoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecUpdate_GoodsGroupPromo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GoodsGroupPromo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GoodsGroupPromo
+        end>
+      Caption = 'actExecUpdate_GoodsGroupPromo'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Promo'
@@ -1290,9 +1362,15 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsGroupPromoID'
         Value = Null
-        DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupPromoName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2264,5 +2342,32 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 904
     Top = 227
+  end
+  object spUpdate_GoodsGroupPromo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Promo_GoodsGroupPromo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupPromoID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsGroupPromoID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 288
+    Top = 304
   end
 end

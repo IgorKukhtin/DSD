@@ -127,6 +127,11 @@ type
     macUpdate_Checked_No: TMultiAction;
     bbUpdate_Checked_Yes: TdxBarButton;
     bbUpdate_Checked_No: TdxBarButton;
+    GoodsGroupPromoName: TcxGridDBColumn;
+    actOpenChoiceGoodsGroupPromo: TOpenChoiceForm;
+    spUpdate_GoodsGroupPromo: TdsdStoredProc;
+    actGoodsGroupPromo: TMultiAction;
+    actExecUpdate_GoodsGroupPromo: TdsdExecStoredProc;
   private
     { Private declarations }
   public

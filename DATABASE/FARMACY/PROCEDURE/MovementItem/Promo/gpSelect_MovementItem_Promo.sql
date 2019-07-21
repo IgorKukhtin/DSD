@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, Summ TFloat
              , isChecked Boolean, isReport Boolean
              , isErased Boolean
+             , GoodsGroupPromoID Integer, GoodsGroupPromoName TVarChar
               )
 AS
 $BODY$
@@ -82,9 +83,16 @@ BEGIN
                  , COALESCE (MI_Promo.isChecked, FALSE) ::Boolean  AS isChecked
                  , CASE WHEN COALESCE (MI_Promo.isChecked, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport  -- в одной из колонок всегда галка -
                  , COALESCE(MI_Promo.IsErased, FALSE)     AS isErased
+                 , Object_GoodsGroupPromo.ID              AS GoodsGroupPromoID
+                 , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
             FROM tmpGoods
                 FULL OUTER JOIN MI_Promo ON tmpGoods.Id = MI_Promo.GoodsId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_Promo.GoodsId,tmpGoods.Id)
+
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                                     ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = Object_Goods_View.Id
+                                    AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+                LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
 
             WHERE Object_Goods.isErased = FALSE 
                OR MI_Promo.id is not null;
@@ -104,6 +112,8 @@ BEGIN
                 , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport  -- в одной из колонок всегда галка -
 
                 , MI_Promo.IsErased
+                , Object_GoodsGroupPromo.ID              AS GoodsGroupPromoID
+                , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
            FROM MovementItem AS MI_Promo
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_Promo.Id
@@ -113,6 +123,11 @@ BEGIN
               LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                             ON MIBoolean_Checked.MovementItemId = MI_Promo.Id
                                            AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                                           
+              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                                   ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = MI_Promo.ObjectId
+                                  AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+              LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
                                      
            WHERE MI_Promo.MovementId = inMovementId
              AND MI_Promo.DescId = zc_MI_Master()

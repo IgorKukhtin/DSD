@@ -25,6 +25,7 @@ uses
   cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   VKDBFCDX in '..\SOURCE\DBF\VKDBFCDX.pas',
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFCrypt in '..\SOURCE\DBF\VKDBFCrypt.pas',

@@ -146,6 +146,7 @@
         <DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\FastReportAddOn.pas"/>
         <DCCReference Include="..\SOURCE\DBF\VKDBFCDX.pas"/>
         <DCCReference Include="..\SOURCE\DBF\VKDBFCollate.pas"/>
         <DCCReference Include="..\SOURCE\DBF\VKDBFCrypt.pas"/>

@@ -2180,10 +2180,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitOverdue() RETURNS Integer AS $
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_UnitOverdue', 'Подразделение для перемещения просроченного товара', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOverdue');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroupPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Goods_GoodsGroupPromo', 'Связь товаров с группой товаров маркетинга', zc_Object_Goods(), zc_Object_GoodsGroupPromo() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupPromo');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.07.19                                                                                      * zc_ObjectLink_Goods_GoodsGroupPromo
  02.07.19                                                                                      * zc_ObjectLink_Unit_UnitOverdue
  02.07.19         * zc_ObjectLink_Unit_UserManager2
                     zc_ObjectLink_Unit_UserManager3

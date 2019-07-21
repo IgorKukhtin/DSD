@@ -713,7 +713,11 @@ uses
   Overdue_UpdateRangeCat5Dialog in '..\..\FormsFarmacy\Document\Overdue_UpdateRangeCat5Dialog.pas' {Overdue_UpdateRangeCat5DialogForm: TParentForm},
   ChoiceDeferredCheck in '..\..\FormsFarmacy\Guides\ChoiceDeferredCheck.pas' {ChoiceDeferredCheckForm: TParentForm},
   Report_GoodsNotSalePast in '..\..\FormsFarmacy\Report\Report_GoodsNotSalePast.pas' {Report_GoodsNotSalePastForm: TParentForm},
-  Report_GoodsNotSalePastDialog in '..\..\FormsFarmacy\Report\Report_GoodsNotSalePastDialog.pas' {Report_GoodsNotSalePastDialogForm: TParentForm};
+  Report_GoodsNotSalePastDialog in '..\..\FormsFarmacy\Report\Report_GoodsNotSalePastDialog.pas' {Report_GoodsNotSalePastDialogForm: TParentForm},
+  Report_GoodsPartionDate_Promo in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate_Promo.pas' {Report_GoodsPartionDate_PromoForm: TParentForm},
+  Report_GoodsPartionDate_PromoDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate_PromoDialog.pas' {Report_GoodsPartionDate_PromoDialogForm: TParentForm},
+  GoodsGroupPromo in '..\..\FormsFarmacy\Guides\GoodsGroupPromo.pas' {GoodsGroupPromoForm: TParentForm},
+  GoodsGroupPromoEdit in '..\..\FormsFarmacy\Guides\GoodsGroupPromoEdit.pas' {GoodsGroupPromoEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

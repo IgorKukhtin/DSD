@@ -49,6 +49,7 @@ type
     procedure LoadEmailSettingsFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
+    procedure LoadGoodsGroupPromoFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsInventoryFormTest;
     procedure LoadGoodsCategoryFormTest;
@@ -685,6 +686,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
 end;
 
+procedure TLoadFormTest.LoadGoodsGroupPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPromoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPromoEditForm');
+end;
+
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
     {
@@ -756,6 +765,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
      }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate_PromoDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate_PromoForm');
+    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsNotSalePastDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsNotSalePastForm'));

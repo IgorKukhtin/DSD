@@ -2445,6 +2445,22 @@
 				<Form>Report_GoodsNotSalePastDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionDate_Promo.pas">
+				<Form>Report_GoodsPartionDate_PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionDate_PromoDialog.pas">
+				<Form>Report_GoodsPartionDate_PromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroupPromo.pas">
+				<Form>GoodsGroupPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroupPromoEdit.pas">
+				<Form>GoodsGroupPromoEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

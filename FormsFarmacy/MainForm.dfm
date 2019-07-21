@@ -2806,6 +2806,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object acttReport_GoodsPartionDate_Promo: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1057#1088#1086#1082#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' ('#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090')'
+      Hint = #1057#1088#1086#1082#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074'sq '#1082#1086#1085#1090#1088#1072#1082#1090')'
+      FormName = 'TReport_GoodsPartionDate_PromoForm'
+      FormNameParam.Value = 'TReport_GoodsPartionDate_PromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3425,6 +3437,9 @@ inherited MainForm: TMainForm
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange
+      end
+      object N186: TMenuItem
+        Action = acttReport_GoodsPartionDate_Promo
       end
       object miOrderInternalPromo: TMenuItem
         Action = actOrderInternalPromo
