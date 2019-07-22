@@ -763,8 +763,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
-    exit;
-     }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate_PromoDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoForm'));
@@ -779,8 +778,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDateDialogForm');
-  //  exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
@@ -884,14 +882,14 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_PromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_PromoForm');
     exit;
-}
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
@@ -903,7 +901,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeDialogForm');
 
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorDialogForm');

@@ -64,7 +64,7 @@ inherited PromoForm: TPromoForm
             Width = 328
           end
           object GoodsGroupPromoName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1099' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
             DataBinding.FieldName = 'GoodsGroupPromoName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <

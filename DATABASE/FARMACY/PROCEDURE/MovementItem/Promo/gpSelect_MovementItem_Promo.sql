@@ -90,7 +90,7 @@ BEGIN
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_Promo.GoodsId,tmpGoods.Id)
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
-                                     ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = Object_Goods_View.Id
+                                     ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
                 LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
 

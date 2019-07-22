@@ -43,6 +43,7 @@ type
     bbExecuteDialog: TdxBarButton;
     PriceSIP: TcxGridDBColumn;
     SummSIP: TcxGridDBColumn;
+    GoodsGroupPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

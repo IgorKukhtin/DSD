@@ -46,6 +46,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               , isChecked  Boolean      -- для маркетинга
               , isReport   Boolean      -- для отчета              
               , isSendMaker Boolean     -- для отчета производителю
+              , GoodsGroupPromoName TVarChar -- Группы товаров для маркетинга
               )
 AS
 $BODY$
@@ -359,6 +360,7 @@ BEGIN
             , tmpData.isChecked    :: Boolean
             , tmpData.isReport     :: Boolean
             , CASE WHEN COALESCE(MakerReport.JuridicalId, 0) = 0 THEN True ELSE False END  AS isSendMaker  
+            , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
 
      FROM tmpData 
         LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpData.MovementId_Check
@@ -391,6 +393,11 @@ BEGIN
                          AND COALESCE (ObjectLink_Maker.ChildObjectid, inMakerId) = inMakerId
                          AND Object_MakerReport.isErased = False) AS MakerReport
                                                                   ON MakerReport.JuridicalId = tmpData.JuridicalId_Income
+                                                                  
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                             ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = tmpData.GoodsId
+                            AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+        LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
      ;
 
 END;
