@@ -258,6 +258,56 @@ WITH LOSS AS ( SELECT
                                  );
       END IF;    
    */
+   
+     -- если это обычное списание, но все равно надо списать сроковые партии
+     IF EXISTS (SELECT 1 FROM Container WHERE Container.DescId   = zc_Container_CountPartionDate()
+                                          AND Container.Amount   > 0
+                                          AND Container.ParentId IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
+                                                                     WHERE _tmpMIContainer_insert.DescId   = zc_MIContainer_Count()
+                                                                     ))
+     THEN
+       WITH -- Остатки сроковых партий - zc_Container_CountPartionDate
+           DD AS (SELECT _tmpMIContainer_insert.MovementItemId
+                         -- сколько надо получить
+                       , -1 * _tmpMIContainer_insert.Amount AS Amount
+                         -- остаток
+                       , Container.Amount AS AmountRemains
+                       , _tmpMIContainer_insert.OperDate    AS OperDate
+                       , Container.Id     AS ContainerId
+                         -- итого "накопительный" остаток
+                       , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id) AS AmountRemains_sum
+                         -- для последнего элемента - не смотрим на остаток
+                       , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY Container.Id DESC) AS DOrd
+                   FROM _tmpMIContainer_insert
+                        JOIN Container ON Container.ParentId = _tmpMIContainer_insert.ContainerId
+                                      AND Container.DescId   = zc_Container_CountPartionDate()
+                                      AND Container.Amount   > 0.0
+                   WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
+                  )
+
+           -- распределение
+         , tmpItem AS (SELECT ContainerId
+                            , MovementItemId
+                            , OperDate
+                            , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
+                                        THEN DD.AmountRemains
+                                   ELSE DD.Amount - DD.AmountRemains_sum + DD.AmountRemains
+                              END AS Amount
+                         FROM DD
+                         WHERE (DD.Amount > 0 AND DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0))
+        -- Результат - проводки по срокам - расход
+        INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+          SELECT zc_MIContainer_CountPartionDate()
+               , zc_Movement_Loss()
+               , inMovementId
+               , tmpItem.MovementItemId
+               , tmpItem.ContainerId
+               , NULL
+               , -1 * Amount
+               , OperDate
+          FROM tmpItem; 
+     END IF;
+   
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
@@ -274,7 +324,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий О.В.
+ 23.07.19                                                                     * 
  21.07.15                                                                     * 
 */
 
