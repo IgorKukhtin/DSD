@@ -111,7 +111,7 @@ BEGIN
           END IF;
         END IF;
 
-        IF EXISTS(SELECT 1 FROM MovementBoolean
+/*        IF EXISTS(SELECT 1 FROM MovementBoolean
                   WHERE MovementBoolean.MovementId = inMovementId
                     AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()
                     AND MovementBoolean.ValueData = TRUE)
@@ -124,7 +124,7 @@ BEGIN
             RAISE EXCEPTION 'Ошибка. Увеличивать количество в автоматически сформированных перемещениях вам запрещено.';
           END IF;
         END IF;
-
+*/
       END IF;
 
       -- Для менеджеров

@@ -151,37 +151,8 @@ BEGIN
                            , Color_calc Integer) ON COMMIT DROP;
 
     -- Данные
-    WITH tmpMovContainerId AS (SELECT Movement.Id
-                               FROM Movement
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                  ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                                 AND MovementLinkObject_Unit.ObjectId = vbUnitId
-                               WHERE Movement.DescId = zc_Movement_Check()
-                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                               )
-       , ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
-                                   , Sum(MovementItemChild.Amount)::TFloat       AS Amount
-                              FROM tmpMovContainerId
-                                   INNER JOIN MovementItem AS MovementItemMaster
-                                                           ON MovementItemMaster.MovementId = tmpMovContainerId.Id
-                                                          AND MovementItemMaster.DescId     = zc_MI_Master()
-                                                          AND MovementItemMaster.isErased   = FALSE
-
-                                   INNER JOIN MovementItem AS MovementItemChild
-                                                           ON MovementItemChild.MovementId = tmpMovContainerId.Id
-                                                          AND MovementItemChild.ParentId = MovementItemMaster.Id
-                                                          AND MovementItemChild.DescId     = zc_MI_Child()
-                                                          AND MovementItemChild.Amount     > 0
-                                                          AND MovementItemChild.isErased   = FALSE
-
-                                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                               ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
-                                                              AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-                              GROUP BY MIFloat_ContainerId.ValueData
-                              )
-          -- Резервы
-        , tmpMov AS (
+    WITH           -- Резервы
+          tmpMov AS (
             SELECT Movement.Id
             FROM MovementBoolean AS MovementBoolean_Deferred
                       INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
@@ -206,6 +177,40 @@ BEGIN
                    WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
                      AND MovementString_CommentError.ValueData <> ''
            )
+        , ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
+                                    , Sum(MovementItemChild.Amount)::TFloat       AS Amount
+                              FROM tmpMov
+
+                                   INNER JOIN MovementItem AS MovementItemChild
+                                                           ON MovementItemChild.MovementId = tmpMov.Id
+                                                          AND MovementItemChild.DescId     = zc_MI_Child()
+                                                          AND MovementItemChild.Amount     > 0
+                                                          AND MovementItemChild.isErased   = FALSE
+
+                                   INNER JOIN MovementItem AS MovementItemMaster
+                                                           ON MovementItemMaster.MovementId = tmpMov.Id
+                                                          AND MovementItemMaster.Id = MovementItemChild.ParentId
+                                                          AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                          AND MovementItemMaster.isErased   = FALSE
+
+                                   INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                              GROUP BY MIFloat_ContainerId.ValueData
+                              )
+      , Reserve
+        AS
+        (
+            SELECT MovementItem.ObjectId                       AS GoodsId
+                 , Sum(MovementItem.Amount)::TFloat            AS Amount
+            FROM tmpMov
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                                                AND MovementItem.Amount    <> 0
+
+            GROUP BY MovementItem.ObjectId
+         )
           -- Остатки по срокам
        , tmpPDContainerAll AS (SELECT Container.Id,
                                      Container.ObjectId,
@@ -339,20 +344,6 @@ BEGIN
                                   LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
                                 GROUP BY Container.ObjectId
                              )
-
-      , Reserve
-        AS
-        (
-            SELECT MovementItem.ObjectId                       AS GoodsId
-                 , Sum(MovementItem.Amount)::TFloat            AS Amount
-            FROM tmpMov
-                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
-                                                AND MovementItem.DescId     = zc_MI_Master()
-                                                AND MovementItem.isErased   = FALSE
-                                                AND MovementItem.Amount    <> 0
-
-            GROUP BY MovementItem.ObjectId
-         )
           -- Непосредственно остатки
        , GoodsRemains AS (SELECT Container.ObjectId
                                , Container.Remains - COALESCE(tmpPDGoodsRemainsAll.Remains, 0)                   AS Remains
