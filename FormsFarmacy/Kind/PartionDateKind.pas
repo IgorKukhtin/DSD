@@ -15,6 +15,7 @@ uses
 type
   TPartionDateKindForm = class(TAncestorEnumForm)
     spUpdateObject: TdsdStoredProc;
+    AmountMonth: TcxGridDBColumn;
   private
     { Private declarations }
   public

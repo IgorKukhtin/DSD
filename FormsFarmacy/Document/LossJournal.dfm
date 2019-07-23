@@ -48,6 +48,11 @@ inherited LossJournalForm: TLossJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = TotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = TotalSummPrice
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -83,6 +88,14 @@ inherited LossJournalForm: TLossJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -98,17 +111,27 @@ inherited LossJournalForm: TLossJournalForm
             DataBinding.FieldName = 'ArticleLossName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 276
+            Width = 241
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
+            Width = 94
+          end
+          object TotalSummPrice: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074'  '#1088#1086#1079#1085'. '#1094#1077#1085#1072#1093
+            DataBinding.FieldName = 'TotalSummPrice'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
           end
         end
       end
@@ -224,6 +247,9 @@ inherited LossJournalForm: TLossJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

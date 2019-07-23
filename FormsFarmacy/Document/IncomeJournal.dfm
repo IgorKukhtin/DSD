@@ -385,6 +385,23 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 80
           end
+          object UpdateDate_Order: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
+            DataBinding.FieldName = 'UpdateDate_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1086#1090#1087#1088#1072#1074#1082#1080') '#1079#1072#1103#1074#1082#1080' '#1087#1086#1089#1090'.'
+            Options.Editing = False
+            Width = 80
+          end
+          object OrderKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
+            DataBinding.FieldName = 'OrderKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
           object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'isDeferred'

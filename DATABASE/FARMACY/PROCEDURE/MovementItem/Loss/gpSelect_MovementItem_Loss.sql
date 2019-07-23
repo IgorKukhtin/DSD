@@ -177,9 +177,9 @@ BEGIN
                  , COALESCE(MovementItem.IsErased,FALSE) AS isErased
             FROM tmpGoods
                 LEFT JOIN MovementItem ON tmpGoods.Id = MovementItem.ObjectId 
-                                       AND MovementItem.MovementId = inMovementId
-                                       AND MovementItem.DescId = zc_MI_Master()
-                                       AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
+                                      AND MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId = zc_MI_Master()
+                                      AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
                 LEFT OUTER JOIN CurrPRICE ON CurrPRICE.GoodsId = tmpGoods.Id
                 LEFT OUTER JOIN REMAINS ON REMAINS.ObjectId = tmpGoods.Id 
                 LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id

@@ -7,20 +7,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 138
+    Top = 166
     Width = 1054
-    Height = 378
+    Height = 350
     ExplicitTop = 138
     ExplicitWidth = 1054
     ExplicitHeight = 378
-    ClientRectBottom = 378
+    ClientRectBottom = 350
     ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1054
       ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 1054
-        Height = 354
+        Height = 326
         ExplicitWidth = 1054
         ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -644,10 +644,10 @@
   end
   inherited DataPanel: TPanel
     Width = 1054
-    Height = 112
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1054
-    ExplicitHeight = 112
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -967,10 +967,44 @@
       Top = 46
       Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
     end
+    object edOrderKind: TcxButtonEdit
+      Left = 381
+      Top = 113
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 160
+    end
+    object cxLabel18: TcxLabel
+      Left = 320
+      Top = 114
+      Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+    end
+    object cxLabel19: TcxLabel
+      Left = 552
+      Top = 114
+      Caption = #1044#1072#1090#1072' / '#1074#1088'. ('#1086#1090#1087#1088#1072#1074#1082#1080')'
+    end
+    object edUpdateDateOrder: TcxDateEdit
+      Left = 668
+      Top = 113
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 41
+      Width = 109
+    end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
-    Left = 757
-    Top = 88
+    Left = 79
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -978,11 +1012,11 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 140
+    Width = 235
   end
   object cxLabel25: TcxLabel [3]
-    Left = 685
-    Top = 89
+    Left = 8
+    Top = 114
     Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090'.'
   end
   object cxLabel14: TcxLabel [4]
@@ -2468,6 +2502,28 @@
         Component = edCheckDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindId'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindName'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UpdateDate_Order'
+        Value = 'NULL'
+        Component = edUpdateDateOrder
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 280
@@ -3309,9 +3365,34 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindId'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindName'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UpdateDate'
+        Value = 'NULL'
+        Component = edUpdateDateOrder
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 828
-    Top = 72
+    Left = 180
+    Top = 104
   end
   object spUpdateMovementIncome_OrderExt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_OrderExternal'
@@ -3564,5 +3645,34 @@
     PackSize = 1
     Left = 968
     Top = 320
+  end
+  object GuidesOrderKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderKind
+    FormNameParam.Value = 'TOrderKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 448
+    Top = 104
   end
 end

@@ -40,6 +40,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edMarginPercent: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edSummSUN: TcxCurrencyEdit;
   private
     { Private declarations }
   public

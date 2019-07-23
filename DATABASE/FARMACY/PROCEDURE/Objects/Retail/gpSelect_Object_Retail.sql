@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MarginPercent TFloat
+             , SummSUN TFloat
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -20,12 +21,17 @@ BEGIN
            , Object_Retail.ValueData  AS NAME
 
            , COALESCE (ObjectFloat_MarginPercent.ValueData, 0) :: TFloat AS MarginPercent
+           , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
             LEFT JOIN ObjectFloat AS ObjectFloat_MarginPercent
                                   ON ObjectFloat_MarginPercent.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_MarginPercent.DescId = zc_ObjectFloat_Retail_MarginPercent() 
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_SummSUN
+                                  ON ObjectFloat_SummSUN.ObjectId = Object_Retail.Id 
+                                 AND ObjectFloat_SummSUN.DescId = zc_ObjectFloat_Retail_SummSUN()
        WHERE Object_Retail.DescId = zc_Object_Retail();
    
 END;
@@ -35,6 +41,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.07.19         * SummSUN
  25.03.19         *
 */
 

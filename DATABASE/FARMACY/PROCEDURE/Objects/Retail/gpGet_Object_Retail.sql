@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MarginPercent TFloat
+             , SummSUN TFloat
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -23,6 +24,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
            , CAST ('' as TVarChar)   AS Name
            , CAST (0 AS TFloat)      AS MarginPercent
+           , CAST (0 AS TFloat)      AS SummSUN
 
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
@@ -33,12 +35,16 @@ BEGIN
            , Object_Retail.ValueData  AS Name
 
            , COALESCE (ObjectFloat_MarginPercent.ValueData, 0) :: TFloat AS MarginPercent
+           , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
             LEFT JOIN ObjectFloat AS ObjectFloat_MarginPercent
                                   ON ObjectFloat_MarginPercent.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_MarginPercent.DescId = zc_ObjectFloat_Retail_MarginPercent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_SummSUN
+                                  ON ObjectFloat_SummSUN.ObjectId = Object_Retail.Id 
+                                 AND ObjectFloat_SummSUN.DescId = zc_ObjectFloat_Retail_SummSUN()
        WHERE Object_Retail.Id = inId;
 
    END IF; 
@@ -51,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.07.19         * SummSUN
  25.03.19         *
 */
 

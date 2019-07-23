@@ -790,12 +790,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeDialogForm');
     exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleDialogForm');
     exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeDialogForm'));
@@ -1484,12 +1485,12 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 end;
@@ -1587,12 +1588,12 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;
@@ -1607,6 +1608,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCheckDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadAdditionalGoodsFormTest;

@@ -26,6 +26,7 @@ RETURNS TABLE (OperDate  TDateTime
              , SummSample TFloat
              , PriceSale TFloat
              , SummSale TFloat
+             , ExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -96,6 +97,7 @@ BEGIN
                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                      WHERE Movement.DescId = zc_Movement_Income()
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
                      AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                      )
 
@@ -122,6 +124,13 @@ BEGIN
                             AND MovementItemFloat.DescId = zc_MIFloat_Price()
                          )
 
+   , tmpMIDate_ExpirationDate AS (SELECT MovementItemDate.*
+                                  FROM MovementItemDate
+                                  WHERE MovementItemDate.MovementItemId IN (SELECT tmpMI_Sample.Id FROM tmpMI_Sample)
+                                    AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
+                                 )
+
+
       SELECT Movement.OperDate
            , Movement.InvNumber
 
@@ -141,9 +150,11 @@ BEGIN
            , COALESCE(MovementItem.PriceSample,0)                    ::TFloat     AS PriceSample
            , (((COALESCE (MovementItem.Amount, 0)) * COALESCE(MovementItem.PriceSample,0))::NUMERIC (16, 2))::TFloat AS SummSample
       
-           , COALESCE(MIFloat_PriceSale.ValueData,0)                    ::TFloat     AS PriceSale
+           , COALESCE(MIFloat_PriceSale.ValueData,0)                 ::TFloat     AS PriceSale
            , (((COALESCE (MovementItem.Amount, 0)) * COALESCE(MIFloat_PriceSale.ValueData,0))::NUMERIC (16, 2))::TFloat AS SummSale
        
+           , COALESCE (MIDate_ExpirationDate.ValueData, NULL)        :: TDateTime AS ExpirationDate
+           
       FROM tmpMI_Sample AS MovementItem 
            LEFT JOIN tmpMovement AS Movement ON Movement.Id = MovementItem.MovementId
 
@@ -153,7 +164,9 @@ BEGIN
            LEFT JOIN tmpMIFloat_PriceSale AS MIFloat_PriceSale
                                           ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                         -- AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
- 
+           LEFT JOIN tmpMIDate_ExpirationDate AS MIDate_ExpirationDate
+                                              ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -174,6 +187,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.07.19         * add ExpirationDate
  10.10.18         *
 */
 

@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_Retail()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
     IN inCode                  Integer   ,     -- Код объекта  
     IN inName                  TVarChar  ,     -- Название объекта 
     IN inMarginPercent         TFloat    ,     --
+    IN inSummSUN               TFloat    ,     --
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,6 +36,9 @@ BEGIN
    -- сохранили св-во <Код GLN - Получатель>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_MarginPercent(), ioId, inMarginPercent);
 
+   -- сохранили св-во <сумма, при которой включается СУН>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_SummSUN(), ioId, inSummSUN);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -44,6 +49,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.07.19         * inSummSUN
  23.03.19         *
 */
 

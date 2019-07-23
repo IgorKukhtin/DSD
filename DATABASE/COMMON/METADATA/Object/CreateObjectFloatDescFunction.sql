@@ -1348,6 +1348,11 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_MarginPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_MarginPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_MarginPercent', '% наценки для срока годности < 6 мес.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_MarginPercent');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_SummSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_SummSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_SummSUN', 'сумма, при которой включается СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_SummSUN');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CreditLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CreditLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CreditLimit', 'Кредитный лимит по дистрибьютору' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CreditLimit');
@@ -1397,6 +1402,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.07.19         * zc_ObjectFloat_Retail_SummSUN
  15.07.19                                                                                      * zc_ObjectFloat_PartionDateKind_Day
  21.06.19                                                                                      * zc_ObjectFloat_PartionGoods_PriceWithVAT 
  07.06.19                                                                                      * zc_ObjectFloat_CreditLimitJuridical_CreditLimit 

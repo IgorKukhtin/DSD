@@ -2,7 +2,7 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 209
+  ClientHeight = 242
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object RetailEditForm: TRetailEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 55
-    Top = 167
+    Left = 47
+    Top = 207
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 207
-    Top = 167
+    Left = 199
+    Top = 207
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -70,6 +70,19 @@ object RetailEditForm: TRetailEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 7
+    Width = 309
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 147
+    Caption = 'C'#1091#1084#1084#1072', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1081' '#1074#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1057#1059#1053
+  end
+  object edSummSUN: TcxCurrencyEdit
+    Left = 10
+    Top = 168
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 9
     Width = 309
   end
   object ActionList: TActionList
@@ -139,10 +152,18 @@ object RetailEditForm: TRetailEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummSUN'
+        Value = Null
+        Component = edSummSUN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 72
+    Left = 112
+    Top = 48
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -187,10 +208,17 @@ object RetailEditForm: TRetailEditForm
         Component = edMarginPercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummSUN'
+        Value = Null
+        Component = edSummSUN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 144
+    Left = 136
+    Top = 208
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

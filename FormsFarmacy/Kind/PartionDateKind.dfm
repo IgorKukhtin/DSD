@@ -3,7 +3,7 @@ inherited PartionDateKindForm: TPartionDateKindForm
   ClientHeight = 328
   ClientWidth = 495
   ExplicitWidth = 511
-  ExplicitHeight = 367
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -45,12 +45,18 @@ inherited PartionDateKindForm: TPartionDateKindForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object AmountMonth: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1084#1077#1089#1103#1094#1077#1074
+            DataBinding.FieldName = 'AmountMonth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          end
           object AmountDay: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1076#1085#1077#1081
             DataBinding.FieldName = 'AmountDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -214,6 +220,14 @@ inherited PartionDateKindForm: TPartionDateKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountDay'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountMonth'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

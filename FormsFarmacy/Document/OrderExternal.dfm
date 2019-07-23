@@ -4,7 +4,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientWidth = 820
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 836
-  ExplicitHeight = 650
+  ExplicitHeight = 649
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1728,8 +1728,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 32
+    Left = 488
+    Top = 16
   end
   object spUpdateMovementUserSend: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_UserSend'

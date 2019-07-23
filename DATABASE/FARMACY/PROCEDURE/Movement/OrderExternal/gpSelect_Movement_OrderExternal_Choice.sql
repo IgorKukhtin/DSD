@@ -18,6 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , isDeferred Boolean
+             , OrderKindId Integer, OrderKindName TVarChar
+             , UpdateDate TDateTime
               )
 
 AS
@@ -54,8 +56,22 @@ BEGIN
            , Movement_OrderExternal_View.ContractName
            , Movement_OrderExternal_View.isDeferred
 
+           , Object_OrderKind.Id           AS OrderKindId
+           , Object_OrderKind.ValueData    AS OrderKindName
+           , MovementDate_Update.ValueData AS UpdateDate
+
        FROM Movement_OrderExternal_View 
-             JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
+             JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                          ON MovementLinkObject_OrderKind.MovementId = Movement_OrderExternal_View.MasterId
+                                         AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+    
+             LEFT JOIN MovementDate AS MovementDate_Update
+                                    ON MovementDate_Update.MovementId = Movement_OrderExternal_View.Id
+                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
        WHERE Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
          AND (Movement_OrderExternal_View.FromId = inJuridicalId OR inJuridicalId = 0)
          AND (Movement_OrderExternal_View.ToId = inUnitId OR inUnitId = 0)

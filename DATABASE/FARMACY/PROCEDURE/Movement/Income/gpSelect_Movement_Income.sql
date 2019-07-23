@@ -23,10 +23,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , isDeferred Boolean
+             , UpdateDate_Order TDateTime
+             , OrderKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , PaymentDays TFloat
              , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
+             
              )
 
 AS
@@ -186,7 +189,9 @@ BEGIN
              , Movement_Order.Id                    AS Movement_OrderId
              , Movement_Order.InvNumber             AS Movement_OrderInvNumber
              , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
-             , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
+             , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean   AS isDeferred
+             , COALESCE (MovementDate_Update_Order.ValueData, NULL) :: TDateTime AS UpdateDate_Order
+             , Object_OrderKind.ValueData           AS OrderKindName
 
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
@@ -308,6 +313,18 @@ BEGIN
                                   ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
+        LEFT JOIN MovementLinkMovement AS MLM_Master
+                                       ON MLM_Master.MovementId = Movement_Order.Id
+                                      AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                     ON MovementLinkObject_OrderKind.MovementId = MLM_Master.MovementChildId
+                                    AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+        LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+
+        LEFT JOIN MovementDate AS MovementDate_Update_Order
+                               ON MovementDate_Update_Order.MovementId = Movement_Order.Id
+                              AND MovementDate_Update_Order.DescId = zc_MovementDate_Update()
+
         LEFT JOIN MovementLinkObject AS MLO_MemberIncomeCheck
                                      ON MLO_MemberIncomeCheck.MovementId = Movement_Income.Id
                                     AND MLO_MemberIncomeCheck.DescId = zc_MovementLinkObject_MemberIncomeCheck()
@@ -353,6 +370,8 @@ BEGIN
                , Object_MemberIncomeCheck.Id  
                , Object_MemberIncomeCheck.ValueData
                , MovementDate_Check.ValueData
+               , COALESCE (MovementDate_Update_Order.ValueData, NULL)
+               , Object_OrderKind.ValueData
 ;
 
 END;
@@ -364,6 +383,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 23.07.19         *
  24.09.18         *
  05.01.18         * add NDS
  15.01.17         * без вьюх

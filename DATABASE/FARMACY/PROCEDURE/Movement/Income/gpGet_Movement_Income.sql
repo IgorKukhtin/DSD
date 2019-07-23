@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , IsPay Boolean, DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , isDeferred Boolean
+             , UpdateDate_Order TDateTime
+             , OrderKindId Integer, OrderKindName TVarChar
               )
 AS
 $BODY$
@@ -70,6 +72,10 @@ BEGIN
              , CAST('' as TVarChar)                             AS Movement_OrderInvNumber_full
              , false                                            AS isDeferred 
 
+             , NULL ::TDateTime                                 AS UpdateDate_Order
+             , 0                                                AS OrderKindId
+             , CAST('' as TVarChar)                             AS OrderKindName
+             
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -150,6 +156,10 @@ BEGIN
           , ('π ' || Movement_Order.InvNumber ||' ÓÚ '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
+          , COALESCE (MovementDate_Update_Order.ValueData, NULL) :: TDateTime AS UpdateDate_Order
+          , Object_OrderKind.Id                            AS OrderKindId
+          , Object_OrderKind.ValueData                     AS OrderKindName
+
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
              LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
@@ -158,6 +168,18 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                        ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+             LEFT JOIN MovementLinkMovement AS MLM_Master
+                                            ON MLM_Master.MovementId = Movement_Order.Id
+                                           AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                          ON MovementLinkObject_OrderKind.MovementId = MLM_Master.MovementChildId
+                                         AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+
+             LEFT JOIN MovementDate AS MovementDate_Update_Order
+                                    ON MovementDate_Update_Order.MovementId = Movement_Order.Id
+                                   AND MovementDate_Update_Order.DescId = zc_MovementDate_Update()
         GROUP BY
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -187,7 +209,11 @@ BEGIN
           , Movement_Income.isPay
           , Movement_Order.InvNumber
           , Movement_Order.Id  
-          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE);
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)
+          , COALESCE (MovementDate_Update_Order.ValueData, NULL)
+          , Object_OrderKind.Id
+          , Object_OrderKind.ValueData
+          ;
     END IF;
 
 END;
@@ -199,6 +225,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 23.07.19         *
  18.10.16         * add isRegistered
  22.04.16         *
  30.01.16         *

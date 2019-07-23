@@ -184,7 +184,23 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 51
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          object OrderKindName: TcxGridDBColumn [2]
+            Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
+            DataBinding.FieldName = 'OrderKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object UpdateDate: TcxGridDBColumn [3]
+            Caption = #1044#1072#1090#1072' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
@@ -359,6 +375,29 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'isDeferred'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OrderKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OrderKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OrderKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OrderKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UpdateDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'UpdateDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

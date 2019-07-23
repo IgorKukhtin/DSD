@@ -164,6 +164,11 @@ type
     actLinkCheck: TdsdExecStoredProc;
     spCheckObject: TdsdStoredProc;
     actCheckObject: TdsdExecStoredProc;
+    edOrderKind: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    GuidesOrderKind: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edUpdateDateOrder: TcxDateEdit;
   private
     { Private declarations }
   public

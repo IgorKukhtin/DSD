@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionDateKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EnumName TVarChar
              , AmountDay Integer
+             , AmountMonth Integer
              , isErased Boolean
              ) AS
              
@@ -22,7 +23,8 @@ $BODY$BEGIN
       , Object_PartionDateKind.ObjectCode   AS Code
       , Object_PartionDateKind.ValueData    AS Name
       , ObjectString.ValueData              AS EnumName
-      , COALESCE (ObjectFloat_Day.ValueData, 0)::Integer AS AmountDay
+      , COALESCE (ObjectFloat_Day.ValueData, 0)  ::Integer AS AmountDay
+      , COALESCE (ObjectFloat_Month.ValueData, 0)::Integer AS AmountMonth
       , Object_PartionDateKind.isErased     AS isErased
    FROM Object AS Object_PartionDateKind
         LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_PartionDateKind.Id
@@ -30,6 +32,9 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Day
                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                             AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
    WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind();
   
 END;$BODY$
@@ -40,6 +45,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.07.19         *
  15.07.19                                                       *
  19.04.19         *
 

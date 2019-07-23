@@ -195,6 +195,14 @@ inherited Report_IncomeSampleForm: TReport_IncomeSampleForm
             Options.Editing = False
             Width = 214
           end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
