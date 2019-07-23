@@ -185,7 +185,15 @@ BEGIN
      -- Кусок ниже реализован !!!временно!!! пока работает одна сеть или много сетей !!!но со сквозной синхронизацией!!!
 
      -- !!!поиск по коду - vbCode!!!
-     vbMainGoodsId:= (SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
+     vbMainGoodsId:= --(SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
+                      (SELECT ObjectBoolean_Goods_isMain.ObjectId
+                       FROM Object AS Object_Goods 
+                            INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain 
+                                                     ON ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+                                                    AND ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
+                       WHERE Object_Goods.DescId = zc_Object_Goods()
+                         AND Object_Goods.ObjectCode  = vbCode
+                       );
 
      -- Добавление/Изменение данных в общем справочнике
      vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, 0, vbUserId, 0, '');
@@ -200,7 +208,6 @@ BEGIN
      WHERE Object_Retail.DescId = zc_Object_Retail()
        -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
      ;
-
 
      IF COALESCE (inMorionCode, 0) > 0
      THEN
@@ -259,6 +266,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 23.07.19         * ускорение
  15.06.16                                                                      *
  01.04.16                                                                      *
  28.09.18                                                                      *
@@ -276,4 +284,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Goods
+--select * from gpInsertUpdate_Object_Goods(ioId := 4414 , inCode := '2272' , inName := 'Клотримазол крем 1% 20г (Глаксо)' , inGoodsGroupId := 394774 , inMeasureId := 323 , inNDSKindId := 9 , inMinimumLot := 0 , inReferCode := 0 , inReferPrice := 0 , inPrice := 0 , inIsClose := 'False' , inTOP := 'False' , inPercentMarkup := 0 , inMorionCode := 64453 , inBarCode := '5900008005937' , inNameUkr := '' , inCodeUKTZED := '' , inExchangeId := 0 ,  inSession := '183242');

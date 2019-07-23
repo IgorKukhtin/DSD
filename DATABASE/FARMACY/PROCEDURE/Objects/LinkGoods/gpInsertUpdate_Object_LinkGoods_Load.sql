@@ -20,10 +20,28 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
 
      -- поиск
-     vbGoodsMainId:= (SELECT Id FROM Object_Goods_Main_View WHERE GoodsCode = inGoodsMainCode :: Integer);
+     --vbGoodsMainId:= (SELECT Id FROM Object_Goods_Main_View WHERE GoodsCode = inGoodsMainCode :: Integer);
+     vbGoodsMainId := (SELECT ObjectBoolean_Goods_isMain.ObjectId
+                       FROM Object AS Object_Goods 
+                            INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain 
+                                                     ON ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+                                                    AND ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
+                       WHERE Object_Goods.DescId = zc_Object_Goods()
+                         AND Object_Goods.ObjectCode  = inGoodsMainCode :: Integer
+                       );
      -- поиск
-
-     vbGoodsId:= (SELECT Id FROM Object_Goods_View WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode);
+     --vbGoodsId:= (SELECT Id FROM Object_Goods_View WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode);
+     vbGoodsId := (SELECT ObjectLink_Goods_Object.ObjectId
+                   FROM ObjectLink AS ObjectLink_Goods_Object
+                        LEFT JOIN Object AS Object_Goods 
+                                         ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                                        AND Object_Goods.DescId = zc_Object_Goods()
+                        INNER JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                              AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+                                              AND ObjectString.ValueData = inGoodsCode
+                   WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                     AND ObjectLink_Goods_Object.ChildObjectId = inRetailId
+                   );
 
      -- проверка
      IF COALESCE (vbGoodsMainId, 0) = 0 THEN
