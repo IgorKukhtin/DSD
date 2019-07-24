@@ -3,6 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
+  ExplicitTop = -88
   ExplicitWidth = 816
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -409,6 +410,61 @@ inherited LossForm: TLossForm
         end>
       Caption = 'actExecSPAddDeferredCheck'
     end
+    object actLoadSend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceSend
+        end
+        item
+          Action = actExecSPAddSend
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1072#1085#1080#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1072#1085#1080#1103
+      ImageIndex = 24
+    end
+    object actOpenChoiceSend: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceSend'
+      FormName = 'TChoiceSendForm'
+      FormNameParam.Value = 'TChoiceSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSPAddSend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spAddSend
+      StoredProcList = <
+        item
+          StoredProc = spAddSend
+        end>
+      Caption = 'actExecSPAddSend'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -517,6 +573,10 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -566,6 +626,10 @@ inherited LossForm: TLossForm
     end
     object dxBarButton1: TdxBarButton
       Action = actLoadDeferredCheck
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actLoadSend
       Category = 0
     end
   end
@@ -1326,7 +1390,32 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 494
-    Top = 520
+    Left = 478
+    Top = 480
+  end
+  object spAddSend: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Loss_AddSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSendID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 470
+    Top = 544
   end
 end

@@ -790,13 +790,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeDialogForm');
     exit;
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleDialogForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeDialogForm'));
@@ -883,24 +883,25 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_PromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_PromoForm');
     exit;
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeJournalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeJournalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeDialogForm');
-
+    exit;
+ {
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorForm');
@@ -1821,6 +1822,10 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));

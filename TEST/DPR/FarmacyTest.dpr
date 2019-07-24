@@ -717,7 +717,8 @@ uses
   Report_GoodsPartionDate_Promo in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate_Promo.pas' {Report_GoodsPartionDate_PromoForm: TParentForm},
   Report_GoodsPartionDate_PromoDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate_PromoDialog.pas' {Report_GoodsPartionDate_PromoDialogForm: TParentForm},
   GoodsGroupPromo in '..\..\FormsFarmacy\Guides\GoodsGroupPromo.pas' {GoodsGroupPromoForm: TParentForm},
-  GoodsGroupPromoEdit in '..\..\FormsFarmacy\Guides\GoodsGroupPromoEdit.pas' {GoodsGroupPromoEditForm: TParentForm};
+  GoodsGroupPromoEdit in '..\..\FormsFarmacy\Guides\GoodsGroupPromoEdit.pas' {GoodsGroupPromoEditForm: TParentForm},
+  ChoiceSend in '..\..\FormsFarmacy\Guides\ChoiceSend.pas' {ChoiceSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -26,8 +26,6 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitHeight = 381
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -353,6 +351,9 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
           Action = actExecuteOverdueDialog
         end
         item
+          Action = actShowPUSHSendPartionDate
+        end
+        item
           Action = actTransfer_SendPartionDate
         end
         item
@@ -401,6 +402,16 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
           StoredProc = spTransfer_SendPartionDate
         end>
       Caption = 'actTransfer_SendPartionDate'
+    end
+    object actShowPUSHSendPartionDate: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spShowPUSHSendPartionDate
+      StoredProcList = <
+        item
+          StoredProc = spShowPUSHSendPartionDate
+        end>
+      Caption = 'actShowPUSHSendPartionDate'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -536,5 +547,65 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
       end>
     Left = 48
     Top = 296
+  end
+  object spShowPUSHSendPartionDate: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementTransferMeneger_PUSHSendPartionDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContainerID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContainerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContainerPGID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContainerPGID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'ExpirationDateDialog'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AmountDialog'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 288
   end
 end
