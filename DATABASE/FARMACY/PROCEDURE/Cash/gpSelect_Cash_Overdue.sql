@@ -126,6 +126,8 @@ BEGIN
     AND Container.WhereObjectId = vbUnitId
     AND ObjectFloat_PartionGoods_ExpirationDate.ValueData <= CURRENT_DATE
     AND Container.Amount > 0
+ -- !!!
+ -- AND 1=0
   ORDER BY Object_Goods.ValueData;
 
 END;

@@ -136,7 +136,10 @@ BEGIN
 
                             WHERE Container.DescId = zc_Container_CountPartionDate()
                               AND Container.WhereObjectId = vbUnitId
-                              AND Container.Amount <> 0)
+                              AND Container.Amount <> 0
+                           -- !!!
+                           -- AND 1=0
+                              )
        , tmpPDContainer AS (SELECT Container.Id,
                                    Container.ParentID,
                                    Container.Amount,
@@ -153,7 +156,8 @@ BEGIN
                                  LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                       ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
                                                      AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-
+                         -- !!!
+                         -- WHERE 1=0
                                   )
        , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                           AND ObjectFloat_Goods_Price.ValueData > 0
