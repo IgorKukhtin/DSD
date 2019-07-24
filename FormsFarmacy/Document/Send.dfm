@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1003
   ExplicitWidth = 1019
-  ExplicitHeight = 656
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -705,6 +705,17 @@ inherited SendForm: TSendForm
       TabOrder = 14
       Width = 133
     end
+    object cbDefSun: TcxCheckBox
+      Left = 616
+      Top = 103
+      Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 15
+      Width = 193
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 8
@@ -751,8 +762,8 @@ inherited SendForm: TSendForm
     Width = 37
   end
   object ceChecked: TcxCheckBox [8]
-    Left = 693
-    Top = 108
+    Left = 787
+    Top = 88
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
     Visible = False
@@ -1653,6 +1664,20 @@ inherited SendForm: TSendForm
         Component = GuidesPartionDateKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSun'
+        Value = Null
+        Component = cbSun
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDefSun'
+        Value = Null
+        Component = cbDefSun
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
