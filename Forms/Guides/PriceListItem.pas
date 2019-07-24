@@ -84,6 +84,16 @@ type
     spInsertUpdate_Separate: TdsdStoredProc;
     actInsertUpdate_Separate: TdsdExecStoredProc;
     bbInsertUpdate_Separate: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    actPrintGrid: TdsdPrintAction;
+    bbPrintGrid: TdxBarButton;
+    TradeMarkName: TcxGridDBColumn;
+    Weight: TcxGridDBColumn;
+    value1: TcxGridDBColumn;
+    value2_4: TcxGridDBColumn;
+    value5_6: TcxGridDBColumn;
+    valueprice_kg: TcxGridDBColumn;
+    valuepricewithvat_kg: TcxGridDBColumn;
   private
     { Private declarations }
   public
