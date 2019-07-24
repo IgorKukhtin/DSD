@@ -407,6 +407,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
         end>
       Params = <
         item

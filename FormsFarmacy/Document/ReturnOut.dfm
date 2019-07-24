@@ -628,6 +628,7 @@ inherited ReturnOutForm: TReturnOutForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
         end>
       Params = <
         item
