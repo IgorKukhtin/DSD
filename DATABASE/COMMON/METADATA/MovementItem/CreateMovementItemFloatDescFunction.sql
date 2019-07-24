@@ -1071,6 +1071,10 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SendSUN() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SendSUN', 'Перемещение по СУН'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SendSUN');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SendDefSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SendDefSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SendDefSUN', 'Отложенное Перемещение по СУН' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SendDefSUN');
+
 CREATE OR REPLACE FUNCTION zc_MIFloat_RemainsSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_RemainsSUN', 'остаток в тек. аптеке сроковых'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsSUN');
@@ -1078,6 +1082,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 24.07.19         * zc_MIFloat_SendDefSUN
  11.07.19         * zc_MIFloat_SendSUN
                     zc_MIFloat_RemainsSUN
  23.06.19                                                                                                     * zc_MIFloat_PricePartionDate()

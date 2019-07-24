@@ -25,21 +25,9 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_PartionDateKind());
 
    -- проверка
-   SELECT COALESCE (ObjectFloat_Day.ValueData, 0)  ::Integer AS AmountDay
-        , COALESCE (ObjectFloat_Month.ValueData, 0)::Integer AS AmountMonth
-      INTO vbDay, vbMonth
-   FROM ObjectFloat AS ObjectFloat_Day
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                              ON ObjectFloat_Month.ObjectId = ObjectFloat_Day.ObjectId
-                             AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-   WHERE ObjectFloat_Day.ObjectId = inId
-     AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day();
-
-   
-   IF COALESCE (inDay,0) <> vbDay AND COALESCE (inMonth,0) <> vbMonth
+   IF COALESCE (inDay,0) <> 0 AND COALESCE (inMonth,0) <> 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Должен быть введен один из параметров Кол.дней или Кол.месяцев.';
+       RAISE EXCEPTION 'Ошибка.Должен быть введен только один из параметров Кол.дней или Кол.месяцев.';
    END IF;
    
    -- сохранили <Объект>
