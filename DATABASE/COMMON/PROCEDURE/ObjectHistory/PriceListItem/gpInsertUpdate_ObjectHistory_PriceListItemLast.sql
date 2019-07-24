@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
    OUT outStartDate             TDateTime,  -- Дата действия цены
    OUT outEndDate               TDateTime,  -- Дата действия цены
     IN inValue                  TFloat,     -- Значение цены
+   OUT outPriceNoVAT            TFloat,     -- Значение цены без НДС
+   OUT outPriceWVAT             TFloat,     -- Значение цены с НДС
     IN inIsLast                 Boolean,    -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -19,6 +21,8 @@ $BODY$
 DECLARE
    DECLARE vbUserId Integer;
    DECLARE vbPriceListItemId Integer;
+   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbVATPercent TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
@@ -96,6 +100,29 @@ BEGIN
    -- вернули значения
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
+       -- параметры прайс листа
+       SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+            , ObjectFloat_VATPercent.ValueData     AS VATPercent
+      INTO vbPriceWithVAT, vbVATPercent
+       FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
+            LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                  ON ObjectFloat_VATPercent.ObjectId = ObjectBoolean_PriceWithVAT.ObjectId
+                                 AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+       WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
+         AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
+   
+   -- расчет цены без НДС, до 4 знаков
+   outPriceNoVAT := CASE WHEN vbPriceWithVAT = TRUE
+                         THEN CAST (inValue - inValue * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                         ELSE inValue
+                    END ::TFloat;
+
+   -- расчет цены с НДС, до 4 знаков
+   outPriceWVAT := CASE WHEN vbPriceWithVAT <> TRUE
+                        THEN CAST ((inValue + inValue * (vbVATPercent / 100)) AS NUMERIC (16, 2))
+                        ELSE CAST (inValue AS NUMERIC (16, 4))
+                   END ::TFloat;
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
 
@@ -107,6 +134,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.07.19         *
  20.08.15         * lpInsert_ObjectHistoryProtocol
  09.12.14                                        *
 */

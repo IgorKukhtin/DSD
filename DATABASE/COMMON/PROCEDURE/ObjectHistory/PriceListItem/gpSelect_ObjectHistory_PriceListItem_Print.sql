@@ -16,8 +16,6 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ValuePrice_kg TFloat, ValuePriceWithVAT_kg TFloat
                 , Weight TFloat
                 , Value1 TVarChar, Value2_4 TVarChar, Value5_6 TVarChar
-
-
                )
 AS
 $BODY$
