@@ -312,7 +312,16 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
             Options.Editing = False
-            Width = 70
+            Width = 58
+          end
+          object isDefSUN: TcxGridDBColumn
+            Caption = ' '#9#1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isDefSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = ' '#9#1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 77
           end
           object MCSPeriod: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047

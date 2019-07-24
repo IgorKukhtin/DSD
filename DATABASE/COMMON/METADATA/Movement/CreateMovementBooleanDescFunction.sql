@@ -174,9 +174,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_SUN() RETURNS integer AS $BODY$BEG
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_SUN', 'Перемещение по СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SUN');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_DefSUN() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_DefSUN'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_DefSUN', 'Отложено перемещение по СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DefSUN');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 24.07.19         * zc_MovementBoolean_DefSUN
  11.07.19         * zc_MovementBoolean_SUN
  26.06.19                                                                                    * zc_MovementBoolean_Transfer
  11.05.19                                                                                    * zc_MovementBoolean_PUSHDaily

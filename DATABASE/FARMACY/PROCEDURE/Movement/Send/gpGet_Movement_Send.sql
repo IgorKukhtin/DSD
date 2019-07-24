@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isComplete Boolean
              , isDeferred Boolean
              , isSUN Boolean
+             , isDefSUN Boolean
               )
 AS
 $BODY$
@@ -52,6 +53,7 @@ BEGIN
              , FALSE                                            AS isComplete
              , FALSE                                            AS isDeferred
              , FALSE                                            AS isSUN
+             , FALSE                                            AS isDefSUN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -78,6 +80,7 @@ BEGIN
            , COALESCE (MovementBoolean_Complete.ValueData, FALSE)::Boolean AS isComplete
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
+           , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -103,7 +106,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-       
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
@@ -113,14 +116,18 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Complete
                                       ON MovementBoolean_Complete.MovementId = Movement.Id
                                      AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
- 
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
- 
+
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                       ON MovementBoolean_SUN.MovementId = Movement.Id
                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                      ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                     AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
@@ -143,6 +150,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 24.07.19         * zc_MovementBoolean_DefSUN
  11.07.19         * zc_MovementBoolean_SUN
  09.06.19         * PartionDateKind
  08.11.17         * Deferred

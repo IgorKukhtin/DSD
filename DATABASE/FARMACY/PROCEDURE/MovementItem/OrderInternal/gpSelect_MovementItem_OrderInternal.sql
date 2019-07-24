@@ -120,9 +120,8 @@ BEGIN
          INTO vbMainJuridicalId
      FROM MovementLinkObject
           INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                         ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject.ObjectId
-                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-
+                                ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject.ObjectId
+                               AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
      WHERE MovementLinkObject.MovementId = inMovementId
        AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
@@ -422,7 +421,7 @@ BEGIN
       , tmpMIF_AmountManual AS (SELECT tmpMIF.*
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_AmountManual()
-                                 )
+                                )
 
       , tmpMIString_Comment AS (SELECT MIString_Comment.*
                                 FROM MovementItemString AS MIString_Comment
@@ -676,6 +675,7 @@ BEGIN
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
            , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount
+           , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount
            , tmpMI.RemainsSUN                           ::TFloat    AS RemainsSUN
 
            , tmpMI.CountPrice
@@ -771,6 +771,7 @@ BEGIN
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
            ;
+
 
 --     RETURN NEXT Cursor1;
 
@@ -1558,13 +1559,9 @@ BEGIN
                               , CEIL(tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData , 1))
                                 * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData , 1)                       AS CalcAmount
                               , ObjectFloat_Goods_MinimumLot.ValueData                                       AS MinimumLot
-
                               , COALESCE (GoodsPrice.isTOP, FALSE)                                           AS Price_isTOP
-
                          FROM tmpMI_All AS tmpMI
-
                                LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpMI.ObjectId
-
                                LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
                                                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI.ObjectId
                                                               -- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
@@ -1689,7 +1686,6 @@ BEGIN
                               AND MILinkObject.MovementItemId in (SELECT tmpMI_Master.Id from tmpMI_Master)
                             )
 
-
       , tmpMIString_Comment AS (SELECT MIString_Comment.*
                                 FROM MovementItemString AS MIString_Comment
 --                                  INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MIString_Comment.MovementItemId
@@ -1740,82 +1736,79 @@ BEGIN
                             )
 
 , tmpMI_all_MinLot AS (SELECT MovementItem.Id
-                       , MovementItem.ObjectId                                            AS GoodsId
-                       , MovementItem.Amount                                              AS Amount
-                       , MovementItem.CalcAmount
-                       , MIFloat_Summ.ValueData                                           AS Summ
-                       , MovementItem.MinimumLot                                          AS Multiplicity
-                       , MIString_Comment.ValueData                                       AS Comment
-                       , COALESCE(PriceList.MakerName, MinPrice.MakerName)                AS MakerName
-                       , MIBoolean_Calculated.ValueData                                   AS isCalculated
-                       -- , ObjectFloat_Goods_MinimumLot.valuedata                           AS MinimumLot
-                       , COALESCE(PriceList.Price, MinPrice.Price)                        AS Price
-                       , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate)  AS PartionGoodsDate
-                       , COALESCE(PriceList.GoodsId, MinPrice.GoodsId)                    AS PartnerGoodsId
-                       , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)                AS PartnerGoodsCode
-                       , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)                AS PartnerGoodsName
-                       , COALESCE(PriceList.JuridicalId, MinPrice.JuridicalId)            AS JuridicalId
-                       , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
-                       , COALESCE(PriceList.ContractId, MinPrice.ContractId)              AS ContractId
-                       , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
-                       , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
-                       , COALESCE(PriceList.SuperFinalPrice_Deferment, MinPrice.SuperFinalPrice_Deferment) AS SuperFinalPrice_Deferment
-                       --, MovementItem.Goods_isTOP
-                       , MovementItem.Price_isTOP
-                       , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
-                       , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
-                       , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
-                          * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
-                       , MIFloat_AmountManual.ValueData                                   AS AmountManual
-                       , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
-                       , MovementItem.isErased
-
-                       , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
-
-
-                  FROM tmpMI_Master AS MovementItem
-
-                       LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
-                                                 ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-
-                       LEFT JOIN tmpMILinkObject AS MILinkObject_Contract
-                                                 ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-
-                       LEFT JOIN tmpMILinkObject AS MILinkObject_Goods
-                                                 ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-
-                       LEFT JOIN tmpMIBoolean_Calculated AS MIBoolean_Calculated ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-
-                       LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id
-
-                       LEFT JOIN tmpMI_PriceList AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
-                                                AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
-                                                AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                AND PriceList.MovementItemId = MovementItem.Id
-
-                       LEFT JOIN tmpMinPrice AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
-
-                       -- LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
-                       --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
-                                            --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-
-                       LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                       LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                       LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                       LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
---LIMIT 2
-                  )
+                            , MovementItem.ObjectId                                            AS GoodsId
+                            , MovementItem.Amount                                              AS Amount
+                            , MovementItem.CalcAmount
+                            , MIFloat_Summ.ValueData                                           AS Summ
+                            , MovementItem.MinimumLot                                          AS Multiplicity
+                            , MIString_Comment.ValueData                                       AS Comment
+                            , COALESCE(PriceList.MakerName, MinPrice.MakerName)                AS MakerName
+                            , MIBoolean_Calculated.ValueData                                   AS isCalculated
+                            -- , ObjectFloat_Goods_MinimumLot.valuedata                           AS MinimumLot
+                            , COALESCE(PriceList.Price, MinPrice.Price)                        AS Price
+                            , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate)  AS PartionGoodsDate
+                            , COALESCE(PriceList.GoodsId, MinPrice.GoodsId)                    AS PartnerGoodsId
+                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)                AS PartnerGoodsCode
+                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)                AS PartnerGoodsName
+                            , COALESCE(PriceList.JuridicalId, MinPrice.JuridicalId)            AS JuridicalId
+                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
+                            , COALESCE(PriceList.ContractId, MinPrice.ContractId)              AS ContractId
+                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
+                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
+                            , COALESCE(PriceList.SuperFinalPrice_Deferment, MinPrice.SuperFinalPrice_Deferment) AS SuperFinalPrice_Deferment
+                            --, MovementItem.Goods_isTOP
+                            , MovementItem.Price_isTOP
+                            , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
+                            , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
+                            , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
+                               * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
+                            , MIFloat_AmountManual.ValueData                                   AS AmountManual
+                            , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+                            , MovementItem.isErased
+                            , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
+                       FROM tmpMI_Master AS MovementItem
+     
+                            LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                                      ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+     
+                            LEFT JOIN tmpMILinkObject AS MILinkObject_Contract
+                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+     
+                            LEFT JOIN tmpMILinkObject AS MILinkObject_Goods
+                                                      ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+     
+                            LEFT JOIN tmpMIBoolean_Calculated AS MIBoolean_Calculated ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+     
+                            LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id
+     
+                            LEFT JOIN tmpMI_PriceList AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
+                                                     AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
+                                                     AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
+                                                     AND PriceList.MovementItemId = MovementItem.Id
+     
+                            LEFT JOIN tmpMinPrice AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
+     
+                            -- LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
+                            --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
+                                                 --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+     
+                            LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                            LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
+     --LIMIT 2
+                       )
 
         -- 2.3
       , tmpOF_MinimumLot_mi AS (SELECT *
-                                   FROM ObjectFloat
-                                   WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                                     AND ObjectFloat.ValueData <> 0
-                                     AND ObjectFloat.ObjectId  IN (SELECT DISTINCT tmpMI_all_MinLot.GoodsId_MinLot FROM tmpMI_all_MinLot)
-                       )
+                                FROM ObjectFloat
+                                WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                  AND ObjectFloat.ValueData <> 0
+                                  AND ObjectFloat.ObjectId  IN (SELECT DISTINCT tmpMI_all_MinLot.GoodsId_MinLot FROM tmpMI_all_MinLot)
+                                )
 
       , tmpMI AS (SELECT tmpMI_all_MinLot.Id
                        , tmpMI_all_MinLot.GoodsId

@@ -391,14 +391,6 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           ComponentItem = 'OrderKindName'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UpdateDate'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'UpdateDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

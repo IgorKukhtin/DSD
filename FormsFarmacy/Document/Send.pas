@@ -128,6 +128,7 @@ type
     actExecUpdate_SendOverdue: TdsdExecStoredProc;
     dxBarSubItem1: TdxBarSubItem;
     dxBarButton1: TdxBarButton;
+    cbDefSun: TcxCheckBox;
   private
     { Private declarations }
   public
