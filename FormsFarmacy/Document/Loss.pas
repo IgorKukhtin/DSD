@@ -63,6 +63,8 @@ type
     actExecSPAddSend: TdsdExecStoredProc;
     spAddSend: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    edComment: TcxTextEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public
