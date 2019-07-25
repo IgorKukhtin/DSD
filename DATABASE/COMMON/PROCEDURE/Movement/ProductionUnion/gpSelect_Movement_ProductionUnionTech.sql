@@ -257,9 +257,8 @@ BEGIN
     ANALYZE _tmpListMaster;
 
 
-    OPEN Cursor1 FOR
     -- для оптимизации - в Табл. 1
-    -- CREATE TEMP TABLE _tmpRes1_ProductionUnionTech ON COMMIT DROP AS
+    CREATE TEMP TABLE _tmpRes_cur1 ON COMMIT DROP AS
       WITH tmpStatus AS (SELECT 0                           AS StatusId
                    UNION SELECT zc_Enum_Status_Complete()   AS StatusId
                    UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -411,7 +410,6 @@ BEGIN
                                   AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
 
            ;
-    RETURN NEXT Cursor1;
 
 
     -- !!!оптимизация!!!
@@ -434,19 +432,23 @@ BEGIN
     ANALYZE _tmpMI_Child_two;
 
 
-     OPEN Cursor2 FOR
      -- для оптимизации - в Табл. - 2
-     -- CREATE TEMP TABLE _tmpRes2_ProductionUnionTech ON COMMIT DROP AS
-     WITH tmpMI_Child AS (SELECT tmpMI_Child_two.MovementItemId
+     CREATE TEMP TABLE _tmpRes_cur2 ON COMMIT DROP AS
+     WITH tmpMILO_GoodsKind AS (SELECT MILO_GoodsKind.*
+                                FROM MovementItemLinkObject AS MILO_GoodsKind
+                                WHERE MILO_GoodsKind.MovementItemId IN (SELECT DISTINCT _tmpMI_Child_two.MovementItemId_Child FROM _tmpMI_Child_two)
+                                  AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               )
+        , tmpMI_Child AS (SELECT tmpMI_Child_two.MovementItemId
                                , tmpMI_Child_two.MovementItemId_Child
                                , tmpMI_Child_two.GoodsId
                                , COALESCE (MILO_GoodsKind.ObjectId, 0)      AS GoodsKindId
                                , tmpMI_Child_two.Amount
                                , tmpMI_Child_two.isErased
                           FROM _tmpMI_Child_two AS tmpMI_Child_two
-                               LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                ON MILO_GoodsKind.MovementItemId = tmpMI_Child_two.MovementItemId_Child
-                                                               AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN tmpMILO_GoodsKind AS MILO_GoodsKind
+                                                           ON MILO_GoodsKind.MovementItemId = tmpMI_Child_two.MovementItemId_Child
+                                                          AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                
                          )
     , tmpReceiptChild AS (SELECT _tmpListMaster.MovementItemId                                  AS MovementItemId
@@ -694,19 +696,16 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
       ;
+    
+
+    -- Все Результаты - 1
+    OPEN Cursor1 FOR SELECT * FROM _tmpRes_cur1;
+    RETURN NEXT Cursor1;
+
+    -- Все Результаты - 2
+    OPEN Cursor2 FOR SELECT * FROM _tmpRes_cur2;
     RETURN NEXT Cursor2;
-    
-
-    -- Все Результаты - 1
-    -- OPEN Cursor1 FOR SELECT * FROM _tmpRes1_ProductionUnionTech;
-    -- RETURN NEXT Cursor1;
-    
-    -- Все Результаты - 1
-    -- OPEN Cursor2 FOR SELECT * FROM _tmpRes1_ProductionUnionTech;
-    -- RETURN NEXT Cursor2;
-
 
 END;
 $BODY$
@@ -724,4 +723,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inFromId:= 8447, inToId:= 8447, inJuridicalBasisId:= 9399, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inFromId:= 8447, inToId:= 8447, inJuridicalBasisId:= 9399, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

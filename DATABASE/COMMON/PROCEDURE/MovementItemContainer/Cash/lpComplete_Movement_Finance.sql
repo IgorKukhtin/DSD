@@ -252,7 +252,10 @@ BEGIN
 
 
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
+     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_BankAccount()
+                                                           THEN zc_Enum_ProfitLossDirection_80300() -- Расходы с прибыли + Списание дебиторской задолженности
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
                                                            THEN zc_Enum_ProfitLossDirection_50400() -- Налоговые платежи по ЗП
                                                       WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
                                                            THEN zc_Enum_ProfitLossDirection_50100() -- Налог на прибыль
@@ -305,7 +308,7 @@ BEGIN
 
                                          -- WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                          WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
-                                          AND _tmpItem.MovementDescId <> zc_Movement_LossDebt()
+                                          AND _tmpItem.MovementDescId NOT IN (zc_Movement_LossDebt(), zc_Movement_BankAccount())
                                               THEN zc_Enum_ProfitLoss_10301() -- Результат основной деятельности + Скидка дополнительная + Продукция
 
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг

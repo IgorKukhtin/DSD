@@ -159,7 +159,7 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
 
-                    ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
+                    ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))))
                END AS ObjectId
              , CASE -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
