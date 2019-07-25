@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , UnitId Integer, UnitName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -35,6 +36,7 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS UnitName
              , 0                     				            AS ArticleLossId
              , CAST ('' AS TVarChar) 				            AS ArticleLossName
+             , CAST ('' AS TVarChar) 		                    AS Comment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -49,6 +51,7 @@ BEGIN
            , Object_Unit.ValueData                              AS FromName
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
+           , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -66,6 +69,9 @@ BEGIN
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
 
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Loss();
 
@@ -78,7 +84,8 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 25.07.19                                                                                     *
  20.07.15                                                                         *
  */
 

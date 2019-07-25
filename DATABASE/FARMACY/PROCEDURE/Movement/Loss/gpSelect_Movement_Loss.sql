@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ArticleLossId Integer, ArticleLossName TVarChar
              , TotalSumm TFloat
              , TotalSummPrice TFloat
+             , Comment TVarChar
               )
 
 AS
@@ -102,6 +103,7 @@ BEGIN
            , Object_ArticleLoss.ValueData       AS ArticleLossName
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
            , tmpSumm.SummPrice     :: TFloat    AS TotalSummPrice
+           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
        FROM tmpMovement
 
@@ -133,6 +135,10 @@ BEGIN
                                  ON ObjectLink_Unit_Juridical.ObjectId = tmpMovement.UnitId
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
             ;
 END;
 $BODY$
@@ -142,7 +148,8 @@ ALTER FUNCTION gpSelect_Movement_Loss (TDateTime, TDateTime, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 24.07.19                                                                                     *
  23.07.19         *
  04.05.16         *
  20.07.15                                                                       *

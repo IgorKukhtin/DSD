@@ -1,21 +1,21 @@
 inherited ChoiceSendForm: TChoiceSendForm
   Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1076#1083#1103' '#1079#1072#1075#1088#1091#1079#1082#1080
-  ClientWidth = 449
+  ClientWidth = 605
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 465
+  ExplicitWidth = 621
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 449
+    Width = 605
     ExplicitWidth = 449
-    ClientRectRight = 449
+    ClientRectRight = 605
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 449
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 449
+        Width = 605
         ExplicitWidth = 449
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -57,15 +57,24 @@ inherited ChoiceSendForm: TChoiceSendForm
             Options.Editing = False
             Width = 97
           end
-          object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
+          object TotalSummPVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1074' '#1091#1089#1088#1077#1076'. '#1094#1077#1085#1072#1093' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 129
+          end
+          object TotalSummTo: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'TotalSummTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 138
           end
         end
       end

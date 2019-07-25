@@ -48,6 +48,7 @@ type
     macUpdate_OperDateList: TMultiAction;
     bbUpdate_OperDateList: TdxBarButton;
     JuridicalName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

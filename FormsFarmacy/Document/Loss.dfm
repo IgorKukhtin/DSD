@@ -1,28 +1,29 @@
 inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
-  ClientWidth = 800
+  ClientWidth = 783
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitTop = -88
-  ExplicitWidth = 816
+  ExplicitWidth = 799
   ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 800
-    Height = 582
+    Top = 119
+    Width = 783
+    Height = 549
+    ExplicitTop = 119
     ExplicitWidth = 800
-    ExplicitHeight = 582
-    ClientRectBottom = 582
-    ClientRectRight = 800
+    ExplicitHeight = 549
+    ClientRectBottom = 549
+    ClientRectRight = 783
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 800
-      ExplicitHeight = 558
+      ExplicitHeight = 525
       inherited cxGrid: TcxGrid
-        Width = 800
-        Height = 558
+        Width = 783
+        Height = 525
         ExplicitWidth = 800
-        ExplicitHeight = 558
+        ExplicitHeight = 525
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -175,9 +176,12 @@ inherited LossForm: TLossForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 800
+    Width = 783
+    Height = 93
     TabOrder = 3
+    ExplicitLeft = 24
     ExplicitWidth = 800
+    ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
       ExplicitLeft = 182
@@ -239,6 +243,18 @@ inherited LossForm: TLossForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 200
+    end
+    object edComment: TcxTextEdit
+      Left = 8
+      Top = 67
+      Properties.ReadOnly = False
+      TabOrder = 10
+      Width = 759
+    end
+    object cxLabel7: TcxLabel
+      Left = 8
+      Top = 48
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -806,8 +822,10 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Comment'
         Value = ''
-        ParamType = ptUnknown
+        Component = edComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -948,8 +966,11 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inComment'
         Value = ''
-        ParamType = ptUnknown
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1047,6 +1068,9 @@ inherited LossForm: TLossForm
       end
       item
         Control = edArticleLoss
+      end
+      item
+        Control = edComment
       end>
     Left = 232
     Top = 193

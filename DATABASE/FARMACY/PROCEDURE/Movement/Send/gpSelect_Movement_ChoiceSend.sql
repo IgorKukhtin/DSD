@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceSend(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, 
-               TotalCount TFloat, TotalSumm TFloat
+               TotalCount TFloat, TotalSummPVAT TFloat, TotalSummTo TFloat
               )
 AS
 $BODY$
@@ -24,7 +24,8 @@ BEGIN
            , Movement_Send.InvNumber
            , Movement_Send.OperDate
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
-           , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
+           , MovementFloat_TotalSummPVAT.ValueData              AS TotalSummPVAT
+           , MovementFloat_TotalSummTo.ValueData                AS TotalSummTo
 
         FROM (SELECT Movement.*
               FROM  Movement 
@@ -42,10 +43,13 @@ BEGIN
                                      ON MovementFloat_TotalCount.MovementId = Movement_Send.Id
                                     AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
  
-             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                     ON MovementFloat_TotalSumm.MovementId =  Movement_Send.Id
-                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement_Send.Id
+                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTo
+                                     ON MovementFloat_TotalSummTo.MovementId =  Movement_Send.Id
+                                    AND MovementFloat_TotalSummTo.DescId = zc_MovementFloat_TotalSummTo()
       ;
 
 END;
@@ -59,6 +63,5 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_ChoiceSend (inUnitId:= 394426  , inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_ChoiceSend (inUnitId:= 394426  , inSession:= '3')
 
