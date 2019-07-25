@@ -350,6 +350,13 @@ BEGIN
                                                                                                           AND Object.Id IS NULL -- !!!нужен только для затрат!!!
        ;
 
+     -- проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId = 0) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <От Кого, Кому>.Проведение невозможно.';
+     END IF;
+
+
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);

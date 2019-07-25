@@ -73,7 +73,7 @@ BEGIN
                                          ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
                                         AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
               WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
+                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                 AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
           , JuridicalSettings AS
@@ -175,3 +175,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_CashGoodsPriceWithVAT (inSession := '3354092');
+-- SELECT * FROM gpSelect_CashGoodsPriceWithVAT (inSession := '3998773') where Id = 2521

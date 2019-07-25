@@ -68,7 +68,7 @@ BEGIN
                                                                       END :: TFloat
                                                 , inRemainsSUN     := COALESCE (_tmpRemains.Amount, 0) :: TFloat
                                                 , inUserId         := vbUserId
-                                                )
+                                                 )
      FROM _tmp_MI
           LEFT JOIN _tmpRemainsGoodsPartionDate AS _tmpRemains ON _tmpRemains.GoodsId = _tmp_MI.GoodsId
           -- AND 1=0
