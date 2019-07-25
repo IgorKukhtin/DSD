@@ -1,11 +1,11 @@
 inherited Report_GoodsPartionDate_PromoForm: TReport_GoodsPartionDate_PromoForm
-  Caption = #1057#1088#1086#1082#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074'sq '#1082#1086#1085#1090#1088#1072#1082#1090')'
+  Caption = #1057#1088#1086#1082#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090')'
   ClientHeight = 375
   ClientWidth = 689
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 705
-  ExplicitHeight = 414
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,17 +14,17 @@ inherited Report_GoodsPartionDate_PromoForm: TReport_GoodsPartionDate_PromoForm
     Height = 308
     TabOrder = 3
     ExplicitTop = 67
-    ExplicitWidth = 686
+    ExplicitWidth = 689
     ExplicitHeight = 308
     ClientRectBottom = 308
     ClientRectRight = 689
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 686
+      ExplicitWidth = 689
       ExplicitHeight = 308
       inherited cxGrid: TcxGrid
         Width = 689
         Height = 308
-        ExplicitWidth = 686
+        ExplicitWidth = 689
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -127,7 +127,7 @@ inherited Report_GoodsPartionDate_PromoForm: TReport_GoodsPartionDate_PromoForm
   inherited Panel: TPanel
     Width = 689
     Height = 41
-    ExplicitWidth = 686
+    ExplicitWidth = 689
     ExplicitHeight = 41
     inherited deStart: TcxDateEdit
       Left = 459

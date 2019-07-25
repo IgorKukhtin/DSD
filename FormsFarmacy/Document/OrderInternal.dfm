@@ -1181,7 +1181,78 @@ inherited OrderInternalForm: TOrderInternalForm
   inherited ActionList: TActionList
     Left = 127
     Top = 215
-    object mactDeleteLinkGroup: TMultiAction [0]
+    object actReportSendDefSUN: TdsdOpenForm [0]
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1086#1073#1085#1086' '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1086#1076#1088#1086#1073#1085#1086' '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 28
+      FormName = 'TReport_GoodsSendSUNForm'
+      FormNameParam.Value = 'TReport_GoodsSendSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSendDefSUN'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object mactDeleteLinkGroup: TMultiAction [1]
       Category = 'DeleteLink'
       MoveParams = <>
       ActionList = <
@@ -1195,7 +1266,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
       ImageIndex = 72
     end
-    object mactDeleteLinkDS: TMultiAction [1]
+    object mactDeleteLinkDS: TMultiAction [2]
       Category = 'DeleteLink'
       MoveParams = <>
       ActionList = <
@@ -1274,7 +1345,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1401,6 +1472,77 @@ inherited OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actReportSendSUN: TdsdOpenForm
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1086#1073#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1086#1076#1088#1086#1073#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 24
+      FormName = 'TReport_GoodsSendSUNForm'
+      FormNameParam.Value = 'TReport_GoodsSendSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSendDefSUN'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actMovementItemProtocolChild: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1506,7 +1648,7 @@ inherited OrderInternalForm: TOrderInternalForm
       PUSHMessageType = pmtInformation
     end
     object actOpenReport_GoodsPartionDate: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Report'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
@@ -1739,6 +1881,22 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbReportSendSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportSendDefSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1832,6 +1990,14 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbUpdateRealSun: TdxBarButton
       Action = actUpdateRealSun
+      Category = 0
+    end
+    object bbReportSendSUN: TdxBarButton
+      Action = actReportSendSUN
+      Category = 0
+    end
+    object bbReportSendDefSUN: TdxBarButton
+      Action = actReportSendDefSUN
       Category = 0
     end
   end

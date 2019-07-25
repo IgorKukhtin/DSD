@@ -137,6 +137,10 @@ type
     actOpenReport_GoodsPartionDate: TdsdOpenForm;
     bbOpenReport_GoodsPartionDate: TdxBarButton;
     bbUpdateRealSun: TdxBarButton;
+    actReportSendSUN: TdsdOpenForm;
+    actReportSendDefSUN: TdsdOpenForm;
+    bbReportSendSUN: TdxBarButton;
+    bbReportSendDefSUN: TdxBarButton;
   private
     { Private declarations }
   public

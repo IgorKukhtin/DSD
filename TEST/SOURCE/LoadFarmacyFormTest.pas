@@ -747,6 +747,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSendSUNForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSendSUNDialogForm');
+    exit;
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsCashForm');
