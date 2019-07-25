@@ -58,6 +58,11 @@ type
     actExecSPAddDeferredCheck: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     spAddDeferredCheck: TdsdStoredProc;
+    actLoadSend: TMultiAction;
+    actOpenChoiceSend: TOpenChoiceForm;
+    actExecSPAddSend: TdsdExecStoredProc;
+    spAddSend: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

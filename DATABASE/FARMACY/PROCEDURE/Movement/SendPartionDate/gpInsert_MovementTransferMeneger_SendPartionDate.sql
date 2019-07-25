@@ -112,10 +112,10 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Количество на изменения срока <%> больше остатка <%>.', inAmount, vbRemains;
   END IF;
 
-  IF DATE_TRUNC ('DAY', vbExpirationDate) >= inExpirationDate
-  THEN
-    RAISE EXCEPTION 'Ошибка. Срок годности можно только увеличивать.';
-  END IF;
+--  IF DATE_TRUNC ('DAY', vbExpirationDate) >= inExpirationDate
+--  THEN
+--    RAISE EXCEPTION 'Ошибка. Срок годности можно только увеличивать.';
+--  END IF;
 
   IF NOT EXISTS(SELECT 1  FROM Movement
 

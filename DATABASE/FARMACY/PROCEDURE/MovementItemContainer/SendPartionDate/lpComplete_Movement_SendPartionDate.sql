@@ -300,13 +300,13 @@ BEGIN
               , _tmpItem_PartionDate.PartionId_in   AS ObjectIntId_analyzer
          FROM _tmpItem_PartionDate;
 
-    IF vbTransfer = TRUE
+    IF vbTransfer = TRUE 
     THEN
         IF EXISTS (SELECT 1 FROM _tmpItem_PartionDate WHERE _tmpItem_PartionDate.ContainerId_Transfer = 0)
         THEN
             RAISE EXCEPTION 'Error. Не определен контейнер для списания.';
         END IF;
-
+        
         INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
                                           , ObjectId_analyzer, WhereObjectId_analyzer, ObjectIntId_analyzer
                                            )
@@ -321,7 +321,9 @@ BEGIN
               , _tmpItem_PartionDate.GoodsId                 AS ObjectId_analyzer
               , vbUnitId                                     AS WhereObjectId_analyzer
               , _tmpItem_PartionDate.PartionId_in            AS ObjectIntId_analyzer
-         FROM _tmpItem_PartionDate;
+         FROM _tmpItem_PartionDate
+              INNER JOIN Container ON Container.DescId = zc_Container_CountPartionDate()
+                                  AND Container.Id = _tmpItem_PartionDate.ContainerId_Transfer;
 
      END IF;
 

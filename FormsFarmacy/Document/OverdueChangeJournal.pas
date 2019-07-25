@@ -68,6 +68,8 @@ type
     cxLabel1: TcxLabel;
     edGoodsName: TcxTextEdit;
     ExpirationDatePG: TcxGridDBColumn;
+    actShowPUSHSendPartionDate: TdsdShowPUSHMessage;
+    spShowPUSHSendPartionDate: TdsdStoredProc;
   private
     { Private declarations }
   public
