@@ -38,15 +38,17 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
 
-   DECLARE vbDate_0 TDateTime;
    DECLARE vbDate_6 TDateTime;
    DECLARE vbDate_1 TDateTime;
+   DECLARE vbDate_0 TDateTime;
 
 BEGIN
 
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- значени€ дл€ разделени€ по срокам
     -- дата + 6 мес€цев
     vbDate_6:= CURRENT_DATE
              + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
