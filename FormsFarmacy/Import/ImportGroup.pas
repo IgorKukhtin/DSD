@@ -64,13 +64,20 @@ type
     spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
     macExecuteImportSettings_Protocol: TMultiAction;
     spRefreshMovementItemLastPriceList_View: TdsdStoredProc;
-    actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc;
     macGUILoadPrice: TMultiAction;
     GuidesArea: TdsdGuides;
     edArea: TcxButtonEdit;
     cxLabel3: TcxLabel;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbUpdate: TdxBarButton;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
+    actProtocolMaster: TdsdOpenForm;
+    actProtocolChild: TdsdOpenForm;
+    bbProtocolMaster: TdxBarButton;
+    bbProtocolChild: TdxBarButton;
   private
     { Private declarations }
   public

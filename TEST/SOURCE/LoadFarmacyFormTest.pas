@@ -1233,12 +1233,15 @@ end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin
+{
   // Настройки импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportGroupEditForm');
 end;
 
 procedure TLoadFormTest.LoadTaxUnitFormTest;

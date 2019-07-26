@@ -720,7 +720,8 @@ uses
   GoodsGroupPromoEdit in '..\..\FormsFarmacy\Guides\GoodsGroupPromoEdit.pas' {GoodsGroupPromoEditForm: TParentForm},
   ChoiceSend in '..\..\FormsFarmacy\Guides\ChoiceSend.pas' {ChoiceSendForm: TParentForm},
   Report_GoodsSendSUN in '..\..\FormsFarmacy\Report\Report_GoodsSendSUN.pas' {Report_GoodsSendSUNForm: TParentForm},
-  Report_GoodsSendSUNDialog in '..\..\FormsFarmacy\Report\Report_GoodsSendSUNDialog.pas' {Report_GoodsSendSUNDialogForm: TParentForm};
+  Report_GoodsSendSUNDialog in '..\..\FormsFarmacy\Report\Report_GoodsSendSUNDialog.pas' {Report_GoodsSendSUNDialogForm: TParentForm},
+  ImportGroupEdit in '..\..\FormsFarmacy\Import\ImportGroupEdit.pas' {ImportGroupEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

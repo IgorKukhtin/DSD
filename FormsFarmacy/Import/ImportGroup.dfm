@@ -1,20 +1,20 @@
 inherited ImportGroupForm: TImportGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 345
-  ClientWidth = 605
+  ClientWidth = 767
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 621
+  ExplicitWidth = 783
   ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 605
+    Width = 767
     Height = 319
     ExplicitWidth = 605
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 605
+    ClientRectRight = 767
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 605
       ExplicitHeight = 319
@@ -25,7 +25,10 @@ inherited ImportGroupForm: TImportGroupForm
         ExplicitWidth = 273
         ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Inserting = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -35,6 +38,7 @@ inherited ImportGroupForm: TImportGroupForm
             Caption = #1043#1088#1091#1087#1087#1099' '#1079#1072#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 197
           end
           object clisErased: TcxGridDBColumn
@@ -42,6 +46,7 @@ inherited ImportGroupForm: TImportGroupForm
             DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 46
           end
@@ -50,11 +55,12 @@ inherited ImportGroupForm: TImportGroupForm
       object cxGrid1: TcxGrid
         Left = 276
         Top = 0
-        Width = 329
+        Width = 491
         Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 329
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -86,6 +92,7 @@ inherited ImportGroupForm: TImportGroupForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
@@ -330,7 +337,6 @@ inherited ImportGroupForm: TImportGroupForm
           Action = mactLoadPrice
         end
         item
-          Action = actRefreshMovementItemLastPriceList_View
         end>
       QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1042#1057#1045' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1042#1057#1045#1052' '#1101#1083#1077#1084#1077#1085#1090#1072#1084
@@ -370,22 +376,114 @@ inherited ImportGroupForm: TImportGroupForm
           Action = actProtocol
         end
         item
-          Action = actRefreshMovementItemLastPriceList_View
         end>
       QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091'? '
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
     end
-    object actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc
+    object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spRefreshMovementItemLastPriceList_View
-      StoredProcList = <
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TImportGroupEditForm'
+      FormNameParam.Value = 'TImportGroupEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          StoredProc = spRefreshMovementItemLastPriceList_View
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
         end>
-      Caption = 'actRefreshMovementItemLastPriceList_View'
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TImportGroupEditForm'
+      FormNameParam.Value = 'TImportGroupEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actProtocolMaster: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1043#1088#1091#1087#1087' '#1079#1072#1075#1088#1091#1079#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1043#1088#1091#1087#1087' '#1079#1072#1075#1088#1091#1079#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolChild: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1047#1072#1075#1088#1091#1079#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1047#1072#1075#1088#1091#1079#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'UserParamName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -424,6 +522,18 @@ inherited ImportGroupForm: TImportGroupForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -449,6 +559,18 @@ inherited ImportGroupForm: TImportGroupForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolChild'
         end
         item
           Visible = True
@@ -500,6 +622,22 @@ inherited ImportGroupForm: TImportGroupForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = edArea
+    end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object bbProtocolMaster: TdxBarButton
+      Action = actProtocolMaster
+      Category = 0
+    end
+    object bbProtocolChild: TdxBarButton
+      Action = actProtocolChild
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
