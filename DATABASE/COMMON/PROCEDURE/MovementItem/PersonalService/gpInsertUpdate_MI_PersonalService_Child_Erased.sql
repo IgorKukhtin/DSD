@@ -98,6 +98,8 @@ end if;
                                                              , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
                                                              , inSummChildRecalc        := 0
                                                              , inSummMinusExtRecalc     := 0
+                                                             , inSummFine               := COALESCE (MIFloat_SummFine.ValueData, 0)
+                                                             , inSummHosp               := COALESCE (MIFloat_SummHosp.ValueData, 0)
                                                              , inComment                := MIString_Comment.ValueData
                                                              , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                              , inUnitId                 := MILinkObject_Unit.ObjectId
@@ -149,6 +151,13 @@ end if;
                LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                            ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                           AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
+
+               LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                           ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+               LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                           ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp() 
 
                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id

@@ -52,6 +52,8 @@ $BODY$
   DECLARE vbTotalSummMinusExtRecalc   TFloat;
   DECLARE vbTotalSummAddOth           TFloat;
   DECLARE vbTotalSummAddOthRecalc     TFloat;
+  DECLARE vbTotalSummFine             TFloat;
+  DECLARE vbTotalSummHosp             TFloat;
 
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
@@ -320,6 +322,8 @@ BEGIN
           , OperSumm_NalogRetRecalc
           , OperSumm_AddOth
           , OperSumm_AddOthRecalc
+          , OperSumm_Fine
+          , OperSumm_Hosp
           , OperHeadCount_Master
           , OperHeadCount_Child
 
@@ -332,7 +336,7 @@ BEGIN
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
-               , vbTotalSummAddOth, vbTotalSummAddOthRecalc
+               , vbTotalSummAddOth, vbTotalSummAddOthRecalc, vbTotalSummFine, vbTotalSummHosp
                , vbTotalHeadCount_Master, vbTotalHeadCount_Child
 
      FROM  -- Расчет Итоговых суммы
@@ -445,6 +449,8 @@ BEGIN
 
                                , SUM (COALESCE (MIFloat_SummAddOth.ValueData, 0))           AS OperSumm_AddOth
                                , SUM (COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0))     AS OperSumm_AddOthRecalc
+                               , SUM (COALESCE (MIFloat_SummFine.ValueData, 0))             AS OperSumm_Fine
+                               , SUM (COALESCE (MIFloat_SummHosp.ValueData, 0))             AS OperSumm_Hosp
                                
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Master
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Child
@@ -590,6 +596,15 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                                            ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                                           ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                                           ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
@@ -832,6 +847,8 @@ BEGIN
                 , OperSumm_NalogRetRecalc
                 , OperSumm_AddOth
                 , OperSumm_AddOthRecalc
+                , OperSumm_Fine
+                , OperSumm_Hosp
                 , OperHeadCount_Master
                 , OperHeadCount_Child
            FROM
@@ -974,6 +991,8 @@ BEGIN
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
                       , SUM (tmpMI.OperSumm_AddOthRecalc)     AS OperSumm_AddOthRecalc
+                      , SUM (tmpMI.OperSumm_Fine)             AS OperSumm_Fine
+                      , SUM (tmpMI.OperSumm_Hosp)             AS OperSumm_Hosp
                       , SUM (tmpMI.OperHeadCount_Master)      AS OperHeadCount_Master
                       , SUM (tmpMI.OperHeadCount_Child)       AS OperHeadCount_Child
                   FROM (SELECT tmpMI.GoodsId
@@ -1091,6 +1110,8 @@ BEGIN
 
                             , tmpMI.OperSumm_AddOth
                             , tmpMI.OperSumm_AddOthRecalc
+                            , tmpMI.OperSumm_Fine
+                            , tmpMI.OperSumm_Hosp
                             , tmpMI.OperHeadCount_Master
                             , tmpMI.OperHeadCount_Child
 
@@ -1164,6 +1185,8 @@ BEGIN
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
+                                   , tmpMI.OperSumm_Fine
+                                   , tmpMI.OperSumm_Hosp
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
                               FROM tmpMI
@@ -1248,6 +1271,8 @@ BEGIN
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
+                                   , tmpMI.OperSumm_Fine
+                                   , tmpMI.OperSumm_Hosp
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
                               FROM tmpMI
@@ -1359,6 +1384,10 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOth(), inMovementId, vbTotalSummAddOth);
          -- Сохранили свойство <Премия (ввод для распределения)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOthRecalc(), inMovementId, vbTotalSummAddOthRecalc);
+         -- Сохранили свойство <штраф>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummFine(), inMovementId, vbTotalSummFine);
+         -- Сохранили свойство <Больничный>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHosp(), inMovementId, vbTotalSummHosp);
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -1425,6 +1454,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.07.19         *
  22.02.19         * TotalHeadCount
  25.06.18         * SummAddOth
                     SummAddOthRecalc

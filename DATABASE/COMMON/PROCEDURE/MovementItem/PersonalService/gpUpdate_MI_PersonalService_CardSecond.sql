@@ -347,6 +347,8 @@ BEGIN
                                                         , inSummSocialAdd      := 0
                                                         , inSummChildRecalc    := 0
                                                         , inSummMinusExtRecalc := 0
+                                                        , inSummFine           := 0
+                                                        , inSummHosp           := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
              , SummAddOth TFloat, SummAddOthRecalc TFloat
+             , SummFine TFloat, SummHosp TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -231,7 +232,10 @@ BEGIN
 
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
-            
+
+            , MIFloat_SummFine.ValueData                AS SummFine
+            , MIFloat_SummHosp.ValueData                AS SummHosp
+
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
@@ -338,6 +342,13 @@ BEGIN
                                         ON MIFloat_SummAddOthRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                        ON MIFloat_SummFine.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                        ON MIFloat_SummHosp.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -386,6 +397,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.07.19         *
  25.06.18         * add SummAddOth,
                         SummAddOthRecalc
  05.01.18         * add SummNalogRet
