@@ -1681,6 +1681,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsSeparate_GoodsMaster() RETURNS Int
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsSeparate_GoodsMaster', 'товары', zc_Object_GoodsSeparate(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsMaster');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_PaidKind', 'Форма оплаты', zc_Object_OrderFinance(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_PaidKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinanceProperty_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_OrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinanceProperty_OrderFinance', 'Виды Планирования платежей', zc_Object_OrderFinanceProperty(), zc_Object_OrderFinance() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_OrderFinance');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinanceProperty_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinanceProperty_Object', 'Управленческие группы назначения/ назначения/ статьи назначения', zc_Object_OrderFinanceProperty(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_Object');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2188,6 +2201,9 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.07.19         * zc_ObjectLink_OrderFinance_PaidKind
+                    zc_ObjectLink_OrderFinanceProperty_OrderFinance
+                    zc_ObjectLink_OrderFinanceProperty_Object
  21.07.19                                                                                      * zc_ObjectLink_Goods_GoodsGroupPromo
  02.07.19                                                                                      * zc_ObjectLink_Unit_UnitOverdue
  02.07.19         * zc_ObjectLink_Unit_UserManager2

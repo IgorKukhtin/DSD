@@ -1088,7 +1088,9 @@ uses
   WeighingProductionParamEdit in '..\..\Forms\Document\WeighingProductionParamEdit.pas' {WeighingProductionParamEditForm: TParentForm},
   GoodsScaleCeh in '..\..\Forms\Guides\GoodsScaleCeh.pas' {GoodsScaleCehForm: TParentForm},
   GoodsScaleCehEdit in '..\..\Forms\Guides\GoodsScaleCehEdit.pas' {GoodsScaleCehEditForm: TParentForm},
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
+  OrderFinance in '..\..\Forms\Guides\OrderFinance.pas' {OrderFinanceForm: TParentForm},
+  OrderFinanceEdit in '..\..\Forms\Guides\OrderFinanceEdit.pas' {OrderFinanceEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

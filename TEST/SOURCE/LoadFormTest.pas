@@ -101,6 +101,7 @@ type
     procedure LoadMobileReportFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadOrderFinanceFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
@@ -733,6 +734,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
 end;
 
+procedure TLoadFormTest.LoadOrderFinanceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceEditForm');
+end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;
 begin
