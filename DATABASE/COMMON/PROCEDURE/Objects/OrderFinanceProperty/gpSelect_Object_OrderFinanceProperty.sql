@@ -40,7 +40,7 @@ BEGIN
            LEFT JOIN ObjectLink AS OrderFinanceProperty_Object
                                 ON OrderFinanceProperty_Object.ObjectId = Object_OrderFinanceProperty.Id
                                AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
-           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = OrderFinanceProperty_InfoMoney.ChildObjectId
+           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = OrderFinanceProperty_Object.ChildObjectId
            LEFT JOIN ObjectDesc AS Object_ObjectDesc ON Object_ObjectDesc.Id = Object_InfoMoney.DescId
 
        WHERE Object_OrderFinanceProperty.DescId = zc_Object_OrderFinanceProperty();

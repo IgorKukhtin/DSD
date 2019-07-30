@@ -420,12 +420,19 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PartionDateKind() RETURNS Integ
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PartionDateKind', 'Типы срок/не срок' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PartionDateKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_OrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_OrderFinance', 'Виды Планирования платежей' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_OrderFinance');
+
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 29.07.19         * zc_MovementLinkObject_OrderFinance
  20.06.19         * zc_MovementLinkObject_GoodsTypeKind
                     zc_MovementLinkObject_BarCodeBox
  20.04.19         * zc_MovementLinkObject_PartionDateKind

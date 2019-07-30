@@ -54,12 +54,8 @@ type
     bbChoiceGuides: TdxBarButton;
     InfoMoney_ObjectChoiceForm: TOpenChoiceForm;
     cxSplitter1: TcxSplitter;
-    bbExecuteImportSettings: TdxBarButton;
-    bbLoadAllPrice: TdxBarButton;
     chObjectCode: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
     bbUpdate: TdxBarButton;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
@@ -73,6 +69,8 @@ type
     Comment: TcxGridDBColumn;
     chObjectName: TcxGridDBColumn;
     chDescName: TcxGridDBColumn;
+    InsertRecordChild: TInsertRecord;
+    bbInsertRecordChild: TdxBarButton;
   private
     { Private declarations }
   public

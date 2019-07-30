@@ -129,7 +129,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -146,6 +145,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 181
@@ -236,15 +236,16 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
+          StoredProc = spErasedUnErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -264,7 +265,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -272,8 +272,10 @@ inherited OrderFinanceForm: TOrderFinanceForm
     object dsdUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
+          StoredProc = spErasedUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -310,8 +312,9 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      ImageIndex = 0
+      FormName = 'TInfoMoneyPlace_ObjectForm'
+      FormNameParam.Value = 'TInfoMoneyPlace_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -327,6 +330,21 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Value = Null
           Component = ChildCDS
           ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'DescName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -429,12 +447,23 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Name = 'TextValue'
           Value = Null
           Component = ChildCDS
-          ComponentItem = 'UserParamName'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object InsertRecordChild: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Action = InfoMoney_ObjectChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
+      ImageIndex = 0
     end
   end
   inherited MasterDS: TDataSource
@@ -474,6 +503,30 @@ inherited OrderFinanceForm: TOrderFinanceForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -506,6 +559,10 @@ inherited OrderFinanceForm: TOrderFinanceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -521,39 +578,17 @@ inherited OrderFinanceForm: TOrderFinanceForm
     end
     object bbSetErasedChild: TdxBarButton
       Action = dsdSetErasedChild
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077
       Category = 0
     end
     object bbUnErasedChild: TdxBarButton
       Action = dsdUnErasedChild
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077
       Category = 0
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
-    end
-    object bbExecuteImportSettings: TdxBarButton
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072
-      Category = 0
-      Visible = ivAlways
-    end
-    object bbLoadAllPrice: TdxBarButton
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1089#1077#1093
-      Category = 0
-      Visible = ivAlways
-    end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
     object bbUpdate: TdxBarButton
       Action = actUpdate
@@ -569,6 +604,10 @@ inherited OrderFinanceForm: TOrderFinanceForm
     end
     object bbProtocolChild: TdxBarButton
       Action = actProtocolChild
+      Category = 0
+    end
+    object bbInsertRecordChild: TdxBarButton
+      Action = InsertRecordChild
       Category = 0
     end
   end

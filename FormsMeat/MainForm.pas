@@ -1033,6 +1033,8 @@ type
     miGoodsByGoodsKind_wms: TMenuItem;
     actGoodsScaleCeh: TdsdOpenForm;
     N204: TMenuItem;
+    actOrderFinance: TdsdOpenForm;
+    miOrderFinance: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

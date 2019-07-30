@@ -740,6 +740,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;

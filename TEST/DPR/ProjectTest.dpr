@@ -1090,7 +1090,8 @@ uses
   GoodsScaleCehEdit in '..\..\Forms\Guides\GoodsScaleCehEdit.pas' {GoodsScaleCehEditForm: TParentForm},
   Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
   OrderFinance in '..\..\Forms\Guides\OrderFinance.pas' {OrderFinanceForm: TParentForm},
-  OrderFinanceEdit in '..\..\Forms\Guides\OrderFinanceEdit.pas' {OrderFinanceEditForm: TParentForm};
+  OrderFinanceEdit in '..\..\Forms\Guides\OrderFinanceEdit.pas' {OrderFinanceEditForm: TParentForm},
+  InfoMoneyPlace_Object in '..\..\Forms\Guides\InfoMoneyPlace_Object.pas' {InfoMoneyPlace_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
