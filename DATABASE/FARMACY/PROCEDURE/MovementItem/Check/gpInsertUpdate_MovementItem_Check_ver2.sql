@@ -55,10 +55,14 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                     AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                          ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
+                      AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
                    );
         ELSE
@@ -68,9 +72,13 @@ BEGIN
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                      AND MIFloat_Price.ValueData = inPrice
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                          ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
+                      AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND MovementItem.isErased   = FALSE
                    );
         END IF;
@@ -84,9 +92,13 @@ BEGIN
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                      -- отложенные чеки с измененной ценой дублируются
                                                      -- AND MIFloat_Price.ValueData = inPrice
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                          ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
+                      AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND MovementItem.isErased   = FALSE
                     LIMIT 1
                    );
