@@ -280,6 +280,8 @@ BEGIN
                                                         , inSummSocialAdd      := 0
                                                         , inSummChildRecalc    := 0
                                                         , inSummMinusExtRecalc := 0
+                                                        , inSummFine           := 0
+                                                        , inSummHosp           := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId
@@ -302,6 +304,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.19         *
  20.06.17         *
 */
 

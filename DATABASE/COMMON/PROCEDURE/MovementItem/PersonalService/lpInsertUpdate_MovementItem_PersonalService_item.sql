@@ -58,6 +58,8 @@ BEGIN
                                                      , inSummSocialAdd          := inSummSocialAdd
                                                      , inSummChildRecalc        := inSummChildRecalc
                                                      , inSummMinusExtRecalc     := inSummMinusExtRecalc
+                                                     , inSummFine               := 0
+                                                     , inSummHosp               := 0
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
                                                      , inUnitId                 := inUnitId

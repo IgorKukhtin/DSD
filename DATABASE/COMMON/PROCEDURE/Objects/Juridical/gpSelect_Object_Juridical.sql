@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DayTaxSummary TFloat,
+               SummOrderFinance TFloat,
                GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
                isDiscountPrice Boolean, isPriceWithVAT Boolean,
                isLongUKTZED Boolean,
@@ -90,7 +91,8 @@ BEGIN
        , Object_Juridical.ObjectCode     AS Code
        , Object_Juridical.ValueData      AS Name
 
-       , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat)) AS DayTaxSummary
+       , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat))    AS DayTaxSummary
+       , COALESCE (ObjectFloat_SummOrderFinance.ValueData, CAST(0 as TFloat)) AS SummOrderFinance
 
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
@@ -178,6 +180,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
                              AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+        LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
+                              ON ObjectFloat_SummOrderFinance.ObjectId = Object_Juridical.Id
+                             AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_Juridical_SummOrderFinance()
+
         LEFT JOIN ObjectString AS ObjectString_GUID
                                ON ObjectString_GUID.ObjectId = Object_Juridical.Id
                               AND ObjectString_GUID.DescId = zc_ObjectString_Juridical_GUID()
@@ -267,6 +273,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.07.19         * SummOrderFinance
  07.02.17         * isPriceWithVAT
  13.01.17         * isLongUKTZED
  17.12.15         * add isDiscountPrice

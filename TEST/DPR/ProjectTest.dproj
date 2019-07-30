@@ -3689,6 +3689,26 @@
 				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\OrderFinance.pas">
+				<Form>OrderFinanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\OrderFinanceEdit.pas">
+				<Form>OrderFinanceEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyPlace_Object.pas">
+				<Form>InfoMoneyPlace_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
+				<Form>OrderFinanceMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceJournal.pas">
+				<Form>OrderFinanceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -33,7 +34,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummSocialAdd          TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChildRecalc        TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc     TFloat    , -- Удержания сторон. юр.л. (ввод)
-    
+    IN inSummFine               TFloat    , -- штраф
+    IN inSummHosp               TFloat    , -- больничный
+
     IN inComment                TVarChar  , -- 
     IN inInfoMoneyId            Integer   , -- Статьи назначения
     IN inUnitId                 Integer   , -- Подразделение
@@ -262,6 +265,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), ioId, COALESCE (outSummPhone, 0));
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFine(), ioId, inSummFine);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHosp(), ioId, inSummHosp);
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
@@ -288,6 +296,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.19         * inSummFine, inSummHosp
  25.06.18         * inSummAddOthRecalc
  05.01.18         * add inSummNalogRetRecalc
  20.06.17         * add inSummCardSecondCash

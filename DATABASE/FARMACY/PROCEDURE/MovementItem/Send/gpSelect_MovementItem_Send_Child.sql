@@ -15,15 +15,49 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Invnumber_Income    TVarChar
              , FromName_Income     TVarChar
              , ContractName_Income TVarChar
+             , PartionDateKindName TVarChar
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbDate180  TDateTime;
+  DECLARE vbDate30   TDateTime;
+  DECLARE vbDay_0  Integer;
+  DECLARE vbDay_1  Integer;
+  DECLARE vbDay_6  Integer;
 BEGIN
 
-     -- проверка прав пользовател€ на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
-     vbUserId := inSession;
+    -- проверка прав пользовател€ на вызов процедуры
+    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
+    vbUserId := inSession;
+
+    vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
+    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
+    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
+                FROM Object  AS Object_PartionDateKind
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
+
+    -- даты + 6 мес€цев, + 1 мес€ц
+    vbDate180 := vbOperDate + (vbDay_6||' DAY' ) ::INTERVAL;
+    vbDate30  := vbOperDate + (vbDay_1||' DAY' ) ::INTERVAL;
+    vbOperDate:= vbOperDate + (vbDay_0||' DAY' ) ::INTERVAL;
+
 
      RETURN QUERY
      WITH
@@ -43,6 +77,11 @@ BEGIN
    , tmpContainer AS (SELECT tmp.ContainerId
                            , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                            , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
+                           , CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
+                                  WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
+                                  WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                                  ELSE 0
+                             END                                                       AS PartionDateKindId
                       FROM tmpMIFloat_ContainerId AS tmp
                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                          ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
@@ -98,6 +137,8 @@ BEGIN
            , COALESCE (tmpPartion.Invnumber, NULL)             :: TVarChar  AS Invnumber_Income
            , COALESCE (tmpPartion.FromName, NULL)              :: TVarChar  AS FromName_Income
            , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar  AS ContractName_Income
+           
+           , Object_PartionDateKind.ValueData                  :: TVarChar  AS PartionDateKindName
 
        FROM tmpMI_Child AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -106,6 +147,7 @@ BEGIN
                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
             LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIFloat_ContainerId.ContainerId
             LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainer.PartionDateKindId
        ;
 END;
 $BODY$

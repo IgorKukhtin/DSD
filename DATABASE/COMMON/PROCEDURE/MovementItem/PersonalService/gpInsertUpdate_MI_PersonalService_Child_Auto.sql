@@ -279,6 +279,8 @@ end if;
                                                                         , inSummSocialAdd          := 0
                                                                         , inSummChildRecalc        := 0
                                                                         , inSummMinusExtRecalc     := 0
+                                                                        , inSummFine               := 0
+                                                                        , inSummHosp               := 0
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
                                                                         , inUnitId                 := inUnitId
@@ -390,6 +392,8 @@ end if;
                                                           , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
                                                           , inSummChildRecalc        := COALESCE (MIFloat_SummChildRecalc.ValueData, 0)
                                                           , inSummMinusExtRecalc     := COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)
+                                                          , inSummFine               := COALESCE (MIFloat_SummFine.ValueData, 0)
+                                                          , inSummHosp               := COALESCE (MIFloat_SummHosp.ValueData, 0)
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId                 := inUnitId
@@ -441,6 +445,12 @@ end if;
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
                                         ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                        ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                        ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()                                       
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -466,6 +476,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.07.19         *
  05.01.18         *
  20.06.17         * add inSummCardSecondCash
  21.06.16         *

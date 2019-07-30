@@ -107,6 +107,8 @@ BEGIN
                                                         , inSummSocialAdd      := COALESCE (gpSelect.SummSocialAdd, 0)
                                                         , inSummChildRecalc    := COALESCE (gpSelect.SummChildRecalc, 0)
                                                         , inSummMinusExtRecalc := COALESCE (gpSelect.SummMinusExtRecalc, 0)
+                                                        , inSummFine           := COALESCE (gpSelect.SummFine, 0)
+                                                        , inSummHosp           := COALESCE (gpSelect.SummHosp, 0)
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
                                                         , inUnitId             := tmpPersonal.UnitId
@@ -135,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.19         *
  05.01.18         *
  20.06.17         * add inSummCardSecondCash 
  28.01.17                                        *

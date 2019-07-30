@@ -174,6 +174,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAddOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummFine
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummHosp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -320,6 +330,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAddOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummFine
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummHosp
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -662,6 +682,24 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalSummFine: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'TotalSummFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummHosp: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086
+            DataBinding.FieldName = 'TotalSummHosp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
           end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080

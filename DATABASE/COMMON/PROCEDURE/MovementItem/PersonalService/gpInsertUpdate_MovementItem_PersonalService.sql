@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -32,6 +33,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummSocialAdd         TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChildRecalc       TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc    TFloat    , -- Удержания сторон. юр.л. (ввод)
+    IN inSummFine              TFloat    , -- штраф
+    IN inSummHosp              TFloat    , -- больничный
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -70,6 +73,8 @@ BEGIN
                                                      , inSummSocialAdd         := inSummSocialAdd
                                                      , inSummChildRecalc       := inSummChildRecalc
                                                      , inSummMinusExtRecalc    := inSummMinusExtRecalc
+                                                     , inSummFine              := inSummFine
+                                                     , inSummHosp              := inSummHosp
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
                                                      , inUnitId                := inUnitId
@@ -94,6 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.19         *
  25.06.18         * inSummAddOthRecalc
  05.01.18         * add inSummNalogRetRecalc
  20.06.17         * add inSummCardSecondCash

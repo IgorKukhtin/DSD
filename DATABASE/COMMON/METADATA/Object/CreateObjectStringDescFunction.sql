@@ -722,6 +722,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsTypeKind_ShortName() RETURNS Int
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsTypeKind_ShortName', zc_object_GoodsTypeKind(), 'Короткое обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsTypeKind_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_OrderFinance_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_OrderFinance_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_OrderFinance_Comment', zc_object_OrderFinance(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_OrderFinance_Comment');
+
+
 ---!!! Аптека
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -953,6 +958,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 29.07.19         * zc_ObjectString_OrderFinance_Comment
  14.06.19                                                                                                         * zc_ObjectString_Goods_Analog
  14.06.19         * zc_ObjectString_Language_Value15-17
  20.05.19         * zc_ObjectString_GoodsTypeKind_ShortName

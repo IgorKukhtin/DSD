@@ -1830,15 +1830,17 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
@@ -1850,7 +1852,7 @@ begin
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadSendPartionDateFormTest;

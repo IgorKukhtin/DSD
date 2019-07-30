@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , TotalSummHoliday TFloat, TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
+             , TotalSummFine TFloat, TotalSummHosp TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JurIdicalId Integer, JurIdicalName TVarChar
@@ -119,7 +120,10 @@ BEGIN
 
            , MovementFloat_TotalSummAddOth.ValueData        AS TotalSummAddOth
            , MovementFloat_TotalSummAddOthRecalc.ValueData  AS TotalSummAddOthRecalc
-           
+
+           , MovementFloat_TotalSummFine.ValueData :: TFloat   AS TotalSummFine
+           , MovementFloat_TotalSummHosp.ValueData :: TFloat   AS TotalSummHosp
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -210,6 +214,13 @@ BEGIN
                                     ON MovementFloat_TotalSummAddOthRecalc.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummAddOthRecalc.DescId = zc_MovementFloat_TotalSummAddOthRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFine
+                                    ON MovementFloat_TotalSummFine.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummFine.DescId = zc_MovementFloat_TotalSummFine()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHosp
+                                    ON MovementFloat_TotalSummHosp.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHosp.DescId = zc_MovementFloat_TotalSummHosp()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -233,6 +244,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.07.19         *
  25.06.18         * TotalSummAddOth
                     TotalSummAddOthRecalc
  20.04.16         * Holiday

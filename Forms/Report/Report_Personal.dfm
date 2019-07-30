@@ -4,7 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 917
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +23,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
       inherited cxGrid: TcxGrid
         Width = 901
         Height = 444
+        ExplicitLeft = 492
+        ExplicitTop = 16
         ExplicitWidth = 901
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -141,6 +143,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummHoliday_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummFine
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummHosp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -257,6 +269,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummHoliday_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummFine
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummHosp
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -606,6 +628,28 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object SummFine: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'SummFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummHosp: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086
+            DataBinding.FieldName = 'SummHosp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090

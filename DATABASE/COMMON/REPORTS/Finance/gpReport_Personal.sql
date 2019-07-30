@@ -31,6 +31,7 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , ServiceSumm TFloat, ServiceSumm_inf TFloat, SummHoliday_inf TFloat, ServiceSumm_dif TFloat
              , IncomeSumm TFloat
              , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat, SummNalogRet TFloat
+             , SummFine TFloat, SummHosp TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
              , ContainerId Integer
               )
@@ -142,6 +143,8 @@ BEGIN
    , tmpMIFloat_SummService AS (SELECT tmp.ContainerId
                                      , SUM (COALESCE (MIFloat_SummService.ValueData,0)) AS  SummService_inf
                                      , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0)) AS  SummHoliday_inf
+                                     , SUM (COALESCE (MIFloat_SummFine.ValueData,0))    AS  SummFine
+                                     , SUM (COALESCE (MIFloat_SummHosp.ValueData,0))    AS  SummHosp
                                 FROM (SELECT DISTINCT MIContainer.ContainerId
                                            , MIContainer.MovementItemId
                                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
@@ -159,6 +162,12 @@ BEGIN
                                       LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                   ON MIFloat_SummHoliday.MovementItemId = tmp.MovementItemId
                                                                  AND MIFloat_SummHoliday.DescId         = zc_MIFloat_SummHoliday()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                                                  ON MIFloat_SummFine.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                                                  ON MIFloat_SummHosp.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
                                 WHERE tmp.Ord = 1
                                 GROUP BY tmp.ContainerId
                                 )
@@ -227,6 +236,8 @@ BEGIN
                            , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
                            , SUM (tmpMIFloat_SummService.SummService_inf) AS ServiceSumm_inf
                            , SUM (tmpMIFloat_SummService.SummHoliday_inf) AS SummHoliday_inf
+                           , SUM (tmpMIFloat_SummService.SummFine)        AS SummFine
+                           , SUM (tmpMIFloat_SummService.SummHosp)        AS SummHosp
                            , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
                            , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                            , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
@@ -290,6 +301,8 @@ BEGIN
         Operation.SummPhone :: TFloat                                                               AS SummPhone,
         Operation.SummNalog :: TFloat                                                               AS SummNalog,
         Operation.SummNalogRet :: TFloat                                                            AS SummNalogRet,
+        Operation.SummFine     :: TFloat                                                            AS SummFine,
+        Operation.SummHosp     :: TFloat                                                            AS SummHosp,
         (-1 * Operation.EndAmount) :: TFloat                                                        AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
@@ -331,6 +344,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 29.07.19         *
  08.04.19         * add SummService_inf
  16.03.17         * add inPersonalId
                     add inPersonalServiceListId

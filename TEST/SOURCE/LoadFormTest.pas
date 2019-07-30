@@ -101,6 +101,8 @@ type
     procedure LoadMobileReportFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadOrderFinanceFormTest;
+    procedure LoadOrderFinanceMovementFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
@@ -733,6 +735,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
 end;
 
+procedure TLoadFormTest.LoadOrderFinanceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
+end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;
 begin
@@ -2041,12 +2062,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   exit;

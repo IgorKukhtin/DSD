@@ -29,7 +29,7 @@ BEGIN
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
              , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
              , SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat, SummAddOthRecalc TFloat
-             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat) ON COMMIT DROP;
+             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummFine TFloat, SummHosp TFloat) ON COMMIT DROP;
 
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
                            , MovementItem.ObjectId                     AS PersonalId
@@ -57,7 +57,7 @@ BEGIN
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
                            , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash
                            , SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd, SummAddOthRecalc
-                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc)
+                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc, SummFine, SummHosp)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
                  , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
@@ -82,6 +82,8 @@ BEGIN
                  , COALESCE (MIFloat_SummSocialAdd.ValueData, 0)       :: TFloat  AS SummSocialAdd
                  , COALESCE (MIFloat_SummChildRecalc.ValueData, 0)     :: TFloat  AS SummChildRecalc
                  , COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)  :: TFloat  AS SummMinusExtRecalc
+                 , COALESCE (MIFloat_SummFine.ValueData, 0)            :: TFloat  AS SummFine
+                 , COALESCE (MIFloat_SummHosp.ValueData, 0)            :: TFloat  AS SummHosp
             FROM MovementItem
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -154,6 +156,13 @@ BEGIN
                                              ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
 
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                             ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                             ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
+
                  LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                               AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -184,6 +193,8 @@ BEGIN
                                                         , inSummSocialAdd      := SummSocialAdd
                                                         , inSummChildRecalc    := SummChildRecalc
                                                         , inSummMinusExtRecalc := SummMinusExtRecalc
+                                                        , inSummFine           := SummFine
+                                                        , inSummHosp           := SummHosp
                                                         , inComment            := 'копирование из другой ведомости'
                                                         , inInfoMoneyId        := InfoMoneyId
                                                         , inUnitId             := UnitId
@@ -198,29 +209,29 @@ BEGIN
 
 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRet(), tmp.MovementItemId, tmp.SummNalogRet)
-     FROM (WITH tmpMI_find AS (SELECT MAX (MovementItem.Id)   AS MovementItemId
-                           , MovementItem.ObjectId            AS PersonalId
-                           , MILinkObject_Unit.ObjectId       AS UnitId
-                           , MILinkObject_Position.ObjectId   AS PositionId
-                           , MILinkObject_InfoMoney.ObjectId  AS InfoMoneyId
-                      FROM MovementItem
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                      WHERE MovementItem.isErased = FALSE
-                        AND MovementItem.DescId = zc_MI_Master()
-                        AND MovementItem.MovementId =  inMovementId
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_Unit.ObjectId
-                             , MILinkObject_Position.ObjectId
-                             , MILinkObject_InfoMoney.ObjectId
-                     )
+     FROM (WITH tmpMI_find AS (SELECT MAX (MovementItem.Id)            AS MovementItemId
+                                    , MovementItem.ObjectId            AS PersonalId
+                                    , MILinkObject_Unit.ObjectId       AS UnitId
+                                    , MILinkObject_Position.ObjectId   AS PositionId
+                                    , MILinkObject_InfoMoney.ObjectId  AS InfoMoneyId
+                               FROM MovementItem
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                     ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                     ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                     ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                               WHERE MovementItem.isErased = FALSE
+                                 AND MovementItem.DescId = zc_MI_Master()
+                                 AND MovementItem.MovementId =  inMovementId
+                               GROUP BY MovementItem.ObjectId
+                                      , MILinkObject_Unit.ObjectId
+                                      , MILinkObject_Position.ObjectId
+                                      , MILinkObject_InfoMoney.ObjectId
+                              )
            SELECT tmpMI_find.MovementItemId
                 , tmpMI.SummNalogRet
            FROM tmpMI_find
@@ -245,6 +256,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.19         *
  05.01.18         * add SummNalogRetRecalc
  20.06.17         * add SummCardSecondCash
  24.02.17         *
