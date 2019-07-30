@@ -78,8 +78,32 @@ BEGIN
       INSERT INTO _PUSH (Id, Text) VALUES (2, 'В конце рабочего дня проверить соотвествие рецептов, прошедших по Хелси и Фармасикеш! За качество сверки  фармацевт несет полную отвественность!"');
    END IF;
    
-   -- Уведомление по перемещениям на склад просрочки
+   -- Уведомление по перемещениям на склад просрочки в пятницу
    IF date_part('DOW',     CURRENT_DATE)::Integer = 5 
+     AND date_part('HOUR',    CURRENT_TIME)::Integer = 16 
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+   THEN
+      IF EXISTS(SELECT 1 FROM Object AS Object_Unit
+
+                   INNER JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
+                                            ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
+                                           AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+                                          AND ObjectBoolean_DividePartionDate.ValueData = True
+
+                   INNER JOIN ObjectLink AS ObjectLink_Unit_UnitOverdue
+                                         ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id 
+                                        AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()
+                                        AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0 
+
+                WHERE Object_Unit.ID = vbUnitId) 
+      THEN
+         INSERT INTO _PUSH (Id, Text) VALUES (3, 'Коллеги, информируем вас, что во вторник на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки", если есть необходимость, проработайте данный товар!');
+      END IF;
+   END IF;
+
+   -- Уведомление по перемещениям на склад просрочки по понедельникам
+   IF date_part('DOW',     CURRENT_DATE)::Integer = 1
      AND date_part('HOUR',    CURRENT_TIME)::Integer = 16 
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
@@ -168,7 +192,7 @@ BEGIN
                      LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id
                 WHERE COALESCE (tmpMovement.ContainerId, 0) = 0)
       THEN
-         INSERT INTO _PUSH (Id, Text) VALUES (3, 'Коллеги, информируем вас, что завтра на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки", если есть необходимость, проработайте данный товар!');
+         INSERT INTO _PUSH (Id, Text) VALUES (4, 'Коллеги, информируем вас, что завтра на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки"!!!');
       END IF;
    END IF;
 

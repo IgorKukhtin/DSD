@@ -524,6 +524,8 @@ type
     actReportGoodsNotSalePast1: TMenuItem;
     acttReport_GoodsPartionDate_Promo: TdsdOpenForm;
     N186: TMenuItem;
+    actReport_GoodsPartionDate5: TdsdOpenForm;
+    N510: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

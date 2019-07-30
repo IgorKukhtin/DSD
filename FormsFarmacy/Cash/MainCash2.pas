@@ -4062,18 +4062,18 @@ begin
   end;
 
 
-  if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
-  begin
-    if checkCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('Id').asInteger,[]) then
-    begin
-      if checkCDS.FieldByName('PartionDateKindId').AsInteger <> SourceClientDataSet.FieldByName('PartionDateKindId').AsInteger then
-      begin
-        ShowMessage('В чек уже опущен медикаменты со сроком <' + checkCDS.FieldByName('PartionDateKindName').Value + '>'#13#10 +
-          'Нельзя в один чек опускать один медикамент с разными сроками.');
-        Exit;
-      end;
-    end;
-  end;
+//  if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
+//  begin
+//    if checkCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('Id').asInteger,[]) then
+//    begin
+//      if checkCDS.FieldByName('PartionDateKindId').AsInteger <> SourceClientDataSet.FieldByName('PartionDateKindId').AsInteger then
+//      begin
+//        ShowMessage('В чек уже опущен медикаменты со сроком <' + checkCDS.FieldByName('PartionDateKindName').Value + '>'#13#10 +
+//          'Нельзя в один чек опускать один медикамент с разными сроками.');
+//        Exit;
+//      end;
+//    end;
+//  end;
 
   if Assigned(SourceClientDataSet.FindField('AmountMonth')) then
   begin
@@ -4312,9 +4312,9 @@ begin
     try
       CheckCDS.Filtered := False;
       // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
-      if checkCDS.Locate('GoodsId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger]),[])
-        and ((checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
-            (checkCDS.FieldByName('PartionDateKindId').AsVariant <> SourceClientDataSet.FindField('PartionDateKindId').AsVariant)) then
+      if checkCDS.Locate('GoodsId;PartionDateKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
+                                                                 SourceClientDataSet.FindField('PartionDateKindId').AsVariant]),[])
+        and (checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) then
       Begin
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
           (SourceClientDataSet.FindField('MorionCode') <> nil) then
@@ -4371,7 +4371,8 @@ begin
         end;
         checkCDS.Post;
       End
-      else if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
+      else if not checkCDS.Locate('GoodsId;PartionDateKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
+                                                                 SourceClientDataSet.FindField('PartionDateKindId').AsVariant]),[]) then
       Begin
         checkCDS.Append;
         checkCDS.FieldByName('Id').AsInteger:=0;
@@ -5463,7 +5464,9 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and
+                            (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId) and
+                            (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
       Begin
         CheckCDS.Edit;
 

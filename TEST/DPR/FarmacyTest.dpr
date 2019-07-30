@@ -721,7 +721,9 @@ uses
   ChoiceSend in '..\..\FormsFarmacy\Guides\ChoiceSend.pas' {ChoiceSendForm: TParentForm},
   Report_GoodsSendSUN in '..\..\FormsFarmacy\Report\Report_GoodsSendSUN.pas' {Report_GoodsSendSUNForm: TParentForm},
   Report_GoodsSendSUNDialog in '..\..\FormsFarmacy\Report\Report_GoodsSendSUNDialog.pas' {Report_GoodsSendSUNDialogForm: TParentForm},
-  ImportGroupEdit in '..\..\FormsFarmacy\Import\ImportGroupEdit.pas' {ImportGroupEditForm: TParentForm};
+  ImportGroupEdit in '..\..\FormsFarmacy\Import\ImportGroupEdit.pas' {ImportGroupEditForm: TParentForm},
+  Report_GoodsPartionDate5 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate5.pas' {Report_GoodsPartionDate5Form: TParentForm},
+  Report_GoodsPartionDate5Dialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate5Dialog.pas' {Report_GoodsPartionDate5DialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
