@@ -28,7 +28,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 43831d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +38,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 43831d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -1026,25 +1026,18 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
-        Value = Null
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSnab'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inJuridicalBasisId'
         Value = Null
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -102,6 +102,7 @@ type
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
     procedure LoadOrderFinanceFormTest;
+    procedure LoadOrderFinanceMovementFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
@@ -743,6 +744,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;

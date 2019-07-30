@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdDB, Datasnap.DBClient, dsdAddOn, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit;
+  cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit;
 
 type
   TJuridicalForm = class(TParentForm)

@@ -228,6 +228,17 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
+      object SummOrderFinance: TcxGridDBColumn
+        Caption = #1051#1080#1084#1080#1090' '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1090#1089#1088#1086#1095#1082#1080
+        DataBinding.FieldName = 'SummOrderFinance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 135
+      end
       object PriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'

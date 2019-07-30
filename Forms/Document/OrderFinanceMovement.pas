@@ -115,6 +115,21 @@ type
     cxLabel4: TcxLabel;
     edOrderFinance: TcxButtonEdit;
     GuidesOrderFinance: TdsdGuides;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chJuridicalCode: TcxGridDBColumn;
+    chJuridicalName: TcxGridDBColumn;
+    chisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    JuridicalCDS: TClientDataSet;
+    JuridicalDS: TDataSource;
+    dsdDBViewAddOnJuridical: TdsdDBViewAddOn;
+    spSelectJuridical: TdsdStoredProc;
+    chSummOrderFinance: TcxGridDBColumn;
+    spUpdate_Juridical_OrderFinance: TdsdStoredProc;
+    actUpdateJuridicalDS: TdsdUpdateDataSet;
+    actShowAll: TBooleanStoredProcAction;
   private
   public
   end;
