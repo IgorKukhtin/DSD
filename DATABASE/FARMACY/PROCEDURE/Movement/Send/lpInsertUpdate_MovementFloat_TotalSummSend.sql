@@ -14,8 +14,9 @@ $BODY$
   DECLARE vbTotalSummTo    TFloat;
 
   DECLARE vbUnitFromId Integer;
-  DECLARE vbUnitToId Integer;
-  DECLARE vbisAuto Boolean;
+  DECLARE vbUnitToId   Integer;
+  DECLARE vbIsAuto     Boolean;
+  DECLARE vbIsSUN      Boolean;
 
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -26,10 +27,14 @@ BEGIN
      -- определяется данные из документа
      SELECT MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
-          , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean
+          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
+          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
+          , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
+          
      INTO vbUnitFromId
         , vbUnitToId 
-        , vbisAuto
+        , vbIsAuto
+        , vbIsSUN
      FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.ID
@@ -40,6 +45,12 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
      WHERE Movement.Id = inMovementId;
 
      WITH
@@ -48,7 +59,7 @@ BEGIN
                         , COALESCE(MovementItem.Amount,0) AS Amount
                    FROM MovementItem
                    WHERE MovementItem.MovementId = inMovementId
-                     AND MovementItem.isErased = false
+                     AND MovementItem.isErased = FALSE
                    )
        , tmpPrice AS (SELECT tmpMI.ObjectId                 AS GoodsId
                            , ObjectLink_Unit.ChildObjectId  AS UnitId
@@ -68,8 +79,8 @@ BEGIN
 
      -- получаем итоговые данные
      SELECT SUM (tmpMI.Amount)
-          , SUM (tmpMI.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END)) ::TFloat
-          , SUM (tmpMI.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END))     ::TFloat
+          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE COALESCE (MIFloat_PriceFrom.ValueData, 0) END)) :: TFloat
+          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE OR vbIsSUN = TRUE THEN Object_Price_To.Price   ELSE COALESCE (MIFloat_PriceTo.ValueData, 0)   END)) :: TFloat
    INTO vbTotalCountSend, vbTotalSummFrom, vbTotalSummTo
      FROM tmpMI
           -- цена подразделений записанная при автоматическом распределении 

@@ -158,7 +158,7 @@ BEGIN
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            JOIN (SELECT DISTINCT Object_RoleAccessKey_View.AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

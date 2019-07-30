@@ -35,6 +35,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
      vbUserId := lpGetUserBySession (inSession);
+     
+     -- замена
+     IF inMovementId_Value = 0 THEN inMovementId_Value:= inMovementId; END IF;
 
      IF COALESCE (inMovementId_Value, 0) = 0
      THEN
