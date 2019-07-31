@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
              , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummCardSecondCash TFloat
-             , SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
+             , SummNalog TFloat, SummMinus TFloat, SummFine TFloat, SummAdd TFloat, SummHoliday TFloat, SummHosp TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
@@ -113,9 +113,11 @@ BEGIN
 --                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
 --                                 , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
+                                   , SUM (COALESCE (MIFloat_SummFine.ValueData, 0))         AS SummFine
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
                                    , SUM (COALESCE (MIFloat_SummAddOth.ValueData, 0))       AS SummAddOth
                                    , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))      AS SummHoliday
+                                   , SUM (COALESCE (MIFloat_SummHosp.ValueData, 0))         AS SummHosp
                                    , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
                                    , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
                                    , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS SummChild
@@ -171,6 +173,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                                                ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                                               ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummFine.DescId         = zc_MIFloat_SummFine()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                                ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
@@ -180,6 +185,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                                               ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummHosp.DescId         = zc_MIFloat_SummHosp()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                                                ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
@@ -252,9 +260,11 @@ BEGIN
 --                                 , tmpParent_all.SummNalog
                                    , COALESCE (tmpSummNalog.SummNalog, 0) AS SummNalog
                                    , tmpParent_all.SummMinus
+                                   , tmpParent_all.SummFine
                                    , tmpParent_all.SummAdd
                                    , tmpParent_all.SummAddOth
                                    , tmpParent_all.SummHoliday
+                                   , tmpParent_all.SummHosp
                                    , tmpParent_all.SummSocialIn
                                    , tmpParent_all.SummSocialAdd
                                    , tmpParent_all.SummChild
@@ -284,9 +294,11 @@ BEGIN
                                    , 0 AS SummCardSecondCash
                                    , 0 AS SummNalog
                                    , 0 AS SummMinus
+                                   , 0 AS SummFine
                                    , 0 AS SummAdd
                                    , 0 AS SummAddOth
                                    , 0 AS SummHoliday
+                                   , 0 AS SummHosp
                                    , 0 AS SummSocialIn
                                    , 0 AS SummSocialAdd
                                    , 0 AS SummChild
@@ -395,9 +407,11 @@ BEGIN
                                    , tmpParent.SummCardSecondCash
                                    , tmpParent.SummNalog
                                    , tmpParent.SummMinus
+                                   , tmpParent.SummFine
                                    , tmpParent.SummAdd
                                    , tmpParent.SummAddOth
                                    , tmpParent.SummHoliday
+                                   , tmpParent.SummHosp
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
                                    , tmpParent.SummChild
@@ -427,9 +441,11 @@ BEGIN
                                    , tmpService.SummCardSecondCash
                                    , tmpService.SummNalog
                                    , tmpService.SummMinus
+                                   , tmpService.SummFine
                                    , tmpService.SummAdd
                                    , tmpService.SummAddOth
                                    , tmpService.SummHoliday
+                                   , tmpService.SummHosp
                                    , tmpService.SummSocialIn
                                    , tmpService.SummSocialAdd
                                    , tmpService.SummChild
@@ -485,8 +501,10 @@ BEGIN
             , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
+            , tmpData.SummFine         :: TFloat AS SummFine
             , (tmpData.SummAdd + tmpData.SummAddOth) :: TFloat AS SummAdd
             , tmpData.SummHoliday      :: TFloat AS SummHoliday
+            , tmpData.SummHosp         :: TFloat AS SummHosp
             , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
             , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
             , tmpData.SummChild        :: TFloat AS SummChild

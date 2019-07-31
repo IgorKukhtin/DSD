@@ -21,13 +21,13 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
-             , SummMinus TFloat, SummAdd TFloat
-             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat
+             , SummMinus TFloat, SummFine TFloat, SummAdd TFloat
+             , SummHoliday TFloat, SummHosp TFloat
+             , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
              , SummAddOth TFloat, SummAddOthRecalc TFloat
-             , SummFine TFloat, SummHosp TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -212,8 +212,10 @@ BEGIN
             , MIFloat_SummNalogRet.ValueData          AS SummNalogRet
             , MIFloat_SummNalogRetRecalc.ValueData    AS SummNalogRetRecalc
             , MIFloat_SummMinus.ValueData             AS SummMinus
+            , MIFloat_SummFine.ValueData              AS SummFine
             , MIFloat_SummAdd.ValueData               AS SummAdd
             , MIFloat_SummHoliday.ValueData           AS SummHoliday
+            , MIFloat_SummHosp.ValueData              AS SummHosp
             , MIFloat_SummSocialIn.ValueData          AS SummSocialIn
             , MIFloat_SummSocialAdd.ValueData         AS SummSocialAdd
             , MIFloat_SummChild.ValueData             AS SummChild
@@ -227,14 +229,11 @@ BEGIN
             , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData             AS SummPhone
 
-            , COALESCE (tmpMIChild.Amount, 0)                                                :: TFloat AS TotalSummChild
+            , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
 
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
-
-            , MIFloat_SummFine.ValueData                AS SummFine
-            , MIFloat_SummHosp.ValueData                AS SummHosp
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -291,6 +290,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                        ON MIFloat_SummFine.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
@@ -298,6 +300,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                         ON MIFloat_SummHoliday.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                        ON MIFloat_SummHosp.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                         ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId
@@ -341,13 +346,6 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                         ON MIFloat_SummAddOthRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_SummFine
-                                        ON MIFloat_SummFine.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
-                                        ON MIFloat_SummHosp.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
