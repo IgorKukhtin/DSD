@@ -25,7 +25,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
               )
 AS
@@ -82,249 +83,250 @@ BEGIN
         , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (inJuridicalGroupId) AS lfSelect_Object_Juridical_byGroup WHERE inJuridicalGroupId <> 0)
 
      SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
-             , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
-             , a.BranchId, a.BranchCode, a.BranchName
-             , a.PaidKindId, a.PaidKindName
-             , a.ContractId, a.ContractCode, a.ContractNumber
-             , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
-             , a.PersonalName
-             , a.PersonalTradeName
-             , a.PersonalCollationName
-             , a.StartDate, a.EndDate
-             , a.DebetRemains, a.KreditRemains
-             , a.SaleSumm, a.DefermentPaymentRemains
-             , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
-             , a.Condition, a.StartContractDate, a.Remains
-             , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
-             , a.AreaName
-from (
-  SELECT 
-     Object_Account_View.AccountId
-   , Object_Account_View.AccountName_all AS AccountName
-   , Object_Juridical.Id        AS JuridicalId
-   , Object_Juridical.Valuedata AS JuridicalName
-   , COALESCE (Object_RetailReport.ValueData, 'прочие') :: TVarChar AS RetailName
-   , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName_main
-   , ObjectHistory_JuridicalDetails_View.OKPO
-   , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-   , Object_Partner.Id          AS PartnerId
-   , Object_Partner.ObjectCode  AS PartnerCode
-   , Object_Partner.ValueData   AS PartnerName
-   , Object_Branch.Id           AS BranchId
-   , Object_Branch.ObjectCode   AS BranchCode
-   , Object_Branch.ValueData    AS BranchName
-   , Object_PaidKind.Id         AS PaidKindId
-   , Object_PaidKind.ValueData  AS PaidKindName
-   , View_Contract.ContractId
-   , View_Contract.ContractCode
-   , View_Contract.InvNumber AS ContractNumber
-   , View_Contract.ContractTagGroupName
-   , View_Contract.ContractTagName
-   , View_Contract.ContractStateKindCode
-   , Object_Personal_View.PersonalName      AS PersonalName
-   , Object_PersonalTrade.PersonalName      AS PersonalTradeName
-   , Object_PersonalCollation.PersonalName  AS PersonalCollationName
-   , View_Contract.StartDate
-   , View_Contract.EndDate
+          , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
+          , a.BranchId, a.BranchCode, a.BranchName
+          , a.PaidKindId, a.PaidKindName
+          , a.ContractId, a.ContractCode, a.ContractNumber
+          , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
+          , a.PersonalName
+          , a.PersonalTradeName
+          , a.PersonalCollationName
+          , a.StartDate, a.EndDate
+          , a.DebetRemains, a.KreditRemains
+          , a.SaleSumm, a.DefermentPaymentRemains
+          , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
+          , a.Condition, a.StartContractDate, a.Remains
+          , a.InfoMoneyGroupName, a.InfoMoneyDestinationName
+          , a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
+          , a.AreaName
+     FROM (
+           SELECT 
+                  Object_Account_View.AccountId
+                , Object_Account_View.AccountName_all AS AccountName
+                , Object_Juridical.Id        AS JuridicalId
+                , Object_Juridical.Valuedata AS JuridicalName
+                , COALESCE (Object_RetailReport.ValueData, 'прочие') :: TVarChar AS RetailName
+                , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName_main
+                , ObjectHistory_JuridicalDetails_View.OKPO
+                , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+                , Object_Partner.Id          AS PartnerId
+                , Object_Partner.ObjectCode  AS PartnerCode
+                , Object_Partner.ValueData   AS PartnerName
+                , Object_Branch.Id           AS BranchId
+                , Object_Branch.ObjectCode   AS BranchCode
+                , Object_Branch.ValueData    AS BranchName
+                , Object_PaidKind.Id         AS PaidKindId
+                , Object_PaidKind.ValueData  AS PaidKindName
+                , View_Contract.ContractId
+                , View_Contract.ContractCode
+                , View_Contract.InvNumber AS ContractNumber
+                , View_Contract.ContractTagGroupName
+                , View_Contract.ContractTagName
+                , View_Contract.ContractStateKindCode
+                , Object_Personal_View.PersonalName      AS PersonalName
+                , Object_PersonalTrade.PersonalName      AS PersonalTradeName
+                , Object_PersonalCollation.PersonalName  AS PersonalCollationName
+                , View_Contract.StartDate
+                , View_Contract.EndDate
+             
+                , (CASE WHEN -1 * RESULT.Remains > 0 THEN -1 * RESULT.Remains ELSE 0 END) :: TFloat AS DebetRemains
+                , (CASE WHEN -1 * RESULT.Remains > 0 THEN 0 ELSE 1 * RESULT.Remains END) :: TFloat AS KreditRemains
+                , RESULT.SaleSumm :: TFloat AS SaleSumm
+             
+                , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
+                             THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
+                        ELSE RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm -- 0
+                   END)::TFloat AS DefermentPaymentRemains
+             
+                , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0)
+                             THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > RESULT.SaleSumm1
+                                       THEN RESULT.SaleSumm1
+                                       ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm)
+                                  END
+                        ELSE 0
+                   END)::TFloat AS SaleSumm1
+             
+                , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > 0 AND RESULT.SaleSumm2 > 0)
+                             THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > RESULT.SaleSumm2
+                                       THEN RESULT.SaleSumm2
+                                       ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1)
+                                  END
+                   ELSE 0 END)::TFloat AS SaleSumm2
+             
+                , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > 0 AND RESULT.SaleSumm3 > 0)
+                             THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > RESULT.SaleSumm3
+                                       THEN RESULT.SaleSumm3
+                                       ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2)
+                                  END
+                        ELSE 0
+                   END)::TFloat AS SaleSumm3
+             
+                , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0)
+                             THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4
+                                       THEN RESULT.SaleSumm4
+                                       ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3)
+                                  END
+                         ELSE 0
+                   END)::TFloat AS SaleSumm4
+             
+                , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0
+                             THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4)
+                             ELSE 0
+                   END )::TFloat AS SaleSumm5
+             
+                , (RESULT.DayCount||' '|| CASE WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                                    THEN 'К.дн.'
+                                               -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendarSale()
+                                               --      THEN 'К.Р.дн.'
+                                               WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
+                                                    THEN 'Б.дн.'
+                                               -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBankSale()
+                                               --     THEN 'Б.Р.дн.'
+                                               ELSE ''
+                                          END
+                                  ||' '|| CASE WHEN RESULT.DelayCreditLimit <> 0
+                                                    THEN '+ ' || TRIM (to_char (RESULT.DelayCreditLimit, '999 999 999 999 999D99')) || 'грн.'
+                                               ELSE ''
+                                          END
+                   )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
+                , RESULT.ContractDate :: TDateTime AS StartContractDate
+                , (-1 * RESULT.Remains) :: TFloat AS Remains
+             
+                   , Object_InfoMoney_View.InfoMoneyGroupName
+                   , Object_InfoMoney_View.InfoMoneyDestinationName
+                   , Object_InfoMoney_View.InfoMoneyId
+                   , Object_InfoMoney_View.InfoMoneyCode
+                   , Object_InfoMoney_View.InfoMoneyName
+             
+                   , Object_Area.ValueData AS AreaName
+             
+           FROM (SELECT RESULT_all.AccountId
+                      , RESULT_all.ContractId
+                      , RESULT_all.JuridicalId 
+                      , -1 * SUM (RESULT_all.Remains)   AS Remains
+                      , SUM (RESULT_all.SaleSumm)  AS SaleSumm
+                      , SUM (RESULT_all.SaleSumm1) AS SaleSumm1
+                      , SUM (RESULT_all.SaleSumm2) AS SaleSumm2
+                      , SUM (RESULT_all.SaleSumm3) AS SaleSumm3
+                      , SUM (RESULT_all.SaleSumm4) AS SaleSumm4
+                      , RESULT_all.ContractConditionKindId
+                      , RESULT_all.DayCount
+                      , RESULT_all.DelayCreditLimit
+                      , RESULT_all.ContractDate
+                      , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                      , CLO_PaidKind.ObjectId  AS PaidKindId
+                      , CLO_Partner.ObjectId   AS PartnerId
+                      , CLO_Branch.ObjectId    AS BranchId
+                      , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
+                 FROM (SELECT Container.Id
+                            , Container.ObjectId     AS AccountId
+                            , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
+                            , CLO_Juridical.ObjectId AS JuridicalId 
+                            , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate >= inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
+                            , SUM (CASE WHEN (MIContainer.OperDate < inOperDate)                 AND (MIContainer.OperDate >= ContractDate)               AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm
+                            , SUM (CASE WHEN (MIContainer.OperDate < ContractDate                AND MIContainer.OperDate >= ContractDate - vbLenght)     AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm1
+                            , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm2
+                            , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm3
+                            , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm4
+                            , ContractCondition_DefermentPayment.ContractConditionKindId
+                            , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
+                            , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
+                            , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
+                        FROM ContainerLinkObject AS CLO_Juridical
+                             INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
+                             INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
+                             LEFT JOIN ContainerLinkObject AS CLO_Contract
+                                                           ON CLO_Contract.ContainerId = Container.Id
+                                                          AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                             -- !!!Группируем Договора!!!
+                             LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
-   , (CASE WHEN -1 * RESULT.Remains > 0 THEN -1 * RESULT.Remains ELSE 0 END) :: TFloat AS DebetRemains
-   , (CASE WHEN -1 * RESULT.Remains > 0 THEN 0 ELSE 1 * RESULT.Remains END) :: TFloat AS KreditRemains
-   , RESULT.SaleSumm :: TFloat AS SaleSumm
+                             LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                                             , zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), Object_ContractCondition_View.Value :: Integer, inOperDate) :: Date AS ContractDate
+                                             , Object_ContractCondition_View.ContractConditionKindId
+                                             , Object_ContractCondition_View.Value :: Integer AS DayCount
+                                        FROM (SELECT Object_ContractCondition_View.ContractId
+                                                   , Object_ContractCondition_View.ContractConditionKindId
+                                                   , MAX (Object_ContractCondition_View.Value) AS Value
+                                              FROM Object_ContractCondition_DefermentPaymentView
+                                                   INNER JOIN Object_ContractCondition_View
+                                                           ON Object_ContractCondition_View.ContractConditionKindId = Object_ContractCondition_DefermentPaymentView.ConditionKindId
+                                              WHERE Object_ContractCondition_View.Value <> 0
+                                              GROUP BY Object_ContractCondition_View.ContractId
+                                                     , Object_ContractCondition_View.ContractConditionKindId
+                                             ) AS Object_ContractCondition_View
+                                       ) AS ContractCondition_DefermentPayment
+                                         ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
 
-   , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
-                THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
-           ELSE RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm -- 0
-      END)::TFloat AS DefermentPaymentRemains
+                             LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                                             , Value AS DelayCreditLimit
+                                        FROM Object_ContractCondition_View
+                                        WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                                       ) AS ContractCondition_CreditLimit
+                                         ON ContractCondition_CreditLimit.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
+                                             
+                             LEFT JOIN MovementItemContainer AS MIContainer 
+                                                             ON MIContainer.Containerid = Container.Id
+                                                            AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
+                            LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                        WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                           -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+                           AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
+                        GROUP BY Container.Id
+                               , Container.ObjectId
+                               , Container.Amount
+                               , View_Contract_ContractKey.ContractId_Key
+                               , CLO_Juridical.ObjectId  
+                               , ContractConditionKindId
+                               , DayCount
+                               , DelayCreditLimit
+                               , ContractDate
+                        ) AS RESULT_all
 
-   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0)
-                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > RESULT.SaleSumm1
-                          THEN RESULT.SaleSumm1
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm)
-                     END
-           ELSE 0
-      END)::TFloat AS SaleSumm1
+                     LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                                   ON CLO_PaidKind.ContainerId = RESULT_all.Id
+                                                  AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                     LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                   ON CLO_Branch.ContainerId = RESULT_all.Id
+                                                  AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                     LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                   ON CLO_InfoMoney.ContainerId = RESULT_all.Id
+                                                  AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                     LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                                   ON CLO_Partner.ContainerId = RESULT_all.Id
+                                                  AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                          ON ObjectLink_Juridical_JuridicalGroup.ObjectId = RESULT_all.JuridicalId
+                                         AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+          
+                     LEFT JOIN tmpJuridical ON tmpJuridical.JuridicalId = RESULT_all.JuridicalId
+                     LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.ContractId = RESULT_all.ContractId
+          
+                 WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+                   AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
+                        -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
+                        OR ((tmpJuridical.JuridicalId > 0 OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
+                   -- AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
+                   AND (tmpJuridical.JuridicalId > 0 OR COALESCE (inJuridicalGroupId, 0) = 0
+                        OR tmpListBranch_Constraint.ContractId > 0
+                        OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
+                 GROUP BY RESULT_all.AccountId
+                        , RESULT_all.ContractId
+                        , RESULT_all.JuridicalId 
+                        , RESULT_all.ContractConditionKindId
+                        , RESULT_all.DayCount
+                        , RESULT_all.DelayCreditLimit
+                        , RESULT_all.ContractDate
+                        , CLO_InfoMoney.ObjectId
+                        , CLO_PaidKind.ObjectId
+                        , CLO_Partner.ObjectId
+                        , CLO_Branch.ObjectId
+                        , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+                 ) AS RESULT
 
-   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > 0 AND RESULT.SaleSumm2 > 0)
-                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > RESULT.SaleSumm2
-                          THEN RESULT.SaleSumm2
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1)
-                     END
-      ELSE 0 END)::TFloat AS SaleSumm2
-
-   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > 0 AND RESULT.SaleSumm3 > 0)
-                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > RESULT.SaleSumm3
-                          THEN RESULT.SaleSumm3
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2)
-                     END
-           ELSE 0
-      END)::TFloat AS SaleSumm3
-
-   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0)
-                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4
-                          THEN RESULT.SaleSumm4
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3)
-                     END
-            ELSE 0
-      END)::TFloat AS SaleSumm4
-
-   , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0
-                THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4)
-                ELSE 0
-      END )::TFloat AS SaleSumm5
-
-   , (RESULT.DayCount||' '|| CASE WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
-                                       THEN 'К.дн.'
-                                  -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendarSale()
-                                  --      THEN 'К.Р.дн.'
-                                  WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
-                                       THEN 'Б.дн.'
-                                  -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBankSale()
-                                  --     THEN 'Б.Р.дн.'
-                                  ELSE ''
-                             END
-                     ||' '|| CASE WHEN RESULT.DelayCreditLimit <> 0
-                                       THEN '+ ' || TRIM (to_char (RESULT.DelayCreditLimit, '999 999 999 999 999D99')) || 'грн.'
-                                  ELSE ''
-                             END
-      )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
-   , RESULT.ContractDate :: TDateTime AS StartContractDate
-   , (-1 * RESULT.Remains) :: TFloat AS Remains
-
-      , Object_InfoMoney_View.InfoMoneyGroupName
-      , Object_InfoMoney_View.InfoMoneyDestinationName
-      , Object_InfoMoney_View.InfoMoneyCode
-      , Object_InfoMoney_View.InfoMoneyName
-
-      , Object_Area.ValueData AS AreaName
-
-  FROM (SELECT RESULT_all.AccountId
-             , RESULT_all.ContractId
-             , RESULT_all.JuridicalId 
-             , -1 * SUM (RESULT_all.Remains)   AS Remains
-             , SUM (RESULT_all.SaleSumm)  AS SaleSumm
-             , SUM (RESULT_all.SaleSumm1) AS SaleSumm1
-             , SUM (RESULT_all.SaleSumm2) AS SaleSumm2
-             , SUM (RESULT_all.SaleSumm3) AS SaleSumm3
-             , SUM (RESULT_all.SaleSumm4) AS SaleSumm4
-             , RESULT_all.ContractConditionKindId
-             , RESULT_all.DayCount
-             , RESULT_all.DelayCreditLimit
-             , RESULT_all.ContractDate
-             , CLO_InfoMoney.ObjectId AS InfoMoneyId
-             , CLO_PaidKind.ObjectId  AS PaidKindId
-             , CLO_Partner.ObjectId   AS PartnerId
-             , CLO_Branch.ObjectId    AS BranchId
-             , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
-        FROM
-       (SELECT Container.Id
-             , Container.ObjectId     AS AccountId
-             , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
-             , CLO_Juridical.ObjectId AS JuridicalId 
-             , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate >= inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
-             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate)                 AND (MIContainer.OperDate >= ContractDate)               AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate                AND MIContainer.OperDate >= ContractDate - vbLenght)     AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm1
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm2
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm3
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm4
-             , ContractCondition_DefermentPayment.ContractConditionKindId
-             , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
-             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
-             , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
-         FROM ContainerLinkObject AS CLO_Juridical
-              INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-              INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
-              LEFT JOIN ContainerLinkObject AS CLO_Contract
-                                            ON CLO_Contract.ContainerId = Container.Id
-                                           AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-              -- !!!Группируем Договора!!!
-              LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
-
-              LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), Object_ContractCondition_View.Value :: Integer, inOperDate) :: Date AS ContractDate
-                              , Object_ContractCondition_View.ContractConditionKindId
-                              , Object_ContractCondition_View.Value :: Integer AS DayCount
-                         FROM (SELECT Object_ContractCondition_View.ContractId
-                                    , Object_ContractCondition_View.ContractConditionKindId
-                                    , MAX (Object_ContractCondition_View.Value) AS Value
-                               FROM Object_ContractCondition_DefermentPaymentView
-                                    INNER JOIN Object_ContractCondition_View
-                                            ON Object_ContractCondition_View.ContractConditionKindId = Object_ContractCondition_DefermentPaymentView.ConditionKindId
-                               WHERE Object_ContractCondition_View.Value <> 0
-                               GROUP BY Object_ContractCondition_View.ContractId
-                                      , Object_ContractCondition_View.ContractConditionKindId
-                              ) AS Object_ContractCondition_View
-                        ) AS ContractCondition_DefermentPayment
-                          ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
-
-              LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , Value AS DelayCreditLimit
-                         FROM Object_ContractCondition_View
-                         WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
-                        ) AS ContractCondition_CreditLimit
-                          ON ContractCondition_CreditLimit.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
-                              
-              LEFT JOIN MovementItemContainer AS MIContainer 
-                                              ON MIContainer.Containerid = Container.Id
-                                             AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
-             LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-         WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-            -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
-         GROUP BY Container.Id
-                , Container.ObjectId
-                , Container.Amount
-                , View_Contract_ContractKey.ContractId_Key
-                , CLO_Juridical.ObjectId  
-                , ContractConditionKindId
-                , DayCount
-                , DelayCreditLimit
-                , ContractDate
-       ) AS RESULT_all
-
-           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
-                                         ON CLO_PaidKind.ContainerId = RESULT_all.Id
-                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-           LEFT JOIN ContainerLinkObject AS CLO_Branch
-                                         ON CLO_Branch.ContainerId = RESULT_all.Id
-                                        AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-           LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                         ON CLO_InfoMoney.ContainerId = RESULT_all.Id
-                                        AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-           LEFT JOIN ContainerLinkObject AS CLO_Partner
-                                         ON CLO_Partner.ContainerId = RESULT_all.Id
-                                        AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = RESULT_all.JuridicalId
-                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-
-           LEFT JOIN tmpJuridical ON tmpJuridical.JuridicalId = RESULT_all.JuridicalId
-           LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.ContractId = RESULT_all.ContractId
-
-         WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-           AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
-                -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
-                OR ((tmpJuridical.JuridicalId > 0 OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
-           -- AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
-           AND (tmpJuridical.JuridicalId > 0 OR COALESCE (inJuridicalGroupId, 0) = 0
-                OR tmpListBranch_Constraint.ContractId > 0
-                OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
-         GROUP BY RESULT_all.AccountId
-                , RESULT_all.ContractId
-                , RESULT_all.JuridicalId 
-                , RESULT_all.ContractConditionKindId
-                , RESULT_all.DayCount
-                , RESULT_all.DelayCreditLimit
-                , RESULT_all.ContractDate
-                , CLO_InfoMoney.ObjectId
-                , CLO_PaidKind.ObjectId
-                , CLO_Partner.ObjectId
-                , CLO_Branch.ObjectId
-                , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
-       ) AS RESULT
-
-       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
-       LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
-       LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = RESULT.ContractId
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
+           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
+           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = RESULT.ContractId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                ON ObjectLink_Contract_Personal.ObjectId = RESULT.ContractId
@@ -365,11 +367,11 @@ from (
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = RESULT.PartnerId
 
-) as a
-where a.DebetRemains <> 0 or a.KreditRemains <> 0
-             or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
-             or  a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
-             or  a.Remains <> 0 
+           ) AS a
+     WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
+        or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
+        or a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
+        or a.Remains <> 0 
     ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
