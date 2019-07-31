@@ -130,6 +130,9 @@ type
     spUpdate_Juridical_OrderFinance: TdsdStoredProc;
     actUpdateJuridicalDS: TdsdUpdateDataSet;
     actShowAll: TBooleanStoredProcAction;
+    spUpdate_Amount: TdsdStoredProc;
+    actUpdate_AmountByReport: TdsdExecStoredProc;
+    bbUpdate_AmountByReport: TdxBarButton;
   private
   public
   end;

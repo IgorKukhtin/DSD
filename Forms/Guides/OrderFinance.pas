@@ -23,7 +23,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides;
+  cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides, cxCurrencyEdit;
 
 type
   TOrderFinanceForm = class(TAncestorDBGridForm)
@@ -54,7 +54,6 @@ type
     bbChoiceGuides: TdxBarButton;
     InfoMoney_ObjectChoiceForm: TOpenChoiceForm;
     cxSplitter1: TcxSplitter;
-    chObjectCode: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     bbUpdate: TdxBarButton;
     actInsert: TdsdInsertUpdateAction;
@@ -67,10 +66,11 @@ type
     clCode: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    chObjectName: TcxGridDBColumn;
-    chDescName: TcxGridDBColumn;
     InsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
+    InfoMoneyChoiceForm: TOpenChoiceForm;
+    InfoMoneyDestinationChoiceForm: TOpenChoiceForm;
+    InfoMoneyGroupChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

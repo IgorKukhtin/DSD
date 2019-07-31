@@ -1,22 +1,22 @@
 inherited OrderFinanceForm: TOrderFinanceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
   ClientHeight = 345
-  ClientWidth = 809
+  ClientWidth = 873
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 825
+  ExplicitWidth = 889
   ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 809
+    Width = 873
     Height = 319
-    ExplicitWidth = 767
+    ExplicitWidth = 809
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 809
+    ClientRectRight = 873
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 767
+      ExplicitWidth = 809
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 449
@@ -82,13 +82,12 @@ inherited OrderFinanceForm: TOrderFinanceForm
       object cxGrid1: TcxGrid
         Left = 452
         Top = 0
-        Width = 357
+        Width = 421
         Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 276
-        ExplicitWidth = 491
+        ExplicitWidth = 357
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -110,45 +109,56 @@ inherited OrderFinanceForm: TOrderFinanceForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chDescName: TcxGridDBColumn
-            Caption = #1042#1080#1076
-            DataBinding.FieldName = 'DescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object chObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'ObjectCode'
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = InfoMoney_ObjectChoiceForm
+                Action = InfoMoneyGroupChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 96
           end
-          object chObjectName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ObjectName'
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = InfoMoney_ObjectChoiceForm
+                Action = InfoMoneyDestinationChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 181
+            Width = 115
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 31
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = InfoMoneyChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 101
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -170,7 +180,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
         Height = 319
         AutoPosition = False
         Control = cxGrid
-        ExplicitLeft = 273
       end
     end
   end
@@ -221,6 +230,9 @@ inherited OrderFinanceForm: TOrderFinanceForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateProperty
+        end
+        item
+          StoredProc = spSelectProperty
         end>
       Caption = 'dsdUpdateChild'
       DataSource = ChildDS
@@ -236,6 +248,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -265,6 +278,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -308,6 +322,97 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
+    object InfoMoneyGroupChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'InfoMoneyChoiceForm'
+      ImageIndex = 0
+      FormName = 'TInfoMoneyGroup_ObjectForm'
+      FormNameParam.Value = 'TInfoMoneyGroup_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InfoMoneyGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InfoMoneyChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'InfoMoneyChoiceForm'
+      ImageIndex = 0
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InfoMoneyDestinationChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'InfoMoneyDestinationChoiceForm'
+      ImageIndex = 0
+      FormName = 'TInfoMoneyDestination_ObjectForm'
+      FormNameParam.Value = 'TInfoMoneyDestination_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InfoMoneyDestinationName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object InfoMoney_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -324,29 +429,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Component = ChildCDS
           ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'ObjectCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DescName'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'DescName'
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -354,7 +436,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TOrderFinanceEditForm'
       FormNameParam.Value = 'TOrderFinanceEditForm'
@@ -447,7 +528,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Name = 'TextValue'
           Value = Null
           Component = ChildCDS
-          ComponentItem = 'ObjectName'
+          ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -459,7 +540,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView1
-      Action = InfoMoney_ObjectChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081

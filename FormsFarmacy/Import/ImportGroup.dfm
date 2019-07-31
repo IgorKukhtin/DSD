@@ -11,12 +11,12 @@ inherited ImportGroupForm: TImportGroupForm
   inherited PageControl: TcxPageControl
     Width = 767
     Height = 319
-    ExplicitWidth = 605
+    ExplicitWidth = 767
     ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 767
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 605
+      ExplicitWidth = 767
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 273
@@ -60,7 +60,6 @@ inherited ImportGroupForm: TImportGroupForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 329
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -385,7 +384,6 @@ inherited ImportGroupForm: TImportGroupForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TImportGroupEditForm'
       FormNameParam.Value = 'TImportGroupEditForm'
@@ -478,7 +476,7 @@ inherited ImportGroupForm: TImportGroupForm
           Name = 'TextValue'
           Value = Null
           Component = ChildCDS
-          ComponentItem = 'UserParamName'
+          ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -571,6 +569,10 @@ inherited ImportGroupForm: TImportGroupForm
         item
           Visible = True
           ItemName = 'bbProtocolChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

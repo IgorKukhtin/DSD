@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinance(
 )
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , PaidKindName TVarChar, InfoMoneyName TVarChar, StartDate TDateTime
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPlan TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -58,6 +60,7 @@ BEGIN
    , tmpData AS (SELECT DISTINCT 
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
+                      , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
                         LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
@@ -129,10 +132,14 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
+           , ObjectHistory_JuridicalDetails_View.OKPO
 
            , Object_Contract.Id               AS ContractId
            , Object_Contract.ObjectCode       AS ContractCode
            , Object_Contract.ValueData        AS ContractName
+           , Object_PaidKind.ValueData        AS PaidKindName
+           , Object_InfoMoney.ValueData       AS InfoMoneyName
+           , ObjectDate_Start.ValueData       AS StartDate
            
            , tmpMI.Amount
            , tmpMI.AmountRemains
@@ -153,6 +160,20 @@ BEGIN
             
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = tmpData.ContractId
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpData.InfoMoneyId
+            
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                 ON ObjectLink_Contract_PaidKind.ObjectId = tmpData.ContractId
+                                AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_Contract_PaidKind.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = tmpData.ContractId
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                AND Object_Contract.ValueData <> '-'
+            
             ;
        ELSE
      -- Результат такой
@@ -163,10 +184,14 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
+           , ObjectHistory_JuridicalDetails_View.OKPO
 
            , Object_Contract.Id               AS ContractId
            , Object_Contract.ObjectCode       AS ContractCode
            , Object_Contract.ValueData        AS ContractName
+           , Object_PaidKind.ValueData        AS PaidKindName
+           , Object_InfoMoney.ValueData       AS InfoMoneyName
+           , ObjectDate_Start.ValueData       AS StartDate
            
            , MovementItem.Amount              AS Amount
            , MIFloat_AmountRemains.ValueData  AS AmountRemains
@@ -224,6 +249,24 @@ BEGIN
                                              ON MILO_Update.MovementItemId = MovementItem.Id
                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                 ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                 ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_Contract_PaidKind.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = Object_Contract.Id
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                AND Object_Contract.ValueData <> '-'
             ;
      END IF;
 END;
