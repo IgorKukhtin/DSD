@@ -23,7 +23,8 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, Vcl.StdCtrls, Vcl.Menus, cxButtons;
+  cxButtonEdit, ChoicePeriod, cxLabel, Vcl.StdCtrls, Vcl.Menus, cxButtons,
+  dxBarExtItems;
 
 type
   TCalendarForm = class(TParentForm)
@@ -59,6 +60,10 @@ type
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     dsdStoredProcInsCalendar: TdsdStoredProc;
     isHoliday: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    MonthName: TcxGridDBColumn;
   private
   public
   end;

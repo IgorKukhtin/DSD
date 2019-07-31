@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , isHoliday Boolean
              , Value TDateTime
              , DayOfWeekName TVarChar
+             , MonthName TVarChar
              , Color_calc Integer
              , isErased Boolean
              ) AS
@@ -29,7 +30,8 @@ BEGIN
          , ObjectBoolean_Working.ValueData          AS Working  
          , COALESCE (ObjectBoolean_Holiday.ValueData, FALSE ) :: Boolean AS isHoliday
          , ObjectDate_Value.ValueData               AS Value
-         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName  
+         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName
+         , zfCalc_MonthName (ObjectDate_Value.ValueData) ::TVarChar AS MonthName
       
          , CASE WHEN ObjectBoolean_Working.ValueData = False OR COALESCE (ObjectBoolean_Holiday.ValueData, FALSE ) = TRUE THEN 15993821  ELSE 0 /*clBlack*/   END :: Integer AS Color_calc                                                      
   

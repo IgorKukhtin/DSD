@@ -3,7 +3,7 @@ object CalendarForm: TCalendarForm
   Top = 0
   Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
   ClientHeight = 545
-  ClientWidth = 385
+  ClientWidth = 515
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,10 +19,11 @@ object CalendarForm: TCalendarForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 89
-    Width = 385
+    Width = 515
     Height = 456
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 385
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -183,6 +184,11 @@ object CalendarForm: TCalendarForm
         item
           Format = ',0.##'
           Kind = skSum
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Value
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -197,6 +203,14 @@ object CalendarForm: TCalendarForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MonthName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094
+        DataBinding.FieldName = 'MonthName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object Value: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'Value'
@@ -243,10 +257,11 @@ object CalendarForm: TCalendarForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 385
+    Width = 515
     Height = 63
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 385
     object deStart: TcxDateEdit
       Left = 126
       Top = 9
@@ -450,10 +465,25 @@ object CalendarForm: TCalendarForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           Visible = True
           ItemName = 'bbToExcel'
         end>
@@ -477,6 +507,16 @@ object CalendarForm: TCalendarForm
       Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
       Visible = ivAlways
       ImageIndex = 35
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -535,6 +575,36 @@ object CalendarForm: TCalendarForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Calendar'
@@ -579,6 +649,10 @@ object CalendarForm: TCalendarForm
       end
       item
         ColorColumn = Value
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
         ValueColumn = Color_calc
         ColorValueList = <>
       end>
