@@ -92,6 +92,23 @@ CREATE OR REPLACE FUNCTION zc_MIString_DosageIdSP() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_DosageIdSP', 'DosageID лікарського засобу' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DosageIdSP');
 
+CREATE OR REPLACE FUNCTION zc_MIString_ProgramIdSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ProgramIdSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ProgramIdSP', 'ID учасника програми(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ProgramIdSP');
+
+CREATE OR REPLACE FUNCTION zc_MIString_NumeratorUnitSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_NumeratorUnitSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_NumeratorUnitSP', 'Одиниця виміру сили дії(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_NumeratorUnitSP');
+
+CREATE OR REPLACE FUNCTION zc_MIString_DenumeratorUnitSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DenumeratorUnitSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_DenumeratorUnitSP', 'Одиниця виміру сутності(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DenumeratorUnitSP');
+
+CREATE OR REPLACE FUNCTION zc_MIString_DynamicsSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DynamicsSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_DynamicsSP', 'Динаміка ціни реїмбурсації щодо попереднього реєстру(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DynamicsSP');
+
+----
 CREATE OR REPLACE FUNCTION zc_MIString_Pack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Pack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Pack', 'Сила дії/Дозування (Соц. проект)(5)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Pack');
@@ -128,6 +145,10 @@ INSERT INTO MovementItemStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 31.07.19         * zc_MIString_ProgramIdSP
+                    zc_MIString_NumeratorUnitSP
+                    zc_MIString_DenumeratorUnitSP
+                    zc_MIString_DynamicsSP
  24.04.19         * zc_MIString_DosageIdSP
  22.04.19         * zc_MIString_IdSP 
  17.02.19                                                                                      * zc_MIString_ComingValueDayUser

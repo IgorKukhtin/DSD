@@ -14,6 +14,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , -- Ключ записи
     IN inMovementId           Integer   ,
@@ -30,6 +35,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
     IN inPriceSP              TFloat  ,
     IN inPaymentSP            TFloat  ,
     IN inGroupSP              TFloat  ,
+
+    IN inDenumeratorValueSP   TFloat  ,
+
     IN inPack                 TVarChar,
     IN inCodeATX              TVarChar,
     IN inMakerSP              TVarChar,
@@ -37,6 +45,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
     IN inReestrDateSP         TVarChar,
     IN inIdSP                 TVarChar  ,    --
     IN inDosageIdSP           TVarChar  ,    --
+
+    IN inProgramIdSP          TVarChar  ,    --
+    IN inNumeratorUnitSP      TVarChar  ,    --
+    IN inDenumeratorUnitSP    TVarChar  ,    --
+    IN inDynamicsSP           TVarChar  ,    --
+
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -65,6 +79,7 @@ BEGIN
                                                , inPriceSP             := inPriceSP
                                                , inPaymentSP           := inPaymentSP
                                                , inGroupSP             := inGroupSP
+                                               , inDenumeratorValueSP  := inDenumeratorValueSP
                                                , inPack                := inPack
                                                , inCodeATX             := inCodeATX
                                                , inMakerSP             := inMakerSP
@@ -72,6 +87,10 @@ BEGIN
                                                , inReestrDateSP        := inReestrDateSP
                                                , inIdSP                := inIdSP
                                                , inDosageIdSP          := inDosageIdSP
+                                               , inProgramIdSP         := inProgramIdSP
+                                               , inNumeratorUnitSP     := inNumeratorUnitSP
+                                               , inDenumeratorUnitSP   := inDenumeratorUnitSP
+                                               , inDynamicsSP          := inDynamicsSP
                                                , inUserId              := vbUserId);
 
 END;
@@ -81,6 +100,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.07.19         *
  22.04.19         * add IdSP, inDosageIdSP
  14.08.18         *
 */

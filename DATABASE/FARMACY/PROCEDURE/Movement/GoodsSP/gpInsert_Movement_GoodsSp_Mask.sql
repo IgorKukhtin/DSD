@@ -43,11 +43,18 @@ BEGIN
                                                  , inPriceSP            := COALESCE (tmp.PriceSP, 0)      :: TFloat
                                                  , inPaymentSP          := COALESCE (tmp.PaymentSP, 0)    :: TFloat
                                                  , inGroupSP            := COALESCE (tmp.GroupSP, 0)      :: TFloat
+                                                 , inDenumeratorValueSP := COALESCE (tmp.DenumeratorValueSP,0) ::TFloat
                                                  , inPack               := tmp.Pack                       :: TVarChar
                                                  , inCodeATX            := tmp.CodeATX                    :: TVarChar
                                                  , inMakerSP            := tmp.MakerSP                    :: TVarChar
                                                  , inReestrSP           := tmp.ReestrSP                   :: TVarChar
                                                  , inReestrDateSP       := tmp.ReestrDateSP               :: TVarChar
+                                                 , inIdSP               := tmp.IdSP
+                                                 , inDosageIdSP         := tmp.DosageIdSP
+                                                 , inProgramIdSP        := tmp.ProgramIdSP
+                                                 , inNumeratorUnitSP    := tmp.NumeratorUnitSP
+                                                 , inDenumeratorUnitSP  := tmp.DenumeratorUnitSP
+                                                 , inDynamicsSP         := tmp.DynamicsSP
                                                  , inUserId             := vbUserId
                                                   )
      FROM gpSelect_MovementItem_GoodsSP (ioId, 'False', 'False', inSession)  AS tmp;

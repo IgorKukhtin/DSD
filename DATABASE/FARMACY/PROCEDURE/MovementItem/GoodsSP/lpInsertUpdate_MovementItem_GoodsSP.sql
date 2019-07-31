@@ -11,6 +11,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, I
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   ,
@@ -27,6 +33,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inPriceSP              TFloat  ,
     IN inPaymentSP            TFloat  ,
     IN inGroupSP              TFloat  ,
+    IN inDenumeratorValueSP   TFloat  ,
     IN inPack                 TVarChar,
     IN inCodeATX              TVarChar,
     IN inMakerSP              TVarChar,
@@ -34,6 +41,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inReestrDateSP         TVarChar,
     IN inIdSP                 TVarChar,
     IN inDosageIdSP           TVarChar,
+    
+    IN inProgramIdSP          TVarChar  ,    --
+    IN inNumeratorUnitSP      TVarChar  ,    --
+    IN inDenumeratorUnitSP    TVarChar  ,    --
+    IN inDynamicsSP           TVarChar  ,    --
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -67,6 +79,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GroupSP(), ioId, inGroupSP);
 
     -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DenumeratorValueSP(), ioId, inDenumeratorValueSP);
+
+    -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Pack(), ioId, inPack);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CodeATX(), ioId, inCodeATX);
@@ -81,6 +96,15 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DosageIdSP(), ioId, inDosageIdSP);
 
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ProgramIdSP(), ioId, inProgramIdSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_NumeratorUnitSP(), ioId, inNumeratorUnitSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DenumeratorUnitSP(), ioId, inDenumeratorUnitSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DynamicsSP(), ioId, inDynamicsSP);
+    
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_IntenalSP(), ioId, inIntenalSPId);
     -- сохранили связь с <>
@@ -99,6 +123,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.    Кухтин И.В.   Климентьев К.И.
+ 31.07.19         *
  22.04.19         * add IdSP, inDosageIdSP
  14.08.18         *
  */

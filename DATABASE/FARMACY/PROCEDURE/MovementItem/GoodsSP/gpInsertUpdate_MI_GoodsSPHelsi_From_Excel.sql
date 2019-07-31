@@ -1,14 +1,10 @@
--- Function: gpInsertUpdate_MI_GoodsSP_From_Excel()
+-- Function: gpInsertUpdate_MI_GoodsSPHelsi_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPHelsi_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_Excel(
     IN inMovementId          Integer   ,    -- 
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
@@ -20,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inDailyNormSP         TFloat    ,    -- 
     IN inDailyCompensationSP TFloat    ,    -- 
     IN inPaymentSP           TFloat    ,    -- 
+    IN inDenumeratorValue    TFloat  ,    --
 
     IN inReestrDateSP        TVarChar  ,    -- 
     IN inPack                TVarChar  ,    -- дозування
@@ -32,6 +29,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inReestrSP            TVarChar  ,    --  
     IN inIdSP                TVarChar  ,    --
     IN inDosageIdSP          TVarChar  ,    --
+    
+    IN inCountry             TVarChar  ,    --
+    IN inIntenalSPName_Lat   TVarChar  ,    --
+    IN inProgramId           TVarChar  ,    --
+    IN inNumeratorUnit       TVarChar  ,    --
+    IN inDenumeratorUnit     TVarChar  ,    --
+    IN inDynamics            TVarChar  ,    --
+
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID
@@ -44,6 +49,8 @@ $BODY$
    DECLARE vbIntenalSPId Integer;
    DECLARE vbKindOutSPId Integer;
    DECLARE vbBrandSPId Integer;
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbIntenalSPName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -67,12 +74,13 @@ BEGIN
 
      -- пытаемся найти "Міжнародна непатентована назва (Соц. проект)" 
      -- если не находим записывае новый элемент в справочник
-     vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inIntenalSPName)) );
-     IF COALESCE (vbIntenalSPId, 0) = 0 AND COALESCE (inIntenalSPName, '')<> '' THEN
+     vbIntenalSPName := TRIM (inIntenalSPName)||', '||TRIM (inIntenalSPName_Lat); --сливаем Укр и лат. названия через зпт.
+     vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(vbIntenalSPName)) );
+     IF COALESCE (vbIntenalSPId, 0) = 0 AND COALESCE (vbIntenalSPName, '') <> '' THEN
         -- записываем новый элемент
         vbIntenalSPId := gpInsertUpdate_Object_IntenalSP (ioId     := 0
                                                         , inCode   := lfGet_ObjectCode(0, zc_Object_IntenalSP()) 
-                                                        , inName   := TRIM(inIntenalSPName)
+                                                        , inName   := TRIM(vbIntenalSPName)
                                                         , inSession:= inSession
                                                           );
      END IF;   
@@ -127,6 +135,7 @@ BEGIN
                  Limit 1 -- на всякий случай
                 );
     
+
     -- сохранить запись
     PERFORM lpInsertUpdate_MovementItem_GoodsSP (ioId                  := COALESCE(vbMI_Id, 0)
                                                , inMovementId          := inMovementId
@@ -143,19 +152,23 @@ BEGIN
                                                , inPriceSP             := COALESCE (inPriceSP, 0) :: TFloat
                                                , inPaymentSP           := COALESCE (inPaymentSP, 0) :: TFloat
                                                , inGroupSP             := 0 ::TFloat
-                                               , inDenumeratorValueSP  := 0 ::TFloat
+                                               , inDenumeratorValueSP  := COALESCE (inDenumeratorValue, 0) :: TFloat
                                                , inPack                := TRIM(inPack)          ::TVarChar
                                                , inCodeATX             := TRIM(inCodeATX)       ::TVarChar
-                                               , inMakerSP             := TRIM(inMakerSP)       ::TVarChar
+                                               , inMakerSP             := (TRIM(inMakerSP)||', '|| TRIM(inCountry)) ::TVarChar
                                                , inReestrSP            := TRIM(inReestrSP)      ::TVarChar
                                                , inReestrDateSP        := TRIM(inReestrDateSP)  ::TVarChar
                                                , inIdSP                := TRIM(inIdSP)          ::TVarChar
                                                , inDosageIdSP          := TRIM(inDosageIdSP)    ::TVarChar
-                                               , inProgramIdSP         := '' ::TVarChar
-                                               , inNumeratorUnitSP     := '' ::TVarChar
-                                               , inDenumeratorUnitSP   := '' ::TVarChar
-                                               , inDynamicsSP          := '' ::TVarChar
+                                               , inProgramIdSP         := TRIM(inProgramId)::TVarChar
+                                               , inNumeratorUnitSP     := TRIM(inNumeratorUnit)::TVarChar
+                                               , inDenumeratorUnitSP   := TRIM(inDenumeratorUnit)::TVarChar
+                                               , inDynamicsSP          := TRIM(inDynamics)::TVarChar
                                                , inUserId              := vbUserId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (vbMI_Id, vbUserId, vbIsInsert);
+    
    
 END;
 $BODY$
@@ -163,8 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.04.19         * add IdSP, inDosageIdSP
- 25.08.18         *
+ 31.07.19         *
 */
 
 -- тест

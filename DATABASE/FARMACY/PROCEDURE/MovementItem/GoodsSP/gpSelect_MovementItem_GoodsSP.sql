@@ -21,6 +21,7 @@ RETURNS TABLE (Id            Integer
              , PriceSP       TFloat
              , PaymentSP     TFloat
              , GroupSP       TFloat
+             , DenumeratorValueSP TFloat
              , Pack          TVarChar
              , CodeATX       TVarChar
              , MakerSP       TVarChar
@@ -28,6 +29,10 @@ RETURNS TABLE (Id            Integer
              , ReestrDateSP  TVarChar
              , IdSP          TVarChar
              , DosageIdSP    TVarChar
+             , ProgramIdSP       TVarChar
+             , NumeratorUnitSP   TVarChar
+             , DenumeratorUnitSP TVarChar
+             , DynamicsSP        TVarChar
              , IntenalSPId   Integer 
              , IntenalSPName TVarChar
              , BrandSPId     Integer 
@@ -70,6 +75,7 @@ BEGIN
              , MIFloat_PriceSP.ValueData                             AS PriceSP
              , MIFloat_PaymentSP.ValueData                           AS PaymentSP
              , MIFloat_GroupSP.ValueData                             AS GroupSP
+             , MIFloat_DenumeratorValueSP.ValueData                  AS DenumeratorValueSP
 
              , MIString_Pack.ValueData                               AS Pack
              , MIString_CodeATX.ValueData                            AS CodeATX
@@ -78,6 +84,11 @@ BEGIN
              , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
              , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
              , COALESCE (MIString_DosageIdSP.ValueData,'')::TVarChar AS DosageIdSP
+             
+             , COALESCE (MIString_ProgramIdSP.ValueData, '')      ::TVarChar AS ProgramIdSP
+             , COALESCE (MIString_NumeratorUnitSP.ValueData, '')  ::TVarChar AS NumeratorUnitSP
+             , COALESCE (MIString_DenumeratorUnitSP.ValueData, '')::TVarChar AS DenumeratorUnitSP
+             , COALESCE (MIString_DynamicsSP.ValueData, '')       ::TVarChar AS DynamicsSP
 
              , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
              , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
@@ -125,6 +136,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_GroupSP
                                          ON MIFloat_GroupSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_GroupSP.DescId = zc_MIFloat_GroupSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_DenumeratorValueSP
+                                         ON MIFloat_DenumeratorValueSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_DenumeratorValueSP.DescId = zc_MIFloat_DenumeratorValueSP()
 
              LEFT JOIN MovementItemString AS MIString_Pack
                                           ON MIString_Pack.MovementItemId = MovementItem.Id
@@ -147,6 +161,19 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_DosageIdSP
                                           ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
                                          AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
+
+             LEFT JOIN MovementItemString AS MIString_DynamicsSP
+                                          ON MIString_DynamicsSP.MovementItemId = MovementItem.Id
+                                         AND MIString_DynamicsSP.DescId = zc_MIString_DynamicsSP()
+             LEFT JOIN MovementItemString AS MIString_DenumeratorUnitSP
+                                          ON MIString_DenumeratorUnitSP.MovementItemId = MovementItem.Id
+                                         AND MIString_DenumeratorUnitSP.DescId = zc_MIString_DenumeratorUnitSP()
+             LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                          ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                         AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
+             LEFT JOIN MovementItemString AS MIString_NumeratorUnitSP
+                                          ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
+                                         AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
 
              LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                               ON MI_IntenalSP.MovementItemId = MovementItem.Id
@@ -182,6 +209,7 @@ BEGIN
              , MIFloat_PriceSP.ValueData                             AS PriceSP
              , MIFloat_PaymentSP.ValueData                           AS PaymentSP
              , MIFloat_GroupSP.ValueData                             AS GroupSP
+             , MIFloat_DenumeratorValueSP.ValueData                  AS DenumeratorValueSP
 
              , MIString_Pack.ValueData                               AS Pack
              , MIString_CodeATX.ValueData                            AS CodeATX
@@ -191,9 +219,13 @@ BEGIN
              , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
              , COALESCE (MIString_DosageIdSP.ValueData,'')::TVarChar AS DosageIdSP
 
+             , COALESCE (MIString_ProgramIdSP.ValueData, '')      ::TVarChar AS ProgramIdSP
+             , COALESCE (MIString_NumeratorUnitSP.ValueData, '')  ::TVarChar AS NumeratorUnitSP
+             , COALESCE (MIString_DenumeratorUnitSP.ValueData, '')::TVarChar AS DenumeratorUnitSP
+             , COALESCE (MIString_DynamicsSP.ValueData, '')       ::TVarChar AS DynamicsSP
+
              , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
              , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
-
              , COALESCE(Object_BrandSP.Id ,0)             ::Integer  AS BrandSPId
              , COALESCE(Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
 
@@ -232,6 +264,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_GroupSP
                                         ON MIFloat_GroupSP.MovementItemId = MovementItem.Id
                                        AND MIFloat_GroupSP.DescId = zc_MIFloat_GroupSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_DenumeratorValueSP
+                                         ON MIFloat_DenumeratorValueSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_DenumeratorValueSP.DescId = zc_MIFloat_DenumeratorValueSP()
 
             LEFT JOIN MovementItemString AS MIString_Pack
                                          ON MIString_Pack.MovementItemId = MovementItem.Id
@@ -255,6 +290,19 @@ BEGIN
                                          ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
                                         AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
 
+             LEFT JOIN MovementItemString AS MIString_DynamicsSP
+                                          ON MIString_DynamicsSP.MovementItemId = MovementItem.Id
+                                         AND MIString_DynamicsSP.DescId = zc_MIString_DynamicsSP()
+             LEFT JOIN MovementItemString AS MIString_DenumeratorUnitSP
+                                          ON MIString_DenumeratorUnitSP.MovementItemId = MovementItem.Id
+                                         AND MIString_DenumeratorUnitSP.DescId = zc_MIString_DenumeratorUnitSP()
+             LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                          ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                         AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
+             LEFT JOIN MovementItemString AS MIString_NumeratorUnitSP
+                                          ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
+                                         AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
+
             LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                              ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                             AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
@@ -273,7 +321,7 @@ BEGIN
          WHERE MovementItem.DescId = zc_MI_Master()
            AND MovementItem.MovementId = inMovementId
            AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-            ;
+         ;
     END IF;            
 
 END;
@@ -283,6 +331,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.07.19         *
  22.04.19         * add IdSP, DosageIdSP
  14.08.18         *
 */

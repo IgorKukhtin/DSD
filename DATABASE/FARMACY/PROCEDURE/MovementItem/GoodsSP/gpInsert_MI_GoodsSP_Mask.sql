@@ -31,6 +31,7 @@ BEGIN
                                                 , inPriceSP            := COALESCE (MI_Mask.PriceSP, MI_Master.PriceSP, 0)           :: TFloat
                                                 , inPaymentSP          := COALESCE (MI_Mask.PaymentSP, MI_Master.PaymentSP, 0)       :: TFloat
                                                 , inGroupSP            := COALESCE (MI_Mask.GroupSP, MI_Master.GroupSP, 0)           :: TFloat
+                                                , inDenumeratorValueSP := COALESCE (MI_Mask.DenumeratorValueSP, MI_Master.DenumeratorValueSP) ::TFloat
                                                 , inPack               := COALESCE (MI_Mask.Pack, MI_Master.Pack, '')                :: TVarChar
                                                 , inCodeATX            := COALESCE (MI_Mask.CodeATX, MI_Master.CodeATX, '')          :: TVarChar
                                                 , inMakerSP            := COALESCE (MI_Mask.MakerSP, MI_Master.MakerSP, '')          :: TVarChar
@@ -38,6 +39,10 @@ BEGIN
                                                 , inReestrDateSP       := COALESCE (MI_Mask.ReestrDateSP, MI_Master.ReestrDateSP, ''):: TVarChar
                                                 , inIdSP               := COALESCE (MI_Mask.IdSP, MI_Master.IdSP, '')                :: TVarChar
                                                 , inDosageIdSP         := COALESCE (MI_Mask.IdSP, MI_Master.DosageIdSP, '')          :: TVarChar
+                                                , inProgramIdSP        := COALESCE (MI_Mask.ProgramIdSP, MI_Master.ProgramIdSP, '')  :: TVarChar
+                                                , inNumeratorUnitSP    := COALESCE (MI_Mask.NumeratorUnitSP, MI_Master.NumeratorUnitSP, '')     :: TVarChar
+                                                , inDenumeratorUnitSP  := COALESCE (MI_Mask.DenumeratorUnitSP, MI_Master.DenumeratorUnitSP, '') :: TVarChar
+                                                , inDynamicsSP         := COALESCE (MI_Mask.DynamicsSP, MI_Master.DynamicsSP, '')     :: TVarChar
                                                 , inUserId             := vbUserId
                                                 )
                                                 

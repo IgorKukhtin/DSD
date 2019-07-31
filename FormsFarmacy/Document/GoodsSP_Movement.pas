@@ -67,7 +67,12 @@ type
     actDoLoadDop: TExecuteImportSettingsAction;
     actGetImportSettingDop: TdsdExecStoredProc;
     macStartLoadDop: TMultiAction;
-    bb: TdxBarButton;
+    bbStartLoadDop: TdxBarButton;
+    spGetImportSettingHelsiId: TdsdStoredProc;
+    macStartLoadHelsi: TMultiAction;
+    actGetImportSettingHelsi: TdsdExecStoredProc;
+    actDoLoadHelsi: TExecuteImportSettingsAction;
+    bbStartLoadHelsi: TdxBarButton;
   private
     { Private declarations }
   public
