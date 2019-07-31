@@ -380,9 +380,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1070#1088'. '#1083#1080#1094
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1320,10 +1317,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Amount
+      StoredProc = spInsertUpdateMI_byReport
       StoredProcList = <
         item
-          StoredProc = spUpdate_Amount
+          StoredProc = spInsertUpdateMI_byReport
         end
         item
           StoredProc = spSelectMI
@@ -2009,8 +2006,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 854
     Top = 319
   end
-  object spUpdate_Amount: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_OrderFinance_byReport'
+  object spInsertUpdateMI_byReport: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderFinance_byReport'
     DataSets = <>
     OutputType = otResult
     Params = <
