@@ -35,7 +35,7 @@ BEGIN
            , Object_Personal.ValueData        AS PersonalName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
+               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = 984658 -- Сисоєва Олена Сергіївна -- IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
        ;
      ELSE
      RETURN QUERY 
