@@ -717,6 +717,8 @@ begin
     exit;
   }
   // отчет поиск товара по всей сети
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsFromRemainsSetPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsFromRemainsSetPriceDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
   exit;

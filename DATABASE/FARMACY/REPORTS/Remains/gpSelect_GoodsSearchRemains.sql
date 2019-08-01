@@ -12,7 +12,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , NDSkindName TVarChar
              , NDS TFloat
              , GoodsGroupName TVarChar
-             , UnitName TVarChar
+             , UnitId integer, UnitName TVarChar
              , AreaName TVarChar
              , Address_Unit TVarChar
              , Phone_Unit TVarChar
@@ -181,6 +181,7 @@ BEGIN
              , Object_Goods_View.NDSkindName                as NDSkindName
              , Object_Goods_View.NDS                        AS NDS
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
+             , Object_Unit.ID                               AS UnitId
              , Object_Unit.ValueData                        AS UnitName
              , Object_Area.ValueData                        AS AreaName
              , ObjectString_Unit_Address.ValueData          AS Address_Unit

@@ -71,7 +71,6 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_RunParams>/realfarmacy</Debugger_RunParams>
 			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -2483,6 +2482,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionDate5Dialog.pas">
 				<Form>Report_GoodsPartionDate5DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas">
+				<Form>Report_GoodsFromRemainsSetPriceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

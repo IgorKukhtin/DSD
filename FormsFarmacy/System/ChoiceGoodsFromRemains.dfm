@@ -4,7 +4,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   ClientWidth = 832
   ShowHint = True
   ExplicitWidth = 848
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -484,6 +484,55 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       ImageIndex = 58
       ShortCut = 27
     end
+    object actGoodsObjectPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialogPrice
+        end
+        item
+          Action = dsdExecSetGoodsObjectPrice
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      ImageIndex = 56
+    end
+    object actExecuteDialogPrice: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogPrice'
+      FormName = 'TReport_GoodsFromRemainsSetPriceDialogForm'
+      FormNameParam.Value = 'TReport_GoodsFromRemainsSetPriceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Price'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object dsdExecSetGoodsObjectPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetGoodsObjectPrice
+      StoredProcList = <
+        item
+          StoredProc = spSetGoodsObjectPrice
+        end>
+      Caption = 'dsdExecSetGoodsObjectPrice'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -544,6 +593,10 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -554,9 +607,66 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       Action = actSetGoodsLink
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actGoodsObjectPrice
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 536
     Top = 208
+  end
+  object spSetGoodsObjectPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_GoodsSearchRemainsSetPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCodeSearch'
+        Value = ''
+        Component = edCodeSearch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSearch'
+        Value = ''
+        Component = edGoodsSearch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceOut'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Price'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 192
+    Top = 200
   end
 end

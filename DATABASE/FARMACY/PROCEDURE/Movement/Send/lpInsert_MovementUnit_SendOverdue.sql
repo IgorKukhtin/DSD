@@ -148,7 +148,7 @@
                                         inUnitId  := inUnitOverdueID,
                                         inPrice   := PriceFrom,
                                         inDate    := CURRENT_DATE::TDateTime,
-                                        inUserId  := 3)
+                                        inUserId  := vbUserId)
     FROM ( WITH
            tmpPrice AS (SELECT MovementItem.ObjectId     AS GoodsId
                              , ObjectLink_Unit.ChildObjectId  AS UnitId
