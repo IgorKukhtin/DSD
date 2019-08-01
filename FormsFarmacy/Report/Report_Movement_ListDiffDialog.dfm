@@ -140,6 +140,7 @@ object Report_Movement_ListDiffDialogForm: TReport_Movement_ListDiffDialogForm
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
+    DateEnd = deEnd
     Left = 175
     Top = 142
   end

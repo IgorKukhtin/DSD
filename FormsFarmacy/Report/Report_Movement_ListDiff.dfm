@@ -91,6 +91,26 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
               Format = ',0.00'
               Kind = skSum
               Column = SummaIncome
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -169,6 +189,26 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
               Format = ',0.00'
               Kind = skSum
               Column = SummaIncome
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsEnd
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -228,6 +268,46 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object RemainsStart: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1086#1089#1090'.'
+            DataBinding.FieldName = 'RemainsStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object RemainsEnd: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'.'
+            DataBinding.FieldName = 'RemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object SummaRemainsStart: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095'. '#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaRemainsStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object SummaRemainsEnd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085#1077#1095#1085'. '#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaRemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
