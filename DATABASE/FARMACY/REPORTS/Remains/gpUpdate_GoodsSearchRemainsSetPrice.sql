@@ -1,11 +1,10 @@
 -- Function: gpUpdate_GoodsSearchRemainsSetPrice()
 
-DROP FUNCTION IF EXISTS gpUpdate_GoodsSearchRemainsSetPrice (TVarChar, TVarChar, integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_GoodsSearchRemainsSetPrice (integer, integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_GoodsSearchRemainsSetPrice(
-    IN inCodeSearch     TVarChar,    -- поиск товаров по коду
-    IN inGoodsSearch    TVarChar,    -- поиск товаров
     IN inID             integer,     -- товар
+    IN inUnitID         integer,     -- Подразделение
     IN inPriceOut       TFloat,      -- Цена
     IN inSession        TVarChar     -- сессия пользователя
 )
@@ -38,16 +37,14 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Цена должна быть больше нуля';
     END IF;
 
-    PERFORM lpInsertUpdate_Object_Price(inGoodsId := T1.Id,
-                                        inUnitId  := T1.UnitID,
+    PERFORM lpInsertUpdate_Object_Price(inGoodsId := inId,
+                                        inUnitId  := inUnitID,
                                         inPrice   := ROUND (inPriceOut, 2),
                                         inDate    := CURRENT_DATE::TDateTime,
-                                        inUserId  := vbUserId)
-    FROM gpSelect_GoodsSearchRemains(inCodeSearch := inCodeSearch, inGoodsSearch := inGoodsSearch,  inSession := inSession) AS T1
-    WHERE T1.ID = inID 
-      AND PriceSale <> ROUND (inPriceOut, 2) 
-    GROUP BY id, UnitID;
+                                        inUserId  := vbUserId);
     
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

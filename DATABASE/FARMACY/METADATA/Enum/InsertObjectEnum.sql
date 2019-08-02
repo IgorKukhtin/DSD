@@ -62,6 +62,26 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Cashless(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Cashless'), inName:= 'Безнал', inEnumName:= 'zc_Enum_Role_Cashless');
    END IF;
 
+   -- zc_Enum_Role_TimingControl
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Контроль сроки')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Контроль сроки')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_TimingControl');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TimingControl(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TimingControl'), inName:= 'Контроль сроки', inEnumName:= 'zc_Enum_Role_TimingControl');
+   END IF;
+
+   -- zc_Enum_Role_TimingControl
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Директор Партнёр')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Директор Партнёр')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_DirectorPartner');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_DirectorPartner(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_DirectorPartner'), inName:= 'Директор Партнёр', inEnumName:= 'zc_Enum_Role_DirectorPartner');
+   END IF;
+
 END $$;
 /*
 DO $$

@@ -492,13 +492,13 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Action = actExecuteDialogPrice
         end
         item
-          Action = dsdExecSetGoodsObjectPrice
+          Action = actViewSetGoodsObjectPrice
         end
         item
           Action = actRefresh
         end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1074#1080#1076#1080#1084#1099#1093' '#1089#1090#1088#1086#1082' '
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1074#1089#1077#1093' '#1074#1080#1076#1080#1084#1099#1093' '#1089#1090#1088#1086#1082' '
       ImageIndex = 56
     end
     object actExecuteDialogPrice: TExecuteDialog
@@ -522,7 +522,17 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object dsdExecSetGoodsObjectPrice: TdsdExecStoredProc
+    object actViewSetGoodsObjectPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSetGoodsObjectPrice
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099
+    end
+    object actExecSetGoodsObjectPrice: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -531,7 +541,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         item
           StoredProc = spSetGoodsObjectPrice
         end>
-      Caption = 'dsdExecSetGoodsObjectPrice'
+      Caption = 'actExecSetGoodsObjectPrice'
     end
   end
   inherited MasterDS: TDataSource
@@ -622,26 +632,18 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inCodeSearch'
-        Value = ''
-        Component = edCodeSearch
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsSearch'
-        Value = ''
-        Component = edGoodsSearch
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inID'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

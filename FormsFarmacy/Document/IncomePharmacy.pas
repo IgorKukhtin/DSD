@@ -112,6 +112,7 @@ type
     actspConduct_Movement: TdsdExecStoredProc;
     actspUnConduct_Movement: TdsdExecStoredProc;
     Color_AmountManual: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

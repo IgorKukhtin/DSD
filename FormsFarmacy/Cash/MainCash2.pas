@@ -3665,6 +3665,13 @@ begin
   inherited;
   if DataSet.FieldByName('List_UID').AsString = '' then
     DataSet.FieldByName('List_UID').AsString := GenerateGUID;
+  if checkCDS.FieldByName('PartionDateKindId').AsVariant = 0 then
+  begin
+    checkCDS.FieldByName('PartionDateKindId').AsVariant := Null;
+    checkCDS.FieldByName('PartionDateKindName').AsVariant := Null;
+    checkCDS.FieldByName('PricePartionDate').AsVariant := Null;
+    checkCDS.FieldByName('PartionDateDiscount').AsVariant := Null;
+  end;
 end;
 
 procedure TMainCashForm2.CheckGridDBTableViewFocusedRecordChanged(

@@ -42,10 +42,11 @@ type
     AreaName: TcxGridDBColumn;
     actGoodsObjectPrice: TMultiAction;
     actExecuteDialogPrice: TExecuteDialog;
-    dsdExecSetGoodsObjectPrice: TdsdExecStoredProc;
+    actExecSetGoodsObjectPrice: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     spSetGoodsObjectPrice: TdsdStoredProc;
     FormParams: TdsdFormParams;
+    actViewSetGoodsObjectPrice: TMultiAction;
   private
     { Private declarations }
   public

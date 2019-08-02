@@ -3,7 +3,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 562
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -339,6 +339,13 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'Color_AmountManual'
             Visible = False
             HeaderAlignmentVert = vaCenter
+          end
+          object AccommodationName: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+            DataBinding.FieldName = 'AccommodationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
           end
         end
       end
