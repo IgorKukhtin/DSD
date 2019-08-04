@@ -40,6 +40,13 @@ type
     edGoodsSearch: TcxTextEdit;
     cxLabel4: TcxLabel;
     AreaName: TcxGridDBColumn;
+    actGoodsObjectPrice: TMultiAction;
+    actExecuteDialogPrice: TExecuteDialog;
+    actExecSetGoodsObjectPrice: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    spSetGoodsObjectPrice: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actViewSetGoodsObjectPrice: TMultiAction;
   private
     { Private declarations }
   public

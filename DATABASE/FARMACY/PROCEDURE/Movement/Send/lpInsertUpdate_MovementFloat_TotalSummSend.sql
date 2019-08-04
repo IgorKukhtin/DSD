@@ -60,6 +60,7 @@ BEGIN
                    FROM MovementItem
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.isErased = FALSE
+                     AND MovementItem.DescId = zc_MI_Master()
                    )
        , tmpPrice AS (SELECT tmpMI.ObjectId                 AS GoodsId
                            , ObjectLink_Unit.ChildObjectId  AS UnitId
@@ -113,7 +114,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummSend (Integer) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.

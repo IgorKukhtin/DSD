@@ -28,6 +28,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_Role_SeniorManager() RETURNS integer AS $BODY
 
 CREATE OR REPLACE FUNCTION zc_Enum_Role_Cashless() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_Cashless' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Role_TimingControl() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_TimingControl' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION zc_Enum_Role_DirectorPartner() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_DirectorPartner' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Типы оплат
 -- !!!

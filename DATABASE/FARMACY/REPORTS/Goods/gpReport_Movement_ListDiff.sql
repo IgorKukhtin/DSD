@@ -27,6 +27,10 @@ RETURNS TABLE (GoodsId        Integer,
                SummaIncome    TFloat,
                AmountDiff     TFloat,
                SummaDiff      TFloat,
+               RemainsStart      TFloat,
+               RemainsEnd        TFloat,
+               SummaRemainsStart TFloat,
+               SummaRemainsEnd   TFloat,
                isTOP    Boolean,
                isFirst  Boolean,
                isSecond Boolean,
@@ -175,7 +179,7 @@ BEGIN
                            INNER JOIN MovementDate AS MovementDate_Branch
                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                                                  AND MovementDate_Branch.ValueData >= '01.04.2019' AND MovementDate_Branch.ValueData < '02.04.2019'
+                                                  AND MovementDate_Branch.ValueData >= inStartDate AND MovementDate_Branch.ValueData < inEndDate + INTERVAL '1 DAY'
                             
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                          ON MovementLinkObject_To.MovementId = Movement_Income.Id
@@ -196,8 +200,124 @@ BEGIN
                          AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
                        GROUP BY MI_Income.ObjectId
                     )   
-                         
-   
+
+
+          -- таблица остатков
+        , tmpContainer AS (SELECT Container.Id            AS ContainerId
+                                , Container.ObjectId      AS GoodsId
+                                , Container.WhereObjectId AS UnitId
+                                , Container.Amount        AS Amount
+                           FROM Container 
+                           WHERE Container.DescId = zc_Container_Count()
+                             AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
+                             AND Container.Amount <> 0
+                             AND Container.ObjectId IN (SELECT DISTINCT tmpData_MI.GoodsId FROM tmpData_MI)
+                           GROUP BY Container.Id
+                                  , Container.ObjectId
+                                  , Container.Amount
+                                  , Container.WhereObjectId
+                           )
+        , tmpRemains_All AS (SELECT tmp.GoodsId
+                                  , tmp.UnitId
+                                  , SUM (tmp.RemainsStart) AS RemainsStart
+                                  , SUM (tmp.RemainsEnd)   AS RemainsEnd
+                             FROM (SELECT tmpContainer.GoodsId       AS GoodsId
+                                        , tmpContainer.UnitId        AS UnitId
+                                        , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)  AS RemainsStart
+                                        , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS RemainsEnd
+                                   FROM tmpContainer                                                        
+                                        LEFT JOIN MovementItemContainer AS MIContainer
+                                                                        ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                       AND MIContainer.OperDate >= inStartDate
+                                                                       AND MIContainer.DescId = zc_Container_Count()
+                                   GROUP BY tmpContainer.ContainerId
+                                          , tmpContainer.GoodsId
+                                          , tmpContainer.Amount
+                                          , tmpContainer.UnitId
+                                   HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
+                                       OR (tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END)) <> 0
+                                   ) AS tmp
+                             GROUP BY tmp.GoodsId
+                                    , tmp.UnitId
+                            )
+        , tmpPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId
+                            , ObjectLink_Price_Unit.ChildObjectId AS UnitId
+                            , ObjectLink_Price_Unit.ObjectId      AS PriceId
+                       FROM tmpUnit
+                            INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                  ON ObjectLink_Price_Unit.ChildObjectId = tmpUnit.UnitId
+                                                 AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                            INNER JOIN ObjectLink AS Price_Goods
+                                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                 AND Price_Goods.ChildObjectId IN (SELECT DISTINCT tmpData_MI.GoodsId FROM tmpData_MI)
+                       )
+
+        , tmpOH_Price_Start AS (SELECT ObjectHistory.*
+                                FROM ObjectHistory
+                                WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpPrice.PriceId FROM tmpPrice)
+                                  AND ObjectHistory.DescId = zc_ObjectHistory_Price()
+                                  AND inStartDate >= ObjectHistory.StartDate AND inStartDate < ObjectHistory.EndDate
+                                )
+        , tmpOH_Price_End AS (SELECT ObjectHistory.*
+                              FROM ObjectHistory
+                              WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpPrice.PriceId FROM tmpPrice)
+                                AND ObjectHistory.DescId = zc_ObjectHistory_Price()
+                                AND inEndDate >= ObjectHistory.StartDate AND inEndDate < ObjectHistory.EndDate
+                              )
+
+        , tmpOHFloat_Start AS (SELECT ObjectHistoryFloat.*
+                               FROM ObjectHistoryFloat
+                               WHERE ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price_Start.Id FROM tmpOH_Price_Start)
+                                 AND ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_Value()
+                              )
+        , tmpOHFloat_End AS (SELECT ObjectHistoryFloat.*
+                             FROM ObjectHistoryFloat
+                             WHERE ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price_End.Id FROM tmpOH_Price_End)
+                               AND ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_Value()
+                            )
+
+        -- для остатка получаем значение цены
+        , tmpPriceRemains AS ( SELECT tmpRemains.GoodsId                                  AS GoodsId
+                                    , tmpRemains.UnitId                                   AS UnitId
+                                    , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)    AS Price_RemainsStart
+                                    , COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) AS Price_RemainsEnd
+                               FROM tmpRemains_All AS tmpRemains
+                                  LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemains.GoodsId
+                                                    AND tmpPrice.unitid  = tmpRemains.UnitId
+                                  -- получаем значения цены из истории значений на начало дня 
+                                                                                           
+                                  LEFT JOIN tmpOH_Price_Start AS ObjectHistory_Price
+                                                                   ON ObjectHistory_Price.ObjectId = tmpPrice.PriceId 
+                                                                 -- AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                                 -- AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
+                                  LEFT JOIN tmpOHFloat_Start AS ObjectHistoryFloat_Price
+                                                             ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                            --AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                  -- получаем значения цены из истории значений на конеч. дату                                                          
+                                  LEFT JOIN tmpOH_Price_End AS ObjectHistory_PriceEnd
+                                                          ON ObjectHistory_PriceEnd.ObjectId = tmpPrice.PriceId 
+                                                       --  AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
+                                                       --  AND inEndDate >= ObjectHistory_PriceEnd.StartDate AND inEndDate < ObjectHistory_PriceEnd.EndDate
+                                  LEFT JOIN tmpOHFloat_End AS ObjectHistoryFloat_PriceEnd
+                                                           ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
+                                                          --AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                )
+        , tmpRemains AS (SELECT /*tmpRemains_All.UnitId
+                              , */tmpRemains_All.GoodsId
+                              , SUM (tmpRemains_All.RemainsStart) AS RemainsStart
+                              , SUM (tmpRemains_All.RemainsEnd)   AS RemainsEnd
+                              , SUM (tmpRemains_All.RemainsStart * tmpPriceRemains.Price_RemainsStart) AS SummaRemainsStart
+                              , SUM (tmpRemains_All.RemainsEnd * tmpPriceRemains.Price_RemainsEnd)     AS SummaRemainsEnd
+                         FROM tmpRemains_All
+                              LEFT JOIN tmpPriceRemains ON tmpPriceRemains.GoodsId = tmpRemains_All.GoodsId
+                                                       AND tmpPriceRemains.UnitId  = tmpRemains_All.UnitId
+                         GROUP BY /*tmpRemains_All.UnitId
+                                , */tmpRemains_All.GoodsId
+                        )
+--------------------------
+
+        -- Результат   
         SELECT
              Object_Goods_View.Id                      AS GoodsId
            , Object_Goods_View.GoodsCodeInt  ::Integer AS GoodsCode
@@ -216,7 +336,12 @@ BEGIN
 
            , (COALESCE (tmpData.Amount,0) - COALESCE (tmpCheck.Amount,0))    :: TFloat AS AmountDiff
            , (COALESCE (tmpData.Summa, 0) - COALESCE (tmpCheck.SummaSale,0)) :: TFloat AS SummaDiff
-           
+
+           , tmpRemains.RemainsStart      :: TFloat
+           , tmpRemains.RemainsEnd        :: TFloat
+           , tmpRemains.SummaRemainsStart :: TFloat
+           , tmpRemains.SummaRemainsEnd   :: TFloat
+
            , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean AS isTOP
            , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean AS isFirst
            , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
@@ -253,7 +378,8 @@ BEGIN
             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
             LEFT JOIN tmpCheck   ON tmpCheck.GoodsId   = tmpData.GoodsId
             LEFT JOIN tmpIncome  ON tmpIncome.GoodsId  = tmpData.GoodsId
-
+            
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpData.GoodsId
 
         ORDER BY GoodsGroupName
                , GoodsName;

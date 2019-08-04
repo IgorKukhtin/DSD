@@ -2485,6 +2485,10 @@
 				<Form>Report_GoodsPartionDate5DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas">
+				<Form>Report_GoodsFromRemainsSetPriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

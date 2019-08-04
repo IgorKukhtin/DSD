@@ -822,10 +822,8 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
       Category = 0
     end
     object dxBarButton6: TdxBarButton
-      Caption = 'New Button'
+      Action = actPartionGoods
       Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
