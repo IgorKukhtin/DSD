@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS lpInsertFind_BankAccount(TVarChar, TVarChar, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_BankAccount(
-    IN inBankAccount         TVarChar,      -- <Счет>
+    IN inBankAccount         TVarChar,      -- <Р/счет>
     IN inBankMFO             TVarChar,      -- <MFO>
     IN inBankName            TVarChar,      -- Название банка
-    IN inJuridicalId         Integer,        -- Юр. лицо
+    IN inJuridicalId         Integer,       -- Юр. лицо (чей это Р/счет)
     IN inUserId              Integer
 )
 RETURNS integer AS

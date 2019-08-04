@@ -133,7 +133,12 @@ BEGIN
                 , (CASE WHEN -1 * RESULT.Remains > 0 THEN 0 ELSE 1 * RESULT.Remains END) :: TFloat AS KreditRemains
                 , RESULT.SaleSumm :: TFloat AS SaleSumm
              
-                , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
+                , (CASE WHEN COALESCE (RESULT.ContractConditionKindId, 0) NOT IN (zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                                                                , zc_Enum_ContractConditionKind_DelayDayBank()
+                                                                                 )
+                        AND RESULT.Remains < 0
+                             THEN 0
+                        WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
                              THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
                         ELSE RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm -- 0
                    END)::TFloat AS DefermentPaymentRemains

@@ -90,12 +90,12 @@ BEGIN
          , tmpMI_Child AS (-- данные по Child
                             SELECT tmpMI.ContainerId
                                  , tmpMI.GoodsId
-                                 , tmpMI.Amount_child + COALESCE (tmpRemains.Amount) AS Amount -- !!!добавили остаток!!!
+                                 , tmpMI.Amount_child + COALESCE (tmpRemains.Amount, 0) AS Amount -- !!!добавили остаток!!!
                             FROM tmpMI
                                  LEFT JOIN tmpRemains ON tmpRemains.ContainerId = tmpMI.ContainerId
-                            WHERE (tmpMI.Amount_child + COALESCE (tmpRemains.Amount)) > 0
-                              -- если есть приход
-                              AND tmpMI.Amount_master > 0
+                            WHERE (tmpMI.Amount_child + COALESCE (tmpRemains.Amount, 0)) > 0
+                              -- НЕ ОГРАНИЧИВАЕМ если есть приход
+                              -- AND tmpMI.Amount_master > 0
                               -- если расход и приход отличаются
                               AND tmpMI.Amount_child <> tmpMI.Amount_master
                            )
@@ -186,6 +186,9 @@ BEGIN
          -- AND tmpMI_find.OperDate = inEndDate
          ;
 
+
+--    RAISE EXCEPTION 'ok.  <%>'
+--      , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 5163);
 
     -- Проверка
     IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.Amount < 0)
