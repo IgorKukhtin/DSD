@@ -156,6 +156,23 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 222
           end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object ConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsCode'

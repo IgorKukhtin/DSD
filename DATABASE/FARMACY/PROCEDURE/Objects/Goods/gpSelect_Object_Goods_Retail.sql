@@ -215,6 +215,7 @@ BEGIN
                                WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                                 AND length(Object_Goods_BarCode.ValueData) <= 13
                                GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )  
 

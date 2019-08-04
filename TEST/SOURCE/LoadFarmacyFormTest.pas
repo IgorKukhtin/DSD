@@ -1607,13 +1607,14 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  //exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));

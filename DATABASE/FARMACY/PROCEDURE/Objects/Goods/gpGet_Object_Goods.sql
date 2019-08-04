@@ -96,8 +96,8 @@ BEGIN
                                      GROUP BY ObjectLink_Main_Morion.ChildObjectId
                                     )
                 , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
-                                           , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
-                                           --, MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                                           --, STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                           , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
                                       FROM ObjectLink AS ObjectLink_Main_BarCode
                                            JOIN tmpGoodsMain ON tmpGoodsMain.GoodsMainId = ObjectLink_Main_BarCode.ChildObjectId
                                            JOIN ObjectLink AS ObjectLink_Child_BarCode
@@ -109,6 +109,7 @@ BEGIN
                                                           AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
                                            LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
                                       WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                        AND length(Object_Goods_BarCode.ValueData) <= 13
                                       GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                                      )                  
              SELECT Object_Goods_View.Id             AS Id 
