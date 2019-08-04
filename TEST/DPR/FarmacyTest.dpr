@@ -724,7 +724,9 @@ uses
   ImportGroupEdit in '..\..\FormsFarmacy\Import\ImportGroupEdit.pas' {ImportGroupEditForm: TParentForm},
   Report_GoodsPartionDate5 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate5.pas' {Report_GoodsPartionDate5Form: TParentForm},
   Report_GoodsPartionDate5Dialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate5Dialog.pas' {Report_GoodsPartionDate5DialogForm: TParentForm},
-  Report_GoodsFromRemainsSetPriceDialog in '..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas' {Report_GoodsFromRemainsSetPriceDialogForm: TParentForm};
+  Report_GoodsFromRemainsSetPriceDialog in '..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas' {Report_GoodsFromRemainsSetPriceDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSun in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas' {Report_Movement_Send_RemainsSunForm: TParentForm},
+  Report_Movement_Send_RemainsSunDialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunDialog.pas' {Report_Movement_Send_RemainsSunDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

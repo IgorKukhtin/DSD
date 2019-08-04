@@ -12,6 +12,7 @@ $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
   DECLARE Cursor3 refcursor;
+  DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpGetUserBySession (inSession);
@@ -53,13 +54,28 @@ BEGIN
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
-          SELECT *
-          FROM _tmpResult_Partion
+          SELECT tmp.*
+               , Object_UnitFrom.ValueData AS FromName
+               , Object_UnitTo.ValueData   AS ToName
+          FROM _tmpResult_Partion AS tmp
+          LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
+          LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
+          ;
      RETURN NEXT Cursor2;
 
      OPEN Cursor3 FOR
-          SELECT *
-          FROM _tmpResult_child
+          SELECT tmp.*
+               , Object_UnitFrom.ValueData     AS FromName
+               , Object_UnitTo.ValueData       AS ToName
+               , Movement.Id                   AS MovementId
+               , Movement.OperDate             AS OperDate
+               , Movement.Invnumber            AS Invnumber
+                 
+          FROM _tmpResult_child AS tmp
+          LEFT JOIN Object AS Object_UnitFrom ON Object_UnitFrom.Id = tmp.UnitId_from
+          LEFT JOIN Object AS Object_UnitTo   ON Object_UnitTo.Id   = tmp.UnitId_to
+          LEFT JOIN Movement ON Movement.Id  = tmp.MovementId
+          ;
      RETURN NEXT Cursor3;
 
 
