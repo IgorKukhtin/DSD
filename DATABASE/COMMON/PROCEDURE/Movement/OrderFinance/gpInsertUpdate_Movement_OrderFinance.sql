@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_Movement_OrderFinance()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderFinance(
@@ -7,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderFinance(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inOrderFinanceId      Integer   , --
+    IN inBankAccountId       Integer   , --
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -23,6 +25,7 @@ BEGIN
                                                  , inInvNumber        := inInvNumber
                                                  , inOperDate         := inOperDate
                                                  , inOrderFinanceId   := inOrderFinanceId
+                                                 , inBankAccountId    := inBankAccountId
                                                  , inComment          := inComment
                                                  , inUserId           := vbUserId
                                                   );

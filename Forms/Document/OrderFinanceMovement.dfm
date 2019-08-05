@@ -2,7 +2,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
-  ClientHeight = 461
+  ClientHeight = 466
   ClientWidth = 990
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 157
+      Width = 125
     end
     object cxLabel1: TcxLabel
       Left = 172
@@ -39,7 +39,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 334
+      Left = 306
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
@@ -48,7 +48,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Width = 94
     end
     object cxLabel2: TcxLabel
-      Left = 334
+      Left = 306
       Top = 5
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
     end
@@ -80,23 +80,23 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 654
+      Left = 781
       Top = 5
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 654
+      Left = 781
       Top = 23
       TabOrder = 7
-      Width = 328
+      Width = 196
     end
     object cxLabel4: TcxLabel
-      Left = 431
+      Left = 408
       Top = 5
       Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
     end
     object edOrderFinance: TcxButtonEdit
-      Left = 431
+      Left = 408
       Top = 23
       Properties.Buttons = <
         item
@@ -105,19 +105,36 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 217
+      Width = 152
+    end
+    object cxLabel3: TcxLabel
+      Left = 568
+      Top = 5
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1086#1087#1083#1072#1090#1072')'
+    end
+    object edBankAccount: TcxButtonEdit
+      Left = 568
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 205
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 83
     Width = 990
-    Height = 378
+    Height = 383
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 378
+    ClientRectBottom = 383
     ClientRectRight = 990
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -127,7 +144,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 0
         Width = 990
-        Height = 354
+        Height = 359
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -279,6 +296,29 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 90
           end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object BankAccountName: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'BankAccountName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 114
+          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
             DataBinding.FieldName = 'AmountRemains'
@@ -384,7 +424,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 0
         Width = 990
-        Height = 354
+        Height = 359
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -1208,6 +1248,44 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       isShowModal = False
     end
+    object actBankAccountChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TBankAccount_ObjectForm'
+      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1385,6 +1463,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankAccountId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -1469,6 +1555,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Name = 'inOrderFinanceId'
         Value = Null
         Component = GuidesOrderFinance
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1593,6 +1687,21 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountId'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountNameAll'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1921,8 +2030,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
-    Top = 16
+    Left = 496
+    Top = 24
   end
   object JuridicalCDS: TClientDataSet
     Aggregates = <>
@@ -2022,5 +2131,35 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 360
     Top = 160
+  end
+  object GuidesBankAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankAccount_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NameAll'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 656
+    Top = 16
   end
 end

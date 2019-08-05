@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_Movement_OrderFinance()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inOrderFinanceId      Integer   , --
+    IN inBankAccountId       Integer   , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -32,7 +34,9 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderFinance(), ioId, inOrderFinanceId);
-
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankAccount(), ioId, inBankAccountId);
+     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 

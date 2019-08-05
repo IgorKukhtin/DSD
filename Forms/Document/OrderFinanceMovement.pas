@@ -133,6 +133,11 @@ type
     spInsertUpdateMI_byReport: TdsdStoredProc;
     actUpdate_AmountByReport: TdsdExecStoredProc;
     bbUpdate_AmountByReport: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
+    BankAccountName: TcxGridDBColumn;
+    actBankAccountChoiceForm: TOpenChoiceForm;
   private
   public
   end;

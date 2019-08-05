@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OrderFinanceId Integer, OrderFinanceName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -46,13 +48,19 @@ BEGIN
            , Object_OrderFinance.Id                 AS OrderFinanceId
            , Object_OrderFinance.ValueData          AS OrderFinanceName
 
+           , Object_BankAccount_View.Id             AS BankAccountId
+           , Object_BankAccount_View.Name           AS BankAccountName
+           , Object_BankAccount_View.BankId
+           , Object_BankAccount_View.BankName
+           , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
-
+           
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderFinance() AND Movement.StatusId = tmpStatus.StatusId
@@ -71,6 +79,11 @@ BEGIN
                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                         AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
             LEFT JOIN Object AS Object_OrderFinance ON Object_OrderFinance.Id = MovementLinkObject_OrderFinance.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
+                                         ON MovementLinkObject_BankAccount.MovementId = Movement.Id
+                                        AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

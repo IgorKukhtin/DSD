@@ -1158,7 +1158,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 400
-        Width = 960
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1169,7 +1169,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 272
-        Width = 960
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
