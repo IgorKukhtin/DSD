@@ -14,36 +14,38 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, cxSplitter, cxGridChartView,
+  cxGridDBChartView, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_Movement_Send_RemainsSunForm = class(TAncestorReportForm)
+    rdUnit: TRefreshDispatcher;
     dxBarButton1: TdxBarButton;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount_sale: TcxGridDBColumn;
-    AmountResult_summ: TcxGridDBColumn;
-    AmountRemains: TcxGridDBColumn;
-    AmountSun_unit: TcxGridDBColumn;
-    Summ_sale: TcxGridDBColumn;
-    AmountSun_unit_save: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    Summ_next_str: TcxGridDBColumn;
-    UnitName_str: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshPartionPrice: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
-    Unit_count_1: TcxGridDBColumn;
-    DataSource1: TDataSource;
-    ClientDataSet1: TClientDataSet;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    ClientDataSet2: TClientDataSet;
-    DataSource2: TDataSource;
-    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    bbPrint: TdxBarButton;
+    actRefreshOnDay: TdsdDataSetRefresh;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    ch2FromName: TcxGridDBColumn;
+    ch2ToName: TcxGridDBColumn;
+    ch2Amount: TcxGridDBColumn;
+    ch2OperDate: TcxGridDBColumn;
+    ch2Invnumber: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
@@ -51,11 +53,18 @@ type
     chAmount: TcxGridDBColumn;
     chSumm: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    cxGridLevel2: TcxGridLevel;
-    ch2OperDate: TcxGridDBColumn;
-    ch2Invnumber: TcxGridDBColumn;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    ClientDataSet1: TClientDataSet;
+    DataSource1: TDataSource;
+    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    ClientDataSet2: TClientDataSet;
+    DataSource2: TDataSource;
+    chAmount_next: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
+    cxSplitter2: TcxSplitter;
+    cxSplitter1: TcxSplitter;
+    chExpirationDate_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

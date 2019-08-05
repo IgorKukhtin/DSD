@@ -10,14 +10,14 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount_sale         TFloat --
              , Summ_sale           TFloat --
-             , AmountSun_real      TFloat -- сумма сроковых по реальным остаткам, должно сходиться с AmountSun_summ_save
-             , AmountSun_summ_save TFloat -- сумма сроковых, без учета изменения
-             , AmountSun_summ      TFloat -- сумма сроковых, которые будем распределять
-             , AmountResult        TFloat -- Автозаказ
-             , AmountResult_summ   TFloat -- итого Автозаказ по всем Аптекам
+             , AmountSun_real      TFloat -- сумма сроковых по реальным остаткам, должно сходиться с AmountSun_summ_save --инф
+             , AmountSun_summ_save TFloat -- сумма сроковых, без учета изменения                                         --инф
+             , AmountSun_summ      TFloat -- сумма сроковых, которые будем распределять                    ---
+             , AmountResult        TFloat -- Автозаказ    -- важно сколько нужно в єту аптеку
+             , AmountResult_summ   TFloat -- итого Автозаказ по всем Аптекам --инф
              , AmountRemains       TFloat -- Остаток
-             , AmountIncome        TFloat -- Приход (ожидаемый)
-             , AmountSend          TFloat -- Перемещение (ожидается)
+             , AmountIncome        TFloat -- Приход (ожидаемый)--инф
+             , AmountSend          TFloat -- Перемещение (ожидается)--инф
              , AmountOrderExternal TFloat -- Заказ (ожидаемый)
              , AmountReserve       TFloat -- Резерв по чекам
              , AmountSun_unit      TFloat -- инф.=0, сроковые на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем

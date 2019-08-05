@@ -2489,12 +2489,12 @@
 				<Form>Report_GoodsFromRemainsSetPriceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas">
-				<Form>Report_Movement_Send_RemainsSunForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunDialog.pas">
 				<Form>Report_Movement_Send_RemainsSunDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas">
+				<Form>Report_Movement_Send_RemainsSunForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

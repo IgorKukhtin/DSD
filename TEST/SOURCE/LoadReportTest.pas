@@ -120,10 +120,11 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по подотчету', ReportPath + '\Отчеты (финансы)\Обороты по подотчету.fr3');
   exit;
 
@@ -145,10 +146,10 @@ begin
 
   LoadReportFromFile('PrintMovement_SaleJuridicalInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleJuridicalInvoice.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Товарный Учет\PrintMovement_IncomeSticker.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет движение по товару (партии ТМЦ+МНМА)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (партии ТМЦ+МНМА).fr3');
   exit;
 
@@ -382,9 +383,10 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrective0416', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0416.fr3');
 
   LoadReportFromFile('PrintMovement_TaxCorrective0317', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0317.fr3');
-
+  }
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
-
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
