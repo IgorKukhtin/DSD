@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer
              , SPKindName TVarChar
              , isSP Boolean
              , InvNumber_Invoice_Full TVarChar
+             , isDeferred Boolean
 
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -124,6 +125,7 @@ BEGIN
             END ::Boolean AS isSP
 
           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
 
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
@@ -166,6 +168,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Passport
                                    ON ObjectString_Passport.ObjectId = Movement_Sale.MemberSPId
                                   AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport() 
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
        ;
 
 END;
@@ -175,7 +181,8 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.07.19                                                                                      *
  05.06.18         *
  01.02.18         *
  22.03.17         *

@@ -1,30 +1,30 @@
 inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1087#1088#1086#1076#1072#1078
   ClientHeight = 491
-  ClientWidth = 745
+  ClientWidth = 747
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Sale'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
-  ExplicitWidth = 761
-  ExplicitHeight = 529
+  ExplicitWidth = 763
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 745
+    Width = 747
     Height = 434
     TabOrder = 3
     ExplicitWidth = 745
     ExplicitHeight = 434
     ClientRectBottom = 434
-    ClientRectRight = 745
+    ClientRectRight = 747
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 745
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
-        Width = 745
+        Width = 747
         Height = 434
         ExplicitWidth = 745
         ExplicitHeight = 434
@@ -272,14 +272,21 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 80
+          end
+          object isDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 745
+    Width = 747
     ExplicitWidth = 745
   end
   inherited ActionList: TActionList

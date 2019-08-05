@@ -24,12 +24,23 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
+    IF COALESCE ((SELECT ValueData FROM MovementBoolean 
+                  WHERE MovementId = inMovementId
+                    AND DescId = zc_MovementBoolean_Deferred()), FALSE)= TRUE
+    THEN
+       -- сохранили признак
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), inMovementId, FALSE);
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.08.19                                                                                      *
  13.10.15                                                                       *
 */
+
+
+

@@ -1,28 +1,28 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 542
-  ClientWidth = 698
+  ClientWidth = 683
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 714
-  ExplicitHeight = 580
+  ExplicitWidth = 699
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 219
-    Width = 698
+    Width = 683
     Height = 323
     ExplicitTop = 219
-    ExplicitWidth = 698
+    ExplicitWidth = 683
     ExplicitHeight = 323
     ClientRectBottom = 323
-    ClientRectRight = 698
+    ClientRectRight = 683
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 698
+      ExplicitWidth = 683
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 698
+        Width = 683
         Height = 201
-        ExplicitWidth = 698
+        ExplicitWidth = 683
         ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -132,7 +132,7 @@ inherited SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 209
-        Width = 698
+        Width = 683
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
@@ -235,7 +235,7 @@ inherited SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 201
-        Width = 698
+        Width = 683
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -244,10 +244,10 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 698
+    Width = 683
     Height = 193
     TabOrder = 3
-    ExplicitWidth = 698
+    ExplicitWidth = 683
     ExplicitHeight = 193
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -270,8 +270,8 @@ inherited SaleForm: TSaleForm
       ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 22
-      ExplicitTop = 22
+      Top = 27
+      ExplicitTop = 27
       ExplicitHeight = 22
     end
     object lblUnit: TcxLabel
@@ -465,6 +465,14 @@ inherited SaleForm: TSaleForm
       Properties.ReadOnly = True
       TabOrder = 31
       Width = 95
+    end
+    object cbisDeferred: TcxCheckBox
+      Left = 166
+      Top = 40
+      Caption = #1054#1090#1083#1086#1078#1077#1085
+      Properties.ReadOnly = True
+      TabOrder = 32
+      Width = 69
     end
   end
   object cxLabel8: TcxLabel [2]
@@ -686,6 +694,19 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 3
     end
+    object spUpdateisDeferredNo: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
     object actGet_SP_Prior: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -699,6 +720,19 @@ inherited SaleForm: TSaleForm
         end>
       Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068' '#1057#1055
       ImageIndex = 74
+    end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -809,11 +843,19 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbPrintCheck: TdxBarButton
@@ -824,6 +866,14 @@ inherited SaleForm: TSaleForm
     object bbGet_SP_Prior: TdxBarButton
       Action = actGet_SP_Prior
       Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = spUpdateisDeferredYes
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = spUpdateisDeferredNo
       Category = 0
     end
   end
@@ -883,6 +933,30 @@ inherited SaleForm: TSaleForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Top = 232
@@ -1116,6 +1190,13 @@ inherited SaleForm: TSaleForm
         Component = edInn
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -1301,10 +1382,12 @@ inherited SaleForm: TSaleForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem_Sale'
     Left = 550
     Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem_Sale'
     Left = 550
     Top = 256
   end
@@ -2012,5 +2095,67 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 208
     Top = 304
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 379
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 315
   end
 end

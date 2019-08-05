@@ -38,6 +38,7 @@ type
     bbmacPrint: TdxBarButton;
     InvNumber_Invoice_Full: TcxGridDBColumn;
     SPKindName: TcxGridDBColumn;
+    isDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

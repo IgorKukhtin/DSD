@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer
              , GroupMemberSPName TVarChar
              , SPKindId   Integer
              , SPKindName TVarChar
+             , isDeferred Boolean
              )
 AS
 $BODY$
@@ -92,6 +93,7 @@ BEGIN
 
           , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
+          , FALSE::Boolean                                       AS isDeferred
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -151,6 +153,8 @@ BEGIN
 
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
+          
         FROM Movement_Sale_View AS Movement_Sale
 
          LEFT JOIN ObjectString AS ObjectString_Address
@@ -162,7 +166,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Passport
                                 ON ObjectString_Passport.ObjectId = Movement_Sale.MemberSPId
                                AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
-            
+         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                   ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
+                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 
@@ -174,7 +180,8 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 31.07.19                                                                                     *
  15.01.19         *
  05.06.18         *
  08.02.17         * add SP
