@@ -383,10 +383,10 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrective0416', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0416.fr3');
 
   LoadReportFromFile('PrintMovement_TaxCorrective0317', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0317.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
@@ -404,7 +404,7 @@ begin
   exit;
   }
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
-  exit;
+  //exit;
   {
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
   exit;
@@ -414,10 +414,10 @@ begin
   LoadReportFromFile('PrintMovement_IncomeFuel', ReportPath + '\Товарный Учет\PrintMovement_IncomeFuel.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Товарный Учет\PrintMovement_ReturnOut.fr3');
-
+  }
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Товарный Учет\PrintMovement_Send.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\Товарный Учет\PrintMovement_Inventory.fr3');
   LoadReportFromFile('PrintMovement_Sale_Order', ReportPath + '\Товарный Учет\PrintMovement_Sale_Order.fr3');
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
@@ -427,9 +427,9 @@ begin
   LoadReportFromFile('PrintMovement_PersonalServiceDetail', ReportPath + '\Персонал\PrintMovement_PersonalServiceDetail.fr3');
   exit;
   LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
-  }
+
   LoadReportFromFile('Приложение7 Новое', ReportPath + '\Отчеты(филиалы)\Приложение7 Новое.fr3');
-  {
+
   LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');
   LoadReportFromFile('Приложение1_test', ReportPath + '\Отчеты(филиалы)\Приложение1_test.fr3');
   exit;

@@ -125,6 +125,15 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
             Options.Editing = False
             Width = 70
           end
+          object WmsCellNum: TcxGridDBColumn
+            Caption = #8470' '#1071#1095#1077#1081#1082#1080' '#1085#1072' '#1089#1082#1083#1072#1076#1077' '#1042#1052#1057
+            DataBinding.FieldName = 'WmsCellNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1058#1086#1074#1072#1088')'
             DataBinding.FieldName = 'GoodsCode'

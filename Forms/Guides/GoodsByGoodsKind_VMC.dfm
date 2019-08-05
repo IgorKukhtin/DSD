@@ -24,8 +24,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       inherited cxGrid: TcxGrid
         Width = 1039
         Height = 364
-        ExplicitLeft = -112
-        ExplicitTop = 16
         ExplicitWidth = 1039
         ExplicitHeight = 364
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -158,6 +156,15 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderHint = #1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057
             Options.Editing = False
             Width = 83
+          end
+          object WmsCellNum: TcxGridDBColumn
+            Caption = #8470' '#1071#1095#1077#1081#1082#1080' '#1085#1072' '#1089#1082#1083#1072#1076#1077' '#1042#1052#1057
+            DataBinding.FieldName = 'WmsCellNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1058#1086#1074#1072#1088')'
@@ -2609,6 +2616,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inWmsCellNum'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WmsCellNum'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRetail1Id'
         Value = Null
         Component = GuidesRetail1
@@ -3035,7 +3050,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end>
     Left = 768
-    Top = 104
+    Top = 120
   end
   object spUpdateGoodsBrand: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsBrand'

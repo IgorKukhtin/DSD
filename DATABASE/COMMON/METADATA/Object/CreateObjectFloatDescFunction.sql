@@ -439,7 +439,11 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_WmsCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_WmsCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_WmsCode', 'Код ВМС - Integer' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_WmsCode');
-  
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum', '№ Ячейки на складе ВМС - Integer' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum');
+ 
 --
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Quality_NumberPrint() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Quality_NumberPrint'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1406,6 +1410,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 05.08.19         * zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum
  23.07.19         * zc_ObjectFloat_Retail_SummSUN
  15.07.19                                                                                      * zc_ObjectFloat_PartionDateKind_Day
  21.06.19                                                                                      * zc_ObjectFloat_PartionGoods_PriceWithVAT 

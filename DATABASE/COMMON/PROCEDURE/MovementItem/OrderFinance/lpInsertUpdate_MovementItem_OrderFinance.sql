@@ -17,6 +17,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   
 BEGIN
 
      -- определяется признак Создание/Корректировка

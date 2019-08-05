@@ -52,6 +52,7 @@ type
     cxLabel5: TcxLabel;
     edRetail6: TcxButtonEdit;
     RefreshDispatcher: TRefreshDispatcher;
+    WmsCellNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

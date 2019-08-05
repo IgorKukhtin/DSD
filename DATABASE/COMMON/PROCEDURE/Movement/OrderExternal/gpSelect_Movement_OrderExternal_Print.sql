@@ -566,6 +566,8 @@ BEGIN
 
            , COALESCE (tmpRemains.Amount, 0)  :: TFloat AS AmountRemains
            
+           , ObjectFloat_WmsCellNum.ValueData  AS WmsCellNum
+           
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -594,6 +596,10 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_WmsCellNum
+                                  ON ObjectFloat_WmsCellNum.ObjectId = View_GoodsByGoodsKind.Id
+                                 AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
@@ -636,6 +642,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.08.19         * WmsCellNum
  21.01.19         * BoxCount
  25.07.18         * CodeSticker
  27.03.18         * add inIsJuridical
