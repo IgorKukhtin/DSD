@@ -16,7 +16,11 @@ BEGIN
     -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
-    IF (vbUserId <> 3) AND EXISTS(SELECT Object.Id FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_DirectorPartner())
+       AND inUnitId <> zc_DirectorPartner_UnitID()
+    THEN
+        RAISE EXCEPTION 'Необходимо выбрать подразделение <%> <%>.', zc_DirectorPartner_UnitID(), (SELECT ValueData FROM Object WHERE Object.Id = zc_DirectorPartner_UnitID());
+    ELSEIF (vbUserId <> 3) AND EXISTS(SELECT Object.Id FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                                             LEFT JOIN Object ON Object.Id = Object_RoleUser.RoleId
                                                             AND Object.DescId = zc_Object_Role()
                                   WHERE Object_RoleUser.ID = vbUserId AND Object.ValueData = 'Франчайзи') 
