@@ -68,11 +68,15 @@ $BODY$
    DECLARE curResult_partion refcursor;
    
 BEGIN
-     -- !!!
-     vbSumm_limit:= 1000;
-
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
+
+
+     -- !!!
+     vbSumm_limit:= CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
+                              THEN (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
+                         ELSE 1000
+                    END;
 
 
      -- все Подразделения для схемы SUN
@@ -583,7 +587,8 @@ BEGIN
         FROM _tmpRemains
              -- итого сроковые которые будем распределять
              INNER JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount) AS Amount, SUM (_tmpRemains_Partion.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion.Amount_real) AS Amount_real
-                         FROM _tmpRemains_Partion GROUP BY _tmpRemains_Partion.GoodsId
+                         FROM _tmpRemains_Partion
+                         GROUP BY _tmpRemains_Partion.GoodsId
                          ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = _tmpRemains.GoodsId
              -- сроковые на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем
              LEFT JOIN _tmpRemains_Partion ON _tmpRemains_Partion.UnitId  = _tmpRemains.UnitId
@@ -1270,7 +1275,8 @@ BEGIN
                              SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, SUM (_tmpResult_Partion.Summ) AS Summ FROM _tmpResult_Partion WHERE _tmpResult_Partion.Amount > 0 GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
                             ) AS tmpSumm_res1
                        -- !!!больше лимита
-                       WHERE tmpSumm_res1.Summ >= vbSumm_limit GROUP BY tmpSumm_res1.UnitId_to
+                       WHERE tmpSumm_res1.Summ >= vbSumm_limit
+                       GROUP BY tmpSumm_res1.UnitId_to
                       ) AS tmpSumm_res1 ON tmpSumm_res1.UnitId_to = _tmpRemains_calc.UnitId
             -- !!!результат!!!
             -- после распределения-2, сумма перемещения без ЛИМИТА
@@ -1289,7 +1295,8 @@ BEGIN
                              SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, SUM (_tmpResult_Partion.Summ) AS Summ FROM _tmpResult_Partion WHERE _tmpResult_Partion.Amount > 0 GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to ORDER BY 1
                             ) AS tmpSumm_res1
                        -- !!!больше лимита
-                       WHERE tmpSumm_res1.Summ >= vbSumm_limit GROUP BY tmpSumm_res1.UnitId_to
+                       WHERE tmpSumm_res1.Summ >= vbSumm_limit
+                       GROUP BY tmpSumm_res1.UnitId_to
                       ) AS tmpSumm_res1_2 ON tmpSumm_res1_2.UnitId_to = _tmpRemains_calc.UnitId
             -- !!!результат-2.1.!!!
             -- после распределения-2, сумма перемещения без ЛИМИТА
@@ -1309,8 +1316,9 @@ BEGIN
                             ) AS tmpSumm_res1
                             LEFT JOIN Object ON Object.Id = tmpSumm_res1.UnitId_from
                        -- !!!больше лимита
-                       WHERE tmpSumm_res1.Summ >= vbSumm_limit GROUP BY tmpSumm_res1.UnitId_to
-                      ) AS tmpSumm_res1_3 ON tmpSumm_res1_2.UnitId_to = _tmpRemains_calc.UnitId
+                       WHERE tmpSumm_res1.Summ >= vbSumm_limit
+                       GROUP BY tmpSumm_res1.UnitId_to
+                      ) AS tmpSumm_res1_3 ON tmpSumm_res1_3.UnitId_to = _tmpRemains_calc.UnitId
             -- !!!результат-2.2.!!!
             -- после распределения-2, сумма перемещения без ЛИМИТА
             LEFT JOIN (SELECT tmpSumm_res1.UnitId_to, STRING_AGG (Object.ValueData, ';') AS UnitName_next_str
@@ -1321,7 +1329,7 @@ BEGIN
                        -- !!!без лимита
                        -- WHERE tmpSumm_res1.Summ >= vbSumm_limit
                        GROUP BY tmpSumm_res1.UnitId_to
-                      ) AS tmpSumm_res2_3 ON tmpSumm_res2_2.UnitId_to = _tmpRemains_calc.UnitId
+                      ) AS tmpSumm_res2_3 ON tmpSumm_res2_3.UnitId_to = _tmpRemains_calc.UnitId
             --
             --
             LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = _tmpRemains_calc.UnitId
