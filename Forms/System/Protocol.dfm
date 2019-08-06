@@ -213,13 +213,15 @@ inherited ProtocolForm: TProtocolForm
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 216
   end
+  inherited ActionList: TActionList
+    Left = 95
+  end
   inherited MasterDS: TDataSource
-    Left = 64
-    Top = 39
+    Top = 111
   end
   inherited MasterCDS: TClientDataSet
-    Left = 16
-    Top = 31
+    Left = 88
+    Top = 143
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Protocol'
@@ -264,8 +266,8 @@ inherited ProtocolForm: TProtocolForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 39
+    Left = 144
+    Top = 103
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -277,8 +279,11 @@ inherited ProtocolForm: TProtocolForm
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 408
-    Top = 168
+    Left = 384
+    Top = 192
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 160
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 40
@@ -304,8 +309,8 @@ inherited ProtocolForm: TProtocolForm
       item
         Component = deEnd
       end>
-    Left = 128
-    Top = 144
+    Left = 184
+    Top = 176
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -331,8 +336,8 @@ inherited ProtocolForm: TProtocolForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 24
+    Left = 272
+    Top = 72
   end
   object ObjectDescGuides: TdsdGuides
     KeyField = 'Id'
@@ -399,8 +404,8 @@ inherited ProtocolForm: TProtocolForm
     DataSource = MasterDS
     XMLDataFieldName = 'ProtocolData'
     DataSet = ProtocolDataCDS
-    Left = 488
-    Top = 88
+    Left = 440
+    Top = 112
   end
   object ProtocolDataCDS: TClientDataSet
     Aggregates = <>

@@ -727,7 +727,9 @@ uses
   Report_GoodsFromRemainsSetPriceDialog in '..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas' {Report_GoodsFromRemainsSetPriceDialogForm: TParentForm},
   Report_Movement_Send_RemainsSunDialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunDialog.pas' {Report_Movement_Send_RemainsSunDialogForm: TParentForm},
   Report_Movement_Send_RemainsSun in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas' {Report_Movement_Send_RemainsSunForm: TParentForm},
-  SendCashJournalSun in '..\..\FormsFarmacy\Document\SendCashJournalSun.pas' {SendCashJournalSunForm: TParentForm};
+  SendCashJournalSun in '..\..\FormsFarmacy\Document\SendCashJournalSun.pas' {SendCashJournalSunForm: TParentForm},
+  Report_PriceProtocol in '..\..\FormsFarmacy\Report\Report_PriceProtocol.pas' {Report_PriceProtocolForm: TParentForm},
+  Report_PriceProtocolDialog in '..\..\FormsFarmacy\Report\Report_PriceProtocolDialog.pas' {Report_PriceProtocolDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
