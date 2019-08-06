@@ -874,6 +874,10 @@ BEGIN
      UPDATE _tmpItemSumm SET AccountId_To = CASE WHEN _tmpItemSumm.AccountId_From IN (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
                                                      THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
 
+                                                 WHEN _tmpItem.AccountDirectionId_From = zc_Enum_AccountDirection_20700() -- Запасы + на филиалах
+                                                  AND _tmpItem.AccountDirectionId_To   = zc_Enum_AccountDirection_20700() -- Запасы + на филиалах
+                                                     THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
+
                                                  WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                      THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
 
