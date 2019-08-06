@@ -276,7 +276,7 @@ inherited SendCashJournalForm: TSendCashJournalForm
         Value = 42887d
         Component = MasterCDS
         ComponentItem = 'isReceived'
-        DataType = ftDateTime
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
