@@ -323,6 +323,13 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 77
           end
+          object isSent: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072
+            DataBinding.FieldName = 'isSent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
           object isReceived: TcxGridDBColumn
             Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
             DataBinding.FieldName = 'isReceived'
@@ -675,6 +682,61 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
     end
+    object actSetReceived: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSetReceived
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      ImageIndex = 61
+    end
+    object actExecSetReceived: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Received
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Received
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+    end
+    object actSetSent: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSetSent
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Hint = ' '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '
+      ImageIndex = 30
+    end
+    object actExecSetSent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Sent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Sent
+        end>
+      Caption = 'actExecSetSent'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -821,11 +883,19 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbPrint: TdxBarButton
@@ -842,6 +912,14 @@ inherited SendJournalForm: TSendJournalForm
     end
     object bbDeferredNo: TdxBarButton
       Action = macUpdateisDeferredNo
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actSetReceived
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actSetSent
       Category = 0
     end
   end
@@ -1098,5 +1176,57 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 416
     Top = 403
+  end
+  object spUpdate_Movement_Received: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Received'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReceived'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReceived'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 339
+  end
+  object spUpdate_Movement_Sent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSent'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 395
   end
 end

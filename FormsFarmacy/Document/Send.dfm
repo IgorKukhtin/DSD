@@ -603,6 +603,7 @@ inherited SendForm: TSendForm
     Width = 1003
     Height = 129
     TabOrder = 3
+    ExplicitTop = 9
     ExplicitWidth = 1003
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -714,7 +715,7 @@ inherited SendForm: TSendForm
       Width = 133
     end
     object cbDefSun: TcxCheckBox
-      Left = 616
+      Left = 610
       Top = 103
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
@@ -725,7 +726,7 @@ inherited SendForm: TSendForm
       Width = 193
     end
     object cbReceived: TcxCheckBox
-      Left = 815
+      Left = 908
       Top = 103
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
@@ -733,6 +734,17 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 16
+      Width = 95
+    end
+    object cbSent: TcxCheckBox
+      Left = 799
+      Top = 103
+      Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 17
       Width = 103
     end
   end
@@ -1700,8 +1712,16 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isSent'
+        Value = Null
+        Component = cbSent
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isReceived'
         Value = 'False'
+        Component = cbReceived
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

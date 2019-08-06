@@ -130,6 +130,7 @@ type
     dxBarButton1: TdxBarButton;
     cbDefSun: TcxCheckBox;
     cbReceived: TcxCheckBox;
+    cbSent: TcxCheckBox;
   private
     { Private declarations }
   public

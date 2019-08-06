@@ -203,8 +203,7 @@ BEGIN
    END IF;
 
    -- Перемещения по СУН
-   IF vbUserId in (3, 4183126) AND
-      EXISTS(SELECT 1
+   IF EXISTS(SELECT 1
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
@@ -250,6 +249,64 @@ BEGIN
         INSERT INTO _PUSH (Id, Text, FormName, Button)
         VALUES (5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!',
                    'TSendCashJournalSunForm', 'Реестр перемещений СУН');
+      END IF;
+   END IF;
+
+   IF EXISTS(SELECT 1
+             FROM  Movement
+                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                              ON MovementBoolean_SUN.MovementId = Movement.Id
+                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                             AND MovementBoolean_SUN.ValueData = True
+                   INNER JOIN MovementBoolean AS MovementBoolean_Sent
+                                              ON MovementBoolean_Sent.MovementId = Movement.Id
+                                             AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
+                                             AND MovementBoolean_Sent.ValueData = True
+                   INNER JOIN MovementBoolean AS MovementBoolean_Received
+                                              ON MovementBoolean_Received.MovementId = Movement.Id
+                                             AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+                                             AND MovementBoolean_Received.ValueData = False
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                AND MovementLinkObject_From.ObjectId = vbUnitId
+                   INNER JOIN MovementDate AS MovementDate_Sent
+                                           ON MovementDate_Sent.MovementId = Movement.Id
+                                          AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
+                                          AND MovementDate_Sent.ValueData >= CURRENT_TIMESTAMP - INTERVAL '20 MIN'
+             WHERE Movement.DescId = zc_Movement_Send()
+               AND Movement.StatusId = zc_Enum_Status_UnComplete())
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги , ожидайте перемещение по СУН.');
+   END IF;
+
+   
+   IF date_part('HOUR',    CURRENT_TIME)::Integer = 16
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+   THEN
+      IF EXISTS(SELECT 1
+                FROM  Movement
+                      INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                 ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                AND MovementBoolean_SUN.ValueData = True
+                      INNER JOIN MovementBoolean AS MovementBoolean_Sent
+                                                 ON MovementBoolean_Sent.MovementId = Movement.Id
+                                                AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
+                                                AND MovementBoolean_Sent.ValueData = True
+                      INNER JOIN MovementBoolean AS MovementBoolean_Received
+                                                 ON MovementBoolean_Received.MovementId = Movement.Id
+                                                AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+                                                AND MovementBoolean_Received.ValueData = False
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                    ON MovementLinkObject_From.MovementId = Movement.Id
+                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                   AND MovementLinkObject_From.ObjectId = vbUnitId
+                WHERE Movement.DescId = zc_Movement_Send()
+                  AND Movement.StatusId = zc_Enum_Status_UnComplete())
+      THEN
+        INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги , ожидайте перемещение по СУН.');
       END IF;
    END IF;
 
@@ -359,5 +416,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
-SELECT * FROM gpGet_PUSH_Cash('3')
+-- SELECT * FROM gpGet_PUSH_Cash('3')

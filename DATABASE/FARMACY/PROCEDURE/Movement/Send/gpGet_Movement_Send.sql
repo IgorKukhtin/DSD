@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred Boolean
              , isSUN Boolean
              , isDefSUN Boolean
+             , isSent Boolean
              , isReceived Boolean
               )
 AS
@@ -55,6 +56,7 @@ BEGIN
              , FALSE                                            AS isDeferred
              , FALSE                                            AS isSUN
              , FALSE                                            AS isDefSUN
+             , FALSE                                            AS isSent
              , FALSE                                            AS isReceived
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -83,6 +85,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
+           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -132,6 +135,9 @@ BEGIN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                      AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sent
+                                      ON MovementBoolean_Sent.MovementId = Movement.Id
+                                     AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()

@@ -1,8 +1,8 @@
--- Function: gpUpdate_Movement_Received()
+-- Function: gpUpdate_Movement_Sent()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Received(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Sent(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Movement_Received(
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Sent(
     IN inMovementId          Integer   ,    -- ключ документа
     IN inisReceived          Boolean   ,    -- Получено-да
     IN inSession             TVarChar       -- текущий пользователь
@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbUnitId     Integer;
    DECLARE vbUnitKey    TVarChar;
    DECLARE vbStatusId   Integer;
-   DECLARE vbUnitIdTo   Integer;
+   DECLARE vbUnitIdFrom Integer;
    DECLARE vbisDeferred Boolean;
    DECLARE vbisSUN      Boolean;
    DECLARE vbisDefSUN   Boolean;
@@ -32,18 +32,18 @@ BEGIN
    END IF;
    vbUnitId := vbUnitKey::Integer;
 
-   SELECT Movement.StatusId, MovementLinkObject_To.ObjectId
+   SELECT Movement.StatusId, MovementLinkObject_From.ObjectId
         , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
         , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
         , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean AS isSent
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
-   INTO vbStatusId, vbUnitIdTo, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived
+   INTO vbStatusId, vbUnitIdFrom, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived
    FROM Movement
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -69,7 +69,7 @@ BEGIN
 
    IF COALESCE(inisReceived, NOT vbisReceived) <> vbisReceived
    THEN
-      RAISE EXCEPTION 'Ошибка. Признак <Получено-да> бал изменен. Обновите данные и повторите изменение признака.';
+      RAISE EXCEPTION 'Ошибка. Признак <Отправлено-да> бал изменен. Обновите данные и повторите изменение признака.';
    END IF;
 
    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
@@ -77,25 +77,33 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
    END IF;
    
-   IF vbUnitIdTo <> vbUnitId AND 
+   IF vbUnitIdFrom <> vbUnitId AND 
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
-      RAISE EXCEPTION 'Ошибка. Изменение <Получено-да> разрешено только сотруднику аптеки получателя.';
+      RAISE EXCEPTION 'Ошибка. Изменение <Отправлено-да> разрешено только сотруднику аптеки отправителя.';
    END IF;
 
-   IF inisReceived = FALSE AND (vbisSUN <> TRUE OR vbisDeferred <> TRUE OR vbisSent <> TRUE)
+   IF inisReceived = FALSE AND (vbisSUN <> TRUE OR vbisDeferred <> TRUE)
    THEN
-      RAISE EXCEPTION 'Ошибка. Для установки <Получено-да> документ должен быть с признаками <Перемещение по СУН>, <Отложен> и <Отправлено-да>.';
+      RAISE EXCEPTION 'Ошибка. Для установки <Отправлено-да> документ должен быть с признаками <Перемещение по СУН> и <Отложен>.';
+   END IF;
+
+   IF vbisReceived = TRUE
+   THEN
+      RAISE EXCEPTION 'Ошибка. Перемещение <Получено-да> отмена признака <Отправлено-да> запрещено.';
    END IF;
 
    IF inisReceived = TRUE AND 
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
-      RAISE EXCEPTION 'Ошибка. Отмена признака <Получено-да> вам запрещена, обратитесь к системному администратору';
+      RAISE EXCEPTION 'Ошибка. Отмена признака <Отправлено-да> вам запрещена, обратитесь к системному администратору';
    END IF;
 
    -- сохранили признак
-   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Received(), inMovementId, NOT inisReceived);
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sent(), inMovementId, NOT inisSent);
+
+   -- сохранили свойство <Дата изменения признака Отправлено>
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sent(), inMovementId, CURRENT_TIMESTAMP);
 
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
