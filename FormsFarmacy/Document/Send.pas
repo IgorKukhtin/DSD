@@ -129,6 +129,7 @@ type
     dxBarSubItem1: TdxBarSubItem;
     dxBarButton1: TdxBarButton;
     cbDefSun: TcxCheckBox;
+    cbReceived: TcxCheckBox;
   private
     { Private declarations }
   public

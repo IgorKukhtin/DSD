@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred Boolean
              , isSUN Boolean
              , isDefSUN Boolean
+             , isReceived Boolean
               )
 AS
 $BODY$
@@ -54,6 +55,7 @@ BEGIN
              , FALSE                                            AS isDeferred
              , FALSE                                            AS isSUN
              , FALSE                                            AS isDefSUN
+             , FALSE                                            AS isReceived
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -81,6 +83,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
+           , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -129,6 +132,10 @@ BEGIN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                      AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                      ON MovementBoolean_Received.MovementId = Movement.Id
+                                     AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -149,7 +156,8 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.08.19                                                                                     * zc_MovementBoolean_Received
  24.07.19         * zc_MovementBoolean_DefSUN
  11.07.19         * zc_MovementBoolean_SUN
  09.06.19         * PartionDateKind

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean
+             , isSUN Boolean, isDefSUN Boolean, isReceived Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -111,6 +111,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
+           , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -195,6 +196,10 @@ BEGIN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                      AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                      ON MovementBoolean_Received.MovementId = Movement.Id
+                                     AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -242,6 +247,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.08.19                                                                                      * zc_MovementBoolean_Received
  24.07.19         * zc_MovementBoolean_DefSUN
  11.07.19         * zc_MovementBoolean_SUN
  09.06.19         *

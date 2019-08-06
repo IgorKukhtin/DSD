@@ -724,6 +724,17 @@ inherited SendForm: TSendForm
       TabOrder = 15
       Width = 193
     end
+    object cbReceived: TcxCheckBox
+      Left = 815
+      Top = 103
+      Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 16
+      Width = 103
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 8
@@ -1685,6 +1696,12 @@ inherited SendForm: TSendForm
         Name = 'isDefSun'
         Value = Null
         Component = cbDefSun
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReceived'
+        Value = 'False'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

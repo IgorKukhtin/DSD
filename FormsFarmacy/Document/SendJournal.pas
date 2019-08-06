@@ -61,6 +61,7 @@ type
     bbDeferredNo: TdxBarButton;
     ReportInvNumber_full: TcxGridDBColumn;
     isSUN: TcxGridDBColumn;
+    isReceived: TcxGridDBColumn;
   private
     { Private declarations }
   public
