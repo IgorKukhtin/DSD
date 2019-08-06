@@ -14,7 +14,9 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , OperDate      TDateTime
-             , Price         Tfloat
+             , Price         TFloat
+             , Price_before  TFloat
+             , PersentDiff   TFloat
              , IsInsert      Boolean
 
               )
@@ -31,7 +33,7 @@ BEGIN
                          , Price_Goods.ChildObjectId               AS GoodsId
                          , ObjectLink_Price_Unit.ObjectId          AS PriceId
                          , ObjectProtocol.isInsert
-                         , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Значение цены реализации"]/@FieldValue', ObjectProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Price
+                         , CAST (REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Значение цены реализации"]/@FieldValue', ObjectProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','') AS TFloat) AS Price
                        FROM ObjectLink AS ObjectLink_Price_Unit
                             INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                      AND (ObjectProtocol.OperDate >= inStartDate AND ObjectProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
@@ -61,13 +63,24 @@ BEGIN
          , Object_Goods.ValueData            AS GoodsName
          , tmpProtocol.OperDate ::TDateTime
          , tmpProtocol.Price    ::TFloat
+         , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat AS Price_before
+         , CASE WHEN COALESCE (ObjectHistoryFloat_Price.ValueData, 0) <> 0 THEN (COALESCE (ObjectHistoryFloat_Price.ValueData, 0) - COALESCE (tmpProtocol.Price,0) ::TFloat )*100 / COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END ::TFloat AS PersentDiff
          , tmpProtocol.isInsert ::Boolean
-         
+
 
     FROM tmpProtocol
       INNER JOIN tmpCount ON tmpCount.PriceId = tmpProtocol.PriceId
       LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId 
       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpProtocol.GoodsId 
+
+      -- получаем значения цены из истории значений на начало дня                                                          
+      LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                              ON ObjectHistory_Price.ObjectId = tmpProtocol.PriceId
+                             AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                             AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) < ObjectHistory_Price.EndDate
+      LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                   ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                  AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
     ORDER BY Object_Goods.ValueData
             ,tmpProtocol.OperDate
     ;

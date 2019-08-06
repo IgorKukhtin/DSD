@@ -109,7 +109,7 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 199
+            Width = 122
           end
           object UserCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -134,7 +134,7 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 229
+            Width = 141
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -142,7 +142,7 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 105
+            Width = 63
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -152,6 +152,15 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             HeaderAlignmentVert = vaCenter
             Width = 255
           end
+          object Price_before: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1044#1086
+            DataBinding.FieldName = 'Price_before'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 145
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -159,7 +168,16 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 205
+            Width = 168
+          end
+          object PersentDiff: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'.'
+            DataBinding.FieldName = 'PersentDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 145
           end
         end
       end
