@@ -206,7 +206,8 @@ begin
           AmountDiffPrev := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffPrev').AsCurrency;
           AmountIncome := MainCashForm.CashListDiffCDS.FieldByName('AmountIncome').AsCurrency;
           PriceSaleIncome := MainCashForm.CashListDiffCDS.FieldByName('PriceSaleIncome').AsCurrency;
-          ListDate := MainCashForm.CashListDiffCDS.FieldByName('ListDate').AsVariant;
+          if not MainCashForm.CashListDiffCDS.FieldByName('ListDate').IsNull then
+            ListDate := MainCashForm.CashListDiffCDS.FieldByName('ListDate').AsDateTime;
         end;
       Except
       end;
@@ -261,7 +262,7 @@ begin
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + FormatCurr(',0.000', AmountDiffPrev);
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
       if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + FormatCurr(',0.000', AmountIncome) + ' Цена (в пути): ' + FormatCurr(',0.000', PriceSaleIncome);
-      if ListDate <> Null then S := S +  #13#10'Последний раз менеджер забрал заказ: ' + FormatDateTime('DD.mm.yyyy HH:NN', AmountDiff);
+      if ListDate <> Null then S := S +  #13#10'Последний раз менеджер забрал заказ: ' + FormatDateTime('DD.mm.yyyy HH:NN', ListDate);
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
       S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
       Label1.Caption := S;

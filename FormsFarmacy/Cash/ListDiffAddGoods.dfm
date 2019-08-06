@@ -3,7 +3,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   Top = 319
   Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1077#1087#1072#1088#1072#1090#1072' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
   ClientHeight = 267
-  ClientWidth = 403
+  ClientWidth = 482
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
-    403
+    482
     267)
   PixelsPerInch = 96
   TextHeight = 13
@@ -68,8 +68,8 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     ParentFont = False
   end
   object bbOk: TcxButton
-    Left = 180
-    Top = 227
+    Left = 291
+    Top = 231
     Width = 75
     Height = 25
     Anchors = [akTop, akRight]
@@ -79,8 +79,8 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     TabOrder = 2
   end
   object bbCancel: TcxButton
-    Left = 301
-    Top = 227
+    Left = 390
+    Top = 231
     Width = 75
     Height = 25
     Anchors = [akTop, akRight]
@@ -102,10 +102,10 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Width = 121
   end
   object meComent: TcxMaskEdit
-    Left = 93
-    Top = 195
+    Left = 90
+    Top = 194
     TabOrder = 4
-    Width = 283
+    Width = 375
   end
   object lcbDiffKind: TcxLookupComboBox
     Left = 93
@@ -117,7 +117,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
       end>
     Properties.ListSource = DiffKindDS
     TabOrder = 1
-    Width = 283
+    Width = 372
   end
   object ListDiffCDS: TClientDataSet
     Aggregates = <>
