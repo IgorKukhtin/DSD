@@ -155,7 +155,9 @@ BEGIN
      -- сохранили свойство <МФО>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankMFO (), vbMovementItemId, inBankMFO);
      -- сохранили свойство <Название банка>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId, inBankName);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId
+                                         , CASE WHEN TRIM (inBankName) <> '' THEN inBankName ELSE COALESCE((SELECT Object.ValueData FROM Object WHERE Object.Id = lpInsertFind_Bank (inBankMFO, inBankName, vbUserId)), '') END
+                                          );
      -- сохранили свойство <Валюта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency (), vbMovementItemId, vbCurrencyId);
      -- сохранили свойство <Валюта партнера>
