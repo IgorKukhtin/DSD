@@ -21,10 +21,34 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsDeferred  Boolean;
+   DECLARE vbUnitId Integer;
+   DECLARE vbAmount    TFloat;
+   DECLARE vbGoodsName  TVarChar;
+   DECLARE vbSaldo      TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
     vbUserId := inSession;
+
+    -- Получили признак отложен
+    SELECT COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
+         , Movement_Sale.UnitId
+    INTO vbIsDeferred
+       , vbUnitId
+    FROM Movement_Sale_View AS Movement_Sale
+         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                   ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
+                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+    WHERE Movement_Sale.Id = inMovementId;
+    
+    -- Сохранили начальное количество для отложеных чеков
+    IF vbIsDeferred = TRUE AND COALESCE (ioId, 0) <> 0
+    THEN
+      vbAmount := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId), 0);
+    ELSE
+      vbAmount := 0;
+    END IF;
 
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
@@ -90,13 +114,54 @@ BEGIN
                                             , inUserId             := vbUserId
                                              );
 
+    -- Сохранили начальное количество для отложеных чеков
+    IF vbIsDeferred = TRUE AND inAmount <> vbAmount
+    THEN
+
+      --Проверка на то что бы не продали больше чем есть на остатке
+      SELECT MI_Sale.GoodsName
+           , COALESCE(SUM(Container.Amount),0) + vbAmount
+      INTO 
+          vbGoodsName
+        , vbSaldo 
+      FROM MovementItem_Sale_View AS MI_Sale
+          LEFT OUTER JOIN Container ON MI_Sale.GoodsId = Container.ObjectId
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.DescId = zc_Container_Count()
+                                   AND Container.Amount > 0
+      WHERE MI_Sale.Id = ioId	
+        AND MI_Sale.isErased = FALSE
+      GROUP BY MI_Sale.GoodsId
+             , MI_Sale.GoodsName
+             , MI_Sale.Amount
+      HAVING COALESCE (MI_Sale.Amount, 0) > (COALESCE (SUM (Container.Amount) ,0) + vbAmount);
+    
+      IF (COALESCE(vbGoodsName,'') <> '') 
+      THEN
+         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, inAmount, vbSaldo;
+      END IF;
+
+      IF inAmount < vbAmount
+      THEN
+        -- Распроводим строку Документ
+        PERFORM lpDelete_MovementItemContainerOne (inMovementId := inMovementId
+                                                 , inMovementItemId := ioId);
+      END IF;
+      
+       -- собственно проводки
+      PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
+                                       ioId,         -- ключ содержимое Документа
+                                       vbUserId);    -- Пользователь       
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 --ALTER FUNCTION gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.  Шаблий О.В.
+ 01.08.19                                                                                      *
  05.06.18         *
  09.02.17         *
  13.10.15                                                                         *

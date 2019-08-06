@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Sale  (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -22,6 +22,7 @@ $BODY$
   DECLARE vbMedicSPId   Integer;
   DECLARE vbMemberSPId  Integer;
   DECLARE vbCount       Integer;
+  DECLARE vbIsDeferred  Boolean;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
@@ -33,24 +34,29 @@ BEGIN
            Movement_Sale.OperDateSP ,
            Movement_Sale.PartnerMedicalId,
            Movement_Sale.MedicSPId,
-           Movement_Sale.MemberSPId
+           Movement_Sale.MemberSPId,
+           COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
            INTO vbOperDate,
                 vbUnitId,
                 vbInvNumberSP,
                 vbOperDateSP,
                 vbPartnerMedicalId,
                 vbMedicSPId,
-                vbMemberSPId
+                vbMemberSPId,
+                vbIsDeferred
     FROM Movement_Sale_View AS Movement_Sale
+         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                   ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
+                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement_Sale.Id = inMovementId;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
-    IF (vbOperDate > CURRENT_DATE) 
+    IF (vbOperDate > CURRENT_DATE)
     THEN
         RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
     END IF;
-    
+
     -- проверка если выбрано мед.учр. тогда проверяем заполнение остальных реквизитов
     IF COALESCE (vbPartnerMedicalId, 0) <> 0
     THEN
@@ -61,7 +67,7 @@ BEGIN
         IF COALESCE (vbInvNumberSP, '') = ''
         THEN
             RAISE EXCEPTION 'Ошибка. Не заполнен реквизит Номер рецепта.';
-        END IF;       
+        END IF;
         IF COALESCE (vbMedicSPId, 0) = 0
         THEN
             RAISE EXCEPTION 'Ошибка. Не заполнен реквизит ФИО врача.';
@@ -74,9 +80,9 @@ BEGIN
     END IF;
 
     IF COALESCE (vbInvNumberSP,'') <>''
-       THEN 
+       THEN
            IF EXISTS(SELECT Movement.Id
-                     FROM Movement 
+                     FROM Movement
                       INNER JOIN MovementLinkObject AS MovementLinkObject_MedicSP
                               ON MovementLinkObject_MedicSP.MovementId = Movement.Id
                              AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
@@ -108,12 +114,12 @@ BEGIN
     FROM MovementItem_Sale_View AS MI_Sale
     WHERE MI_Sale.MovementId = inMovementId
       AND MI_Sale.isErased = FALSE;
-    
-    IF (COALESCE (vbGoodsName, '') <> '') 
+
+    IF (COALESCE (vbGoodsName, '') <> '')
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи равно 0.', vbGoodsName;
     END IF;
-    IF (COALESCE (vbCount, 0) = 0) 
+    IF (COALESCE (vbCount, 0) = 0)
     THEN
         RAISE EXCEPTION 'Ошибка. Не выбраны товары для продажи';
     END IF;
@@ -121,18 +127,57 @@ BEGIN
     IF COALESCE (vbInvNumberSP,'') <>'' AND COALESCE (vbCount, 0) > 1
     THEN
         RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.';
-    END IF;    
-    
+    END IF;
+
+    -- Проверяем вдруг проведено больше чеа выписано
+    IF vbIsDeferred = TRUE
+    THEN
+      WITH HeldBy AS(SELECT MovementItemContainer.MovementItemId   AS MovementItemId
+                          , SUM(- MovementItemContainer.Amount)      AS Amount
+                     FROM MovementItemContainer
+                     WHERE MovementItemContainer.MovementId = inMovementId
+                     GROUP BY MovementItemContainer.MovementItemId)
+
+      SELECT Object_Goods.ValueData
+           , HeldBy.Amount
+           , COALESCE(MovementItem.Amount,0)
+      INTO
+          vbGoodsName
+        , vbAmount
+        , vbSaldo
+      FROM HeldBy AS HeldBy
+          LEFT OUTER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                      AND MovementItem.IsErased = FALSE
+                                      AND COALESCE(MovementItem.Amount,0) > 0
+                                      AND MovementItem.ID = HeldBy.MovementItemId
+          LEFT OUTER JOIN Object AS Object_Goods
+                                 ON Object_Goods.Id = MovementItem.ObjectId
+      WHERE HeldBy.Amount > COALESCE(MovementItem.Amount,0);
+
+      IF (COALESCE(vbGoodsName,'') <> '')
+      THEN
+          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во проведено <%> больше, чем выписано <%>. Необходимо отменить отложен перед проведением документа.', vbGoodsName, vbAmount, vbSaldo;
+      END IF;
+
+    END IF;
 
     --Проверка на то что бы не продали больше чем есть на остатке
+    WITH HeldBy AS(SELECT MovementItemContainer.MovementItemId   AS MovementItemId
+                        , SUM(- MovementItemContainer.Amount)      AS Amount
+                   FROM MovementItemContainer
+                   WHERE MovementItemContainer.MovementId = inMovementId
+                   GROUP BY MovementItemContainer.MovementItemId)
+
     SELECT MI_Sale.GoodsName
          , COALESCE(MI_Sale.Amount,0)
-         , COALESCE(SUM(Container.Amount),0) 
-    INTO 
+         , COALESCE(SUM(Container.Amount),0) + COALESCE(HeldBy.Amount,0)
+    INTO
         vbGoodsName
       , vbAmount
-      , vbSaldo 
+      , vbSaldo
     FROM MovementItem_Sale_View AS MI_Sale
+        LEFT OUTER JOIN HeldBy AS HeldBy
+                               ON MI_Sale.ID = HeldBy.MovementItemId
         LEFT OUTER JOIN Container ON MI_Sale.GoodsId = Container.ObjectId
                                  AND Container.WhereObjectId = vbUnitId
                                  AND Container.DescId = zc_Container_Count()
@@ -142,9 +187,10 @@ BEGIN
     GROUP BY MI_Sale.GoodsId
            , MI_Sale.GoodsName
            , MI_Sale.Amount
-    HAVING COALESCE (MI_Sale.Amount, 0) > COALESCE (SUM (Container.Amount) ,0);
-    
-    IF (COALESCE(vbGoodsName,'') <> '') 
+           , HeldBy.Amount
+    HAVING (COALESCE (MI_Sale.Amount, 0) - COALESCE(HeldBy.Amount,0)) > COALESCE (SUM (Container.Amount) ,0);
+
+    IF (COALESCE(vbGoodsName,'') <> '')
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
     END IF;
@@ -166,7 +212,7 @@ BEGIN
                                          AND MI_Sale.IsErased = FALSE
                                          AND MI_Sale.Amount > 0
                                          AND MI_Sale.MovementId = inMovementId
-                                         
+
               WHERE
                   Movement_Inventory.DescId = zc_Movement_Inventory()
                   AND
@@ -177,22 +223,31 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Проведение документа запрещено!';
     END IF;*/
-  
+
+    IF vbIsDeferred = TRUE
+    THEN
+       -- сохранили признак
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), inMovementId, FALSE);
+    END IF;
+
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
     -- собственно проводки
     PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
-                                     vbUserId);    -- Пользователь  
+                                     0,            -- ключ содержимое Документа
+                                     vbUserId);    -- Пользователь
 
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
+    UPDATE Movement SET StatusId = zc_Enum_Status_Complete()
     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Шаблий О.В.
+ 01.08.19                                                                       *
  05.06.18         *
  03.04.17         *
  13.10.15                                                         *

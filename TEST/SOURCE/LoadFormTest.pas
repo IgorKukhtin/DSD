@@ -508,12 +508,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCDialogForm');
-  // торг. сети
+  {// торг. сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGK_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGK_VMCDialogForm');
 
@@ -523,7 +523,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   }
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_wmsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_wmsForm');
 end;

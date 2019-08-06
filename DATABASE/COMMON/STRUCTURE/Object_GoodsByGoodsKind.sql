@@ -27,7 +27,8 @@ CREATE TABLE Object_GoodsByGoodsKind(
    BoxWeight           TFloat  ,
    WeightOnBox         TFloat  ,
    CountOnBox          TFloat  ,
-   isErased            Boolean
+   isErased            Boolean ,
+   WmsCellNum          Integer
    );
 /*-------------------------------------------------------------------------------*/
 

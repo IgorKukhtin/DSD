@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , -- 
     IN inContractId            Integer   , -- 
+    IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
     IN inComment               TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
@@ -26,6 +28,7 @@ BEGIN
                                                   , inMovementId          := inMovementId
                                                   , inJuridicalId         := inJuridicalId
                                                   , inContractId          := inContractId
+                                                  , inBankAccountId       := inBankAccountId
                                                   , inAmount              := inAmount
                                                   , inComment             := inComment
                                                   , inUserId              := vbUserId

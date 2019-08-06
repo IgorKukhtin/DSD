@@ -121,6 +121,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    WmsCellNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

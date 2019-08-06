@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer
              , WeightOnBox TFloat
              , CountOnBox  TFloat
              , WmsCode     Integer
+             , WmsCellNum  Integer
              , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
              , IsErased Boolean
               )
@@ -68,7 +69,8 @@ BEGIN
            , Object_GoodsByGoodsKind.BoxWeight   ::TFloat      
            , Object_GoodsByGoodsKind.WeightOnBox ::TFloat
            , Object_GoodsByGoodsKind.CountOnBox  ::TFloat
-           , Object_GoodsByGoodsKind.WmsCode           
+           , Object_GoodsByGoodsKind.WmsCode
+           , Object_GoodsByGoodsKind.WmsCellNum  ::Integer
 
            , CASE WHEN COALESCE (Object_GoodsByGoodsKind.GoodsTypeKindId_Sh, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
            , CASE WHEN COALESCE (Object_GoodsByGoodsKind.GoodsTypeKindId_Nom, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
@@ -124,6 +126,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.19        *
  23.05.19        *
 */
 -- тест

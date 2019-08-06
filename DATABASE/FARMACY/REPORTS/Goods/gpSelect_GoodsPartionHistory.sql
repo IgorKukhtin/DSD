@@ -53,6 +53,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- Контролшь использования подразделения
+    inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
 
     -- определяется <Торговая сеть>
     IF vbUserId = 3 THEN vbObjectId:= 0;

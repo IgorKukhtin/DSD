@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 902
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -672,11 +672,12 @@ inherited GoodsForm: TGoodsForm
   end
   inherited MasterDS: TDataSource
     Left = 56
-    Top = 48
+    Top = 80
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    Top = 48
+    Left = 24
+    Top = 88
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Retail'
@@ -698,7 +699,7 @@ inherited GoodsForm: TGoodsForm
   end
   inherited BarManager: TdxBarManager
     Left = 112
-    Top = 48
+    Top = 96
     DockControlHeights = (
       0
       0

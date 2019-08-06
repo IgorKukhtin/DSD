@@ -239,7 +239,7 @@ BEGIN
            , tmpMI.HeadCount
            , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
            , CASE WHEN COALESCE (tmpMI.Count, 0) <> 0 
-                  THEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.Count
+                  THEN tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.Count
                   ELSE 0
              END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
            , tmpMI.PartionGoodsDate
@@ -255,6 +255,8 @@ BEGIN
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
            , Object_Unit.ValueData              AS UnitName
+
+           , ObjectFloat_WmsCellNum.ValueData   AS WmsCellNum
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -293,6 +295,13 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+            LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                                                           AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_WmsCellNum
+                                  ON ObjectFloat_WmsCellNum.ObjectId = View_GoodsByGoodsKind.Id
+                                 AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
+                                 
        ORDER BY ObjectString_Goods_GroupNameFull.ValueData
               , Object_GoodsGroup.ValueData
               , Object_Goods.ValueData
@@ -312,6 +321,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.08.19         * WmsCellNum
  12.02.19         * add inisItem
  11.10.17         *
  12.06.15         *

@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , -- 
     IN inContractId            Integer   , -- 
+    IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
     IN inComment               TVarChar  , -- 
     IN inUserId                Integer     -- пользователь
@@ -15,6 +17,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   
 BEGIN
 
      -- определяется признак Создание/Корректировка
@@ -28,6 +31,8 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), ioId, inBankAccountId);
 
      IF vbIsInsert = TRUE
      THEN

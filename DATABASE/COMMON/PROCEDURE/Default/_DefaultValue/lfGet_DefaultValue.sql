@@ -16,6 +16,16 @@ BEGIN
        RETURN '0'; -- !!!захардодил для Pharmacy!!!
   ELSE
 
+  IF LOWER (REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')) = LOWER ('zc_Object_Unit') AND 
+    EXISTS(SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Role() AND LOWER (Object.ValueData) = LOWER ('Директор Партнёр'))
+  THEN
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_DirectorPartner())
+     THEN
+        RETURN zc_DirectorPartner_UnitID()::TVarChar;
+     END IF;
+  END IF;
+  
+
   IF EXISTS (SELECT 1
                               FROM DefaultValue
                                    INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
@@ -106,3 +116,4 @@ ALTER FUNCTION lpGet_DefaultValue (TVarChar, Integer) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM lpGet_DefaultValue ('zc_Object_Retail', zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpGet_DefaultValue ('zc_Object_Unit', 11780883);

@@ -278,6 +278,22 @@ BEGIN
                                                           ON ObjectBoolean_Goods_Second.ObjectId = tmp.GoodsId
                                                          AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second()
                                  )
+         , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+                           FROM MovementItem
+                                INNER JOIN MovementItemFloat AS MIFloat_Container
+                                                             ON MIFloat_Container.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Container.DescId = zc_MIFloat_ContainerId()
+                                INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIFloat_Container.ValueData::Integer
+                                                              AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                     ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                    AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId = zc_MI_Child()
+                             AND MovementItem.IsErased = FALSE
+                           GROUP BY MovementItem.ParentId
+                          )
 
             -- результат
             SELECT
@@ -310,7 +326,7 @@ BEGIN
               , Object_ReasonDifferences.Id                                AS ReasonDifferencesId
               , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
               , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
-              , tmpRemains.MinExpirationDate   
+              , COALESCE (tmpMI_Child.ExpirationDate, tmpRemains.MinExpirationDate)::TDateTime AS MinExpirationDate   
               , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
               , tmpGoodsParam.GoodsGroupName                               AS GoodsGroupName
@@ -342,6 +358,8 @@ BEGIN
                 LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
                 LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
+
+                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem_Send.Id 
 
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null;
@@ -560,6 +578,22 @@ BEGIN
                                                           ON ObjectBoolean_Goods_Second.ObjectId = tmp.GoodsId
                                                          AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second()
                                  )
+         , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+                           FROM MovementItem
+                                INNER JOIN MovementItemFloat AS MIFloat_Container
+                                                             ON MIFloat_Container.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Container.DescId = zc_MIFloat_ContainerId()
+                                INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIFloat_Container.ValueData::Integer
+                                                              AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                     ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                    AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId = zc_MI_Child()
+                             AND MovementItem.IsErased = FALSE
+                           GROUP BY MovementItem.ParentId
+                          )
 
        -- результат
        SELECT
@@ -598,7 +632,8 @@ BEGIN
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            --, tmpMIContainer.MinExpirationDate   
            --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
-           , CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END AS MinExpirationDate
+           , COALESCE (tmpMI_Child.ExpirationDate, 
+             CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END)::TDateTime AS MinExpirationDate
            , MovementItem_Send.IsErased                                AS isErased
 
            , tmpGoodsParam.GoodsGroupName                                      AS GoodsGroupName
@@ -635,6 +670,8 @@ BEGIN
 
             LEFT JOIN tmpMinExpirationDate ON tmpMinExpirationDate.GoodsId = MovementItem_Send.ObjectId
                                          -- AND MovementItem_Send.Amount = 0
+                                         
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem_Send.Id 
 ;
      END IF;
 
@@ -676,4 +713,4 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
---select * from gpSelect_MovementItem_Send(inMovementId := 3957473 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');select * from gpSelect_MovementItem_Send(inMovementId := 3722388 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Send(inMovementId := 15183090 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

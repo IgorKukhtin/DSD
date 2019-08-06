@@ -526,6 +526,8 @@ type
     N186: TMenuItem;
     actReport_GoodsPartionDate5: TdsdOpenForm;
     N510: TMenuItem;
+    actReport_Movement_Send_RemainsSun: TdsdOpenForm;
+    miReport_Movement_Send_RemainsSun: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

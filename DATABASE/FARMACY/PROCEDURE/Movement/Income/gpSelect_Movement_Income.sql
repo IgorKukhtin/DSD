@@ -36,6 +36,7 @@ AS
 $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -48,6 +49,13 @@ BEGIN
      -- определяется <Торговая сеть>
      IF vbUserId = 3 THEN vbObjectId:= 0;
      ELSE vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     END IF;
+
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_DirectorPartner())
+     THEN
+        vbUnitId := zc_DirectorPartner_UnitID();
+     ELSE 
+        vbUnitId := 0;
      END IF;
 
      RETURN QUERY
@@ -66,6 +74,7 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbObjectId = 0)
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                          AND  (vbUnitId = 0 OR vbUnitId = ObjectLink_Unit_Juridical.ObjectId)
                         )
         , Movement_Income AS ( SELECT Movement_Income.Id
                                     , Movement_Income.InvNumber

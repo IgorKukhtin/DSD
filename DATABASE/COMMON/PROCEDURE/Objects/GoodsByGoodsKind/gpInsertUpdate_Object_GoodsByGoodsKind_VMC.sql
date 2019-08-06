@@ -12,6 +12,13 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar);
 
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , Boolean, Boolean, Boolean
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
@@ -51,6 +58,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
    OUT outWmsCodeCalc_Nom      TVarChar, -- новый Код ВМС* номинал
    OUT outWmsCodeCalc_Ves      TVarChar, -- новый Код ВМС* неноминал
    
+    IN inWmsCellNum                Integer  , -- № Ячейки на складе ВМС
+    
     IN inRetail1Id                 Integer  , -- Сеть 1
     IN inRetail2Id                 Integer  , -- Сеть 2
     IN inRetail3Id                 Integer  , -- Сеть 3
@@ -152,6 +161,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Width(), ioId, inWidth);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormInDays(), ioId, inNormInDays);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum(), ioId, inWmsCellNum);   
+   
 
 
    IF inisGoodsTypeKind_Sh = TRUE 

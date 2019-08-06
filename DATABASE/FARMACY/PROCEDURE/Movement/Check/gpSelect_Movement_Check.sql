@@ -56,6 +56,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Контролшь использования подразделения
+     inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
+
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 

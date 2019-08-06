@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , CodeCalc_Ves TVarChar     -- Код ВМС неноминал
              , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
 
+             , WmsCellNum        Integer     -- № Ячейки на складе ВМС
              , WmsCode           Integer     -- новый Код ВМС*
              , WmsCodeCalc_Sh    TVarChar    -- новый Код ВМС* шт.
              , WmsCodeCalc_Nom   TVarChar    -- новый Код ВМС* номинал
@@ -125,7 +126,8 @@ BEGIN
                                          ELSE NULL
                                     END  :: TVarChar AS CodeCalc_Ves
                                   --
-                                  , ObjectFloat_WmsCode.ValueData AS WmsCode
+                                  , ObjectFloat_WmsCellNum.ValueData  AS WmsCellNum
+                                  , ObjectFloat_WmsCode.ValueData     AS WmsCode
 
                                   , CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId <> 0
                                          THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
@@ -179,6 +181,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode
                                                         ON ObjectFloat_WmsCode.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                        AND ObjectFloat_WmsCode.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_WmsCellNum
+                                                        ON ObjectFloat_WmsCellNum.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                       AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
                              )
    , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
@@ -386,6 +391,7 @@ BEGIN
                   ELSE TRUE
              END  AS isCodeCalc_Diff                                         -- Повтор кода ВМС
 
+           , Object_GoodsByGoodsKind_View.WmsCellNum       :: Integer        -- 
            , Object_GoodsByGoodsKind_View.WmsCode          :: Integer        -- Код ВМС* для выгрузки
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar       -- шт. - Код ВМС* для выгрузки
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar       -- номинал - Код ВМС* для выгрузки

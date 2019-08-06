@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindName TVarChar, InfoMoneyName TVarChar, StartDate TDateTime
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPlan TFloat
+             , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -76,6 +77,12 @@ BEGIN
                     , MIFloat_AmountRemains.ValueData  AS AmountRemains
                     , MIFloat_AmountPartner.ValueData  AS AmountPartner
                     , MIFloat_AmountPlan.ValueData     AS AmountPlan
+
+                    , Partner_BankAccount_View.BankName
+                    , Partner_BankAccount_View.MFO
+                    , Partner_BankAccount_View.Id      AS BankAccountId
+                    , Partner_BankAccount_View.Name    AS BankAccountName
+
                     , MIString_Comment.ValueData       AS Comment
                     , Object_Insert.ValueData          AS InsertName
                     , Object_Update.ValueData          AS UpdateName
@@ -107,6 +114,11 @@ BEGIN
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                                     ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+                    LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId
 
                     LEFT JOIN MovementItemDate AS MIDate_Insert
                                                ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -145,6 +157,12 @@ BEGIN
            , tmpMI.AmountRemains
            , tmpMI.AmountPartner
            , tmpMI.AmountPlan
+
+           , tmpMI.BankName
+           , tmpMI.MFO
+           , tmpMI.BankAccountId
+           , tmpMI.BankAccountName
+
            , tmpMI.Comment
 
            , tmpMI.InsertName
@@ -197,6 +215,12 @@ BEGIN
            , MIFloat_AmountRemains.ValueData  AS AmountRemains
            , MIFloat_AmountPartner.ValueData  AS AmountPartner
            , MIFloat_AmountPlan.ValueData     AS AmountPlan
+
+           , Partner_BankAccount_View.BankName
+           , Partner_BankAccount_View.MFO
+           , Partner_BankAccount_View.Id      AS BankAccountId
+           , Partner_BankAccount_View.Name    AS BankAccountName
+
            , MIString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData          AS InsertName
@@ -232,6 +256,11 @@ BEGIN
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                             ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -272,8 +301,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderFinance (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

@@ -15,9 +15,9 @@ BEGIN
    
    --выбираем данные из zc_Object_GoodsByGoodsKind
     CREATE TEMP TABLE tmpGoodsByGoodsKind (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, MeasureId Integer, GoodsTypeKindId_Sh Integer, GoodsTypeKindId_Nom Integer, GoodsTypeKindId_Ves Integer
-                                         , WeightMin TFloat, WeightMax TFloat, NormInDays TFloat, Height TFloat, Length TFloat, Width TFloat, WmsCode Integer, BoxId Integer, BoxWeight TFloat, WeightOnBox TFloat, CountOnBox TFloat, isErased Boolean) ON COMMIT DROP;
+                                         , WeightMin TFloat, WeightMax TFloat, NormInDays TFloat, Height TFloat, Length TFloat, Width TFloat, WmsCode Integer, WmsCellNum Integer, BoxId Integer, BoxWeight TFloat, WeightOnBox TFloat, CountOnBox TFloat, isErased Boolean) ON COMMIT DROP;
           INSERT INTO tmpGoodsByGoodsKind (ObjectId, GoodsId, GoodsKindId, MeasureId, GoodsTypeKindId_Sh, GoodsTypeKindId_Nom, GoodsTypeKindId_Ves
-                                         , WeightMin, WeightMax, NormInDays, Height, Length, Width, WmsCode, BoxId, BoxWeight, WeightOnBox, CountOnBox, isErased)
+                                         , WeightMin, WeightMax, NormInDays, Height, Length, Width, WmsCode, WmsCellNum, BoxId, BoxWeight, WeightOnBox, CountOnBox, isErased)
           SELECT tmp.Id AS ObjectId
                , tmp.GoodsId
                , tmp.GoodsKindId
@@ -32,6 +32,7 @@ BEGIN
                , tmp.Length
                , tmp.Width
                , tmp.WmsCode
+               , tmp.WmsCellNum
                , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END AS BoxId
                , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat AS BoxWeight
                , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat AS WeightOnBox
@@ -54,7 +55,8 @@ BEGIN
              , Height                = tmp.Height             
              , Length                = tmp.Length             
              , Width                 = tmp.Width              
-             , WmsCode               = tmp.WmsCode            
+             , WmsCode               = tmp.WmsCode
+             , WmsCellNum            = tmp.WmsCellNum
              , BoxId                 = tmp.BoxId              
              , BoxWeight             = tmp.BoxWeight          
              , WeightOnBox           = tmp.WeightOnBox        
@@ -78,6 +80,7 @@ BEGIN
                                         , Length
                                         , Width
                                         , WmsCode
+                                        , WmsCellNum
                                         , BoxId
                                         , BoxWeight
                                         , WeightOnBox
@@ -97,6 +100,7 @@ BEGIN
            , tmp.Length
            , tmp.Width
            , tmp.WmsCode
+           , tmp.WmsCellNum
            , tmp.BoxId
            , tmp.BoxWeight
            , tmp.WeightOnBox
@@ -117,7 +121,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.19         * WmsCellNum
  23.05.19         *
 */
 
