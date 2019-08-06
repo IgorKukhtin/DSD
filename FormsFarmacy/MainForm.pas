@@ -528,6 +528,8 @@ type
     N510: TMenuItem;
     actReport_Movement_Send_RemainsSun: TdsdOpenForm;
     miReport_Movement_Send_RemainsSun: TMenuItem;
+    actMCS_Lite: TdsdOpenForm;
+    miMCS_Lite: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
