@@ -33,12 +33,12 @@ inherited SendCashJournalForm: TSendCashJournalForm
           DataSet = PrintItemsCDS
         end>
     end
-    object actSetDeferred: TMultiAction
+    object actSetReceived: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actExecSetDeferred
+          Action = actExecSetReceived
         end
         item
           Action = actRefresh
@@ -49,14 +49,14 @@ inherited SendCashJournalForm: TSendCashJournalForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
       ImageIndex = 61
     end
-    object actExecSetDeferred: TdsdExecStoredProc
+    object actExecSetReceived: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Movement_Deferred
+      StoredProc = spUpdate_Movement_Received
       StoredProcList = <
         item
-          StoredProc = spUpdate_Movement_Deferred
+          StoredProc = spUpdate_Movement_Received
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
@@ -211,7 +211,7 @@ inherited SendCashJournalForm: TSendCashJournalForm
         end>
     end
     object dxBarButton1: TdxBarButton
-      Action = actSetDeferred
+      Action = actSetReceived
       Category = 0
     end
   end
@@ -258,8 +258,8 @@ inherited SendCashJournalForm: TSendCashJournalForm
         MultiSelectSeparator = ','
       end>
   end
-  object spUpdate_Movement_Deferred: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Deferred'
+  object spUpdate_Movement_Received: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Received'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -272,10 +272,10 @@ inherited SendCashJournalForm: TSendCashJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisDeferred'
+        Name = 'inisReceived'
         Value = 42887d
         Component = MasterCDS
-        ComponentItem = 'isDeferred'
+        ComponentItem = 'isReceived'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
