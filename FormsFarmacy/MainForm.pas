@@ -530,6 +530,8 @@ type
     miReport_Movement_Send_RemainsSun: TMenuItem;
     actMCS_Lite: TdsdOpenForm;
     miMCS_Lite: TMenuItem;
+    actReport_PriceProtocol: TdsdOpenForm;
+    miReport_PriceProtocol: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -20,13 +20,13 @@ type
     PeriodChoice: TPeriodChoice;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     cxLabel5: TcxLabel;
     edUser: TcxButtonEdit;
-    UserGuides: TdsdGuides;
+    GuidesUser: TdsdGuides;
     cxLabel6: TcxLabel;
     edGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public

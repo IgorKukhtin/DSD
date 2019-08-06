@@ -401,7 +401,7 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_MIProtocol'
+    StoredProcName = 'gpReport_PriceProtocol'
     Params = <
       item
         Name = 'inStartDate'
@@ -436,30 +436,11 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsGroupId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisMovement'
-        Value = 'True'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -585,10 +566,10 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
   object GuidesUser: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
-    FormNameParam.Value = 'TUser_ObjectForm'
+    FormNameParam.Value = 'TUserForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUser_ObjectForm'
+    FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -678,11 +659,11 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

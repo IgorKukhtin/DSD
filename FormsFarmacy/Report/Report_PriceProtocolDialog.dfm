@@ -106,7 +106,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = UserGuides
+        Component = GuidesUser
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -122,7 +122,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -155,7 +155,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -163,7 +163,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -172,7 +172,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'UserId'
         Value = Null
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -180,7 +180,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'UserName'
         Value = Null
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -189,7 +189,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'GoodsId'
         Value = Null
-        Component = GuidesGoods
+        Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -197,7 +197,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'GoodsName'
         Value = Null
-        Component = GuidesGoods
+        Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -212,7 +212,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
     Left = 224
     Top = 7
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -224,7 +224,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -232,7 +232,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -241,19 +241,19 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
     Left = 248
     Top = 103
   end
-  object UserGuides: TdsdGuides
+  object GuidesUser: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
-    FormNameParam.Value = 'TUser_ObjectForm'
+    FormNameParam.Value = 'TUserForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUser_ObjectForm'
+    FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -261,7 +261,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -276,19 +276,19 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
     Left = 152
     Top = 68
   end
-  object GuidesGoods: TdsdGuides
+  object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesGoods
+        Component = GoodsGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -297,7 +297,7 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesGoods
+        Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
