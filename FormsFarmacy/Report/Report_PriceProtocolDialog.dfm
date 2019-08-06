@@ -279,10 +279,10 @@ inherited Report_PriceProtocolDialogForm: TReport_PriceProtocolDialogForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoodsLiteForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoodsLiteForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

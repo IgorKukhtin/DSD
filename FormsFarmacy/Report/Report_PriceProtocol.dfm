@@ -105,7 +105,7 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.AssignedValues.EditFormat = True
-            Properties.DisplayFormat = 'DD.MM.YYYY HH:MM'
+            Properties.DisplayFormat = 'DD.MM.YYYY HH:MM:SS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -677,10 +677,10 @@ inherited Report_PriceProtocolForm: TReport_PriceProtocolForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoodsLiteForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoodsLiteForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

@@ -1693,6 +1693,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinanceProperty_Object() RETURNS I
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinanceProperty_Object', 'Управленческие группы назначения/ назначения/ статьи назначения', zc_Object_OrderFinanceProperty(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_Object');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalOrderFinance_Juridical', 'Юр. лицо', zc_Object_JuridicalOrderFinance(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalOrderFinance_BankAccount', 'Расчетный счет', zc_Object_JuridicalOrderFinance(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_BankAccount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney', 'УП статьи назначения', zc_Object_JuridicalOrderFinance(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney');
 
 --!!! АПТЕКА
 
@@ -2201,6 +2212,9 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.08.19         * zc_ObjectLink_JuridicalOrderFinance_Juridical
+                    zc_ObjectLink_JuridicalOrderFinance_BankAccount
+                    zc_ObjectLink_JuridicalOrderFinance_InfoMoney
  29.07.19         * zc_ObjectLink_OrderFinance_PaidKind
                     zc_ObjectLink_OrderFinanceProperty_OrderFinance
                     zc_ObjectLink_OrderFinanceProperty_Object

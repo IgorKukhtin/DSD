@@ -28,10 +28,11 @@ BEGIN
    -- Результат
    RETURN QUERY 
     WITH 
-    tmpProtocol AS (SELECT ObjectProtocol.OperDate
+    tmpProtocol AS (SELECT ObjectProtocol.Id              AS ProtocolId
+                         , ObjectProtocol.OperDate
                          , ObjectProtocol.UserId
-                         , Price_Goods.ChildObjectId               AS GoodsId
-                         , ObjectLink_Price_Unit.ObjectId          AS PriceId
+                         , Price_Goods.ChildObjectId      AS GoodsId
+                         , ObjectLink_Price_Unit.ObjectId AS PriceId
                          , ObjectProtocol.isInsert
                          , CAST (REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Значение цены реализации"]/@FieldValue', ObjectProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','') AS TFloat) AS Price
                        FROM ObjectLink AS ObjectLink_Price_Unit
@@ -48,15 +49,30 @@ BEGIN
                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                     )
 
+ /* , tmpCount AS (SELECT *
+                 FROM (SELECT tmpProtocol.ProtocolId
+                            , COUNT (*) OVER (PARTITION BY tmpProtocol.PriceId, tmpProtocol.UserId) AS ord
+                       FROM tmpProtocol
+                       ) AS tmp
+                 WHERE tmp.Ord > 1
+                )
+*/
   , tmpCount AS (SELECT tmpProtocol.PriceId
                       , COUNT (DISTINCT tmpProtocol.Price)
                  FROM tmpProtocol
                  GROUP BY tmpProtocol.PriceId
                  HAVING  count(DISTINCT tmpProtocol.Price) > 1
                 )
+ , tmpCount2 AS (SELECT *
+                 FROM (SELECT ProtocolId
+                            , COUNT (*) OVER (PARTITION BY LEFT (CAST(tmpProtocol.OperDate AS TVARCHAR),16) , tmpProtocol.UserId) AS ord
+                       FROM tmpProtocol
+                       ) AS tmp
+                 WHERE tmp.Ord < 3
+                 )
 
     -- Результат
-    SELECT Object_User.Id                    AS UserId
+    SELECT DISTINCT Object_User.Id                    AS UserId
          , Object_User.ObjectCode ::Integer  AS UserCode
          , Object_User.ValueData             AS UserName
          , Object_Goods.ObjectCode           AS GoodsCode
@@ -66,10 +82,9 @@ BEGIN
          , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat AS Price_before
          , CASE WHEN COALESCE (ObjectHistoryFloat_Price.ValueData, 0) <> 0 THEN (COALESCE (ObjectHistoryFloat_Price.ValueData, 0) - COALESCE (tmpProtocol.Price,0) ::TFloat )*100 / COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END ::TFloat AS PersentDiff
          , tmpProtocol.isInsert ::Boolean
-
-
     FROM tmpProtocol
       INNER JOIN tmpCount ON tmpCount.PriceId = tmpProtocol.PriceId
+      INNER JOIN tmpCount2 ON tmpCount2.ProtocolId = tmpProtocol.ProtocolId
       LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId 
       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpProtocol.GoodsId 
 
@@ -77,10 +92,12 @@ BEGIN
       LEFT JOIN ObjectHistory AS ObjectHistory_Price
                               ON ObjectHistory_Price.ObjectId = tmpProtocol.PriceId
                              AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                             AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) < ObjectHistory_Price.EndDate
+                             --AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) < ObjectHistory_Price.EndDate
+                         AND  tmpProtocol.OperDate >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', tmpProtocol.OperDate) < ObjectHistory_Price.EndDate
       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                    ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                   AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+    WHERE COALESCE (tmpProtocol.Price,0) <> COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
     ORDER BY Object_Goods.ValueData
             ,tmpProtocol.OperDate
     ;

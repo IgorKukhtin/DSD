@@ -870,6 +870,10 @@ CREATE OR REPLACE FUNCTION zc_Object_OrderFinanceProperty() RETURNS integer AS $
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_OrderFinanceProperty', 'Значения для Планирования платежей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_OrderFinanceProperty');
 
+CREATE OR REPLACE FUNCTION zc_Object_JuridicalOrderFinance() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalOrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_JuridicalOrderFinance', 'Параметры Юр.лица в планировании платежей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalOrderFinance');
+
 
 
 --!!! Аптека
@@ -1185,6 +1189,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 06.08.19         * zc_Object_JuridicalOrderFinance
  29.07.19         * zc_Object_OrderFinance
                     zc_Object_OrderFinanceProperty
  21.07.19                                                                                        * zc_Object_GoodsGroupPromo
