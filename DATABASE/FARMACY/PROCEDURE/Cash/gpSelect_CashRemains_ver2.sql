@@ -922,12 +922,28 @@ BEGIN
                                                                  AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
-              ,tmpNotSold AS (SELECT DISTINCT MovementItemContainer.ObjectId_Analyzer   AS GoodsId
-                              FROM MovementItemContainer
-                              WHERE MovementItemContainer.OperDate >= CURRENT_DATE - INTERVAL '100 DAY'
-                                AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                                AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
-                             )
+               , tmpContainer AS (SELECT CashSessionSnapShot.ObjectId        AS GoodsID   
+                                       , SUM(CashSessionSnapShot.Remains)    AS Amount
+                                  FROM CashSessionSnapShot
+                                  WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
+                                  GROUP BY CashSessionSnapShot.ObjectId
+                                 )
+               , tmpMovementItemContainer AS (SELECT MovementItemContainer.WhereObjectId_Analyzer    AS UnitID
+                                                   , MovementItemContainer.ObjectId_Analyzer         AS GoodsID  
+                                                   , SUM(MovementItemContainer.Amount)               AS Amount
+                                                   , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                                              FROM MovementItemContainer 
+                                              WHERE MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
+                                                AND MovementItemContainer.OperDate >= CURRENT_DATE -  ('100 DAY')::INTERVAL 
+                                              GROUP BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer
+                                              )
+               , tmpNotSold AS (SELECT Container.GoodsID
+                                FROM tmpContainer AS Container
+                                     LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
+                                                                        ON MovementItemContainer.GoodsID = Container.GoodsID 
+                                WHERE (Container.Amount >= COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
+                                )
+
 
         -- Результат
         SELECT
@@ -1174,7 +1190,7 @@ BEGIN
                  ELSE NULL
             END                                          :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
-          , COALESCE(tmpNotSold.GoodsID, 0) = 0                    AS NotSold
+          , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check

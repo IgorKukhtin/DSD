@@ -1662,7 +1662,10 @@ begin
             except ON E:Exception do Add_Log('Marc_PUSH err=' + E.Message);
             end;
           end;
-        end else if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString);
+        end else if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') or
+          (Trim(PUSHDS.FieldByName('FormName').AsString) <> '') then ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString,
+            PUSHDS.FieldByName('FormName').AsString, PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString, PUSHDS.FieldByName('ValueParams').AsString);
       finally
          PUSHDS.Delete;
       end;

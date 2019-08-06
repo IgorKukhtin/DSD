@@ -22,49 +22,48 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.Id
-                               , Container.WhereObjectId
-                               , Container.ObjectId
-                               , Container.Amount
+    WITH tmpContainer AS (SELECT Container.WhereObjectId  AS UnitID
+                               , Container.ObjectId       AS GoodsID   
+                               , SUM(Container.Amount)    AS Amount
                           FROM Container
                           WHERE Container.DescId = zc_Container_Count()
                             AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                            AND Container.Amount <> 0
+                          GROUP BY Container.WhereObjectId
+                                 , Container.ObjectId
+                          HAVING SUM(Container.Amount) > 0
                          )
-       , tmpNotSold AS (SELECT DISTINCT
-                               MovementItemContainer.ObjectId_Analyzer       AS GoodsId
-                             , MovementItemContainer.WhereObjectId_analyzer  AS UnitId
-                        FROM MovementItemContainer
-                        WHERE MovementItemContainer.OperDate >= CURRENT_DATE -  (inAmountDay||' DAY')::INTERVAL
-                          AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                          AND (MovementItemContainer.WhereObjectId_Analyzer = inUnitId OR inUnitId = 0)
-                       )
-       , tmpRemains AS (SELECT Container.WhereObjectId
-                             , Container.ObjectId
-                             , SUM (Container.Amount) AS Remains
+       , tmpMovementItemContainer AS (SELECT MovementItemContainer.WhereObjectId_Analyzer    AS UnitID
+                                           , MovementItemContainer.ObjectId_Analyzer         AS GoodsID  
+                                           , SUM(MovementItemContainer.Amount)               AS Amount
+                                           , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                                      FROM MovementItemContainer 
+                                      WHERE  (MovementItemContainer.WhereObjectId_Analyzer = inUnitId OR inUnitId = 0)
+                                        AND MovementItemContainer.OperDate >= CURRENT_DATE -  (inAmountDay||' DAY')::INTERVAL 
+                                      GROUP BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer)
+       , tmpRemains AS (SELECT Container.UnitID
+                             , Container.GoodsID
+                             , Container.Amount    AS Remains
                         FROM tmpContainer AS Container
-                        GROUP BY Container.WhereObjectId , Container.ObjectId)
+                             LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
+                                                                ON MovementItemContainer.UnitID = Container.UnitID
+                                                               AND MovementItemContainer.GoodsID = Container.GoodsID 
+                        WHERE (Container.Amount >= COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0)
 
 
     SELECT Object_Unit.ID            AS UnitID
          , Object_Unit.ObjectCode    AS UnitCode
          , Object_Unit.ValueData     AS UnitName
-         , Container.ObjectId        AS GoodsId
+         , Container.GoodsID         AS GoodsId
          , Object_Goods.ObjectCode   AS GoodsCode
          , Object_Goods.ValueData    AS GoodsName
          , Container.Remains::TFloat AS Remains
     FROM tmpRemains AS Container
 
          LEFT JOIN Object AS Object_Unit
-                          ON Object_Unit.Id = Container.WhereObjectId
+                          ON Object_Unit.Id = Container.UnitID
 
          LEFT JOIN Object AS Object_Goods
-                          ON Object_Goods.Id = Container.ObjectId
-
-         LEFT JOIN tmpNotSold ON tmpNotSold.GoodsId = Container.ObjectId
-                             AND tmpNotSold.UnitId = Container.WhereObjectId
-
-    WHERE tmpNotSold.GoodsId Is	NULL;
+                          ON Object_Goods.Id = Container.GoodsID;
 
 
 END;
@@ -81,4 +80,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsNotSalePast(inUnitId :=  183292, inAmountDay := 100, inSession := '3')
+-- SELECT * FROM gpSelect_GoodsNotSalePast(inUnitId :=  375626 , inAmountDay := 100, inSession := '3')

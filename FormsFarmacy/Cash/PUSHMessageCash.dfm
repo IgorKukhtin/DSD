@@ -82,5 +82,16 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       ModalResult = 1
       TabOrder = 1
     end
+    object btOpenForm: TcxButton
+      Left = 10
+      Top = 7
+      Width = 75
+      Height = 25
+      Cancel = True
+      Caption = #1050#1085#1086#1087#1082#1072
+      TabOrder = 2
+      Visible = False
+      OnClick = btOpenFormClick
+    end
   end
 end

@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Text TBlob)
+RETURNS TABLE (Id Integer, Text TBlob,
+               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -25,7 +26,12 @@ BEGIN
     vbUnitId := vbUnitKey::Integer;
 
     CREATE TEMP TABLE _PUSH (Id  Integer
-                           , Text TBlob) ON COMMIT DROP;
+                           , Text TBlob
+                           , FormName TVarChar
+                           , Button TVarChar
+                           , Params TVarChar
+                           , TypeParams TVarChar
+                           , ValueParams TVarChar) ON COMMIT DROP;
 
      -- Отметка посещаемости
     vbEmployeeSchedule := '';
@@ -68,19 +74,19 @@ BEGIN
    THEN
       INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в  график (Ctrl+T) исходя из персонального графика работы (07:00, 08:00, 10:00)');
    END IF;
-   
+
    -- Уведомление по рецептам Хелси и Фармасикеш
-   IF vbUnitId in (9951517, 375627, 183289) 
-     AND date_part('HOUR',  CURRENT_TIME)::Integer = 17 
+   IF vbUnitId in (9951517, 375627, 183289)
+     AND date_part('HOUR',  CURRENT_TIME)::Integer = 17
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 50
    THEN
       INSERT INTO _PUSH (Id, Text) VALUES (2, 'В конце рабочего дня проверить соотвествие рецептов, прошедших по Хелси и Фармасикеш! За качество сверки  фармацевт несет полную отвественность!"');
    END IF;
-   
+
    -- Уведомление по перемещениям на склад просрочки в пятницу
-   IF date_part('DOW',     CURRENT_DATE)::Integer = 5 
-     AND date_part('HOUR',    CURRENT_TIME)::Integer = 16 
+   IF date_part('DOW',     CURRENT_DATE)::Integer = 5
+     AND date_part('HOUR',    CURRENT_TIME)::Integer = 16
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
    THEN
@@ -92,11 +98,11 @@ BEGIN
                                           AND ObjectBoolean_DividePartionDate.ValueData = True
 
                    INNER JOIN ObjectLink AS ObjectLink_Unit_UnitOverdue
-                                         ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id 
+                                         ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id
                                         AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()
-                                        AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0 
+                                        AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0
 
-                WHERE Object_Unit.ID = vbUnitId) 
+                WHERE Object_Unit.ID = vbUnitId)
       THEN
          INSERT INTO _PUSH (Id, Text) VALUES (3, 'Коллеги, информируем вас, что во вторник на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки", если есть необходимость, проработайте данный товар!');
       END IF;
@@ -104,7 +110,7 @@ BEGIN
 
    -- Уведомление по перемещениям на склад просрочки по понедельникам
    IF date_part('DOW',     CURRENT_DATE)::Integer = 1
-     AND date_part('HOUR',    CURRENT_TIME)::Integer = 16 
+     AND date_part('HOUR',    CURRENT_TIME)::Integer = 16
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
    THEN
@@ -116,11 +122,11 @@ BEGIN
                                           AND ObjectBoolean_DividePartionDate.ValueData = True
 
                    INNER JOIN ObjectLink AS ObjectLink_Unit_UnitOverdue
-                                         ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id 
+                                         ON ObjectLink_Unit_UnitOverdue.ObjectId = Object_Unit.Id
                                         AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()
-                                        AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0 
+                                        AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0
 
-                WHERE Object_Unit.ID = vbUnitId) 
+                WHERE Object_Unit.ID = vbUnitId)
          AND EXISTS(WITH
                      -- просрочка
                      tmpContainer AS (SELECT Container.Id                                         AS Id,
@@ -143,12 +149,12 @@ BEGIN
 
                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                                                 ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
-                                                               AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5() 
+                                                               AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
 
                                     WHERE Container.DescId = zc_Container_CountPartionDate()
                                       AND Container.WhereObjectId = vbUnitId
                                       AND Container.Amount > 0
-                                      AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE + interval '1 day' 
+                                      AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE + interval '1 day'
                                       AND  COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
                      -- Контейнера в не проведенных документах
                    , tmpMovement AS (SELECT DISTINCT MIFloat_ContainerId.ValueData::Integer  AS ContainerId
@@ -192,7 +198,58 @@ BEGIN
                      LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id
                 WHERE COALESCE (tmpMovement.ContainerId, 0) = 0)
       THEN
-         INSERT INTO _PUSH (Id, Text) VALUES (4, 'Коллеги, информируем вас, что завтра на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки"!!!');
+        INSERT INTO _PUSH (Id, Text) VALUES (4, 'Коллеги, информируем вас, что завтра на товар по вашей 4 категории (просрочка) будет создано перемещение на виртуальный склад "Сроки"!!!');
+      END IF;
+   END IF;
+
+   -- Перемещения по СУН
+   IF vbUserId in (3, 4183126) AND
+      EXISTS(SELECT 1
+             FROM  Movement
+                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                              ON MovementBoolean_SUN.MovementId = Movement.Id
+                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                             AND MovementBoolean_SUN.ValueData = True
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                               AND MovementLinkObject_From.ObjectId = vbUnitId
+             WHERE Movement.DescId = zc_Movement_Send()
+               AND Movement.StatusId = zc_Enum_Status_Erased())
+   THEN
+      IF (SELECT COUNT(*)
+          FROM  Movement
+                INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                           ON MovementBoolean_SUN.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                          AND MovementBoolean_SUN.ValueData = True
+                INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                            AND MovementLinkObject_From.ObjectId = vbUnitId
+          WHERE Movement.DescId = zc_Movement_Send()
+            AND Movement.StatusId = zc_Enum_Status_Erased()) = 1
+      THEN
+        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+          SELECT 5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!',
+                    'TSendForm', 'Перемещение СУН', 'Id,inOperDate', 'ftInteger,ftDateTime',
+                    Movement.ID::TVarChar||','||CURRENT_DATE::TVarChar
+          FROM  Movement
+                INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                           ON MovementBoolean_SUN.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                          AND MovementBoolean_SUN.ValueData = True
+                INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                            AND MovementLinkObject_From.ObjectId = vbUnitId
+          WHERE Movement.DescId = zc_Movement_Send()
+            AND Movement.StatusId = zc_Enum_Status_Erased()
+          LIMIT 1;
+      ELSE
+        INSERT INTO _PUSH (Id, Text, FormName, Button)
+        VALUES (5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!',
+                   'TSendCashJournalSunForm', 'Реестр перемещений СУН');
       END IF;
    END IF;
 
@@ -200,20 +257,20 @@ BEGIN
    WITH tmpMovementItemUnit AS (SELECT DISTINCT Movement.Id AS MovementId
                                 FROM Movement
 
-                                    INNER JOIN MovementItem 
+                                    INNER JOIN MovementItem
                                            ON MovementItem.MovementId = Movement.Id
                                           AND MovementItem.DescId = zc_MI_Child()
                                           AND MovementItem.IsErased = False
-                                          
+
                                     LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
                                                            ON MovementDate_DateEndPUSH.MovementId = Movement.Id
                                                           AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
-                                                          
+
                                 WHERE Movement.OperDate <= CURRENT_TIMESTAMP
-                                  AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
+                                  AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))
                                   AND Movement.DescId = zc_Movement_PUSH()
                                   AND Movement.StatusId = zc_Enum_Status_Complete())
-   
+
    INSERT INTO _PUSH (Id, Text)
    SELECT
           Movement.Id                              AS ID
@@ -224,7 +281,7 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
                                ON MovementDate_DateEndPUSH.MovementId = Movement.Id
                               AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
-                                              
+
         LEFT JOIN MovementFloat AS MovementFloat_Replays
                                 ON MovementFloat_Replays.MovementId = Movement.Id
                                AND MovementFloat_Replays.DescId = zc_MovementFloat_Replays()
@@ -232,11 +289,11 @@ BEGIN
         LEFT JOIN MovementBlob AS MovementBlob_Message
                                ON MovementBlob_Message.MovementId = Movement.Id
                               AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
-                              
+
         LEFT JOIN MovementBoolean AS MovementBoolean_Daily
                                   ON MovementBoolean_Daily.MovementId = Movement.Id
                                  AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
-                              
+
         LEFT JOIN MovementItem AS MovementItem_Child
                                ON MovementItem_Child.MovementId = Movement.Id
                               AND MovementItem_Child.DescId = zc_MI_Child()
@@ -247,23 +304,23 @@ BEGIN
 
    WHERE Movement.OperDate <= CURRENT_TIMESTAMP
      AND make_time(date_part('hour', Movement.OperDate)::integer, date_part('minute', Movement.OperDate)::integer, date_part('second', Movement.OperDate)::integer) <= CURRENT_TIME
-     AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
+     AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))
      AND Movement.DescId = zc_Movement_PUSH()
      AND Movement.StatusId = zc_Enum_Status_Complete()
      AND (COALESCE(MovementItemUnit.MovementId, 0) = 0 OR COALESCE(MovementItem_Child.ObjectId, 0) = vbUnitId)
      AND (COALESCE (MovementBoolean_Daily.ValueData, FALSE) = FALSE
           AND COALESCE(MovementFloat_Replays.ValueData, 1) >
-              COALESCE ((SELECT SUM(MovementItem.Amount) 
-                         FROM MovementItem 
+              COALESCE ((SELECT SUM(MovementItem.Amount)
+                         FROM MovementItem
                          WHERE MovementItem.MovementId = Movement.Id
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.ObjectId = vbUserId), 0)
           OR
           COALESCE (MovementBoolean_Daily.ValueData, FALSE) = TRUE
           AND COALESCE(MovementFloat_Replays.ValueData, 1) >
-              COALESCE ((SELECT SUM(MovementItem.Amount) 
-                         FROM MovementItem 
-              
+              COALESCE ((SELECT SUM(MovementItem.Amount)
+                         FROM MovementItem
+
                               LEFT JOIN MovementItemDate AS MID_Viewed
                                      ON MID_Viewed.MovementItemId = MovementItem.Id
                                     AND MID_Viewed.DescId = zc_MIDate_Viewed()
@@ -278,6 +335,11 @@ BEGIN
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text
+          , _PUSH.FormName               AS FormName
+          , _PUSH.Button                 AS Button
+          , _PUSH.Params                 AS Params
+          , _PUSH.TypeParams             AS TypeParams
+          , _PUSH.ValueParams            AS ValueParams
      FROM _PUSH;
 
 END;
@@ -288,6 +350,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.08.19                                                       *
  25.07.19                                                       *
  11.05.19                                                       *
  13.03.18                                                       *
@@ -296,4 +359,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_PUSH_Cash('3')
+--
+SELECT * FROM gpGet_PUSH_Cash('3')
