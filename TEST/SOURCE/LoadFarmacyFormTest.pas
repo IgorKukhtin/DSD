@@ -257,6 +257,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDriverForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDriverEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDriverEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitLincDriverForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitLincDriverForm');
 end;
 
 procedure TLoadFormTest.LoadBankStatementFormTest;

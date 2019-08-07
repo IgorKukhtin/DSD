@@ -2873,6 +2873,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actUnitLincDriver: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1089' '#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      FormName = 'TUnitLincDriverForm'
+      FormNameParam.Value = 'TUnitLincDriverForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3655,6 +3666,9 @@ inherited MainForm: TMainForm
         end
         object N187: TMenuItem
           Action = actDriver
+        end
+        object N188: TMenuItem
+          Action = actUnitLincDriver
         end
       end
       object N44: TMenuItem [1]

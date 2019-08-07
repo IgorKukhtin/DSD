@@ -89,11 +89,12 @@ type
     FInfoAfterExecute: string;
     FQuestionBeforeExecute: string;
     FMoveParams: TCollection;
-    FCancelAction: TAction;
+    FCancelAction: TCustomAction;
     FActiveControl: TWinControl;
     FTimer: TTimer;
     FEnabledTimer: Boolean;
     FPostDataSetAfterExecute: Boolean;
+    FAfterAction: TCustomAction;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
     procedure SetEnabledTimer(const Value: Boolean);
     procedure OnTimer(Sender: TObject);
@@ -123,7 +124,9 @@ type
     // задание списка параметров, которые измен€ютс€ перед выполнением действи€
     property MoveParams: TCollection read FMoveParams write FMoveParams;
     // действие вызываетс€ если результат вызова основного действи€ false
-    property CancelAction: TAction read FCancelAction write FCancelAction;
+    property CancelAction: TCustomAction read FCancelAction write FCancelAction;
+    // действие вызываетс€ если результат вызова основного действи€ true
+    property AfterAction: TCustomAction read FAfterAction write FAfterAction;
     property Enabled;
     property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
       write FPostDataSetBeforeExecute default true;
@@ -2066,8 +2069,11 @@ begin
   if PostDataSetAfterExecute then
     PostDataSet;
   if not result then
+  begin
     if Assigned(CancelAction) then
       CancelAction.Execute;
+  end else if Assigned(AfterAction) then
+      AfterAction.Execute;
   if result and (InfoAfterExecute <> '') then
   begin
     Application.ProcessMessages;

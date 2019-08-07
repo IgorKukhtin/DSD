@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionDatePromo (
 )
 RETURNS TABLE (UnitID Integer, UnitCode Integer, UnitName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionDateKindName TVarChar,
-               Amount TFloat, ExpirationDate TDateTime, DayOverdue Integer,
+               Remains TFloat, ExpirationDate TDateTime, DayOverdue Integer,
                InvNumber TVarChar, MakerName TVarChar
               ) AS
 $BODY$

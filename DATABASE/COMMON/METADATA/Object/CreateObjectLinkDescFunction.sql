@@ -2208,10 +2208,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroupPromo() RETURNS Integer
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Goods_GoodsGroupPromo', 'Связь товаров с группой товаров маркетинга', zc_Object_Goods(), zc_Object_GoodsGroupPromo() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupPromo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Driver() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_Driver'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_Driver', 'Водитель для развозки товара', zc_Object_Unit(), zc_Object_Driver() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_Driver');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 07.08.19                                                                                      * zc_ObjectLink_Unit_Driver
  06.08.19         * zc_ObjectLink_JuridicalOrderFinance_Juridical
                     zc_ObjectLink_JuridicalOrderFinance_BankAccount
                     zc_ObjectLink_JuridicalOrderFinance_InfoMoney

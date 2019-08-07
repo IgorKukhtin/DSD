@@ -731,7 +731,8 @@ uses
   Report_PriceProtocol in '..\..\FormsFarmacy\Report\Report_PriceProtocol.pas' {Report_PriceProtocolForm: TParentForm},
   Report_PriceProtocolDialog in '..\..\FormsFarmacy\Report\Report_PriceProtocolDialog.pas' {Report_PriceProtocolDialogForm: TParentForm},
   Driver in '..\..\FormsFarmacy\Guides\Driver.pas' {DriverForm: TParentForm},
-  DriverEdit in '..\..\FormsFarmacy\Guides\DriverEdit.pas' {DriverEditForm: TParentForm};
+  DriverEdit in '..\..\FormsFarmacy\Guides\DriverEdit.pas' {DriverEditForm: TParentForm},
+  UnitLincDriver in '..\..\FormsFarmacy\Guides\UnitLincDriver.pas' {UnitLincDriverForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

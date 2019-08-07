@@ -534,6 +534,8 @@ type
     miReport_PriceProtocol: TMenuItem;
     actDriver: TdsdOpenForm;
     N187: TMenuItem;
+    actUnitLincDriver: TdsdOpenForm;
+    N188: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
