@@ -519,7 +519,6 @@ inherited SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 84
           end
           object chExpirationDate: TcxGridDBColumn
@@ -603,7 +602,6 @@ inherited SendForm: TSendForm
     Width = 1003
     Height = 129
     TabOrder = 3
-    ExplicitTop = 9
     ExplicitWidth = 1003
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -1261,6 +1259,18 @@ inherited SendForm: TSendForm
           StoredProc = spUpdate_SendOverdue
         end>
       Caption = 'actExecUpdate_SendOverdue'
+    end
+    object actUpdateDataSetDetailDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'actUpdateDataSetDetailDS'
+      DataSource = DetailDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1997,7 +2007,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 368
+    Top = 360
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send'
@@ -2835,5 +2845,39 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 878
     Top = 336
+  end
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'ID'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 160
+    Top = 408
   end
 end

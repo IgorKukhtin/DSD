@@ -17,6 +17,9 @@ $BODY$
    DECLARE vbRetailId_to     Integer;
    DECLARE vbIsDeferred      Boolean;
    DECLARE vbPartionDateId   Integer;
+   DECLARE vbGoodsName       TVarChar;
+   DECLARE vbAmountM         TFloat;
+   DECLARE vbAmountC         TFloat;
 BEGIN
 
 /*!!!test
@@ -119,7 +122,25 @@ end if;*/
                    HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0)
                   )
         THEN
-            RAISE EXCEPTION 'Ошибка.Кол-во сроковых <> Кол-во в перемещении.Надо перераспределить товар по партиям.';
+           SELECT Object_Goods.ValueData, MI_Master.Amount, COALESCE (SUM (MI_Child.Amount), 0)
+           INTO vbGoodsName, vbAmountM, vbAmountC
+           FROM MovementItem AS MI_Master
+                LEFT JOIN MovementItem AS MI_Child
+                                       ON MI_Child.MovementId = 15231111
+                                      AND MI_Child.DescId     = zc_MI_Child()
+                                      AND MI_Child.ParentId   = MI_Master.Id
+                                      AND MI_Child.IsErased   = FALSE
+                                      AND MI_Child.Amount     > 0
+                LEFT JOIN Object AS Object_Goods
+                                 ON Object_Goods.ID = MI_Master.ObjectId
+           WHERE MI_Master.MovementId = 15231111
+             AND MI_Master.DescId     = zc_MI_Master()
+             AND MI_Master.IsErased   = FALSE
+             AND MI_Master.Amount     > 0
+           GROUP BY MI_Master.Id, Object_Goods.ValueData, MI_Master.Amount
+           HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0) LIMIT 1;
+
+           RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> распределено <%>.Надо перераспределить товар по партиям.', vbGoodsName, vbAmountM, vbAmountC;
         END IF;
 
     ELSE
