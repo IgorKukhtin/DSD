@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2862,6 +2862,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actDriver: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1080
+      FormName = 'TDriverForm'
+      FormNameParam.Value = 'TDriverForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3641,6 +3652,9 @@ inherited MainForm: TMainForm
         end
         object actJackdawsChecks1: TMenuItem
           Action = actJackdawsChecks
+        end
+        object N187: TMenuItem
+          Action = actDriver
         end
       end
       object N44: TMenuItem [1]

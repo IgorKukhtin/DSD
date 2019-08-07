@@ -729,7 +729,9 @@ uses
   Report_Movement_Send_RemainsSun in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas' {Report_Movement_Send_RemainsSunForm: TParentForm},
   SendCashJournalSun in '..\..\FormsFarmacy\Document\SendCashJournalSun.pas' {SendCashJournalSunForm: TParentForm},
   Report_PriceProtocol in '..\..\FormsFarmacy\Report\Report_PriceProtocol.pas' {Report_PriceProtocolForm: TParentForm},
-  Report_PriceProtocolDialog in '..\..\FormsFarmacy\Report\Report_PriceProtocolDialog.pas' {Report_PriceProtocolDialogForm: TParentForm};
+  Report_PriceProtocolDialog in '..\..\FormsFarmacy\Report\Report_PriceProtocolDialog.pas' {Report_PriceProtocolDialogForm: TParentForm},
+  Driver in '..\..\FormsFarmacy\Guides\Driver.pas' {DriverForm: TParentForm},
+  DriverEdit in '..\..\FormsFarmacy\Guides\DriverEdit.pas' {DriverEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

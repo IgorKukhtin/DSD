@@ -44,6 +44,7 @@ type
     procedure LoadDefaultFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiffKindFormTest;
+    procedure LoadDriverTest;
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
@@ -241,12 +242,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
 end;
+
 procedure TLoadFormTest.LoadDiffKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiffKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiffKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiffKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiffKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadDriverTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDriverForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDriverForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDriverEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDriverEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankStatementFormTest;

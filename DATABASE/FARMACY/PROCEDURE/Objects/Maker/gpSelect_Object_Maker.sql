@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport2  Boolean
              , isReport3  Boolean
              , isReport4  Boolean
+             , isReport5  Boolean
              , isQuarter  Boolean
              , is4Month  Boolean
              , isErased   Boolean
@@ -61,6 +62,7 @@ $BODY$BEGIN
            , COALESCE (ObjectBoolean_Maker_Report2.ValueData, FALSE) :: Boolean AS isReport2
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
+           , COALESCE (ObjectBoolean_Maker_Report5.ValueData, FALSE) :: Boolean AS isReport5
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
            , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
@@ -97,6 +99,9 @@ $BODY$BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report4
                                    ON ObjectBoolean_Maker_Report4.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report4.DescId = zc_ObjectBoolean_Maker_Report4()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report5
+                                   ON ObjectBoolean_Maker_Report5.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_Report5.DescId = zc_ObjectBoolean_Maker_Report5()
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
@@ -125,10 +130,11 @@ $BODY$
 
 LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
+
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 07.08.19                                                       *
  05.04.19                                                       *
  03.04.19                                                       *
  16.01.19         *
@@ -138,3 +144,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Maker('2')
+
+

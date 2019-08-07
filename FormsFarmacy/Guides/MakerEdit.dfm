@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 455
+  ClientHeight = 477
   ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 81
-    Top = 418
+    Top = 434
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 227
-    Top = 418
+    Top = 434
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -193,7 +193,7 @@
   end
   object cbQuarter: TcxCheckBox
     Left = 40
-    Top = 362
+    Top = 382
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
     ParentShowHint = False
@@ -203,13 +203,23 @@
   end
   object cb4Month: TcxCheckBox
     Left = 40
-    Top = 382
+    Top = 402
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
     ParentShowHint = False
     ShowHint = True
     TabOrder = 23
     Width = 296
+  end
+  object cbReport5: TcxCheckBox
+    Left = 40
+    Top = 362
+    Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
+    Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 24
+    Width = 270
   end
   object ActionList: TActionList
     Left = 272
@@ -348,6 +358,14 @@
         Name = 'inisReport4'
         Value = Null
         Component = cbReport4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport5'
+        Value = Null
+        Component = cbReport5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -492,6 +510,13 @@
         Name = 'isReport4'
         Value = Null
         Component = cbReport4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReport5'
+        Value = Null
+        Component = cbReport5
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
