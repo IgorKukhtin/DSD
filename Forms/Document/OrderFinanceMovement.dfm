@@ -418,7 +418,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
     end
     object cxTabSheet1: TcxTabSheet
-      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1070#1088'. '#1083#1080#1094
+      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
       object cxGrid1: TcxGrid
         Left = 0
