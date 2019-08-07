@@ -125,7 +125,7 @@ type
     JuridicalCDS: TClientDataSet;
     JuridicalDS: TDataSource;
     dsdDBViewAddOnJuridical: TdsdDBViewAddOn;
-    spSelectJuridical: TdsdStoredProc;
+    spSelectJuridicalOrderFinance: TdsdStoredProc;
     chSummOrderFinance: TcxGridDBColumn;
     spUpdate_Juridical_OrderFinance: TdsdStoredProc;
     actUpdateJuridicalDS: TdsdUpdateDataSet;
@@ -138,6 +138,13 @@ type
     GuidesBankAccount: TdsdGuides;
     BankAccountName: TcxGridDBColumn;
     actBankAccountChoiceForm: TOpenChoiceForm;
+    actShowAllJur: TBooleanStoredProcAction;
+    bbShowAllJur: TdxBarButton;
+    actShowErasedJur: TBooleanStoredProcAction;
+    bbShowErasedJur: TdxBarButton;
+    chBankAccountName: TcxGridDBColumn;
+    chBankName: TcxGridDBColumn;
+    actBankAccountChoiceFormJur: TOpenChoiceForm;
   private
   public
   end;

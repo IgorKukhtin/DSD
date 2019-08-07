@@ -1037,6 +1037,8 @@ type
     miOrderFinance: TMenuItem;
     actOrderFinanceMov: TdsdOpenForm;
     miOrderFinanceMov: TMenuItem;
+    actJuridicalOrderFinance: TdsdOpenForm;
+    miJuridicalOrderFinance: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
