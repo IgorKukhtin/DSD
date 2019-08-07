@@ -2865,7 +2865,8 @@ inherited MainForm: TMainForm
     object actDriver: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1080
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1080' '#1057#1059#1053
+      Hint = #1042#1086#1076#1080#1090#1077#1083#1080' '#1057#1059#1053
       FormName = 'TDriverForm'
       FormNameParam.Value = 'TDriverForm'
       FormNameParam.DataType = ftString
@@ -2876,7 +2877,8 @@ inherited MainForm: TMainForm
     object actUnitLincDriver: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1089' '#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1089' '#1074#1086#1076#1080#1090#1077#1083#1077#1084' '#1057#1059#1053
+      Hint = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1089' '#1074#1086#1076#1080#1090#1077#1083#1077#1084' '#1057#1059#1053
       FormName = 'TUnitLincDriverForm'
       FormNameParam.Value = 'TUnitLincDriverForm'
       FormNameParam.DataType = ftString

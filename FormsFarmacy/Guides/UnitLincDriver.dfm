@@ -1,5 +1,5 @@
 inherited UnitLincDriverForm: TUnitLincDriverForm
-  Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1080' '#1074#1086#1076#1080#1090#1077#1083#1077#1081
+  Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1080' '#1074#1086#1076#1080#1090#1077#1083#1077#1081' '#1057#1059#1053
   ClientHeight = 339
   ClientWidth = 655
   AddOnFormData.isAlwaysRefresh = False
@@ -90,7 +90,7 @@ inherited UnitLincDriverForm: TUnitLincDriverForm
             Width = 81
           end
           object UserName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1057#1059#1053
             DataBinding.FieldName = 'DriverName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <

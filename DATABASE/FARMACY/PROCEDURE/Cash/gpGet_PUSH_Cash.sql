@@ -262,10 +262,9 @@ BEGIN
                                               ON MovementBoolean_Sent.MovementId = Movement.Id
                                              AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
                                              AND MovementBoolean_Sent.ValueData = True
-                   INNER JOIN MovementBoolean AS MovementBoolean_Received
+                   LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                               ON MovementBoolean_Received.MovementId = Movement.Id
                                              AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-                                             AND MovementBoolean_Received.ValueData = False
                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                  ON MovementLinkObject_From.MovementId = Movement.Id
                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -275,7 +274,8 @@ BEGIN
                                           AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
                                           AND MovementDate_Sent.ValueData >= CURRENT_TIMESTAMP - INTERVAL '20 MIN'
              WHERE Movement.DescId = zc_Movement_Send()
-               AND Movement.StatusId = zc_Enum_Status_UnComplete())
+               AND Movement.StatusId = zc_Enum_Status_UnComplete()
+               AND COALESCE (MovementBoolean_Received.ValueData, False) = False)
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги , ожидайте перемещение по СУН.');
    END IF;
@@ -295,16 +295,17 @@ BEGIN
                                                  ON MovementBoolean_Sent.MovementId = Movement.Id
                                                 AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
                                                 AND MovementBoolean_Sent.ValueData = True
-                      INNER JOIN MovementBoolean AS MovementBoolean_Received
-                                                 ON MovementBoolean_Received.MovementId = Movement.Id
-                                                AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-                                                AND MovementBoolean_Received.ValueData = False
+                      LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                                ON MovementBoolean_Received.MovementId = Movement.Id
+                                               AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+                                               AND MovementBoolean_Received.ValueData = False
                       INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                     ON MovementLinkObject_From.MovementId = Movement.Id
                                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                    AND MovementLinkObject_From.ObjectId = vbUnitId
                 WHERE Movement.DescId = zc_Movement_Send()
-                  AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  AND COALESCE (MovementBoolean_Received.ValueData, False) = False)
       THEN
         INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги , ожидайте перемещение по СУН.');
       END IF;

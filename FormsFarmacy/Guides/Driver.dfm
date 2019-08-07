@@ -1,7 +1,7 @@
 object DriverForm: TDriverForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1086#1076#1080#1090#1077#1083#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1086#1076#1080#1090#1077#1083#1080' '#1057#1059#1053'>'
   ClientHeight = 331
   ClientWidth = 592
   Color = clBtnFace
@@ -26,7 +26,6 @@ object DriverForm: TDriverForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 516
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
