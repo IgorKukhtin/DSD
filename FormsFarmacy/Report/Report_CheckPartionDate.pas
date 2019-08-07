@@ -56,6 +56,15 @@ type
     DaysDiff: TcxGridDBColumn;
     actRefreshDate: TdsdDataSetRefresh;
     actRefreshKind: TdsdDataSetRefresh;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    GuidesRetail: TdsdGuides;
+    actRefreshList: TdsdDataSetRefresh;
+    cbList: TcxCheckBox;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,18 +2,24 @@
 
 DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckPartionDate(
     IN inUnitId              Integer  ,  -- Подразделение
+    IN inRetailId            Integer  ,  -- ссылка на торг.сеть
+    IN inJuridicalId         Integer  ,  -- юр.лицо
     IN inStartDate           TDateTime,  -- Дата начала
     IN inEndDate             TDateTime,  -- Дата окончания
     IN inIsExpirationDate    Boolean  ,  -- показать типы срок/ не срок
     IN inIsPartionDateKind   Boolean  ,  -- показать срок годности
+    IN inisUnitList          Boolean,    --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId    Integer
              , OperDate      TDateTime
              , Invnumber     TVarChar
+             , UnitId        Integer
+             , UnitName      TVarChar
              , GoodsId       Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
@@ -25,6 +31,7 @@ RETURNS TABLE (MovementId    Integer
              , Summ          TFloat
              , SumSale       TFloat
              , Persent       TFloat
+             , PersentSale   TFloat
              , SummDiff      TFloat
              , SummSaleDiff  TFloat
              , DaysDiff      TFloat
@@ -103,12 +110,39 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH 
-        tmpMovement AS (SELECT *
+        tmpUnit AS (SELECT inUnitId                                  AS UnitId
+                    WHERE COALESCE (inUnitId, 0) <> 0 
+                      AND inisUnitList = FALSE
+                   UNION 
+                    SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
+                    FROM ObjectLink AS ObjectLink_Unit_Juridical
+                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                              AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
+                                                   OR (inRetailId = 0 AND inUnitId = 0))
+                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                      AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                      AND inisUnitList = FALSE
+                   UNION
+                    SELECT ObjectBoolean_Report.ObjectId             AS UnitId
+                    FROM ObjectBoolean AS ObjectBoolean_Report
+                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                              ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Report.ObjectId
+                                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                    WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                      AND ObjectBoolean_Report.ValueData = TRUE
+                      AND inisUnitList = TRUE
+                   )
+        
+      , tmpMovement AS (SELECT Movement.*
+                             , MovementLinkObject_Unit.ObjectId AS UnitId
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                          AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                                          --AND MovementLinkObject_Unit.ObjectId = inUnitId
+                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.DescId = zc_Movement_Check()
                         )
@@ -233,6 +267,12 @@ BEGIN
                                 THEN (100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount))
                                 ELSE 0
                            END                         AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
+
+                         , CASE WHEN COALESCE (MIFloat_Price.ValueData * tmpMI_Child.Amount, 0) <> 0
+                                THEN (100 - ((MIFloat_PriceSale.ValueData * tmpMI_Child.Amount) * 100) / (MIFloat_Price.ValueData * tmpMI_Child.Amount))
+                                ELSE 0
+                           END                         AS PersentSale   -- % потери от продажи (определяем по пропорции 100%-цена без скидки и X% - продажа)
+
                          , (MIFloat_Price.ValueData * tmpMI_Child.Amount - tmpIncome.PriceIncome * tmpMI_Child.Amount)                  AS SummDiff      -- сумма потери от продажи ( в денежном эквиваленте)
                          , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - MIFloat_Price.ValueData * tmpMI_Child.Amount)            AS SummSaleDiff  -- разница суммы по цене продажи и цене без скидки
                          , tmpIncome.ExpirationDate
@@ -247,9 +287,11 @@ BEGIN
                     )
 
         -- результат
-        SELECT Movement.Id             AS MovementId
-             , Movement.OperDate       AS OperDate
-             , Movement.Invnumber      AS Invnumber
+        SELECT tmpMovement.Id          AS MovementId
+             , tmpMovement.OperDate    AS OperDate
+             , tmpMovement.Invnumber   AS Invnumber
+             , Object_Unit.Id          AS UnitId
+             , Object_Unit.ValueData   AS UnitName
              , Object_Goods.Id         AS GoodsId
              , Object_Goods.ObjectCode AS GoodsCode
              , Object_Goods.ValueData  AS GoodsName
@@ -262,18 +304,20 @@ BEGIN
              , tmpData.Summ            :: TFloat
              , tmpData.SumSale         :: TFloat
              , tmpData.Persent         :: TFloat
+             , tmpData.PersentSale     :: TFloat
              , tmpData.SummDiff        :: TFloat
              , tmpData.SummSaleDiff    :: TFloat
 
-             , CASE WHEN inIsExpirationDate = TRUE THEN DATE_PART ('DAY', (tmpData.ExpirationDate - Movement.OperDate)) ELSE 0 END :: TFloat DaysDiff
+             , CASE WHEN inIsExpirationDate = TRUE THEN DATE_PART ('DAY', (tmpData.ExpirationDate - tmpMovement.OperDate)) ELSE 0 END :: TFloat DaysDiff
              , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
              , CASE WHEN inIsExpirationDate = TRUE THEN tmpData.ExpirationDate ELSE NULL END :: TDateTime AS ExpirationDate
         FROM tmpData 
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
-           LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
+           LEFT JOIN tmpMovement ON tmpMovement.Id = tmpData.MovementId
 
            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpData.PartionDateKindId
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
         ;
 END;
 $BODY$
@@ -288,6 +332,4 @@ $BODY$
 */
 
 -- тест
---
---SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.06.2019' ::TDateTime, inIsExpirationDate:= FALSE, inIsPartionDateKind:= FALSE, inSession := '3' :: TVarChar);
---SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.06.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inSession := '3' :: TVarChar);
+--SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.07.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);

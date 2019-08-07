@@ -1,14 +1,16 @@
 -- Function:  gpReport_Check_PriceChange()
 
 DROP FUNCTION IF EXISTS gpReport_Check_PriceChange (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_PriceChange (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Check_PriceChange(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRetailId         Integer  ,  -- ссылка на торг.сеть
     IN inJuridicalId      Integer  ,  -- юр.лицо
     IN inStartDate        TDateTime,  -- Дата начала
-    IN inEndDate        TDateTime,  -- Дата окончания
+    IN inEndDate          TDateTime,  -- Дата окончания
     IN inisUnitList       Boolean,    -- 
+    IN inisDetails        Boolean,    -- показать подразделения
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId        Integer 
@@ -24,6 +26,8 @@ RETURNS TABLE (GoodsId        Integer
              , SummaChange    TFloat
              , IsClose Boolean, UpdateDate TDateTime
              , isTop boolean, isFirst boolean, isSecond boolean
+             
+             , UnitId Integer, UnitName TVarChar
                )
 AS
 $BODY$
@@ -237,6 +241,7 @@ BEGIN
                 )
                 
   , tmpDataAll AS (SELECT tmpData.GoodsId
+                        , CASE WHEN inisDetails = TRUE THEN tmpData.UnitId ELSE 0 END AS UnitId
                         , SUM (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) = tmpData.Price THEN tmpData.Amount ELSE 0 END)     AS AmountChange
                         , SUM (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) < tmpData.Price THEN tmpData.Amount  ELSE 0 END)    AS AmountSale
                         , SUM (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) = tmpData.Price THEN tmpData.SummaSale ELSE 0 END)  AS SummaChange
@@ -247,6 +252,7 @@ BEGIN
                                                 AND tmpData.OperDate >= tmpPriceChange.StartDate AND tmpData.OperDate < tmpPriceChange.EndDate
                                                 AND COALESCE (tmpPriceChange.PriceChange, 0) <> 0
                    GROUP BY tmpData.GoodsId
+                          , CASE WHEN inisDetails = TRUE THEN tmpData.UnitId ELSE 0 END
                    )
 
         -- результат
@@ -268,10 +274,14 @@ BEGIN
              , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean AS isTOP
              , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean AS isFirst
              , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
+             
+             , Object_Unit.Id         AS UnitId
+             , Object_Unit.ValueData  AS UnitName
 
         FROM tmpDataAll AS tmpData
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+             LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpData.UnitId
 
              -- условия хранения
              LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
@@ -315,4 +325,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Check_PriceChange(inUnitId := 0 , inRetailId:=  4, inJuridicalId:=0 , inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('29.09.2018')::TDateTime , inisUnitList := 'False' ,  inSession := '3');
+-- SELECT * FROM gpReport_Check_PriceChange(inUnitId := 0 , inRetailId:=  4, inJuridicalId:=0 , inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('29.09.2018')::TDateTime , inisUnitList := 'False' , inisDetails:= FALSE, inSession := '3');

@@ -1142,10 +1142,6 @@
 				<Form>QualityNumberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Profit.pas">
-				<Form>Report_ProfitForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ProfitDialog.pas">
 				<Form>Report_ProfitDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2519,6 +2515,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitLincDriver.pas">
 				<Form>UnitLincDriverForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Profit.pas">
+				<Form>Report_ProfitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

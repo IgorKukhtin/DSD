@@ -163,6 +163,14 @@ inherited Report_Check_PriceChangeForm: TReport_Check_PriceChangeForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 210
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -375,7 +383,7 @@ inherited Report_Check_PriceChangeForm: TReport_Check_PriceChangeForm
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object ceRetail: TcxButtonEdit
-      Left = 483
+      Left = 488
       Top = 5
       Properties.Buttons = <
         item
@@ -392,6 +400,13 @@ inherited Report_Check_PriceChangeForm: TReport_Check_PriceChangeForm
       Action = actRefreshList
       TabOrder = 8
       Width = 137
+    end
+    object cbDetails: TcxCheckBox
+      Left = 402
+      Top = 36
+      Action = actRefreshDetails
+      TabOrder = 9
+      Width = 183
     end
   end
   object edJuridical: TcxButtonEdit [2]
@@ -436,6 +451,19 @@ inherited Report_Check_PriceChangeForm: TReport_Check_PriceChangeForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshDetails: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -682,6 +710,14 @@ inherited Report_Check_PriceChangeForm: TReport_Check_PriceChangeForm
         Name = 'inisUnitList'
         Value = Null
         Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetails'
+        Value = Null
+        Component = cbDetails
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

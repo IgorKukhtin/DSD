@@ -42,6 +42,13 @@ type
     deEnd: TcxDateEdit;
     cbPartionDateKind: TcxCheckBox;
     cbExpirationDate: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
+    cbList: TcxCheckBox;
   private
     { Private declarations }
   public
