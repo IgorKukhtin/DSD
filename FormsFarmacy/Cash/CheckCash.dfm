@@ -3,7 +3,7 @@ inherited CheckCashForm: TCheckCashForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 562
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1468,8 +1468,8 @@ inherited CheckCashForm: TCheckCashForm
     Top = 261
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 406
-    Top = 240
+    Left = 462
+    Top = 352
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_CheckCash'
@@ -1627,7 +1627,7 @@ inherited CheckCashForm: TCheckCashForm
     Aggregates = <>
     Params = <>
     Left = 748
-    Top = 233
+    Top = 257
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

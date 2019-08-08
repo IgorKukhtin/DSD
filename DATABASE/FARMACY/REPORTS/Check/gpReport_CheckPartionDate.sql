@@ -30,6 +30,7 @@ RETURNS TABLE (MovementId    Integer
              , SumIncome     TFloat
              , Summ          TFloat
              , SumSale       TFloat
+             , SummChangePercent TFloat
              , Persent       TFloat
              , PersentSale   TFloat
              , SummDiff      TFloat
@@ -253,6 +254,12 @@ BEGIN
                                AND MovementItemFloat.DescId = zc_MIFloat_Price()
                              )
 
+      , tmpMIFloat_SummChangePercent AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+                                           AND MovementItemFloat.DescId = zc_MIFloat_SummChangePercent()
+                                         )
+
       , tmpData AS (SELECT tmpMI_Child.MovementId      AS MovementId
                          , tmpMI_Child.Id              AS MI_Id_Child
                          , tmpMI_Child.ObjectId        AS GoodsId
@@ -263,13 +270,14 @@ BEGIN
                          , tmpIncome.PriceIncome * tmpMI_Child.Amount                                                                   AS SumIncome
                          , MIFloat_PriceSale.ValueData * tmpMI_Child.Amount                                                             AS SumSale
                          , MIFloat_Price.ValueData * tmpMI_Child.Amount                                                                 AS Summ
+                         , COALESCE (MIFloat_SummChangePercent.ValueData, 0)                                                            AS SummChangePercent
                          , CASE WHEN COALESCE (tmpIncome.PriceIncome * tmpMI_Child.Amount, 0) <> 0
                                 THEN (100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (tmpIncome.PriceIncome * tmpMI_Child.Amount))
                                 ELSE 0
                            END                         AS Persent   -- % потери от продажи (определяем по пропорции 100%-запупка и X% - продажа)
 
-                         , CASE WHEN COALESCE (MIFloat_Price.ValueData * tmpMI_Child.Amount, 0) <> 0
-                                THEN (100 - ((MIFloat_PriceSale.ValueData * tmpMI_Child.Amount) * 100) / (MIFloat_Price.ValueData * tmpMI_Child.Amount))
+                         , CASE WHEN COALESCE (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount, 0) <> 0
+                                THEN (100 - ((MIFloat_Price.ValueData * tmpMI_Child.Amount) * 100) / (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount))
                                 ELSE 0
                            END                         AS PersentSale   -- % потери от продажи (определяем по пропорции 100%-цена без скидки и X% - продажа)
 
@@ -284,6 +292,8 @@ BEGIN
                                                         ON MIFloat_PriceSale.MovementItemId = tmpMI_Master.Id
                          LEFT JOIN tmpMIFloat_Price AS MIFloat_Price
                                                     ON MIFloat_Price.MovementItemId = tmpMI_Master.Id
+                         LEFT JOIN tmpMIFloat_SummChangePercent AS MIFloat_SummChangePercent
+                                                                ON MIFloat_SummChangePercent.MovementItemId = tmpMI_Master.Id
                     )
 
         -- результат
@@ -303,6 +313,7 @@ BEGIN
              , tmpData.SumIncome       :: TFloat
              , tmpData.Summ            :: TFloat
              , tmpData.SumSale         :: TFloat
+             , tmpData.SummChangePercent :: TFloat
              , tmpData.Persent         :: TFloat
              , tmpData.PersentSale     :: TFloat
              , tmpData.SummDiff        :: TFloat
