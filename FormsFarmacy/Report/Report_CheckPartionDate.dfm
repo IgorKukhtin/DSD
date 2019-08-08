@@ -60,6 +60,11 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,6 +105,11 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -181,6 +191,17 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Options.Editing = False
             Width = 89
           end
+          object colSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1095#1077#1082#1077')'
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'Price'
@@ -247,10 +268,10 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1094#1077#1085#1099' '#1079#1072#1082#1091#1087#1082#1080
             Options.Editing = False
-            Width = 89
+            Width = 87
           end
           object SummDiff: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080', '#1075#1088#1085
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080', '#1075#1088#1085
             DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -971,7 +992,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       end>
     PackSize = 1
     Left = 600
-    Top = 152
+    Top = 200
   end
   object rgUnit: TRefreshDispatcher
     IdParam.Value = Null

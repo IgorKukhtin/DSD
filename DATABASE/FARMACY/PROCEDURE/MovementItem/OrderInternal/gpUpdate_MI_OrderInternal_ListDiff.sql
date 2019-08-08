@@ -152,23 +152,25 @@ BEGIN
 
      -- если все позиции из листа отказа перенесены во внутренний заказ - проводим документ Лист отказа
      -- 
-/*
-                SELECT Movement.Id
-                     , SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) AS ord
-                FROM Movement 
-                    INNER JOIN  MovementItem ON MovementItem.MovementId = Movement.Id
+     PERFORM gpComplete_Movement_ListDiff (tmp.MovementId, inSession)
+     FROM (SELECT Movement.Id AS MovementId
+                , SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) AS ord
+           FROM Movement 
+               INNER JOIN  MovementItem ON MovementItem.MovementId = Movement.Id
 
-                     LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
-                                                AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
-                                                AND MovementItem.isErased = FALSE
-                                                AND MovementItem.DescId   = zc_MI_Master()
-                 WHERE Movement.DescId = zc_Movement_ListDiff() 
-                                                       AND Movement.StatusId <> zc_Enum_Status_Erased() AND Movement.StatusId <> zc_Enum_Status_Complete()
-                                                       AND Movement.OperDate >= '07.11.2018'                
+                LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                           AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
+                                           AND MovementItem.isErased = FALSE
+                                           AND MovementItem.DescId   = zc_MI_Master()
+            WHERE Movement.DescId = zc_Movement_ListDiff() 
+                                                  AND Movement.StatusId <> zc_Enum_Status_Erased() 
+                                                  AND Movement.StatusId <> zc_Enum_Status_Complete()
+                                                  AND Movement.OperDate >= '07.11.2018'                
 
-                GROUP BY Movement.Id
-HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) = 0
-*/
+           GROUP BY Movement.Id
+           HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) = 0
+           ) AS tmp;
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

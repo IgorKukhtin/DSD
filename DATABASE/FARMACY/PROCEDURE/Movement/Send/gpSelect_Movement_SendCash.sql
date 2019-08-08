@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isReceived Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -107,6 +107,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
+           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
 
            , Object_Insert.ValueData              AS InsertName
@@ -193,6 +194,9 @@ BEGIN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                      AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
                                      
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sent
+                                      ON MovementBoolean_Sent.MovementId = Movement.Id
+                                     AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
