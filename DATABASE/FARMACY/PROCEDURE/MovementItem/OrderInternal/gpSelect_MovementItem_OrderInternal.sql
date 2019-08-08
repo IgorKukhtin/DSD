@@ -838,7 +838,8 @@ BEGIN
                    FROM MovementItemFloat
                    WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                      AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                    , zc_MIFloat_JuridicalPrice())
+                                                    , zc_MIFloat_JuridicalPrice()
+                                                    /*, zc_MIFloat_DefermentPrice()*/)
                     )
       , tmpMIFloat_Price AS (SELECT tmpMIF.*
                              FROM tmpMIF
@@ -848,9 +849,10 @@ BEGIN
                                       FROM tmpMIF
                                       WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
                                       )
-      , tmpMIFloat_DefermentPrice AS (SELECT tmpMIF.*
-                                      FROM tmpMIF
-                                      WHERE tmpMIF.DescId = zc_MIFloat_DefermentPrice()
+      , tmpMIFloat_DefermentPrice AS (SELECT MovementItemFloat.*
+                                      FROM MovementItemFloat
+                                      WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                                        AND MovementItemFloat.DescId = zc_MIFloat_DefermentPrice()
                                       )
                                   
       , tmpMIString_Maker AS (SELECT MIString_Maker.*
@@ -980,7 +982,10 @@ BEGIN
              LEFT JOIN tmpMIDate_PartionGoods    AS MIDate_PartionGoods    ON MIDate_PartionGoods.MovementItemId    = MI_Child.Id
              LEFT JOIN tmpMIFloat_Price          AS MIFloat_Price          ON MIFloat_Price.MovementItemId          = MI_Child.Id
              LEFT JOIN tmpMIFloat_JuridicalPrice AS MIFloat_JuridicalPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
-             LEFT JOIN tmpMIFloat_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
+             LEFT JOIN MovementItemFloat AS MIFloat_DefermentPrice
+                                         ON MIFloat_DefermentPrice.MovementItemId = MI_Child.Id
+                                        AND MIFloat_DefermentPrice.DescId = zc_MIFloat_DefermentPrice()             
+--             LEFT JOIN tmpMIFloat_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
              LEFT JOIN tmpMIString_Maker         AS MIString_Maker         ON MIString_Maker.MovementItemId         = MI_Child.Id
              LEFT JOIN tmpJuridical                                        ON tmpJuridical.MovementItemId           = MI_Child.Id
              LEFT JOIN tmpContract                                         ON tmpContract.MovementItemId            = MI_Child.Id
