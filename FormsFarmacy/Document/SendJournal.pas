@@ -62,6 +62,15 @@ type
     ReportInvNumber_full: TcxGridDBColumn;
     isSUN: TcxGridDBColumn;
     isReceived: TcxGridDBColumn;
+    spUpdate_Movement_Received: TdsdStoredProc;
+    actExecSetReceived: TdsdExecStoredProc;
+    actSetReceived: TMultiAction;
+    dxBarButton2: TdxBarButton;
+    actSetSent: TMultiAction;
+    actExecSetSent: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    spUpdate_Movement_Sent: TdsdStoredProc;
+    isSent: TcxGridDBColumn;
   private
     { Private declarations }
   public

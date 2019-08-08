@@ -212,6 +212,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaChange
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaPartionDate
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaPromo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -387,6 +402,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaChange
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaPartionDate
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaPromo
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -562,6 +592,33 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
+          end
+          object SummaChange: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081') '#1080#1085#1092'.'
+            DataBinding.FieldName = 'SummaChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object SummaPartionDate: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1089#1088#1086#1082#1086#1074#1099#1077') '#1080#1085#1092'.'
+            DataBinding.FieldName = 'SummaPartionDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object SummaPromo: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1072#1088#1082#1077#1090'.) '#1080#1085#1092'.'
+            DataBinding.FieldName = 'SummaPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object SummaProfitWithSP: TcxGridDBColumn
             Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
@@ -1268,9 +1325,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0

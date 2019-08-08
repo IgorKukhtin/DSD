@@ -761,6 +761,15 @@ inherited MainCashForm2: TMainCashForm2
           Width = 30
           IsCaptionAssigned = True
         end
+        object MainMakerName: TcxGridDBColumn
+          Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+          DataBinding.FieldName = 'MakerName'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+          Options.Editing = False
+          Width = 110
+        end
         object MainAmountIncome: TcxGridDBColumn
           Caption = #1058#1086#1074'.'#1074' '#1087#1091#1090#1080
           DataBinding.FieldName = 'AmountIncome'

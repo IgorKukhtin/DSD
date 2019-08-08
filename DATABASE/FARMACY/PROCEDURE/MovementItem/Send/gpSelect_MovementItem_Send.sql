@@ -38,6 +38,7 @@ $BODY$
     DECLARE vbUnitFromId Integer;
     DECLARE vbUnitToId Integer;
     DECLARE vbisAuto Boolean;
+    DECLARE vbIsSUN Boolean;
     DECLARE vbOperDate TDateTime;
     DECLARE vbOperDateEnd TDateTime;
     DECLARE vbRetailId Integer;
@@ -51,10 +52,12 @@ BEGIN
          , MovementLinkObject_To.ObjectId
          , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean
          , date_trunc('day', Movement.OperDate)
+         , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
     INTO vbUnitFromId
        , vbUnitToId 
        , vbisAuto
        , vbOperDate
+       , vbIsSUN
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.ID
@@ -65,6 +68,13 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
@@ -308,11 +318,11 @@ BEGIN
               , tmpCheck.Amount::TFloat                           AS AmountCheck
               , COALESCE (MovementItem_Send.PriceIn, tmpRemains.PriceIn)::TFloat           AS PriceIn
               , COALESCE (MovementItem_Send.SumPriceIn, (MovementItem_Send.Amount * tmpRemains.PriceIn))      ::TFloat  AS SumPriceIn
-              , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
-              , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
+              , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
+              , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
-              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
-              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
+              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
+              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
 
               , MovementItem_Send.Price
               , MovementItem_Send.Summa
@@ -612,11 +622,11 @@ BEGIN
            , COALESCE (tmpMIContainer.PriceIn , tmpRemains.PriceIn)                               ::TFloat         AS PriceIn
            , COALESCE (tmpMIContainer.SumPriceIn,(MovementItem_Send.Amount * tmpRemains.PriceIn)) ::TFloat         AS SumPriceIn
 
-           , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
-           , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
+           , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
+           , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
-           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
-           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
+           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
+           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
 
            , tmpMIContainer.Price            ::TFloat  AS Price
            , tmpMIContainer.Summa            ::TFloat  AS Summa

@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS lpSelect_MovementItem_Promo_onDate (TDateTime);
 CREATE OR REPLACE FUNCTION lpSelect_MovementItem_Promo_onDate(
     IN inOperDate    TDateTime     -- 
 )
-RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat
+RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat, MakerID Integer
               )
 AS
 $BODY$
@@ -17,9 +17,11 @@ BEGIN
                         , tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent :: TFloat AS ChangePercent
-                   FROM (SELECT Movement.Id           AS MovementId
-                              , MI_Juridical.ObjectId AS JuridicalId
-                              , MI_Goods.ObjectId     AS GoodsId
+                        , tmp.MakerID
+                   FROM (SELECT Movement.Id                       AS MovementId
+                              , MovementLinkObject_Maker.ObjectId AS MakerID
+                              , MI_Juridical.ObjectId             AS JuridicalId
+                              , MI_Goods.ObjectId                 AS GoodsId
                               , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
                               , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, MovementDate_EndPromo.ValueData DESC, Movement.Id DESC) AS Ord
                          FROM Movement
@@ -34,6 +36,10 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                       ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                                      AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                           ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                                     
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE

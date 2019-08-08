@@ -418,7 +418,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
     end
     object cxTabSheet1: TcxTabSheet
-      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1070#1088'. '#1083#1080#1094
+      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
       object cxGrid1: TcxGrid
         Left = 0
@@ -495,7 +495,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object chJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1086
-            DataBinding.FieldName = 'Code'
+            DataBinding.FieldName = 'JuridicalCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -504,7 +504,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           end
           object chJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -543,13 +543,37 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
-          object chInvNumberBranch: TcxGridDBColumn
-            Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
-            DataBinding.FieldName = 'InvNumberBranch'
+          object chBankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object chInvNumberBranch: TcxGridDBColumn
+            Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'InvNumberBranch'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object chBankAccountName: TcxGridDBColumn
+            Caption = #1056'/'#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoiceFormJur
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
           end
           object chRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
@@ -783,6 +807,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           ItemName = 'bbShowAll'
         end
         item
+          Visible = True
+          ItemName = 'bbShowErasedJur'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAllJur'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -934,6 +966,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 0
       ImageIndex = 41
     end
+    object bbShowAllJur: TdxBarButton
+      Action = actShowAllJur
+      Category = 0
+    end
+    object bbShowErasedJur: TdxBarButton
+      Action = actShowErasedJur
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -968,6 +1008,27 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object actShowErasedJur: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelectJuridicalOrderFinance
+      StoredProcList = <
+        item
+          StoredProc = spSelectJuridicalOrderFinance
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -996,9 +1057,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Juridical_OrderFinance
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateJuridicalDS'
       DataSource = JuridicalDS
@@ -1033,7 +1091,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectJuridical
+          StoredProc = spSelectJuridicalOrderFinance
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1286,6 +1344,44 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       isShowModal = False
     end
+    object actBankAccountChoiceFormJur: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BankAccount_ObjectChoiceForm'
+      FormName = 'TBankAccount_ObjectForm'
+      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankAccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankAccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1372,8 +1468,30 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actShowAllJur: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelectJuridicalOrderFinance
+      StoredProcList = <
+        item
+          StoredProc = spSelectJuridicalOrderFinance
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
@@ -2070,8 +2188,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 819
     Top = 265
   end
-  object spSelectJuridical: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
+  object spSelectJuridicalOrderFinance: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_JuridicalOrderFinance'
     DataSet = JuridicalCDS
     DataSets = <
       item
@@ -2081,6 +2199,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'inShowAll'
         Value = False
+        Component = actShowAllJur
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2090,15 +2217,39 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 271
   end
   object spUpdate_Juridical_OrderFinance: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Juridical_OrderFinance'
+    StoredProcName = 'gpInsertUpdate_Object_JuridicalOrderFinance'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'ioId'
         Value = Null
         Component = JuridicalCDS
         ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'BankAccountId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

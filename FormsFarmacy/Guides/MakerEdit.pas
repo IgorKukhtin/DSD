@@ -50,6 +50,7 @@ type
     edAmountMonth: TcxCurrencyEdit;
     cbQuarter: TcxCheckBox;
     cb4Month: TcxCheckBox;
+    cbReport5: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -58,6 +58,9 @@ type
     GuidesJuridical: TdsdGuides;
     cbList: TcxCheckBox;
     actRefreshList: TdsdDataSetRefresh;
+    cbDetails: TcxCheckBox;
+    actRefreshDetails: TdsdDataSetRefresh;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

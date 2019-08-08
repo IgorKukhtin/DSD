@@ -378,7 +378,6 @@ uses
   BankAccountJournalFarmacyDialog in '..\..\FormsFarmacy\Document\BankAccountJournalFarmacyDialog.pas' {BankAccountJournalFarmacyDialogForm: TParentForm},
   QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
   QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
-  Report_Profit in '..\..\FormsFarmacy\Report\Report_Profit.pas' {Report_ProfitForm: TParentForm},
   Report_ProfitDialog in '..\..\FormsFarmacy\Report\Report_ProfitDialog.pas' {Report_ProfitDialogForm: TParentForm},
   Report_PriceInterventionDialog in '..\..\FormsFarmacy\Report\Report_PriceInterventionDialog.pas' {Report_PriceInterventionDialogForm: TParentForm},
   Report_MovementCheckDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckDialog.pas' {Report_MovementCheckDialogForm: TParentForm},
@@ -727,7 +726,13 @@ uses
   Report_GoodsFromRemainsSetPriceDialog in '..\..\FormsFarmacy\Report\Report_GoodsFromRemainsSetPriceDialog.pas' {Report_GoodsFromRemainsSetPriceDialogForm: TParentForm},
   Report_Movement_Send_RemainsSunDialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunDialog.pas' {Report_Movement_Send_RemainsSunDialogForm: TParentForm},
   Report_Movement_Send_RemainsSun in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun.pas' {Report_Movement_Send_RemainsSunForm: TParentForm},
-  SendCashJournalSun in '..\..\FormsFarmacy\Document\SendCashJournalSun.pas' {SendCashJournalSunForm: TParentForm};
+  SendCashJournalSun in '..\..\FormsFarmacy\Document\SendCashJournalSun.pas' {SendCashJournalSunForm: TParentForm},
+  Report_PriceProtocol in '..\..\FormsFarmacy\Report\Report_PriceProtocol.pas' {Report_PriceProtocolForm: TParentForm},
+  Report_PriceProtocolDialog in '..\..\FormsFarmacy\Report\Report_PriceProtocolDialog.pas' {Report_PriceProtocolDialogForm: TParentForm},
+  Driver in '..\..\FormsFarmacy\Guides\Driver.pas' {DriverForm: TParentForm},
+  DriverEdit in '..\..\FormsFarmacy\Guides\DriverEdit.pas' {DriverEditForm: TParentForm},
+  UnitLincDriver in '..\..\FormsFarmacy\Guides\UnitLincDriver.pas' {UnitLincDriverForm: TParentForm},
+  Report_Profit in '..\..\FormsFarmacy\Report\Report_Profit.pas' {Report_ProfitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

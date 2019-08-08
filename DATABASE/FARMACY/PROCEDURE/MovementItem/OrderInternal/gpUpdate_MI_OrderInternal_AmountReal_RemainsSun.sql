@@ -111,8 +111,8 @@ BEGIN
                                                 , inMovementId     := inMovementId
                                                 , inGoodsId        := _tmp_MI.GoodsId
                                                 , inAmount         := CASE WHEN _tmpRemains.Amount     <> 0
-                                                                             OR _tmpRemains.SendSUN    <> 0
-                                                                             OR _tmpRemains.SendDefSUN <> 0
+                                                                             OR _tmp_MI.SendSUN    <> 0
+                                                                             OR _tmp_MI.SendDefSUN <> 0
                                                                            THEN 0
                                                                            WHEN _tmp_MI.Amount     <> 0 THEN _tmp_MI.Amount
                                                                            ELSE _tmp_MI.AmountReal

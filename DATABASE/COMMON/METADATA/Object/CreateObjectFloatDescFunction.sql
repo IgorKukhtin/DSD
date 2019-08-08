@@ -975,6 +975,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_EndRemainsCalc() RETUR
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_ReportCollation_EndRemainsCalc', zc_Object_ReportCollation(), 'кон. сальдо по данным Отчета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemainsCalc');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance', zc_Object_JuridicalOrderFinance(), 'Лимит по сумме отсрочки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance');
+
 
 --!!! АПТЕКА
 
@@ -1410,6 +1414,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.08.19         * zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance
  05.08.19         * zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum
  23.07.19         * zc_ObjectFloat_Retail_SummSUN
  15.07.19                                                                                      * zc_ObjectFloat_PartionDateKind_Day

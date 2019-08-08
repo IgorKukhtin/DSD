@@ -1,29 +1,29 @@
 inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 364
-  ClientWidth = 824
+  ClientWidth = 1046
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 840
+  ExplicitWidth = 1062
   ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 824
+    Width = 1046
     Height = 265
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 824
+    ExplicitWidth = 1046
     ExplicitHeight = 265
     ClientRectBottom = 265
-    ClientRectRight = 824
+    ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 1046
       ExplicitHeight = 265
       inherited cxGrid: TcxGrid
-        Width = 824
+        Width = 1046
         Height = 265
-        ExplicitWidth = 824
+        ExplicitWidth = 1046
         ExplicitHeight = 265
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -109,6 +109,14 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
@@ -182,7 +190,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 93
           end
           object SumIncome: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1079#1072#1082#1091#1087#1082#1080
@@ -201,7 +209,6 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -219,13 +226,26 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 89
           end
           object Persent: TcxGridDBColumn
-            Caption = '% '#1087#1086#1090#1077#1088#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = '% '#1087#1086#1090#1077#1088#1080'  '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'Persent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1094#1077#1085#1099' '#1079#1072#1082#1091#1087#1082#1080
+            Options.Editing = False
+            Width = 89
+          end
+          object PersentSale: TcxGridDBColumn
+            Caption = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'PersentSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1094#1077#1085#1099' '#1079#1072#1082#1091#1087#1082#1080
             Options.Editing = False
             Width = 89
           end
@@ -246,7 +266,6 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -264,9 +283,9 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
     end
   end
   inherited Panel: TPanel
-    Width = 824
+    Width = 1046
     Height = 73
-    ExplicitWidth = 824
+    ExplicitWidth = 1046
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 120
@@ -313,11 +332,11 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 299
+      Width = 181
     end
     object cbPartionDateKind: TcxCheckBox
-      Left = 219
-      Top = 37
+      Left = 502
+      Top = 36
       Action = actRefreshKind
       ParentShowHint = False
       ShowHint = True
@@ -325,13 +344,54 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       Width = 180
     end
     object cbExpirationDate: TcxCheckBox
-      Left = 405
-      Top = 37
+      Left = 688
+      Top = 36
       Action = actRefreshDate
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
       Width = 146
+    end
+    object cxLabel19: TcxLabel
+      Left = 502
+      Top = 11
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+    end
+    object ceRetail: TcxButtonEdit
+      Left = 584
+      Top = 10
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 132
+    end
+    object cxLabel3: TcxLabel
+      Left = 727
+      Top = 11
+      Caption = #1070#1088'.'#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 780
+      Top = 10
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 187
+    end
+    object cbList: TcxCheckBox
+      Left = 308
+      Top = 36
+      Action = actRefreshList
+      TabOrder = 12
+      Width = 137
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -365,6 +425,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
       Hint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshKind: TdsdDataSetRefresh [1]
@@ -513,6 +574,48 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisList'
+          Value = Null
+          Component = cbList
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -601,6 +704,19 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         end>
       isShowModal = False
     end
+    object actRefreshList: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+      Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 136
@@ -616,6 +732,22 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -647,6 +779,14 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         Name = 'inisPartionDateKind'
         Value = Null
         Component = cbPartionDateKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnitList'
+        Value = Null
+        Component = cbList
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -703,7 +843,6 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = mactOpenDocument
       end
       item
       end>
@@ -721,6 +860,19 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
     Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesUnit
+      end
+      item
+        Component = GuidesJuridical
+      end>
     Left = 144
     Top = 200
   end
@@ -750,8 +902,8 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 16
+    Left = 400
+    Top = 8
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -831,5 +983,65 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       end>
     Left = 200
     Top = 128
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 864
+    Top = 8
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 624
+    Top = 16
   end
 end

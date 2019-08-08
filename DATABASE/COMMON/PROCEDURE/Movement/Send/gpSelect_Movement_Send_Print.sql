@@ -327,4 +327,4 @@ $BODY$
  12.06.15         *
 */
 
--- SELECT * FROM gpSelect_Movement_Send_Print (inMovementId := 570596, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Send_Print (inMovementId := 570596, inMovementId_Weighing:= 0 , inisItem:=true, inSession:= '5');

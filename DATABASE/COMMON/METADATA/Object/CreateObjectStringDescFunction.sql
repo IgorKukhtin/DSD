@@ -954,10 +954,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Analog() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_Analog', zc_Object_Goods(), 'Перечень аналогов товара' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Analog');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Driver_E_Mail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Driver_E_Mail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Driver_E_Mail', zc_Object_Driver(), 'e-mail для отправки реестра перемещений' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Driver_E_Mail');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 07.08.19                                                                                                         * zc_ObjectString_Driver_E_Mail
  29.07.19         * zc_ObjectString_OrderFinance_Comment
  14.06.19                                                                                                         * zc_ObjectString_Goods_Analog
  14.06.19         * zc_ObjectString_Language_Value15-17

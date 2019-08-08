@@ -17,10 +17,6 @@ uses
 
 type
   TSendCashJournalForm = class(TSendJournalForm)
-    actExecSetDeferred: TdsdExecStoredProc;
-    spUpdate_Movement_Deferred: TdsdStoredProc;
-    actSetDeferred: TMultiAction;
-    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

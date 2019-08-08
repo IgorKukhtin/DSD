@@ -130,6 +130,9 @@ type
     dxBarButton1: TdxBarButton;
     cbDefSun: TcxCheckBox;
     cbReceived: TcxCheckBox;
+    cbSent: TcxCheckBox;
+    actUpdateDataSetDetailDS: TdsdUpdateDataSet;
+    spInsertUpdateMIChild: TdsdStoredProc;
   private
     { Private declarations }
   public

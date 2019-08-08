@@ -184,6 +184,7 @@ end;
 
 procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
   var AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
+      AmountIncome, PriceSaleIncome : currency; ListDate : Variant;
       S : string;
 begin
   if GoodsCDS = Nil then Exit;
@@ -191,6 +192,7 @@ begin
   try
     try
       FAmountDay := 0; AmountDiffUser := 0; AmountDiff := 0; AmountDiffPrev := 0;
+      AmountIncome := 0; PriceSaleIncome := 0; ListDate := Null;
       if not gc_User.Local then
       try
         MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
@@ -202,6 +204,10 @@ begin
           AmountDiff := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
           FAmountDay := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
           AmountDiffPrev := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffPrev').AsCurrency;
+          AmountIncome := MainCashForm.CashListDiffCDS.FieldByName('AmountIncome').AsCurrency;
+          PriceSaleIncome := MainCashForm.CashListDiffCDS.FieldByName('PriceSaleIncome').AsCurrency;
+          if not MainCashForm.CashListDiffCDS.FieldByName('ListDate').IsNull then
+            ListDate := MainCashForm.CashListDiffCDS.FieldByName('ListDate').AsDateTime;
         end;
       Except
       end;
@@ -255,6 +261,8 @@ begin
       if AmountDiffUser <> 0 Then S := S +  #13#10'  в том числе вами: ' + FormatCurr(',0.000', AmountDiffUser);
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + FormatCurr(',0.000', AmountDiffPrev);
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
+      if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + FormatCurr(',0.000', AmountIncome) + ' Цена (в пути): ' + FormatCurr(',0.000', PriceSaleIncome);
+      if ListDate <> Null then S := S +  #13#10'Последний раз менеджер забрал заказ: ' + FormatDateTime('DD.mm.yyyy HH:NN', ListDate);
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
       S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
       Label1.Caption := S;

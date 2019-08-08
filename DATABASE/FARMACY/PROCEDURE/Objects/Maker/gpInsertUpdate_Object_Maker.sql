@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, I
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inisReport2       Boolean,       -- отправлять "отчет по продажам"
     IN inisReport3       Boolean,       -- отправлять "реализация за период с остатками на конец периода"
     IN inisReport4       Boolean,       -- отправлять "приход расход остаток"
+    IN inisReport5       Boolean,       -- отправлять "отчет по срокам"
     IN inisQuarter       Boolean,       -- Отправлять дополнительно квартальные отчеты
     IN inis4Month        Boolean,       -- Отправлять дополнительно отчеты за 4 месяца
     IN inSession         TVarChar       -- сессия пользователя
@@ -74,6 +76,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report4(), ioId, inisReport4);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report5(), ioId, inisReport5);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Quarter(), ioId, inisQuarter);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_4Month(), ioId, inis4Month);
@@ -88,6 +92,7 @@ $BODY$ LANGUAGE plpgsql;
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.08.19                                                       *
  05.04.19                                                       *
  03.04.19                                                       *
  18.01.19         *
