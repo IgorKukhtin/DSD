@@ -53,6 +53,10 @@ BEGIN
                     AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
                         THEN PrintForms_View_Default.PrintFormName
 
+                   -- новая форма для Жук А.Н. Товарная накладная
+                   WHEN MovementLinkObject_To.ObjectId = 3683763   
+                        THEN 'PrintMovement_Sale2_3683763'
+
                    ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
               END AS PrintFormName
 
@@ -106,6 +110,7 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.08.19         *
  07.02.14                                                        * + PaidKindId
  06.02.14                                                        *
  05.02.14                                                        *

@@ -247,10 +247,10 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1094#1077#1085#1099' '#1079#1072#1082#1091#1087#1082#1080
             Options.Editing = False
-            Width = 89
+            Width = 87
           end
           object SummDiff: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080', '#1075#1088#1085
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080', '#1075#1088#1085
             DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -971,7 +971,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
       end>
     PackSize = 1
     Left = 600
-    Top = 152
+    Top = 200
   end
   object rgUnit: TRefreshDispatcher
     IdParam.Value = Null
