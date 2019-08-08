@@ -970,147 +970,25 @@ BEGIN
                                AND tmpResult.UnitId_to   = _tmpResult_Partion.UnitId_to
                                AND tmpResult.GoodsId     = _tmpResult_Partion.GoodsId
             WHERE _tmpResult_Partion.Amount_next > 0
-        ;
+           ;
          -- 6.2.2. !!!если нашлись товары - DefSUN!!!
          IF EXISTS (SELECT 1 FROM _tmpList_DefSUN)
          THEN
              -- тогда на 2-м шаге они участвовать не будут !!!
-             SELECT *
-             FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= inOperDate
-                                                   , inStep    := 2
-                                                   , inUserId  := vbUserId
-                                                    );
-             -- !!!ВЫХОД!!!
-             RETURN;
-    
+             PERFORM lpInsert_Movement_Send_RemainsSun (inOperDate:= inOperDate
+                                                      , inStep    := 2
+                                                      , inUserId  := inUserId
+                                                       );
          END IF;
 
      END IF;
 
-/*
-!!!      
-     -- !!!Удаляем предыдущие документы - SUN !!!
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(), tmp.MovementId, FALSE)
-     FROM (SELECT Movement.Id AS MovementId
-           FROM Movement
-                INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                -- !!!только для таких Аптек!!!
-                -- INNER JOIN
-                --
-                INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                           ON MovementBoolean_SUN.MovementId = Movement.Id
-                                          AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-                                          AND MovementBoolean_SUN.ValueData  = TRUE
-           WHERE Movement.OperDate = CURRENT_DATE
-             AND Movement.DescId   = zc_Movement_Send()
-             AND Movement.StatusId = zc_Enum_Status_Erased()
-          ) AS tmp;
 
-     -- !!!Удаляем предыдущие документы - DefSUN!!!
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, FALSE)
-     FROM (SELECT Movement.Id AS MovementId
-           FROM Movement
-                INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                -- !!!только для таких Аптек!!!
-                -- INNER JOIN
-                --
-                --
-                INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                           ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                          AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
-                                          AND MovementBoolean_DefSUN.ValueData = TRUE
-           WHERE Movement.OperDate = CURRENT_DATE
-             AND Movement.DescId   = zc_Movement_Send()
-             AND Movement.StatusId = zc_Enum_Status_Erased()
-          ) AS tmp;
-
-     -- создали документы
-     UPDATE _tmpResult_Partion SET MovementId = tmp.MovementId
-     FROM (SELECT tmp.UnitId_from
-                , tmp.UnitId_to
-                , gpInsertUpdate_Movement_Send (ioId               := 0
-                                              , inInvNumber        := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
-                                              , inOperDate         := inOperDate
-                                              , inFromId           := UnitId_from
-                                              , inToId             := UnitId_to
-                                              , inComment          := ''
-                                              , inChecked          := FALSE
-                                              , inisComplete       := FALSE
-                                              , inSession          := inSession
-                                               ) AS MovementId
-
-           FROM (SELECT DISTINCT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to FROM _tmpResult_Partion) AS tmp
-          ) AS tmp
-     WHERE _tmpResult_Partion.UnitId_from = tmp.UnitId_from
-       AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
-          ;
-
-
-     -- сохранили свойство <Перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
-           , 
-
-     FROM (SELECT DISTINCT _tmpResult_Partion.MovementId FROM _tmpResult_Partion WHERE _tmpResult_Partion.Amount > 0
-          ) AS tmp;
-     -- сохранили свойство <Отложено перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
-     FROM (SELECT DISTINCT _tmpResult_Partion.MovementId FROM _tmpResult_Partion WHERE _tmpResult_Partion.Amount_next > 0
-          ) AS tmp;
-
-
-     -- 6.1. создали строки - Перемещение по СУН
-     UPDATE _tmpResult_Partion SET MovementItemId = tmp.MovementItemId
-     FROM (SELECT _tmpResult_Partion.MovementId
-                , _tmpResult_Partion.GoodsId
-                , lpInsertUpdate_MovementItem_Send (ioId                   := 0
-                                                  , inMovementId           := _tmpResult_Partion.MovementId
-                                                  , inGoodsId              := _tmpResult_Partion.GoodsId
-                                                  , inAmount               := _tmpResult_Partion.Amount
-                                                  , inAmountManual         := 0
-                                                  , inAmountStorage        := 0
-                                                  , inReasonDifferencesId  := 0
-                                                  , inUserId               := inUserId
-                                                   ) AS MovementItemId
-           FROM _tmpResult_Partion
-           WHERE _tmpResult_Partion.Amount > 0
-          ) AS tmp
-     WHERE _tmpResult_Partion.MovementId = tmp.MovementId
-       AND _tmpResult_Partion.GoodsId    = tmp.GoodsId
-          ;
-
-     -- 6.2. создали строки - Отложено перемещение по СУН
-     UPDATE _tmpResult_Partion SET MovementItemId = tmp.MovementItemId
-     FROM (SELECT _tmpResult_Partion.MovementId
-                , _tmpResult_Partion.GoodsId
-                , lpInsertUpdate_MovementItem_Send (ioId                   := 0
-                                                  , inMovementId           := _tmpResult_Partion.MovementId
-                                                  , inGoodsId              := _tmpResult_Partion.GoodsId
-                                                  , inAmount               := _tmpResult_Partion.Amount_next
-                                                  , inAmountManual         := 0
-                                                  , inAmountStorage        := 0
-                                                  , inReasonDifferencesId  := 0
-                                                  , inUserId               := inUserId
-                                                   ) AS MovementItemId
-           FROM _tmpResult_Partion
-           WHERE _tmpResult_Partion.Amount_next > 0
-          ) AS tmp
-     WHERE _tmpResult_Partion.MovementId = tmp.MovementId
-       AND _tmpResult_Partion.GoodsId    = tmp.GoodsId
-          ;*/
+     IF inStep = 2
+     THEN
+         -- !!!Выход!!!
+         RETURN;
+     END IF;
 
 
      -- 7.1. распределяем перемещения - по партиям со сроками
