@@ -362,6 +362,9 @@ BEGIN
              -- отбросили !!закрытые!!
              INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
                                          AND Object_Goods_View.IsClose = FALSE
+        -- !!!только с таким НТЗ!!!
+        WHERE tmpObject_Price.MCSValue >= 1
+
         -- !!!отключил, взяли все!!!
         /*WHERE CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
                    WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))

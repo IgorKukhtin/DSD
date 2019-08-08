@@ -53,7 +53,7 @@ BEGIN
                                                           AND MovementItem.isErased   = FALSE
                               WHERE Movement.OperDate = vbOperDate
                                 AND Movement.DescId   = zc_Movement_Send()
-                                AND Movement.StatusId = zc_Enum_Status_Erased()
+                             -- AND Movement.StatusId = zc_Enum_Status_Erased()
                                 AND vbOperDate >= '30.07.2019'
                               GROUP BY MovementItem.ObjectId
 
@@ -75,7 +75,7 @@ BEGIN
                                                           AND MovementItem.isErased   = FALSE
                               WHERE Movement.OperDate = vbOperDate
                                 AND Movement.DescId   = zc_Movement_Send()
-                                AND Movement.StatusId = zc_Enum_Status_Erased()
+                             -- AND Movement.StatusId = zc_Enum_Status_Erased()
                                 AND vbOperDate >= '30.07.2019'
                               GROUP BY MovementItem.ObjectId
                              )
@@ -106,7 +106,7 @@ BEGIN
 
 
      -- сохраняем свойства,
-     /*заказ без учета СУН - это то что сейчас в эмаунте, но только в том случае если есть сроковый, а в Амоунт пишешь ноль*/
+     -- заказ без учета СУН - это то что сейчас в эмаунте, но только в том случае если есть сроковый, а в Амоунт пишешь ноль
      PERFORM lpInsertUpdate_MI_OrderInternal_SUN (inId             := COALESCE (_tmp_MI.Id, 0)
                                                 , inMovementId     := inMovementId
                                                 , inGoodsId        := _tmp_MI.GoodsId
@@ -117,11 +117,11 @@ BEGIN
                                                                            WHEN _tmp_MI.Amount     <> 0 THEN _tmp_MI.Amount
                                                                            ELSE _tmp_MI.AmountReal
                                                                       END :: TFloat
-                                                , inAmountReal     := CASE WHEN (_tmpRemains.Amount <> 0 OR _tmpRemains.SendSUN <> 0 OR _tmpRemains.SendDefSUN <> 0)
+                                                , inAmountReal     := CASE WHEN (_tmpRemains.Amount <> 0 OR _tmp_MI.SendSUN <> 0 OR _tmp_MI.SendDefSUN <> 0)
                                                                             AND _tmp_MI.Amount <> 0
                                                                            THEN _tmp_MI.Amount
 
-                                                                           WHEN _tmpRemains.Amount <> 0  OR _tmpRemains.SendSUN <> 0 OR _tmpRemains.SendDefSUN <> 0
+                                                                           WHEN _tmpRemains.Amount <> 0  OR _tmp_MI.SendSUN <> 0 OR _tmp_MI.SendDefSUN <> 0
                                                                                 THEN _tmp_MI.AmountReal
                                                                            ELSE 0
                                                                       END :: TFloat

@@ -28,7 +28,6 @@ BEGIN
      SELECT MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
-          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
           
      INTO vbUnitFromId
@@ -53,6 +52,47 @@ BEGIN
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
      WHERE Movement.Id = inMovementId;
 
+
+
+     -- !!!временно!!! - Только для IsSUN
+     IF vbIsSUN = TRUE
+     THEN
+         -- Сохранили PriceFrom + Price_To
+         PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN tmpPrice.UnitId = vbUnitId_from THEN zc_MIFloat_PriceFrom()
+                                                        WHEN tmpPrice.UnitId = vbUnitId_to   THEN zc_MIFloat_PriceTo()
+                                                   END
+                                                 , tmpPrice.MovementItemId
+                                                 , COALESCE (tmpPrice.Price, 0)
+                                                  )
+         FROM (WITH tmpMI AS (SELECT MovementItem.Id
+                                   , MovementItem.ObjectId
+                                   , COALESCE(MovementItem.Amount,0) AS Amount
+                              FROM MovementItem
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.isErased   = FALSE
+                                AND MovementItem.DescId     = zc_MI_Master()
+                             )
+                  , tmpPrice AS (SELECT tmpMI.Id                                     AS MovementItemId
+                                      , ObjectLink_Unit.ChildObjectId                AS UnitId
+                                      , ROUND (ObjectFloat_Price_Value.ValueData, 2) AS Price
+                                  FROM tmpMI
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                 ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
+                                                AND ObjectLink_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                       INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                             ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                                                            AND ObjectLink_Unit.ChildObjectId IN (vbUnitId_from, vbUnitId_to)
+                                                            AND ObjectLink_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
+                                                             ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Goods.ObjectId
+                                                            AND ObjectFloat_Price_Value.DescId  = zc_ObjectFloat_Price_Value()
+                                 )
+               SELECT tmpPrice.MovementItemId, tmpPrice.UnitId, tmpPrice.Price FROM tmpPrice
+              ) AS tmpPrice
+     END IF;
+
+
+     -- получаем итоговые данные
      WITH
          tmpMI AS (SELECT MovementItem.Id
                         , MovementItem.ObjectId
@@ -80,9 +120,9 @@ BEGIN
 
      -- получаем итоговые данные
      SELECT SUM (tmpMI.Amount)
-          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE COALESCE (MIFloat_PriceFrom.ValueData, 0) END)) :: TFloat
-          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE OR vbIsSUN = TRUE THEN Object_Price_To.Price   ELSE COALESCE (MIFloat_PriceTo.ValueData, 0)   END)) :: TFloat
-   INTO vbTotalCountSend, vbTotalSummFrom, vbTotalSummTo
+          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE /*OR vbIsSUN = TRUE*/ THEN Object_Price_From.Price ELSE COALESCE (MIFloat_PriceFrom.ValueData, 0) END)) :: TFloat
+          , SUM (tmpMI.Amount * (CASE WHEN vbIsAuto = FALSE /*OR vbIsSUN = TRUE*/ THEN Object_Price_To.Price   ELSE COALESCE (MIFloat_PriceTo.ValueData, 0)   END)) :: TFloat
+            INTO vbTotalCountSend, vbTotalSummFrom, vbTotalSummTo
      FROM tmpMI
           -- цена подразделений записанная при автоматическом распределении 
           LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom

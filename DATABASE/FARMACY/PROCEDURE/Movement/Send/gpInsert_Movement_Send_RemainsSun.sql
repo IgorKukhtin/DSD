@@ -12,8 +12,37 @@ $BODY$
    DECLARE vbUserId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId := inSession;
+     
+
+     -- !!!ВЫХОД для zfCalc_UserAdmin - т.к. автоматом надо формировать только 1 раз
+     /*IF inSession = zfCalc_UserAdmin()
+        AND (EXISTS (SELECT Movement.Id AS MovementId
+                     FROM Movement
+                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                     WHERE Movement.OperDate = CURRENT_DATE
+                       -- AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId = zc_Enum_Status_Erased()
+                    )
+          OR EXISTS (SELECT Movement.Id AS MovementId
+                     FROM Movement
+                          INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                                     ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
+                                                    AND MovementBoolean_DefSUN.ValueData = TRUE
+                     WHERE Movement.OperDate = CURRENT_DATE
+                       AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId = zc_Enum_Status_Erased()
+                    )
+            )
+     THEN
+         -- ВЫХОД
+         RETURN;
+     END IF;*/
 
 
      -- все Подразделения для схемы SUN
@@ -222,4 +251,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= '3') -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
