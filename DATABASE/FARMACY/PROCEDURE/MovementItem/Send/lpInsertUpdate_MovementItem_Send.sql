@@ -33,8 +33,8 @@ BEGIN
           , MovementLinkObject_To.ObjectId
           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
-            INTO vbUnitFromId
-               , vbUnitToId 
+            INTO vbUnitId_from
+               , vbUnitId_to 
                , vbIsSUN
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -105,7 +105,7 @@ BEGIN
                                     AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
                                  )
                SELECT tmpPrice.UnitId, tmpPrice.Price FROM tmpPrice
-              ) AS tmpPrice
+              ) AS tmpPrice;
      END IF;
 
 

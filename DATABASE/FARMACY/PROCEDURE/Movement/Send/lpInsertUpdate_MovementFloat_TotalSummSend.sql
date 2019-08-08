@@ -13,10 +13,10 @@ $BODY$
   DECLARE vbTotalSummFrom  TFloat;
   DECLARE vbTotalSummTo    TFloat;
 
-  DECLARE vbUnitFromId Integer;
-  DECLARE vbUnitToId   Integer;
-  DECLARE vbIsAuto     Boolean;
-  DECLARE vbIsSUN      Boolean;
+  DECLARE vbUnitId_from Integer;
+  DECLARE vbUnitId_to   Integer;
+  DECLARE vbIsAuto      Boolean;
+  DECLARE vbIsSUN       Boolean;
 
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -29,27 +29,26 @@ BEGIN
           , MovementLinkObject_To.ObjectId
           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
-          
-     INTO vbUnitFromId
-        , vbUnitToId 
-        , vbIsAuto
-        , vbIsSUN
+            INTO vbUnitId_from
+               , vbUnitId_to 
+               , vbIsAuto
+               , vbIsSUN
      FROM Movement
-        INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = Movement.ID
-                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-        INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                      ON MovementLinkObject_To.MovementId = Movement.ID
-                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-        LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
-                                  ON MovementBoolean_isAuto.MovementId = Movement.Id
-                                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
-                                  ON MovementBoolean_SUN.MovementId = Movement.Id
-                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                        ON MovementLinkObject_From.MovementId = Movement.ID
+                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                        ON MovementLinkObject_To.MovementId = Movement.ID
+                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+          LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                    ON MovementBoolean_SUN.MovementId = Movement.Id
+                                   AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+          LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                    ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                   AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
      WHERE Movement.Id = inMovementId;
 
 
@@ -88,7 +87,7 @@ BEGIN
                                                             AND ObjectFloat_Price_Value.DescId  = zc_ObjectFloat_Price_Value()
                                  )
                SELECT tmpPrice.MovementItemId, tmpPrice.UnitId, tmpPrice.Price FROM tmpPrice
-              ) AS tmpPrice
+              ) AS tmpPrice;
      END IF;
 
 
@@ -111,7 +110,7 @@ BEGIN
                                                 AND ObjectLink_Goods.DescId = zc_ObjectLink_Price_Goods()
                            INNER JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
-                                                AND ObjectLink_Unit.ChildObjectId in (vbUnitFromId, vbUnitToId)
+                                                AND ObjectLink_Unit.ChildObjectId in (vbUnitId_from, vbUnitId_to)
                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_Price_Unit()
                            LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
                                                  ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Goods.ObjectId
@@ -134,10 +133,10 @@ BEGIN
 
           LEFT JOIN tmpPrice AS Object_Price_From
                              ON Object_Price_From.GoodsId = tmpMI.ObjectId
-                            AND Object_Price_From.UnitId = vbUnitFromId
+                            AND Object_Price_From.UnitId = vbUnitId_from
           LEFT JOIN tmpPrice AS Object_Price_To
                              ON Object_Price_To.GoodsId = tmpMI.ObjectId
-                            AND Object_Price_To.UnitId = vbUnitToId
+                            AND Object_Price_To.UnitId = vbUnitId_to
           ;
 
 
