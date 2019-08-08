@@ -31,7 +31,6 @@ BEGIN
      -- определяются данные из документа
      SELECT MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
-          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
             INTO vbUnitId_from
                , vbUnitId_to 
