@@ -60,8 +60,8 @@ BEGIN
                   ;
 
      -- Данные из док. отказ
-     CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat, Comment TVarChar, DiffKindName TVarChar) ON COMMIT DROP;
-       INSERT INTO _tmpListDiff_MI (Id, GoodsId, Amount, Comment, DiffKindName)
+     CREATE TEMP TABLE _tmpListDiff_MI (MovementId Integer, Id Integer, GoodsId Integer, Amount TFloat, Comment TVarChar, DiffKindName TVarChar) ON COMMIT DROP;
+       INSERT INTO _tmpListDiff_MI (MovementId, Id, GoodsId, Amount, Comment, DiffKindName)
               WITH    
                   -- документы отказа
                   tmpListDiff AS (SELECT Movement.*
@@ -106,7 +106,8 @@ BEGIN
                                       AND MovementItemString.DescId = zc_MIString_Comment()
                                     )
                                                  
-                SELECT tmpListDiff_MI_All.Id
+                SELECT tmpListDiff_MI_All.MovementId                     AS MovementId
+                     , tmpListDiff_MI_All.Id                             AS Id
                      , tmpListDiff_MI_All.ObjectId                       AS GoodsId
                      , tmpListDiff_MI_All.Amount                         AS Amount
                      , COALESCE (tmpMI_Comment.ValueData, '') ::TVarChar AS Comment
@@ -149,6 +150,25 @@ BEGIN
            , lpInsert_MovementItemProtocol (tmp.Id, vbUserId, FALSE)
      FROM _tmpListDiff_MI AS tmp;
 
+     -- если все позиции из листа отказа перенесены во внутренний заказ - проводим документ Лист отказа
+     -- 
+/*
+                SELECT Movement.Id
+                     , SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) AS ord
+                FROM Movement 
+                    INNER JOIN  MovementItem ON MovementItem.MovementId = Movement.Id
+
+                     LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
+                                                AND MovementItem.isErased = FALSE
+                                                AND MovementItem.DescId   = zc_MI_Master()
+                 WHERE Movement.DescId = zc_Movement_ListDiff() 
+                                                       AND Movement.StatusId <> zc_Enum_Status_Erased() AND Movement.StatusId <> zc_Enum_Status_Complete()
+                                                       AND Movement.OperDate >= '07.11.2018'                
+
+                GROUP BY Movement.Id
+HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) = 0
+*/
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
