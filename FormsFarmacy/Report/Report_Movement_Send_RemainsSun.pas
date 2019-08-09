@@ -66,6 +66,19 @@ type
     cxSplitter1: TcxSplitter;
     chExpirationDate_in: TcxGridDBColumn;
     spSendSUN: TdsdStoredProc;
+    DefSUNCDS: TClientDataSet;
+    DefSUNDS: TDataSource;
+    actSendSUN: TdsdExecStoredProc;
+    macSendSUN: TMultiAction;
+    bbSendSUN: TdxBarButton;
+    cxSplitter3: TcxSplitter;
+    cxGrid3: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    dsFromName: TcxGridDBColumn;
+    dsToName: TcxGridDBColumn;
+    dsGoodsCode: TcxGridDBColumn;
+    dfGoodsName: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
   private
     { Private declarations }
   public

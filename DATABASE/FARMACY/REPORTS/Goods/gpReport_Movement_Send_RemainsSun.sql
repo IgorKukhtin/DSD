@@ -13,7 +13,6 @@ $BODY$
   DECLARE Cursor2 refcursor;
   DECLARE Cursor3 refcursor;
   DECLARE Cursor4 refcursor;
-  DECLARE Cursor5 refcursor;
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -180,14 +179,17 @@ BEGIN
      RETURN NEXT Cursor3;
 
      OPEN Cursor4 FOR
-          SELECT tmp.*
-               , tmp.UnitId_from
+          SELECT Object_Goods.Id           AS GoodsId
+               , Object_Goods.ObjectCode   AS GoodsCode
+               , Object_Goods.ValueData    AS GoodsName
+               , Object_UnitFrom.Id        AS FrimId
                , Object_UnitFrom.ValueData AS FromName
-               , tmp.UnitId_to
+               , Object_UnitTo.Id          AS ToId
                , Object_UnitTo.ValueData   AS ToName
-          FROM _tmpResult_Partion AS tmp
-          LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
-          LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
+          FROM _tmpList_DefSUN AS tmp
+          LEFT JOIN Object AS Object_UnitFrom ON Object_UnitFrom.Id = tmp.UnitId_from
+          LEFT JOIN Object AS Object_UnitTo   ON Object_UnitTo.Id   = tmp.UnitId_to
+          LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmp.GoodsId
           ;
      RETURN NEXT Cursor4;
 
