@@ -12,6 +12,8 @@ $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
   DECLARE Cursor3 refcursor;
+  DECLARE Cursor4 refcursor;
+  DECLARE Cursor5 refcursor;
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -177,6 +179,17 @@ BEGIN
           ;
      RETURN NEXT Cursor3;
 
+     OPEN Cursor4 FOR
+          SELECT tmp.*
+               , tmp.UnitId_from
+               , Object_UnitFrom.ValueData AS FromName
+               , tmp.UnitId_to
+               , Object_UnitTo.ValueData   AS ToName
+          FROM _tmpResult_Partion AS tmp
+          LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
+          LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
+          ;
+     RETURN NEXT Cursor4;
 
 END;
 $BODY$

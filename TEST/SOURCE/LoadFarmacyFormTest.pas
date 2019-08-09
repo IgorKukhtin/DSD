@@ -794,13 +794,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveCashDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveCashDialogForm');
     exit;
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPartionDateDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPartionDateDialogForm');
     exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate_PromoDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate_PromoForm'));
