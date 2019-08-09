@@ -385,6 +385,8 @@ type
     actSendCashJournal: TdsdOpenForm;
     N31: TMenuItem;
     MainMakerName: TcxGridDBColumn;
+    actSendCashJournalSun: TdsdOpenForm;
+    N32: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

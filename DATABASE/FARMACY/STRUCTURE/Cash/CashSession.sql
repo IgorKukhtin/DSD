@@ -40,6 +40,7 @@ CREATE TABLE CashSessionSnapShot
   Remains             TFloat      NOT NULL, -- Остаток
   MCSValue            TFloat      NULL,     -- неснижаемый товарный остаток
   Reserved            TFloat      NULL,     -- в резерве
+  DeferredSend        TFloat      NULL,     -- в отложенных перемещениях
   MinExpirationDate   TDateTime   NULL,     -- Срок годн. ост.
   MCSValueOld         TFloat      NULL,     -- НТЗ - значение которое вернется по окончании периода
   StartDateMCSAuto    TDateTime   NULL,     -- дата нач. периода

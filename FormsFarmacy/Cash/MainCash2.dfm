@@ -3153,6 +3153,18 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actSendCashJournalSun: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1057#1059#1053
+      Hint = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1057#1059#1053
+      FormName = 'TSendCashJournalSunForm'
+      FormNameParam.Value = 'TSendCashJournalSunForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4855,6 +4867,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N31: TMenuItem
       Action = actSendCashJournal
+    end
+    object N32: TMenuItem
+      Action = actSendCashJournalSun
     end
   end
   object TimerDroppedDown: TTimer

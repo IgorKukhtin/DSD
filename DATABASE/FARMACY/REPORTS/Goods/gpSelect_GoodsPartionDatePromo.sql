@@ -1,15 +1,18 @@
 -- Function: gpSelect_GoodsPartionDatePromo()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsPartionDatePromo (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPartionDatePromo (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionDatePromo (
     IN inUnitId         Integer ,
+    IN inMakerId        Integer ,
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (UnitID Integer, UnitCode Integer, UnitName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionDateKindName TVarChar,
                Remains TFloat, ExpirationDate TDateTime, DayOverdue Integer,
-               InvNumber TVarChar, MakerName TVarChar
+               InvNumber TVarChar, MakerName TVarChar,
+               MainJuridicalId Integer, MainJuridicalName TVarChar  --Наше Юр. лицо
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -74,12 +77,44 @@ BEGIN
     vbDate0   := CURRENT_DATE + CASE WHEN vbIsMonth_0 = TRUE THEN vbMonth_0 ||' MONTH'  ELSE vbMonth_0 ||' DAY' END :: INTERVAL;
 
     RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.Id
+    WITH           -- Id строк Маркетинговых контрактов inMakerId
+         tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id                        AS MI_Id
+                                      , MI_Goods.ObjectId                  AS GoodsId
+                                      , Movement.InvNumber                 AS InvNumber
+                                      , MovementDate_StartPromo.ValueData  AS StartDate_Promo
+                                      , MovementDate_EndPromo.ValueData    AS EndDate_Promo
+                                      , MIFloat_Price.ValueData            AS Price
+                                      , MovementLinkObject_Maker.ObjectId  AS MakerId
+                                 FROM Movement
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                                 ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                                AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                                                AND (MovementLinkObject_Maker.ObjectId = inMakerId OR inMakerId = 0)
+
+                                   INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                           ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                          AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                   INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                           ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                          AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+
+                                   INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                      AND MI_Goods.DescId = zc_MI_Master()
+                                                                      AND MI_Goods.isErased = FALSE
+                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                               ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.DescId = zc_Movement_Promo()
+                                  )    
+       , tmpContainer AS (SELECT Container.Id
                                , Container.WhereObjectId
                                , Container.ObjectId
                                , Container.Amount
                                , ContainerLinkObject.ObjectId                       AS PartionGoodsId
                           FROM Container
+                          
+                               INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = Container.ObjectId
 
                                LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -118,36 +153,6 @@ BEGIN
 
                                  LEFT OUTER JOIN Movement AS Movement_Income ON Movement_Income.Id = Object_PartionGoods.ObjectCode
                             )
-          -- Id строк Маркетинговых контрактов inMakerId
-       , tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id                        AS MI_Id
-                                      , MI_Goods.ObjectId                  AS GoodsId
-                                      , Movement.InvNumber                 AS InvNumber
-                                      , MovementDate_StartPromo.ValueData  AS StartDate_Promo
-                                      , MovementDate_EndPromo.ValueData    AS EndDate_Promo
-                                      , MIFloat_Price.ValueData            AS Price
-                                      , MovementLinkObject_Maker.ObjectId  AS MakerId
-                                 FROM Movement
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
-                                                                 ON MovementLinkObject_Maker.MovementId = Movement.Id
-                                                                AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-
-                                   INNER JOIN MovementDate AS MovementDate_StartPromo
-                                                           ON MovementDate_StartPromo.MovementId = Movement.Id
-                                                          AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-                                   INNER JOIN MovementDate AS MovementDate_EndPromo
-                                                           ON MovementDate_EndPromo.MovementId = Movement.Id
-                                                          AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-
-                                   INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                      AND MI_Goods.DescId = zc_MI_Master()
-                                                                      AND MI_Goods.isErased = FALSE
-                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                               ON MIFloat_Price.MovementItemId = MI_Goods.Id
-                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                 WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                                   AND Movement.DescId = zc_Movement_Promo()
-                                  )
-
 
 
     SELECT Object_Unit.ID                         AS UnitID
@@ -162,6 +167,8 @@ BEGIN
          , Container.DayOverdue::Integer          AS DayOverdue
          , tmpMIPromo.InvNumber                   AS InvNumber
          , Object_Maker.ValueData                 AS MakerName
+         , Object_MainJuridical.Id                  AS MainJuridicalId
+         , Object_MainJuridical.ValueData           AS MainJuridicalName
     FROM tmpPDContainer AS Container
 
          INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = Container.ObjectId
@@ -170,6 +177,11 @@ BEGIN
 
          LEFT JOIN Object AS Object_Unit
                           ON Object_Unit.Id = Container.WhereObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+         LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
          LEFT JOIN Object AS Object_Goods
                           ON Object_Goods.Id = Container.ObjectId
@@ -194,4 +206,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsPartionDatePromo(inUnitId :=  183292, inSession := '3')
+-- SELECT * FROM gpSelect_GoodsPartionDatePromo(inUnitId :=  183292, inMakerId := 0, inSession := '3')
