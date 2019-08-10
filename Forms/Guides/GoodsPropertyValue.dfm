@@ -73,6 +73,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 70
       end
+      object isWeigth: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095'. '#1085#1072#1082#1083'.'
+        DataBinding.FieldName = 'isWeigth'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 110
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -456,6 +464,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisWeigth'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -533,11 +549,16 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbUpdateisWeigth: TdxBarButton
+      Action = actUpdateisWeigth
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1044#1072'/ '#1053#1077#1090
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 224
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -839,6 +860,23 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actUpdateisWeigth: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateisWeigth
+      StoredProcList = <
+        item
+          StoredProc = spUpdateisWeigth
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1044#1072'/ '#1053#1077#1090
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1044#1072'/ '#1053#1077#1090
+      ImageIndex = 76
+      ShortCut = 121
+      RefreshOnTabSetChanges = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsPropertyValue'
@@ -882,8 +920,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 424
-    Top = 216
+    Left = 376
+    Top = 224
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -910,8 +948,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 464
-    Top = 288
+    Left = 480
+    Top = 280
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 424
@@ -1086,5 +1124,31 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end>
     Left = 664
     Top = 192
+  end
+  object spUpdateisWeigth: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsPropertyValue_isWeigth'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWeigth'
+        Value = 'TRUE'
+        Component = ClientDataSet
+        ComponentItem = 'isWeigth'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 208
   end
 end

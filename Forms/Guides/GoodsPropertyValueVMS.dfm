@@ -75,6 +75,14 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
         Options.Editing = False
         Width = 70
       end
+      object isWeigth: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095'. '#1085#1072#1082#1083'.'
+        DataBinding.FieldName = 'isWeigth'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 110
+      end
       object clGoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1354,8 +1362,8 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 240
+    Left = 640
+    Top = 192
   end
   object spUpdateSh_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_GoodsPropertyValue_Sh'

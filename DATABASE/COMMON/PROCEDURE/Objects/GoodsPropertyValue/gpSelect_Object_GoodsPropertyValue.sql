@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Quality TVarChar, Quality2 TVarChar, Quality10 TVarChar
              , GoodsBrandName TVarChar
              , isOrder Boolean
+             , isWeigth Boolean
              , isErased Boolean
              , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
@@ -94,7 +95,8 @@ BEGIN
        
        , tmpGoodsByGoodsKind.GoodsBrandName :: TVarChar
        
-       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
+       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE)    :: Boolean AS isOrder
+       , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
        , Object_GoodsPropertyValue.isErased   AS isErased
 
        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
@@ -168,6 +170,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Quality10
                                ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
+                               AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
@@ -320,6 +326,7 @@ BEGIN
        , COALESCE (tmpGoodsByGoodsKind.GoodsBrandName, NULL) :: TVarChar AS GoodsBrandName
 
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
+       , tmpObjectLink.isWeigth                        :: Boolean AS isWeigth
        , tmpObjectLink.isErased
 
        , COALESCE (tmpObjectLink.isGoodsTypeKind_Sh,  FALSE) :: Boolean AS isGoodsTypeKind_Sh
@@ -371,6 +378,8 @@ BEGIN
                         , Object_Box.ValueData                   AS BoxName
                         , ObjectFloat_WeightOnBox.ValueData      AS WeightOnBox
                         , ObjectFloat_CountOnBox.ValueData       AS CountOnBox
+
+                        , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -458,6 +467,10 @@ BEGIN
                                             ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
 
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                             ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
+                                            AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+
                    WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                       AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId)  
                    ) AS tmpObjectLink ON tmpObjectLink.GoodsId = tmpGoods.GoodsId 
@@ -476,6 +489,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.08.19         * add isWeigth
  10.04.19         * 
  30.03.19         * add Quality
  26.02.19         *

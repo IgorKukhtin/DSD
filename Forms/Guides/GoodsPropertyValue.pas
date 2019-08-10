@@ -87,6 +87,10 @@ type
     BoxName: TcxGridDBColumn;
     WeightOnBox: TcxGridDBColumn;
     CountOnBox: TcxGridDBColumn;
+    spUpdateisWeigth: TdsdStoredProc;
+    actUpdateisWeigth: TdsdDataSetRefresh;
+    bbUpdateisWeigth: TdxBarButton;
+    isWeigth: TcxGridDBColumn;
   private
     { Private declarations }
   public
