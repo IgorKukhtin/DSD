@@ -876,6 +876,7 @@ BEGIN
              , ObjectString_Article.ValueData       AS Article
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
              , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+             , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -904,6 +905,10 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_ArticleGLN
                                     ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                     ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -1093,7 +1098,12 @@ BEGIN
                   ELSE 'KGM'
              END::TVarChar                   AS DELIVEREDUNIT
            , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
+
+           --если  isWeigth = true - тогда в amountpartner - для шт. вернуть вес, в measurename - вернуть кг.
+           , CASE WHEN tmpObject_GoodsPropertyValue.isWeigth = FALSE THEN tmpMI.AmountPartner
+                  ELSE CAST ((tmpMI.AmountPartner * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
+             END                             AS AmountPartner
+
            , tmpMI_Order.Amount              AS AmountOrder
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
@@ -1177,9 +1187,9 @@ BEGIN
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
-           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST ((tmpMI.AmountPartner * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
            , CAST (tmpMI.AmountPartner * COALESCE (ObjectFloat_Weight.ValueData, 0) AS TFloat) AS AmountPack_Weight
---           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+--           , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
 
            , CASE WHEN vbOperDate < '01.01.2017'
@@ -1218,13 +1228,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-            LEFT JOIN ObjectString AS OS_Measure_InternalCode
-                                   ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
-                                  AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -1241,6 +1244,15 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpObject_GoodsPropertyValue.isWeigth = TRUE THEN zc_Measure_Kg() ELSE ObjectLink_Goods_Measure.ChildObjectId END
+            LEFT JOIN ObjectString AS OS_Measure_InternalCode
+                                   ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
+                                  AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -1375,6 +1387,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.08.19         *
  26.11.15         *
  17.09.15         *
  13.11.14                                                       * fix
