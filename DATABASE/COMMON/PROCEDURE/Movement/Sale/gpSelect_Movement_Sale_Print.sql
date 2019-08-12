@@ -307,7 +307,7 @@ BEGIN
                    ) AS OperSumm
 
                          -- ШТ
-                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpObject_GoodsPropertyValue.isWeigth = FALSE
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = FALSE
                                    THEN tmpMI.Amount
                               ELSE 0
                          END) AS TotalCountSh
@@ -320,7 +320,7 @@ BEGIN
                          END) AS TotalCountKg
 
                          -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
-                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpObject_GoodsPropertyValue.isWeigth = TRUE
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth, FALSE) = TRUE
                                    THEN tmpMI.Amount
                               ELSE 0
                          END) AS TotalCountSh_Kg
@@ -1222,7 +1222,7 @@ BEGIN
            , tmpMI.Amount                    AS Amount
 
            --если  isWeigth = true - тогда в amountpartner - для шт. вернуть вес, в measurename - вернуть кг.
-           , CASE WHEN tmpObject_GoodsPropertyValue.isWeigth = FALSE THEN tmpMI.AmountPartner
+           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.isWeigth, FALSE) = FALSE THEN tmpMI.AmountPartner
                   ELSE CAST ((tmpMI.AmountPartner * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
              END                             AS AmountPartner
 
@@ -1370,7 +1370,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpObject_GoodsPropertyValue.isWeigth = TRUE THEN zc_Measure_Kg() ELSE ObjectLink_Goods_Measure.ChildObjectId END
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE THEN zc_Measure_Kg() ELSE ObjectLink_Goods_Measure.ChildObjectId END
             LEFT JOIN ObjectString AS OS_Measure_InternalCode
                                    ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
                                   AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
