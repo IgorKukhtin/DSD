@@ -352,6 +352,9 @@ BEGIN
 
      -- проверка
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId = 0) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+        AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                       )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <От Кого, Кому>.Проведение невозможно.';
      END IF;
@@ -366,7 +369,7 @@ BEGIN
                                 , inDescId     := zc_Movement_BankAccount()
                                 , inUserId     := inUserId
                                  );
-
+O
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

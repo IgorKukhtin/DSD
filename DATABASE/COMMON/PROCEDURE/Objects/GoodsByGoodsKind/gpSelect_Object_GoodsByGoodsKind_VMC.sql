@@ -13,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind_VMC(
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
-             , GoodsKindId Integer, GoodsKindName TVarChar
-             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsGroupAnalystName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
@@ -184,7 +184,8 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_WmsCellNum
                                                         ON ObjectFloat_WmsCellNum.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                        AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
-                             )
+                          -- WHERE Object_GoodsByGoodsKind_View.isErased = FALSE 
+                            )
    , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Nom) AS Count2
@@ -313,9 +314,11 @@ BEGIN
            , Object_GoodsByGoodsKind_View.GoodsCode
            , Object_GoodsByGoodsKind_View.GoodsName
            , Object_GoodsByGoodsKind_View.GoodsKindId
+           , Object_GoodsByGoodsKind_View.GoodsKindCode
            , Object_GoodsByGoodsKind_View.GoodsKindName
 
-           , Object_GoodsGroup.ValueData     AS GoodsGroupName
+           , Object_GoodsGroup.Id                        AS GoodsGroupId
+           , Object_GoodsGroup.ValueData                 AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName

@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbJuridicalId Integer;
    DECLARE vbCurrencyId Integer;
+   DECLARE vbBankId Integer;
    DECLARE vbAmountCurrency TFloat;
 
    DECLARE vbCurrencyValue TFloat;
@@ -154,10 +155,14 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankAccount (), vbMovementItemId, inBankAccount);
      -- сохранили свойство <МФО>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankMFO (), vbMovementItemId, inBankMFO);
-     -- сохранили свойство <Название банка>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId
-                                         , CASE WHEN TRIM (inBankName) <> '' THEN inBankName ELSE COALESCE((SELECT Object.ValueData FROM Object WHERE Object.Id = lpInsertFind_Bank (inBankMFO, inBankName, vbUserId)), '') END
-                                          );
+    -- сохранили свойство <Название банка>
+    IF TRIM (COALESCE (inBankName, '')) = ''
+    THEN
+        vbBankId := lpInsertFind_Bank (inBankMFO, inBankName, vbUserId);
+        inBankName:= COALESCE((SELECT Object.ValueData FROM Object WHERE Object.Id = vbBankId), '');
+    END IF;
+    --
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId, inBankName);
      -- сохранили свойство <Валюта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency (), vbMovementItemId, vbCurrencyId);
      -- сохранили свойство <Валюта партнера>
@@ -428,6 +433,12 @@ BEGIN
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
   */
 
+-- if inSession = '5' 
+-- then
+--    RAISE EXCEPTION 'ok1 %', vbJuridicalId;
+-- end if;
+
+
    RETURN 0;
 END;
 $BODY$
@@ -451,3 +462,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_BankStatementItemLoad (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFileName:= 'xxx', inBankAccountId:= 1, inSession:= '2')
+-- select * from gpInsertUpdate_Movement_BankStatementItemLoad(inDocNumber := '15299' , inOperDate := ('06.08.2019')::TDateTime , inBankAccountMain := '26000301367079' , inBankMFOMain := '300528' , inOKPO := '37989269' , inJuridicalName := '11011000 УДКСУ у Соборному р-ні м.Дніп' , inBankAccount := '31110063004005' , inBankMFO := '899998' , inBankName := '' , inCurrencyCode := '980' , inCurrencyName := '' , inAmount := -21 , inComment := '*;101;24447183; військовий збір із доходів фізліц  1,5%' ,  inSession := '5');

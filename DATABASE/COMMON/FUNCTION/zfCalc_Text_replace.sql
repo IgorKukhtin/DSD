@@ -19,7 +19,13 @@ BEGIN
     
     IF vbIndex > 0
     THEN
-        RETURN OVERLAY (inText PLACING COALESCE (inToText, '') FROM vbIndex FOR LENGTH (inFromText));
+        inText:= OVERLAY (inText PLACING COALESCE (inToText, '') FROM vbIndex FOR LENGTH (inFromText));
+        --
+        IF POSITION (LOWER (inFromText) IN LOWER (inText)) > 0
+        THEN RETURN zfCalc_Text_replace(inText,inFromText, inToText);
+        ELSE RETURN inText;
+        END IF;
+        
     ELSE
         RETURN inText;
     END IF;
