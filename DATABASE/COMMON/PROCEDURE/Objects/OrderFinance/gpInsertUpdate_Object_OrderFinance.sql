@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_OrderFinance()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inName                    TVarChar  ,    -- Название объекта <>
     IN inComment                 TVarChar  ,    -- примечание
     IN inPaidKindId              Integer   ,    -- ФО
+    IN inBankAccountId           Integer   ,    -- р/с
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -37,7 +39,10 @@ BEGIN
    
    -- сохранили связь с <ФО>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_PaidKind(), ioId, inPaidKindId);
-   
+
+   -- сохранили связь с <р/с>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_BankAccount(), ioId, inBankAccountId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
@@ -49,6 +54,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.19         *
  29.07.19         * 
 */
 

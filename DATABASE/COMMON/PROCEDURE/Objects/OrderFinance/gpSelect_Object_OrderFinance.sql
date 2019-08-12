@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_OrderFinance(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , Comment TVarChar
              , isErased Boolean
              )
@@ -24,6 +26,12 @@ BEGIN
             , Object_PaidKind.Id               AS PaidKindId
             , Object_PaidKind.ValueData        AS PaidKindName   
 
+            , Object_BankAccount_View.Id       AS BankAccountId
+            , Object_BankAccount_View.Name     AS BankAccountName
+            , Object_BankAccount_View.BankId   AS BankId
+            , Object_BankAccount_View.BankName AS BankName
+            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+
             , ObjectString_Comment.ValueData   AS Comment
 
             , Object_OrderFinance.isErased     AS isErased
@@ -37,6 +45,11 @@ BEGIN
                                 ON OrderFinance_PaidKind.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_PaidKind.DescId = zc_ObjectLink_OrderFinance_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = OrderFinance_PaidKind.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_BankAccount
+                                ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
+           LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
        WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance();
   
 END;
@@ -47,6 +60,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.08.19         *
  29.07.19         *
 */
 

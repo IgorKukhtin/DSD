@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 212
+  ClientHeight = 269
   ClientWidth = 296
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 36
-    Top = 170
+    Top = 234
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 180
-    Top = 170
+    Top = 234
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -86,6 +86,23 @@
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 104
+  end
+  object cxLabel2: TcxLabel
+    Left = 11
+    Top = 168
+    Caption = #1056#1072#1089#1095'.'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1083#1072#1090#1080#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1082#1072#1084
+  end
+  object edBankAccount: TcxButtonEdit
+    Left = 11
+    Top = 189
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 273
   end
   object ActionList: TActionList
     Left = 192
@@ -162,6 +179,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 39
@@ -225,10 +250,25 @@
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountId'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountName'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 199
-    Top = 170
+    Left = 239
+    Top = 202
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -278,5 +318,35 @@
       end>
     Left = 208
     Top = 16
+  end
+  object GuidesBankAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankAccount_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 168
   end
 end

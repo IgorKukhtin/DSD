@@ -42,6 +42,9 @@ type
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
   private
     { Private declarations }
   public

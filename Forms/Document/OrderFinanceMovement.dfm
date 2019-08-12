@@ -2147,9 +2147,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountId'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountNameAll'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 496
-    Top = 24
+    Left = 472
+    Top = 16
   end
   object JuridicalCDS: TClientDataSet
     Aggregates = <>

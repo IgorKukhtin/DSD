@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_OrderFinance(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
              , Comment TVarChar
              , isErased Boolean
              )
@@ -28,6 +29,9 @@ BEGIN
            , 0                      AS PaidKindId
            , CAST ('' as TVarChar)  AS PaidKindName 
 
+           , 0                      AS BankAccountId
+           , CAST ('' as TVarChar)  AS BankAccountName
+
            , CAST ('' as TVarChar)  AS Comment     
        
            , CAST (NULL AS Boolean) AS isErased;
@@ -40,6 +44,9 @@ BEGIN
 
             , Object_PaidKind.Id               AS PaidKindId
             , Object_PaidKind.ValueData        AS PaidKindName   
+
+            , Object_BankAccount.Id            AS BankAccountId
+            , Object_BankAccount.ValueData     AS BankAccountName
 
             , ObjectString_Comment.ValueData   AS Comment
            
@@ -55,6 +62,11 @@ BEGIN
                                AND OrderFinance_PaidKind.DescId = zc_ObjectLink_OrderFinance_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = OrderFinance_PaidKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS OrderFinance_BankAccount
+                                ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
+           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = OrderFinance_BankAccount.ChildObjectId
+
        WHERE Object_OrderFinance.Id = inId;
    END IF;
   
@@ -67,6 +79,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.19         *
  29.07.19         *
 */
 
