@@ -56,6 +56,8 @@ BEGIN
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
 
+zc_ObjectLink_OrderFinance_BankAccount
+
      ELSE
 
      RETURN QUERY

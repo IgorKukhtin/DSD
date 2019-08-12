@@ -1685,6 +1685,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_PaidKind() RETURNS Integer
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinance_PaidKind', 'Форма оплаты', zc_Object_OrderFinance(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_PaidKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_BankAccount', 'расч.счет', zc_Object_OrderFinance(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_BankAccount');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinanceProperty_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_OrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinanceProperty_OrderFinance', 'Виды Планирования платежей', zc_Object_OrderFinanceProperty(), zc_Object_OrderFinance() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_OrderFinance');

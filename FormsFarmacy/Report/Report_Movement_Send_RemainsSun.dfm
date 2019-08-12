@@ -1,30 +1,30 @@
 inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'>'
-  ClientHeight = 599
+  ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 637
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 960
-    Height = 540
+    Height = 474
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 960
     ExplicitHeight = 540
-    ClientRectBottom = 540
+    ClientRectBottom = 474
     ClientRectRight = 960
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 960
       ExplicitHeight = 540
       inherited cxGrid: TcxGrid
         Width = 960
-        Height = 272
+        Height = 240
         ExplicitWidth = 960
-        ExplicitHeight = 288
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -380,7 +380,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086'-'#1074#1086' '#1089#1088#1086#1082#1086#1074#1099#1093', '#1082#1086#1090#1086#1088#1099#1077' '#1073#1091#1076#1077#1084' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1103#1090#1100
-            Width = 55
+            Width = 70
           end
           object AmountResult: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
@@ -610,15 +610,15 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxGrid2: TcxGrid
         Left = 0
-        Top = 408
+        Top = 360
         Width = 960
-        Height = 132
+        Height = 114
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        object cxGridDBTableView2: TcxGridDBTableView
+        object GridDBTableViewResult_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource2
+          DataController.DataSource = Result_childDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -854,50 +854,58 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'OperDate'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 115
+            Width = 78
           end
           object ch2Invnumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Invnumber'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 140
+            Width = 93
           end
           object ContainerId: TcxGridDBColumn
             DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object MovementId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object chExpirationDate_in: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate_in'
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 70
           end
         end
         object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableView2
+          GridView = GridDBTableViewResult_child
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 280
+        Top = 248
         Width = 960
-        Height = 120
+        Height = 104
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitTop = 288
-        object cxGridDBTableView1: TcxGridDBTableView
+        object GridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource1
+          DataController.DataSource = PartionDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1111,7 +1119,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Width = 232
           end
           object chAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' >= 1000)'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1121,7 +1129,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Width = 99
           end
           object chSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' >= 1000)'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -1130,51 +1138,48 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Width = 121
           end
           object chAmount_next: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' (next)'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' < 1000)'
             DataBinding.FieldName = 'Amount_next'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 99
           end
           object chSumm_next: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' (next)'
+            Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' < 1000)'
             DataBinding.FieldName = 'Summ_next'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
         end
         object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
+          GridView = GridDBTableViewPartion
         end
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 400
-        Width = 8
+        Top = 352
+        Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitLeft = -3
-        ExplicitTop = 408
+        ExplicitTop = 400
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 272
-        Width = 8
+        Top = 240
+        Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 258
+        ExplicitTop = 272
       end
     end
   end
@@ -1205,6 +1210,260 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       Visible = False
       ExplicitLeft = 149
       ExplicitWidth = 20
+    end
+  end
+  object cxSplitter3: TcxSplitter [2]
+    Left = 0
+    Top = 533
+    Width = 960
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = cxGrid3
+    ExplicitTop = 400
+    ExplicitWidth = 8
+  end
+  object cxGrid3: TcxGrid [3]
+    Left = 0
+    Top = 541
+    Width = 960
+    Height = 132
+    Align = alBottom
+    PopupMenu = PopupMenu
+    TabOrder = 7
+    ExplicitTop = 408
+    object cxGridDBTableView1: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DefSUNDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsBehavior.FocusCellOnCycle = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.DataRowSizing = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object dsFromName: TcxGridDBColumn
+        Caption = #1054#1090' '#1082#1086#1075#1086
+        DataBinding.FieldName = 'FromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 254
+      end
+      object dsToName: TcxGridDBColumn
+        Caption = #1050#1086#1084#1091
+        DataBinding.FieldName = 'ToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 240
+      end
+      object dsGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 99
+      end
+      object dfGoodsName: TcxGridDBColumn
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 291
+      end
+    end
+    object cxGridLevel3: TcxGridLevel
+      GridView = cxGridDBTableView1
     end
   end
   inherited ActionList: TActionList
@@ -1271,6 +1530,31 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actSendSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSendSUN
+      StoredProcList = <
+        item
+          StoredProc = spSendSUN
+        end>
+      Caption = 'actSendSUN'
+      ImageIndex = 41
+    end
+    object macSendSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendSUN
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'>? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'> '#1089#1086#1079#1076#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'>'
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1287,10 +1571,13 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         DataSet = MasterCDS
       end
       item
-        DataSet = ClientDataSet1
+        DataSet = PartionCDS
       end
       item
-        DataSet = ClientDataSet2
+        DataSet = Result_childCDS
+      end
+      item
+        DataSet = DefSUNCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1337,6 +1624,14 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         end
         item
           Visible = True
+          ItemName = 'bbSendSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1362,6 +1657,10 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       Visible = ivAlways
       ImageIndex = 3
       ShortCut = 16464
+    end
+    object bbSendSUN: TdxBarButton
+      Action = macSendSUN
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1408,9 +1707,9 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     Left = 792
     Top = 208
   end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
+  object DBViewAddOn_Partion: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = GridDBTableViewPartion
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -1557,7 +1856,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     Left = 648
     Top = 384
   end
-  object ClientDataSet1: TClientDataSet
+  object PartionCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UnitId_to;GoodsId'
@@ -1565,17 +1864,17 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 704
-    Top = 384
+    Left = 416
+    Top = 368
   end
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet1
-    Left = 752
+  object PartionDS: TDataSource
+    DataSet = PartionCDS
+    Left = 544
     Top = 376
   end
-  object dsdDBViewAddOn2: TdsdDBViewAddOn
+  object DBViewAddOn_Result_child: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView2
+    View = GridDBTableViewResult_child
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -1719,23 +2018,54 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 656
-    Top = 520
+    Left = 576
+    Top = 592
   end
-  object ClientDataSet2: TClientDataSet
+  object Result_childCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UnitId_from;UnitId_to;GoodsId'
     MasterFields = 'UnitId_from;UnitId_to;GoodsId'
-    MasterSource = DataSource1
+    MasterSource = PartionDS
     PacketRecords = 0
     Params = <>
-    Left = 712
-    Top = 512
+    Left = 656
+    Top = 496
   end
-  object DataSource2: TDataSource
-    DataSet = ClientDataSet2
+  object Result_childDS: TDataSource
+    DataSet = Result_childCDS
     Left = 760
-    Top = 512
+    Top = 480
+  end
+  object spSendSUN: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Send_RemainsSun'
+    DataSets = <
+      item
+      end>
+    OutputType = otMultiExecute
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1000
+    Left = 624
+    Top = 192
+  end
+  object DefSUNCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 88
+    Top = 576
+  end
+  object DefSUNDS: TDataSource
+    DataSet = DefSUNCDS
+    Left = 152
+    Top = 584
   end
 end

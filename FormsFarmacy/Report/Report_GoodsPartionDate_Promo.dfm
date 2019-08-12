@@ -5,7 +5,7 @@ inherited Report_GoodsPartionDate_PromoForm: TReport_GoodsPartionDate_PromoForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 705
-  ExplicitHeight = 413
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,6 +243,12 @@ inherited Report_GoodsPartionDate_PromoForm: TReport_GoodsPartionDate_PromoForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerId'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -60,6 +60,7 @@ type
     btnAllMaker: TButton;
     isQuarter: TcxGridDBColumn;
     is4Month: TcxGridDBColumn;
+    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -109,6 +110,7 @@ type
     procedure ReportCheck(ADateStart, ADateEnd : TDateTime);
     procedure ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
     procedure ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
+    procedure ReportGoodsPartionDate;
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -186,6 +188,14 @@ begin
     begin
       RepType := 3;
       ReportIncomeConsumptionBalance(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport5').AsBoolean then
+    begin
+      RepType := 4;
+      ReportGoodsPartionDate;
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
@@ -554,6 +564,42 @@ begin
   OpenAndFormatSQL;
 end;
 
+procedure TMainForm.ReportGoodsPartionDate;
+begin
+  Add_Log('Начало Формирования отчет по срокам');
+  FileName := 'Отчет по срокам';
+  Subject := FileName;
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  GoodsCode AS "Код", '#13#10 +
+    '  GoodsName AS "Название", '#13#10 +
+    '  PartionDateKindName AS "Тип срока", '#13#10 +
+    '  Remains AS "Остаток", '#13#10 +
+    '  ExpirationDate AS "Срок годности", '#13#10 +
+    '  DayOverdue AS "Дней до просрочки"  '#13#10 +
+    'from gpSelect_GoodsPartionDatePromo(0, :inMaker, ''3'') '#13#10 +
+    'where MainJuridicalId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)' +
+    '  AND UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0)';
+
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[3];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+end;
+
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
@@ -680,6 +726,7 @@ begin
     1 : ReportCheck(DateStart, DateEnd);
     2 : ReportAnalysisRemainsSelling(DateStart, DateEnd);
     3 : ReportIncomeConsumptionBalance(DateStart, DateEnd);
+    4 : ReportGoodsPartionDate;
   end;
 end;
 

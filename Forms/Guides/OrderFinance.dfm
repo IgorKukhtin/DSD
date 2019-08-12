@@ -1,28 +1,28 @@
 inherited OrderFinanceForm: TOrderFinanceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
   ClientHeight = 345
-  ClientWidth = 873
+  ClientWidth = 903
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 889
+  ExplicitWidth = 919
   ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 873
+    Width = 903
     Height = 319
-    ExplicitWidth = 809
+    ExplicitWidth = 873
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 873
+    ClientRectRight = 903
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 809
+      ExplicitWidth = 873
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
-        Width = 449
+        Width = 569
         Height = 319
         Align = alLeft
-        ExplicitWidth = 449
+        ExplicitWidth = 569
         ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -42,7 +42,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 70
+            Width = 35
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -58,7 +58,23 @@ inherited OrderFinanceForm: TOrderFinanceForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 89
+            Width = 55
+          end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object BankAccountName: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 125
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -75,19 +91,20 @@ inherited OrderFinanceForm: TOrderFinanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 98
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 452
+        Left = 572
         Top = 0
-        Width = 421
+        Width = 331
         Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 357
+        ExplicitLeft = 452
+        ExplicitWidth = 421
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -121,7 +138,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 96
+            Width = 75
           end
           object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -135,7 +152,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 115
+            Width = 90
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -144,7 +161,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 31
+            Width = 33
           end
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -158,7 +175,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 101
+            Width = 71
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -174,12 +191,13 @@ inherited OrderFinanceForm: TOrderFinanceForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 449
+        Left = 569
         Top = 0
         Width = 3
         Height = 319
         AutoPosition = False
         Control = cxGrid
+        ExplicitLeft = 449
       end
     end
   end
@@ -315,6 +333,29 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankAccountId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankAccountName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankAccountNameAll'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountNameAll'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -692,6 +733,10 @@ inherited OrderFinanceForm: TOrderFinanceForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     Left = 280
     Top = 192
   end
@@ -809,8 +854,8 @@ inherited OrderFinanceForm: TOrderFinanceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 520
-    Top = 144
+    Left = 496
+    Top = 104
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'

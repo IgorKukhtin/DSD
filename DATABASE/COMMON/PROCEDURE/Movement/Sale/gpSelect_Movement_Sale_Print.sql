@@ -35,6 +35,7 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
+    DECLARE vbTotalCountSh_Kg TFloat;
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
@@ -209,6 +210,66 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
+    -- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
+    CREATE TEMP TABLE tmpObject_GoodsPropertyValue (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, Name TVarChar,
+                                                    Amount TFloat, AmountDoc TFloat, BoxCount TFloat,
+                                                    BarCode TVarChar, Article TVarChar,
+                                                    BarCodeGLN  TVarChar, ArticleGLN TVarChar, 
+                                                    isWeigth Boolean) ON COMMIT DROP;
+    INSERT INTO  tmpObject_GoodsPropertyValue (ObjectId, GoodsId, GoodsKindId, Name, Amount, AmountDoc, BoxCount, BarCode, Article, BarCodeGLN, ArticleGLN, isWeigth)
+        SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             , Object_GoodsPropertyValue.ValueData  AS Name
+             , ObjectFloat_Amount.ValueData         AS Amount
+             , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+             , ObjectFloat_BoxCount.ValueData       AS BoxCount
+             , ObjectString_BarCode.ValueData       AS BarCode
+             , ObjectString_Article.ValueData       AS Article
+             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+             , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
+        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+             ) AS tmpGoodsProperty
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+             LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                   ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+             LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                   ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                  AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+             LEFT JOIN ObjectString AS ObjectString_Article
+                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+
+             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                     ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+         ;
+
 
     IF vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
     THEN
@@ -233,9 +294,10 @@ BEGIN
                END AS OperSumm_PVAT
              , TotalCountKg
              , TotalCountSh
+             , TotalCountSh_Kg
 
                INTO vbOperSumm_MVAT, vbOperSumm_PVAT
-                  , vbTotalCountKg, vbTotalCountSh
+                  , vbTotalCountKg, vbTotalCountSh, vbTotalCountSh_Kg
 
         FROM
        (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
@@ -245,7 +307,7 @@ BEGIN
                    ) AS OperSumm
 
                          -- ШТ
-                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = FALSE
                                    THEN tmpMI.Amount
                               ELSE 0
                          END) AS TotalCountSh
@@ -256,6 +318,12 @@ BEGIN
                                    THEN tmpMI.Amount
                               ELSE 0
                          END) AS TotalCountKg
+
+                         -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth, FALSE) = TRUE
+                                   THEN tmpMI.Amount
+                              ELSE 0
+                         END) AS TotalCountSh_Kg
 
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
@@ -316,7 +384,58 @@ BEGIN
                                             ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                       LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                             AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+                                                             AND (tmpObject_GoodsPropertyValue.Article <> ''
+                                                               OR tmpObject_GoodsPropertyValue.BarCode <> ''
+                                                               OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
+                                                               OR tmpObject_GoodsPropertyValue.Name <> '')
         ) AS tmpMI;
+    ELSE 
+            -- Расчет шт для штучного товара, который нужно показать как кг, чтоб снять это кол-во с итого шт.
+        SELECT TotalCountSh_Kg
+        INTO vbTotalCountSh_Kg
+        FROM (SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
+                     SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE
+                                    THEN tmpMI.Amount
+                               ELSE 0
+                          END) AS TotalCountSh_Kg
+              FROM (SELECT MovementItem.ObjectId AS GoodsId
+                         , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
+                         , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                          THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                     WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
+                                          THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                     ELSE MovementItem.Amount
+                                END) AS Amount
+                    FROM MovementItem
+                         INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                     ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                         LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                     ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.isErased = FALSE
+                    GROUP BY MovementItem.ObjectId
+                           , MILinkObject_GoodsKind.ObjectId
+                   ) AS tmpMI
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                             ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+      
+                        LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                              AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+                                                              AND (tmpObject_GoodsPropertyValue.Article <> ''
+                                                                OR tmpObject_GoodsPropertyValue.BarCode <> ''
+                                                                OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
+                                                                OR tmpObject_GoodsPropertyValue.Name <> '')
+             ) AS tmpMI;
     END IF;
 
 
@@ -385,8 +504,10 @@ BEGIN
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , FLOOR (MovementFloat_TotalCount.ValueData) AS TotalCount_floor
+           
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData - COALESCE (vbTotalCountSh_Kg,0) END AS TotalCountSh
+
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
@@ -864,7 +985,7 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-     WITH tmpObject_GoodsPropertyValue AS
+     WITH /*tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -876,6 +997,7 @@ BEGIN
              , ObjectString_Article.ValueData       AS Article
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
              , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+             , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -905,6 +1027,10 @@ BEGIN
                                     ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                     ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -912,7 +1038,8 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-     , tmpObject_GoodsPropertyValueGroup AS
+     ,*/
+       tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Name
              , tmpObject_GoodsPropertyValue.Article
@@ -1093,7 +1220,12 @@ BEGIN
                   ELSE 'KGM'
              END::TVarChar                   AS DELIVEREDUNIT
            , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
+
+           --если  isWeigth = true - тогда в amountpartner - для шт. вернуть вес, в measurename - вернуть кг.
+           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.isWeigth, FALSE) = FALSE THEN tmpMI.AmountPartner
+                  ELSE CAST ((tmpMI.AmountPartner * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
+             END                             AS AmountPartner
+
            , tmpMI_Order.Amount              AS AmountOrder
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
@@ -1177,9 +1309,9 @@ BEGIN
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
-           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST ((tmpMI.AmountPartner * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
            , CAST (tmpMI.AmountPartner * COALESCE (ObjectFloat_Weight.ValueData, 0) AS TFloat) AS AmountPack_Weight
---           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+--           , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
 
            , CASE WHEN vbOperDate < '01.01.2017'
@@ -1218,13 +1350,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-            LEFT JOIN ObjectString AS OS_Measure_InternalCode
-                                   ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
-                                  AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -1241,6 +1366,15 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE THEN zc_Measure_Kg() ELSE ObjectLink_Goods_Measure.ChildObjectId END
+            LEFT JOIN ObjectString AS OS_Measure_InternalCode
+                                   ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
+                                  AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -1375,6 +1509,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.08.19         *
  26.11.15         *
  17.09.15         *
  13.11.14                                                       * fix

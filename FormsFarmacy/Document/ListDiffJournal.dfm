@@ -1,29 +1,29 @@
 inherited ListDiffJournalForm: TListDiffJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074'>'
   ClientHeight = 535
-  ClientWidth = 861
+  ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  ExplicitWidth = 877
+  ExplicitWidth = 912
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 861
+    Width = 896
     Height = 478
     TabOrder = 3
     ExplicitWidth = 861
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 861
+    ClientRectRight = 896
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 861
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 861
+        Width = 896
         Height = 478
         ExplicitWidth = 861
         ExplicitHeight = 478
@@ -52,6 +52,11 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_free
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_inf
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -77,6 +82,11 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_free
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_inf
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -170,12 +180,24 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
+          object Summa_inf: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1080#1085#1092#1086')'
+            DataBinding.FieldName = 'Summa_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1053#1060#1054' - '#1094#1077#1085#1072' '#1091' '#1085#1072#1089' '#1042#1067#1064#1045', '#1095#1077#1084' '#1091' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1086#1074
+            Options.Editing = False
+            Width = 74
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 861
+    Width = 896
     ExplicitWidth = 861
     inherited deStart: TcxDateEdit
       EditValue = 42005d

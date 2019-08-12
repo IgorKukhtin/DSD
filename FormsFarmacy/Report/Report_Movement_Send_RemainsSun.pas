@@ -39,7 +39,7 @@ type
     bbPrint: TdxBarButton;
     actRefreshOnDay: TdsdDataSetRefresh;
     cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
+    GridDBTableViewResult_child: TcxGridDBTableView;
     ch2FromName: TcxGridDBColumn;
     ch2ToName: TcxGridDBColumn;
     ch2Amount: TcxGridDBColumn;
@@ -47,24 +47,38 @@ type
     ch2Invnumber: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    GridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
     chToName: TcxGridDBColumn;
     chAmount: TcxGridDBColumn;
     chSumm: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    ClientDataSet1: TClientDataSet;
-    DataSource1: TDataSource;
-    dsdDBViewAddOn2: TdsdDBViewAddOn;
-    ClientDataSet2: TClientDataSet;
-    DataSource2: TDataSource;
+    DBViewAddOn_Partion: TdsdDBViewAddOn;
+    PartionCDS: TClientDataSet;
+    PartionDS: TDataSource;
+    DBViewAddOn_Result_child: TdsdDBViewAddOn;
+    Result_childCDS: TClientDataSet;
+    Result_childDS: TDataSource;
     chAmount_next: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
     cxSplitter2: TcxSplitter;
     cxSplitter1: TcxSplitter;
     chExpirationDate_in: TcxGridDBColumn;
+    spSendSUN: TdsdStoredProc;
+    DefSUNCDS: TClientDataSet;
+    DefSUNDS: TDataSource;
+    actSendSUN: TdsdExecStoredProc;
+    macSendSUN: TMultiAction;
+    bbSendSUN: TdxBarButton;
+    cxSplitter3: TcxSplitter;
+    cxGrid3: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    dsFromName: TcxGridDBColumn;
+    dsToName: TcxGridDBColumn;
+    dsGoodsCode: TcxGridDBColumn;
+    dfGoodsName: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
   private
     { Private declarations }
   public

@@ -83,7 +83,7 @@ BEGIN
                               , MovementItem.Amount             ::TFloat AS Amount
                               , COALESCE (tmpChild_AmountManual.AmountManual,0)           ::TFloat AS AmountManual
                               , (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) AS AmountTotal
-                              , (COALESCE (tmpChild.AmountOut,0) / vbDays) AS AmountOut_avg
+                              , CASE WHEN COALESCE (vbDays, 0) <> 0 THEN (COALESCE (tmpChild.AmountOut,0) / vbDays) ELSE 0 END AS AmountOut_avg
                               , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                      ELSE 0
@@ -111,16 +111,16 @@ BEGIN
                         )
 
       , tmpMI_Child_Calc AS (SELECT tmpMI_Child.*
-                               , (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) :: TFloat AS Koeff
-                          FROM tmpMI_Child
-                               LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
-                          WHERE COALESCE (tmpMI_Child.AmountManual,0) = 0
+                                  , CASE WHEN COALESCE (vbDays,0) <> 0 AND COALESCE (tmpMI_Master.RemainsDay,0) <> 0 THEN (((tmpMI_Child.AmountOut / vbDays) * tmpMI_Master.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpMI_Master.RemainsDay) ELSE 0 END :: TFloat AS Koeff
+                             FROM tmpMI_Child
+                                  LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
+                             WHERE COALESCE (tmpMI_Child.AmountManual,0) = 0
                          )
 
       -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
       , tmpMI_Master2 AS (SELECT MovementItem.Id
                                , (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) AS AmountTotal
-                               , (COALESCE (tmpChild.AmountOut,0) / vbDays) AS AmountOut_avg
+                               , CASE WHEN COALESCE (vbDays,0) <> 0 THEN (COALESCE (tmpChild.AmountOut,0) / vbDays) ELSE 0 END AS AmountOut_avg
                                , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
                                       THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (MovementItem.AmountManual,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                       ELSE 0
@@ -258,3 +258,4 @@ $BODY$
 --select * from gpSelect_MovementItem_OrderInternalPromoChild(inMovementId := 0, inIsErased := 'False' ,  inSession := '3');
 
 -- select * from gpSelect_MI_OrderInternalPromo(inMovementId := 13840564 , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_MI_OrderInternalPromo(inMovementId := 15291839 , inIsErased := 'False' ,  inSession := '3');

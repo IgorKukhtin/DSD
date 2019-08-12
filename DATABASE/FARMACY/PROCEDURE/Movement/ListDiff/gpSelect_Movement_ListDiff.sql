@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Count_free  TFloat
              , Count_Order TFloat
              , Summa_free  TFloat
+             , Summa_inf   TFloat
               )
 
 AS
@@ -65,6 +66,8 @@ BEGIN
                               , SUM (CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) <> 0 THEN MovementItem.Amount ELSE 0 END) AS Count_Order
                               , SUM (MI_Float_Price.ValueData * 
                                      CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) = 0  THEN MovementItem.Amount ELSE 0 END) AS Summa_free
+                              , SUM (MI_Float_Price.ValueData * 
+                                     CASE WHEN MILO_DiffKind.ObjectId = 9572752 THEN MovementItem.Amount ELSE 0 END) AS Summa_inf
                          FROM tmpMovement
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -74,7 +77,10 @@ BEGIN
                                                          AND MIFloat_OrderId.DescId         = zc_MIFloat_MovementId()
                               LEFT JOIN MovementItemFloat AS MI_Float_Price
                                                           ON MI_Float_Price.MovementItemId = MovementItem.Id
-                                                         AND MI_Float_Price.DescId = zc_MIFloat_Price()                           
+                                                         AND MI_Float_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemLinkObject AS MILO_DiffKind
+                                                               ON MILO_DiffKind.MovementItemId = MovementItem.Id
+                                                              AND MILO_DiffKind.DescId = zc_MILinkObject_DiffKind()
                          GROUP BY MovementItem.MovementId
                          )
        SELECT
@@ -93,6 +99,7 @@ BEGIN
            , tmpData_MI.Count_free  :: TFloat
            , tmpData_MI.Count_Order :: TFloat
            , tmpData_MI.Summa_free  :: TFloat
+           , tmpData_MI.Summa_inf   :: TFloat
 
        FROM tmpMovement AS Movement
 

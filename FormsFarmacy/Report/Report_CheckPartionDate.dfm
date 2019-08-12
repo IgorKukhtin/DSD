@@ -203,7 +203,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 65
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080'  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1095#1077#1082')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -236,7 +236,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 89
           end
           object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1095#1077#1082')'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -247,7 +247,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 89
           end
           object Persent: TcxGridDBColumn
-            Caption = '% '#1087#1086#1090#1077#1088#1080'  '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
+            Caption = '% '#1087#1086#1090#1077#1088#1080': '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'.'#1089#1086' '#1089#1082#1080#1076'./ '#1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'Persent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -259,7 +259,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             Width = 89
           end
           object PersentSale: TcxGridDBColumn
-            Caption = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Caption = '% '#1087#1086#1090#1077#1088#1080' : '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076' ('#1095#1077#1082') / '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PersentSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -268,10 +268,10 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1094#1077#1085#1099' '#1079#1072#1082#1091#1087#1082#1080
             Options.Editing = False
-            Width = 87
+            Width = 104
           end
           object SummDiff: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080', '#1075#1088#1085
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' : '#1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' - '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -279,10 +279,12 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 102
           end
           object SummSaleDiff: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080' ('#1094#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' - '#1094#1077#1085#1072'), '#1075#1088#1085
+            Caption = 
+              #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080': '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076'. ('#1095#1077#1082') - '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1073#1077#1079' '#1089#1082#1080#1076#1082 +
+              #1080', '#1075#1088#1085
             DataBinding.FieldName = 'SummSaleDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -290,7 +292,7 @@ inherited Report_CheckPartionDateForm: TReport_CheckPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 113
           end
           object DaysDiff: TcxGridDBColumn
             Caption = #1044#1085#1077#1081' '#1076#1086' '#1089#1088#1086#1082#1072

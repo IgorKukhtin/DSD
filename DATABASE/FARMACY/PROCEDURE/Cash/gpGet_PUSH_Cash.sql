@@ -230,7 +230,10 @@ BEGIN
             AND Movement.StatusId = zc_Enum_Status_Erased()) = 1
       THEN
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-          SELECT 5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!',
+          SELECT 5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
+                    CASE WHEN date_part('DOW',     CURRENT_DATE)::Integer <= 5 
+                          AND date_part('HOUR',    CURRENT_TIME)::Integer < 12 
+                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 12:00!' ELSE '' END,
                     'TSendForm', 'Перемещение СУН', 'Id,inOperDate', 'ftInteger,ftDateTime',
                     Movement.ID::TVarChar||','||CURRENT_DATE::TVarChar
           FROM  Movement
@@ -247,7 +250,10 @@ BEGIN
           LIMIT 1;
       ELSE
         INSERT INTO _PUSH (Id, Text, FormName, Button)
-        VALUES (5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!',
+        VALUES (5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
+                    CASE WHEN date_part('DOW',     CURRENT_DATE)::Integer <= 5 
+                          AND date_part('HOUR',    CURRENT_TIME)::Integer < 12 
+                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 12:00!' ELSE '' END,
                    'TSendCashJournalSunForm', 'Реестр перемещений СУН');
       END IF;
    END IF;

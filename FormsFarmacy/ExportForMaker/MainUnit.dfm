@@ -388,6 +388,11 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082
       OnClick = pmClick
     end
+    object N5: TMenuItem
+      Tag = 4
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      OnClick = pmClick
+    end
   end
   object qrySetDateSend: TZQuery
     Connection = ZConnection1

@@ -82,6 +82,11 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,6 +148,11 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -212,6 +222,14 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -294,6 +312,17 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
           object SummaMargin: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
@@ -646,6 +675,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         end>
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077', '#1070#1088'.'#1083#1080#1094#1086' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartion: TdsdDataSetRefresh
