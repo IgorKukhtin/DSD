@@ -93,4 +93,4 @@ ALTER FUNCTION gpSelect_Movement_Medoc (TDateTime, TDateTime, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Medoc (inStartDate:= ('01.11.2015')::TDateTime, inEndDate:= ('01.11.2015')::TDateTime, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Medoc (inStartDate:= ('01.07.2019')::TDateTime, inEndDate:= ('01.07.2019')::TDateTime, inSession:= zfCalc_UserAdmin())
