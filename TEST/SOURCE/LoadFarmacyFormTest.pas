@@ -1510,6 +1510,7 @@ procedure TLoadFormTest.LoadOrderInternalPromoFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoJournalForm');
 
@@ -1518,7 +1519,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPromoChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPromoChoiceForm');
-
+   }
 end;
 
 procedure TLoadFormTest.LoadObjectUnionFormTest;
