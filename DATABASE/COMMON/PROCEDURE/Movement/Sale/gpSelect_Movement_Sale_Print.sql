@@ -397,7 +397,7 @@ BEGIN
         SELECT TotalCountSh_Kg
         INTO vbTotalCountSh_Kg
         FROM (SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
-                     SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpObject_GoodsPropertyValue.isWeigth = TRUE
+                     SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE
                                     THEN tmpMI.Amount
                                ELSE 0
                           END) AS TotalCountSh_Kg
