@@ -1264,6 +1264,16 @@ BEGIN
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
           -- AND vbOperDate < zc_DateStart_OperDatePartner()
        ;
+/*
+
+     IF inMovementId = 14030304
+     THEN
+         RAISE EXCEPTION 'Ошибка. <%> <%>  <%> <%>', (SELECT OperSumm FROM _tmpItemSumm WHERE isRestoreAccount_60000 = TRUE AND ContainerId_From = 724550)
+                                                         , (SELECT OperSumm FROM _tmpItemSumm WHERE isRestoreAccount_60000 = TRUE AND ContainerId_From = 724558)
+                                                         , (SELECT OperSumm FROM _tmpItemSumm WHERE isRestoreAccount_60000 = TRUE AND ContainerId_From = 2532332)
+                                                         , (SELECT OperSumm FROM _tmpItemSumm WHERE isRestoreAccount_60000 = TRUE AND ContainerId_From = 2532333)
+                                                         ;
+     END IF;*/
 
 
      -- 1.2.4. !!!Проверка - в этом случае корреспонденция между с/с и Прибыль будущих периодов должна быть одинаковой
