@@ -25,19 +25,21 @@ BEGIN
 
     PERFORM lpInsertUpdate_MovementItem_Loss (ioId                 := COALESCE(MovementItemLoos.Id,0)
                                             , inMovementId         := inMovementId
-                                            , inGoodsId            := MovementItemCheck.ObjectId
-                                            , inAmount             := MovementItemCheck.Amount
+                                            , inGoodsId            := MovementItemSend.ObjectId
+                                            , inAmount             := MovementItemSend.Amount
                                             , inUserId             := vbUserId)
-    FROM MovementItem AS MovementItemCheck
+    FROM (SELECT MovementItemSend.ObjectId
+               , SUM(MovementItemSend.Amount) AS Amount
+          FROM MovementItem AS MovementItemSend
+          WHERE MovementItemSend.MovementId = inSendID
+            AND MovementItemSend.IsErased = False
+            AND MovementItemSend.DescId = zc_MI_Master()
+          GROUP BY MovementItemSend.ObjectId) AS MovementItemSend
 
          LEFT OUTER JOIN MovementItem AS MovementItemLoos
                                       ON MovementItemLoos.MovementId = inMovementId  
-                                     AND MovementItemLoos.ObjectId = MovementItemCheck.ObjectId 
-                                     AND MovementItemLoos.DescId = zc_MI_Master()
-
-    WHERE MovementItemCheck.MovementId = inSendID
-      AND MovementItemCheck.IsErased = False
-      AND MovementItemCheck.DescId = zc_MI_Master();
+                                     AND MovementItemLoos.ObjectId = MovementItemSend.ObjectId 
+                                     AND MovementItemLoos.DescId = zc_MI_Master();
   
 END;
 $BODY$

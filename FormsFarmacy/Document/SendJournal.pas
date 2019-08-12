@@ -71,6 +71,7 @@ type
     dxBarButton1: TdxBarButton;
     spUpdate_Movement_Sent: TdsdStoredProc;
     isSent: TcxGridDBColumn;
+    isOverdueSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

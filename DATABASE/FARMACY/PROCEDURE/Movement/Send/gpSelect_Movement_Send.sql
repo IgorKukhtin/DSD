@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -113,6 +113,9 @@ BEGIN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
+           , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
+                   AND Movement.OperDate < CURRENT_DATE
+                   AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -267,4 +270,4 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inSession:= '2')

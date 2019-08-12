@@ -214,6 +214,7 @@ BEGIN
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                AND MovementLinkObject_From.ObjectId = vbUnitId
              WHERE Movement.DescId = zc_Movement_Send()
+               AND Movement.OperDate = CURRENT_DATE
                AND Movement.StatusId = zc_Enum_Status_Erased())
    THEN
       IF (SELECT COUNT(*)
@@ -227,7 +228,8 @@ BEGIN
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                             AND MovementLinkObject_From.ObjectId = vbUnitId
           WHERE Movement.DescId = zc_Movement_Send()
-            AND Movement.StatusId = zc_Enum_Status_Erased()) = 1
+            AND Movement.OperDate = CURRENT_DATE
+            AND Movement.StatusId = zc_Enum_Status_Erased()) <> 1
       THEN
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
           SELECT 5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
@@ -246,15 +248,16 @@ BEGIN
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                             AND MovementLinkObject_From.ObjectId = vbUnitId
           WHERE Movement.DescId = zc_Movement_Send()
+            AND Movement.OperDate = CURRENT_DATE
             AND Movement.StatusId = zc_Enum_Status_Erased()
           LIMIT 1;
       ELSE
-        INSERT INTO _PUSH (Id, Text, FormName, Button)
+        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
         VALUES (5, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
                     CASE WHEN date_part('DOW',     CURRENT_DATE)::Integer <= 5 
                           AND date_part('HOUR',    CURRENT_TIME)::Integer < 12 
                          THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 12:00!' ELSE '' END,
-                   'TSendCashJournalSunForm', 'Реестр перемещений СУН');
+                   'TSendCashJournalSunForm', 'Реестр перемещений СУН', 'isSUNAll', 'ftBoolean', 'False');
       END IF;
    END IF;
 
@@ -271,10 +274,10 @@ BEGIN
                    LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                               ON MovementBoolean_Received.MovementId = Movement.Id
                                              AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                 ON MovementLinkObject_From.MovementId = Movement.Id
-                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                AND MovementLinkObject_From.ObjectId = vbUnitId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                 ON MovementLinkObject_To.MovementId = Movement.Id
+                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                AND MovementLinkObject_To.ObjectId = vbUnitId
                    INNER JOIN MovementDate AS MovementDate_Sent
                                            ON MovementDate_Sent.MovementId = Movement.Id
                                           AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
@@ -305,10 +308,10 @@ BEGIN
                                                 ON MovementBoolean_Received.MovementId = Movement.Id
                                                AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
                                                AND MovementBoolean_Received.ValueData = False
-                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                    ON MovementLinkObject_From.MovementId = Movement.Id
-                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                   AND MovementLinkObject_From.ObjectId = vbUnitId
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                   AND MovementLinkObject_To.ObjectId = vbUnitId
                 WHERE Movement.DescId = zc_Movement_Send()
                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
                   AND COALESCE (MovementBoolean_Received.ValueData, False) = False)

@@ -116,7 +116,7 @@ BEGIN
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
     AND Object_Unit_Run.isErased = FALSE
     AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 11300059);
+    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 11300059, 11769526);
 
 
     -- По аптекам не вошедшим в сети

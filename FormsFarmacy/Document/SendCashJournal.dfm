@@ -16,28 +16,11 @@ inherited SendCashJournalForm: TSendCashJournalForm
       end
     end
   end
-  inherited BarManager: TdxBarManager [4]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited spMovementUnComplete: TdsdStoredProc [2]
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [5]
+  inherited spMovementSetErased: TdsdStoredProc [3]
   end
-  inherited PopupMenu: TPopupMenu [6]
-  end
-  inherited PeriodChoice: TPeriodChoice [7]
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher [8]
-  end
-  inherited spMovementComplete: TdsdStoredProc [9]
-  end
-  inherited spMovementUnComplete: TdsdStoredProc [10]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [11]
-  end
-  inherited FormParams: TdsdFormParams [12]
+  inherited FormParams: TdsdFormParams [4]
     Params = <
       item
         Name = 'Id'
@@ -80,25 +63,25 @@ inherited SendCashJournalForm: TSendCashJournalForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spMovementReComplete: TdsdStoredProc [13]
+  inherited spMovementReComplete: TdsdStoredProc [5]
   end
-  inherited PrintHeaderCDS: TClientDataSet [14]
+  inherited PrintHeaderCDS: TClientDataSet [6]
   end
-  inherited PrintItemsCDS: TClientDataSet [15]
+  inherited PrintItemsCDS: TClientDataSet [7]
   end
-  inherited spSelectPrint: TdsdStoredProc [16]
+  inherited spSelectPrint: TdsdStoredProc [8]
   end
-  inherited PrintItemsSverkaCDS: TClientDataSet [17]
+  inherited PrintItemsSverkaCDS: TClientDataSet [9]
   end
-  inherited spUpdate_Movement_OperDate: TdsdStoredProc [18]
+  inherited spUpdate_Movement_OperDate: TdsdStoredProc [10]
   end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [19]
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [11]
   end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [20]
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [12]
   end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [21]
+  inherited spUpdate_Movement_Received: TdsdStoredProc [13]
   end
-  inherited ActionList: TActionList [22]
+  inherited ActionList: TActionList [14]
     inherited actPrint: TdsdPrintAction
       MoveParams = <
         item
@@ -116,11 +99,11 @@ inherited SendCashJournalForm: TSendCashJournalForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [23]
+  inherited MasterDS: TDataSource [15]
   end
-  inherited MasterCDS: TClientDataSet [24]
+  inherited MasterCDS: TClientDataSet [16]
   end
-  inherited spSelect: TdsdStoredProc [25]
+  inherited spSelect: TdsdStoredProc [17]
     StoredProcName = 'gpSelect_Movement_SendCash'
     Params = <
       item
@@ -156,5 +139,26 @@ inherited SendCashJournalForm: TSendCashJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [18]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [19]
+  end
+  inherited BarManager: TdxBarManager [20]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [21]
+  end
+  inherited PopupMenu: TPopupMenu [22]
+  end
+  inherited PeriodChoice: TPeriodChoice [23]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [24]
+  end
+  inherited spMovementComplete: TdsdStoredProc [25]
   end
 end

@@ -1,13 +1,10 @@
--- Function: gpUnComplete_Movement_Income (Integer, TVarChar, TVarChar)
+-- Function: gpUnComplete_Movement_Income (Integer, TVarChar)
 
--- DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_Income (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Check(
+CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Income(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inUsersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
---    IN inSession         TVarChar DEFAULT ''     -- сессия пользователя
-    IN inSession           TVarChar                -- сессия пользователя
+    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -16,28 +13,26 @@ $BODY$
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
 BEGIN
-    if coalesce(inUserSession, '') <> '' then 
-     inSession := inUserSession;
-    end if;
+     -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+     
     -- проверка прав пользователя на вызов процедуры
     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
     THEN
-        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-
         -- Разрешаем только сотрудникам с правами админа    
         IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
         THEN
           RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
         END IF;
-    ELSE
-        vbUserId:=inSession::Integer;
     END IF;
+     
 
      -- проверка - если <Master> Удален, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
+    PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
+    
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
-        date_trunc('day', Movement.OperDate),
+        Movement.OperDate,
         Movement_Unit.ObjectId AS Unit
     INTO
         vbOperDate,
@@ -47,17 +42,8 @@ BEGIN
                                       ON Movement_Unit.MovementId = Movement.Id
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
-    
-    IF EXISTS(SELECT 1 FROM MovementBoolean AS MovementBoolean_Delay
-              WHERE MovementBoolean_Delay.MovementId = inMovementId
-                AND MovementBoolean_Delay.DescId    = zc_MovementBoolean_Delay()
-                AND MovementBoolean_Delay.ValueData = TRUE)
-    THEN
-      -- сохранили свойство <Дата создания просрочки>
-      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Delay(), inMovementId, CURRENT_TIMESTAMP);
-    END IF;
 
-/*    IF EXISTS(SELECT 1
+    /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
                                           ON MI_Inventory.MovementId = Movement_Inventory.Id
@@ -82,23 +68,21 @@ BEGIN
                   Movement_Inventory.StatusId = zc_Enum_Status_Complete()
               )
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Отмена проведения документа запрещена!';
+        RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего прихода. Отмена проведения документа запрещена!';
     END IF;*/
+    
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
- 02.07.19                                                                    *
- 18.04.19                                                                    *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  03.07.14                                                       *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_Check (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUnComplete_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

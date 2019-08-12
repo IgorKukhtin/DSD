@@ -337,6 +337,13 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object isOverdueSUN: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isOverdueSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object MCSPeriod: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
             DataBinding.FieldName = 'MCSPeriod'

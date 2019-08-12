@@ -28,16 +28,18 @@ BEGIN
                                             , inGoodsId            := MovementItemCheck.ObjectId
                                             , inAmount             := MovementItemCheck.Amount
                                             , inUserId             := vbUserId)
-    FROM MovementItem AS MovementItemCheck
+    FROM (SELECT MovementItemCheck.ObjectId
+               , SUM(MovementItemCheck.Amount) AS Amount
+          FROM MovementItem AS MovementItemCheck
+          WHERE MovementItemCheck.MovementId = inCheckID
+          AND MovementItemCheck.IsErased = False
+          AND MovementItemCheck.DescId = zc_MI_Master()
+          GROUP BY MovementItemCheck.ObjectId) AS MovementItemCheck
 
          LEFT OUTER JOIN MovementItem AS MovementItemLoos
                                       ON MovementItemLoos.MovementId = inMovementId  
                                      AND MovementItemLoos.ObjectId = MovementItemCheck.ObjectId 
-                                     AND MovementItemLoos.DescId = zc_MI_Master()
-
-    WHERE MovementItemCheck.MovementId = inCheckID
-      AND MovementItemCheck.IsErased = False
-      AND MovementItemCheck.DescId = zc_MI_Master();
+                                     AND MovementItemLoos.DescId = zc_MI_Master();
   
 END;
 $BODY$

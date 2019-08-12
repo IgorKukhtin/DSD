@@ -271,7 +271,7 @@ BEGIN
                     HAVING SUM(T0.Amount) <> 0
                    )
 
-      , CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+      , CurrPRICE AS (SELECT DISTINCT Price_Goods.ChildObjectId               AS GoodsId
                            , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                       FROM tmpMI
                          INNER JOIN ObjectLink AS Price_Goods
@@ -365,4 +365,5 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Loss (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_Loss (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- 
+select * from gpSelect_MovementItem_Loss(inMovementId := 15264081 , inShowAll := 'False' , inIsErased := 'True' ,  inSession := '3');
