@@ -6513,7 +6513,7 @@ begin
     if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
       nCheckID := CheckCDS.FieldByName('GoodsId').asInteger;
     try
-      if not FileExists(Remains_lcl) or not FileExists(Alternative_lcl) then
+      if not FileExists(Remains_lcl) {or not FileExists(Alternative_lcl)} then
         ShowMessage('Нет локального хранилища.');
 
       WaitForSingleObject(MutexRemains, INFINITE);
