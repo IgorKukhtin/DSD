@@ -108,6 +108,7 @@ type
     edUserManager3: TcxButtonEdit;
     GuidesUserManager3: TdsdGuides;
     cbSUN: TcxCheckBox;
+    cbAutoMCS: TcxCheckBox;
   private
     { Private declarations }
   public

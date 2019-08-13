@@ -122,7 +122,7 @@
   end
   object cbRepriceAuto: TcxCheckBox
     Left = 255
-    Top = 121
+    Top = 107
     Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
     TabOrder = 15
@@ -534,6 +534,14 @@
     TabOrder = 64
     Width = 119
   end
+  object cbAutoMCS: TcxCheckBox
+    Left = 255
+    Top = 126
+    Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+    Caption = #1040#1074#1090#1086' '#1087#1077#1088'. '#1053#1058#1047
+    TabOrder = 65
+    Width = 113
+  end
   object ActionList: TActionList
     Left = 356
     Top = 398
@@ -851,6 +859,14 @@
         Value = Null
         Component = GuidesUnitOverdue
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAutoMCS'
+        Value = Null
+        Component = cbAutoMCS
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1218,6 +1234,13 @@
         Name = 'isSun'
         Value = Null
         Component = cbSUN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAutoMCS'
+        Value = False
+        Component = cbAutoMCS
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

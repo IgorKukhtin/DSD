@@ -35,7 +35,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isSP        Boolean,
                DividePartionDate Boolean,
                RedeemByHandSP Boolean,
-               UnitOverdueId  Integer, UnitOverdueName TVarChar
+               UnitOverdueId  Integer, UnitOverdueName TVarChar,
+               isAutoMCS Boolean
                ) AS
 $BODY$
 BEGIN
@@ -112,6 +113,7 @@ BEGIN
            
            , CAST (0 as Integer)   AS UnitOverdueId
            , CAST ('' as TVarChar) AS UnitOverdueName
+           , FALSE                 AS isAutoMCS
            
 ;
    ELSE
@@ -187,6 +189,7 @@ BEGIN
       
       , COALESCE (Object_UnitOverdue.Id,0)          ::Integer  AS UnitOverdueId
       , COALESCE (Object_UnitOverdue.ValueData, '') ::TVarChar AS UnitOverdueName
+      , COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE):: Boolean AS isAutoMCS
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -351,6 +354,10 @@ BEGIN
                             AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()
         LEFT JOIN Object AS Object_UnitOverdue ON Object_UnitOverdue.Id = ObjectLink_Unit_UnitOverdue.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Unit_AutoMCS
+                                ON ObjectBoolean_Unit_AutoMCS.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -366,6 +373,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 13.08.19                                                        * AutoMCS
  11.07.19         *
  02.07.19                                                        * add UnitOverdue
  02.07.19         *
