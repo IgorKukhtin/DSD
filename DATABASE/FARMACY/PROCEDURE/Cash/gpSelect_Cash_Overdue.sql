@@ -12,7 +12,7 @@ RETURNS TABLE (ORD Integer, id Integer,
                BranchDate TDateTime, Invnumber TVarChar, FromName TVarChar, ContractName TVarChar,
                PartionGoodsId Integer,
                ExpirationDateDialog TDateTime, AmountDialog TFloat,
-               Cat_5 boolean,
+               Cat_5 boolean,  DatePartionGoodsCat5 TDateTime
                Price TFloat
               ) AS
 $BODY$
@@ -69,16 +69,17 @@ BEGIN
        , Container.Amount                                   AS Amount
        , ObjectFloat_PartionGoods_PriceWithVAT.ValueData    AS PriceWithVAT
        , ObjectFloat_PartionGoods_ValueMin.ValueData        AS ValueMin
-       , ObjectFloat_PartionGoods_ExpirationDate.ValueData  AS ExpirationDate
+       , ObjectDate_PartionGoods_ExpirationDate.ValueData   AS ExpirationDate
        , MovementDate_Branch.ValueData                      AS BranchDate
        , Movement_Income.Invnumber                          AS Invnumber
        , Object_From.ValueData                              AS FromName
        , Object_Contract.ValueData                          AS ContractName
        , ContainerLinkObject.ObjectId                       AS PartionGoodsId 
 
-       , ObjectFloat_PartionGoods_ExpirationDate.ValueData            AS ExpirationDateDialog
+       , ObjectDate_PartionGoods_ExpirationDate.ValueData             AS ExpirationDateDialog
        , Container.Amount                                             AS AmountDialog
        , COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE)  AS Cat_5
+       , ObjectDate_PartionGoods_Cat_5.ValueData                      AS DatePartionGoodsCat5
        , COALESCE(tmpObject_Price.Price,0)::TFloat                    AS Price
   FROM Container
 
@@ -96,13 +97,17 @@ BEGIN
                              ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  ContainerLinkObject.ObjectId
                             AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
 
-       LEFT JOIN ObjectDate AS ObjectFloat_PartionGoods_ExpirationDate
-                            ON ObjectFloat_PartionGoods_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
-                           AND ObjectFloat_PartionGoods_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+       LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_ExpirationDate
+                            ON ObjectDate_PartionGoods_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                           AND ObjectDate_PartionGoods_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
        LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  ContainerLinkObject.ObjectId
                               AND ObjectBoolean_PartionGoods_Cat_5.DescId = zc_ObjectBoolean_PartionGoods_Cat_5()
+
+       LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Cat_5
+                            ON ObjectDate_PartionGoods_Cat_5.ObjectId =  ContainerLinkObject.ObjectId
+                           AND ObjectDate_PartionGoods_Cat_5.DescId = zc_ObjectDate_PartionGoods_Cat_5()
 
        LEFT JOIN Movement AS Movement_Income ON Movement_Income.ID = Object_PartionGoods.ObjectCode
 
@@ -124,7 +129,7 @@ BEGIN
        
   WHERE Container.DescId    = zc_Container_CountPartionDate()
     AND Container.WhereObjectId = vbUnitId
-    AND ObjectFloat_PartionGoods_ExpirationDate.ValueData <= CURRENT_DATE
+    AND ObjectDate_PartionGoods_ExpirationDate.ValueData <= CURRENT_DATE
     AND Container.Amount > 0
  -- !!!
  -- AND 1=0

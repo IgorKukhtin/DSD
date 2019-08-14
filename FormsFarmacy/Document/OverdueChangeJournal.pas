@@ -70,6 +70,8 @@ type
     ExpirationDatePG: TcxGridDBColumn;
     actShowPUSHSendPartionDate: TdsdShowPUSHMessage;
     spShowPUSHSendPartionDate: TdsdStoredProc;
+    DatePartionGoodsCat5: TcxGridDBColumn;
+    Cat_5: TcxGridDBColumn;
   private
     { Private declarations }
   public

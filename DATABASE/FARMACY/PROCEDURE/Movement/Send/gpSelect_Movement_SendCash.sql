@@ -112,7 +112,7 @@ BEGIN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
-                   AND Movement.OperDate < CURRENT_DATE
+                   AND Movement.OperDate < CURRENT_DATE - INTERVAL '1 DAY'
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
 
            , Object_Insert.ValueData              AS InsertName
@@ -244,6 +244,8 @@ BEGIN
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
          AND (inisSUN = FALSE OR inisSUN = TRUE AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE)
+         AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased() 
+           OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY' AND Movement.StatusId = zc_Enum_Status_Erased())
         
        ;
 
@@ -264,5 +266,4 @@ ALTER FUNCTION gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarCh
 -- тест
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')
--- 
-select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'True' , inisSUNAll := 'True', inSession := '3');
+-- select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'True' , inisSUNAll := 'True', inSession := '3');

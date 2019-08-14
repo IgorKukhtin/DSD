@@ -110,6 +110,7 @@ type
     spUpdate_isDeferred_Yes: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    AmountDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

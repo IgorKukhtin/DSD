@@ -62,7 +62,7 @@ type
     MultiAction1: TMultiAction;
     actExecuteOverdueDialog: TExecuteDialog;
     actTransfer_SendPartionDate: TdsdExecStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    ORD: TcxGridDBColumn;
     Cat_5: TcxGridDBColumn;
     spUpdate_Cat_5: TdsdStoredProc;
     Action1: TAction;
@@ -75,6 +75,7 @@ type
     dxBarButton4: TdxBarButton;
     FormParams: TdsdFormParams;
     Price: TcxGridDBColumn;
+    DatePartionGoodsCat5: TcxGridDBColumn;
   private
     { Private declarations }
   public

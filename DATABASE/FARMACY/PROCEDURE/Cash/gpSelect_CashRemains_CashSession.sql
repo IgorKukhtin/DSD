@@ -562,6 +562,7 @@ BEGIN
                                       , SUM(Container.DeferredSend)                             AS DeferredSend
                                       , MIN(COALESCE (Container.ExpirationDate, zc_DateEnd()))  AS MinExpirationDate
                                  FROM tmpContainer AS Container
+                                 WHERE Container.Amount <> 0
                                  GROUP BY Container.ObjectId
                                  HAVING SUM(Container.Amount) <> 0 OR SUM(Container.DeferredSend) <> 0
                                  )

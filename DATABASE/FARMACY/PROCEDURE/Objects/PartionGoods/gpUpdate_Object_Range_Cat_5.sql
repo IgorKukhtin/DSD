@@ -53,7 +53,24 @@ BEGIN
                                                       AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                             WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                            )
+                            ),
+       tmpNotSale AS (SELECT ContainerLinkObject.ContainerId 
+                      FROM ObjectDate
+                           INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = ObjectDate.ObjectId
+                                                         AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                           INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
+                                               AND Container.WhereObjectId = vbUnitId
+/*                           LEFT JOIN MovementItemContainer ON MovementItemContainer.MovementDescId =  zc_Movement_Check() 
+                                                          AND MovementItemContainer.ContainerId = ContainerLinkObject.ContainerId
+                           LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemID
+                                                                 
+                           LEFT JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.ParentId
+                                                           AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
+                                                           AND MovementItemLinkObject.ObjectId = zc_Enum_PartionDateKind_Cat_5() 
+*/                      WHERE ObjectDate.DescId = zc_ObjectDate_PartionGoods_Cat_5()
+--                        AND COALESCE (MovementItemLinkObject.MovementItemId, 0) = 0
+                        AND ObjectDate.ValueData < CURRENT_DATE - interval '30 day')
+                            
 
     SELECT ContainerLinkObject.ObjectId AS PartionGoodsID
     FROM Container
@@ -82,6 +99,7 @@ BEGIN
       AND Container.whereobjectid = vbUnitId
       AND COALESCE(tmpObject_Price.Price,0) >= inPriceMin
       AND COALESCE(tmpObject_Price.Price,0) <= inPriceMax
+      AND COALESCE(tmpNotSale.ContainerId, 0) = 0
       AND COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE) AS T1;
   
 END;

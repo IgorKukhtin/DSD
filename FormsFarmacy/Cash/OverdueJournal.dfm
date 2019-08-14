@@ -53,7 +53,7 @@ object OverdueJournalForm: TOverdueJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object ORD: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'ORD'
         HeaderAlignmentHorz = taCenter
@@ -134,6 +134,13 @@ object OverdueJournalForm: TOverdueJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 172
+      end
+      object DatePartionGoodsCat5: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102
+        DataBinding.FieldName = 'DatePartionGoodsCat5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 127
       end
     end
     object cxGridLevel: TcxGridLevel

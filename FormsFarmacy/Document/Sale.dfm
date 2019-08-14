@@ -85,6 +85,17 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object AmountDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1086
+            DataBinding.FieldName = 'AmountDeferred'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.000'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
