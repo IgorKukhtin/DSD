@@ -40,15 +40,23 @@ BEGIN
         IF inShowAll THEN
             RETURN QUERY
                 WITH 
-                    tmpRemains AS(
+                    tmpMovementItemContainer AS (SELECT MovementItemContainer.ContainerID        AS Id
+                                                      , SUM(-MovementItemContainer.Amount)       AS Amount
+                                                 FROM  MovementItemContainer
+                                                 WHERE MovementItemContainer.MovementId = inMovementId
+                                                   AND vbStatusId = zc_Enum_Status_UnComplete() 
+                                                 GROUP BY MovementItemContainer.ContainerID
+                                                 )
+                   ,tmpRemains AS(
                                     SELECT 
                                          Container.Id
                                        , Container.ObjectId
-                                       , Container.Amount
+                                       , Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
                                     FROM Container
+                                         LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
                                     WHERE Container.DescId = zc_Container_Count()
                                       AND Container.WhereObjectId = vbUnitId
-                                      AND Container.Amount > 0
+                                      AND (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
                                  )
                   ,tmpRemainsIncome AS (SELECT tmpRemains.*
                                                , MI_Income.Id              AS IncomeId
@@ -138,16 +146,25 @@ BEGIN
                                         AND
                                         MovementItem.DescId = zc_MI_Master()
                     ),
+                    tmpMovementItemContainer AS (SELECT MovementItemContainer.ContainerID        AS Id
+                                                      , SUM(-MovementItemContainer.Amount)       AS Amount
+                                                 FROM  MovementItemContainer
+                                                 WHERE MovementItemContainer.MovementId = inMovementId
+                                                   AND vbStatusId = zc_Enum_Status_UnComplete() 
+                                                 GROUP BY MovementItemContainer.ContainerID
+                                                 ),
                     tmpRemains AS(
                                     SELECT 
                                         Container.Id
                                        ,Container.ObjectId
-                                       ,Container.Amount
-                                    FROM tmpSale
-                                        INNER JOIN Container ON tmpSale.ObjectId = Container.ObjectId
-                                                            AND Container.DescId = zc_Container_Count()
-                                                            AND Container.WhereObjectId = vbUnitId
-                                                            AND Container.Amount > 0
+                                       ,Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
+                                    FROM Container 
+                                         LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
+                                        
+                                    WHERE Container.ObjectId in (SELECT DISTINCT tmpSale.ObjectId FROM tmpSale)
+                                      AND Container.DescId = zc_Container_Count()
+                                      AND Container.WhereObjectId = vbUnitId
+                                      AND (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
                                  )
                    ,tmpRemainsInfo AS (
                                         SELECT
