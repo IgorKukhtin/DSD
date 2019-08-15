@@ -125,7 +125,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     OptionsView.RowGrandTotalWidth = 421
     TabOrder = 1
     object pvOperDate: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1044#1072#1090#1072
       DataBinding.FieldName = 'OperDate'
@@ -141,7 +141,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvDayOfWeekName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
       DataBinding.FieldName = 'DayOfWeekName'
@@ -153,6 +153,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       IsCaptionAssigned = True
       Caption = #1043#1086#1076
       DataBinding.FieldName = 'Year'
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'YYYY'
       Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
@@ -162,13 +164,15 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
+      Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
+      Visible = True
       Width = 50
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
@@ -183,45 +187,49 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupAnalystName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
       DataBinding.FieldName = 'GoodsGroupAnalystName'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsTagName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsTagName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsPlatformName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
       DataBinding.FieldName = 'GoodsPlatformName'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsName_basis: TcxDBPivotGridField
@@ -234,7 +242,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     object pvGoodsName_main: TcxDBPivotGridField
       AreaIndex = 12
       IsCaptionAssigned = True
-      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1085#1072' '#1091#1087#1072#1082'.)'
       DataBinding.FieldName = 'GoodsName_main'
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
@@ -248,6 +256,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
@@ -291,7 +300,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountSaleReal_10500: TcxDBPivotGridField
-      AreaIndex = 15
+      Area = faData
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountSaleReal_10500'
@@ -302,7 +312,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountSaleReal_40208: TcxDBPivotGridField
-      AreaIndex = 16
+      Area = faData
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountSaleReal_40208'
@@ -322,6 +333,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
@@ -353,7 +365,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOnPriceOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 11
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendOnPriceOut'
@@ -417,29 +429,34 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountIncome: TcxDBPivotGridField
-      AreaIndex = 14
+      Area = faData
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountIncome'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountReturnOut: TcxDBPivotGridField
-      AreaIndex = 17
+      Area = faData
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountReturnOut'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountSendIn: TcxDBPivotGridField
-      AreaIndex = 18
+      Area = faData
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendIn'
@@ -450,7 +467,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountSendOut: TcxDBPivotGridField
-      AreaIndex = 19
+      Area = faData
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendOut'
@@ -461,7 +479,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountSendOnPriceOut_10900: TcxDBPivotGridField
-      AreaIndex = 20
+      Area = faData
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'. ('#1091#1090#1080#1083#1100')'
       DataBinding.FieldName = 'AmountSendOnPriceOut_10900'
@@ -472,15 +491,18 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountReturnIn: TcxDBPivotGridField
-      AreaIndex = 21
+      Area = faData
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountReturnIn'
+      Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountReturnIn_40208: TcxDBPivotGridField
-      AreaIndex = 22
+      Area = faData
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnIn_40208'
@@ -488,15 +510,18 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountReturnInReal: TcxDBPivotGridField
-      AreaIndex = 23
+      Area = faData
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnInReal'
+      Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountReturnInReal_40208: TcxDBPivotGridField
-      AreaIndex = 24
+      Area = faData
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.) ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnInReal_40208'
@@ -504,7 +529,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountLoss: TcxDBPivotGridField
-      AreaIndex = 25
+      Area = faData
+      AreaIndex = 24
       IsCaptionAssigned = True
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountLoss'
@@ -512,7 +538,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountInventory: TcxDBPivotGridField
-      AreaIndex = 26
+      Area = faData
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
       DataBinding.FieldName = 'AmountInventory'
@@ -520,7 +547,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountProductionIn: TcxDBPivotGridField
-      AreaIndex = 27
+      Area = faData
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1080#1079#1074'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountProductionIn'
@@ -528,7 +556,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountProductionOut: TcxDBPivotGridField
-      AreaIndex = 28
+      Area = faData
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1080#1079#1074'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountProductionOut'
@@ -733,21 +762,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'StartDate2'
-          Value = 'NULL'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate2'
-          Value = 'NULL'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromGroupId'
+          Name = 'UnitId'
           Value = ''
           Component = GuidesUnitGroup
           ComponentItem = 'Key'
@@ -755,7 +770,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'FromGroupName'
+          Name = 'UnitName'
           Value = ''
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
@@ -764,33 +779,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ToGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'GoodsGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsGroupId'
           Value = ''
           Component = GuidesGoodsGroup
           ComponentItem = 'Key'
@@ -798,7 +787,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ChildGoodsGroupName'
+          Name = 'GoodsGroupName'
           Value = ''
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
@@ -809,26 +798,13 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         item
           Name = 'GoodsId'
           Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsId'
-          Value = ''
           Component = GuidesGoods
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ChildGoodsName'
+          Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
@@ -837,16 +813,9 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isMovement'
+          Name = 'isDay'
           Value = 'False'
           Component = cbIsDay
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -976,7 +945,6 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         Value = ''
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1005,7 +973,6 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         Value = ''
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1024,10 +991,10 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1035,7 +1002,6 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

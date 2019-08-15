@@ -55,7 +55,6 @@ BEGIN
           WITH 
           tmpReport AS (SELECT *, MAX (tmp.CountStart) OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId) AS CountStart_Calc
                         FROM lpReport_MotionGoodsCount_light (inStartDate:= inStartDate, inEndDate:= inEndDate, inLocationId := inUnitId , inUserId := vbUserId) as tmp
-                        LIMIT 100
                        )
                        
         , tmpData AS (SELECT tmp.OperDate

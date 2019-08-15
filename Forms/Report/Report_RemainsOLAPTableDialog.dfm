@@ -237,7 +237,6 @@ object Report_RemainsOLAPTableDialogForm: TReport_RemainsOLAPTableDialogForm
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -267,7 +266,6 @@ object Report_RemainsOLAPTableDialogForm: TReport_RemainsOLAPTableDialogForm
         Value = ''
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -286,10 +284,10 @@ object Report_RemainsOLAPTableDialogForm: TReport_RemainsOLAPTableDialogForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -297,7 +295,6 @@ object Report_RemainsOLAPTableDialogForm: TReport_RemainsOLAPTableDialogForm
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

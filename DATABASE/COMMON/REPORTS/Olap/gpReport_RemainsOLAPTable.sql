@@ -64,11 +64,13 @@ BEGIN
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
  
-    IF inGoodsGroupId <> 0
+ 
+
+    IF COALESCE (inGoodsGroupId, 0) <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
           SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inGoodsId <> 0
+    ELSE IF COALESCE (inGoodsId,0) <> 0
          THEN
              INSERT INTO _tmpGoods (GoodsId)
               SELECT inGoodsId;
@@ -79,13 +81,13 @@ BEGIN
     END IF;
 
     -- ограничения по ОТ КОГО
-    IF inUnitId <> 0
+    IF COALESCE (inUnitId,0) <> 0
     THEN
         INSERT INTO _tmpUnit (UnitId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
+           SELECT lfSelect_Object_Unit_byGroup.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
     ELSE
          INSERT INTO _tmpUnit (UnitId)
-          SELECT Id FROM Object WHERE Object.DescId = zc_Object_Unit();
+          SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit();
     END IF;
   
     -- Результат
@@ -93,7 +95,7 @@ BEGIN
       WITH 
            
            -- данные из таблицы RemainsOLAPTable
-           tmpTable AS (SELECT *
+           tmpTable AS (SELECT tmp.*
                         FROM RemainsOLAPTable AS tmp
                              INNER JOIN _tmpUnit  ON _tmpUnit.UnitId   = tmp.UnitId
                              INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmp.GoodsId
@@ -105,8 +107,8 @@ BEGIN
                             , tmp.UnitId
                             , tmp.GoodsId
                             , tmp.GoodsKindId
-                            , CASE WHEN inIsDay = TRUE THEN tmp.AmountStart ELSE CASE WHEN tmp.OperDate = inStartDate THEN tmp.AmountStart ELSE 0 END END AS AmountStart_inf
-                            , CASE WHEN inIsDay = TRUE THEN tmp.AmountEnd ELSE CASE WHEN tmp.OperDate = inEndDate THEN tmp.AmountEnd ELSE 0 END END AS AmountEnd_inf
+                            , SUM (CASE WHEN inIsDay = TRUE THEN tmp.AmountStart ELSE CASE WHEN tmp.OperDate = inStartDate THEN tmp.AmountStart ELSE 0 END END) AS AmountStart_inf
+                            , SUM (CASE WHEN inIsDay = TRUE THEN tmp.AmountEnd ELSE CASE WHEN tmp.OperDate = inEndDate THEN tmp.AmountEnd ELSE 0 END END) AS AmountEnd_inf
                             , SUM (tmp.AmountStart)                AS AmountStart
                             , SUM (tmp.AmountEnd)                  AS AmountEnd
                             , SUM (tmp.AmountIncome)               AS AmountIncome
@@ -137,8 +139,6 @@ BEGIN
                                , tmp.UnitId
                                , tmp.GoodsId
                                , tmp.GoodsKindId
-                               , CASE WHEN inIsDay = TRUE THEN tmp.AmountStart ELSE CASE WHEN tmp.OperDate = inStartDate THEN tmp.AmountStart ELSE 0 END END
-                               , CASE WHEN inIsDay = TRUE THEN tmp.AmountEnd ELSE CASE WHEN tmp.OperDate = inEndDate THEN tmp.AmountEnd ELSE 0 END END
                        )
 
          , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
@@ -274,4 +274,4 @@ $BODY$
 */
 
 -- тест-
- -- SELECT * FROM gpReport_RemainsOLAPTable (inStartDate:= '01.06.2018', inEndDate:= '01.06.2018', inStartDate2:= '05.06.2017', inEndDate2:= '05.06.2017', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;
+ -- select * from gpReport_RemainsOLAPTable(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('02.01.2019')::TDateTime , inGoodsGroupId := 0 , inGoodsId := 0 , inUnitId := 0 , inIsDay := 'True' ,  inSession := '5');
