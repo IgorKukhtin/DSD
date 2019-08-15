@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOLAPTable (
     IN inIsDay              Boolean   ,
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (tmpData.OperDate           TDateTime
+RETURNS TABLE (OperDate                   TDateTime
              , DayOfWeekName              TVarChar
              , MonthName                  TVarChar
              , Year                       TVarChar
