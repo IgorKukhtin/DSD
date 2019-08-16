@@ -34,6 +34,7 @@ CREATE OR REPLACE FUNCTION zc_FormClass_Send() RETURNS TVarChar AS $BODY$BEGIN R
 CREATE OR REPLACE FUNCTION zc_FormClass_Loss() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TLossForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_FormClass_Check() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TCheckForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_FormClass_Sale() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TSaleForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_FormClass_SendPartionDate() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TSendPartionDateForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- Почта - !!! VOLATILE !!! - !!!ФЛП_Шапиро И А!!!
 CREATE OR REPLACE FUNCTION zc_Mail_Host()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'smtp.mail.ru'*/                 SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Host() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;

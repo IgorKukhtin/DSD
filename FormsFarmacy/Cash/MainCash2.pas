@@ -389,6 +389,8 @@ type
     N32: TMenuItem;
     MemDataDEFERENDS: TFloatField;
     MainDeferredSend: TcxGridDBColumn;
+    MemDataREMAINSSUN: TFloatField;
+    MainRemainsSun: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -900,6 +902,7 @@ begin
         MemData.FieldByName('PRICEPD').AsVariant:=FLocalDataBaseDiff.FieldByName('PRICEPD').AsVariant;
         MemData.FieldByName('COLORCALC').AsVariant:=FLocalDataBaseDiff.FieldByName('COLORCALC').AsVariant;
         MemData.FieldByName('DEFERENDS').AsVariant:=FLocalDataBaseDiff.FieldByName('DEFERENDS').AsVariant;
+        MemData.FieldByName('REMAINSSUN').AsVariant:=FLocalDataBaseDiff.FieldByName('REMAINSSUN').AsVariant;
         FLocalDataBaseDiff.Edit;
         FLocalDataBaseDiff.DeleteRecord;
         FLocalDataBaseDiff.Post;
@@ -1437,7 +1440,7 @@ procedure TMainCashForm2.ClearFilterAll;
 begin
   if RemainsCDS.Active and (
     (RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0') or
-    Assigned(RemainsCDS.OnFilterRecord)) then
+    Assigned(RemainsCDS.OnFilterRecord) or pnlAnalogFilter.Visible) then
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
     PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -2666,6 +2669,7 @@ begin
         RemainsCDS.FieldByName('AmountMonth').AsVariant := MemData.FieldByName('AMOUNTMON').AsVariant;
         RemainsCDS.FieldByName('PricePartionDate').AsVariant := MemData.FieldByName('PRICEPD').AsVariant;
         RemainsCDS.FieldByName('DeferredSend').AsVariant := MemData.FieldByName('DEFERENDS').AsVariant;
+        RemainsCDS.FieldByName('RemainsSun').AsVariant := MemData.FieldByName('REMAINSSUN').AsVariant;
         RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
         RemainsCDS.Post;
       End
@@ -2689,6 +2693,7 @@ begin
           RemainsCDS.FieldByName('AmountMonth').AsVariant := MemData.FieldByName('AMOUNTMON').AsVariant;
           RemainsCDS.FieldByName('PricePartionDate').AsVariant := MemData.FieldByName('PRICEPD').AsVariant;
           RemainsCDS.FieldByName('DeferredSend').AsVariant := MemData.FieldByName('DEFERENDS').AsVariant;
+          RemainsCDS.FieldByName('RemainsSun').AsVariant := MemData.FieldByName('REMAINSSUN').AsVariant;
           RemainsCDS.FieldByName('Color_calc').AsVariant := MemData.FieldByName('COLORCALC').AsVariant;
           RemainsCDS.Post;
         End;
@@ -3751,7 +3756,7 @@ end;
 procedure TMainCashForm2.cxButton7Click(Sender: TObject);
  var Id : Integer; PartionDateKindId : Variant;
 begin
-  if Assigned(RemainsCDS.OnFilterRecord) then
+  if Assigned(RemainsCDS.OnFilterRecord) or pnlAnalogFilter.Visible then
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
     PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;

@@ -1551,6 +1551,12 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43681d
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 456
@@ -1824,7 +1830,7 @@ inherited SendForm: TSendForm
         Action = actRefresh
       end>
     Left = 160
-    Top = 216
+    Top = 208
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <

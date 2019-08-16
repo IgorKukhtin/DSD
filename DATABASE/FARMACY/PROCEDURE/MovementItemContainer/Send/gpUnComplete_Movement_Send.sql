@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
   DECLARE vbisSUN Boolean;
+  DECLARE vbisDefSUN Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
@@ -37,12 +38,14 @@ BEGIN
         Movement.OperDate,
         Movement_From.ObjectId AS Unit_From,
         Movement_To.ObjectId AS Unit_To,
-        COALESCE (MovementBoolean_SUN.ValueData, FALSE)  
+        COALESCE (MovementBoolean_SUN.ValueData, FALSE), 
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
     INTO
         vbOperDate,
         vbUnit_From,
         vbUnit_To,
-        vbisSUN        
+        vbisSUN,
+        vbisDefSUN
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -53,6 +56,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                   ON MovementBoolean_SUN.MovementId = Movement.Id
                                  AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
     WHERE Movement.Id = inMovementId;
     
     IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE
@@ -69,6 +75,11 @@ BEGIN
       END IF;
       vbUserUnitId := vbUnitKey::Integer;
         
+      IF vbisDefSUN = TRUE
+      THEN
+        RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
+      END IF;
+
       IF COALESCE (vbUserUnitId, 0) = 0
       THEN 
         RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';     

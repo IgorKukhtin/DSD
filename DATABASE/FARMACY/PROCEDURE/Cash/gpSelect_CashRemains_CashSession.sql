@@ -136,7 +136,9 @@ BEGIN
 
 
     RETURN QUERY
-    WITH tmpDeferredSendAll AS (SELECT
+    WITH 
+          -- Отложенные перемещения
+         tmpDeferredSendAll AS (SELECT
                                     Container.Id
                                   , Container.ParentId
                                   , SUM(- MovementItemContainer.Amount) AS Amount

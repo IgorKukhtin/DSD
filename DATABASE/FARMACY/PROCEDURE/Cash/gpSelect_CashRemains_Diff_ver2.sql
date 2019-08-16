@@ -24,7 +24,8 @@ RETURNS TABLE (
     AmountMonth TFloat,
     PricePartionDate TFloat,
     Color_calc Integer,
-    DeferredSend TFloat
+    DeferredSend TFloat,
+    RemainsSun TFloat
 )
 AS
 $BODY$
@@ -247,6 +248,7 @@ BEGIN
                                OR
                                COALESCE(SESSIONDATA.DeferredSend, 0) <> 0)
                        )
+
        -- РЕЗУЛЬТАТ
        SELECT tmpDiff.ObjectId
             , Object_Goods.ObjectCode     AS GoodsCode
@@ -254,7 +256,7 @@ BEGIN
             , tmpDiff.Price
             , tmpDiff.Remains
             , tmpDiff.MinExpirationDate
-            , tmpDiff.PartionDateKindId
+            , NULLIF (tmpDiff.PartionDateKindId, 0)  AS PartionDateKindId
             , tmpDiff.MCSValue
             , tmpDiff.Reserved
             , tmpDiff.DeferredSend
@@ -365,6 +367,76 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
+                 -- Все перемещения по СУН
+                ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
+                                FROM Movement
+
+                                     INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
+
+                                WHERE Movement.DescId = zc_Movement_Send()
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE 
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                )
+                   -- Перемещения по СУН основные контейнера
+                 , tmpRenainsSUNCount AS (SELECT Container.Id
+                                               , Container.ObjectId   
+                                               , SUM(Container.Amount) AS Amount
+                                          FROM tmpSendAll AS Movement
+
+                                               INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.MovementId
+                                                                      AND MovementItem.DescId = zc_MI_Child()
+
+                                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.MovementId
+                                                                               AND MovementItemContainer.MovementItemId = MovementItem.Id
+                                                                               AND MovementItemContainer.DescId = zc_Container_Count()
+                                                                               AND MovementItemContainer.isActive = TRUE
+
+                                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                                                   AND Container.WhereObjectId = vbUnitId
+
+                                          WHERE Container.Amount <> 0
+                                          GROUP BY Container.Id, Container.ObjectId 
+                                          )
+                   -- Перемещения по СУН полный набор
+                 , tmpRenainsSUNAll AS (SELECT Container.Id                                       AS ID
+                                          , Container.ObjectId                                 AS GoodsID
+                                          , Container.Amount                                   AS Amount
+                                          , ContainerPD.Id                                     AS PDID
+                                          , ContainerPD.Amount                                 AS AmountPD
+                                          , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
+                                                      COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
+                                                                                                       THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
+                                                 ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
+                                     FROM tmpRenainsSUNCount AS Container
+
+                                          LEFT JOIN Container AS ContainerPD
+                                                              ON ContainerPD.ParentId = Container.Id
+                                                             AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+                                          LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.Id
+                                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                          LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                              AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                                  ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
+                                                                 AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+
+                                      )
+                   -- Перемещения по СУН остатки
+                 , tmpRenainsSUN AS (SELECT Container.GoodsID                                   AS GoodsID
+                                          , COALESCE(Container.PartionDateKindId, 0)            AS PartionDateKindId
+                                          , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
+                                     FROM tmpRenainsSUNAll AS Container
+
+                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
+                                      )
 
         SELECT
             _DIFF.ObjectId,
@@ -397,10 +469,14 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                     ELSE _DIFF.Price END
                  ELSE NULL END::TFloat                                  AS PricePartionDate,
             _DIFF.Color_calc,
-            _DIFF.DeferredSend
+            _DIFF.DeferredSend,
+            RemainsSUN TFloat
         FROM _DIFF
             LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (_DIFF.PartionDateKindId, 0)
-            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId;
+            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
+            -- Остаток товара по СУН
+            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = _DIFF.ObjectId
+                                   AND tmpRenainsSUN.PartionDateKindId = _DIFF.PartionDateKindId;
 
 
 END;

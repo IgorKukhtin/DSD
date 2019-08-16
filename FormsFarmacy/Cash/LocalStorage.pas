@@ -360,6 +360,7 @@ begin
       AddFloatField(LocalDataBaseDiff, 'PRICEPD'); //Отпускная цена согласно партии
       AddIntField(LocalDataBaseDiff,   'COLORCALC'); //цвет
       AddFloatField(LocalDataBaseDiff, 'DEFERENDS'); //В отложенных перемещениях
+      AddFloatField(LocalDataBaseDiff, 'REMAINSSUN'); //Остатки SUN
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -383,7 +384,8 @@ begin
         (FindField('PDKINDID') = nil) or
         (FindField('PDKINDNAME') = nil) or
         (FindField('COLORCALC') = nil) or
-        (FindField('DEFERENDS') = nil));
+        (FindField('DEFERENDS') = nil) or
+        (FindField('REMAINSSUN') = nil));
 
       Close;
 

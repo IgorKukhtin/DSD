@@ -175,7 +175,7 @@ BEGIN
               , CASE 
                   WHEN MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
                        MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
-                    THEN zc_Color_Warning_Red()
+                    THEN 36095
                 END                                                                       AS WarningColor
 
              , MovementItem_Income.ExpirationDate
@@ -307,7 +307,7 @@ BEGIN
               , CASE 
                   WHEN MovementItem.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
                        MovementItem.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
-                    THEN zc_Color_Warning_Red()
+                    THEN 36095
                 END AS WarningColor
              , MovementItem_Income.ExpirationDate
              , MovementItem_Income.PartionGoods

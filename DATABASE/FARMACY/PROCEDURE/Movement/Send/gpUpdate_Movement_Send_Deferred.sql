@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbisDeferred Boolean;
+   DECLARE vbisDefSUN Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -21,9 +22,29 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
 
-   vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
-   vbisDeferred := (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_Deferred());
+    -- параметры документа
+    SELECT
+        Movement.StatusId,
+        COALESCE (MovementBoolean_Deferred.ValueData, FALSE),
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
+    INTO
+        vbStatusId,
+        vbisDeferred,
+        vbisDefSUN
+    FROM Movement
+        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+    WHERE Movement.Id = inMovementId;
    
+    IF vbisDefSUN = TRUE AND inisDeferred = TRUE
+    THEN
+      RAISE EXCEPTION 'Ошибка. Коллеги, отложенные переиещение по СУН проводить нельзя.';
+    END IF;
+
    -- свойство не меняем у проведенных документов
    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
    THEN

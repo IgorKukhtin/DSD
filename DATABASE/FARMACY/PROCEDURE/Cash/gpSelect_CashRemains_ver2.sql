@@ -30,7 +30,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean,
-               DeferredSend TFloat
+               DeferredSend TFloat,
+               RemainsSUN TFloat
+               
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
              , PriceWithVAT_check        TFloat
@@ -449,6 +451,76 @@ BEGIN
                                                                         ON MovementItemContainer.GoodsID = Container.GoodsID
                                 WHERE (Container.Amount >= COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
                                 )
+                 -- Все перемещения по СУН
+                ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
+                                FROM Movement
+
+                                     INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
+
+                                WHERE Movement.DescId = zc_Movement_Send()
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE 
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                )
+                   -- Перемещения по СУН основные контейнера
+                 , tmpRenainsSUNCount AS (SELECT Container.Id
+                                               , Container.ObjectId   
+                                               , SUM(Container.Amount) AS Amount
+                                          FROM tmpSendAll AS Movement
+
+                                               INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.MovementId
+                                                                      AND MovementItem.DescId = zc_MI_Child()
+
+                                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.MovementId
+                                                                               AND MovementItemContainer.MovementItemId = MovementItem.Id
+                                                                               AND MovementItemContainer.DescId = zc_Container_Count()
+                                                                               AND MovementItemContainer.isActive = TRUE
+
+                                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                                                   AND Container.WhereObjectId = vbUnitId
+
+                                          WHERE Container.Amount <> 0
+                                          GROUP BY Container.Id, Container.ObjectId 
+                                          )
+                   -- Перемещения по СУН полный набор
+                 , tmpRenainsSUNAll AS (SELECT Container.Id                                       AS ID
+                                          , Container.ObjectId                                 AS GoodsID
+                                          , Container.Amount                                   AS Amount
+                                          , ContainerPD.Id                                     AS PDID
+                                          , ContainerPD.Amount                                 AS AmountPD
+                                          , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
+                                                      COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
+                                                                                                       THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
+                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
+                                                 ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
+                                     FROM tmpRenainsSUNCount AS Container
+
+                                          LEFT JOIN Container AS ContainerPD
+                                                              ON ContainerPD.ParentId = Container.Id
+                                                             AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+                                          LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.Id
+                                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                          LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                              AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                                  ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
+                                                                 AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+
+                                      )
+                   -- Перемещения по СУН остатки
+                 , tmpRenainsSUN AS (SELECT Container.GoodsID                                   AS GoodsID
+                                          , COALESCE(Container.PartionDateKindId, 0)            AS PartionDateKindId
+                                          , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
+                                     FROM tmpRenainsSUNAll AS Container
+
+                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
+                                      )
 
 
         -- Результат
@@ -697,7 +769,8 @@ BEGIN
             END                                          :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
           , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
-          , CashSessionSnapShot.DeferredSend                       AS DeferredSend
+          , CashSessionSnapShot.DeferredSend::TFloat               AS DeferredSend
+          , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
@@ -771,6 +844,10 @@ BEGIN
 
            -- Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
+           
+           -- Остаток товара по СУН
+           LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId
+                                  AND tmpRenainsSUN.PartionDateKindId = CashSessionSnapShot.PartionDateKindId
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
