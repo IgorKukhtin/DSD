@@ -284,10 +284,10 @@ object Report_RemainsOLAPTableDialogForm: TReport_RemainsOLAPTableDialogForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_ObjectForm'
+    FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

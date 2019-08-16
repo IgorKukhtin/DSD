@@ -64,7 +64,7 @@ BEGIN
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
  
- 
+ --RAISE EXCEPTION 'Ошибка. <%>, <%>, <%>.', inGoodsGroupId, inGoodsId, inUnitId;
 
     IF COALESCE (inGoodsGroupId, 0) <> 0
     THEN
@@ -80,7 +80,7 @@ BEGIN
          END IF;
     END IF;
 
-    -- ограничения по ОТ КОГО
+    -- ограничения по подразделению
     IF COALESCE (inUnitId,0) <> 0
     THEN
         INSERT INTO _tmpUnit (UnitId)

@@ -68,10 +68,7 @@ type
     GuidesUnitGroup: TdsdGuides;
     GuidesGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
-    PeriodChoice2: TPeriodChoice;
-    cfPrice: TdsdPivotGridCalcFields;
-    cfPriceSale: TdsdPivotGridCalcFields;
-    cfPriceSaleReal: TdsdPivotGridCalcFields;
+    actRefreshDay: TdsdDataSetRefresh;
   private
   public
   end;
