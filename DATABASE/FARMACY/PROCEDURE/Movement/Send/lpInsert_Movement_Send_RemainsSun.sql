@@ -463,7 +463,7 @@ BEGIN
                             )
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
                )
-               -- мен€ем: добавим еще 9 дней, будет от 60 дней включительно
+               -- мен€ем: добавим еще 9 дней, будет от 60 дней включительно - только дл€ —”Ќ
              + INTERVAL '9 DAY'
              ;
     -- дата + 0 мес€цев

@@ -319,33 +319,39 @@ BEGIN
                , Movement_Income.Invnumber     AS Invnumber
                , tmp.ContainerId
                , tmp.MovementId
-               , COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd())  AS ExpirationDate_in
+               , COALESCE (ObjectDate_Value.ValueData, zc_DateEnd())  AS ExpirationDate_in
 
 
           FROM _tmpResult_child AS tmp
-          LEFT JOIN Object AS Object_UnitFrom ON Object_UnitFrom.Id = tmp.UnitId_from
-          LEFT JOIN Object AS Object_UnitTo   ON Object_UnitTo.Id   = tmp.UnitId_to
-          LEFT JOIN Movement ON Movement.Id  = tmp.MovementId
-
-          -- находим срок годности из прихода
-          LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
-                                        ON CLO_PartionMovementItem.ContainerId = tmp.ContainerId
-                                       AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-          LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
-          -- элемент прихода
-          LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-          -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-          LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                      ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                     AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-          -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-          LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-
-          LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate_in
-                                            ON MIDate_ExpirationDate_in.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                           AND MIDate_ExpirationDate_in.DescId = zc_MIDate_PartionGoods()
-
-          LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+               LEFT JOIN Object AS Object_UnitFrom ON Object_UnitFrom.Id = tmp.UnitId_from
+               LEFT JOIN Object AS Object_UnitTo   ON Object_UnitTo.Id   = tmp.UnitId_to
+               LEFT JOIN Movement ON Movement.Id  = tmp.MovementId
+     
+               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                             ON CLO_PartionGoods.ContainerId = tmp.ContainerId
+                                            AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+               LEFT OUTER JOIN ObjectDate AS ObjectDate_Value
+                                          ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                         AND ObjectDate_Value.DescId   =  zc_ObjectDate_PartionGoods_Value()
+               -- находим срок годности из прихода
+               LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                             ON CLO_PartionMovementItem.ContainerId = tmp.ContainerId
+                                            AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+               LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+               -- элемент прихода
+               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+               -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+               LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                           ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                          AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+               -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+     
+               /*LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate_in
+                                                 ON MIDate_ExpirationDate_in.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                AND MIDate_ExpirationDate_in.DescId = zc_MIDate_PartionGoods()*/
+     
+               LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
           ;
      RETURN NEXT Cursor3;
 
