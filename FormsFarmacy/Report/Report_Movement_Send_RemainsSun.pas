@@ -79,6 +79,21 @@ type
     dsGoodsCode: TcxGridDBColumn;
     dfGoodsName: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
+    Amount_res: TcxGridDBColumn;
+    Summ_res: TcxGridDBColumn;
+    Amount_next_res: TcxGridDBColumn;
+    Summ_next_res: TcxGridDBColumn;
+    AmountSunOnly_summ: TcxGridDBColumn;
+    Amount_notSold_summ: TcxGridDBColumn;
+    chAmountSunOnly_summ: TcxGridDBColumn;
+    chAmount_notSold_summ: TcxGridDBColumn;
+    chAmountResult: TcxGridDBColumn;
+    chAmountRemains: TcxGridDBColumn;
+    chPrice: TcxGridDBColumn;
+    chMCS: TcxGridDBColumn;
+    chAmount_sale: TcxGridDBColumn;
+    chAmountSun_summ_save: TcxGridDBColumn;
+    chAmountSun_summ: TcxGridDBColumn;
   private
     { Private declarations }
   public
