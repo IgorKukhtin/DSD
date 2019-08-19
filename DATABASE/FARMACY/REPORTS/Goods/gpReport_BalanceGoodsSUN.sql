@@ -14,8 +14,12 @@ RETURNS TABLE (GoodsID  Integer
              , Price TFloat
              , AmountIn TFloat
              , SummaIn TFloat
+             , AmountIn100 TFloat
+             , SummaIn100 TFloat
              , AmountOut TFloat
              , SummaOut TFloat
+             , AmountOut100 TFloat
+             , SummaOut100 TFloat
              )
 AS
 $BODY$
@@ -51,6 +55,7 @@ BEGIN
            -- Перемещения по СУН содержимое
          , tmpSUNAll AS (SELECT MIMaster.ObjectId
                                        , MovementLinkObject_To.ObjectId = inUnitId  AS isActive
+                                       , CASE WHEN COALESCE (MIChild.id, 0) = 0 AND MIMaster.Amount <> 0 THEN MIMaster.Amount END AS Amount100
                                        , MIChild.Amount
                                   FROM tmpSendAll AS Movement
 
@@ -59,7 +64,7 @@ BEGIN
                                                               AND MIMaster.DescId = zc_MI_Master()
                                                               AND MIMaster.isErased = False
 
-                                       INNER JOIN MovementItem AS MIChild
+                                       LEFT JOIN MovementItem AS MIChild
                                                                ON MIChild.MovementId =  Movement.Id
                                                               AND MIChild.ParentId = MIMaster.ID
                                                               AND MIChild.DescId = zc_MI_Child()
@@ -82,12 +87,15 @@ BEGIN
                                   )
          , tmpSUNGroup AS (SELECT tmpSUNAll.ObjectId
                                        , tmpSUNAll.isActive
+                                       , Sum(tmpSUNAll.Amount100) as Amount100
                                        , Sum(tmpSUNAll.Amount) as Amount
                                   FROM tmpSUNAll
                                   GROUP BY tmpSUNAll.ObjectId, tmpSUNAll.isActive)
          , tmpSUN AS (SELECT tmpSUNGroup.ObjectId
                            , Sum(CASE WHEN tmpSUNGroup.isActive = TRUE THEN tmpSUNGroup.Amount END) as AmountIn
+                           , Sum(CASE WHEN tmpSUNGroup.isActive = TRUE THEN tmpSUNGroup.Amount100 END) as AmountIn100
                            , Sum(CASE WHEN tmpSUNGroup.isActive = FALSE THEN tmpSUNGroup.Amount END) as AmountOut
+                           , Sum(CASE WHEN tmpSUNGroup.isActive = FALSE THEN tmpSUNGroup.Amount100 END) as AmountOut100
                       FROM tmpSUNGroup
                       GROUP BY tmpSUNGroup.ObjectId)
          , tmpPrice AS (SELECT OL_Price_Goods.ChildObjectId      AS GoodsId
@@ -113,13 +121,17 @@ BEGIN
 
 
     SELECT tmpSUN.ObjectId
-         , Object_Goods.ObjectCode                                AS GoodsCode
-         , Object_Goods.ValueData                                 AS GoodsName
-         , tmpPrice.Price::TFloat                                 AS Price
+         , Object_Goods.ObjectCode                                 AS GoodsCode
+         , Object_Goods.ValueData                                  AS GoodsName
+         , tmpPrice.Price::TFloat                                  AS Price
          , tmpSUN.AmountIn::TFloat
-         , ROUND (tmpSUN.AmountIn * tmpPrice.Price, 2)::TFloat    AS SummaIn
+         , ROUND (tmpSUN.AmountIn * tmpPrice.Price, 2)::TFloat     AS SummaIn
+         , tmpSUN.AmountIn100::TFloat
+         , ROUND (tmpSUN.AmountIn100 * tmpPrice.Price, 2)::TFloat  AS SummaIn100
          , tmpSUN.AmountOut::TFloat
-         , ROUND (tmpSUN.AmountOut * tmpPrice.Price, 2)::TFloat   AS SummaOut
+         , ROUND (tmpSUN.AmountOut * tmpPrice.Price, 2)::TFloat    AS SummaOut
+         , tmpSUN.AmountOut100::TFloat
+         , ROUND (tmpSUN.AmountOut100 * tmpPrice.Price, 2)::TFloat AS SummaOut100
     FROM tmpSUN
 
          INNER JOIN Object AS Object_Goods ON Object_Goods.ID = tmpSUN.ObjectId
@@ -134,8 +146,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 19.08.19                                                       *
  17.08.19                                                       *
 */
 
 -- тест
--- select * from gpReport_BalanceGoodsSUN(inStartDate := ('12.08.2019')::TDateTime , inDateFinal := ('17.08.2019')::TDateTime , inUnitId := 375626 ,  inSession := '3');
+-- select * from gpReport_BalanceGoodsSUN(inStartDate := ('12.08.2019')::TDateTime , inDateFinal := ('19.08.2019')::TDateTime , inUnitId := 375626 ,  inSession := '3');

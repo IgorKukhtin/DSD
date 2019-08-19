@@ -286,7 +286,10 @@ BEGIN
                                  FROM tmpContainerPD
                                  GROUP BY tmpContainerPD.ParentId
                                  )
-       , tmpGoods_PD AS (SELECT DISTINCT tmpContainerPD.ObjectId AS GoodsId FROM tmpContainerPD WHERE tmpContainerPD.PriceWithVAT <= 15)
+       , tmpGoods_PD AS (SELECT DISTINCT tmpContainerPD.ObjectId AS GoodsId 
+                         FROM tmpContainerPD 
+                         WHERE tmpContainerPD.PriceWithVAT <= 15
+                           AND tmpContainerPD.PartionDateKindId = zc_Enum_PartionDateKind_6())
          -- спец-цены
 --     , tmpCashGoodsPriceWithVAT AS (SELECT * FROM gpSelect_CashGoodsPriceWithVAT('3'))
 --     , tmpCashGoodsPriceWithVAT AS (SELECT 0 :: Integer AS Id, 0 :: TFloat AS PriceWithVAT WHERE 1=0)
