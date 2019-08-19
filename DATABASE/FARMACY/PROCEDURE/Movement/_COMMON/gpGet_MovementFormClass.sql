@@ -18,6 +18,7 @@ BEGIN
             WHEN zc_Movement_Loss() THEN zc_FormClass_Loss()
             WHEN zc_Movement_Check() THEN zc_FormClass_Check()
             WHEN zc_Movement_Sale() THEN zc_FormClass_Sale()
+            WHEN zc_Movement_SendPartionDate() THEN zc_FormClass_SendPartionDate()
         END
     INTO
         outFormClass
@@ -36,5 +37,4 @@ ALTER FUNCTION gpGet_MovementFormClass (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= zfCalc_UserAdmin());
+-- select * from gpGet_MovementFormClass(inMovementId := 14346050 ,  inSession := '3');

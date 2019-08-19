@@ -441,9 +441,6 @@ object MainCashForm2: TMainCashForm2
       StoredProcList = <
         item
           StoredProc = spSelectRemains
-        end
-        item
-          StoredProc = spSelect_Alternative
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077

@@ -928,6 +928,26 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 78
         end
+        object MainDeferredSend: TcxGridDBColumn
+          Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093
+          DataBinding.FieldName = 'DeferredSend'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object MainRemainsSun: TcxGridDBColumn
+          Caption = #1055#1088#1080#1096#1083#1086' '#1087#1086' '#1057#1059#1053
+          DataBinding.FieldName = 'RemainsSun'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 81
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -3162,7 +3182,14 @@ inherited MainCashForm2: TMainCashForm2
       FormNameParam.Value = 'TSendCashJournalSunForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'isSUNAll'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
   end
@@ -3290,7 +3317,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
-    Filter = 'Remains <> 0 or Reserved <> 0'
+    Filter = 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0'
     Filtered = True
     FieldDefs = <>
     IndexDefs = <>
@@ -4426,6 +4453,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object MemDataCOLORCALC: TIntegerField
       FieldName = 'COLORCALC'
+    end
+    object MemDataDEFERENDS: TFloatField
+      FieldName = 'DEFERENDS'
+    end
+    object MemDataREMAINSSUN: TFloatField
+      FieldName = 'REMAINSSUN'
     end
   end
   object mdCheck: TdxMemData

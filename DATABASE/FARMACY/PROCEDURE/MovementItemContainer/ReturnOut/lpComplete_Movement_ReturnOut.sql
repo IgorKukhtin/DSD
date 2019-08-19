@@ -124,8 +124,8 @@ BEGIN
         INNER JOIN MovementItemContainer AS MIContainer_Income
                                          ON MIContainer_Income.MovementItemId = MovementItem_Income.Id
                                         AND MIContainer_Income.DescId = zc_MIContainer_Count()                                        
-    WHERE  
-        Movement_ReturnOut_View.Id =  inMovementId;
+    WHERE Movement_ReturnOut_View.Id =  inMovementId
+      AND MovementItem_ReturnOut_View.isErased = FALSE;
 
     -- А сюда товары
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)

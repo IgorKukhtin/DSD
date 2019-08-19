@@ -35,17 +35,24 @@ $BODY$
    DECLARE vbAmount        TFloat;
    DECLARE vbAmountManual  TFloat;
    DECLARE vbAmountStorage TFloat;
+   DECLARE vbisDefSUN      Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
 
     --определяем подразделение получателя
-    SELECT MovementLinkObject_To.ObjectId AS UnitId
-           INTO vbUnitId
-    FROM MovementLinkObject AS MovementLinkObject_To
-    WHERE MovementLinkObject_To.MovementId = inMovementId
-      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To();
+    SELECT MovementLinkObject_To.ObjectId AS UnitId, COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
+           INTO vbUnitId, vbisDefSUN
+    FROM Movement 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+    
+          LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                    ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                   AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+    WHERE Movement.Id = inMovementId;
 
     -- Получаем предыдущее значение количеств
     SELECT
@@ -80,6 +87,11 @@ BEGIN
         IF COALESCE (vbUserUnitId, 0) = 0
         THEN
           RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
+        END IF;
+        
+        IF vbisDefSUN = TRUE
+        THEN
+          RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
         END IF;
 
         --определяем подразделение отправителя

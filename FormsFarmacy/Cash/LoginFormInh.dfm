@@ -13,9 +13,11 @@ inherited LoginForm1: TLoginForm1
   end
   inherited cxLabel2: TcxLabel
     Style.IsFontAssigned = True
+    AnchorX = 153
   end
   inherited cxLabel3: TcxLabel
     Style.IsFontAssigned = True
+    AnchorX = 153
   end
   object cxLabel4: TcxLabel [7]
     Left = 102

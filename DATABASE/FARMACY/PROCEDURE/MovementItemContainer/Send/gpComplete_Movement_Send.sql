@@ -26,6 +26,7 @@ $BODY$
   DECLARE vbInvNumber TVarChar;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
+  DECLARE vbisDefSUN      Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -40,12 +41,14 @@ BEGIN
         Movement.OperDate,
         Movement.InvNumber,
         Movement_From.ObjectId AS Unit_From,
-        Movement_To.ObjectId AS Unit_To
+        Movement_To.ObjectId AS Unit_To,
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
     INTO
         outOperDate,
         vbInvNumber,
         vbUnit_From,
-        vbUnit_To
+        vbUnit_To,
+        vbisDefSUN
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -53,6 +56,9 @@ BEGIN
         INNER JOIN MovementLinkObject AS Movement_To
                                       ON Movement_To.MovementId = Movement.Id
                                      AND Movement_To.DescId = zc_MovementLinkObject_To()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                 AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
     WHERE Movement.Id = inMovementId;
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -74,6 +80,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
       END IF;     
     END IF;     
+
+    IF vbisDefSUN = TRUE
+    THEN
+      RAISE EXCEPTION 'Ошибка. Коллеги, отложенные переиещение по СУН проводить нельзя.';
+    END IF;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
@@ -104,6 +115,7 @@ BEGIN
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = FALSE
+                           AND MovementItem.Amount <> 0
                          GROUP BY MovementItem.ObjectId
                         )
       , tmpContainer AS (SELECT Container.ObjectId     AS GoodsId
@@ -268,7 +280,7 @@ $BODY$
  19.12.18                                                                        *  
  13.05.16         *
  29.07.15                                                         *
- */
+ 
 
 -- тест
 -- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 29207, inIsCurrentData:= TRUe,  inSession:= '2')

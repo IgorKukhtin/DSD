@@ -36,9 +36,13 @@ BEGIN
                                                 , inPrice              := tmpAll.Price           :: TFloat
                                                 , inUserId             := vbUserId
                                                 )
-    FROM (WITH SelectMinPrice_AllGoods AS (SELECT * FROM lpSelect_GoodsMinPrice_onDate (inOperdate := vbOperDate, inUnitId := 0, inObjectId := vbRetailId, inUserId := vbUserId) AS SelectMinPrice_AllGoods)
-             , tmpGoodsPromoMain AS (SELECT DISTINCT tmp.MovementId, tmp.GoodsId, tmp.JuridicalId FROM lpSelect_MovementItem_Promo_onDate(inOperDate:= vbOperDate) AS tmp)
+    FROM (WITH 
+             -- данные по ценам товаров
+               SelectMinPrice_AllGoods AS (SELECT * FROM lpSelect_GoodsMinPrice_onDate (inOperdate := vbOperDate, inUnitId := 0, inObjectId := vbRetailId, inUserId := vbUserId) AS SelectMinPrice_AllGoods)
              -- товары сети для PromoMovement
+             --, tmpGoodsPromoMain AS (SELECT DISTINCT tmp.MovementId, tmp.GoodsId, tmp.JuridicalId FROM lpSelect_MovementItem_Promo_onDate(inOperDate:= vbOperDate) AS tmp)
+            
+             -- Строки документа, сначала ручками добавляют товары, маркет или не маркет, а потом для этих товаров выполняется расчет (ранее выбирались все товары промо в мастер)
              , tmpGoodsPromo AS (SELECT MovementItem.Id                              AS MI_Id
                                       , MovementItem.ObjectId                        AS GoodsId_retail
                                       , MIFloat_PromoMovementId.ValueData :: Integer AS PromoMovementId

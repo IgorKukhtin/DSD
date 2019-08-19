@@ -77,6 +77,10 @@ BEGIN
                                  ON ObjectLink_Unit_Parent_Run.ObjectId = ObjectLink_Unit_Juridical_Run.ObjectId
                                 AND ObjectLink_Unit_Parent_Run.DescId = zc_ObjectLink_Unit_Parent()
 
+           INNER JOIN ObjectBoolean AS ObjectBoolean_Unit_AutoMCS
+                                    ON ObjectBoolean_Unit_AutoMCS.ObjectId = ObjectLink_Unit_Juridical_Run.ObjectId
+                                   AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PharmacyItem
                                    ON ObjectBoolean_PharmacyItem.ObjectId = ObjectLink_Unit_Juridical_Run.ObjectId
                                   AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
@@ -116,7 +120,7 @@ BEGIN
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
     AND Object_Unit_Run.isErased = FALSE
     AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 11300059);
+    AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE;
 
 
     -- По аптекам не вошедшим в сети
@@ -130,6 +134,10 @@ BEGIN
            INNER JOIN ObjectLink AS ObjectLink_Unit
                                  ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
+
+           INNER JOIN ObjectBoolean AS ObjectBoolean_Unit_AutoMCS
+                                    ON ObjectBoolean_Unit_AutoMCS.ObjectId = ObjectLink_Unit.ObjectId
+                                   AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
 
            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
@@ -175,6 +183,7 @@ BEGIN
     AND Object_RecalcMCSSheduler.isErased = FALSE
     AND COALESCE (ObjectFloat_Period.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
+    AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
     AND ObjectLink_Unit.ChildObjectId not in
      (SELECT ObjectLink_Unit_Juridical_Run.ObjectId
       FROM Object AS Object_RecalcMCSSheduler
@@ -215,12 +224,9 @@ BEGIN
 
       WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
         AND Object_RecalcMCSSheduler.isErased = FALSE
-        AND COALESCE (ObjectFloat_Period.ValueData::Integer, 0) <> 0
-        AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
         AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
         AND Object_Unit_Run.isErased = FALSE
-        AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-        AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 11300059, 11769526));
+        AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0);
 
 END;
 $BODY$

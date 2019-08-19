@@ -1094,7 +1094,9 @@ uses
   InfoMoneyPlace_Object in '..\..\Forms\Guides\InfoMoneyPlace_Object.pas' {InfoMoneyPlace_ObjectForm: TParentForm},
   OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
   OrderFinanceJournal in '..\..\Forms\Document\OrderFinanceJournal.pas' {OrderFinanceJournalForm: TParentForm},
-  JuridicalOrderFinance in '..\..\Forms\Guides\JuridicalOrderFinance.pas' {JuridicalOrderFinanceForm: TParentForm};
+  JuridicalOrderFinance in '..\..\Forms\Guides\JuridicalOrderFinance.pas' {JuridicalOrderFinanceForm: TParentForm},
+  Report_RemainsOLAPTable in '..\..\Forms\Report\Report_RemainsOLAPTable.pas' {Report_RemainsOLAPTableForm: TParentForm},
+  Report_RemainsOLAPTableDialog in '..\..\Forms\Report\Report_RemainsOLAPTableDialog.pas' {Report_RemainsOLAPTableDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

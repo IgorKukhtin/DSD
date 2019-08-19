@@ -1,13 +1,15 @@
 -- Function: gpSelect_Movement_SendCash()
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendCash(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
     IN inisSUN         Boolean ,
+    IN inisSUNAll      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -20,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -54,7 +56,7 @@ BEGIN
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId WHERE inisSUN = FALSE
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inisSUN = FALSE
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE OR inisSUN = TRUE
                        )
         -- , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
@@ -107,8 +109,11 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
-           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
+           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
+           , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
+                   AND Movement.OperDate < CURRENT_DATE
+                   AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -126,7 +131,9 @@ BEGIN
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
        FROM (SELECT Movement.id
              FROM tmpStatus
-                  JOIN Movement ON (inisSUN = TRUE OR Movement.OperDate BETWEEN inStartDate AND inEndDate)  
+                  JOIN Movement ON (inisSUN = TRUE AND Movement.OperDate = CURRENT_DATE
+                                    OR inisSUN = TRUE AND inisSUNAll = TRUE
+                                    OR Movement.OperDate BETWEEN inStartDate AND inEndDate)  
                                AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
@@ -235,8 +242,10 @@ BEGIN
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
-         AND (tmpUnit_To.UnitId = vbUnitId AND inisSUN = FALSE OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
          AND (inisSUN = FALSE OR inisSUN = TRUE AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE)
+         AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased() 
+           OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased())
         
        ;
 
@@ -257,3 +266,4 @@ ALTER FUNCTION gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarCh
 -- тест
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')
+-- select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'True' , inisSUNAll := 'True', inSession := '3');

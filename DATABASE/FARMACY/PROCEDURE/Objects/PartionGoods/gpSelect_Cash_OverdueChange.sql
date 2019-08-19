@@ -12,7 +12,8 @@ RETURNS TABLE (ContainerID Integer,
                Amount TFloat, ExpirationDate TDateTime,
                ContainerPGID Integer, AmountPG TFloat, ExpirationDatePG TDateTime,
                BranchDate TDateTime, Invnumber TVarChar, FromName TVarChar, ContractName TVarChar,
-               ExpirationDateDialog TDateTime, AmountDialog TFloat
+               ExpirationDateDialog TDateTime, AmountDialog TFloat,
+               Cat_5 boolean, DatePartionGoodsCat5 TDateTime
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -74,6 +75,9 @@ BEGIN
        , COALESCE (ObjectFloat_PartionGoods_ExpirationDate.ValueData,
                    tmpExpirationDate.ValueData, zc_DateEnd())              AS ExpirationDateDialog
        , COALESCE (Container_PG.Amount, Container.Amount)                  AS AmountDialog
+
+       , COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE)       AS Cat_5
+       , ObjectDate_PartionGoods_Cat_5.ValueData                           AS DatePartionGoodsCat5
   FROM tmpContainer AS Container
 
        LEFT JOIN tmpExpirationDate ON tmpExpirationDate.ContainerId = Container.Id
@@ -110,6 +114,13 @@ BEGIN
                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                               ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  ContainerLinkObject.ObjectId
+                              AND ObjectBoolean_PartionGoods_Cat_5.DescId = zc_ObjectBoolean_PartionGoods_Cat_5()
+
+       LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Cat_5
+                            ON ObjectDate_PartionGoods_Cat_5.ObjectId =  ContainerLinkObject.ObjectId
+                           AND ObjectDate_PartionGoods_Cat_5.DescId = zc_ObjectDate_PartionGoods_Cat_5()
   ORDER BY 5;
 
 END;
@@ -126,4 +137,3 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- select * from gpSelect_Cash_OverdueChange(inUnitID := 183292 , inGoodsId := 16597 ,  inSession := '3');

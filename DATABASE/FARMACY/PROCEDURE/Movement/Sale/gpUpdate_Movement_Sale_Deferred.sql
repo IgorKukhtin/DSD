@@ -49,7 +49,7 @@ BEGIN
        IF inisDeferred = TRUE
        THEN
 
-           --Проверка на то что бы не продали больше чем есть на остатке
+/*           --Проверка на то что бы не продали больше чем есть на остатке
            SELECT MI_Sale.GoodsName
                 , COALESCE(MI_Sale.Amount,0)
                 , COALESCE(SUM(Container.Amount),0) 
@@ -73,7 +73,7 @@ BEGIN
            THEN
               RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
            END IF;
-
+*/
            -- собственно проводки
            PERFORM lpComplete_Movement_Sale(inMovementId  -- ключ Документа
                                           , 0             -- ключ строки Документа
@@ -102,4 +102,3 @@ LANGUAGE plpgsql VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
  01.08.19                                                                      *
-*/

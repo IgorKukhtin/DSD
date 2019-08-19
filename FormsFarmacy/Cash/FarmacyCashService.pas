@@ -386,14 +386,14 @@ begin
             ReleaseMutex(MutexRemains);
           end;
 
-          Add_Log('Start MutexAlternative 311');
-          WaitForSingleObject(MutexAlternative, INFINITE);
-          try
-            SaveLocalData(AlternativeCDS,Alternative_lcl);
-          finally
-            Add_Log('End MutexAlternative 311');
-            ReleaseMutex(MutexAlternative);
-          end;
+//          Add_Log('Start MutexAlternative 311');
+//          WaitForSingleObject(MutexAlternative, INFINITE);
+//          try
+//            SaveLocalData(AlternativeCDS,Alternative_lcl);
+//          finally
+//            Add_Log('End MutexAlternative 311');
+//            ReleaseMutex(MutexAlternative);
+//          end;
         end;
       Except
       end;
@@ -707,54 +707,91 @@ begin
 end;
 
 function TMainCashForm2.SaveCashRemains : boolean;
-  var nRemainsFieldCount, nAlternativeFieldCount: integer;
+  var nRemainsFieldCount: integer;
 begin
   Result := False;
   tiServise.Hint := 'Получение остатков';
   Add_Log('Start MutexRemains 390');
   WaitForSingleObject(MutexRemains, INFINITE);
-  Add_Log('Start MutexAlternative 393');
-  WaitForSingleObject(MutexAlternative, INFINITE);
   RemainsCDS.DisableControls;
-  AlternativeCDS.DisableControls;
   try
     try
       nRemainsFieldCount := -1;
       if RemainsCDS.Active then
         nRemainsFieldCount := RemainsCDS.Fields.Count;
-      nAlternativeFieldCount := -1;
-      if AlternativeCDS.Active then
-        nAlternativeFieldCount := AlternativeCDS.Fields.Count;
       //Получение остатков
       actRefresh.Execute;
       //Проверка количества столбцов в новом наборе
-      if (nRemainsFieldCount > RemainsCDS.Fields.Count)
-         or
-         (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
+      if (nRemainsFieldCount > RemainsCDS.Fields.Count) then
       begin
         tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
         tiServise.ShowBalloonHint;
         Result := true;
         Add_Log('Ошибка при получении остатков');
         Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
-        Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
         Exit;
       end;
       //Сохранение остатков в локальной базе
       SaveLocalData(RemainsCDS,Remains_lcl);
-      SaveLocalData(AlternativeCDS,Alternative_lcl);
     Except ON E:Exception do
       Add_Log('Ошибка при получении остатков:' + E.Message);
     end;
   finally
     RemainsCDS.EnableControls;
-    AlternativeCDS.EnableControls;
     Add_Log('End MutexRemains 390');
     ReleaseMutex(MutexRemains);
-    Add_Log('End MutexAlternative 393');
-    ReleaseMutex(MutexAlternative);
   end;
 end;
+
+//function TMainCashForm2.SaveCashRemains : boolean;
+//  var nRemainsFieldCount, nAlternativeFieldCount: integer;
+//begin
+//  Result := False;
+//  tiServise.Hint := 'Получение остатков';
+//  Add_Log('Start MutexRemains 390');
+//  WaitForSingleObject(MutexRemains, INFINITE);
+//  Add_Log('Start MutexAlternative 393');
+//  WaitForSingleObject(MutexAlternative, INFINITE);
+//  RemainsCDS.DisableControls;
+//  AlternativeCDS.DisableControls;
+//  try
+//    try
+//      nRemainsFieldCount := -1;
+//      if RemainsCDS.Active then
+//        nRemainsFieldCount := RemainsCDS.Fields.Count;
+//      nAlternativeFieldCount := -1;
+//      if AlternativeCDS.Active then
+//        nAlternativeFieldCount := AlternativeCDS.Fields.Count;
+//      //Получение остатков
+//      actRefresh.Execute;
+//      //Проверка количества столбцов в новом наборе
+//      if (nRemainsFieldCount > RemainsCDS.Fields.Count)
+//         or
+//         (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
+//      begin
+//        tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
+//        tiServise.ShowBalloonHint;
+//        Result := true;
+//        Add_Log('Ошибка при получении остатков');
+//        Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
+//        Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
+//        Exit;
+//      end;
+//      //Сохранение остатков в локальной базе
+//      SaveLocalData(RemainsCDS,Remains_lcl);
+//      SaveLocalData(AlternativeCDS,Alternative_lcl);
+//    Except ON E:Exception do
+//      Add_Log('Ошибка при получении остатков:' + E.Message);
+//    end;
+//  finally
+//    RemainsCDS.EnableControls;
+//    AlternativeCDS.EnableControls;
+//    Add_Log('End MutexRemains 390');
+//    ReleaseMutex(MutexRemains);
+//    Add_Log('End MutexAlternative 393');
+//    ReleaseMutex(MutexAlternative);
+//  end;
+//end;
 
 procedure TMainCashForm2.SaveCashRemainsDif;
 begin
@@ -790,6 +827,8 @@ begin
              FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
              FLocalDataBaseDiff.Fields[14].AsVariant:=DiffCDS.Fields[14].AsVariant;
              FLocalDataBaseDiff.Fields[15].AsVariant:=DiffCDS.Fields[15].AsVariant;
+             FLocalDataBaseDiff.Fields[16].AsVariant:=DiffCDS.Fields[16].AsVariant;
+             FLocalDataBaseDiff.Fields[17].AsVariant:=DiffCDS.Fields[17].AsVariant;
              FLocalDataBaseDiff.Post;
              DiffCDS.Next;
           end;
@@ -1072,8 +1111,8 @@ begin
       sp.OutputType := otResult;
       sp.StoredProcName := 'gpGet_CheckFarmacyName_byUser';
       sp.Params.Clear;
-      sp.Params.AddParam('outIsEnter',ftString,ptOutput, Null);
-      sp.Params.AddParam('outUnitId',ftString,ptOutput, Null);
+      sp.Params.AddParam('outIsEnter', ftBoolean, ptOutput, Null);
+      sp.Params.AddParam('outUnitId', ftInteger, ptOutput, Null);
       sp.Params.AddParam('inUnitName',ftString,ptInput, iniLocalUnitNameGet);
       if sp.Execute(False,False) = '' then
       begin

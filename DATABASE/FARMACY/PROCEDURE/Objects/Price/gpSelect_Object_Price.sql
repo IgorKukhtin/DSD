@@ -156,7 +156,28 @@ BEGIN
     THEN
         RETURN QUERY
         With 
-        tmpContainerRemeins AS (SELECT container.objectid
+        tmpContainerPDAll AS (SELECT Container.ParentId
+                                   , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
+                              FROM Container
+
+                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                              WHERE Container.DescId = zc_Container_CountPartionDate()
+                                AND Container.Amount > 0 
+                                AND Container.WhereObjectId = inUnitId
+                                AND (Container.objectid = inGoodsId OR inGoodsId = 0)
+                              )
+
+      , tmpContainerPD AS (SELECT Container.ParentId
+                                , COALESCE (MIN(ObjectDate_ExpirationDate.ValueData), zc_DateEnd())  AS ExpirationDate
+                                 FROM tmpContainerPDAll AS Container
+                                      LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                           ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                 GROUP BY Container.ParentId
+                                 )
+      , tmpContainerRemeins AS (SELECT container.objectid
                                      , Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
                                      , Container.Id   AS  ContainerId
                                 FROM container
@@ -169,9 +190,12 @@ BEGIN
                                 )
       , tmpRemeins AS (SELECT tmp.Objectid
                             , Sum(tmp.Remains)  ::TFloat  AS Remains
-                            , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                            , MIN(COALESCE(ContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                        FROM tmpContainerRemeins AS tmp
-                              -- находим партию
+                              -- если есть сроковые контейннра то берем дату из нии
+                              LEFT JOIN tmpContainerPD AS ContainerPD
+                                                       ON ContainerPD.ParentId = tmp.ContainerId
+                              -- находим партию                              
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                             ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
                                                            AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -695,7 +719,28 @@ BEGIN
     ELSE
         RETURN QUERY
         WITH 
-        tmpContainerRemeins AS (SELECT container.objectid
+        tmpContainerPDAll AS (SELECT Container.ParentId
+                                   , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
+                              FROM Container
+
+                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                              WHERE Container.DescId = zc_Container_CountPartionDate()
+                                AND Container.Amount > 0 
+                                AND Container.WhereObjectId = inUnitId
+                                AND (Container.objectid = inGoodsId OR inGoodsId = 0)
+                              )
+
+      , tmpContainerPD AS (SELECT Container.ParentId
+                                , COALESCE (MIN(ObjectDate_ExpirationDate.ValueData), zc_DateEnd())  AS ExpirationDate
+                                 FROM tmpContainerPDAll AS Container
+                                      LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                           ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                 GROUP BY Container.ParentId
+                                 )
+      , tmpContainerRemeins AS (SELECT container.objectid
                                      , Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
                                      , Container.Id   AS  ContainerId
                                 FROM container
@@ -738,7 +783,11 @@ BEGIN
       , tmpRemeins1 AS (SELECT tmp.Objectid
                              , tmp.Remains
                              , Object_PartionMovementItem.ObjectCode ::Integer
+                             , ContainerPD.ExpirationDate
                        FROM tmpContainerRemeins AS tmp
+                              -- если есть сроковые контейннра то берем дату из нии
+                              LEFT JOIN tmpContainerPD AS ContainerPD
+                                                        ON ContainerPD.ParentId = tmp.ContainerId
                               -- находим партию
                               LEFT JOIN tmpCLO AS ContainerLinkObject_MovementItem
                                                             ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
@@ -756,6 +805,7 @@ BEGIN
                             , (tmp.Remains)  ::TFloat  AS Remains
                             , MIFloat_MovementItem.ValueData :: Integer AS MI_Id_find
                             , MI_Income.Id                              AS MI_Id
+                            , tmp.ExpirationDate
                        FROM tmpRemeins1 AS tmp
                               -- элемент прихода
                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.ObjectCode
@@ -772,7 +822,7 @@ BEGIN
                                      )
       , tmpRemeins3 AS (SELECT tmp.Objectid
                              , (tmp.Remains)  ::TFloat  AS Remains
-                             , (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                             , (COALESCE(tmp.ExpirationDate, MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                         FROM tmpRemeins2 AS tmp
                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = tmp.MI_Id_find

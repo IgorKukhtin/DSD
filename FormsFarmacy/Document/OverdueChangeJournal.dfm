@@ -67,6 +67,13 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
+      object Cat_5: TcxGridDBColumn
+        Caption = '5 '#1082#1072#1090'.'
+        DataBinding.FieldName = 'Cat_5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 46
+      end
       object ExpirationDate: TcxGridDBColumn
         Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
         DataBinding.FieldName = 'ExpirationDate'
@@ -104,6 +111,13 @@ object OverdueChangeJournalForm: TOverdueChangeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 172
+      end
+      object DatePartionGoodsCat5: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102
+        DataBinding.FieldName = 'DatePartionGoodsCat5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 112
       end
     end
     object cxGridLevel: TcxGridLevel

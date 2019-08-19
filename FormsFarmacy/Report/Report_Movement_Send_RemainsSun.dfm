@@ -14,17 +14,17 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 960
-    ExplicitHeight = 540
+    ExplicitHeight = 474
     ClientRectBottom = 474
     ClientRectRight = 960
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 960
-      ExplicitHeight = 540
+      ExplicitHeight = 474
       inherited cxGrid: TcxGrid
         Width = 960
         Height = 240
         ExplicitWidth = 960
-        ExplicitHeight = 272
+        ExplicitHeight = 240
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -494,6 +494,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_min'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1084#1080#1085'. '#1089#1091#1084#1084#1072
@@ -504,6 +505,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_max'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085' '#1089#1091#1084#1084#1072
@@ -514,6 +516,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Unit_count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1082#1086#1083'-'#1074#1086' '#1090#1072#1082#1080#1093' '#1085#1072#1082#1083'.'
@@ -524,6 +527,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_min_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1087#1086#1089#1083#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'-1: '#1084#1080#1085'. '#1089#1091#1084#1084#1072
@@ -535,6 +539,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_max_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1087#1086#1089#1083#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'-1: '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085' '#1089#1091#1084#1084#1072
@@ -554,6 +559,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_min_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1087#1086#1089#1083#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'-2: '#1084#1080#1085'. '#1089#1091#1084#1084#1072
@@ -565,6 +571,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             DataBinding.FieldName = 'Summ_max_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1087#1086#1089#1083#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'-2: '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085' '#1089#1091#1084#1084#1072
@@ -581,6 +588,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           end
           object Summ_str: TcxGridDBColumn
             DataBinding.FieldName = 'Summ_str'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -589,18 +597,21 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           end
           object Summ_next_str: TcxGridDBColumn
             DataBinding.FieldName = 'Summ_next_str'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
           object UnitName_str: TcxGridDBColumn
             DataBinding.FieldName = 'UnitName_str'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object UnitName_next_str: TcxGridDBColumn
             DataBinding.FieldName = 'UnitName_next_str'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1169,7 +1180,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitTop = 400
       end
       object cxSplitter1: TcxSplitter
         Left = 0
@@ -1179,7 +1189,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 272
       end
     end
   end
@@ -1220,8 +1229,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid3
-    ExplicitTop = 400
-    ExplicitWidth = 8
   end
   object cxGrid3: TcxGrid [3]
     Left = 0
@@ -1231,7 +1238,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 7
-    ExplicitTop = 408
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DefSUNDS

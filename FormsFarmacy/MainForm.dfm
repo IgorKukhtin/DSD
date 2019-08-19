@@ -2886,6 +2886,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_BalanceGoodsSUN: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053
+      Hint = #1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053
+      FormName = 'TReport_BalanceGoodsSUNForm'
+      FormNameParam.Value = 'TReport_BalanceGoodsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3408,6 +3420,9 @@ inherited MainForm: TMainForm
       end
       object miReport_Movement_Send_RemainsSun: TMenuItem
         Action = actReport_Movement_Send_RemainsSun
+      end
+      object N189: TMenuItem
+        Action = actReport_BalanceGoodsSUN
       end
       object N178: TMenuItem
         Caption = '-'

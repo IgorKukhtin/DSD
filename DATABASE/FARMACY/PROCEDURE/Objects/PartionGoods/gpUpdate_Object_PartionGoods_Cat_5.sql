@@ -23,8 +23,35 @@ BEGIN
      THEN 
          RAISE EXCEPTION 'Ошибка.Партия не найдена.';
      END IF;
+     
+     -- Если партию переводили в 5 категорию
+     IF NOT inCat_5 AND
+        EXISTS(SELECT * FROM ObjectDate 
+               WHERE ObjectDate.DescID = zc_ObjectDate_PartionGoods_Cat_5() 
+                 AND ObjectDate.ObjectID = inPartionGoodsId
+                 AND ObjectDate.ValueData < CURRENT_DATE - INTERVAL '30 DAY') --AND
+/*        NOT EXISTS(SELECT 1 FROM ContainerLinkObject
+                                 INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId =  zc_Movement_Check() 
+                                                                 AND MovementItemContainer.ContainerId = ContainerLinkObject.ContainerId
+                                 INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemID
+                                 INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.ParentId
+                                                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
+                                                                  AND MovementItemLinkObject.ObjectId = zc_Enum_PartionDateKind_Cat_5() 
+                   WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
+                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods())
+*/     THEN     
+        RAISE EXCEPTION 'Ошибка. Эту позицию запрещено переносить в 5 кат, поскольку она там находилась 30 дней и вернулась в 4 кат';     
+     END IF;
+     
 
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PartionGoods_Cat_5(), inPartionGoodsId, NOT inCat_5);
+
+     -- сохранили - дату первого перевода в 5 категорию
+     IF NOT EXISTS(SELECT * FROM ObjectDate WHERE ObjectDate.DescID = zc_ObjectDate_PartionGoods_Cat_5() AND ObjectDate.ObjectID = inPartionGoodsId)
+     THEN     
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Cat_5(), inPartionGoodsId, CURRENT_TIMESTAMP);
+     END IF;
+     
 
      -- Возвращаем значение
      outCat_5 := COALESCE ((SELECT ValueData FROM ObjectBoolean WHERE DescID = zc_ObjectBoolean_PartionGoods_Cat_5() AND ObjectId = inPartionGoodsId), FALSE);
@@ -36,6 +63,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 14.08.19                                                       *
  17.07.19                                                       *
 */
 

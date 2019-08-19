@@ -138,6 +138,7 @@ BEGIN
 
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                          AND MovementItem.isErased = FALSE
+                         AND MovementItem.DescId = zc_MI_Master()
         JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId

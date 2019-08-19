@@ -365,8 +365,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Route_EndRunPlan() RETURNS Integer AS $
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Route(), 'zc_ObjectDate_Route_EndRunPlan', 'Время возвращения план' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Route_EndRunPlan');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PartionGoods_Cat_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Cat_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectDate_PartionGoods_Cat_5', 'Дата перевода в 5 категорию' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Cat_5');
+
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 14.08.19                                                                                     * zc_ObjectDate_PartionGoods_Cat_5
  06.04.19         * zc_ObjectDate_Route_StartRunPlan
                     zc_ObjectDate_Route_EndRunPlan
  20.03.19         * zc_ObjectDate_Unit_SP
