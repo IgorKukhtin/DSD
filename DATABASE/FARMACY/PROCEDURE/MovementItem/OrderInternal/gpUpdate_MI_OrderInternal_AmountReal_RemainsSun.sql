@@ -105,21 +105,20 @@ BEGIN
                AND MovementItem.isErased   = FALSE;
 
 
-     -- сохраняем свойства,
-     -- заказ без учета СУН - это то что сейчас в эмаунте, но только в том случае если есть сроковый, а в Амоунт пишешь ноль
+     -- сохраняем свойства
+     -- заказ без учета СУН - это то что сейчас в эмаунте, но только в том случае если есть сроковый, а в AmountSecond пишешь ноль
      PERFORM lpInsertUpdate_MI_OrderInternal_SUN (inId             := COALESCE (_tmp_MI.Id, 0)
                                                 , inMovementId     := inMovementId
                                                 , inGoodsId        := _tmp_MI.GoodsId
-                                                , inAmount         := CASE WHEN _tmpRemains.Amount     <> 0
+                                                , inAmount         := CASE WHEN _tmpRemains.Amount <> 0
                                                                              OR _tmp_MI.SendSUN    <> 0
-                                                                             OR _tmp_MI.SendDefSUN <> 0
-                                                                           THEN 0
+                                                                             OR _tmp_MI.SendDefSUN <> 0 THEN 0
                                                                            WHEN _tmp_MI.Amount     <> 0 THEN _tmp_MI.Amount
                                                                            ELSE _tmp_MI.AmountReal
                                                                       END :: TFloat
                                                 , inAmountReal     := CASE WHEN (_tmpRemains.Amount <> 0 OR _tmp_MI.SendSUN <> 0 OR _tmp_MI.SendDefSUN <> 0)
                                                                             AND _tmp_MI.Amount <> 0
-                                                                           THEN _tmp_MI.Amount
+                                                                                THEN _tmp_MI.Amount
 
                                                                            WHEN _tmpRemains.Amount <> 0  OR _tmp_MI.SendSUN <> 0 OR _tmp_MI.SendDefSUN <> 0
                                                                                 THEN _tmp_MI.AmountReal
@@ -133,12 +132,11 @@ BEGIN
      FROM _tmp_MI
           LEFT JOIN _tmpRemainsGoodsPartionDate AS _tmpRemains ON _tmpRemains.GoodsId = _tmp_MI.GoodsId
           -- AND 1=0
-     ;
-
+    ;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

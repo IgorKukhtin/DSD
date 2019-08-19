@@ -51,7 +51,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WmsCodeCalc_Nom   TVarChar    -- новый Код ВМС* номинал
              , WmsCodeCalc_Ves   TVarChar    -- новый Код ВМС* неноминал
              --
-             --, GoodsPropertyBoxId Integer
+             , GoodsPropertyBoxId Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar -- Ящик (E2/E3)
              , WeightOnBox TFloat                               -- Кол-во кг. в ящ. (E2/E3)
              , CountOnBox TFloat                                -- Кол-во ед. в ящ. (E2/E3)
@@ -60,16 +60,16 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , BoxHeight TFloat
              , BoxLength TFloat
              , BoxWidth TFloat
-             , WeightGross TFloat                               -- Вес брутто полного ящика (E2/E3)
-             , WeightAvgGross TFloat                            -- Вес брутто по среднему весу ящика (E2/E3)
-             , WeightAvgNet TFloat                              -- Вес нетто по среднему весу ящика (E2/E3)
+             , WeightGross TFloat                               -- Вес брутто полного ящика "по ???" (E2/E3)
+             , WeightAvgGross TFloat                            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , WeightAvgNet TFloat                              -- Вес нетто полного ящика "по среднему весу" (E2/E3)
              , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
              , WeightOnBox_2 TFloat, CountOnBox_2 TFloat
              , BoxVolume_2 TFloat, BoxWeight_2 TFloat
              , BoxHeight_2 TFloat, BoxLength_2 TFloat, BoxWidth_2 TFloat
-             , WeightGross_2 TFloat                             -- Вес брутто полного ящика (Гофра)
-             , WeightAvgGross_2 TFloat                          -- Вес брутто по среднему весу ящика (Гофра)
-             , WeightAvgNet_2 TFloat                            -- Вес нетто по среднему весу ящика (Гофра)
+             , WeightGross_2 TFloat                             -- Вес брутто полного ящика "по ???" (Гофра)
+             , WeightAvgGross_2 TFloat                          -- Вес брутто полного ящика "по среднему весу" (Гофра)
+             , WeightAvgNet_2 TFloat                            -- Вес нетто полного ящика "по среднему весу" (Гофра)
 
              , BoxId_Retail1 Integer, BoxName_Retail1 TVarChar  -- ящик для Сети 1
              , BoxId_Retail2 Integer, BoxName_Retail2 TVarChar  -- ящик для Сети 2
@@ -200,6 +200,7 @@ BEGIN
    , tmpGoodsPropertyBox AS (SELECT ObjectLink_GoodsPropertyBox_Goods.ChildObjectId     AS GoodsId
                                   , ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId AS GoodsKindId
 
+                                  , Object_GoodsPropertyBox.Id           AS GoodsPropertyBoxId
                                   , Object_Box.Id                        AS BoxId
                                   , Object_Box.ObjectCode                AS BoxCode
                                   , Object_Box.ValueData                 AS BoxName
@@ -306,8 +307,7 @@ BEGIN
                                WHERE ObjectLink_GoodsPropertyValue_Box.DescId = zc_ObjectLink_GoodsPropertyValue_Box()
                                  AND COALESCE (ObjectLink_GoodsPropertyValue_Box.ChildObjectId,0) <> 0
                                )
-
-       --
+       -- Результат
        SELECT
              Object_GoodsByGoodsKind_View.Id
            , Object_GoodsByGoodsKind_View.GoodsId
@@ -401,6 +401,7 @@ BEGIN
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Ves  :: TVarChar       -- неноминал - Код ВМС* для выгрузки
 
             -- ящик (E2/E3)
+            , tmpGoodsPropertyBox.GoodsPropertyBoxId
             , tmpGoodsPropertyBox.BoxId
             , tmpGoodsPropertyBox.BoxCode
             , tmpGoodsPropertyBox.BoxName
@@ -419,7 +420,7 @@ BEGIN
             , tmpGoodsPropertyBox.BoxLength
             , tmpGoodsPropertyBox.BoxWidth
 
-              -- Вес брутто полного ящика (E2/E3)
+              -- Вес брутто полного ящика "по ???" (E2/E3)
             , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE tmpGoodsPropertyBox.WeightOnBox
@@ -427,7 +428,7 @@ BEGIN
              + tmpGoodsPropertyBox.BoxWeight
               ) :: TFloat AS WeightGross
 
-             -- Вес брутто по среднему весу ящика (E2/E3)
+             -- Вес брутто полного ящика "по среднему весу" (E2/E3)
             , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE 0
@@ -461,7 +462,7 @@ BEGIN
             , tmpGoodsPropertyBox_2.BoxLength   AS BoxLength_2
             , tmpGoodsPropertyBox_2.BoxWidth    AS BoxWidth_2
 
-              -- Вес брутто полного ящика (Гофра)
+              -- Вес брутто полного ящика "по ???" (Гофра)
             , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE tmpGoodsPropertyBox_2.WeightOnBox
@@ -469,7 +470,7 @@ BEGIN
              + tmpGoodsPropertyBox_2.BoxWeight
               ) :: TFloat AS WeightGross_2
 
-             -- Вес брутто по среднему весу ящика (Гофра)
+             -- Вес брутто полного ящика "по среднему весу" (Гофра)
             , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE 0
@@ -477,7 +478,7 @@ BEGIN
              + tmpGoodsPropertyBox_2.BoxWeight
               ) :: TFloat AS WeightAvgGross_2
 
-              -- Вес нетто по среднему весу ящика (Гофра)
+              -- Вес нетто полного ящика "по среднему весу" (Гофра)
             , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE 0

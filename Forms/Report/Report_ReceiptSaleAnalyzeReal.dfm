@@ -3,7 +3,8 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   ClientHeight = 430
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -340
+  ExplicitLeft = -241
+  ExplicitTop = -8
   ExplicitWidth = 1146
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -117,6 +118,11 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
               Format = ',0.####'
               Kind = skSum
               Column = SummCost4_sale
+            end
+            item
+              Format = ' ,0.####'
+              Kind = skSum
+              Column = Profit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -208,6 +214,11 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
               Format = ',0.####'
               Kind = skSum
               Column = SummCost4_sale
+            end
+            item
+              Format = ' ,0.####'
+              Kind = skSum
+              Column = Profit
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -749,6 +760,16 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
+          object Profit: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1080#1073#1099#1083#1100
+            DataBinding.FieldName = 'Profit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -901,6 +922,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
+          end
+          object Color_Profit: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Profit'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 45
           end
         end
         object ChildView: TcxGridDBTableView [1]
@@ -1888,6 +1915,104 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_Profit: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = 
+        #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1060#1072#1082#1090' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087 +
+        #1088#1072#1081#1089#1091'2+ '#1095#1080#1089#1090'. '#1087#1088#1080#1073'.)'
+      Hint = 
+        #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1060#1072#1082#1090' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087 +
+        #1088#1072#1081#1089#1091'2 + '#1095#1080#1089#1090'. '#1087#1088#1080#1073'.)'
+      ImageIndex = 19
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExcel'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1095#1080#1089#1090#1072#1103' '#1087#1088#1080#1073#1099#1083#1100')'
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1095#1080#1089#1090#1072#1103' '#1087#1088#1080#1073#1099#1083#1100')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_CalcPrice: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -2585,6 +2710,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Profit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_CalcPrice'
         end
         item
@@ -2671,6 +2804,17 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Action = actPrint_Calc_PriceListExcel
       Category = 0
     end
+    object bbPrint_Profit: TdxBarButton
+      Action = actPrint_Profit
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Profit
+        ColorValueList = <>
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 128

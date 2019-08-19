@@ -367,12 +367,16 @@ BEGIN
 -- RAISE EXCEPTION 'ok' ;
 
 
-        -- Пересчитываем ручное количество для строк с авторасчетом
+        -- Пересчитываем ручное количество для строк с авторасчетом - Количество, установленное вручную
         PERFORM
             lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
                                             ,inMovementItemId := MovementItemSaved.Id
-                                            ,inValueData      := CEIL ((MovementItemSaved.Amount
+                                            ,inValueData      := -- округлили ВВЕРХ AllLot
+                                                                 CEIL ((-- Спецзаказ
+                                                                        MovementItemSaved.Amount
+                                                                        -- Количество дополнительное
                                                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                                                        -- кол-во отказов
                                                                       + COALESCE (MIFloat_ListDiff.ValueData, 0)
                                                                        ) / COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
                                                                       )
@@ -389,13 +393,14 @@ BEGIN
             INNER JOIN Object_Goods_View AS Object_Goods
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId
         WHERE MovementItemSaved.MovementId = vbMovementId;
+
     END IF;
 
 
     -- пересчет для схемы SUN
     IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
     THEN
-        PERFORM gpUpdate_MI_OrderInternal_AmountReal_RemainsSun (inMovementId:= inMovementId
+        PERFORM gpUpdate_MI_OrderInternal_AmountReal_RemainsSun (inMovementId:= vbMovementId
                                                                , inUnitId    := inUnitId
                                                                , inSession   := inSession
                                                                 );
@@ -417,9 +422,9 @@ BEGIN
                     MovementLinkObject_Unit.ObjectId = inUnitId
              )
     THEN
-        outOrderExists := True;
+        outOrderExists := TRUE;
     ELSE
-        outOrderExists := False;
+        outOrderExists := FALSE;
     END IF;
 
 END;

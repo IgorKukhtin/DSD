@@ -6,34 +6,36 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_SKU_GROUP (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_SKU_GROUP(
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbProcName_SKU_GROUP   TVarChar;
-   DECLARE vbProcName_SKU_DEPENDS TVarChar;
-   DECLARE vbRowNum   Integer;
+   DECLARE vbProcName            TVarChar;
+   DECLARE vbTagName_sku_group   TVarChar;
+   DECLARE vbTagName_sku_depends TVarChar;
+   DECLARE vbActionName          TVarChar;
+   DECLARE vbRowNum              Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
 
-     vbProcName_SKU_GROUP  := 'gpInsert_Object_wms_SKU_GROUP';
-     vbProcName_SKU_DEPENDS:= 'gpInsert_Object_wms_SKU_DEPENDS';
+     --
+     vbProcName:= 'gpInsert_Object_wms_SKU_GROUP';
+     --
+     vbTagName_sku_group   := 'sku_group';
+     vbTagName_sku_depends := 'sku_depends';
+     --
+     vbActionName:= 'set';
 
 
      -- удалили прошлые данные
-     DELETE FROM Object_WMS WHERE Object_WMS.ProcName IN (vbProcName_SKU_GROUP, vbProcName_SKU_DEPENDS);
-
-     -- первые строчки XML
-     -- vbRowNum:= 1;
-     -- INSERT INTO Object_WMS (ProcName, RowNum, RowData) VALUES (vbProcName_SKU_GROUP, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
-     -- INSERT INTO Object_WMS (ProcName, RowNum, RowData) VALUES (vbProcName_SKU_DEPENDS, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
+     DELETE FROM Object_WMS WHERE Object_WMS.ProcName = vbProcName;
 
 
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, RowNum, RowData, ObjectId)
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
         WITH tmpGoods_all AS (SELECT tmpGoods.sku_id, tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.ObjectId
                               FROM lpSelect_Object_WMS_SKU() AS tmpGoods
                              )
@@ -192,8 +194,12 @@ BEGIN
                       SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_10 AS tmp
                      )
         -- Результат
-        -- sku_group
-        SELECT vbProcName_SKU_GROUP AS ProcName
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+        FROM
+       (-- sku_group
+        SELECT vbProcName          AS ProcName
+             , vbTagName_sku_group AS TagName
+             , vbActionName        AS ActionName
              , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY COALESCE (tmpGoodsGroup_10.Ord, 0) DESC
                                                                    , COALESCE (tmpGoodsGroup_9.Ord, 0) DESC
                                                                    , COALESCE (tmpGoodsGroup_8.Ord, 0) DESC
@@ -209,10 +215,11 @@ BEGIN
                                                            ) :: Integer) AS RowNum
                -- XML
              , ('<sku_group'
-            ||' sku_group_id=“' || tmpData.sku_group_id :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
-             ||' description=“' || zfCalc_Text_replace (tmpData.description, CHR(39), '`') ||'"' -- Уникальное наименование группы товаров в справочнике предприятия
-              ||' parent_id=“' || CASE WHEN tmpData.parent_id > 0 THEN tmpData.parent_id :: TVarChar ELSE 'system' END :: TVarChar ||'"' -- Код родительской группы товаров в справочнике предприятия.
-              ||' </sku_group>'
+                  ||' action="' || vbActionName                     ||'"' -- ???
+            ||' sku_group_id="' || tmpData.sku_group_id :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
+             ||' description="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.description, CHR(39), '`'), '"', '`') ||'"' -- Уникальное наименование группы товаров в справочнике предприятия
+              ||' parent_id="' || CASE WHEN tmpData.parent_id > 0 THEN tmpData.parent_id :: TVarChar ELSE 'system' END :: TVarChar ||'"' -- Код родительской группы товаров в справочнике предприятия.
+              ||'></sku_group>'
                ):: Text AS RowData
                -- Id
              , tmpData.sku_group_id AS ObjectId
@@ -229,20 +236,25 @@ BEGIN
              LEFT JOIN tmpGoodsGroup_1 ON tmpGoodsGroup_1.GoodsGroupId = tmpData.sku_group_id
              LEFT JOIN tmpGoodsGroup_0 ON tmpGoodsGroup_0.GoodsGroupId = tmpData.sku_group_id
 
-       UNION ALL 
+       UNION ALL
         -- sku_depends
-        SELECT vbProcName_SKU_DEPENDS AS ProcName
+        SELECT vbProcName            AS ProcName
+             , vbTagName_sku_depends AS TagName
+             , vbActionName          AS ActionName
              , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
                -- XML
              , ('<sku_depends'
-            ||' sku_group_id=“' || tmpData.GoodsGroupId :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
-                  ||' sku_id=“' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
-                  ||' </sku_depends>'
+                  ||' action="' || vbActionName                     ||'"' -- ???
+           ||' sku_groups_id="' || tmpData.GoodsGroupId :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
+                  ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
+                  ||'></sku_depends>'
                ):: Text AS RowData
                -- Id
              , tmpData.ObjectId
         FROM tmpGoods_all AS tmpData
-        ORDER BY 2;
+       ) AS tmp
+     -- WHERE tmp.RowNum BETWEEN 1 AND 1
+        ORDER BY 4;
 
 END;
 $BODY$
@@ -253,6 +265,8 @@ $BODY$
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.08.19                                       *
 */
+-- delete FROM Object_WMS
+-- select * FROM Object_WMS
 -- тест
 -- SELECT * FROM gpInsert_Object_wms_SKU_GROUP (zfCalc_UserAdmin()) -- WHERE ProcName = 'gpInsert_Object_wms_SKU_GROUP'
 -- SELECT * FROM gpInsert_Object_wms_SKU_GROUP (zfCalc_UserAdmin()) -- WHERE ProcName = 'gpInsert_Object_wms_SKU_DEPENDS'

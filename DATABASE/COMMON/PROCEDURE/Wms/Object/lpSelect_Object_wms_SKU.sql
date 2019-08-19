@@ -11,6 +11,28 @@ RETURNS TABLE (ObjectId Integer
              , GoodsTypeKindId Integer, GoodsTypeKindCode Integer, GoodsTypeKindName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureId Integer, MeasureName TVarChar
+               -- Вес 1-ой ед.
+             , WeightMin TFloat
+             , WeightMax TFloat
+             , WeightAvg TFloat
+               -- размеры 1-ой ед.
+             , Height    TFloat
+             , Length    TFloat
+             , Width     TFloat
+               -- Ящик (E2/E3)
+             , GoodsPropertyBoxId Integer 
+             , BoxId Integer, BoxCode Integer, BoxName TVarChar
+             , WeightOnBox    TFloat -- Кол-во кг. в ящ. (E2/E3)
+             , CountOnBox     TFloat -- Кол-во ед. в ящ. (E2/E3)
+             , BoxVolume      TFloat -- Объем ящ., м3. (E2/E3)
+             , BoxWeight      TFloat -- Вес самогно ящ. (E2/E3)
+             , BoxHeight      TFloat -- Высота ящ. (E2/E3)
+             , BoxLength      TFloat -- Длина ящ. (E2/E3)
+             , BoxWidth       TFloat -- Ширина ящ. (E2/E3)
+             , WeightGross    TFloat -- Вес брутто полного ящика "по ???" (E2/E3)
+             , WeightAvgGross TFloat -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , WeightAvgNet   TFloat -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+
              , sku_id       Integer  -- ***Уникальный код товара в товарном справочнике предприятия
              , sku_code     Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
              , name         TVarChar -- Наименование товара в товарном справочнике предприятия
@@ -32,7 +54,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-        WITH tmpGoods_all AS (SELECT zfCalc_Text_replace (tmp.GoodsName, CHR(39), '`') AS GoodsName_repl
+        WITH tmpGoods_all AS (SELECT zfCalc_Text_replace (zfCalc_Text_replace (tmp.GoodsName, CHR(39), '`'), '"', '`') AS GoodsName_repl
                                    , *
                               FROM gpSelect_Object_GoodsByGoodsKind_VMC (inRetail1Id:= 0
                                                                        , inRetail2Id:= 0
@@ -78,6 +100,29 @@ BEGIN
              , Object_GoodsTypeKind.Id AS GoodsTypeKindId, Object_GoodsTypeKind.ObjectCode AS GoodsTypeKindCode, Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
              , tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.GoodsGroupNameFull
              , tmpGoods.MeasureId, tmpGoods.MeasureName
+
+               -- Вес 1-ой ед.
+             , tmpGoods.WeightMin
+             , tmpGoods.WeightMax
+             , tmpGoods.WeightAvg
+               -- размеры 1-ой ед.
+             , tmpGoods.Height
+             , tmpGoods.Length
+             , tmpGoods.Width
+
+               -- Ящик (E2/E3)
+             , tmpGoods.GoodsPropertyBoxId
+             , tmpGoods.BoxId, tmpGoods.BoxCode, tmpGoods.BoxName
+             , tmpGoods.WeightOnBox              -- Кол-во кг. в ящ. (E2/E3)
+             , tmpGoods.CountOnBox               -- Кол-во ед. в ящ. (E2/E3)
+             , tmpGoods.BoxVolume                -- Объем ящ., м3. (E2/E3)
+             , tmpGoods.BoxWeight                -- Вес самогно ящ. (E2/E3)
+             , tmpGoods.BoxHeight                -- Высота ящ. (E2/E3)
+             , tmpGoods.BoxLength                -- Длина ящ. (E2/E3)
+             , tmpGoods.BoxWidth                 -- Ширина ящ. (E2/E3)
+             , tmpGoods.WeightGross              -- Вес брутто полного ящика "по ???" (E2/E3)
+             , tmpGoods.WeightAvgGross           -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , tmpGoods.WeightAvgNet             -- Вес нетто полного ящика "по среднему весу" (E2/E3)
 
              , tmpGoods.sku_id       :: Integer  -- ***Уникальный код товара в товарном справочнике предприятия
              , tmpGoods.sku_code     :: Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.

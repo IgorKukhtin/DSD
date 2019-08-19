@@ -129,6 +129,10 @@ type
     spGetParams: TdsdStoredProc;
     GoodsCode_isCost: TcxGridDBColumn;
     GoodsName_isCost: TcxGridDBColumn;
+    actPrint_Profit: TdsdPrintAction;
+    bbPrint_Profit: TdxBarButton;
+    Profit: TcxGridDBColumn;
+    Color_Profit: TcxGridDBColumn;
   private
     { Private declarations }
   public

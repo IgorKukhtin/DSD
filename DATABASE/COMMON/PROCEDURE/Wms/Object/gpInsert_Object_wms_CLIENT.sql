@@ -6,51 +6,71 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_CLIENT (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_CLIENT(
     IN inSession       VarChar(255)       -- сесси€ пользовател€
 )
--- RETURNS TABLE (ProcName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbProcName TVarChar;
-   DECLARE vbRowNum   Integer;
+   DECLARE vbProcName               TVarChar;
+   DECLARE vbTagName_client         TVarChar;
+   DECLARE vbTagName_client_address TVarChar;
+   DECLARE vbActionName             TVarChar;
+   DECLARE vbRowNum                 Integer;
 BEGIN
-     vbProcName:= 'gpInsert_Object_wms_CLIENT';
-
      -- проверка прав пользовател€ на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
 
+     --
+     vbProcName:= 'gpInsert_Object_wms_CLIENT';
+     --
+     vbTagName_client        := 'client';
+     vbTagName_client_address:= 'client_address';
+     --
+     vbActionName:= 'set';
 
 
      -- удалили прошлые данные
      DELETE FROM Object_WMS WHERE Object_WMS.ProcName = vbProcName;
 
-     -- первые строчки XML
-     -- vbRowNum:= 1;
-     -- INSERT INTO Object_WMS (ProcName, RowNum, RowData) VALUES (vbProcName, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
-
 
      -- –езультат
      -- RETURN QUERY
      -- –езультат - сформировали новые данные - Ёлементы XML
-     INSERT INTO Object_WMS (ProcName, RowNum, RowData, ObjectId)
-        WITH tmpPartner AS (SELECT Object_Partner.DescId, Object_Partner.Id AS client_id, Object_Partner.ValueData AS name
-                                 , COALESCE (ObjectString_Address.ValueData, '')            AS address
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
+        WITH tmpPartner AS (-- zc_Object_Partner
+                            SELECT Object_Partner.DescId, Object_Partner.Id AS client_id, Object_Partner.ValueData AS name
+                                 , COALESCE (ObjectString_Address.ValueData, '') AS address
                             FROM Object AS Object_Partner
                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                        ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                                       AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                                                      ON ObjectLink_Juridical_InfoMoney.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                     AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
                                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                                       ON ObjectLink_Juridical_JuridicalGroup.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                      AND ObjectLink_Juridical_JuridicalGroup.DescId   = zc_ObjectLink_Juridical_JuridicalGroup()
+                                 LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
+                                                      ON ObjectLink_JuridicalGroup_Parent.ObjectId = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+                                                     AND ObjectLink_JuridicalGroup_Parent.DescId   = zc_ObjectLink_JuridicalGroup_Parent()
                                  LEFT JOIN ObjectString AS ObjectString_Address
                                                         ON ObjectString_Address.ObjectId = Object_Partner.Id
                                                        AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address()
                             WHERE Object_Partner.DescId   = zc_Object_Partner()
                               AND Object_Partner.isErased = FALSE
-                              AND ObjectLink_Juridical_JuridicalGroup.ChildObjectId = 257163 -- покупатели ƒнепр
+                              AND (ObjectLink_JuridicalGroup_Parent.ChildObjectId    = 8362 -- 03-ѕќ ”ѕј“≈Ћ»
+                                OR ObjectLink_Juridical_JuridicalGroup.ChildObjectId = 8362 -- 03-ѕќ ”ѕј“≈Ћ»
+                                OR ObjectLink_Juridical_InfoMoney.ChildObjectId      IN (zc_Enum_InfoMoney_30101() -- ƒоходы - √отова€ продукци€
+                                                                                       , zc_Enum_InfoMoney_30102() -- ƒоходы - “ушенка
+                                                                                        )
+                                  )
+--                            AND ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (8362   -- 03-ѕќ ”ѕј“≈Ћ»
+--                                                                                    , 257163 -- покупатели ƒнепр
+--                                                                                     )
  
                            UNION ALL
+                            -- zc_Object_Unit
                             SELECT Object_Unit.DescId, Object_Unit.Id AS client_id, Object_Unit.ValueData AS name
-                                 , COALESCE (ObjectString_Address.ValueData, '')            AS address
+                                 , COALESCE (ObjectString_Address.ValueData, '') AS address
                             FROM Object AS Object_Unit
                                  INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
                                                        ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
@@ -74,27 +94,54 @@ BEGIN
                               AND ObjectLink_Unit_HistoryCost.ChildObjectId IS NULL
                            )
         -- –езультат
-        SELECT vbProcName AS ProcName
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+        FROM
+       (SELECT vbProcName       AS ProcName
+             , vbTagName_client AS TagName
+             , vbActionName     AS ActionName
              , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.DescId, tmpData.client_id) :: Integer) AS RowNum
                -- XML
              , ('<client'
-               ||' client_id=У' || tmpData.client_id    :: TVarChar ||'"' -- ”никальный идентификатор клиента
-                    ||' name=У' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.name, CHR(39), '`'), '"', '`') ||'"' -- »м€ клиента
-              ||' short_name=У' || ''                               ||'"' --  ороткое им€ клиента
-                 ||' address=У' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.address, CHR(39), '`'), '"', '`') ||'"' -- јдрес клиента
-                   ||' phone=У' || ''                               ||'"' -- “елефон клиента
-                   ||' email=У' || ''                               ||'"' -- E-mail клиента
-                     ||' fax=У' || ''                               ||'"' -- ‘акс клиента
-             ||' is_customer=У' || CASE WHEN tmpData.DescId = zc_Object_Partner() THEN 't' ELSE 'f' END :: TVarChar ||'"' -- явл€етс€ ли контрагент покупателем: УfФ Ц не €вл€етс€, УtФ Ц €вл€етс€. «начение по умолчанию: УfФ
-             ||' is_supplier=У' || 'f'                              ||'"' -- явл€етс€ ли контрагент поставщиком: УfФ Ц не €вл€етс€, УtФ Ц €вл€етс€. «начение по умолчанию: УfФ
-         ||' is_manufacturer=У' || 'f'                              ||'"' -- явл€етс€ ли контрагент производителем: УfФ Ц не €вл€етс€, УtФ Ц €вл€етс€. «начение по умолчанию: УfФ
-                ||' comments=У' || ''                               ||'"' --  омментарии
-                ||' </client>'
+                  ||' action="' || vbActionName                     ||'"' -- ???
+               ||' client_id="' || tmpData.client_id    :: TVarChar ||'"' -- ”никальный идентификатор клиента
+                    ||' name="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.name, CHR(39), '`'), '"', '`') ||'"' -- »м€ клиента
+              ||' short_name="' || ''                               ||'"' --  ороткое им€ клиента
+--!              ||' address="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.address, CHR(39), '`'), '"', '`') ||'"' -- јдрес клиента
+                   ||' phone="' || ''                               ||'"' -- “елефон клиента
+                   ||' email="' || ''                               ||'"' -- E-mail клиента
+                     ||' fax="' || ''                               ||'"' -- ‘акс клиента
+             ||' is_customer="' || CASE WHEN tmpData.DescId = zc_Object_Partner() THEN 't' ELSE 'f' END :: TVarChar ||'"' -- явл€етс€ ли контрагент покупателем: "f" Ц не €вл€етс€, "t" Ц €вл€етс€. «начение по умолчанию: "f"
+             ||' is_supplier="' || 'f'                              ||'"' -- явл€етс€ ли контрагент поставщиком: "f" Ц не €вл€етс€, "t" Ц €вл€етс€. «начение по умолчанию: "f"
+               ||' is_holder="' || 'f'                              ||'"' -- явл€етс€ ли контрагент владельцем: "f" Ц не €вл€етс€, "t" Ц €вл€етс€. «начение по умолчанию: "f"
+         ||' is_manufacturer="' || 'f'                              ||'"' -- явл€етс€ ли контрагент производителем: "f" Ц не €вл€етс€, "t" Ц €вл€етс€. «начение по умолчанию: "f"
+                ||' comments="' || ''                               ||'"' --  омментарии
+                ||'></client>'
                ):: Text AS RowData
                -- Id
-             , tmpData.client_id
+             , tmpData.client_id AS ObjectId
         FROM tmpPartner AS tmpData
-        ORDER BY 2;
+
+       UNION ALL
+        -- client_address
+        SELECT vbProcName               AS ProcName
+             , vbTagName_client_address AS TagName
+             , vbActionName             AS ActionName
+             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.DescId, tmpData.client_id) :: Integer) AS RowNum
+               -- XML
+             , ('<client_address'
+                  ||' action="' || vbActionName                     ||'"' -- ???
+              ||' address_id="' || tmpData.client_id    :: TVarChar ||'"' -- ”никальный код адреса клиента
+               ||' client_id="' || tmpData.client_id    :: TVarChar ||'"' -- ”никальный идентификатор клиента
+                 ||' address="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.address, CHR(39), '`'), '"', '`') ||'"' -- јдрес доставки
+                ||' comments="' || ''                               ||'"' --  омментарии
+                ||'></client_address>'
+               ):: Text AS RowData
+               -- Id
+             , tmpData.client_id AS ObjectId
+        FROM tmpPartner AS tmpData
+       ) AS tmp
+     -- WHERE tmp.RowNum BETWEEN 1 AND 10
+        ORDER BY 4;
 
 END;
 $BODY$
@@ -105,5 +152,7 @@ $BODY$
               ‘елонюк ».¬.    ухтин ».¬.    лиментьев  .».
  10.08.19                                       *
 */
+-- delete FROM Object_WMS
+-- select * FROM Object_WMS
 -- тест
 -- SELECT * FROM gpInsert_Object_wms_CLIENT (zfCalc_UserAdmin())
