@@ -94,6 +94,11 @@ type
     chAmount_sale: TcxGridDBColumn;
     chAmountSun_summ_save: TcxGridDBColumn;
     chAmountSun_summ: TcxGridDBColumn;
+    chPartionDateKindName: TcxGridDBColumn;
+    actOpenReportPartionHistoryForm: TdsdOpenForm;
+    actOpenReportPartionDateForm: TdsdOpenForm;
+    bbReportPartionDate: TdxBarButton;
+    bbReportPartionHistory: TdxBarButton;
   private
     { Private declarations }
   public
