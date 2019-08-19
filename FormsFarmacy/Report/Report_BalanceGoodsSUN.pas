@@ -48,6 +48,10 @@ type
     SummaIn: TcxGridDBBandedColumn;
     AmountOut: TcxGridDBBandedColumn;
     SummaOut: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column4: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

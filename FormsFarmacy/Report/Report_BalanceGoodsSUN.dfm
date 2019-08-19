@@ -80,14 +80,23 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
           Bands = <
             item
               Caption = #1058#1086#1074#1072#1088
-              Width = 470
+              Width = 362
             end
             item
-              Caption = #1055#1088#1080#1093#1086#1076
+              Caption = #1055#1088#1080#1093#1086#1076' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1103
+              Width = 120
             end
             item
-              Caption = #1056#1072#1089#1093#1086#1076
-              Width = 193
+              Caption = #1055#1088#1080#1093#1086#1076' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+              Width = 120
+            end
+            item
+              Caption = #1056#1072#1089#1093#1086#1076' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1103
+              Width = 120
+            end
+            item
+              Caption = #1056#1072#1089#1093#1086#1076' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+              Width = 120
             end>
           object GoodsCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -122,7 +131,7 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
             Position.RowIndex = 0
           end
           object AmountIn: TcxGridDBBandedColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -147,15 +156,15 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
             Position.RowIndex = 0
           end
           object AmountOut: TcxGridDBBandedColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 86
-            Position.BandIndex = 2
+            Width = 87
+            Position.BandIndex = 3
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -166,8 +175,59 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 106
+            Width = 84
+            Position.BandIndex = 3
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn
+            AlternateCaption = '3'
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountIn100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
             Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummaIn100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountOut100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+            Position.BandIndex = 4
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column4: TcxGridDBBandedColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummaOut100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+            Position.BandIndex = 4
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
