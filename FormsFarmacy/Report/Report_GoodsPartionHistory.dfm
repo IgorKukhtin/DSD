@@ -181,6 +181,14 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Options.Editing = False
             Width = 70
           end
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
           object MCSValue: TcxGridDBColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
