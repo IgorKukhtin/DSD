@@ -761,7 +761,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceGoodsSUNForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceGoodsSUNForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceGoodsSUNDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceGoodsSUNDialogForm');
+    exit;
+
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));

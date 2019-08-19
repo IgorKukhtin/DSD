@@ -536,6 +536,8 @@ type
     N187: TMenuItem;
     actUnitLincDriver: TdsdOpenForm;
     N188: TMenuItem;
+    actReport_BalanceGoodsSUN: TdsdOpenForm;
+    N189: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -114,7 +114,7 @@ BEGIN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
-                   AND Movement.OperDate < CURRENT_DATE - INTERVAL '1 DAY'
+                   AND Movement.OperDate < CURRENT_DATE
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
 
            , Object_Insert.ValueData              AS InsertName
