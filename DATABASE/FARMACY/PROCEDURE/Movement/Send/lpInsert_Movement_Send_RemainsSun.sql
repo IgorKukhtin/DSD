@@ -521,7 +521,7 @@ BEGIN
                                          INNER JOIN Container ON Container.WhereObjectId = _tmpUnit_SUN.UnitId
                                                              AND Container.Amount        <> 0
                                                              AND Container.DescId        = zc_Container_Count()
-                                    WHERE 1=0
+                                 -- WHERE 1=0
                                    )
                 -- список Sold
             /*, tmpSold_all AS (SELECT DISTINCT
@@ -530,6 +530,7 @@ BEGIN
                                 FROM -- !!!только для таких Аптек!!!
                                      _tmpUnit_SUN
                                      INNER JOIN Container ON Container.WhereObjectId = _tmpUnit_SUN.UnitId
+                                                      -- !!!ВСЕ!!
                                                       -- AND Container.Amount        <> 0
                                                          AND Container.DescId        = zc_Container_Count()
                                      INNER JOIN MovementItemContainer AS MIContainer
@@ -654,10 +655,10 @@ BEGIN
              , 0                 AS Amount_notSold
         FROM tmpRes_SUN
              -- если он есть в tmpNotSold, тогда распределяем только ВСЕ кол-во из tmpNotSold
-          -- LEFT JOIN tmpNotSold ON tmpNotSold.UnitId  = tmpRes_SUN.UnitId
-          --                     AND tmpNotSold.GoodsId = tmpRes_SUN.GoodsId
-     -- WHERE -- !!!
-     --       tmpNotSold.GoodsId IS NULL
+             LEFT JOIN tmpNotSold ON tmpNotSold.UnitId  = tmpRes_SUN.UnitId
+                                AND tmpNotSold.GoodsId = tmpRes_SUN.GoodsId
+        WHERE -- !!!
+              tmpNotSold.GoodsId IS NULL
 
        UNION ALL
         -- 
@@ -666,8 +667,8 @@ BEGIN
              , tmpNotSold.ContainerId AS ContainerId_Parent
              , tmpNotSold.ContainerId
              , tmpNotSold.GoodsId
-          -- , tmpNotSold.Amount
-             , 0 AS Amount
+             , tmpNotSold.Amount
+          -- , 0 AS Amount
              , 0 AS PartionDateKindId
              , zc_DateEnd() AS ExpirationDate
              , 0                 AS Amount_sun
@@ -678,12 +679,12 @@ BEGIN
                              AND tmpSUN.GoodsId   = tmpNotSold.GoodsId
 
              -- если он есть в сроковых, тогда распределяем только сроковое кол-во
-             LEFT JOIN tmpRes_SUN ON tmpRes_SUN.UnitId  = tmpNotSold.UnitId
-                                 AND tmpRes_SUN.GoodsId = tmpNotSold.GoodsId
+          -- LEFT JOIN tmpRes_SUN ON tmpRes_SUN.UnitId  = tmpNotSold.UnitId
+          --                     AND tmpRes_SUN.GoodsId = tmpNotSold.GoodsId
         WHERE -- !!!
               tmpSUN.GoodsId IS NULL
              -- !!!
-          AND tmpRes_SUN.GoodsId IS NULL
+       -- AND tmpRes_SUN.GoodsId IS NULL
               
        ;
 

@@ -28,7 +28,7 @@ BEGIN
    -- если не нашли создаем нового
    IF COALESCE (vbMemberId, 0) = 0 
    THEN 
-       RAISE EXCEPTION 'Ошибка. Код ИНН <%> не найден <%>.', TRIM (inINN);
+       RAISE EXCEPTION 'Ошибка. Код ИНН <%> не найден <%>.', TRIM (inINN), inName;
    ELSE
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Card(), vbMemberId, inCard);
