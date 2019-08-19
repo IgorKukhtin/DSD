@@ -345,7 +345,7 @@ BEGIN
                        , Object_NDSKind.ValueData                         AS NDSKindName
                        , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
 
-                       , CEIL(tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1) ::TFloat  AS CalcAmount
+                       , CEIL (tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1) ::TFloat  AS CalcAmount
                        , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                        , tmpGoodsMain.isSP
                        , tmpGoodsMain.PriceOptSP
@@ -659,14 +659,32 @@ BEGIN
            , MIFloat_AmountSecond.ValueData                         AS AmountSecond
 
            , tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
-           , NULLIF (COALESCE (MIFloat_AmountManual.ValueData,
-                               CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0) ) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)     
-                               ), 0)   ::TFloat   AS CalcAmountAll
+           , NULLIF (COALESCE (-- Количество, установленное вручную
+                               MIFloat_AmountManual.ValueData
+                               -- округлили ВВЕРХ AllLot
+                             , CEIL ((-- Спецзаказ
+                                      tmpMI.Amount
+                                      -- Количество дополнительное
+                                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                      -- кол-во отказов
+                                    + COALESCE (tmpMI.ListDiffAmount, 0)
+                                     ) / COALESCE (tmpMI.MinimumLot, 1)
+                                    ) * COALESCE (tmpMI.MinimumLot, 1)     
+                              ), 0) :: TFloat AS CalcAmountAll
 
-           , (COALESCE (MIFloat_Price.ValueData,0)
-                       * COALESCE (MIFloat_AmountManual.ValueData, 
-                                   CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0)) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)    
-                                   )
+           , (COALESCE (MIFloat_Price.ValueData, 0)
+                      * COALESCE (-- Количество, установленное вручную
+                                  MIFloat_AmountManual.ValueData
+                                  -- округлили ВВЕРХ AllLot
+                                , CEIL ((-- Спецзаказ
+                                         tmpMI.Amount
+                                         -- Количество дополнительное
+                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                         -- кол-во отказов
+                                       + COALESCE (tmpMI.ListDiffAmount, 0)
+                                        ) / COALESCE (tmpMI.MinimumLot, 1)
+                                       ) * COALESCE (tmpMI.MinimumLot, 1)     
+                                 )
              )                                          ::TFloat    AS SummAll
 
            , tmpMI.CheckAmount                                      AS CheckAmount
@@ -1781,8 +1799,15 @@ BEGIN
                             , MovementItem.Price_isTOP
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
-                            , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
-                               * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
+                              -- округлили ВВЕРХ AllLot
+                            , CEIL ((-- Спецзаказ
+                                     MovementItem.Amount
+                                     -- Количество дополнительное
+                                   + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                     -- кол-во отказов
+                                   + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                    ) / COALESCE (MovementItem.MinimumLot, 1)
+                                   ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
 
@@ -1946,11 +1971,11 @@ BEGIN
                          , tmpMI.MakerName
                          , tmpMI.SuperFinalPrice
                          , tmpMI.SuperFinalPrice_Deferment
-                         , COALESCE(tmpMI.isCalculated, FALSE)                     AS isCalculated
-                         , tmpMI.AmountSecond                                      AS AmountSecond
-                         , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
-                         , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
-                         , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
+                         , COALESCE (tmpMI.isCalculated, FALSE)                             AS isCalculated
+                         , tmpMI.AmountSecond                                               AS AmountSecond
+                         , NULLIF (tmpMI.AmountAll, 0)                                      AS AmountAll
+                         , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
+                         , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
                          , tmpMI.AmountReal
                          , tmpMI.SendSUNAmount
@@ -3318,8 +3343,15 @@ BEGIN
                             , MovementItem.Price_isTOP
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
-                            , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
-                               * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
+                              -- округлили ВВЕРХ AllLot
+                            , CEIL ((-- Спецзаказ
+                                     MovementItem.Amount
+                                     -- Количество дополнительное
+                                   + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                     -- кол-во отказов
+                                   + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                    ) / COALESCE (MovementItem.MinimumLot, 1)
+                                   ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
                             , MovementItem.isErased
@@ -3469,11 +3501,11 @@ BEGIN
                          , tmpMI.MakerName
                          , tmpMI.SuperFinalPrice
                          , tmpMI.SuperFinalPrice_Deferment
-                         , COALESCE(tmpMI.isCalculated, FALSE)                     AS isCalculated
-                         , tmpMI.AmountSecond                                      AS AmountSecond
-                         , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
-                         , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
-                         , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
+                         , COALESCE (tmpMI.isCalculated, FALSE)                             AS isCalculated
+                         , tmpMI.AmountSecond                                               AS AmountSecond
+                         , NULLIF (tmpMI.AmountAll, 0)                                      AS AmountAll
+                         , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
+                         , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
@@ -3876,7 +3908,8 @@ BEGIN
                      ELSE 0
                 END AS PartionGoodsDateColor
            , Remains.Amount                                                  AS RemainsInUnit
-           , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved           -- кол-во в отложенных чеках
+             -- кол-во в отложенных чеках
+           , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved
            , CASE WHEN (COALESCE (Remains.Amount,0) - COALESCE (tmpReserve.Amount, 0)) < 0 THEN (COALESCE (Remains.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) ELSE 0 END :: TFLoat AS Remains_Diff  --не хватает с учетом отлож. чеком
            , Object_Price_View.MCSValue                                      AS MCS
            , tmpGoodsCategory.Value                                          AS MCS_GoodsCategory

@@ -31,29 +31,41 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
+    -- Количество, установленное вручную
     IF inAmountManual IS NULL 
     THEN
-        SELECT MinimumLot INTO vbMinimumLot
+        -- MinimumLot
+        SELECT Object_Goods_View.MinimumLot
+               INTO vbMinimumLot
         FROM Object_Goods_View 
-        WHERE Id = inGoodsId
-        and MinimumLot <> 0;
-    
-        SELECT
-            (CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))
+        WHERE Object_Goods_View.Id = inGoodsId
+          AND Object_Goods_View.MinimumLot <> 0;
+
+        -- заменили inAmountManual
+        SELECT -- округлили ВВЕРХ AllLot
+               CEIL((-- Спецзаказ
+                     inAmount
+                     -- Количество дополнительное
+                   + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                     -- кол-во отказов
+                   + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                    ) / COALESCE (vbMinimumLot, 1)
+                   ) * COALESCE (vbMinimumLot, 1)
         INTO
             inAmountManual
         FROM
             MovementItem
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                             AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                               ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
-        WHERE
-            Id = ioId;
+                                             AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+        WHERE MovementItem.Id = ioId;
+
     END IF;
-    -- сохранили свойство <Ручное количество>
+
+    -- сохранили свойство <Количество, установленное вручную>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), ioId, COALESCE(inAmountManual, 0));
 
     
