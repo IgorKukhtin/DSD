@@ -22,7 +22,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       ExplicitHeight = 474
       inherited cxGrid: TcxGrid
         Width = 960
-        Height = 240
+        Height = 264
         ExplicitWidth = 960
         ExplicitHeight = 240
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -824,9 +824,9 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxGrid2: TcxGrid
         Left = 0
-        Top = 360
+        Top = 384
         Width = 960
-        Height = 114
+        Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -1121,12 +1121,13 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 248
+        Top = 272
         Width = 960
         Height = 104
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitTop = 248
         object GridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -1592,21 +1593,23 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 352
+        Top = 376
         Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
+        ExplicitTop = 352
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 240
+        Top = 264
         Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 240
       end
     end
   end
@@ -1997,7 +2000,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
-      ImageIndex = 25
+      ImageIndex = 24
       FormName = 'TReport_GoodsPartionDateForm'
       FormNameParam.Value = 'TReport_GoodsPartionDateForm'
       FormNameParam.DataType = ftString
@@ -2106,6 +2109,128 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         end
         item
           Name = 'PartyName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportPartionDateChild: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'> ('#1089#1088#1086#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'> ('#1089#1088#1086#1082#1080')'
+      ImageIndex = 24
+      FormName = 'TReport_GoodsPartionDateForm'
+      FormNameParam.Value = 'TReport_GoodsPartionDateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = PartionCDS
+          ComponentItem = 'UnitId_from'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = PartionCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDetail'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportPartionHistoryChild: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'> ('#1089#1088#1086#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'> ('#1089#1088#1086#1082#1080')'
+      ImageIndex = 25
+      FormName = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.Value = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = PartionCDS
+          ComponentItem = 'UnitId_from'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = PartionCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyName'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2192,11 +2317,19 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         end
         item
           Visible = True
+          ItemName = 'bbReportPartionDate'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbReportPartionDate'
+          ItemName = 'bbOpenReportPartionHistoryChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportPartionDateChild'
         end
         item
           Visible = True
@@ -2237,10 +2370,17 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     object bbReportPartionDate: TdxBarButton
       Action = actOpenReportPartionDateForm
       Category = 0
-      ImageIndex = 24
     end
     object bbReportPartionHistory: TdxBarButton
       Action = actOpenReportPartionHistoryForm
+      Category = 0
+    end
+    object bbOpenReportPartionHistoryChild: TdxBarButton
+      Action = actOpenReportPartionHistoryChild
+      Category = 0
+    end
+    object bbOpenReportPartionDateChild: TdxBarButton
+      Action = actOpenReportPartionDateChild
       Category = 0
     end
   end

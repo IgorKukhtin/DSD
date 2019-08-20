@@ -99,6 +99,10 @@ type
     actOpenReportPartionDateForm: TdsdOpenForm;
     bbReportPartionDate: TdxBarButton;
     bbReportPartionHistory: TdxBarButton;
+    actOpenReportPartionDateChild: TdsdOpenForm;
+    actOpenReportPartionHistoryChild: TdsdOpenForm;
+    bbOpenReportPartionHistoryChild: TdxBarButton;
+    bbOpenReportPartionDateChild: TdxBarButton;
   private
     { Private declarations }
   public
