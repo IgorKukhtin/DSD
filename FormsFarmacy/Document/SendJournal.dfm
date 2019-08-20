@@ -4,7 +4,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -689,6 +689,32 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
     end
+    object actUpdate_isSun: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSun
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 76
+    end
+    object actUpdate_isDefSun: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDefSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDefSun
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 58
+    end
     object actSetReceived: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -882,6 +908,22 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isSun'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isDefSun'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -927,6 +969,14 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = actSetSent
+      Category = 0
+    end
+    object bbUpdate_isDefSun: TdxBarButton
+      Action = actUpdate_isDefSun
+      Category = 0
+    end
+    object bbUpdate_isSun: TdxBarButton
+      Action = actUpdate_isSun
       Category = 0
     end
   end
@@ -1181,8 +1231,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 416
-    Top = 403
+    Left = 400
+    Top = 443
   end
   object spUpdate_Movement_Received: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Received'
@@ -1207,8 +1257,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 339
+    Left = 728
+    Top = 347
   end
   object spUpdate_Movement_Sent: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Sent'
@@ -1235,5 +1285,73 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 688
     Top = 395
+  end
+  object spUpdate_isDefSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_isDefSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDefSUN'
+        Value = 'FALSE'
+        Component = MasterCDS
+        ComponentItem = 'isDefSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDefSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDefSUN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 355
+  end
+  object spUpdate_isSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_isSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSUN'
+        Value = 'True'
+        Component = MasterCDS
+        ComponentItem = 'isSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 339
   end
 end
