@@ -61,7 +61,7 @@ BEGIN
                                                       AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
                           LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
                      WHERE Movement.DescId = zc_Movement_Send()
-                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  -- AND Movement.StatusId = zc_Enum_Status_Complete()
                      AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY'
                      )
 
