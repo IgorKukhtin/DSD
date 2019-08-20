@@ -1,11 +1,14 @@
  -- Function: gpReport_BalanceGoodsSUN()
 
 DROP FUNCTION IF EXISTS gpReport_BalanceGoodsSUN (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_BalanceGoodsSUN (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_BalanceGoodsSUN(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inDateFinal        TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
+    IN inShow2Cat         Boolean,    -- Показывать 2 категорию
+    IN inShow100          Boolean,    -- Показывать 100 дней
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsID  Integer
@@ -14,12 +17,8 @@ RETURNS TABLE (GoodsID  Integer
              , Price TFloat
              , AmountIn TFloat
              , SummaIn TFloat
-             , AmountIn100 TFloat
-             , SummaIn100 TFloat
              , AmountOut TFloat
              , SummaOut TFloat
-             , AmountOut100 TFloat
-             , SummaOut100 TFloat
              )
 AS
 $BODY$
@@ -87,15 +86,13 @@ BEGIN
                                   )
          , tmpSUNGroup AS (SELECT tmpSUNAll.ObjectId
                                        , tmpSUNAll.isActive
-                                       , Sum(tmpSUNAll.Amount100) as Amount100
-                                       , Sum(tmpSUNAll.Amount) as Amount
+                                       , COALESCE(Sum(CASE WHEN inShow100 = TRUE THEN tmpSUNAll.Amount100 END), 0) +
+                                         COALESCE(Sum(CASE WHEN inShow2Cat = TRUE THEN tmpSUNAll.Amount END), 0)       AS Amount
                                   FROM tmpSUNAll
                                   GROUP BY tmpSUNAll.ObjectId, tmpSUNAll.isActive)
          , tmpSUN AS (SELECT tmpSUNGroup.ObjectId
-                           , Sum(CASE WHEN tmpSUNGroup.isActive = TRUE THEN tmpSUNGroup.Amount END) as AmountIn
-                           , Sum(CASE WHEN tmpSUNGroup.isActive = TRUE THEN tmpSUNGroup.Amount100 END) as AmountIn100
-                           , Sum(CASE WHEN tmpSUNGroup.isActive = FALSE THEN tmpSUNGroup.Amount END) as AmountOut
-                           , Sum(CASE WHEN tmpSUNGroup.isActive = FALSE THEN tmpSUNGroup.Amount100 END) as AmountOut100
+                           , NULLIF(Sum(CASE WHEN tmpSUNGroup.isActive = TRUE THEN tmpSUNGroup.Amount END), 0) as AmountIn
+                           , NULLIF(Sum(CASE WHEN tmpSUNGroup.isActive = FALSE THEN tmpSUNGroup.Amount END), 0) as AmountOut
                       FROM tmpSUNGroup
                       GROUP BY tmpSUNGroup.ObjectId)
          , tmpPrice AS (SELECT OL_Price_Goods.ChildObjectId      AS GoodsId
@@ -126,17 +123,14 @@ BEGIN
          , tmpPrice.Price::TFloat                                  AS Price
          , tmpSUN.AmountIn::TFloat
          , ROUND (tmpSUN.AmountIn * tmpPrice.Price, 2)::TFloat     AS SummaIn
-         , tmpSUN.AmountIn100::TFloat
-         , ROUND (tmpSUN.AmountIn100 * tmpPrice.Price, 2)::TFloat  AS SummaIn100
          , tmpSUN.AmountOut::TFloat
          , ROUND (tmpSUN.AmountOut * tmpPrice.Price, 2)::TFloat    AS SummaOut
-         , tmpSUN.AmountOut100::TFloat
-         , ROUND (tmpSUN.AmountOut100 * tmpPrice.Price, 2)::TFloat AS SummaOut100
     FROM tmpSUN
 
          INNER JOIN Object AS Object_Goods ON Object_Goods.ID = tmpSUN.ObjectId
 
-         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpSUN.ObjectId;
+         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpSUN.ObjectId
+    WHERE COALESCE(tmpSUN.AmountIn, 0) <> 0 OR COALESCE(tmpSUN.AmountOut, 0) <> 0;
 
 
 END;
@@ -146,9 +140,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.08.19                                                       *
  19.08.19                                                       *
  17.08.19                                                       *
 */
 
 -- тест
--- select * from gpReport_BalanceGoodsSUN(inStartDate := ('12.08.2019')::TDateTime , inDateFinal := ('19.08.2019')::TDateTime , inUnitId := 375626 ,  inSession := '3');
+-- select * from gpReport_BalanceGoodsSUN(inStartDate := ('12.08.2019')::TDateTime , inDateFinal := ('19.08.2019')::TDateTime , inUnitId := 375626 ,  inShow2Cat := TRUE, inShow100 := TRUE, inSession := '3');

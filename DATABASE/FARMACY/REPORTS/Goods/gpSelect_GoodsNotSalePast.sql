@@ -1,5 +1,6 @@
 -- Function: gpSelect_GoodsNotSalePast()
 
+
 DROP FUNCTION IF EXISTS gpSelect_GoodsNotSalePast (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsNotSalePast (
@@ -47,7 +48,7 @@ BEGIN
                              LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
                                                                 ON MovementItemContainer.UnitID = Container.UnitID
                                                                AND MovementItemContainer.GoodsID = Container.GoodsID 
-                        WHERE (Container.Amount >= COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0)
+                        WHERE (Container.Amount > COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0)
 
 
     SELECT Object_Unit.ID            AS UnitID

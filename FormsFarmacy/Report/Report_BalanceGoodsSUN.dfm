@@ -1,28 +1,28 @@
 inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
   Caption = #1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053
   ClientHeight = 480
-  ClientWidth = 865
+  ClientWidth = 815
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 881
+  ExplicitWidth = 831
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
-    Width = 865
-    Height = 422
+    Top = 67
+    Width = 815
+    Height = 413
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 865
     ExplicitHeight = 422
-    ClientRectBottom = 422
-    ClientRectRight = 865
+    ClientRectBottom = 413
+    ClientRectRight = 815
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 865
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 865
-        Height = 422
+        Width = 815
+        Height = 413
         ExplicitWidth = 865
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -80,23 +80,15 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
           Bands = <
             item
               Caption = #1058#1086#1074#1072#1088
-              Width = 362
+              Width = 438
             end
             item
-              Caption = #1055#1088#1080#1093#1086#1076' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1103
-              Width = 120
+              Caption = #1055#1088#1080#1093#1086#1076
+              Width = 170
             end
             item
-              Caption = #1055#1088#1080#1093#1086#1076' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
-              Width = 120
-            end
-            item
-              Caption = #1056#1072#1089#1093#1086#1076' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1103
-              Width = 120
-            end
-            item
-              Caption = #1056#1072#1089#1093#1086#1076' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
-              Width = 120
+              Caption = #1056#1072#1089#1093#1086#1076
+              Width = 170
             end>
           object GoodsCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -164,7 +156,7 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
-            Position.BandIndex = 3
+            Position.BandIndex = 2
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -176,58 +168,7 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 84
-            Position.BandIndex = 3
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn
-            AlternateCaption = '3'
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountIn100'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 87
             Position.BandIndex = 2
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'SummaIn100'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-            Position.BandIndex = 2
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountOut100'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 87
-            Position.BandIndex = 4
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object cxGridDBBandedTableView1Column4: TcxGridDBBandedColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'SummaOut100'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-            Position.BandIndex = 4
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -239,10 +180,10 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
     end
   end
   inherited Panel: TPanel
-    Width = 865
-    Height = 32
-    ExplicitWidth = 865
-    ExplicitHeight = 32
+    Width = 815
+    Height = 41
+    ExplicitWidth = 792
+    ExplicitHeight = 41
     inherited deStart: TcxDateEdit
       Left = 29
       ExplicitLeft = 29
@@ -279,8 +220,47 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 412
+      Width = 260
     end
+    object cbShow100: TcxCheckBox
+      Left = 591
+      Top = 18
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' 100 '#1076#1085#1077#1081
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' 100 '#1076#1085#1077#1081
+      TabOrder = 6
+      Width = 208
+    end
+    object cbShow2Cat: TcxCheckBox
+      Left = 591
+      Top = 2
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+      TabOrder = 7
+      Width = 160
+    end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = cbShow100
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbShow2Cat
+        Properties.Strings = (
+          'Checked')
+      end>
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -353,6 +333,22 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Show2Cat'
+          Value = Null
+          Component = cbShow2Cat
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Show100'
+          Value = Null
+          Component = cbShow100
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -391,6 +387,22 @@ inherited Report_BalanceGoodsSUNForm: TReport_BalanceGoodsSUNForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShow2Cat'
+        Value = Null
+        Component = cbShow2Cat
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShow100'
+        Value = Null
+        Component = cbShow100
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

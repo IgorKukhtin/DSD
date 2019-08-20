@@ -3,7 +3,7 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053'>'
-  ClientHeight = 166
+  ClientHeight = 217
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 41
-    Top = 127
+    Top = 175
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
   end
   object cxButton2: TcxButton
     Left = 215
-    Top = 127
+    Top = 175
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -78,6 +78,22 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
     Left = 121
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
+  end
+  object cbShow2Cat: TcxCheckBox
+    Left = 8
+    Top = 114
+    Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+    Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' 2 '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+    TabOrder = 8
+    Width = 249
+  end
+  object cbShow100: TcxCheckBox
+    Left = 8
+    Top = 142
+    Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' 100 '#1076#1085#1077#1081
+    Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' 100 '#1076#1085#1077#1081
+    TabOrder = 9
+    Width = 249
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -134,6 +150,22 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Show2Cat'
+        Value = 'False'
+        Component = cbShow2Cat
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Show100'
+        Value = Null
+        Component = cbShow100
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -232,7 +264,7 @@ object Report_BalanceGoodsSUNDialogForm: TReport_BalanceGoodsSUNDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 199
-    Top = 91
+    Left = 191
+    Top = 75
   end
 end

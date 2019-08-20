@@ -41,6 +41,8 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cbShow2Cat: TcxCheckBox;
+    cbShow100: TcxCheckBox;
   private
     { Private declarations }
   public
