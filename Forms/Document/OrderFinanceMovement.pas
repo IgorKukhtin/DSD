@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, dsdInternetAction;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -145,6 +145,19 @@ type
     chBankAccountName: TcxGridDBColumn;
     chBankName: TcxGridDBColumn;
     actBankAccountChoiceFormJur: TOpenChoiceForm;
+    spSelect_Export: TdsdStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    ExportDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport: TMultiAction;
   private
   public
   end;
