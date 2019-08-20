@@ -36,6 +36,26 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Def
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_unComp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Comp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -51,6 +71,26 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Def
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_unComp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Comp
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -60,6 +100,31 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -127,6 +192,54 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object Amount_Def: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1086', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'Amount_Def'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object Amount_Del: TcxGridDBColumn
+            Caption = #1057#1086#1079#1076#1072#1085', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'Amount_Del'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object Amount_unComp: TcxGridDBColumn
+            Caption = #1042' '#1088#1072#1073#1086#1090#1077', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'Amount_unComp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object Amount_Comp: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'  '#1087#1088#1086#1096#1083#1086', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'Amount_Comp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object PartionDateKindName: TcxGridDBColumn
             Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
@@ -258,6 +371,7 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
     Top = 8
     Action = actRefreshIsPartion
     TabOrder = 6
+    Visible = False
     Width = 248
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -550,14 +664,6 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSendDefSUN'
-        Value = Null
-        Component = cbSendDefSUN
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Top = 136
   end
@@ -611,7 +717,6 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = mactOpenDocument
       end
       item
       end>
@@ -629,6 +734,16 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
     Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesGoods
+      end
+      item
+        Component = GuidesUnit
+      end>
     Left = 144
     Top = 200
   end
@@ -706,14 +821,6 @@ inherited Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'IsSendDefSUN'
-        Value = Null
-        Component = cbSendDefSUN
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

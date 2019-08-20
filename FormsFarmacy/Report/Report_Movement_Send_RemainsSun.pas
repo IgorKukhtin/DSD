@@ -103,6 +103,8 @@ type
     actOpenReportPartionHistoryChild: TdsdOpenForm;
     bbOpenReportPartionHistoryChild: TdxBarButton;
     bbOpenReportPartionDateChild: TdxBarButton;
+    actReportSendSUN: TdsdOpenForm;
+    bbReportSendSUN: TdxBarButton;
   private
     { Private declarations }
   public

@@ -13,21 +13,30 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
     Width = 824
     Height = 272
     TabOrder = 3
-    ExplicitTop = 67
+    ExplicitTop = 87
     ExplicitWidth = 824
-    ExplicitHeight = 292
+    ExplicitHeight = 272
     ClientRectBottom = 272
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
-      ExplicitHeight = 292
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 824
         Height = 272
         ExplicitWidth = 824
-        ExplicitHeight = 292
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -36,13 +45,15 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -53,6 +64,19 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -62,6 +86,38 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 96
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 133
+          end
+          object Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
@@ -87,7 +143,8 @@ inherited Report_GoodsPartionDateForm: TReport_GoodsPartionDateForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Options.Editing = False
+            Width = 97
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1089#1090#1072#1090#1086#1082')'

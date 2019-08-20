@@ -11,6 +11,11 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsPartionDate(
 )
 RETURNS TABLE (ContainerId      Integer   --ИД 
              , ContainerId_PartionDate Integer
+             , UnitId         Integer
+             , UnitName       TVarChar
+             , JuridicalName  TVarChar
+             , RetailName     TVarChar
+             , Address        TVarChar
              , GoodsId             Integer
              , GoodsCode           Integer
              , GoodsName           TVarChar
@@ -101,6 +106,7 @@ BEGIN
         WITH 
         tmpCountPartionDate AS (SELECT CASE WHEN inIsDetail = TRUE THEN Container.Id ELSE 0 END   AS ContainerId
                                      , Container.ParentId                                         AS ParentId_Container
+                                     , CLO_Unit.ObjectId                                          AS UnitId
                                      , Container.ObjectId                                         AS GoodsId
                                      , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
                                      , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MI_Id_Income
@@ -120,7 +126,7 @@ BEGIN
                                      INNER JOIN ContainerLinkObject AS CLO_Unit 
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                   AND CLO_Unit.ObjectId = inUnitId
+                                                                   AND (CLO_Unit.ObjectId = inUnitId OR inUnitId = 0)
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
                                                                    ON CLO_PartionGoods.ContainerId = Container.Id
                                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -158,6 +164,7 @@ BEGIN
                                        , COALESCE (MI_Income_find.Id,MI_Income.Id)
                                        , Container.ParentId
                                        , CASE WHEN inIsDetail = TRUE THEN ObjectFloat_PartionGoods_MovementId.ValueData ELSE 0 END
+                                       , CLO_Unit.ObjectId
                                 )
 
       , tmpExpirationDate AS (SELECT tmpCountPartionDate.ParentId_Container
@@ -170,6 +177,7 @@ BEGIN
                               , COALESCE (MI_Income_find.Id,MI_Income.Id)                 AS MI_Id_Income
                               , tmp.ContainerId                                           AS ContainerId
                               , COALESCE (Object_PartionMovementItem.Id, 0)               AS PartionGoodsId
+                              , tmp.UnitId                                                AS UnitId
                               , tmp.GoodsId                                               AS GoodsId
                               , SUM (tmp.Amount)                                          AS Amount                                                                -- остаток
                               , COALESCE (tmpExpirationDate.minExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()) ::TDateTime AS ExpirationDate        -- Срок годности
@@ -180,15 +188,21 @@ BEGIN
                                      ELSE 0
                                 END                                                       AS PartionDateKindId
                          FROM (SELECT Container.Id                            AS ContainerId
+                                    , Container.WhereObjectId                 AS UnitId
                                     , Container.ObjectId                      AS GoodsId
                                     , COALESCE (Container.Amount,0) ::TFloat  AS Amount
                                FROM Container
+                                    INNER JOIN (SELECT DISTINCT tmpCountPartionDate.UnitId, tmpCountPartionDate.GoodsId 
+                                                FROM tmpCountPartionDate
+                                                ) AS tmp ON tmp.UnitId  = Container.WhereObjectId
+                                                        AND tmp.GoodsId = Container.ObjectId
                                WHERE Container.DescId = zc_Container_Count()
-                                 AND Container.WhereObjectId = inUnitId
+                                 --AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
+                                 --AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                  AND COALESCE (Container.Amount,0) <> 0
-                                 AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                GROUP BY Container.Id
                                       , Container.ObjectId
+                                      , Container.WhereObjectId
                                ) AS tmp
                             LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                           ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
@@ -211,6 +225,7 @@ BEGIN
                          WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate_6
 
                          GROUP BY tmp.GoodsId
+                                , tmp.UnitId
                                 , COALESCE (tmpExpirationDate.minExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())
                                 , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                 , COALESCE (MI_Income_find.Id,MI_Income.Id)
@@ -218,7 +233,8 @@ BEGIN
                                 , COALESCE (Object_PartionMovementItem.Id, 0)
                         )
 
-      , tmpData AS (SELECT COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)                             AS GoodsId
+      , tmpData AS (SELECT COALESCE (tmpCountPartionDate.UnitId, tmpContainer.UnitId)                               AS UnitId
+                         , COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)                             AS GoodsId
                          , COALESCE (tmpCountPartionDate.ContainerId,0)                                             AS ContainerId_PartionDate
                          , tmpContainer.PartionGoodsId                                                              AS PartionGoodsId
                          , tmpContainer.ContainerId                                                                 AS ContainerId
@@ -234,6 +250,7 @@ BEGIN
                          FULL JOIN tmpContainer ON tmpContainer.MI_Id_Income = tmpCountPartionDate.MI_Id_Income
                                                AND tmpContainer.ContainerId  = tmpCountPartionDate.ParentId_Container
                     GROUP BY COALESCE (tmpCountPartionDate.GoodsId, tmpContainer.GoodsId)
+                           , COALESCE (tmpCountPartionDate.UnitId, tmpContainer.UnitId)
                            , COALESCE (tmpCountPartionDate.ContainerId,0)
                            , tmpContainer.ContainerId
                            , COALESCE (tmpCountPartionDate.MovementId_Income, tmpContainer.MovementId_Income)
@@ -279,10 +296,38 @@ BEGIN
                                WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_SendPartionDate FROM tmpData)
                                )
 
+      , tmpUnitParam AS (SELECT Object_Unit.Id                       AS UnitId
+                              , Object_Unit.ValueData                AS UnitName
+                              , Object_Juridical.ValueData           AS JuridicalName
+                              , Object_Retail.ValueData              AS RetailName
+                              , ObjectString_Unit_Address.ValueData  AS Address
+                         FROM (SELECT DISTINCT tmpData.UnitId FROM tmpData) AS tmpUnit
+                              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                   ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+                              LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                                     ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                                    AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                   ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                        )
+
         -- результат
         SELECT
             tmpData.ContainerId
           , tmpData.ContainerId_PartionDate
+          , tmpUnitParam.UnitId
+          , tmpUnitParam.UnitName
+          , tmpUnitParam.JuridicalName
+          , tmpUnitParam.RetailName
+          , tmpUnitParam.Address
           , Object_Goods.Id            AS GoodsId
           , Object_Goods.ObjectCode    AS GoodsCode
           , Object_Goods.ValueData     AS GoodsName
@@ -317,6 +362,8 @@ BEGIN
            LEFT JOIN tmpSendPartionDate ON tmpSendPartionDate.Id = tmpData.MovementId_SendPartionDate
 
            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpData.PartionDateKindId
+           
+           LEFT JOIN tmpUnitParam ON tmpUnitParam.UnitId = tmpData.UnitId
         ;
 END;
 $BODY$

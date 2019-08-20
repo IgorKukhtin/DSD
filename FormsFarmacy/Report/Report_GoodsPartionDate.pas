@@ -22,9 +22,7 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    AmountRemains: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;  AmountRemains: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;

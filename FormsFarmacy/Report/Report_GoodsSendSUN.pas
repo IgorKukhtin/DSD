@@ -45,6 +45,7 @@ type
     GuidesGoods: TdsdGuides;
     edGoods: TcxButtonEdit;
     cxLabel6: TcxLabel;
+    StatusCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
