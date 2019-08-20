@@ -23,11 +23,11 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Send_IsDefSUN());
    
       -- параметры документа
-   SELECT COALESCE (MovementBoolean_SUN.ValueData, FALSE) isSUN
+   SELECT COALESCE (MovementBoolean_SUN.ValueData, FALSE) AS isSUN
    INTO vbisSUN
-   FROM MovementBoolean AS MovementBoolean_DefSUN
-   WHERE MovementBoolean_DefSUN.MovementId = inMovementId
-     AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_SUN();
+   FROM MovementBoolean AS MovementBoolean_SUN
+   WHERE MovementBoolean_SUN.MovementId = inMovementId
+     AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN();
 
    -- переопределили
    outisDefSUN := not inisDefSUN;
