@@ -761,6 +761,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutDialogForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceGoodsSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceGoodsSUNForm');

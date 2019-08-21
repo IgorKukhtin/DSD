@@ -737,7 +737,9 @@ uses
   Report_BalanceGoodsSUN in '..\..\FormsFarmacy\Report\Report_BalanceGoodsSUN.pas' {Report_BalanceGoodsSUNForm: TParentForm},
   Wages in '..\..\FormsFarmacy\Document\Wages.pas' {WagesForm: TParentForm},
   WagesJournal in '..\..\FormsFarmacy\Document\WagesJournal.pas' {WagesJournalForm: TParentForm},
-  WagesUser in '..\..\FormsFarmacy\Cash\WagesUser.pas' {WagesUserForm: TParentForm};
+  WagesUser in '..\..\FormsFarmacy\Cash\WagesUser.pas' {WagesUserForm: TParentForm},
+  Report_CheckSendSUN_InOut in '..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOut.pas' {Report_CheckSendSUN_InOutForm: TParentForm},
+  Report_CheckSendSUN_InOutDialog in '..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOutDialog.pas' {Report_CheckSendSUN_InOutDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
