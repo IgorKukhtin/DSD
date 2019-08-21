@@ -61,6 +61,7 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
     Hint = #1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1076#1072'/'#1085#1077#1090')'
     Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 4
+    Visible = False
     Width = 249
   end
   object cxLabel6: TcxLabel
@@ -178,14 +179,6 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isSendDefSUN'
-        Value = Null
-        Component = cbSendDefSUN
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

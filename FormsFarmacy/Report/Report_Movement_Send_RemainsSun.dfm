@@ -24,7 +24,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         Width = 960
         Height = 264
         ExplicitWidth = 960
-        ExplicitHeight = 240
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1127,7 +1127,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitTop = 248
         object GridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -1599,7 +1598,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitTop = 352
       end
       object cxSplitter1: TcxSplitter
         Left = 0
@@ -1609,7 +1607,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 240
       end
     end
   end
@@ -1995,7 +1992,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       ImageIndex = 41
     end
     object actOpenReportPartionDateForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Report'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
@@ -2050,7 +2047,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       isShowModal = False
     end
     object actOpenReportPartionHistoryForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Report'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'>'
@@ -2116,7 +2113,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       isShowModal = False
     end
     object actOpenReportPartionDateChild: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Report'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'> ('#1089#1088#1086#1082#1080')'
@@ -2171,7 +2168,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       isShowModal = False
     end
     object actOpenReportPartionHistoryChild: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Report'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'> ('#1089#1088#1086#1082#1080')'
@@ -2232,6 +2229,70 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           Name = 'PartyName'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReportSendSUN: TdsdOpenForm
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1086#1073#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1086#1076#1088#1086#1073#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 26
+      FormName = 'TReport_GoodsSendSUNForm'
+      FormNameParam.Value = 'TReport_GoodsSendSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42132d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42132d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2321,6 +2382,10 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         end
         item
           Visible = True
+          ItemName = 'bbReportSendSUN'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2381,6 +2446,10 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     end
     object bbOpenReportPartionDateChild: TdxBarButton
       Action = actOpenReportPartionDateChild
+      Category = 0
+    end
+    object bbReportSendSUN: TdxBarButton
+      Action = actReportSendSUN
       Category = 0
     end
   end
