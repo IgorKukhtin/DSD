@@ -123,7 +123,7 @@
                           AND Container.WhereObjectId = inUnitID
                           AND Container.Amount > 0
                           AND ObjectDate_ExpirationDate.ValueData <= vbOperDate
-                          AND  COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
+                          AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
          -- Содержиться в старом перемещении
        , tmpMovement AS (SELECT MovementItemMaster.ID                   AS MasterID
                               , MovementItemChild.ID                    AS ChildID
@@ -146,19 +146,16 @@
 
                         WHERE Movement.Id = vbMovementID)
 
-    INSERT INTO tmpContainerOverdue (ID, GoodsID, Amount, ExpirationDate, MasterID, ChildID)
+    INSERT INTO tmpContainerOverdue (ID, GoodsID, Amount, ExpirationDate, ChildID)
     SELECT Container.Id,
            Container.GoodsID,
            Container.Amount,
 
            Container.ExpirationDate,
 
-           tmpMovement.MasterID,
            tmpMovement.ChildID
     FROM tmpContainer AS Container
-         LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id
-                               OR COALESCE(tmpMovement.ContainerId, 0) = 0
-                              AND tmpMovement.ObjectID = Container.GoodsID;
+         LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id;
 
      -- Нечего создать выходим
     IF NOT EXISTS(SELECT 1 FROM tmpContainerOverdue)
@@ -169,6 +166,15 @@
     IF vbMovementID = 0
     THEN
        vbInvNumber := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar);
+    ELSE
+        -- Прописуем во временную таблицу ID мастера если есть
+      UPDATE tmpContainerOverdue SET MasterID = MovementItem.ID
+      FROM (SELECT MovementItem.Id
+                 , MovementItem.ObjectId
+            FROM MovementItem
+            WHERE MovementItem.MovementId = vbMovementID
+              AND MovementItem.DescId = zc_MI_Master()) AS MovementItem
+      WHERE MovementItem.ObjectId = tmpContainerOverdue.GoodsId;    
     END IF;
 
       -- Создаем перемещение
@@ -191,9 +197,9 @@
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := COALESCE(tmpContainerOverdue.MasterID, 0),
                                               inMovementId           := vbMovementID,
                                               inGoodsId              := tmpContainerOverdue.GoodsId,
-                                              inAmount               := SUM(tmpContainerOverdue.Amount)::TFloat,
-                                              inAmountManual         := SUM(tmpContainerOverdue.Amount)::TFloat,
-                                              inAmountStorage        := SUM(tmpContainerOverdue.Amount)::TFloat,
+                                              inAmount               := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
                                               inReasonDifferencesId  := 0,
                                               inUserId               := vbUserId)
     FROM tmpContainerOverdue
@@ -263,7 +269,7 @@
                                                    inUserId        := vbUserId)
     FROM tmpContainerOverdue
     WHERE COALESCE(tmpContainerOverdue.MasterID, 0) <> 0;
-
+    
       -- Удалили записи Child с 0
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItem.ID,
                                            inSession               := inSession)

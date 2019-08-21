@@ -25,6 +25,11 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
     
+    IF COALESCE (ioId, 0) < 0
+    THEN
+       RAISE EXCEPTION 'Ошибка. Строки по перемещению товаров без продаж 100 дней редактировать нельзя.';
+    END IF;
+
     IF COALESCE (ioId, 0) = 0
     THEN
        RAISE EXCEPTION 'Ошибка. Не определено ID строки.';

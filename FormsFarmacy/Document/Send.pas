@@ -133,6 +133,7 @@ type
     cbSent: TcxCheckBox;
     actUpdateDataSetDetailDS: TdsdUpdateDataSet;
     spInsertUpdateMIChild: TdsdStoredProc;
+    chColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

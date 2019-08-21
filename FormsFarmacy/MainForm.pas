@@ -538,6 +538,8 @@ type
     N188: TMenuItem;
     actReport_BalanceGoodsSUN: TdsdOpenForm;
     N189: TMenuItem;
+    actWages: TdsdOpenForm;
+    N190: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

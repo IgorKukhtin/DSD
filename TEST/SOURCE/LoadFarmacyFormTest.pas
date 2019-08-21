@@ -1926,6 +1926,12 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+
+  Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KPUForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KPUForm');
 

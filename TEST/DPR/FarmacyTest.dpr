@@ -734,7 +734,9 @@ uses
   UnitLincDriver in '..\..\FormsFarmacy\Guides\UnitLincDriver.pas' {UnitLincDriverForm: TParentForm},
   Report_Profit in '..\..\FormsFarmacy\Report\Report_Profit.pas' {Report_ProfitForm: TParentForm},
   Report_BalanceGoodsSUNDialog in '..\..\FormsFarmacy\Report\Report_BalanceGoodsSUNDialog.pas' {Report_BalanceGoodsSUNDialogForm: TParentForm},
-  Report_BalanceGoodsSUN in '..\..\FormsFarmacy\Report\Report_BalanceGoodsSUN.pas' {Report_BalanceGoodsSUNForm: TParentForm};
+  Report_BalanceGoodsSUN in '..\..\FormsFarmacy\Report\Report_BalanceGoodsSUN.pas' {Report_BalanceGoodsSUNForm: TParentForm},
+  Wages in '..\..\FormsFarmacy\Document\Wages.pas' {WagesForm: TParentForm},
+  WagesJournal in '..\..\FormsFarmacy\Document\WagesJournal.pas' {WagesJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

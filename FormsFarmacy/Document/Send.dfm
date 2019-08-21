@@ -592,6 +592,10 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
+          object chColor_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -2763,7 +2767,11 @@ inherited SendForm: TSendForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = chColor_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
