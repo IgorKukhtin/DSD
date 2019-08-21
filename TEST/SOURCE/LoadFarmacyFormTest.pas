@@ -1931,6 +1931,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
   Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KPUForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KPUForm');

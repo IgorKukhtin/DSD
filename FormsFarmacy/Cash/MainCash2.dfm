@@ -3192,6 +3192,18 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = False
     end
+    object actWagesUser: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actWagesUser'
+      ShortCut = 16471
+      FormName = 'TWagesUserForm'
+      FormNameParam.Value = 'TWagesUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

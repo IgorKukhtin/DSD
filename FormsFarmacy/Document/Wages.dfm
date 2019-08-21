@@ -1,5 +1,5 @@
 inherited WagesForm: TWagesForm
-  Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+  Caption = #1047'/'#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 500
   ClientWidth = 953
   AddOnFormData.AddOnFormRefresh.ParentList = 'Wages'
@@ -89,10 +89,10 @@ inherited WagesForm: TWagesForm
               Width = 332
             end
             item
-              Caption = #1055#1077#1088#1080#1086#1076
+              Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 50
+              Width = 123
             end>
           object PersonalCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -143,21 +143,15 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
-          object Value: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Value'
-            PropertiesClassName = 'TcxComboBoxProperties'
-            Properties.Items.Strings = (
-              ''
-              '7:00'
-              '8:00'
-              '9:00'
-              '10:00'
-              '12:00'
-              '21:00'
-              #1042)
+          object Amount: TcxGridDBBandedColumn
+            Caption = #1047#1072' '#1086#1090#1088#1072#1073#1086#1090#1072#1085#1085#1086#1077' '#1074#1088#1077#1084#1103
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -300,8 +294,10 @@ inherited WagesForm: TWagesForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = Null
-          Component = edOperDate
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          DataType = ftDateTime
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
@@ -369,50 +365,6 @@ inherited WagesForm: TWagesForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Wages'
-    DataSet = nil
-    DataSets = <
-      item
-      end
-      item
-      end
-      item
-        DataSet = MasterCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDate'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'ShowAll'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 64
     Top = 224
   end
@@ -490,10 +442,6 @@ inherited WagesForm: TWagesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -645,7 +593,7 @@ inherited WagesForm: TWagesForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = 0d
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -773,13 +721,6 @@ inherited WagesForm: TWagesForm
     Top = 272
   end
   inherited GuidesFiller: TGuidesFiller
-    ActionItemList = <
-      item
-        Action = actDataDialog
-      end
-      item
-        Action = actInsertUpdateMovement
-      end>
     Left = 264
     Top = 232
   end
