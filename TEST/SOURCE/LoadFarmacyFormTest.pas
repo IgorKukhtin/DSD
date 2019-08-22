@@ -130,6 +130,7 @@ type
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
+    procedure LoadWagesTest;
     procedure FormTest;
   end;
 
@@ -1349,6 +1350,29 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnnamedEnterprisesJournalForm');
 end;
 
+procedure TLoadFormTest.LoadWagesTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollGroupEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+end;
+
+
 procedure TLoadFormTest.LoadEnumFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TNDSKindForm'));
@@ -1931,14 +1955,7 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
-  Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KPUForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KPUForm');
 

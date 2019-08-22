@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.954,=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.023,=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.370,D:\DSD\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas=D:\DSD\FormsFarmacy\Cash\PosECRCommX_BPOS1Lib.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.356,=D:\DSD\FormsFarmacy\Cash\ListDiffAddGoods.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.491,D:\DSD\FormsFarmacy\Cash\PosInterface.pas=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.436,D:\DSD\DPR_My\Unit1.pas=D:\DSD\FormsFarmacy\Cash\EmployeeWorkLog.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.341,=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.569,D:\DSD\DPR_My\Unit1.pas=D:\DSD\FormsFarmacy\Cash\PayPosTermProcess.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.331,=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.589,=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.019,=D:\DSD\FormsFarmacy\Cash\ChoiceBankPOSTerminal.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.988,=D:\DSD\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.754,D:\DSD\FormsFarmacy\Cash\PosECRCommX_BPOS1Lib.pas=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.660,=D:\DSD\FormsFarmacy\Cash\NeoFiscalPrinterDriver_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.109,=D:\DSD\FormsFarmacy\Cash\ListDiff.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.569,D:\DSD\DPR_My\Unit1.dfm=D:\DSD\FormsFarmacy\Cash\PayPosTermProcess.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.505,D:\DSD\FormsFarmacy\Cash\PosFactory.pas=D:\DSD\DPR_My\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.857,=D:\DSD\FormsFarmacy\Cash\Cash_IKC_E810T.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.864,=D:\DSD\FormsFarmacy\Cash\GoodsToExpirationDate.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.333,D:\DSD\FormsFarmacy\Cash\DivisibilityDialog.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.478,=D:\DSD\FormsFarmacy\Cash\ListGoods.pas</Transaction>
+  </Transactions>
+</BorlandProject>

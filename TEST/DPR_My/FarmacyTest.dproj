@@ -1,0 +1,2041 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{D8BAD5CF-CB27-4E81-AEC7-ABFCB1B2B50C}</ProjectGuid>
+			<ProjectVersion>13.4</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<MainSource>FarmacyTest.dpr</MainSource>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Release</Config>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
+			<TargetedPlatforms>1</TargetedPlatforms>
+			<AppType>Application</AppType>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+			<Base_Win64>true</Base_Win64>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+			<Base_Win32>true</Base_Win32>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+			<Cfg_1_Win32>true</Cfg_1_Win32>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+			<Cfg_2_Win32>true</Cfg_2_Win32>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<DCC_UsePackage>DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;CustomIPTransport;dsnap;IndyCore;JvDB;bindcompfmx;dbrtl;bindcomp;inetdb;JvPluginSystem;xmlrtl;ibxpress;bindengine;soaprtl;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;JvDlgs;IndySystem;DataSnapClient;DataSnapProviderClient;DBXOracleDriver;JvCore;fmxase;inetdbxpress;rtl;DbxClientDriver;JvSystem;JvControls;IndyProtocols;DBXMySQLDriver;JvPageComps;JvStdCtrls;JvCustom;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<DCC_UsePackage>cxLibraryRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;officeXPrt;cxPageControlRS16;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;cxPageControldxBarPopupMenuRS16;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxPScxSSLnkRS16;vclactnband;dxServerModeRS16;bindcompvcl;Jcl;vclie;ipstudiowinclient;dsnapcon;vclx;dxFlowChartRS16;dxGDIPlusRS16;dxdborRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;EhLib160;adortl;ZDbc;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;dxmdsRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;ipstudiowin;cxSchedulerRS16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<DCC_UsePackage>dxTileControlRS16;JvGlobus;fsADO16;JvMM;cxLibraryRS16;JvManagedThreads;ipstudiowindataset;JvCrypt;frxBDE16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;JvNet;officeXPrt;cxPageControlRS16;JvDotNetCtrls;fsIBX16;vclimg;QR5RunDXE2;fmi;RtmRxCtl160;dxComnRS16;JvXPCtrls;vcldb;dxADOServerModeRS16;CloudService;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;ipstudiowinwordxp;JvRuntimeDesign;ADDONS_XE2;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;DSDComponent;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;DBXOdbcDriver;JvCmp;dxdbtrRS16;kassa;JvTimeFramework;dxPScxSSLnkRS16;fsBDE16;frxDB16;intrawebdb_120_160;fs16;vclactnband;FMXTee;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;frxcs16;Jcl;vclie;ipstudiowinclient;dclfrxTee16;dsnapcon;JvPascalInterpreter;dcldxSkinsCoreRS16;vclx;T557_R100;dxFlowChartRS16;frxIBX16;dxGDIPlusRS16;JvBDE;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;frxTee16;inetdbbde;vclib;Rave100VCL;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;Intraweb_120_160;frxADO16;vclribbon;frxe16;vtable160;vcl;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;fsTee16;JvAppFrm;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;EhLibDataDrivers160;EhLib160;JvDocking;adortl;JvWizards;JvHMI;frxDBX16;JvBands;ZDbc;frx16;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;svnui;dxmdsRS16;dxSpellCheckerRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;JvJans;JvPrintPreview;ipstudiowin;QImport3RT_D16;cxSchedulerRS16;ZCore;vcltouch;websnap;DSDDesignComponent;VclSmp;dxTabbedMDIRS16;fsDB16;DataSnapConnectors;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;svn;bdertl;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<DCC_RemoteDebug>true</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\..\DCU\Farmacy</DCC_DcuOutput>
+			<DCC_RemoteDebug>false</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_DebugDCUs>true</DCC_DebugDCUs>
+			<DCC_DebugInformation>true</DCC_DebugInformation>
+			<DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+			<DCC_SymbolReferenceInfo>2</DCC_SymbolReferenceInfo>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\..\DCU\Farmacy</DCC_DcuOutput>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="$(MainSource)">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
+			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
+			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
+			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
+			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
+				<Form>PriceListGoodsItemForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
+			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
+			<DCCReference Include="..\..\SOURCE\FormStorage.pas"/>
+			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
+				<Form>ParentForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuides.pas"/>
+			<DCCReference Include="..\..\SOURCE\DataModul.pas">
+				<Form>dmMain</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPartnerCodeMaster.pas">
+				<Form>GoodsPartnerCodeMasterForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsMainEdit.pas">
+				<Form>GoodsMainEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\dbTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
+				<Form>PeriodChoiceForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\Defaults.pas"/>
+			<DCCReference Include="..\..\SOURCE\UnilWin.pas"/>
+			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
+				<Form>MessagesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\SimpleGauge.pas">
+				<Form>SimpleGaugeForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\Document.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\Log.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalData.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFDataSet.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFPrx.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFUtil.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFMemMgr.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCDX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFIndex.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSorters.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCollate.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFParser.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFNTX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\ObjectTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Box.pas">
+				<Form>BoxForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BoxEdit.pas">
+				<Form>BoxEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
+				<Form>ImportExportLinkTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
+				<Form>AncestorBaseForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorData.pas">
+				<Form>AncestorDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
+				<Form>AncestorDBGridForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+				<Form>AncestorDocumentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
+				<Form>AncestorDocumentMCForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
+				<Form>AncestorEditDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+				<Form>AncestorEnumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+				<Form>AncestorGuidesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
+				<Form>AncestorJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
+				<Form>AboutBox</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\MovementLoad.pas">
+				<Form>MovementLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Retail.pas">
+				<Form>RetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RetailEdit.pas">
+				<Form>RetailEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical.pas">
+				<Form>JuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeJournal.pas">
+				<Form>IncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceList.pas">
+				<Form>PriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceListJournal.pas">
+				<Form>PriceListJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternalJournal.pas">
+				<Form>OrderExternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalLite.pas">
+				<Form>OrderInternalLiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Role.pas">
+				<Form>RoleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
+			<DCCReference Include="..\..\Forms\Import\ImportType.pas">
+				<Form>ImportTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas"/>
+			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Load\MovementItemsLoad.pas">
+				<Form>MovementItemsLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\FileTypeKind.pas">
+				<Form>FileTypeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListItemsLoad.pas">
+				<Form>PriceListItemsLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
+				<Form>PriceListLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\AdditionalGoods.pas">
+				<Form>AdditionalGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\LinkGoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\PaidKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\PriceListTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\RetailTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
+			<DCCReference Include="..\SOURCE\Form\ParentFormTest.pas">
+				<Form>TestForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsMainLite.pas">
+				<Form>GoodsMainLiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
+				<Form>DefaultsKeyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Objects.pas">
+				<Form>ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\ImportExportLink.pas">
+				<Form>ImportExportLinkForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
+				<Form>ObjectDescForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\FormsUnit.pas">
+				<Form>FormsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\UnionDesc.pas">
+				<Form>UnionDescForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\UserKey.pas">
+				<Form>UserKeyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods_NDS_diff.pas">
+				<Form>Goods_NDS_diffForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsEdit.pas">
+				<Form>GoodsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsMain.pas">
+				<Form>GoodsMainForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas">
+				<Form>GoodsPartnerCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportSettingsTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
+			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\LoadObjectUnit.pas">
+				<Form>LoadObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\PriceListMovementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderInternalTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
+				<Form>ContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
+				<Form>ContractEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas">
+				<Form>PriceGroupSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\JuridicalSettingsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
+				<Form>JuridicalSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\Forms\Action.pas">
+				<Form>ActionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\UserProtocol.pas">
+				<Form>UserProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupItemsTest.pas"/>
+			<DCCReference Include="..\..\Forms\Import\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas">
+				<Form>dmUnloadUploadData</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ContactPersonKind.pas">
+				<Form>ContactPersonKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\OrderKind.pas">
+				<Form>OrderKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ContactPersonTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerCode.pas">
+				<Form>PartnerCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
+				<Form>GoodsLiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportOrderGoods.pas">
+				<Form>ReportOrderGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
+				<Form>LookAndFillSettingsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\InvoiceXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
+				<Form>Member_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\MemberTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\Process.pas">
+				<Form>ProcessForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\IncomeTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas">
+				<Form>ChoiceGoodsFromPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\OrderKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\OrderKindEdit.pas">
+				<Form>OrderKindEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTest.pas"/>
+			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
+				<Form>SetUserDefaultsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementProtocol.pas">
+				<Form>MovementProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\NDSKind.pas">
+				<Form>NDSKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Bank.pas">
+				<Form>BankForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\BankAccountTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount_Object.pas">
+				<Form>BankAccount_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankEdit.pas">
+				<Form>BankEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical_Object.pas">
+				<Form>Juridical_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Currency.pas">
+				<Form>CurrencyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Currency_Object.pas">
+				<Form>Currency_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CurrencyEdit.pas">
+				<Form>CurrencyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CurrencyValue_Object.pas">
+				<Form>CurrencyValue_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account.pas">
+				<Form>AccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account_Object.pas">
+				<Form>Account_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection.pas">
+				<Form>AccountDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection_Object.pas">
+				<Form>AccountDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirectionEdit.pas">
+				<Form>AccountDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountEdit.pas">
+				<Form>AccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup.pas">
+				<Form>AccountGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup_Object.pas">
+				<Form>AccountGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroupEdit.pas">
+				<Form>AccountGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyDestinationTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney.pas">
+				<Form>InfoMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination.pas">
+				<Form>InfoMoneyDestinationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination_Object.pas">
+				<Form>InfoMoneyDestination_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestinationEdit.pas">
+				<Form>InfoMoneyDestinationEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyEdit.pas">
+				<Form>InfoMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup.pas">
+				<Form>InfoMoneyGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup_Object.pas">
+				<Form>InfoMoneyGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroupEdit.pas">
+				<Form>InfoMoneyGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossDirectionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLoss.pas">
+				<Form>ProfitLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLoss_Object.pas">
+				<Form>ProfitLoss_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection.pas">
+				<Form>ProfitLossDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
+				<Form>ProfitLossDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirectionEdit.pas">
+				<Form>ProfitLossDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossEdit.pas">
+				<Form>ProfitLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroup.pas">
+				<Form>ProfitLossGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroup_Object.pas">
+				<Form>ProfitLossGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroupEdit.pas">
+				<Form>ProfitLossGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ReturnTypeTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\ReturnType.pas">
+				<Form>ReturnTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ReturnTypeEdit.pas">
+				<Form>ReturnTypeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\LossDebtTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\LossDebtMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossDebt.pas">
+				<Form>LossDebtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossDebtJournal.pas">
+				<Form>LossDebtJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
+				<Form>MovementItemContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Balance.pas">
+				<Form>Report_BalanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOutJournal.pas">
+				<Form>ReturnOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeJournalChoice.pas">
+				<Form>IncomeJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankAccountJournal.pas">
+				<Form>BankAccountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankAccountMovement.pas">
+				<Form>BankAccountMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountJournalFarmacy.pas">
+				<Form>BankAccountJournalFarmacyForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas">
+				<Form>BankAccountMovementFarmacyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MoneyPlace_Object.pas">
+				<Form>MoneyPlace_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankStatement.pas">
+				<Form>BankStatementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankStatementJournal.pas">
+				<Form>BankStatementJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalCollation.pas">
+				<Form>Report_JuridicalCollationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalSold.pas">
+				<Form>Report_JuridicalSoldForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\StatusXML.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendOnPrice.pas">
+				<Form>SendOnPriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendOnPriceJournal.pas">
+				<Form>SendOnPriceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MarginCategory.pas">
+				<Form>MarginCategoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MarginCategoryItem.pas">
+				<Form>MarginCategoryItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MarginCategoryLink.pas">
+				<Form>MarginCategoryLinkForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\dsdException.pas"/>
+			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
+				<Form>MovementDescDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePharmacy.pas">
+				<Form>IncomePharmacyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePharmacyJournal.pas">
+				<Form>IncomePharmacyJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\LoadFarmacyReportTest.pas"/>
+			<DCCReference Include="..\..\Forms\Document\CheckJournal.pas">
+				<Form>CheckJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Check.pas">
+				<Form>CheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\CashRegisterKind.pas">
+				<Form>CashRegisterKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CashRegister.pas">
+				<Form>CashRegisterForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CashRegisterEdit.pas">
+				<Form>CashRegisterEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
+				<Form>AncestorReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainGoods.pas">
+				<Form>Report_GoodsRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas">
+				<Form>Report_GoodsPartionMoveForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PriceTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\AlternativeGroup.pas">
+				<Form>AlternativeGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
+				<Form>RepriceUnitForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
+				<Form>CheckVIPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred.pas">
+				<Form>CheckDeferredForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PaidType.pas">
+				<Form>PaidTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\CashRegisterTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\InventoryTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Inventory.pas">
+				<Form>InventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\InventoryJournal.pas">
+				<Form>InventoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\LossTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\LossMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ArticleLossTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Loss.pas">
+				<Form>LossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossJournal.pas">
+				<Form>LossJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLoss.pas">
+				<Form>ArticleLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLossEdit.pas">
+				<Form>ArticleLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Send.pas">
+				<Form>SendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendJournal.pas">
+				<Form>SendJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\SendTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas">
+				<Form>CreateOrderFromMCSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CheckJournalUser.pas">
+				<Form>CheckJournalUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MCS.pas">
+				<Form>MCSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionGoodsChoice.pas">
+				<Form>PartionGoodsChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas">
+				<Form>Report_GoodsPartionHistoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\RecalcMCS_Dialog.pas">
+				<Form>RecalcMCS_DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Object\ReportSoldParams.pas">
+				<Form>ReportSoldParamsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ReportSoldParamsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold.pas">
+				<Form>Report_SoldForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold_Day.pas">
+				<Form>Report_Sold_DayForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold_DayUser.pas">
+				<Form>Report_Sold_DayUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\AdditionalGoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\SaleMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Sale.pas">
+				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_ByPartionGoods.pas">
+				<Form>Report_Movement_ByPartionGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\PaymentTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\PaymentMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Payment.pas">
+				<Form>PaymentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PaymentJournal.pas">
+				<Form>PaymentJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalCorporate.pas">
+				<Form>JuridicalCorporateForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ReasonDifferences.pas">
+				<Form>ReasonDifferencesForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ReasonDifferencesTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Income_AmountTrouble.pas">
+				<Form>Income_AmountTroubleForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadBaDM.pas">
+				<Form>Report_UploadBaDMForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadOptima.pas">
+				<Form>Report_UploadOptimaForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\RepriceTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\RepriceMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RepriceJournal.pas">
+				<Form>RepriceJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Reprice.pas">
+				<Form>RepriceForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ChangeIncomePaymentKindTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ChangeIncomePaymentKind.pas">
+				<Form>ChangeIncomePaymentKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\ChangeIncomePaymentTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas">
+				<Form>ChangeIncomePaymentJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ChangeIncomePayment.pas">
+				<Form>ChangeIncomePaymentForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceHistory.pas">
+				<Form>PriceHistoryForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas">
+				<Form>ReturnOutPartnerDataDialogForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas">
+				<Form>IncomePartnerDataDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalGroupEdit.pas">
+				<Form>PersonalGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalGroup.pas">
+				<Form>PersonalGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalEdit.pas">
+				<Form>PersonalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Personal_Object.pas">
+				<Form>Personal_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Personal.pas">
+				<Form>PersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Education.pas">
+				<Form>EducationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\EducationEdit.pas">
+				<Form>EducationEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Position.pas">
+				<Form>PositionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PositionEdit.pas">
+				<Form>PositionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Calendar.pas">
+				<Form>CalendarForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\WorkTimeKind_Object.pas">
+				<Form>WorkTimeKind_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\WorkTimeKind.pas">
+				<Form>WorkTimeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Member.pas">
+				<Form>MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberEdit.pas">
+				<Form>MemberEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas">
+				<Form>SheetWorkTimeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTime.pas">
+				<Form>SheetWorkTimeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome.pas">
+				<Form>Report_MovementIncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas">
+				<Form>SheetWorkTimeAddRecordForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroupEdit.pas">
+				<Form>GoodsGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroup_Object.pas">
+				<Form>GoodsGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_LiquidDialog.pas">
+				<Form>Report_LiquidDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Wage.pas">
+				<Form>Report_WageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_WageDialog.pas">
+				<Form>Report_WageDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceDialog.pas">
+				<Form>PriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsAll.pas">
+				<Form>GoodsAllForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsAllJuridical.pas">
+				<Form>GoodsAllJuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsAllRetail.pas">
+				<Form>GoodsAllRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\EmailKind.pas">
+				<Form>EmailKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\EmailTools.pas">
+				<Form>EmailToolsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\EmailSettings.pas">
+				<Form>EmailSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Movement_PeriodDialog.pas">
+				<Form>Movement_PeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Liquid.pas">
+				<Form>Report_LiquidForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceOnDate.pas">
+				<Form>PriceOnDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountJournalFarmacyDialog.pas">
+				<Form>BankAccountJournalFarmacyDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\QualityNumberJournal.pas">
+				<Form>QualityNumberJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\QualityNumber.pas">
+				<Form>QualityNumberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Profit.pas">
+				<Form>Report_ProfitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ProfitDialog.pas">
+				<Form>Report_ProfitDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceInterventionDialog.pas">
+				<Form>Report_PriceInterventionDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckDialog.pas">
+				<Form>Report_MovementCheckDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainGoodsDialog.pas">
+				<Form>Report_GoodsRemainsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckFarmDialog.pas">
+				<Form>Report_MovementCheckFarmDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckFarm.pas">
+				<Form>ReportMovementCheckFarmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceIntervention.pas">
+				<Form>Report_PriceInterventionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncomeDialog.pas">
+				<Form>Report_MovementIncomeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginReport.pas">
+				<Form>MarginReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginReportItem.pas">
+				<Form>MarginReportItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncomeFarmDialog.pas">
+				<Form>Report_MovementIncomeFarmDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncomeFarm.pas">
+				<Form>Report_MovementIncomeFarmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas">
+				<Form>Report_PriceIntervention2Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOut.pas">
+				<Form>ReturnOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromRemains.pas">
+				<Form>ChoiceGoodsFromRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSite.pas">
+				<Form>Report_GoodsOnUnit_ForSiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSiteDialog.pas">
+				<Form>Report_GoodsOnUnit_ForSiteDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckMiddleDialog.pas">
+				<Form>Report_MovementCheckMiddleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheck.pas">
+				<Form>ReportMovementCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternalJournalChoice.pas">
+				<Form>OrderExternalJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Income.pas">
+				<Form>IncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Promo.pas">
+				<Form>PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoJournal.pas">
+				<Form>PromoJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas">
+				<Form>ReportMovementCheckMiddleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas">
+				<Form>Report_RemainsOverGoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementItemProtocol.pas">
+				<Form>MovementItemProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitForFarmacyCash.pas">
+				<Form>UnitForFarmacyCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveDialog.pas">
+				<Form>Report_GoodsPartionMoveDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Email.pas">
+				<Form>EmailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\EmailEdit.pas">
+				<Form>EmailEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Price.pas">
+				<Form>PriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionHistoryDialog.pas">
+				<Form>Report_GoodsPartionHistoryDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Over.pas">
+				<Form>OverForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OverJournal.pas">
+				<Form>OverJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleUnion.pas">
+				<Form>RoleUnionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas">
+				<Form>Report_RemainsOverGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas">
+				<Form>PriceGoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\Color.pas">
+				<Form>ColorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\OverSettingsEdit.pas">
+				<Form>OverSettingsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\OverSettings.pas">
+				<Form>OverSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalJuridicalEdit.pas">
+				<Form>DiscountExternalJuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCard.pas">
+				<Form>DiscountCardForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BarCodeEdit.pas">
+				<Form>BarCodeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BarCode.pas">
+				<Form>BarCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools_Object.pas">
+				<Form>DiscountExternalTools_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCardEdit.pas">
+				<Form>DiscountCardEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternal_Object.pas">
+				<Form>DiscountExternal_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\ConfirmedKind.pas">
+				<Form>ConfirmedKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternal.pas">
+				<Form>DiscountExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas">
+				<Form>DiscountExternalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalJuridical.pas">
+				<Form>DiscountExternalJuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas">
+				<Form>PriceGroupSettingsTopForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquid.pas">
+				<Form>Report_MovementCheck_UnLiquidForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquidDialog.pas">
+				<Form>Report_MovementCheck_UnLiquidDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Payment_Plan.pas">
+				<Form>Report_Payment_PlanForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Payment_PlanDialog.pas">
+				<Form>Report_Payment_PlanDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckErrorDialog.pas">
+				<Form>Report_MovementCheckErrorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckError.pas">
+				<Form>Report_MovementCheckErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MCS_Lite.pas">
+				<Form>MCS_LiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\OrderShedule.pas">
+				<Form>OrderSheduleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas">
+				<Form>OrderSheduleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP_Error.pas">
+				<Form>CheckVIP_ErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas">
+				<Form>Report_MovementIncome_PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_Promo.pas">
+				<Form>Report_MovementCheck_PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\InventoryPartion.pas">
+				<Form>InventoryPartionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckPrintDialog.pas">
+				<Form>CheckPrintDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckPromo.pas">
+				<Form>Report_CheckPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PeriodDialog.pas">
+				<Form>Report_PeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\KindOutSP.pas">
+				<Form>KindOutSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\KindOutSPEdit.pas">
+				<Form>KindOutSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\IntenalSPEdit.pas">
+				<Form>IntenalSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\IntenalSP.pas">
+				<Form>IntenalSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BrandSP.pas">
+				<Form>BrandSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BrandSPEdit.pas">
+				<Form>BrandSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSP.pas">
+				<Form>Report_CheckSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSPDialog.pas">
+				<Form>Report_CheckSPDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerMedical.pas">
+				<Form>PartnerMedicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerMedicalEdit.pas">
+				<Form>PartnerMedicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ConditionsKeepEdit.pas">
+				<Form>ConditionsKeepEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ConditionsKeep.pas">
+				<Form>ConditionsKeepForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Object\ReportPromoParams.pas">
+				<Form>ReportPromoParamsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_onGoods.pas">
+				<Form>Report_MinPrice_onGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_onGoodsDialog.pas">
+				<Form>Report_MinPrice_onGoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract_Object.pas">
+				<Form>Contract_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Badm.pas">
+				<Form>Report_BadmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas">
+				<Form>Unit_byReportBadmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\DataTimeDialog.pas">
+				<Form>DataTimeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Object\MarginCategory_Cross.pas">
+				<Form>MarginCategory_CrossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Object\MarginCategory_Total.pas">
+				<Form>MarginCategory_TotalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Object\MarginCategory_CrossDialog.pas">
+				<Form>MarginCategory_CrossDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoUnit.pas">
+				<Form>PromoUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoUnitJournal.pas">
+				<Form>PromoUnitJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas">
+				<Form>Report_MovementCheck_CrossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMemberSPEdit.pas">
+				<Form>GroupMemberSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMemberSP.pas">
+				<Form>GroupMemberSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas">
+				<Form>MarginCategoryItemHistoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SaleSP.pas">
+				<Form>Report_SaleSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SaleSPDialog.pas">
+				<Form>Report_SaleSPDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSPEdit.pas">
+				<Form>MedicSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberSPEdit.pas">
+				<Form>MemberSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas">
+				<Form>Report_RemainsOverGoods_ToForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\InvoiceJournal.pas">
+				<Form>InvoiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PromoDialog.pas">
+				<Form>Report_PromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsSP.pas">
+				<Form>GoodsSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsSP_Object.pas">
+				<Form>GoodsSP_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Check_SPEdit.pas">
+				<Form>Check_SPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementPriceList_Cross.pas">
+				<Form>Report_MovementPriceList_CrossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementPriceList_Dialog.pas">
+				<Form>Report_MovementPriceList_DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementPriceList.pas">
+				<Form>Report_MovementPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools.pas">
+				<Form>DiscountExternalToolsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas">
+				<Form>DiscountExternalToolsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\SPKind.pas">
+				<Form>SPKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsBarCode.pas">
+				<Form>GoodsBarCodeForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberIncomeCheck.pas">
+				<Form>MemberIncomeCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberIncomeCheckEdit.pas">
+				<Form>MemberIncomeCheckEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeCheckDialog.pas">
+				<Form>IncomeCheckDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods_BarCode.pas">
+				<Form>Goods_BarCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocCOM.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFalling.pas">
+				<Form>ReportMovementCheckGrowthAndFallingForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas">
+				<Form>Report_GoodsRemainsLightForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas">
+				<Form>Report_GoodsRemainsLightDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFallingDialog.pas">
+				<Form>ReportMovementCheckGrowthAndFallingDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+				<Form>ExportSalesForSuppForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas">
+				<Form>ProvinceCityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ProvinceCity.pas">
+				<Form>ProvinceCityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_Assortment.pas">
+				<Form>Report_Check_AssortmentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas">
+				<Form>Report_Check_AssortmentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_OverOrder.pas">
+				<Form>Report_OverOrderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas">
+				<Form>Report_OverOrderDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceBySendDialog.pas">
+				<Form>PriceBySendDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_Rating.pas">
+				<Form>Report_Check_RatingForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_RatingDialog.pas">
+				<Form>Report_Check_RatingDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas">
+				<Form>Report_MovementChecLightDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas">
+				<Form>ReportMovementCheckLightForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitTree.pas">
+				<Form>UnitTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Area.pas">
+				<Form>AreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\AreaEdit.pas">
+				<Form>AreaEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalAreaEdit.pas">
+				<Form>JuridicalAreaEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalArea.pas">
+				<Form>JuridicalAreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Import\ImportGroup.pas">
+				<Form>ImportGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_JuridicalArea.pas">
+				<Form>Unit_JuridicalAreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckMiddle_Detail.pas">
+				<Form>Report_CheckMiddle_DetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckMiddle_DetailDialog.pas">
+				<Form>Report_CheckMiddle_DetailDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome_byPromoDialog.pas">
+				<Form>Report_MovementIncome_byPromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas">
+				<Form>Report_MovementIncome_byPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas">
+				<Form>Report_GoodsRemains_AnotherRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas">
+				<Form>Report_Movement_AnotherRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContactPersonEdit.pas">
+				<Form>ContactPersonEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContactPerson.pas">
+				<Form>ContactPersonForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_byPromoDialog.pas">
+				<Form>Report_MinPrice_byPromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\MarginCategoryJournal.pas">
+				<Form>MarginCategoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\MarginCategory_Movement.pas">
+				<Form>MarginCategory_MovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas">
+				<Form>Report_MinPrice_byPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SAMP_AnalysisDialog.pas">
+				<Form>Report_SAMP_AnalysisDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas">
+				<Form>Report_SAMP_AnalysisForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberSP.pas">
+				<Form>MemberSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP.pas">
+				<Form>MedicSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_UKTZED.pas">
+				<Form>Report_Check_UKTZEDForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_UKTZEDDialog.pas">
+				<Form>Report_Check_UKTZEDDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PromoCodeEdit.pas">
+				<Form>PromoCodeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PromoCode.pas">
+				<Form>PromoCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoCodeMovement.pas">
+				<Form>PromoCodeMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoCodeJournal.pas">
+				<Form>PromoCodeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical_Unit_Object.pas">
+				<Form>Juridical_Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoCodeSignDialog.pas">
+				<Form>PromoCodeSignDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_byPromoCode.pas">
+				<Form>Report_Check_byPromoCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\FiscalEdit.pas">
+				<Form>FiscalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Fiscal.pas">
+				<Form>FiscalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrentDialog.pas">
+				<Form>Report_GoodsRemainsCurrentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas">
+				<Form>Report_GoodsRemainsCurrentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRetail.pas">
+				<Form>GoodsRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas">
+				<Form>GoodsRetailDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerMedical_Object.pas">
+				<Form>PartnerMedical_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP_Object.pas">
+				<Form>MedicSP_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas">
+				<Form>Report_Analysis_Remains_SellingForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitCategory.pas">
+				<Form>UnitCategoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitCategoryEdit.pas">
+				<Form>UnitCategoryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas">
+				<Form>ReportMovementCheckFLForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas">
+				<Form>Report_ImplementationPlanEmployeeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas">
+				<Form>Report_ImplementationPlanEmployeeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas">
+				<Form>Report_IncomeConsumptionBalanceForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalLegalAddress.pas">
+				<Form>JuridicalLegalAddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalLegalAddressEdit.pas">
+				<Form>JuridicalLegalAddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\Address.pas">
+				<Form>AddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\AddressEdit.pas">
+				<Form>AddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalActualAddress.pas">
+				<Form>JuridicalActualAddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas">
+				<Form>JuridicalActualAddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeAll.pas">
+				<Form>Report_ImplementationPlanEmployeeAllForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\DataDialog.pas">
+				<Form>DataDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Liquidity.pas">
+				<Form>Report_LiquidityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Accommodation.pas">
+				<Form>AccommodationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\TestShowForm.pas"/>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1049</VersionInfo>
+						<VersionInfo Name="CodePage">1251</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+					</Excluded_Packages>
+					<Source>
+						<Source Name="MainSource">FarmacyTest.dpr</Source>
+					</Source>
+				</Delphi.Personality>
+				<Deployment/>
+				<Platforms>
+					<Platform value="Win64">False</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+				<ModelSupport>False</ModelSupport>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+	</Project>

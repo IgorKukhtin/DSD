@@ -2539,7 +2539,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Cash\WagesUser.pas">
 				<Form>WagesUserForm</Form>
-                <DesignClass>TParentForm</DesignClass>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOut.pas">
 				<Form>Report_CheckSendSUN_InOutForm</Form>
@@ -2547,6 +2547,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOutDialog.pas">
 				<Form>Report_CheckSendSUN_InOutDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PayrollGroup.pas">
+				<Form>PayrollGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PayrollGroupEdit.pas">
+				<Form>PayrollGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PayrollType.pas">
+				<Form>PayrollTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PayrollTypeEdit.pas">
+				<Form>PayrollTypeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

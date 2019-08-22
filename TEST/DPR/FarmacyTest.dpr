@@ -739,7 +739,11 @@ uses
   WagesJournal in '..\..\FormsFarmacy\Document\WagesJournal.pas' {WagesJournalForm: TParentForm},
   WagesUser in '..\..\FormsFarmacy\Cash\WagesUser.pas' {WagesUserForm: TParentForm},
   Report_CheckSendSUN_InOut in '..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOut.pas' {Report_CheckSendSUN_InOutForm: TParentForm},
-  Report_CheckSendSUN_InOutDialog in '..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOutDialog.pas' {Report_CheckSendSUN_InOutDialogForm: TParentForm};
+  Report_CheckSendSUN_InOutDialog in '..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOutDialog.pas' {Report_CheckSendSUN_InOutDialogForm: TParentForm},
+  PayrollGroup in '..\..\FormsFarmacy\Guides\PayrollGroup.pas' {PayrollGroupForm: TParentForm},
+  PayrollGroupEdit in '..\..\FormsFarmacy\Guides\PayrollGroupEdit.pas' {PayrollGroupEditForm: TParentForm},
+  PayrollType in '..\..\FormsFarmacy\Guides\PayrollType.pas' {PayrollTypeForm: TParentForm},
+  PayrollTypeEdit in '..\..\FormsFarmacy\Guides\PayrollTypeEdit.pas' {PayrollTypeEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
