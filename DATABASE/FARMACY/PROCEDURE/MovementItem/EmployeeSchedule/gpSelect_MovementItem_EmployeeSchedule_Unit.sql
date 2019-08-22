@@ -575,7 +575,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_Unit (TVarChar) OWNER TO postgres;
 
 
 /*

@@ -1,4 +1,4 @@
-unit Report_GoodsSendSUN;
+unit Report_CheckSendSUN_InOut;
 
 interface
 
@@ -17,13 +17,13 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxImageComboBox;
 
 type
-  TReport_GoodsSendSUNForm = class(TAncestorReportForm)
+  TReport_CheckSendSUN_InOutForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    Amount_In: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
@@ -38,14 +38,18 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    cbSendDefSUN: TcxCheckBox;
     ContractName_Income: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     GuidesGoods: TdsdGuides;
     edGoods: TcxButtonEdit;
     cxLabel6: TcxLabel;
-    StatusCode: TcxGridDBColumn;
+    deStart2: TcxDateEdit;
+    deEnd2: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel5: TcxLabel;
+    UnitName: TcxGridDBColumn;
+    PeriodChoice2: TPeriodChoice;
   private
     { Private declarations }
   public
@@ -53,12 +57,12 @@ type
   end;
 
 var
-  Report_GoodsSendSUNForm: TReport_GoodsSendSUNForm;
+  Report_CheckSendSUN_InOutForm: TReport_CheckSendSUN_InOutForm;
 
 implementation
 
 {$R *.dfm}
 initialization
 
-  RegisterClass(TReport_GoodsSendSUNForm);
+  RegisterClass(TReport_CheckSendSUN_InOutForm);
 end.

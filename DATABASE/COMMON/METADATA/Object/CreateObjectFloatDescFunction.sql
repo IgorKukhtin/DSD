@@ -1409,11 +1409,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionGoods_PriceWithVAT() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionGoods(), 'zc_ObjectFloat_PartionGoods_PriceWithVAT', 'Цена закупки с НДС.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionGoods_PriceWithVAT');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollType_Percent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollType_Percent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PayrollType(), 'zc_ObjectFloat_PayrollType_Percent', 'Процент от базы' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollType_Percent');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollType_MinAccrualAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollType_MinAccrualAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PayrollType(), 'zc_ObjectFloat_PayrollType_MinAccrualAmount', 'Мин сумма начисления' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollType_MinAccrualAmount');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.08.19                                                                                      * zc_ObjectFloat_PayrollType_Percent, zc_ObjectFloat_PayrollType_MinAccrualAmount 
  06.08.19         * zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance
  05.08.19         * zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum
  23.07.19         * zc_ObjectFloat_Retail_SummSUN

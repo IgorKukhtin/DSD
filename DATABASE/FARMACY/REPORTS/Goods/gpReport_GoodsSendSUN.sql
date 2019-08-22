@@ -1,24 +1,30 @@
  -- Function: gpReport_GoodsSendSUN()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsSendSUN (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsSendSUN (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsSendSUN(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
     IN inGoodsId          Integer  ,  -- товар
-    IN inisSendDefSUN     Boolean,    -- Отложенное Перемещение по СУН (да / нет)
+    --IN inisSendDefSUN     Boolean,    -- Отложенное Перемещение по СУН (да / нет)
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate  TDateTime
              , InvNumber TVarChar
+             , StatusCode Integer
              , FromName  TVarChar
              , ToName  TVarChar
              , PartionDateKindName TVarChar
              , GoodsCode  Integer
              , GoodsName  TVarChar
              , GoodsGroupName  TVarChar
-             , Amount TFloat
+             --, Amount TFloat
+             , Amount_Def TFloat
+             , Amount_Del TFloat
+             , Amount_unComp TFloat
+             , Amount_Comp TFloat
              , ExpirationDate      TDateTime
              , OperDate_Income     TDateTime
              , Invnumber_Income    TVarChar
@@ -42,15 +48,21 @@ BEGIN
                           , MovementLinkObject_To.ObjectId              AS ToId
                           , MovementLinkObject_From.ObjectId            AS FromId
                           , MovementLinkObject_PartionDateKind.ObjectId AS PartionDateKindId
+                          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     AS isSUN
+                          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  AS isDefSUN
                      FROM Movement
                           INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                       AND MovementLinkObject_To.ObjectId = inUnitId
+                                                       AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId =0)
 
-                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                    AND MovementBoolean_SUN.DescId = CASE WHEN inisSendDefSUN = FALSE THEN zc_MovementBoolean_SUN() ELSE zc_MovementBoolean_DefSUN() END
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                                    ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
+                          LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                                    ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                                   AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
  
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -63,6 +75,7 @@ BEGIN
                      WHERE Movement.DescId = zc_Movement_Send()
                   -- AND Movement.StatusId = zc_Enum_Status_Complete()
                      AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY'
+                     AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE)
                      )
 
    , tmpMI_Master AS (SELECT MovementItem.*
@@ -70,7 +83,7 @@ BEGIN
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                   AND MovementItem.DescId     = zc_MI_Master()
                                                   AND MovementItem.isErased   = FALSE
-                                                  AND MovementItem.ObjectId   = inGoodsId
+                                                  AND (MovementItem.ObjectId   = inGoodsId OR inGoodsId = 0)
                       )
 
    , tmpMI_Child AS (SELECT MovementItem.*
@@ -135,6 +148,7 @@ BEGIN
 
       SELECT Movement.OperDate
            , Movement.InvNumber
+           , Object_Status.ObjectCode                       AS StatusCode
 
            , Object_From.ValueData                          AS FromName
            , Object_To.ValueData                            AS ToName
@@ -143,8 +157,14 @@ BEGIN
            , Object_Goods.ObjectCode           :: Integer   AS GoodsCode
            , Object_Goods.ValueData                         AS GoodsName
            , Object_GoodsGroup.ValueData                    AS GoodsGroupName
-
-           , tmpMI_Master.Amount                            AS Amount
+           -- 1) признак DefSUN = true - значит перемещение отложено
+           , CASE WHEN Movement.isDefSUN = TRUE THEN tmpMI_Master.Amount ELSE 0 END  ::TFloat AS Amount_Def
+           -- 2) статус удален - значит создан
+           , CASE WHEN Movement.isDefSUN = FALSE AND Movement.StatusId = zc_Enum_Status_Erased() THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount_Del
+           -- 3) стат не провед - значит "в работе"
+           , CASE WHEN Movement.isDefSUN = FALSE AND Movement.StatusId = zc_Enum_Status_UnComplete() THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount_unComp
+           -- 4) стат "проведен" - знач. перемещение  прошло
+           , CASE WHEN Movement.isDefSUN = FALSE AND Movement.StatusId = zc_Enum_Status_Complete() THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount_Comp
 
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime AS OperDate_Income
@@ -154,6 +174,7 @@ BEGIN
            
       FROM tmpMI_Master
            LEFT JOIN tmpMovement AS Movement          ON Movement.Id               = tmpMI_Master.MovementId
+           LEFT JOIN Object AS Object_Status          ON Object_Status.Id          = Movement.StatusId
            LEFT JOIN Object AS Object_Goods           ON Object_Goods.Id           = tmpMI_Master.ObjectId
            LEFT JOIN Object AS Object_From            ON Object_From.Id            = Movement.FromId
            LEFT JOIN Object AS Object_To              ON Object_To.Id              = Movement.ToId

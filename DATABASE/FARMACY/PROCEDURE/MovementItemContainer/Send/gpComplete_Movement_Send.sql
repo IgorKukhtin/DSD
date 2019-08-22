@@ -139,11 +139,55 @@ BEGIN
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
     LIMIT 1
    ;
-    
-    IF (COALESCE(vbGoodsName,'') <> '') 
+   
+    -- Проверка на то что бы не списали больше чем есть на остатке по распределенным позициям 
+    IF EXISTS (SELECT 1
+               FROM MovementItem AS MI_Child
+               WHERE MI_Child.MovementId = inMovementId
+                 AND MI_Child.DescId     = zc_MI_Child()
+                 AND MI_Child.IsErased   = FALSE
+                 AND MI_Child.Amount     <> 0
+              ) 
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во перемещения <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+      SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountRemains
+             INTO vbGoodsName, vbAmount, vbSaldo
+      FROM (WITH tmpMI AS (SELECT MI_Master.ObjectId     AS GoodsId
+                                , MI_Child.Amount        AS Amount
+                                , Container.Id           AS ContainerId
+                                , Container.Amount       AS ContainerAmount
+                           FROM MovementItem AS MI_Master
+                                LEFT JOIN MovementItem AS MI_Child
+                                               ON MI_Child.MovementId = inMovementId
+                                              AND MI_Child.DescId     = zc_MI_Child()
+                                              AND MI_Child.ParentId   = MI_Master.Id
+                                              AND MI_Child.IsErased   = FALSE
+                                              AND MI_Child.Amount     > 0
+                                -- это zc_Container_CountPartionDate
+                                LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                            ON MIFloat_ContainerId.MovementItemId = MI_Child.Id
+                                                           AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData :: Integer
+                                              
+                           WHERE MI_Master.MovementId = inMovementId
+                             AND MI_Master.DescId     = zc_MI_Master()
+                             AND MI_Master.IsErased   = FALSE
+                          )
+
+            SELECT tmpMI.GoodsId, SUM(tmpMI.Amount) AS Amount, tmpMI.ContainerAmount AS AmountRemains
+            FROM tmpMI
+            GROUP BY tmpMI.GoodsId, tmpMI.ContainerId, tmpMI.ContainerAmount
+            HAVING SUM(tmpMI.Amount) > COALESCE (tmpMI.ContainerAmount, 0)
+           ) AS tmp
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+      LIMIT 1
+     ;
+     
+      IF (COALESCE(vbGoodsName,'') <> '') 
+      THEN
+          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во рвспределено <%> больше, чем есть на остатке <%> по партии.', vbGoodsName, vbAmount, vbSaldo;
+      END IF;
     END IF;
+    
 
 
     -- Проверка: Не проводить накладные перемещения - у которых колонка - "Кол-во получателя" отличается от кол-ки "Факт кол-во". 

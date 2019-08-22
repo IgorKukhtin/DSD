@@ -449,7 +449,7 @@ BEGIN
                                 FROM tmpContainer AS Container
                                      LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
                                                                         ON MovementItemContainer.GoodsID = Container.GoodsID
-                                WHERE (Container.Amount >= COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
+                                WHERE (Container.Amount > COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
                                 )
                  -- Все перемещения по СУН
                 ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId

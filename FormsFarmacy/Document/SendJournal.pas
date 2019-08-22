@@ -72,6 +72,12 @@ type
     spUpdate_Movement_Sent: TdsdStoredProc;
     isSent: TcxGridDBColumn;
     isOverdueSUN: TcxGridDBColumn;
+    spUpdate_isDefSun: TdsdStoredProc;
+    spUpdate_isSun: TdsdStoredProc;
+    actUpdate_isSun: TdsdExecStoredProc;
+    actUpdate_isDefSun: TdsdExecStoredProc;
+    bbUpdate_isDefSun: TdxBarButton;
+    bbUpdate_isSun: TdxBarButton;
   private
     { Private declarations }
   public

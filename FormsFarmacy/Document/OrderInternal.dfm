@@ -1533,13 +1533,6 @@ inherited OrderInternalForm: TOrderInternalForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isSendDefSUN'
-          Value = 'FALSE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1882,14 +1875,6 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbReportSendSUN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReportSendDefSUN'
         end
         item
           Visible = True

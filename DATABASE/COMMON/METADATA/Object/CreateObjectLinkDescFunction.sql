@@ -2217,10 +2217,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Driver() RETURNS Integer AS $BODY$
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_Driver', 'Водитель для развозки товара', zc_Object_Unit(), zc_Object_Driver() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_Driver');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PayrollType_PayrollGroup() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollGroup'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PayrollType_PayrollGroup', 'Группа расчета заработной платы', zc_Object_PayrollType(), zc_Object_PayrollGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollGroup');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.08.19                                                                                      * zc_ObjectLink_PayrollType_PayrollGroup
  07.08.19                                                                                      * zc_ObjectLink_Unit_Driver
  06.08.19         * zc_ObjectLink_JuridicalOrderFinance_Juridical
                     zc_ObjectLink_JuridicalOrderFinance_BankAccount

@@ -2529,6 +2529,26 @@
 				<Form>Report_BalanceGoodsSUNForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Wages.pas">
+				<Form>WagesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\WagesJournal.pas">
+				<Form>WagesJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Cash\WagesUser.pas">
+				<Form>WagesUserForm</Form>
+                <DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOut.pas">
+				<Form>Report_CheckSendSUN_InOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSendSUN_InOutDialog.pas">
+				<Form>Report_CheckSendSUN_InOutDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1,12 +1,10 @@
-object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
+object Report_CheckSendSUN_InOutDialogForm: TReport_CheckSendSUN_InOutDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = 
-    #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' / '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086 +
-    ' '#1057#1059#1053'>'
-  ClientHeight = 247
-  ClientWidth = 361
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'>'
+  ClientHeight = 233
+  ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +18,8 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 49
-    Top = 207
+    Left = 57
+    Top = 183
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -30,8 +28,8 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 223
-    Top = 207
+    Left = 231
+    Top = 183
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -39,8 +37,8 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
     TabOrder = 1
   end
   object edUnit: TcxButtonEdit
-    Left = 8
-    Top = 85
+    Left = 15
+    Top = 88
     Properties.Buttons = <
       item
         Default = True
@@ -48,29 +46,20 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 327
+    Width = 363
   end
   object cxLabel3: TcxLabel
-    Left = 8
-    Top = 65
+    Left = 15
+    Top = 68
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
-  object cbSendDefSUN: TcxCheckBox
-    Left = 49
-    Top = 164
-    Hint = #1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1076#1072'/'#1085#1077#1090')'
-    Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 4
-    Visible = False
-    Width = 249
-  end
   object cxLabel6: TcxLabel
-    Left = 8
+    Left = 15
     Top = 116
     Caption = #1058#1086#1074#1072#1088':'
   end
   object edGoods: TcxButtonEdit
-    Left = 8
+    Left = 15
     Top = 134
     Properties.Buttons = <
       item
@@ -78,44 +67,70 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 327
-  end
-  object cxLabel1: TcxLabel
-    Left = 8
-    Top = 8
-    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    TabOrder = 5
+    Width = 363
   end
   object deStart: TcxDateEdit
-    Left = 8
-    Top = 28
+    Left = 106
+    Top = 8
     EditValue = 43831d
     Properties.ShowTime = False
-    TabOrder = 8
-    Width = 91
-  end
-  object cxLabel2: TcxLabel
-    Left = 135
-    Top = 8
-    Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    TabOrder = 6
+    Width = 81
   end
   object deEnd: TcxDateEdit
-    Left = 135
-    Top = 28
+    Left = 106
+    Top = 35
     EditValue = 43831d
     Properties.ShowTime = False
-    TabOrder = 10
-    Width = 110
+    TabOrder = 7
+    Width = 81
+  end
+  object cxLabel4: TcxLabel
+    Left = 15
+    Top = 9
+    Caption = #1044#1072#1090#1072' '#1089' ('#1087#1088#1080#1093#1086#1076'):'
+  end
+  object cxLabel5: TcxLabel
+    Left = 8
+    Top = 35
+    Caption = #1044#1072#1090#1072' '#1087#1086' ('#1087#1088#1080#1093#1086#1076'):'
+  end
+  object cxLabel1: TcxLabel
+    Left = 207
+    Top = 9
+    Caption = #1044#1072#1090#1072' '#1089' ('#1088#1072#1089#1093#1086#1076'):'
+  end
+  object deStart2: TcxDateEdit
+    Left = 297
+    Top = 8
+    EditValue = 43831d
+    Properties.ShowTime = False
+    TabOrder = 11
+    Width = 81
+  end
+  object cxLabel2: TcxLabel
+    Left = 200
+    Top = 35
+    Caption = #1044#1072#1090#1072' '#1087#1086' ('#1088#1072#1089#1093#1086#1076'):'
+  end
+  object deEnd2: TcxDateEdit
+    Left = 297
+    Top = 34
+    EditValue = 43831d
+    Properties.ShowTime = False
+    TabOrder = 13
+    Width = 81
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 175
-    Top = 184
+    Left = 103
+    Top = 72
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
-    Top = 86
+    Top = 174
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -133,7 +148,7 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'StartDate'
+        Name = 'StartDate1'
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
@@ -141,7 +156,7 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'EndDate'
+        Name = 'EndDate1'
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
@@ -181,9 +196,25 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate2'
+        Value = 'NULL'
+        Component = deStart2
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate2'
+        Value = 'NULL'
+        Component = deEnd2
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 318
-    Top = 110
+    Left = 334
+    Top = 166
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -214,11 +245,11 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 166
-    Top = 54
+    Top = 142
   end
   object ActionList: TActionList
-    Left = 267
-    Top = 63
+    Left = 323
+    Top = 103
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -278,7 +309,13 @@ object Report_GoodsSendSUNDialogForm: TReport_GoodsSendSUNDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 56
+    Left = 256
+    Top = 120
+  end
+  object PeriodChoice2: TPeriodChoice
+    DateStart = deStart2
+    DateEnd = deEnd2
+    Left = 231
+    Top = 64
   end
 end
