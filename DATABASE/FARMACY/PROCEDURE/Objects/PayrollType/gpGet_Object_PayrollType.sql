@@ -1,0 +1,77 @@
+-- Function: gpGet_Object_PayrollType()
+
+DROP FUNCTION IF EXISTS gpGet_Object_PayrollType(integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_Object_PayrollType(
+    IN inId          Integer,       -- ключ объекта <>
+    IN inSession     TVarChar       -- сессия пользователя
+)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , PayrollGroupID Integer, PayrollGroupName TVarChar
+             , Percent TFloat, MinAccrualAmount TFloat
+             , isErased boolean) AS
+$BODY$
+BEGIN
+
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PayrollType());
+
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , lfGet_ObjectCode(0, zc_Object_PayrollType()) AS Code
+           , CAST ('' as TVarChar)  AS Name
+           
+           , CAST (0 as Integer)    AS PayrollGroupID
+           , CAST ('' as TVarChar)  AS PayrollGroupName
+           , CAST (Null as TFloat)  AS Percent
+           , CAST (Null as TFloat)  AS MinAccrualAmount 
+
+           , CAST (NULL AS Boolean) AS isErased;
+   ELSE
+       RETURN QUERY
+       SELECT
+             Object_PayrollType.Id                       AS Id
+           , Object_PayrollType.ObjectCode               AS Code
+           , Object_PayrollType.ValueData                AS Name
+
+           , Object_PayrollGroup.ID                      AS PayrollGroupID
+           , Object_PayrollGroup.ValueData               AS PayrollGroupName
+           , ObjectFloat_Percent.ValueData               AS Percent
+           , ObjectFloat_MinAccrualAmount.ValueData      AS MinAccrualAmount 
+
+           , Object_PayrollType.isErased                 AS isErased
+
+       FROM Object AS Object_PayrollType
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PayrollGroup
+                                 ON ObjectLink_Goods_PayrollGroup.ObjectId = Object_PayrollType.Id
+                                AND ObjectLink_Goods_PayrollGroup.DescId = zc_ObjectLink_PayrollType_PayrollGroup()
+            LEFT JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = ObjectLink_Goods_PayrollGroup.ChildObjectId
+   
+            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                  ON ObjectFloat_Percent.ObjectId = Object_PayrollType.Id
+                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_PayrollType_Percent()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_MinAccrualAmount
+                                  ON ObjectFloat_MinAccrualAmount.ObjectId = Object_PayrollType.Id
+                                 AND ObjectFloat_MinAccrualAmount.DescId = zc_ObjectFloat_PayrollType_MinAccrualAmount()
+
+       WHERE Object_PayrollType.Id = inId;
+   END IF;
+
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 22.08.19                                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Object_PayrollType (0, '3')

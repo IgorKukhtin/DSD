@@ -243,6 +243,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Hospital(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= 'больничный'                , inEnumName:= 'zc_Enum_WorkTimeKind_Hospital');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipOut(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= '-замена'                   , inEnumName:= 'zc_Enum_WorkTimeKind_SkipOut');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipIn(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 6, inName:= '+замена'                   , inEnumName:= 'zc_Enum_WorkTimeKind_SkipIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkCS(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 7, inName:= 'полная смена'              , inEnumName:= 'zc_Enum_WorkTimeKind_WorkCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkAS(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 8, inName:= 'средняя смена'             , inEnumName:= 'zc_Enum_WorkTimeKind_WorkAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkNS(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 9, inName:= 'ночная смена'              , inEnumName:= 'zc_Enum_WorkTimeKind_WorkNS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkSCS(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 10, inName:= 'подмена полной смены'     , inEnumName:= 'zc_Enum_WorkTimeKind_WorkSCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkS(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 11, inName:= 'кладовщик'                , inEnumName:= 'zc_Enum_WorkTimeKind_WorkS');
 
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');

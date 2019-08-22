@@ -39,12 +39,13 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    cePremiumImplPlan: TcxCurrencyEdit;
+    cePercent: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    cePenaltyNonMinPlan: TcxCurrencyEdit;
-    cxLabel4: TcxLabel;
-    ceMinLineByLineImplPlan: TcxCurrencyEdit;
+    ceMinAccrualAmount: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
+    edPayrollGroup: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    PayrollGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

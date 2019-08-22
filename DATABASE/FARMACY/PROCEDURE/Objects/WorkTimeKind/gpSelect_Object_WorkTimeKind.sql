@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShortName TVarChar
              , Value     TVarChar
+             , PayrollTypeID Integer, PayrollTypeName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -23,6 +24,9 @@ $BODY$BEGIN
       , ObjectString_ShortName.ValueData AS ShortName 
       , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) AS Value
       
+      , Object_PayrollType.ID            AS PayrollGroupID
+      , Object_PayrollType.ValueData     AS PayrollGroupName
+
       , Object_WorkTimeKind.isErased     AS isErased
       
    FROM OBJECT AS Object_WorkTimeKind
@@ -31,6 +35,11 @@ $BODY$BEGIN
                                ON ObjectString_ShortName.ObjectId = Object_WorkTimeKind.Id
                               AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
                               
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_PayrollType
+                             ON ObjectLink_Goods_PayrollType.ObjectId = Object_WorkTimeKind.Id
+                            AND ObjectLink_Goods_PayrollType.DescId = zc_ObjectLink_WorkTimeKind_PayrollType()
+        LEFT JOIN Object AS Object_PayrollType ON Object_PayrollType.Id = ObjectLink_Goods_PayrollType.ChildObjectId
+
    WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind();
   
 END;$BODY$
@@ -41,7 +50,8 @@ ALTER FUNCTION gpSelect_Object_WorkTimeKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 22.08.19                                                       *
  01.10.13         *
 
 */

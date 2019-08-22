@@ -46,7 +46,20 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
             Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ShortName'
             HeaderAlignmentVert = vaCenter
-            Width = 165
+            Width = 106
+          end
+          object PayrollTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1088#1072#1089#1095#1077#1090#1072' '#1079'/'#1087
+            DataBinding.FieldName = 'PayrollTypeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPayrollTypeChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentVert = vaCenter
+            Width = 181
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -72,6 +85,33 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object actPayrollTypeChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actPayrollTypeChoice'
+      FormName = 'TPayrollTypeForm'
+      FormNameParam.Value = 'TPayrollTypeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PayrollTypeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PayrollTypeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -103,6 +143,14 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         Component = MasterCDS
         ComponentItem = 'ShortName'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPayrollTypeID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PayrollTypeID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

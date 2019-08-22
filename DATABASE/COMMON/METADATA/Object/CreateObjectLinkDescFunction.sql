@@ -2221,11 +2221,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PayrollType_PayrollGroup() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PayrollType_PayrollGroup', 'Группа расчета заработной платы', zc_Object_PayrollType(), zc_Object_PayrollGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollGroup');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_WorkTimeKind_PayrollType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_WorkTimeKind_PayrollType'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_WorkTimeKind_PayrollType', 'Тип расчета заработной платы', zc_Object_WorkTimeKind(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_WorkTimeKind_PayrollType');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 22.08.19                                                                                      * zc_ObjectLink_PayrollType_PayrollGroup
+ 22.08.19                                                                                      * zc_ObjectLink_PayrollType_PayrollGroup, zc_ObjectLink_WorkTimeKind_PayrollType
  07.08.19                                                                                      * zc_ObjectLink_Unit_Driver
  06.08.19         * zc_ObjectLink_JuridicalOrderFinance_Juridical
                     zc_ObjectLink_JuridicalOrderFinance_BankAccount

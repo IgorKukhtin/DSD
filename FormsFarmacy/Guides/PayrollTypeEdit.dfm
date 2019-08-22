@@ -1,7 +1,7 @@
 ﻿object PayrollTypeEditForm: TPayrollTypeEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1072#1087#1090#1077#1082#1080'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
   ClientHeight = 300
   ClientWidth = 436
   Color = clBtnFace
@@ -61,7 +61,7 @@
     TabOrder = 5
     Width = 400
   end
-  object cePremiumImplPlan: TcxCurrencyEdit
+  object cePercent: TcxCurrencyEdit
     Left = 23
     Top = 177
     Properties.DecimalPlaces = 4
@@ -72,33 +72,36 @@
   object cxLabel6: TcxLabel
     Left = 23
     Top = 154
-    Caption = '% '#1087#1088#1077#1084#1080#1080' '#1079#1072' '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078
+    Caption = ' '#1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1073#1072#1079#1099' '
   end
-  object cePenaltyNonMinPlan: TcxCurrencyEdit
-    Left = 23
-    Top = 127
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 8
-    Width = 186
-  end
-  object cxLabel4: TcxLabel
-    Left = 23
-    Top = 108
-    Caption = '% '#1096#1090#1088#1072#1092#1072' '#1079#1072' '#1085#1077#1074#1099#1087'. '#1084#1080#1085'. '#1087#1083#1072#1085#1072
-  end
-  object ceMinLineByLineImplPlan: TcxCurrencyEdit
+  object ceMinAccrualAmount: TcxCurrencyEdit
     Left = 23
     Top = 223
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 10
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 8
     Width = 186
   end
   object cxLabel2: TcxLabel
     Left = 23
     Top = 204
-    Caption = ' '#1052#1080#1085'. % '#1087#1086#1089#1090#1088#1086#1095#1085#1086#1075#1086' '#1074#1099#1087#1086#1083#1085'. '#1084#1080#1085'. '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1086#1083#1091#1095'. '#1087#1088#1077#1084#1080#1080
+    Caption = #1052#1080#1085' '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+  end
+  object edPayrollGroup: TcxButtonEdit
+    Left = 20
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 217
+  end
+  object cxLabel3: TcxLabel
+    Left = 23
+    Top = 102
+    Caption = #1043#1088#1091#1087#1087#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
   end
   object ActionList: TActionList
     Left = 252
@@ -162,25 +165,25 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PenaltyNonMinPlan'
+        Name = 'inPayrollGroupID'
         Value = Null
-        Component = cePenaltyNonMinPlan
+        Component = PayrollGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercent'
+        Value = Null
+        Component = cePercent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PremiumImplPlan'
+        Name = 'inMinAccrualAmount'
         Value = Null
-        Component = cePremiumImplPlan
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MinLineByLineImplPlan'
-        Value = Null
-        Component = ceMinLineByLineImplPlan
+        Component = ceMinAccrualAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -227,23 +230,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PenaltyNonMinPlan'
+        Name = 'PayrollGroupID'
         Value = Null
-        Component = cePenaltyNonMinPlan
+        Component = PayrollGroupGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PayrollGroupName'
+        Value = Null
+        Component = PayrollGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Percent'
+        Value = Null
+        Component = cePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PremiumImplPlan'
+        Name = 'MinAccrualAmount'
         Value = Null
-        Component = cePremiumImplPlan
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MinLineByLineImplPlan'
-        Value = Null
-        Component = ceMinLineByLineImplPlan
+        Component = ceMinAccrualAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -269,5 +280,34 @@
     StorageType = stStream
     Left = 324
     Top = 64
+  end
+  object PayrollGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPayrollGroup
+    FormNameParam.Value = 'TPayrollGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPayrollGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PayrollGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PayrollGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 112
   end
 end

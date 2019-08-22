@@ -9,11 +9,14 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, dsdAddOn,
   dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction,
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, Vcl.Controls, Vcl.Menus;
+  cxGridCustomView, cxGrid, Vcl.Controls, Vcl.Menus, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
 
 type
   TWorkTimeKindForm = class(TAncestorEnumForm)
     spInsertUpdateObject: TdsdStoredProc;
+    PayrollTypeName: TcxGridDBColumn;
+    actPayrollTypeChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
