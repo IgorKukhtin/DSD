@@ -22,6 +22,10 @@ RETURNS TABLE (UnitId    Integer
              , ToName         TVarChar
              , InvNumber_From TVarChar
              , InvNumber_To   TVarChar
+             , OperDate_From  TVarChar
+             , OperDate_To    TVarChar
+             , ExpirationDate_From TVarChar
+             , ExpirationDate_To   TVarChar
              , Amount_In     TFloat
              , Amount_Out    TFloat
              , SummaFrom_In  TFloat
@@ -33,11 +37,65 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   
+   DECLARE vbDate_0 TDateTime;
+   DECLARE vbDate_6 TDateTime;
+   DECLARE vbDate_1 TDateTime;
 BEGIN
 
     -- проверка прав пользовател€ на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- дата + 6 мес€цев
+    vbDate_6:= CURRENT_DATE
+             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                             FROM Object  AS Object_PartionDateKind
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
+                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
+                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                             WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
+                            )
+                SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
+               );
+    -- дата + 1 мес€ц
+    vbDate_1:= CURRENT_DATE
+             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                             FROM Object  AS Object_PartionDateKind
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
+                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
+                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                             WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1()
+                            )
+                SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
+               )
+               -- мен€ем: добавим еще 9 дней, будет от 60 дней включительно - только дл€ —”Ќ
+             + INTERVAL '9 DAY'
+             ;
+    -- дата + 0 мес€цев
+    vbDate_0 := CURRENT_DATE
+             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                             FROM Object  AS Object_PartionDateKind
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
+                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
+                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                             WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0()
+                            )
+                SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
+               );
+
 
     -- –езультат
     RETURN QUERY
@@ -72,8 +130,9 @@ BEGIN
                                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
                            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
                       WHERE Movement.DescId = zc_Movement_Send()
-                      AND Movement.OperDate >= inStartDate1 AND Movement.OperDate < inEndDate1 + INTERVAL '1 DAY'
-                      AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE /*OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE*/)
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND Movement.OperDate >= inStartDate1 AND Movement.OperDate < inEndDate1 + INTERVAL '1 DAY'
+                        AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE /*OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE*/)
                       )
 
    , tmpMI_Master1 AS (SELECT MovementItem.*
@@ -125,8 +184,9 @@ BEGIN
                                                        AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
                            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
                       WHERE Movement.DescId = zc_Movement_Send()
-                      AND Movement.OperDate >= inStartDate2 AND Movement.OperDate < inEndDate2 + INTERVAL '1 DAY'
-                      AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE /*OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE*/)
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND Movement.OperDate >= inStartDate2 AND Movement.OperDate < inEndDate2 + INTERVAL '1 DAY'
+                        AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE /*OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE*/)
                       )
 
    , tmpMI_Master2 AS (SELECT MovementItem.*
@@ -147,6 +207,79 @@ BEGIN
                                                              AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
                       )
 
+   , tmpMI_Child AS (SELECT MovementItem.*
+                     FROM (SELECT DISTINCT tmpMI_Master1.Id, tmpMI_Master1.MovementId FROM tmpMI_Master1
+                         UNION
+                           SELECT DISTINCT tmpMI_Master2.Id, tmpMI_Master2.MovementId FROM tmpMI_Master2
+                           ) AS tmpMI_Master
+                          INNER JOIN MovementItem ON MovementItem.ParentId   = tmpMI_Master.Id
+                                                 AND MovementItem.MovementId = tmpMI_Master.MovementId
+                                                 AND MovementItem.DescId   = zc_MI_Child()
+                                                 AND MovementItem.isErased = FALSE                       
+                     )
+
+   , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
+                                     , MovementItemFloat.ValueData :: Integer AS ContainerId
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
+                                  AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                )
+
+   , tmpContainer AS (SELECT tmp.ContainerId
+                           , tmp.MovementItemId
+                           , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
+                           , COALESCE (ObjectDate_Value.ValueData, zc_DateEnd())       AS ExpirationDate
+                           , CASE WHEN COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) <= vbDate_0 THEN zc_Enum_PartionDateKind_0()
+                                  WHEN COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) > vbDate_0  AND COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) <= vbDate_1 THEN zc_Enum_PartionDateKind_1()
+                                  WHEN COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) > vbDate_1  AND COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) <= vbDate_6 THEN zc_Enum_PartionDateKind_6()
+                                  ELSE 0
+                             END                                                       AS PartionDateKindId
+                      FROM tmpMIFloat_ContainerId AS tmp
+                      
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = tmp.ContainerId
+                                                        AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                           LEFT OUTER JOIN ObjectDate AS ObjectDate_Value
+                                                      ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                     AND ObjectDate_Value.DescId   =  zc_ObjectDate_PartionGoods_Value()
+                           -- находим партию
+                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                         ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
+                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                           -- элемент прихода
+                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                           -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                           -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                     )
+
+   , tmpPartion AS (SELECT Movement.Id
+                         , MovementDate_Branch.ValueData AS BranchDate
+                         , Movement.Invnumber            AS Invnumber
+                         , Object_From.ValueData         AS FromName
+                         , Object_Contract.ValueData     AS ContractName
+                    FROM Movement
+                         LEFT JOIN MovementDate AS MovementDate_Branch
+                                                ON MovementDate_Branch.MovementId = Movement.Id
+                                               AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                    WHERE Movement.Id IN (SELECT DISTINCT tmpContainer.MovementId_Income FROM tmpContainer)
+                    )
+
+
    , tmpIN AS (SELECT Movement.OperDate     AS OperDate
                     , Movement.InvNumber    AS InvNumber
                     , Movement.ToId         AS UnitId
@@ -155,6 +288,8 @@ BEGIN
                     , Object_From.ValueData AS FromName
                     , Movement.ToId         AS ToId
                     , Object_To.ValueData   AS ToName
+                    , tmpMI_Master.MovementId AS MovementId
+                    , tmpMI_Master.Id       AS Id
                     , tmpMI_Master.ObjectId AS GoodsId
                     , tmpMI_Master.Amount   AS Amount
                     , COALESCE(tmpMI_Master.SummaFrom,0) AS SummaFrom
@@ -173,6 +308,8 @@ BEGIN
                      , Object_From.ValueData AS FromName
                      , Movement.ToId         AS ToId
                      , Object_To.ValueData   AS ToName
+                     , tmpMI_Master.MovementId AS MovementId
+                     , tmpMI_Master.Id       AS Id
                      , tmpMI_Master.ObjectId AS GoodsId
                      , tmpMI_Master.Amount   AS Amount
                      , COALESCE(tmpMI_Master.SummaFrom,0) AS SummaFrom
@@ -190,10 +327,25 @@ BEGIN
             , Object_Goods.ObjectCode              AS GoodsCode
             , Object_Goods.ValueData               AS GoodsName
             , Object_GoodsGroup.ValueData          AS GoodsGroupName
+
             , STRING_AGG (DISTINCT tmpIN.FromName, ','  ORDER BY tmpIN.FromName DESC) ::TVarChar AS FromName
             , STRING_AGG (DISTINCT tmpOUT.ToName,   ','  ORDER BY tmpOUT.ToName DESC) ::TVarChar AS ToName
-            , STRING_AGG (DISTINCT ('є '||tmpIN.InvNumber ||' ('|| LEFT(tmpIN.OperDate::TVarChar,10)::TVarChar||')') ::TVarChar , ',' ::TVarChar) ::TVarChar AS InvNumber_From
-            , STRING_AGG (DISTINCT ('є '||tmpOUT.InvNumber ||' ('||LEFT(tmpOUT.OperDate::TVarChar,10)::TVarChar||')') ::TVarChar , ',' ::TVarChar)::TVarChar AS InvNumber_To
+
+            --, STRING_AGG (DISTINCT ('є '||tmpIN.InvNumber ||' ('|| LEFT(tmpIN.OperDate::TVarChar,10)::TVarChar||')') ::TVarChar , ',' ::TVarChar) ::TVarChar AS InvNumber_From
+            --, STRING_AGG (DISTINCT ('є '||tmpOUT.InvNumber ||' ('||LEFT(tmpOUT.OperDate::TVarChar,10)::TVarChar||')') ::TVarChar , ',' ::TVarChar)::TVarChar AS InvNumber_To
+
+            , STRING_AGG (DISTINCT ('є '||tmpIN.InvNumber), ',' ::TVarChar) ::TVarChar AS InvNumber_From
+            , STRING_AGG (DISTINCT ('є '||tmpOUT.InvNumber), ',' ::TVarChar)::TVarChar AS InvNumber_To
+
+
+            , STRING_AGG (DISTINCT ( ( lpad (DATE_PART('Day', tmpIN.OperDate)::TVarChar,2,'0')||'.'||lpad (DATE_PART('Month', tmpIN.OperDate)::TVarChar,2,'0'))::TVarChar) ::TVarChar , ',' ::TVarChar)   ::TVarChar AS OperDate_From
+            , STRING_AGG (DISTINCT ( ( lpad (DATE_PART('Day', tmpOUT.OperDate)::TVarChar,2,'0')||'.'||lpad (DATE_PART('Month', tmpOUT.OperDate)::TVarChar,2,'0'))::TVarChar) ::TVarChar , ',' ::TVarChar) ::TVarChar AS OperDate_To
+            
+            , STRING_AGG (DISTINCT (lpad (DATE_PART('Day', COALESCE (tmpContainer_IN.ExpirationDate, zc_DateEnd()) )::TVarChar ,2,'0'::TVarChar)||'.'||lpad (DATE_PART('Month', COALESCE (tmpContainer_IN.ExpirationDate, zc_DateEnd()))::TVarChar ,2,'0'::TVarChar)||'.'||lpad (DATE_PART('YEAR', COALESCE (tmpContainer_IN.ExpirationDate, zc_DateEnd()))::TVarChar ,4,'0'::TVarChar)
+                         ||' (є '|| tmpPartion_IN.Invnumber ||' от ' || lpad (DATE_PART('Day', tmpPartion_IN.BranchDate)::TVarChar,2,'0') ||'.'||lpad (DATE_PART('Month', tmpPartion_IN.BranchDate)::TVarChar,2,'0') ||'.'||lpad (DATE_PART('YEAR', tmpPartion_IN.BranchDate)::TVarChar,4,'0') ||')'), ',' ::TVarChar) ::TVarChar AS ExpirationDate_From
+            , STRING_AGG (DISTINCT (lpad (DATE_PART('Day', COALESCE (tmpContainer_OUT.ExpirationDate, zc_DateEnd()) )::TVarChar ,2,'0'::TVarChar)||'.'||lpad (DATE_PART('Month', COALESCE (tmpContainer_OUT.ExpirationDate, zc_DateEnd()))::TVarChar ,2,'0'::TVarChar)||'.'||lpad (DATE_PART('YEAR', COALESCE (tmpContainer_OUT.ExpirationDate, zc_DateEnd()))::TVarChar ,4,'0'::TVarChar)
+                         ||' (є '|| tmpPartion_OUT.Invnumber ||' от '|| lpad (DATE_PART('Day', tmpPartion_OUT.BranchDate)::TVarChar,2,'0') ||'.' || lpad (DATE_PART('Month', tmpPartion_OUT.BranchDate)::TVarChar,2,'0') ||'.' || lpad (DATE_PART('YEAR', tmpPartion_OUT.BranchDate)::TVarChar,4,'0') ||')'), ',' ::TVarChar) ::TVarChar AS ExpirationDate_To
+
             , SUM (COALESCE (tmpIN.Amount,0))    ::TFloat  AS Amount_In
             , SUM (COALESCE (tmpOUT.Amount,0))   ::TFloat  AS Amount_Out
             , SUM (COALESCE(tmpIN.SummaFrom,0))  ::TFloat  AS SummaFrom_In
@@ -205,17 +357,43 @@ BEGIN
                             AND tmpOUT.UnitId = tmpIN.UnitId --tmpOUT.FromId = tmpIN.ToId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpIN.GoodsId
 
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpIN.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+            
+            ---
+            LEFT JOIN tmpMI_Child AS tmpMI_Child_IN 
+                                  ON tmpMI_Child_IN.ParentId   = tmpIN.Id
+                                 AND tmpMI_Child_IN.MovementId = tmpIN.MovementId
+
+            LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId_IN
+                                             ON MIFloat_ContainerId_IN.MovementItemId = tmpMI_Child_IN.Id
+            LEFT JOIN tmpContainer AS tmpContainer_IN ON tmpContainer_IN.ContainerId = MIFloat_ContainerId_IN.ContainerId
+            LEFT JOIN tmpPartion AS tmpPartion_IN ON tmpPartion_IN.Id= tmpContainer_IN.MovementId_Income
+
+            LEFT JOIN Object AS Object_PartionDateKind_IN ON Object_PartionDateKind_IN.Id = tmpContainer_IN.PartionDateKindId
+
+            ---
+            LEFT JOIN tmpMI_Child AS tmpMI_Child_OUT 
+                                  ON tmpMI_Child_OUT.ParentId   = tmpOUT.Id
+                                 AND tmpMI_Child_OUT.MovementId = tmpOUT.MovementId
+
+            LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId_OUT
+                                             ON MIFloat_ContainerId_OUT.MovementItemId = tmpMI_Child_OUT.Id
+            LEFT JOIN tmpContainer AS tmpContainer_OUT ON tmpContainer_OUT.ContainerId = MIFloat_ContainerId_OUT.ContainerId
+            LEFT JOIN tmpPartion AS tmpPartion_OUT ON tmpPartion_OUT.Id= tmpContainer_OUT.MovementId_Income
+
+            LEFT JOIN Object AS Object_PartionDateKind_OUT ON Object_PartionDateKind_OUT.Id = tmpContainer_OUT.PartionDateKindId
+
        WHERE tmpOUT.GoodsId IS NOT NULL
        GROUP BY tmpIN.UnitId
               , tmpIN.UnitName 
               , Object_Goods.Id
               , Object_Goods.ValueData
               , Object_GoodsGroup.ValueData
-;
+       ;
 
 END;
 
@@ -230,3 +408,5 @@ $BODY$
 
 -- тест
 --select * from gpReport_CheckSendSUN_InOut(inStartDate1:= '01.08.2019' ::TDateTime, inEndDate1:= '16.08.2019' ::TDateTime, inStartDate2 := '01.08.2019' ::TDateTime, inEndDate2 := '16.08.2019' ::TDateTime,inUnitId:= 0, inGoodsId:= 0, inSession:= '3'::TVarChar);
+
+--select lpad('yu', 5, '0')

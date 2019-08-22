@@ -24,7 +24,6 @@ inherited Report_CheckSendSUN_InOutForm: TReport_CheckSendSUN_InOutForm
       inherited cxGrid: TcxGrid
         Width = 886
         Height = 272
-        ExplicitTop = -3
         ExplicitWidth = 886
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -136,6 +135,42 @@ inherited Report_CheckSendSUN_InOutForm: TReport_CheckSendSUN_InOutForm
           object InvNumber_To: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'InvNumber_To'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_From: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'OperDate_From'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object OperDate_To: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'OperDate_To'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ExpirationDate_From: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080', '#1087#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ExpirationDate_From'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ExpirationDate_To: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080', '#1087#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'ExpirationDate_To'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
