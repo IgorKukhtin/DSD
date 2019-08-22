@@ -1176,6 +1176,16 @@ CREATE OR REPLACE FUNCTION zc_Object_Driver() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Driver', 'Водители' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Driver');
 
+CREATE OR REPLACE FUNCTION zc_Object_PayrollType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PayrollType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PayrollType', 'Типы расчета заработной платы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PayrollType');
+
+CREATE OR REPLACE FUNCTION zc_Object_PayrollGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PayrollGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PayrollGroup', 'Группы расчета заработной платы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PayrollGroup');
+
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1192,6 +1202,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 22.09.19                                                                                        * zc_Object_PayrollType, zc_Object_PayrollGroup
  07.09.19                                                                                        * zc_Object_Driver
  06.08.19         * zc_Object_JuridicalOrderFinance
  29.07.19         * zc_Object_OrderFinance
