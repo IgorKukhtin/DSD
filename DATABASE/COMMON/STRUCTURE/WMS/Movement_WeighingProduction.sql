@@ -1,6 +1,6 @@
 /*
   Создание 
-    - таблицы Movement_WeighingProduction (oбъекты)
+    - таблицы Movement_WeighingProduction
     - связей
     - индексов
 */
@@ -14,6 +14,7 @@ CREATE TABLE Movement_WeighingProduction(
    InvNumber           TVarChar  NOT NULL,
    OperDate            TDateTime NOT NULL,
    StatusId            Integer   NOT NULL,
+   StatusId_wms        Integer       NULL,
    FromId              Integer   NOT NULL,
    ToId                Integer   NOT NULL,
    GoodsTypeKindId_1   Integer   NOT NULL,

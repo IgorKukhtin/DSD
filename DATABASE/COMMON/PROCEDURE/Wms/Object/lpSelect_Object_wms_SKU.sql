@@ -20,7 +20,7 @@ RETURNS TABLE (ObjectId Integer
              , Length    TFloat
              , Width     TFloat
                -- Ящик (E2/E3)
-             , GoodsPropertyBoxId Integer 
+             , GoodsPropertyBoxId Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
              , WeightOnBox    TFloat -- Кол-во кг. в ящ. (E2/E3)
              , CountOnBox     TFloat -- Кол-во ед. в ящ. (E2/E3)
@@ -54,48 +54,80 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-        WITH tmpGoods_all AS (SELECT zfCalc_Text_replace (zfCalc_Text_replace (tmp.GoodsName, CHR(39), '`'), '"', '`') AS GoodsName_repl
-                                   , *
-                              FROM gpSelect_Object_GoodsByGoodsKind_VMC (inRetail1Id:= 0
-                                                                       , inRetail2Id:= 0
-                                                                       , inRetail3Id:= 0
-                                                                       , inRetail4Id:= 0
-                                                                       , inRetail5Id:= 0
-                                                                       , inRetail6Id:= 0
-                                                                       , inSession  := zfCalc_UserAdmin()
-                                                                        ) AS tmp
-                              WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 
+        WITH tmpGoods_all AS (SELECT Object_Goods.ObjectCode          AS GoodsCode
+                                   , Object_Goods.ValueData           AS GoodsName
+                                   , zfCalc_Text_replace (zfCalc_Text_replace (Object_Goods.ValueData, CHR(39), '`'), '"', '`') AS GoodsName_repl
+                                   , Object_GoodsKind.ObjectCode      AS GoodsKindCode
+                                   , Object_GoodsKind.ValueData       AS GoodsKindName
+                                   , Object_Measure.ValueData         AS MeasureName
+                                   , Object_Box.ObjectCode            AS BoxCode
+                                   , Object_Box.ValueData             AS BoxName
+                                   , ObjectFloat_Volume.ValueData     AS BoxVolume
+                                   , ObjectFloat_Height.ValueData     AS BoxHeight
+                                   , ObjectFloat_Length.ValueData     AS BoxLength
+                                   , ObjectFloat_Width.ValueData      AS BoxWidth
+                                   , ObjectLink_Goods_GoodsGroup.ChildObjectId   AS GoodsGroupId
+                                   , Object_GoodsGroup.ValueData                 AS GoodsGroupName
+                                   , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                                   , tmp.*
+                              FROM Object_GoodsByGoodsKind AS tmp
+                                   LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmp.GoodsId
+                                   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
+                                   LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = tmp.MeasureId
+                                   LEFT JOIN Object AS Object_Box       ON Object_Box.Id       = tmp.BoxId
+
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Volume
+                                                         ON ObjectFloat_Volume.ObjectId = tmp.BoxId
+                                                        AND ObjectFloat_Volume.DescId   = zc_ObjectFloat_Box_Volume()
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                                         ON ObjectFloat_Height.ObjectId = tmp.BoxId
+                                                        AND ObjectFloat_Height.DescId   = zc_ObjectFloat_Box_Height()
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                                                         ON ObjectFloat_Length.ObjectId = tmp.BoxId
+                                                        AND ObjectFloat_Length.DescId   = zc_ObjectFloat_Box_Length()
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                                         ON ObjectFloat_Width.ObjectId = tmp.BoxId
+                                                        AND ObjectFloat_Width.DescId   = zc_ObjectFloat_Box_Width()
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = tmp.GoodsId
+                                                       AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                   LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                   LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmp.GoodsId
+                                                         AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                              WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 AND tmp.isErased = FALSE
                              )
                , tmpGoods AS (-- Штучный
-                              SELECT tmpGoods_all.Id * 10 + 1                                                              AS sku_id
-                                   , tmpGoods_all.WmsCodeCalc_Sh                                                           AS sku_code
+                              SELECT tmpGoods_all.sku_id_Sh                                                                AS sku_id
+                                   , tmpGoods_all.sku_code_Sh                                                              AS sku_code
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Sh  AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
-                                   , zc_Enum_GoodsTypeKind_Sh()                                                            AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsTypeKindId_Sh                                                       AS GoodsTypeKindId
                                    , *
-                              FROM tmpGoods_all WHERE tmpGoods_all.isGoodsTypeKind_Sh  = TRUE
+                              FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Sh  = zc_Enum_GoodsTypeKind_Sh()
                              UNION ALL
                               -- Номинальный
-                              SELECT tmpGoods_all.Id * 10 + 2                                                              AS sku_id
-                                   , tmpGoods_all.WmsCodeCalc_Nom                                                          AS sku_code
+                              SELECT tmpGoods_all.sku_id_Nom                                                               AS sku_id
+                                   , tmpGoods_all.sku_code_Nom                                                             AS sku_code
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Nom AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
-                                   , zc_Enum_GoodsTypeKind_Nom()                                                           AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsTypeKindId_Nom                                                      AS GoodsTypeKindId
                                    , *
-                              FROM tmpGoods_all WHERE tmpGoods_all.isGoodsTypeKind_Nom = TRUE
+                              FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Nom = zc_Enum_GoodsTypeKind_Nom()
                              UNION ALL
                               -- Весовой
-                              SELECT tmpGoods_all.Id * 10 + 3                                                              AS sku_id
-                                   , tmpGoods_all.WmsCodeCalc_Ves                                                          AS sku_code
+                              SELECT tmpGoods_all.sku_id_Ves                                                               AS sku_id
+                                   , tmpGoods_all.sku_code_Ves                                                             AS sku_code
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Ves AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
-                                   , zc_Enum_GoodsTypeKind_Ves()                                                           AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsTypeKindId_Ves                                                      AS GoodsTypeKindId
                                    , *
-                              FROM tmpGoods_all WHERE tmpGoods_all.isGoodsTypeKind_Ves = TRUE
+                              FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Ves = zc_Enum_GoodsTypeKind_Ves()
                              )
         -- Результат
-        SELECT tmpGoods.Id AS ObjectId
-             , tmpGoods.GoodsId, tmpGoods.Code AS GoodsCode, tmpGoods.GoodsName
+        SELECT tmpGoods.ObjectId
+             , tmpGoods.GoodsId, tmpGoods.GoodsCode, tmpGoods.GoodsName
              , tmpGoods.GoodsKindId, tmpGoods.GoodsKindCode, tmpGoods.GoodsKindName
              , Object_GoodsTypeKind.Id AS GoodsTypeKindId, Object_GoodsTypeKind.ObjectCode AS GoodsTypeKindCode, Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
              , tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.GoodsGroupNameFull
@@ -104,7 +136,7 @@ BEGIN
                -- Вес 1-ой ед.
              , tmpGoods.WeightMin
              , tmpGoods.WeightMax
-             , tmpGoods.WeightAvg
+             , ((tmpGoods.WeightMin + tmpGoods.WeightMax) / 2) :: TFloat AS WeightAvg
                -- размеры 1-ой ед.
              , tmpGoods.Height
              , tmpGoods.Length
@@ -113,16 +145,42 @@ BEGIN
                -- Ящик (E2/E3)
              , tmpGoods.GoodsPropertyBoxId
              , tmpGoods.BoxId, tmpGoods.BoxCode, tmpGoods.BoxName
-             , tmpGoods.WeightOnBox              -- Кол-во кг. в ящ. (E2/E3)
+
+               -- *заменили - Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
+             , CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                         THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                    ELSE tmpGoods.WeightOnBox
+               END :: TFloat AS WeightOnBox
+
              , tmpGoods.CountOnBox               -- Кол-во ед. в ящ. (E2/E3)
              , tmpGoods.BoxVolume                -- Объем ящ., м3. (E2/E3)
-             , tmpGoods.BoxWeight                -- Вес самогно ящ. (E2/E3)
+             , tmpGoods.BoxWeight                -- Вес самого ящ. (E2/E3)
              , tmpGoods.BoxHeight                -- Высота ящ. (E2/E3)
              , tmpGoods.BoxLength                -- Длина ящ. (E2/E3)
              , tmpGoods.BoxWidth                 -- Ширина ящ. (E2/E3)
-             , tmpGoods.WeightGross              -- Вес брутто полного ящика "по ???" (E2/E3)
-             , tmpGoods.WeightAvgGross           -- Вес брутто полного ящика "по среднему весу" (E2/E3)
-             , tmpGoods.WeightAvgNet             -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+
+               -- *заменили - Вес брутто полного ящика "??? по среднему весу" (E2/E3)
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                     ELSE tmpGoods.WeightOnBox
+                END
+              + tmpGoods.BoxWeight
+               ) :: TFloat AS WeightGross
+
+               -- *заменили - Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                     ELSE tmpGoods.WeightOnBox
+                END
+              + tmpGoods.BoxWeight
+               ) :: TFloat AS WeightAvgGross
+
+               -- *заменили - Вес нетто полного ящика "по среднему весу" (E2/E3) - тоже что и WeightOnBox
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                     ELSE tmpGoods.WeightOnBox
+                END
+               ) :: TFloat AS WeightAvgNet
 
              , tmpGoods.sku_id       :: Integer  -- ***Уникальный код товара в товарном справочнике предприятия
              , tmpGoods.sku_code     :: Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.

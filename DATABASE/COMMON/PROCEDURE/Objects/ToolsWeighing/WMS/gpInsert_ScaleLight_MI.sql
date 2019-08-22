@@ -71,7 +71,9 @@ $BODY$
    DECLARE vbGoodsTypeKindId  Integer;
    DECLARE vbBarCodeBoxId     Integer;
    DECLARE vbLineCode         Integer;
-   DECLARE vbWmsCode          TVarChar;
+   DECLARE vbWmsBarCode       TVarChar;
+   DECLARE vb_sku_id          TVarChar;
+   DECLARE vb_sku_code        TVarChar;
    DECLARE vbIsFull           Boolean;
    DECLARE vbWeightOnBox      TFloat;   -- факт - Вес
    DECLARE vbCountOnBox       TFloat;   -- факт - шт (информативно?)
@@ -98,11 +100,16 @@ BEGIN
      
      -- сколько дней
      vbDay:= (1 + EXTRACT (DAY FROM (vbOperDate - DATE_TRUNC ('YEAR', vbOperDate)) :: INTERVAL)) :: TVarChar;
+     -- привели к 3-м символам
      vbDay:= REPEAT ('0', 3 - LENGTH (vbDay)) || vbDay;
      -- вес - КГ
      vbW_1:= (FLOOR (inRealWeight) :: Integer) :: TVarChar;
+     -- привели к 1-му символу
+     IF LENGTH (vbW_1) <> 1 THEN vbW_1:= SUBSTRING(vbW_1, LENGTH (vbW_1), 1); vbW_1 := REPEAT ('0', 1 - LENGTH (vbW_1)); END IF;
      -- вес - ГР.
      vbW_3:= (FLOOR (MOD (inRealWeight, 1) * 1000) :: Integer) :: TVarChar;
+     -- привели к 3-м символам
+     vbW_3 := REPEAT ('0', 3 - LENGTH (vbW_3)) || vbW_3;
      
      -- привели к 4-м символам
      inWmsCode_Sh := REPEAT ('0', 4 - LENGTH (inWmsCode_Sh))  || inWmsCode_Sh;
@@ -121,10 +128,14 @@ BEGIN
          THEN
              -- это ШТ.
              vbGoodsTypeKindId:= inGoodsTypeKindId_Sh;
+             -- Id ВМС + код ВМС
+             SELECT tmp.sku_id_Sh, tmp.sku_code_Sh
+                    INTO vb_sku_id, vb_sku_code
+             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
-             vbWmsCode := '3' || vbDay || inWmsCode_Sh || vbW_1 || vbW_3;
+             vbWmsBarCode:= '3' || vbDay || inWmsCode_Sh || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
-             vbWmsCode := vbWmsCode || zfCalc_SummBarCode(vbWmsCode) :: TVarChar;
+             vbWmsBarCode:= vbWmsBarCode || zfCalc_SummBarCode (vbWmsBarCode) :: TVarChar;
 
              -- нашли на какой это линии
              IF inGoodsTypeKindId_1 = inGoodsTypeKindId_Sh
@@ -161,10 +172,14 @@ BEGIN
          THEN
              -- это НОМ.
              vbGoodsTypeKindId:= inGoodsTypeKindId_Nom;
+             -- Id ВМС + код ВМС
+             SELECT tmp.sku_id_Nom, tmp.sku_code_Nom
+                    INTO vb_sku_id, vb_sku_code
+             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
-             vbWmsCode := '3' || vbDay || inWmsCode_Nom || vbW_1 || vbW_3;
+             vbWmsBarCode := '3' || vbDay || inWmsCode_Nom || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
-             vbWmsCode := vbWmsCode || zfCalc_SummBarCode(vbWmsCode) :: TVarChar;
+             vbWmsBarCode := vbWmsBarCode || zfCalc_SummBarCode (vbWmsBarCode) :: TVarChar;
 
              -- нашли на какой это линии
              IF inGoodsTypeKindId_1 = inGoodsTypeKindId_Nom
@@ -195,10 +210,14 @@ BEGIN
          THEN
              -- это Ves.
              vbGoodsTypeKindId:= inGoodsTypeKindId_Ves;
+             -- Id ВМС + код ВМС
+             SELECT tmp.sku_id_Ves, tmp.sku_code_Ves
+                    INTO vb_sku_id, vb_sku_code
+             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
-             vbWmsCode := '3' || vbDay || inWmsCode_Ves || vbW_1 || vbW_3;
+             vbWmsBarCode := '3' || vbDay || inWmsCode_Ves || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
-             vbWmsCode := vbWmsCode || zfCalc_SummBarCode(vbWmsCode) :: TVarChar;
+             vbWmsBarCode := vbWmsBarCode || zfCalc_SummBarCode (vbWmsBarCode) :: TVarChar;
 
              -- нашли на какой это линии
              IF inGoodsTypeKindId_1 = inGoodsTypeKindId_Ves
@@ -238,7 +257,10 @@ BEGIN
                                                     , inLineCode            := vbLineCode
                                                     , inAmount              := inAmount
                                                     , inRealWeight          := inRealWeight
-                                                    , inWmsCode             := vbWmsCode
+                                                    , inWmsBarCode          := vbWmsBarCode
+                                                    , in_sku_id             := vb_sku_id
+                                                    , in_sku_code           := vb_sku_code
+                                                    , inPartionDate         := vbOperDate
                                                     , inSession             := inSession
                                                      );
 
@@ -371,7 +393,7 @@ BEGIN
             , vbGoodsTypeKindId
             , vbBarCodeBoxId
             , vbLineCode
-            , vbWmsCode
+            , vbWmsBarCode
             , CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1 THEN vbIsFull ELSE FALSE END :: Boolean AS isFull_1
             , CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_2 THEN vbIsFull ELSE FALSE END :: Boolean AS isFull_2
             , CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_3 THEN vbIsFull ELSE FALSE END :: Boolean AS isFull_3

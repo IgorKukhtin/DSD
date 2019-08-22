@@ -406,7 +406,7 @@ BEGIN
             , tmpGoodsPropertyBox.BoxCode
             , tmpGoodsPropertyBox.BoxName
 
-              -- Кол-во кг. в ящ. (E2/E3)
+              -- Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
             , CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                         THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                    ELSE tmpGoodsPropertyBox.WeightOnBox
@@ -420,7 +420,7 @@ BEGIN
             , tmpGoodsPropertyBox.BoxLength
             , tmpGoodsPropertyBox.BoxWidth
 
-              -- Вес брутто полного ящика "по ???" (E2/E3)
+              -- Вес брутто полного ящика "??? по среднему весу" (E2/E3)
             , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE tmpGoodsPropertyBox.WeightOnBox
@@ -436,7 +436,7 @@ BEGIN
              + tmpGoodsPropertyBox.BoxWeight
               ) :: TFloat AS WeightAvgGross
 
-              -- Вес нетто по среднему весу ящика (E2/E3)
+              -- Вес нетто по среднему весу ящика (E2/E3) - тоже что и WeightOnBox
             , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
                          THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
                     ELSE 0

@@ -136,8 +136,12 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_1
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_1
-                             -- вложенность - Вес
-                           , ObjectFloat_WeightOnBox.ValueData  AS WeightOnBox_1
+                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
+                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                    -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
+                                  ELSE ObjectFloat_WeightOnBox.ValueData
+                             END                      :: TFloat AS WeightOnBox_1
                              -- Вложенность - шт (информативно?)
                            , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_1
                 
@@ -153,8 +157,12 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_2
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_2
-                             -- вложенность - Вес
-                           , ObjectFloat_WeightOnBox.ValueData  AS WeightOnBox_2
+                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
+                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                    -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
+                                  ELSE ObjectFloat_WeightOnBox.ValueData
+                             END                      :: TFloat AS WeightOnBox_2
                              -- Вложенность - шт (информативно?)
                            , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_2
                 
@@ -170,8 +178,12 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_3
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_3
-                             -- вложенность - Вес
-                           , ObjectFloat_WeightOnBox.ValueData  AS WeightOnBox_3
+                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
+                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                    -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
+                                  ELSE ObjectFloat_WeightOnBox.ValueData
+                             END                      :: TFloat AS WeightOnBox_3
                              -- Вложенность - шт (информативно?)
                            , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_3
                 

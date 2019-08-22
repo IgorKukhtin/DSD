@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_WeighingProduction_wms()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_WeighingProduction_wms (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_WeighingProduction_wms (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_WeighingProduction_wms(
  INOUT ioId                  BigInt    , --  люч объекта <Ёлемент документа>
@@ -13,7 +13,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_WeighingProduction_wms(
     IN inRealWeight          TFloat    , --
  -- IN inInsertDate          TDateTime , --
  -- IN inUpdateDate          TDateTime , --
-    IN inWmsCode             TVarChar  , --
+    IN inWmsBarCode          TVarChar  , --
+    IN in_sku_id             TVarChar  , --
+    IN in_sku_code           TVarChar  , --
+    IN inPartionDate         TDateTime , --
     IN inSession             TVarChar    -- сесси€ пользовател€
 )                              
 RETURNS BigInt
@@ -59,7 +62,10 @@ BEGIN
      IF COALESCE (ioId, 0) = 0 THEN
         -- создали
         INSERT INTO MI_WeighingProduction (MovementId, ParentId, GoodsTypeKindId, BarCodeBoxId, LineCode
-                                         , Amount, RealWeight, InsertDate, UpdateDate, WmsCode, IsErased
+                                         , Amount, RealWeight, InsertDate, UpdateDate
+                                         , WmsCode, sku_id, sku_code
+                                         , PartionDate
+                                         , IsErased
                                           )
                VALUES (inMovementId
                      , NULL
@@ -70,7 +76,10 @@ BEGIN
                      , inRealWeight
                      , CURRENT_TIMESTAMP
                      , NULL
-                     , inWmsCode
+                     , inWmsBarCode
+                     , in_sku_id
+                     , in_sku_code
+                     , inPartionDate
                      , FALSE
                       )
                  RETURNING Id INTO ioId;
@@ -86,7 +95,10 @@ BEGIN
                   , RealWeight        = inRealWeight
                -- , InsertDate        = inInsertDate
                   , UpdateDate        = CURRENT_TIMESTAMP
-                  , WmsCode           = inWmsCode
+                  , WmsCode           = inWmsBarCode
+                  , sku_id            = in_sku_id
+                  , sku_code          = in_sku_code
+                  , PartionDate       = inPartionDate
         WHERE MI_WeighingProduction.Id = ioId;    
     
         --

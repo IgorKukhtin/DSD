@@ -15,42 +15,52 @@ BEGIN
      -- таблица - элементы
      CREATE TEMP TABLE _tmpItem_PersonalService (MovementId_serviceBN Integer, PersonalServiceListId_from Integer, PersonalServiceListId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, SummCard TFloat, SummCardRecalc TFloat) ON COMMIT DROP;
 
-     -- поиск данных
-     WITH tmpParams AS (-- Получили одну Ведомость - БН
-                        SELECT MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId, MovementDate_ServiceDate.ValueData AS ServiceDate
+     -- 
+     WITH -- из zc_Movement_BankAccount - Получили одну Ведомость - БН
+          tmpParams AS (SELECT MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId, MovementDate_ServiceDate.ValueData AS ServiceDate
                         FROM MovementItem
                              INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                                ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
                              INNER JOIN MovementDate AS MovementDate_ServiceDate
                                                      ON MovementDate_ServiceDate.MovementId = inMovementId
-                                                    AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                                                    AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
                         WHERE MovementItem.MovementId = inMovementId
-                          AND MovementItem.DescId = zc_MI_Master()
+                          AND MovementItem.DescId     = zc_MI_Master()
                        )
-    , tmpMI_service AS (-- данные из ведомости БН + установленные в ней ведомости начисления (реальные)
-                        SELECT Movement.Id                                          AS MovementId
+      -- данные zc_Movement_PersonalService + установленные в ней ведомости zc_MIFloat_SummCardRecalc - начисления (реальные)
+    , tmpMI_service AS (SELECT Movement.Id                                          AS MovementId
                              -- , MovementLinkObject_PersonalServiceList.ObjectId      AS PersonalServiceListId
-                             , MILinkObject_PersonalServiceList.ObjectId            AS PersonalServiceListId_to
+                             , CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
+                                         THEN tmpParams.MoneyPlaceId
+                                         ELSE MILinkObject_PersonalServiceList.ObjectId
+                               END AS PersonalServiceListId_to
                              , MovementItem.ObjectId                                AS PersonalId
                              , MILinkObject_Unit.ObjectId                           AS UnitId
                              , MILinkObject_Position.ObjectId                       AS PositionId
                              , MILinkObject_InfoMoney.ObjectId                      AS InfoMoneyId
-                             -- , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))       AS SummCard        -- Карточка (БН)
-                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)) AS SummCardRecalc  -- Карточка (БН) ввод
+                               -- Карточка (БН) ввод + "Сумма начислено"
+                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
+                                  + CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
+                                         THEN COALESCE (MIFloat_SummHosp.ValueData, 0)
+                                         ELSE 0
+                                    END) AS SummCardRecalc
                         FROM tmpParams
+                             -- ведомость за этот месяц
                              INNER JOIN MovementDate AS MovementDate_ServiceDate
                                                      ON MovementDate_ServiceDate.ValueData = tmpParams.ServiceDate
-                                                    AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                             INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                                                AND Movement.DescId = zc_Movement_PersonalService()
+                                                    AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
+                             -- проведен
+                             INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
+                                                AND Movement.DescId   = zc_Movement_PersonalService()
                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                             -- именно эта ведомость
                              INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                            ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                                           AND MovementLinkObject_PersonalServiceList.ObjectId   = tmpParams.MoneyPlaceId
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.isErased   = FALSE
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                               ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
@@ -66,12 +76,26 @@ BEGIN
                              /*LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                                          ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()*/
+                             -- Карта БН (ввод) - 1ф. 
                              LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
-                        WHERE (/*MIFloat_SummCard.ValueData <> 0 OR*/ MIFloat_SummCardRecalc.ValueData <> 0)
+                                                        AND MIFloat_SummCardRecalc.DescId         = zc_MIFloat_SummCardRecalc()
+                             -- или "Сумма начислено "
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                                         ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummHosp.DescId         = zc_MIFloat_SummHosp()
+                             LEFT JOIN ObjectLink AS OL_PersonalServiceList_PaidKind
+                                                  ON OL_PersonalServiceList_PaidKind.ObjectId = tmpParams.MoneyPlaceId
+                                                 AND OL_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+                        WHERE (MIFloat_SummCardRecalc.ValueData <> 0
+                            OR (MIFloat_SummHosp.ValueData   <> 0 /*AND OL_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()*/)
+                         -- OR MIFloat_SummCard.ValueData        <> 0
+                              )
                         GROUP BY Movement.Id
-                               , MovementLinkObject_PersonalServiceList.ObjectId
+                               , CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
+                                           THEN tmpParams.MoneyPlaceId
+                                           ELSE MILinkObject_PersonalServiceList.ObjectId
+                                 END
                                , MovementItem.ObjectId
                                , MILinkObject_Unit.ObjectId
                                , MILinkObject_Position.ObjectId

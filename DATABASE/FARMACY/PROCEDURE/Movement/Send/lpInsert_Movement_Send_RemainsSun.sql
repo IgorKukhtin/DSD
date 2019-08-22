@@ -1261,7 +1261,23 @@ BEGIN
 
      END IF;
 
-     -- 6.1.4. !!!важно, если остатка не хватило для vbSumm_limit - переносим в отложенные!!!
+     -- 6.1.4.1. !!!важно, для vbSumm_limit - переносим из отложенных в Amount!!!
+     UPDATE _tmpResult_Partion SET Amount      = CASE WHEN _tmpResult_Partion.Amount_next > 0 THEN _tmpResult_Partion.Amount + _tmpResult_Partion.Amount_next  ELSE _tmpResult_Partion.Amount END
+                                 , Summ        = CASE WHEN _tmpResult_Partion.Summ_next   > 0 THEN _tmpResult_Partion.Summ   + _tmpResult_Partion.Summ_next    ELSE _tmpResult_Partion.Summ   END
+                                 , Amount_next = 0
+                                 , Summ_next   = 0
+     FROM -- собрали в 1 перемещение
+          (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
+           FROM _tmpResult_Partion
+           GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
+           HAVING SUM (_tmpResult_Partion.Summ + _tmpResult_Partion.Summ_next) >= vbSumm_limit
+          ) AS tmp
+     WHERE _tmpResult_Partion.UnitId_from = tmp.UnitId_from
+       AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
+       AND _tmpResult_Partion.Amount_next > 0
+    ;
+
+     -- 6.1.4.2. !!!важно, если остатка не хватило для vbSumm_limit - переносим в отложенные!!!
      UPDATE _tmpResult_Partion SET Amount      = CASE WHEN _tmpResult_Partion.Amount_next = 0 THEN 0                         ELSE _tmpResult_Partion.Amount      END
                                  , Summ        = CASE WHEN _tmpResult_Partion.Summ_next   = 0 THEN 0                         ELSE _tmpResult_Partion.Summ        END
                                  , Amount_next = CASE WHEN _tmpResult_Partion.Amount_next = 0 THEN _tmpResult_Partion.Amount ELSE _tmpResult_Partion.Amount_next END

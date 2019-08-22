@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_SKU_GROUP (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_SKU_GROUP(
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
@@ -14,7 +14,6 @@ $BODY$
    DECLARE vbTagName_sku_group   TVarChar;
    DECLARE vbTagName_sku_depends TVarChar;
    DECLARE vbActionName          TVarChar;
-   DECLARE vbRowNum              Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
@@ -35,7 +34,7 @@ BEGIN
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
         WITH tmpGoods_all AS (SELECT tmpGoods.sku_id, tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.ObjectId
                               FROM lpSelect_Object_WMS_SKU() AS tmpGoods
                              )
@@ -194,65 +193,68 @@ BEGIN
                       SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_10 AS tmp
                      )
         -- Результат
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
-       (-- sku_group
-        SELECT vbProcName          AS ProcName
-             , vbTagName_sku_group AS TagName
-             , vbActionName        AS ActionName
-             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY COALESCE (tmpGoodsGroup_10.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_9.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_8.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_7.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_6.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_5.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_4.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_3.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_2.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_1.Ord, 0) DESC
-                                                                   , COALESCE (tmpGoodsGroup_0.Ord, 0) DESC
-                                                                   , tmpData.sku_group_id
+             (-- sku_group
+              SELECT vbProcName          AS ProcName
+                   , vbTagName_sku_group AS TagName
+                   , vbActionName        AS ActionName
+                   , (ROW_NUMBER() OVER (ORDER BY COALESCE (tmpGoodsGroup_10.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_9.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_8.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_7.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_6.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_5.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_4.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_3.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_2.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_1.Ord, 0) DESC
+                                                          , COALESCE (tmpGoodsGroup_0.Ord, 0) DESC
+                                                          , tmpData.sku_group_id
                                                            ) :: Integer) AS RowNum
-               -- XML
-             , ('<sku_group'
-                  ||' action="' || vbActionName                     ||'"' -- ???
-            ||' sku_group_id="' || tmpData.sku_group_id :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
-             ||' description="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.description, CHR(39), '`'), '"', '`') ||'"' -- Уникальное наименование группы товаров в справочнике предприятия
-              ||' parent_id="' || CASE WHEN tmpData.parent_id > 0 THEN tmpData.parent_id :: TVarChar ELSE 'system' END :: TVarChar ||'"' -- Код родительской группы товаров в справочнике предприятия.
-              ||'></sku_group>'
-               ):: Text AS RowData
-               -- Id
-             , tmpData.sku_group_id AS ObjectId
-        FROM tmpData
-             LEFT JOIN tmpGoodsGroup_10 ON tmpGoodsGroup_10.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_9 ON tmpGoodsGroup_9.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_8 ON tmpGoodsGroup_8.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_7 ON tmpGoodsGroup_7.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_6 ON tmpGoodsGroup_6.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_5 ON tmpGoodsGroup_5.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_4 ON tmpGoodsGroup_4.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_3 ON tmpGoodsGroup_3.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_2 ON tmpGoodsGroup_2.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_1 ON tmpGoodsGroup_1.GoodsGroupId = tmpData.sku_group_id
-             LEFT JOIN tmpGoodsGroup_0 ON tmpGoodsGroup_0.GoodsGroupId = tmpData.sku_group_id
+                     -- XML
+                   , ('<' || vbTagName_sku_group
+                          ||' action="' || vbActionName                     ||'"' -- ???
+                    ||' sku_group_id="' || tmpData.sku_group_id :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
+                     ||' description="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.description, CHR(39), '`'), '"', '`') ||'"' -- Уникальное наименование группы товаров в справочнике предприятия
+                       ||' parent_id="' || CASE WHEN tmpData.parent_id > 0 THEN tmpData.parent_id :: TVarChar ELSE 'system' END :: TVarChar ||'"' -- Код родительской группы товаров в справочнике предприятия.
+                                        ||'></' || vbTagName_sku_group || '>'
+                     ):: Text AS RowData
+                     -- Id
+                   , tmpData.sku_group_id AS ObjectId
+                   , 1                    AS GroupId
+              FROM tmpData
+                   LEFT JOIN tmpGoodsGroup_10 ON tmpGoodsGroup_10.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_9 ON tmpGoodsGroup_9.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_8 ON tmpGoodsGroup_8.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_7 ON tmpGoodsGroup_7.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_6 ON tmpGoodsGroup_6.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_5 ON tmpGoodsGroup_5.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_4 ON tmpGoodsGroup_4.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_3 ON tmpGoodsGroup_3.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_2 ON tmpGoodsGroup_2.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_1 ON tmpGoodsGroup_1.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_0 ON tmpGoodsGroup_0.GoodsGroupId = tmpData.sku_group_id
+      
+             UNION ALL
+              -- sku_depends
+              SELECT vbProcName            AS ProcName
+                   , vbTagName_sku_depends AS TagName
+                   , vbActionName          AS ActionName
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
+                     -- XML
+                   , ('<' || vbTagName_sku_depends
+                          ||' action="' || vbActionName                     ||'"' -- ???
+                   ||' sku_groups_id="' || tmpData.GoodsGroupId :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
+                          ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
+                                        ||'></' || vbTagName_sku_depends || '>'
+                     ):: Text AS RowData
+                     -- Id
+                   , tmpData.ObjectId
+                   , 2 AS GroupId
 
-       UNION ALL
-        -- sku_depends
-        SELECT vbProcName            AS ProcName
-             , vbTagName_sku_depends AS TagName
-             , vbActionName          AS ActionName
-             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
-               -- XML
-             , ('<sku_depends'
-                  ||' action="' || vbActionName                     ||'"' -- ???
-           ||' sku_groups_id="' || tmpData.GoodsGroupId :: TVarChar ||'"' -- Уникальный код группы товаров в справочнике предприятия
-                  ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
-                  ||'></sku_depends>'
-               ):: Text AS RowData
-               -- Id
-             , tmpData.ObjectId
-        FROM tmpGoods_all AS tmpData
-       ) AS tmp
+              FROM tmpGoods_all AS tmpData
+             ) AS tmp
      -- WHERE tmp.RowNum BETWEEN 1 AND 1
         ORDER BY 4;
 

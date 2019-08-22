@@ -35,7 +35,6 @@ BEGIN
                    AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                 );
 
-
      -- ВЫплата Карта БН (ввод) - 2ф.
      IF EXISTS (SELECT 1
                 FROM MovementItem
@@ -85,7 +84,21 @@ BEGIN
         -- Сумма зачисления
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (i + 2, ';;' || vbTotalSumm);
 
+     ELSE
+         -- проверка ошибки
+         IF COALESCE (vbBankId, 0) = 0
+         THEN
+              RAISE EXCEPTION 'Ошибка.Для ведеомости <%> не установлено значение <Банк>.'
+                            , lfGet_Object_ValueData_sh ((SELECT MLO_PersonalServiceList.ObjectId
+                                                          FROM MovementLinkObject AS MLO_PersonalServiceList
+                                                          WHERE MLO_PersonalServiceList.MovementId = inMovementId
+                                                            AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                         ));
+         END IF;
+
      END IF;
+
+
 
      -- ПАТ "БАНК ВОСТОК"
      IF vbBankId = 76968
@@ -120,10 +133,12 @@ BEGIN
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
-	FOR r IN (select card, personalname, inn, SummCardRecalc from gpSelect_MovementItem_PersonalService(inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession))
+	FOR r IN (SELECT gpSelect.card, gpSelect.personalname, gpSelect.inn, COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
+	          FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
+	         )
 	LOOP
-		IF (char_length(r.card)<>14)
-		   OR (NOT ISNUMERIC(r.card))
+		IF (char_length (r.card) < 14)
+		   -- OR (NOT ISNUMERIC(r.card))
 		   -- OR (NOT ISNUMERIC(r.inn))
 		   -- OR (char_length(r.inn)<>10)
 		   OR (char_length(r.personalname)=0) THEN
@@ -180,7 +195,7 @@ BEGIN
                    SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
                         , '<EMPLOYEE IDENTIFYCODE="' || gpSelect.inn || '"'                              -- Идентификационный код сотрудника
                                || ' CARDACCOUNTNO="' || gpSelect.card || '"'                             -- Номер карточного (или другого) счёта
-                               ||        ' AMOUNT="' || REPLACE (CAST (gpSelect.SummCardRecalc AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+                               ||        ' AMOUNT="' || REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0)  + COALESCE (gpSelect.SummHosp, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
                                || '/>'
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE

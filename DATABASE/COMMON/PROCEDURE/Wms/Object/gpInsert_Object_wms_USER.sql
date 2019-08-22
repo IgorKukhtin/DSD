@@ -6,14 +6,13 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_USER (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_USER(
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbProcName   TVarChar;
    DECLARE vbTagName    TVarChar;
    DECLARE vbActionName TVarChar;
-   DECLARE vbRowNum     Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
@@ -33,7 +32,7 @@ BEGIN
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
         WITH tmpMember AS (SELECT Object_Member.DescId, Object_Member.Id AS id, Object_Member.ValueData AS fio
                            FROM Object AS Object_Member
                                 INNER JOIN ObjectLink AS ObjectLink_User_Member
@@ -52,23 +51,25 @@ BEGIN
                              AND Object_Member.isErased = FALSE
                           )
         -- Результат
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
-       (SELECT vbProcName   AS ProcName
-             , vbTagName    AS TagName
-             , vbActionName AS ActionName
-             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.id) :: Integer) AS RowNum
-               -- XML
-             , ('<add_user'
-                  ||' action="' || vbActionName                     ||'"' -- ???
-                      ||' id="' || tmpData.id           :: TVarChar ||'"' -- Уникальный id сотрудника
-                    ||' fio="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.fio, CHR(39), '`'), '"', '`') ||'"' -- ФИО сотрудника
-                ||'></add_user>'
-               ):: Text AS RowData
-               -- Id
-             , tmpData.id AS ObjectId
-        FROM tmpMember AS tmpData
-       ) AS tmp
+             (SELECT vbProcName   AS ProcName
+                   , vbTagName    AS TagName
+                   , vbActionName AS ActionName
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.id) :: Integer) AS RowNum
+                     -- XML
+                   , ('<' || vbTagName
+                          ||' action="' || vbActionName                     ||'"' -- ???
+                              ||' id="' || tmpData.id           :: TVarChar ||'"' -- Уникальный id сотрудника
+                             ||' fio="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.fio, CHR(39), '`'), '"', '`') ||'"' -- ФИО сотрудника
+                                        ||'></' || vbTagName || '>'
+                     ):: Text AS RowData
+                     -- Id
+                   , tmpData.id AS ObjectId
+                   , 0          AS GroupId
+
+              FROM tmpMember AS tmpData
+             ) AS tmp
      -- WHERE tmp.RowNum BETWEEN 1 AND 10
         ORDER BY 4;
 

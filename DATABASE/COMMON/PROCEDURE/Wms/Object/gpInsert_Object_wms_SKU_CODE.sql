@@ -6,14 +6,13 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_SKU_CODE (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_SKU_CODE(
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbProcName   TVarChar;
    DECLARE vbTagName    TVarChar;
    DECLARE vbActionName TVarChar;
-   DECLARE vbRowNum     Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
@@ -26,35 +25,36 @@ BEGIN
      vbActionName:= 'set';
 
 
+     -- !!!Залили ВСЕ данные - в Object_GoodsByGoodsKind - линейная табл.!!!
+     PERFORM gpInsertUpdate_Object_GoodsByGoodsKind_wms (inSession);
+
+
      -- удалили прошлые данные
      DELETE FROM Object_WMS WHERE Object_WMS.ProcName = vbProcName;
-
-     -- первые строчки XML
-     -- vbRowNum:= 1;
-     -- INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData) VALUES (vbProcName, vbTagName, vbActionName, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
 
 
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
-       (SELECT vbProcName   AS ProcName
-             , vbTagName    AS TagName
-             , vbActionName AS ActionName
-             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
-               -- XML
-             , ('<sku_code'
-                   ||' action="' || vbActionName                     ||'"' -- ???
-                   ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
-                 ||' sku_code="' || tmpData.sku_code     :: TVarChar ||'"' -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
-                      ||'></sku_code>'
-               ) :: Text AS RowData
-               -- Id
-             , tmpData.ObjectId
-        FROM lpSelect_Object_wms_SKU() AS tmpData
-       ) AS tmp
+             (SELECT vbProcName   AS ProcName
+                   , vbTagName    AS TagName
+                   , vbActionName AS ActionName
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
+                     -- XML
+                   , ('<' || vbTagName
+                          ||' action="' || vbActionName                     ||'"' -- ???
+                          ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в товарном справочнике предприятия
+                        ||' sku_code="' || tmpData.sku_code     :: TVarChar ||'"' -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
+                                        ||'></' || vbTagName || '>'
+                     ) :: Text AS RowData
+                     -- Id
+                   , tmpData.ObjectId
+                   , 0 AS GroupId
+              FROM lpSelect_Object_wms_SKU() AS tmpData
+             ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY 4
      -- LIMIT 1

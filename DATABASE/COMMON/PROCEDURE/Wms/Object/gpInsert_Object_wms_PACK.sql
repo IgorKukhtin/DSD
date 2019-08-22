@@ -6,14 +6,13 @@ DROP FUNCTION IF EXISTS gpInsert_Object_wms_PACK (VarChar(255));
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_PACK(
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer)
+-- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbProcName   TVarChar;
    DECLARE vbTagName    TVarChar;
    DECLARE vbActionName TVarChar;
-   DECLARE vbRowNum     Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_Object_wms_SKU());
@@ -33,7 +32,7 @@ BEGIN
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId)
+     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
         WITH tmpGoods AS (SELECT tmp.sku_id                       -- ***Уникальный код товара в товарном справочнике предприятия
                                , tmp.sku_code                     -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
                                , tmp.name                         -- Наименование товара в товарном справочнике предприятия
@@ -90,6 +89,8 @@ BEGIN
                                , 0                   :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
                                , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
+                               --
+                               , 1 AS GroupId
                           FROM tmpGoods
 
                          UNION ALL
@@ -122,41 +123,44 @@ BEGIN
                                , tmpGoods.BoxWeight  :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
                                , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
+                               --
+                               , 2 AS GroupId
                           FROM tmpGoods
                           WHERE tmpGoods.BoxId > 0
                          ) 
         -- Результат
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId
+        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
-       (SELECT vbProcName   AS ProcName
-             , vbTagName    AS TagName
-             , vbActionName AS ActionName
-             , (COALESCE (vbRowNum, 0) + ROW_NUMBER() OVER (ORDER BY CASE WHEN tmpData.ctn_type = 'unit' THEN 1 ELSE 2 END, tmpData.pack_id) :: Integer) AS RowNum
-               -- XML
-             , ('<pack'
-                  ||' action="' || vbActionName                     ||'"' -- ???
-                 ||' pack_id="' || tmpData.pack_id      :: TVarChar ||'"' -- Уникальный код упаковки
-                  ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в справочнике предприятия 
-             ||' description="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.description, CHR(39), '`'), '"', '`') ||'"' -- Уникальное описание упаковки
-                 ||' barcode="' || tmpData.barcode                  ||'"' -- 
-                 ||' is_main="' || tmpData.is_main                  ||'"' -- Признак основной упаковки: t – является основной упаковкой; f – не является основной упаковкой Значение по умолчанию t
-                ||' ctn_type="' || tmpData.ctn_type                 ||'"' -- Тип упаковки: unit – единичная упаковка carton – коробочная упаковка
-                 ||' code_id="' || tmpData.code_id                  ||'"' -- Элемент упаковки (идентификатор упаковки из которой состоит данная). Для единичных упаковок равен 0. 
-                   ||' units="' || tmpData.units        :: TVarChar ||'"' -- Количество элементов упаковки, т.е. количество вложенных элементов
-              ||' base_units="' || tmpData.base_units   :: TVarChar ||'"' -- Количество единичных упаковок в данной
-               ||' layer_qty="' || tmpData.layer_qty    :: TVarChar ||'"' -- Остается пустым, т.к. нет прима палетными нормами
-                   ||' width="' || tmpData.width        :: TVarChar ||'"' -- Ширина упаковки (см)
-                  ||' length="' || tmpData.length       :: TVarChar ||'"' -- Длина упаковки (см)
-                  ||' height="' || tmpData.height       :: TVarChar ||'"' -- Высота упаковки (см)
-                  ||' weight="' || zfConvert_FloatToString (tmpData.weight)        ||'"' -- Вес упаковки (кг)
-           ||' weight_brutto="' || zfConvert_FloatToString (tmpData.weight_brutto) ||'"' -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
-                ||'></pack>'
-               ):: Text AS RowData
-               -- Id
-             , tmpData.pack_id AS ObjectId
-        FROM tmpData
-       ) AS tmp
-        WHERE tmp.RowNum BETWEEN 1 AND 2
+             (SELECT vbProcName   AS ProcName
+                   , vbTagName    AS TagName
+                   , vbActionName AS ActionName
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.GroupId, tmpData.pack_id) :: Integer) AS RowNum
+                     -- XML
+                   , ('<' || vbTagName
+                          ||' action="' || vbActionName                     ||'"' -- ???
+                         ||' pack_id="' || tmpData.pack_id      :: TVarChar ||'"' -- Уникальный код упаковки
+                          ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный код товара в справочнике предприятия 
+                     ||' description="' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.description, CHR(39), '`'), '"', '`') ||'"' -- Уникальное описание упаковки
+                         ||' barcode="' || tmpData.barcode                  ||'"' -- 
+                         ||' is_main="' || tmpData.is_main                  ||'"' -- Признак основной упаковки: t – является основной упаковкой; f – не является основной упаковкой Значение по умолчанию t
+                        ||' ctn_type="' || tmpData.ctn_type                 ||'"' -- Тип упаковки: unit – единичная упаковка carton – коробочная упаковка
+                         ||' code_id="' || tmpData.code_id                  ||'"' -- Элемент упаковки (идентификатор упаковки из которой состоит данная). Для единичных упаковок равен 0. 
+                           ||' units="' || tmpData.units        :: TVarChar ||'"' -- Количество элементов упаковки, т.е. количество вложенных элементов
+                      ||' base_units="' || tmpData.base_units   :: TVarChar ||'"' -- Количество единичных упаковок в данной
+                       ||' layer_qty="' || tmpData.layer_qty    :: TVarChar ||'"' -- Остается пустым, т.к. нет прима палетными нормами
+                           ||' width="' || tmpData.width        :: TVarChar ||'"' -- Ширина упаковки (см)
+                          ||' length="' || tmpData.length       :: TVarChar ||'"' -- Длина упаковки (см)
+                          ||' height="' || tmpData.height       :: TVarChar ||'"' -- Высота упаковки (см)
+                          ||' weight="' || zfConvert_FloatToString (tmpData.weight)        ||'"' -- Вес упаковки (кг)
+                   ||' weight_brutto="' || zfConvert_FloatToString (tmpData.weight_brutto) ||'"' -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
+                                        ||'></' || vbTagName || '>'
+                     ):: Text AS RowData
+                     -- Id
+                   , tmpData.pack_id AS ObjectId
+                   , tmpData.GroupId
+              FROM tmpData
+             ) AS tmp
+     -- WHERE tmp.RowNum BETWEEN 1 AND 2
         ORDER BY 4;
 
 END;

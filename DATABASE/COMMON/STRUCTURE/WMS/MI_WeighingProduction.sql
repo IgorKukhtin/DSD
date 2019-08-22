@@ -15,13 +15,16 @@ CREATE TABLE MI_WeighingProduction(
    ParentId            Integer       NULL,
    GoodsTypeKindId     Integer   NOT NULL,
    BarCodeBoxId        Integer   NOT NULL,
-   WmsCode             TVarChar  NOT NULL,
    LineCode            Integer   NOT NULL,
    Amount              TFloat    NOT NULL,
    RealWeight          TFloat    NOT NULL,
    InsertDate          TDateTime NOT NULL,
    UpdateDate          TDateTime     NULL,
-   IsErased            Boolean   NOT NULL
+   WmsCode             TVarChar  NOT NULL, -- 13-значн. Ш/К для ВМС
+   sku_id              TVarChar  NOT NULL, -- sku_id
+   sku_code            TVarChar  NOT NULL, -- sku_code
+   PartionDate         TDateTime NOT NULL,
+   isErased            Boolean   NOT NULL
    );
 /*-------------------------------------------------------------------------------*/
 
