@@ -112,7 +112,7 @@ BEGIN
           , Object_NDSKind.ValueData         AS NDSKindName
           , tmpMI_Child.UnitId
           , tmpMI_Child.UnitCode
-          , tmpMI_Child.UnitName
+          , (tmpMI_Child.UnitName ||' ('|| Object_Juridical.ValueData||', '|| ObjectHistory_JuridicalDetails_View.OKPO ||')' ):: TVarChar AS UnitName
           , tmpMI_Master.Price
           , tmpMI_Child.Amount                        :: TFloat AS Amount
           , (tmpMI_Child.Amount * tmpMI_Master.Price) :: TFloat AS Summ
@@ -138,6 +138,12 @@ BEGIN
                                ON ObjectLink_Goods_NDSKind.ObjectId = tmpMI_Master.GoodsId
                               AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
           LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                               ON ObjectLink_Unit_Juridical.ObjectId = tmpMI_Child.UnitId
+                              AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 ;
 END;
 $BODY$
