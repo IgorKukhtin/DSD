@@ -40,7 +40,9 @@ RETURNS TABLE (
     InsertName       TVarChar,  --Пользователь(созд.) 
     InsertDate       TDateTime, --Дата(созд.)
     ExpirationDate   TDateTime,  -- срок годности
-    PartionDateKindName TVarChar -- категория срока годности
+    PartionDateKindName TVarChar, -- категория срока годности
+    isSUN            Boolean,
+    isDefSUN         Boolean
   )
 AS
 $BODY$
@@ -241,8 +243,10 @@ BEGIN
                                                                    CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                                                    CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
                                                                    MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID)) + _tmpRem.RemainsStart AS Saldo,
-                   Object_Insert.ValueData              AS InsertName,
-                   MovementDate_Insert.ValueData        AS InsertDate
+                   Object_Insert.ValueData                               AS InsertName,
+                   MovementDate_Insert.ValueData                         AS InsertDate,
+                   COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN,
+                   COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
             FROM _tmpGoods AS tmp
                 INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
                                     AND Container.DescId = zc_Container_Count()
@@ -304,6 +308,14 @@ BEGIN
                                             AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
 
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                          ON MovementBoolean_SUN.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                         AND Movement.DescId = zc_Movement_Send()
+                LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                          ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                         AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+                                         AND Movement.DescId = zc_Movement_Send()
             WHERE (CLO_Party.ObjectID = inPartyId OR inPartyId = 0)
           UNION ALL
             SELECT tmpRem_All.ContainerId     AS ContainerId,
@@ -328,7 +340,9 @@ BEGIN
                    0                          AS OrdNum,
                    tmpRem_All.RemainsStart    AS Saldo,
                    NULL                       AS InsertName,
-                   NULL                       AS InsertDate
+                   NULL                       AS InsertDate,
+                   FALSE           ::Boolean  AS isSUN,
+                   FALSE           ::Boolean  AS isDefSUN
             FROM tmpRem_All
           UNION ALL
             SELECT tmpRem_All.ContainerId     AS ContainerId,
@@ -353,7 +367,9 @@ BEGIN
                    999999999                  AS OrdNum,
                    tmpRem_All.RemainsEnd      AS Saldo,
                    NULL                       AS InsertName,
-                   NULL                       AS InsertDate 
+                   NULL                       AS InsertDate,
+                   FALSE           ::Boolean  AS isSUN,
+                   FALSE           ::Boolean  AS isDefSUN
             FROM tmpRem_All                           
            )
 
@@ -461,7 +477,9 @@ BEGIN
             Res.InsertDate            ::TDateTime,         --Дата(созд.)
             
             Res.ExpirationDate        ::TDateTime,
-            Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
+            Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName,
+            Res.isSUN                 ::Boolean,
+            Res.isDefSUN              ::Boolean
         FROM tmpData AS Res 
 
            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = Res.PartionDateKindId
@@ -476,6 +494,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.08.19         * isSUN,isDefSUN 
  19.08.19         * add PartionDateKindName
  08.04.19         * add ExpirationDate
  24.05.18         * оптимизация

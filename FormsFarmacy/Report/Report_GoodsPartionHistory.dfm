@@ -259,6 +259,24 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Options.Editing = False
             Width = 58
           end
+          object isSUN: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 58
+          end
+          object isDefSUN: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isDefSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = ' '#9#1054#1090#1083#1086#1078#1077#1085#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 77
+          end
         end
       end
     end
