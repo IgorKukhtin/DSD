@@ -249,6 +249,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkSCS(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 10, inName:= 'подмена полной смены'     , inEnumName:= 'zc_Enum_WorkTimeKind_WorkSCS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkS(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 11, inName:= 'кладовщик'                , inEnumName:= 'zc_Enum_WorkTimeKind_WorkS');
 
+-- !!! Типы расчета заработной платы
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkCS(),    inDescId:= zc_Object_PayrollType(), inCode:= 1, inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkAS(),    inDescId:= zc_Object_PayrollType(), inCode:= 2, inName:= 'Средняя смена'               , inEnumName:= 'zc_Enum_PayrollType_WorkAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSCS(),   inDescId:= zc_Object_PayrollType(), inCode:= 3, inName:= 'Подмена полной смены'        , inEnumName:= 'zc_Enum_PayrollType_WorkSCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4, inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5, inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
+
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(),  inDescId:= zc_Object_DocumentTaxKind(), inCode:= 2, inName:= 'Сводная налоговая по юр.л.(реализация)', inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS');

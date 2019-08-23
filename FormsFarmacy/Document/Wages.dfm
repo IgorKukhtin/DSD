@@ -356,6 +356,146 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actspInsertUser'
     end
+    object actCalculationPerson: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoicePersonal
+        end
+        item
+          Action = actExecSPCalculationPerson
+        end
+        item
+          Action = actExportCalculationPerson
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Hint = #1056#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      ImageIndex = 3
+    end
+    object actOpenChoicePersonal: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoicePersonal'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSPCalculationPerson: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintCalculationPerson
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCalculationPerson
+        end>
+      Caption = 'actExecSPCalculationPerson'
+    end
+    object actExportCalculationPerson: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1044#1077#1085#1100' '#1088#1072#1089#1095#1077#1090#1072
+          FieldName = 'OperDate'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          FieldName = 'UnitName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1050#1088#1072#1090'. '#1085#1072#1080#1084'.'
+          FieldName = 'ShortName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
+          FieldName = 'PayrollGroupName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+          FieldName = 'SummaCalc'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          Kind = skSumma
+          KindText = #1048#1090#1086#1075#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1086':'
+        end
+        item
+          Caption = #1060#1086#1088#1084#1091#1083#1072' '#1088#1072#1089#1095#1077#1090#1072
+          FieldName = 'FormulaCalc'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 100
+          WrapText = True
+          CalcColumnLists = <>
+        end>
+      Caption = 'actExportCalculationPerson'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -445,6 +585,10 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -515,6 +659,10 @@ inherited WagesForm: TWagesForm
       Visible = ivAlways
       ImageIndex = 35
     end
+    object dxBarButton7: TdxBarButton
+      Action = actCalculationPerson
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
@@ -565,6 +713,11 @@ inherited WagesForm: TWagesForm
       end
       item
         Name = 'UnitID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -795,8 +948,8 @@ inherited WagesForm: TWagesForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Wages_TotalSumm'
-    Left = 668
-    Top = 220
+    Left = 188
+    Top = 364
   end
   object spInsertUser: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_Wages_User'
@@ -822,5 +975,49 @@ inherited WagesForm: TWagesForm
     PackSize = 1
     Left = 488
     Top = 352
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 820
+    Top = 265
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 820
+    Top = 214
+  end
+  object spSelectPrintCalculationPerson: TdsdStoredProc
+    StoredProcName = 'gpSelect_CalculationPerson_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 663
+    Top = 216
   end
 end

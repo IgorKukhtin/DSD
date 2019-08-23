@@ -110,7 +110,7 @@ BEGIN
                                      , ContainerID Integer
                                      , Amount      TFloat) ON COMMIT DROP;
 
-     IF vbisSUN = TRUE
+/*     IF vbisSUN = TRUE
      THEN
        IF EXISTS(SELECT 1 FROM  MovementItemContainer
                  WHERE MovementItemContainer.MovementId = inMovementId)
@@ -306,7 +306,7 @@ BEGIN
          WHERE tmpMIContainerAll.Amount - COALESCE (tmpMIParent.Amount, 0) > 0;
        END IF;
      END IF;
-
+*/
 
      RETURN QUERY
      WITH

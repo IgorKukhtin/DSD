@@ -24,7 +24,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul,
+  dsdExportToXLSAction;
 
 type
   TWagesForm = class(TAncestorDocumentForm)
@@ -44,6 +45,14 @@ type
     Color_Calc: TcxGridDBBandedColumn;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
+    actCalculationPerson: TMultiAction;
+    dxBarButton7: TdxBarButton;
+    actOpenChoicePersonal: TOpenChoiceForm;
+    actExportCalculationPerson: TdsdExportToXLS;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrintCalculationPerson: TdsdStoredProc;
+    actExecSPCalculationPerson: TdsdExecStoredProc;
   private
     { Private declarations }
   public
