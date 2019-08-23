@@ -162,6 +162,7 @@ BEGIN
                                      GROUP BY Container.ObjectId
                                             , Container.Amount 
                                             , tmpPrice_Unit.Price
+                                            , Container.Id
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
                                      ) AS tmp
                               GROUP BY tmp.GoodsId
