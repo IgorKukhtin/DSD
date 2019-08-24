@@ -1,38 +1,30 @@
 /*
   Создание 
-    - таблицы MI_WeighingProduction (oбъекты)
+    - таблицы MI_Incoming (oбъекты)
     - связей
     - индексов
 */
 
--- DROP TABLE MI_WeighingProduction
+-- DROP TABLE MI_Incoming
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE MI_WeighingProduction(
+CREATE TABLE MI_Incoming(
    Id                  BIGSERIAL NOT NULL PRIMARY KEY, 
    MovementId          Integer   NOT NULL,
-   ParentId            Integer       NULL,
+   GoodsId             Integer   NOT NULL,
+   GoodsKindId	       Integer   NOT NULL,
    GoodsTypeKindId     Integer   NOT NULL,
-   BarCodeBoxId        Integer   NOT NULL,
-   LineCode            Integer   NOT NULL,
-   Amount              TFloat    NOT NULL,
-   RealWeight          TFloat    NOT NULL,
-   InsertDate          TDateTime NOT NULL,
-   UpdateDate          TDateTime     NULL,
-   WmsCode             TVarChar  NOT NULL, -- 13-значн. Ш/К для ВМС
    sku_id              TVarChar  NOT NULL, -- sku_id
    sku_code            TVarChar  NOT NULL, -- sku_code
+   Amount              TFloat    NOT NULL,
+   RealWeight          TFloat    NOT NULL,
    PartionDate         TDateTime NOT NULL,
    isErased            Boolean   NOT NULL
    );
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-
---CREATE INDEX idx_MI_WeighingProduction_Id	 ON MI_WeighingProduction (Id);
---CREATE INDEX idx_MI_WeighingProduction_OperDate ON MI_WeighingProduction (OperDate);
---CREATE INDEX idx_MI_WeighingProduction_MovementId  ON MI_WeighingProduction (MovementId);
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -41,8 +33,7 @@ CREATE TABLE MI_WeighingProduction(
  ДАТА         АВТОР
  ----------------
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.08.19                                       *
- 22.05.19         *
+ 22.08.19                                       *
 */
 
 

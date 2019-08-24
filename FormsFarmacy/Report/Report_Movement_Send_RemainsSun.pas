@@ -39,7 +39,7 @@ type
     bbPrint: TdxBarButton;
     actRefreshOnDay: TdsdDataSetRefresh;
     cxGrid2: TcxGrid;
-    GridDBTableViewResult_child: TcxGridDBTableView;
+    cxGridDBTableViewResult_child: TcxGridDBTableView;
     ch2FromName: TcxGridDBColumn;
     ch2ToName: TcxGridDBColumn;
     ch2Amount: TcxGridDBColumn;
@@ -47,7 +47,7 @@ type
     ch2Invnumber: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxGrid1: TcxGrid;
-    GridDBTableViewPartion: TcxGridDBTableView;
+    cxGridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
     chToName: TcxGridDBColumn;
     chAmount: TcxGridDBColumn;
@@ -73,7 +73,7 @@ type
     bbSendSUN: TdxBarButton;
     cxSplitter3: TcxSplitter;
     cxGrid3: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableViewDefSUN: TcxGridDBTableView;
     dsFromName: TcxGridDBColumn;
     dsToName: TcxGridDBColumn;
     dsGoodsCode: TcxGridDBColumn;
@@ -105,6 +105,22 @@ type
     bbOpenReportPartionDateChild: TdxBarButton;
     actReportSendSUN: TdsdOpenForm;
     bbReportSendSUN: TdxBarButton;
+    AmountSend_out: TcxGridDBColumn;
+    chAmountReserve: TcxGridDBColumn;
+    chAmountSend_in: TcxGridDBColumn;
+    chAmountSend_out: TcxGridDBColumn;
+    BalanceCDS: TClientDataSet;
+    BalanceDS: TDataSource;
+    DBViewAddOnBalance: TdsdDBViewAddOn;
+    cxGrid4: TcxGrid;
+    cxGridDBTableViewBalance: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridDBColumn4: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    DBViewAddOnDefSUN: TdsdDBViewAddOn;
+    cxGridDBColumn5: TcxGridDBColumn;
   private
     { Private declarations }
   public

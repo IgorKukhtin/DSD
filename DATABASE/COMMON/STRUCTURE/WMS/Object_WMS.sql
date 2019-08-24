@@ -11,6 +11,7 @@
 
 CREATE TABLE Object_WMS(
    Id                    BIGSERIAL NOT NULL PRIMARY KEY, 
+   GUID                  TVarChar  NOT NULL,
    ProcName              TVarChar  NOT NULL,
    TagName               TVarChar  NOT NULL,
    ActionName            TVarChar  NOT NULL,
@@ -22,8 +23,10 @@ CREATE TABLE Object_WMS(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-CREATE INDEX idx_Object_WMS_ProcName ON Object_WMS (ProcName);
-CREATE INDEX idx_Object_WMS_TagName  ON Object_WMS (TagName);
+CREATE INDEX idx_Object_WMS_ProcName      ON Object_WMS (ProcName);
+CREATE INDEX idx_Object_WMS_TagName       ON Object_WMS (TagName);
+CREATE INDEX idx_Object_WMS_GUID          ON Object_WMS (GUID);
+CREATE INDEX idx_Object_WMS_GUID_ProcName ON Object_WMS (GUID, ProcName);
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -31,6 +34,6 @@ CREATE INDEX idx_Object_WMS_TagName  ON Object_WMS (TagName);
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Фелонюк И.В.    
-20.08.19               *
+              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.08.19                                       *
 */

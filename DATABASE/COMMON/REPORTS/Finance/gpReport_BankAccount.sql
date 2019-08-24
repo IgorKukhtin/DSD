@@ -25,7 +25,7 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar,
              , StartAmount_Currency TFloat, StartAmountD_Currency TFloat, StartAmountK_Currency TFloat
              , DebetSumm_Currency TFloat, KreditSumm_Currency TFloat
              , EndAmount_Currency TFloat, EndAmountD_Currency TFloat, EndAmountK_Currency TFloat
-             , Summ_Currency TFloat
+             , Summ_Currency TFloat, Summ_pl TFloat
              , MovementId Integer
              , CashName TVarChar
              , GroupId Integer, GroupName TVarChar
@@ -165,6 +165,7 @@ BEGIN
         CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END :: TFloat        AS EndAmountK_Currency,
 
         Operation.Summ_Currency :: TFloat                                                                             AS Summ_Currency,
+        Operation.Summ_pl       :: TFloat                                                                             AS Summ_pl,
         Operation.MovementId :: Integer                                                                               AS MovementId,
         
         TRIM (COALESCE (tmpBankAccount.BankName, '' ) || '  ' || COALESCE (tmpBankAccount.Name, Object_Juridical.ValueData)) :: TVarChar  AS CashName,
@@ -186,6 +187,7 @@ BEGIN
                , SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency
                , SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency
                , SUM (Operation_all.Summ_Currency)        AS Summ_Currency
+               , SUM (Operation_all.Summ_pl)              AS Summ_pl
           FROM
            -- 1.1. остаток в валюте баланса
           (SELECT tmpContainer.ContainerId
@@ -205,6 +207,7 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 , 0                         AS Summ_Currency
+                , 0                         AS Summ_pl
                 , 0                         AS MovementId
                 , ''                        AS Comment
            FROM tmpContainer
@@ -230,6 +233,7 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 , 0                         AS Summ_Currency
+                , 0                         AS Summ_pl
                 , 0                         AS MovementId
                 , ''                        AS Comment
            FROM tmpContainer
@@ -258,6 +262,7 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
+                , 0                         AS Summ_pl
                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                 , COALESCE (MIString_Comment.ValueData, '') AS Comment
            FROM tmpContainer
@@ -308,6 +313,7 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
                 , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
                 , 0                         AS Summ_Currency
+                , 0                         AS Summ_pl
                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                 , COALESCE (MIString_Comment.ValueData, '') AS Comment
            FROM tmpContainer
@@ -358,7 +364,8 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 -- , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
-                , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
+                , 0                         AS Summ_Currency
+                , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_pl
                 , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId /*MIReport.MovementId*/ ELSE 0 END AS MovementId
                 , COALESCE (MIString_Comment.ValueData, '') AS Comment
            FROM (SELECT tmpContainer.*
@@ -431,7 +438,7 @@ BEGIN
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0
          OR Operation.StartAmount_Currency <> 0 OR Operation.EndAmount_Currency <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0
-         OR Operation.Summ_Currency <> 0
+         OR Operation.Summ_Currency <> 0 OR Operation.Summ_pl <> 0
            );
 
 
@@ -450,4 +457,4 @@ ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());

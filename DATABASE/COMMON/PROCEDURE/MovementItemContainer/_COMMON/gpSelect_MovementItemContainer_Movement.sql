@@ -472,10 +472,19 @@ BEGIN
                        ELSE Object_Direction.ValueData || COALESCE (' *** ' || Object_Partner.ValueData, '')
                   END AS DirectionObjectName
 
-
-                , COALESCE (Object_Destination.Id, 0) AS DestinationId
-                , Object_Destination.ObjectCode       AS DestinationObjectCode
-                , Object_Destination.ValueData        AS DestinationObjectName
+                , CASE WHEN Object_Destination.ValueData         <> '' THEN Object_Destination.Id
+                       WHEN Object_Personal.ValueData            <> '' THEN Object_Personal.Id
+                       WHEN Object_PersonalServiceList.ValueData <> '' THEN Object_PersonalServiceList.Id
+                       ELSE 0
+                  END                      :: Integer AS DestinationId
+                , CASE WHEN Object_Destination.ValueData         <> '' THEN Object_Destination.ObjectCode
+                       WHEN Object_Personal.ValueData            <> '' THEN Object_Personal.ObjectCode
+                       WHEN Object_PersonalServiceList.ValueData <> '' THEN Object_PersonalServiceList.ObjectCode
+                  END                      :: Integer AS DestinationObjectCode
+                , CASE WHEN Object_Destination.ValueData         <> '' THEN Object_Destination.ValueData
+                       WHEN Object_Personal.ValueData            <> '' THEN COALESCE (Object_PersonalServiceList.ValueData || ' : ', '') || Object_Personal.ValueData
+                       WHEN Object_PersonalServiceList.ValueData <> '' THEN Object_PersonalServiceList.ValueData
+                  END                     :: TVarChar AS DestinationObjectName
                 , Object_GoodsGroup.ObjectCode        AS GoodsGroupCode
                 , Object_GoodsGroup.ValueData         AS GoodsGroupName
                 , COALESCE (Object_GoodsKind.Id, 0)   AS GoodsKindId
@@ -545,7 +554,11 @@ BEGIN
                        WHEN ContainerLinkObject_Unit.ObjectId <> 0
                             THEN ContainerLinkObject_Unit.ObjectId
                   END AS DirectionId
-                , ContainerLinkObject_Partner.ObjectId AS PartnerId
+
+                , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN ContainerLinkObject_PersonalServiceList.ObjectId ELSE 0 END AS PersonalServiceListId
+                , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN ContainerLinkObject_Personal.ObjectId            ELSE 0 END AS PersonalId
+
+                , ContainerLinkObject_Partner.ObjectId             AS PartnerId
 
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsId ELSE 0 END     AS DestinationId
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsKindId ELSE 0 END AS GoodsKindId
@@ -571,8 +584,8 @@ BEGIN
 
             FROM tmpMIContainer_Summ
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Juridical
-                                        ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                       AND ContainerLinkObject_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
+                                       ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Partner
                                         ON ContainerLinkObject_Partner.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                        AND ContainerLinkObject_Partner.DescId      = zc_ContainerLinkObject_Partner()
@@ -582,9 +595,15 @@ BEGIN
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Member
                                        ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                       AND ContainerLinkObject_Member.DescId      = zc_ContainerLinkObject_Member()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Personal
+                                       ON ContainerLinkObject_Personal.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Personal.DescId      = zc_ContainerLinkObject_Personal()
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Unit
                                        ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                       AND ContainerLinkObject_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_PersonalServiceList
+                                       ON ContainerLinkObject_PersonalServiceList.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Car
                                        ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                       AND ContainerLinkObject_Car.DescId      = zc_ContainerLinkObject_Car()
@@ -636,9 +655,12 @@ BEGIN
 
                  LEFT JOIN tmpProfitLoss_View AS Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = tmpMIContainer_Summ.ProfitLossId
 
-                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpMIContainer_Summ.DirectionId
+                 LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id   = tmpMIContainer_Summ.DirectionId
                  LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpMIContainer_Summ.DestinationId
-                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMIContainer_Summ.PartnerId
+                 LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = tmpMIContainer_Summ.PartnerId
+
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMIContainer_Summ.PersonalServiceListId
+                 LEFT JOIN Object AS Object_Personal            ON Object_Personal.Id            = tmpMIContainer_Summ.PersonalId
 
                  LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpMIContainer_Summ.JuridicalBasisId
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpMIContainer_Summ.BusinessId
@@ -689,6 +711,12 @@ BEGIN
                    , Object_Destination.Id
                    , Object_Destination.ObjectCode
                    , Object_Destination.ValueData
+                   , Object_Personal.Id
+                   , Object_Personal.ObjectCode
+                   , Object_Personal.ValueData
+                   , Object_PersonalServiceList.Id
+                   , Object_PersonalServiceList.ObjectCode
+                   , Object_PersonalServiceList.ValueData
                    , Object_GoodsKind.Id
                    , Object_GoodsKind.ValueData
                    , Object_Goods_Parent.ObjectCode

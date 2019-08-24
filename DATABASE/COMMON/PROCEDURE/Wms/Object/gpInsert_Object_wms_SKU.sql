@@ -2,11 +2,13 @@
 -- 4.1.1.1 Справочник товаров <sku>
 
 DROP FUNCTION IF EXISTS gpInsert_Object_wms_SKU (VarChar(255));
+DROP FUNCTION IF EXISTS gpInsert_Object_wms_SKU (VarChar(255), VarChar(255));
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_SKU(
+    IN inGUID          VarChar(255),      -- 
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
+-- RETURNS TABLE (GUID TVarChar, ProcName TVarChar, TagName TVarChar, RowNum Integer, ActionName TVarChar, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
@@ -30,23 +32,30 @@ BEGIN
      PERFORM gpInsertUpdate_Object_GoodsByGoodsKind_wms (inSession);
 
 
-     -- удалили прошлые данные
-     DELETE FROM Object_WMS WHERE Object_WMS.ProcName = vbProcName;
+     -- Проверка
+     IF TRIM (COALESCE (inGUID, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Error inGUID = <%>', inGUID;
+     ELSEIF inGUID = '1'
+     THEN
+         -- удалили прошлые данные
+         DELETE FROM Object_WMS WHERE Object_WMS.GUID = inGUID; -- AND Object_WMS.ProcName = vbProcName;
+     END IF;
+
 
      -- первые строчки XML
      -- vbRowNum:= 1;
-     -- INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData) VALUES (vbProcName, vbTagName, vbActionName, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
+     -- INSERT INTO Object_WMS (GUID, ProcName, TagName, RowNum, RowData) VALUES (inGUID, vbProcName, vbTagName, vbRowNum, '<?xml version="1.0" encoding="UTF-16"?>');
 
 
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
+     INSERT INTO Object_WMS (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
+        SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
              (SELECT vbProcName   AS ProcName
                    , vbTagName    AS TagName
-                   , vbActionName AS ActionName
                    , (ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName
@@ -73,6 +82,7 @@ BEGIN
                    , tmpData.ObjectId
                    , 0 AS GroupId
               FROM lpSelect_Object_wms_SKU() AS tmpData
+           -- WHERE tmpData.sku_id = '795292'
              ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY 4
@@ -88,20 +98,7 @@ $BODY$
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.08.19                                       *
 */
-/*
-CREATE TABLE Object_WMS(
-   Id                    BIGSERIAL NOT NULL PRIMARY KEY, 
-   ProcName              TVarChar NOT NULL,
-   TagName               TVarChar NOT NULL,
-   ActionName            TVarChar NOT NULL,
-   RowNum                Integer  NOT NULL,
-   RowData               Text     NOT NULL,
-   ObjectId              Integer  NOT NULL
-   );
-CREATE INDEX idx_Object_WMS_ProcName ON Object_WMS (ProcName);
-CREATE INDEX idx_Object_WMS_TagName  ON Object_WMS (TagName);
-*/
--- delete FROM Object_WMS
--- select * FROM Object_WMS
+-- select * FROM Object_WMS WHERE RowData ILIKE '%sync_id=1%
+-- select * FROM Object_WMS WHERE GUID = '1' ORDER BY Id
 -- тест
--- SELECT * FROM gpInsert_Object_wms_SKU (zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_Object_wms_SKU ('1', zfCalc_UserAdmin())

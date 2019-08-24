@@ -2,11 +2,13 @@
 -- 4.1.1.3 Справочник контрагентов <client>
 
 DROP FUNCTION IF EXISTS gpInsert_Object_wms_CLIENT (VarChar(255));
+DROP FUNCTION IF EXISTS gpInsert_Object_wms_CLIENT (VarChar(255), VarChar(255));
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_wms_CLIENT(
+    IN inGUID          VarChar(255),      -- 
     IN inSession       VarChar(255)       -- сессия пользователя
 )
--- RETURNS TABLE (ProcName TVarChar, TagName TVarChar, ActionName TVarChar, RowNum Integer, RowData Text, ObjectId Integer, GroupId Integer)
+-- RETURNS TABLE (GUID TVarChar, ProcName TVarChar, TagName TVarChar, RowNum Integer, ActionName TVarChar, RowData Text, ObjectId Integer, GroupId Integer)
 RETURNS VOID
 AS
 $BODY$
@@ -27,14 +29,21 @@ BEGIN
      vbActionName:= 'set';
 
 
-     -- удалили прошлые данные
-     DELETE FROM Object_WMS WHERE Object_WMS.ProcName = vbProcName;
+     -- Проверка
+     IF TRIM (COALESCE (inGUID, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Error inGUID = <%>', inGUID;
+     ELSEIF inGUID = '1'
+     THEN
+         -- удалили прошлые данные
+         DELETE FROM Object_WMS WHERE Object_WMS.GUID = inGUID; -- AND Object_WMS.ProcName = vbProcName;
+     END IF;
 
 
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
-     INSERT INTO Object_WMS (ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
+     INSERT INTO Object_WMS (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId)
         WITH tmpPartner AS (-- zc_Object_Partner
                             SELECT Object_Partner.DescId, Object_Partner.Id AS client_id, Object_Partner.ValueData AS name
                                  , COALESCE (ObjectString_Address.ValueData, '') AS address
@@ -93,11 +102,10 @@ BEGIN
                               AND ObjectLink_Unit_HistoryCost.ChildObjectId IS NULL
                            )
         -- Результат
-        SELECT tmp.ProcName, tmp.TagName, tmp.ActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
+        SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId
         FROM
              (SELECT vbProcName       AS ProcName
                    , vbTagName_client AS TagName
-                   , vbActionName     AS ActionName
                    , (ROW_NUMBER() OVER (ORDER BY tmpData.DescId, tmpData.client_id) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName_client
@@ -125,7 +133,6 @@ BEGIN
               -- client_address
               SELECT vbProcName               AS ProcName
                    , vbTagName_client_address AS TagName
-                   , vbActionName             AS ActionName
                    , (ROW_NUMBER() OVER (ORDER BY tmpData.DescId, tmpData.client_id) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName_client_address
@@ -153,7 +160,24 @@ $BODY$
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.08.19                                       *
 */
--- delete FROM Object_WMS
--- select * FROM Object_WMS
+/*
+ SELECT * 
+FROM Movement 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_from
+                                         ON MovementLinkObject_from.MovementId = Movement.Id
+                                        AND MovementLinkObject_from.DescId = zc_MovementLinkObject_from()
+            LEFT JOIN Object AS Object_from ON Object_from.Id = MovementLinkObject_from.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+where Movement.OperDate >= '01.08.2019' 
+AND Movement.DescId = zc_Movement_OrderExternal() 
+AND Movement.StatusId = zc_Enum_Status_Complete()
+and Object_from.Id not in (select ObjectId FROM Object_WMS)
+and MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
+*/
+-- select * FROM Object_WMS WHERE RowData ILIKE '%sync_id=1%
+-- select * FROM Object_WMS WHERE GUID = '1' ORDER BY Id
 -- тест
--- SELECT * FROM gpInsert_Object_wms_CLIENT (zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_Object_wms_CLIENT ('1', zfCalc_UserAdmin())

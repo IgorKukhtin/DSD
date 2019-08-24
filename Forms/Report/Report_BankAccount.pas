@@ -86,6 +86,7 @@ type
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    Summ_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public

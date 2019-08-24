@@ -3,8 +3,10 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   ClientHeight = 555
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -209
+  ExplicitTop = -133
   ExplicitWidth = 998
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -111,6 +113,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
               Format = ',0.00##'
               Kind = skSum
               Column = Summ_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_pl
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -197,6 +204,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
               Format = ',0.00##'
               Kind = skSum
               Column = Summ_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_pl
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -453,6 +465,19 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '(+) '#1089#1091#1084#1084#1072' '#1087#1088#1080#1073#1099#1083#1100'  (-) '#1089#1091#1084#1084#1072' '#1091#1073#1099#1090#1086#1082
+            Options.Editing = False
+            Width = 70
+          end
+          object Summ_pl: TcxGridDBColumn
+            Caption = #1055#1088#1086#1095#1077#1077
+            DataBinding.FieldName = 'Summ_pl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '(+) '#1089#1091#1084#1084#1072' '#1076#1086#1087'. '#1087#1088#1080#1073#1099#1083#1100'  (-) '#1089#1091#1084#1084#1072' '#1091#1073#1099#1090#1086#1082
             Options.Editing = False
             Width = 70
           end
