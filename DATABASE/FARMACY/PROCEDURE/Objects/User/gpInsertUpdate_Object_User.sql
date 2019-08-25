@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inisProjectMobile  Boolean   ,    -- признак - это Торговый агент
     IN inisSite           Boolean   ,    -- признак - Для сайта
     IN inMemberId         Integer   ,    -- физ. лицо
+    IN inPasswordWages    TVarChar  ,    -- пароль пользователя 
     IN inSession          TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
@@ -57,6 +59,7 @@ BEGIN
    END IF;
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_PasswordWages(), ioId, inPasswordWages);
 
 
    -- Ведение протокола
@@ -66,10 +69,11 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
   
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.08.19                                                       *
  06.11.17         * inisSite
  21.04.17         *
  12.09.16         *

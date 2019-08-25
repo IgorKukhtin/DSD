@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -19,6 +20,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inPhoto               Tblob     ,
 
     IN inEducationId         Integer   ,    --
+    
+    IN inManagerPharmacy     Boolean   ,    -- Заведующая аптекой
+    IN inPositionID          Integer   ,    -- Должность
+    
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -70,6 +75,12 @@ BEGIN
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Education(), ioId, inEducationId);
 
+   -- сохранили свойство <Заведующая аптекой>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_ManagerPharmacy(), ioId, inManagerPharmacy);
+
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Member_Position(), ioId, inPositionID);
+
    -- синхронизируем <Физические лица> и <Сотрудники>
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
@@ -82,7 +93,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.08.19                                                       *
  25.01.16         *
 */
 

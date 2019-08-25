@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EMailSign Tblob, Photo Tblob
              , isOfficial Boolean
              , EducationId Integer, EducationCode Integer, EducationName TVarChar
+             , isManagerPharmacy Boolean
+             , PositionID Integer, PositionName TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -55,6 +57,10 @@ BEGIN
          , Object_Education.ObjectCode              AS EducationCode
          , Object_Education.ValueData               AS EducationName
          
+         , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
+         , Object_Position.Id                       AS PositionID
+         , Object_Position.ValueData                AS PositionName
+
          , Object_Member.isErased                   AS isErased
 
      FROM Object AS Object_Member
@@ -118,6 +124,15 @@ BEGIN
                               ON ObjectBlob_Photo.ObjectId = Object_Member.Id
                              AND ObjectBlob_Photo.DescId = zc_ObjectBlob_Member_Photo()
 
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                 ON ObjectBoolean_ManagerPharmacy.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+         LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -147,6 +162,10 @@ BEGIN
            , CAST (0 as Integer)    AS EducationCode
            , CAST ('' as TVarChar)  AS EducationName   
 
+           , FALSE                  AS isManagerPharmacy
+           , CAST (0 as Integer)    AS PositionId
+           , CAST ('' as TVarChar)  AS PositionName   
+
            , FALSE AS isErased
 
     ;
@@ -159,7 +178,8 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.08.19                                                       *
  25.01.16         *
           
 */

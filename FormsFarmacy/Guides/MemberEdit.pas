@@ -41,6 +41,10 @@ type
     edAddress: TcxTextEdit;
     cxLabel10: TcxLabel;
     Photo: TcxMemo;
+    cePosition: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    PositionGuides: TdsdGuides;
+    ceManagerPharmacy: TcxCheckBox;
   private
     { Private declarations }
   public

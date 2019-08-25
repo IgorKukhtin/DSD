@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EMail TVarChar, Phone TVarChar, Address TVarChar
              , EMailSign Tblob, Photo Tblob
              , EducationId Integer, EducationCode Integer, EducationName TVarChar
+             , isManagerPharmacy Boolean
+             , PositionID Integer, PositionName TVarChar
              , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -41,6 +43,10 @@ BEGIN
            , CAST (0 as Integer)    AS EducationCode
            , CAST ('' as TVarChar)  AS EducationName   
   
+           , FALSE                  AS ManagerPharmacy
+           , CAST (0 as Integer)    AS PositionId
+           , CAST ('' as TVarChar)  AS PositionName   
+
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
@@ -64,6 +70,10 @@ BEGIN
          , Object_Education.Id                      AS EducationId
          , Object_Education.ObjectCode              AS EducationCode
          , Object_Education.ValueData               AS EducationName
+
+         , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
+         , Object_Position.Id                       AS PositionID
+         , Object_Position.ValueData                AS PositionName
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 
@@ -103,6 +113,15 @@ BEGIN
                              AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
          LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
     
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                 ON ObjectBoolean_ManagerPharmacy.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+         LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
      WHERE Object_Member.Id = inId;
      
    END IF;
@@ -113,7 +132,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.08.19                                                       *
  25.01.11         * 
 */
 
