@@ -1,17 +1,19 @@
 /*
   Создание 
-    - таблицы MI_Incoming (oбъекты)
+    - таблицы wms_MI_Incoming
     - связей
     - индексов
 */
 
--- DROP TABLE MI_Incoming
+-- DROP TABLE wms_MI_Incoming
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE MI_Incoming(
+CREATE TABLE wms_MI_Incoming(
    Id                  BIGSERIAL NOT NULL PRIMARY KEY, 
-   MovementId          Integer   NOT NULL,
+   OperDate            TDateTime NOT NULL,
+   StatusId            Integer   NOT NULL,
+   StatusId_wms        Integer       NULL,
    GoodsId             Integer   NOT NULL,
    GoodsKindId	       Integer   NOT NULL,
    GoodsTypeKindId     Integer   NOT NULL,
@@ -20,11 +22,14 @@ CREATE TABLE MI_Incoming(
    Amount              TFloat    NOT NULL,
    RealWeight          TFloat    NOT NULL,
    PartionDate         TDateTime NOT NULL,
-   isErased            Boolean   NOT NULL
+   InsertDate          TDateTime NOT NULL,
+   UpdateDate          TDateTime     NULL
    );
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
+CREATE INDEX idx_wms_MI_Incoming_Id                ON wms_MI_Incoming (Id);
+CREATE INDEX idx_wms_MI_Incoming_OperDate          ON wms_MI_Incoming (OperDate);
+CREATE INDEX idx_wms_MI_Incoming_OperDate_StatusId ON wms_MI_Incoming (OperDate, StatusId);
 
 /*-------------------------------------------------------------------------------*/
 /*

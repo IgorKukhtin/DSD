@@ -1,9 +1,9 @@
--- Function: gpSelect_Movement_WeighingProduction_wms_PrintSticker (Integer, TVarChar)
+-- Function: gpSelect_wms_Movement_WeighingProduction_PrintSticker (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingProduction_wms_PrintSticker (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingProduction_wms_PrintSticker (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_Movement_WeighingProduction_PrintSticker (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_Movement_WeighingProduction_PrintSticker (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_wms_PrintSticker(
+CREATE OR REPLACE FUNCTION gpSelect_wms_Movement_WeighingProduction_PrintSticker(
     IN inMovementId        Integer   ,   -- ключ Документа
     IN inId                Integer   ,   -- строка
     IN inSession           TVarChar      -- сессия пользователя
@@ -17,12 +17,12 @@ $BODY$
     DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- параметры из документа
      SELECT Movement.DescId, Movement.StatusId, Movement.OperDate
-   INTO vbDescId, vbStatusId
+            INTO vbDescId, vbStatusId
      FROM Movement
      WHERE Movement.Id = inMovementId;
 
@@ -45,7 +45,7 @@ BEGIN
        -- Результат -- для 1-ой строки
        SELECT MovementItem.Id
             , MovementItem.WmsCode AS IdBarCode
-       FROM MI_WeighingProduction AS MovementItem 
+       FROM wms_MI_WeighingProduction AS MovementItem 
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.Id         = inId
        ;
@@ -63,4 +63,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingProduction_wms_PrintSticker (inMovementId := 432692, inId:= 177, inSession:= '5');
+-- SELECT * FROM gpSelect_wms_Movement_WeighingProduction_PrintSticker (inMovementId := 432692, inId:= 177, inSession:= '5');

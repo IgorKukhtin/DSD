@@ -1,9 +1,9 @@
--- Function: gpGet_Movement_WeighingProduction_wms(Integer, TVarChar)
+-- Function: gpGet_wms_Movement_WeighingProduction(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_WeighingProduction_wms (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_WeighingProduction_wms (BigInt, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_wms_Movement_WeighingProduction (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_wms_Movement_WeighingProduction (BigInt, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction_wms (
+CREATE OR REPLACE FUNCTION gpGet_wms_Movement_WeighingProduction (
     IN inMovementId        BigInt   , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -36,7 +36,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_WeighingProduction());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
@@ -45,7 +45,7 @@ BEGIN
          SELECT
                0 :: Integer AS Id
            --  0 :: BigInt AS Id
-             , CAST (NEXTVAL ('Movement_WeighingProduction_seq') AS TVarChar) AS InvNumber
+             , CAST (NEXTVAL ('wms_Movement_WeighingProduction_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
@@ -142,7 +142,7 @@ BEGIN
              , Object_User.Id                       AS UserId
              , Object_User.ValueData                AS UserName
 
-       FROM Movement_WeighingProduction AS Movement
+       FROM wms_Movement_WeighingProduction AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.MovementDescId
             
@@ -176,7 +176,7 @@ BEGIN
             LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = ObjectLink_BarCodeBox_Box3.ChildObjectId
 
        WHERE Movement.Id =  inMovementId;
-       --  AND Movement.DescId = zc_Movement_WeighingProduction();
+
      END IF;
 END;
 $BODY$
@@ -189,4 +189,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_WeighingProduction_wms(inMovementId := 0 ,  inSession := '5');
+-- SELECT * FROM gpGet_wms_Movement_WeighingProduction(inMovementId := 0 ,  inSession := '5');

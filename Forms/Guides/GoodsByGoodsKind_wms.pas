@@ -39,12 +39,6 @@ type
     bbUpdateGoodsBrand: TdxBarButton;
     isGoodsTypeKind_Sh: TcxGridDBColumn;
     isGoodsTypeKind_Nom: TcxGridDBColumn;
-    spUpdateSh_Yes: TdsdStoredProc;
-    spUpdateNom_Yes: TdsdStoredProc;
-    spUpdateSh_No: TdsdStoredProc;
-    spUpdateVes_Yes: TdsdStoredProc;
-    spUpdateNom_No: TdsdStoredProc;
-    spUpdateVes_No: TdsdStoredProc;
     cxLabel2: TcxLabel;
     edRetail4: TcxButtonEdit;
     cxLabel4: TcxLabel;

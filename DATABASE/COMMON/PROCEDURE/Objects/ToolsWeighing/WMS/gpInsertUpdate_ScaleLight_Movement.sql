@@ -38,7 +38,7 @@ BEGIN
 
 
      -- сохранили
-     inId:= gpInsertUpdate_Movement_WeighingProduction_wms (ioId                  := inId
+     inId:= gpInsertUpdate_wms_Movement_WeighingProduction (ioId                  := inId
                                                        -- , inInvNumber           := inInvNumber
                                                           , inOperDate            := inOperDate
                                                        -- , inStartWeighing       := inStartWeighing
@@ -63,7 +63,7 @@ BEGIN
        SELECT Movement.Id :: Integer
             , Movement.InvNumber
             , Movement.OperDate
-       FROM Movement_WeighingProduction AS Movement
+       FROM wms_Movement_WeighingProduction AS Movement
        WHERE Movement.Id = inId;
 
 

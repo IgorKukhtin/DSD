@@ -524,8 +524,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_wmsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_wmsForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsBrandFormTest;
@@ -3212,31 +3210,27 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   //
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
-  }
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
-
   //
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
-  }
+
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;
  begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsForm');
-  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsJournalForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_wmsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_wmsForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

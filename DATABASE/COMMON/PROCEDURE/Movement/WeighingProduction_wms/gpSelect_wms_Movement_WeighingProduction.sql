@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_WeighingProduction_wms()
+-- Function: gpSelect_wms_Movement_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingProduction_wms (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_Movement_WeighingProduction (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_wms (
+CREATE OR REPLACE FUNCTION gpSelect_wms_Movement_WeighingProduction (
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean ,
@@ -37,7 +37,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
@@ -96,9 +96,9 @@ BEGIN
              , Object_User.Id                       AS UserId
              , Object_User.ValueData                AS UserName
        FROM tmpStatus
-            INNER JOIN Movement_WeighingProduction AS Movement
-                                                   ON Movement.StatusId = tmpStatus.StatusId
-                                                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+            INNER JOIN wms_Movement_WeighingProduction AS Movement
+                                                       ON Movement.StatusId = tmpStatus.StatusId
+                                                      AND Movement.OperDate BETWEEN inStartDate AND inEndDate
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.MovementDescId
@@ -144,4 +144,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingProduction_wms(inStartDate := ('23.05.2019')::TDateTime , inEndDate := ('23.05.2019')::TDateTime , inIsErased := 'True' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_wms_Movement_WeighingProduction(inStartDate := ('23.05.2019')::TDateTime , inEndDate := ('23.05.2019')::TDateTime , inIsErased := 'True' , inJuridicalBasisId := 9399 ,  inSession := '5');

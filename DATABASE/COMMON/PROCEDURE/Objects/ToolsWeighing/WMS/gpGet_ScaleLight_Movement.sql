@@ -101,8 +101,8 @@ BEGIN
        WITH tmpMovement AS (-- если inMovementId = 0, тогда - последний не закрытый
                             SELECT Movement.*
                             FROM (SELECT Movement.*
-                                  FROM (SELECT (inOperDate - INTERVAL '113 DAY') AS StartDate, (inOperDate + INTERVAL '113 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
-                                       INNER JOIN Movement_WeighingProduction AS Movement
+                                  FROM (SELECT (inOperDate - INTERVAL '0 DAY') AS StartDate, (inOperDate + INTERVAL '0 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
+                                       INNER JOIN wms_Movement_WeighingProduction AS Movement
                                                ON Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
                                               AND Movement.StatusId    = zc_Enum_Status_UnComplete()
                                               AND Movement.UserId      = vbUserId
@@ -113,8 +113,8 @@ BEGIN
                            UNION
                             -- или "следующий" не закрытый, т.е. <> inMovementId, для inIsNext = TRUE
                             SELECT Movement.*
-                            FROM (SELECT (inOperDate - INTERVAL '111 DAY') AS StartDate, (inOperDate + INTERVAL '111 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
-                                 INNER JOIN Movement_WeighingProduction AS Movement
+                            FROM (SELECT (inOperDate - INTERVAL '0 DAY') AS StartDate, (inOperDate + INTERVAL '0 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
+                                 INNER JOIN wms_Movement_WeighingProduction AS Movement
                                          ON Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
                                         AND Movement.StatusId    = zc_Enum_Status_UnComplete()
                                         AND Movement.UserId      = vbUserId
@@ -125,7 +125,7 @@ BEGIN
                             -- или inMovementId если он тоже не закрытый, для inIsNext = FALSE
                             SELECT Movement.*
                             FROM (SELECT inMovementId AS MovementId WHERE inMovementId > 0 AND inIsNext = FALSE) AS tmp
-                                 INNER JOIN Movement_WeighingProduction AS Movement
+                                 INNER JOIN wms_Movement_WeighingProduction AS Movement
                                          ON Movement.Id          = tmp.MovementId
                                         AND Movement.StatusId    = zc_Enum_Status_UnComplete()
                                      -- AND Movement.UserId      = vbUserId
@@ -241,7 +241,11 @@ BEGIN
            , tmpBox.BoxId        AS BoxId_1                  -- Id ящика
            , tmpBox.BoxName      AS BoxName_1                -- название ящика Е2 или Е3
            , tmpBox.BoxWeight    AS BoxWeight_1              -- Вес самого ящика
-           , tmpBox.WeightOnBox  AS WeightOnBox_1            -- вложенность - Вес
+           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
+                  ELSE tmpBox.WeightOnBox
+             END       :: TFloat AS WeightOnBox_1            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
            , tmpBox.CountOnBox   AS CountOnBox_1             -- Вложенность - шт (информативно?)
 
              -- 2-ая линия - Всегда этот цвет
@@ -258,7 +262,11 @@ BEGIN
            , tmpBox.BoxId        AS BoxId_2                  -- Id ящика
            , tmpBox.BoxName      AS BoxName_2                -- название ящика Е2 или Е3
            , tmpBox.BoxWeight    AS BoxWeight_2              -- Вес самого ящика
-           , tmpBox.WeightOnBox  AS WeightOnBox_2            -- вложенность - Вес
+           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
+                  ELSE tmpBox.WeightOnBox
+             END       :: TFloat AS WeightOnBox_2            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
            , tmpBox.CountOnBox   AS CountOnBox_2             -- Вложенность - шт (информативно?)
 
              -- 3-ья линия - Всегда этот цвет
@@ -275,7 +283,11 @@ BEGIN
            , tmpBox.BoxId        AS BoxId_3                  -- Id ящика
            , tmpBox.BoxName      AS BoxName_3                -- название ящика Е2 или Е3
            , tmpBox.BoxWeight    AS BoxWeight_3              -- Вес самого ящика
-           , tmpBox.WeightOnBox  AS WeightOnBox_3            -- вложенность - Вес
+           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
+                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
+                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
+                  ELSE tmpBox.WeightOnBox
+             END       :: TFloat AS WeightOnBox_3            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
            , tmpBox.CountOnBox   AS CountOnBox_3             -- Вложенность - шт (информативно?)
 
       FROM tmpMovement AS Movement

@@ -121,6 +121,20 @@ BEGIN
                               AND MIContainer.isActive               = FALSE
                             GROUP BY MIContainer.ContainerId
                                    , MIContainer.OperDate
+                           UNION ALL
+                            -- минус Списание
+                            SELECT MIContainer.ContainerId
+                                 , MIContainer.OperDate
+                                 , zc_MI_Child() AS DescId_mi
+                                 , 1 * SUM (MIContainer.Amount) AS OperCount
+                            FROM MovementItemContainer AS MIContainer 
+                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.DescId                 = zc_MIContainer_Count()
+                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                              AND MIContainer.MovementDescId         = zc_Movement_Loss()
+                              AND MIContainer.isActive               = FALSE
+                            GROUP BY MIContainer.ContainerId
+                                   , MIContainer.OperDate
                            ) AS tmp
                             GROUP BY tmp.ContainerId
                                    , tmp.OperDate

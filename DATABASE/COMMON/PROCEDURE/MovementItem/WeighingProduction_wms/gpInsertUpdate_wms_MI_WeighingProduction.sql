@@ -1,13 +1,13 @@
--- Function: gpInsertUpdate_MI_WeighingProduction_wms()
+-- Function: gpInsertUpdate_wms_MI_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_WeighingProduction_wms (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_wms_MI_WeighingProduction (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_WeighingProduction_wms(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_MI_WeighingProduction(
  INOUT ioId                  BigInt    , -- Ключ объекта <Элемент документа>
     IN inMovementId          BigInt    , -- Ключ объекта <Документ>
- -- IN inParentId            Integer   , -- 
-    IN inGoodsTypeKindId     Integer   , -- 
-    IN inBarCodeBoxId        Integer   , -- 
+ -- IN inParentId            Integer   , --
+    IN inGoodsTypeKindId     Integer   , --
+    IN inBarCodeBoxId        Integer   , --
     IN inLineCode            Integer   , --
     IN inAmount              TFloat    , --
     IN inRealWeight          TFloat    , --
@@ -18,28 +18,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_WeighingProduction_wms(
     IN in_sku_code           TVarChar  , --
     IN inPartionDate         TDateTime , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS BigInt
 AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbParentId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingProduction_wms());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_wms_MI_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
 
      -- поиск
-     vbStatusId:= (SELECT Movement_WeighingProduction.StatusId FROM Movement_WeighingProduction WHERE Movement_WeighingProduction.Id = inMovementId);
+     vbStatusId:= (SELECT wms_Movement_WeighingProduction.StatusId FROM wms_Movement_WeighingProduction WHERE wms_Movement_WeighingProduction.Id = inMovementId);
      -- проверка
      IF vbStatusId <> zc_Enum_Status_UnComplete()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.'
-                       , (SELECT Movement_WeighingProduction.InvNumber FROM Movement_WeighingProduction WHERE Movement_WeighingProduction.Id = inMovementId)
+                       , (SELECT wms_Movement_WeighingProduction.InvNumber FROM wms_Movement_WeighingProduction WHERE wms_Movement_WeighingProduction.Id = inMovementId)
                        , lfGet_Object_ValueData (vbStatusId);
      END IF;
-     
+
      -- проверка
      IF COALESCE (inGoodsTypeKindId, 0) = 0
      THEN
@@ -61,12 +62,13 @@ BEGIN
 
      IF COALESCE (ioId, 0) = 0 THEN
         -- создали
-        INSERT INTO MI_WeighingProduction (MovementId, ParentId, GoodsTypeKindId, BarCodeBoxId, LineCode
-                                         , Amount, RealWeight, InsertDate, UpdateDate
-                                         , WmsCode, sku_id, sku_code
-                                         , PartionDate
-                                         , IsErased
-                                          )
+        INSERT INTO wms_MI_WeighingProduction (MovementId, ParentId, GoodsTypeKindId, BarCodeBoxId, LineCode
+                                             , Amount, RealWeight, InsertDate, UpdateDate
+                                             , WmsCode, sku_id, sku_code
+                                             , PartionDate
+                                             , StatusId_wms
+                                             , IsErased
+                                              )
                VALUES (inMovementId
                      , NULL
                      , inGoodsTypeKindId
@@ -80,12 +82,13 @@ BEGIN
                      , in_sku_id
                      , in_sku_code
                      , inPartionDate
+                     , NULL
                      , FALSE
                       )
                  RETURNING Id INTO ioId;
      ELSE
         -- изменили
-        UPDATE MI_WeighingProduction
+        UPDATE wms_MI_WeighingProduction
                 SET MovementId        = inMovementId
                -- , ParentId          = inParentId
                   , GoodsTypeKindId   = inGoodsTypeKindId
@@ -99,12 +102,19 @@ BEGIN
                   , sku_id            = in_sku_id
                   , sku_code          = in_sku_code
                   , PartionDate       = inPartionDate
-        WHERE MI_WeighingProduction.Id = ioId;    
-    
+                  , StatusId_wms      = NULL
+        WHERE wms_MI_WeighingProduction.Id = ioId RETURNING ParentId INTO vbParentId;
+
         --
         IF NOT FOUND
         THEN
             RAISE EXCEPTION 'Ошибка.Не найден ioId = <%>.', ioId;
+        END IF;
+
+        -- проверка
+        IF COALESCE (vbParentId, 0) > 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Ящик уже закрыт.Изменения невозможны.';
         END IF;
 
      END IF;

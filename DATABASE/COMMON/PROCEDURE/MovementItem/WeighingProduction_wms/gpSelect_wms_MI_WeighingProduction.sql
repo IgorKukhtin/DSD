@@ -1,9 +1,9 @@
--- Function: gpSelect_MI_WeighingProduction_wms()
+-- Function: gpSelect_wms_MI_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MI_WeighingProduction_wms (BigInt, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_MI_WeighingProduction (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_MI_WeighingProduction (BigInt, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingProduction_wms (
+CREATE OR REPLACE FUNCTION gpSelect_wms_MI_WeighingProduction (
     IN inMovementId  BigInt       , -- ключ Документа
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
@@ -25,7 +25,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingProduction());
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_wms_MI_WeighingProduction());
 
      RETURN QUERY 
        SELECT
@@ -47,9 +47,9 @@ BEGIN
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            INNER JOIN MI_WeighingProduction AS MovementItem 
-                                             ON MovementItem.MovementId = inMovementId
-                                            AND MovementItem.isErased   = tmpIsErased.isErased
+            INNER JOIN wms_MI_WeighingProduction AS MovementItem 
+                                                 ON MovementItem.MovementId = inMovementId
+                                                AND MovementItem.isErased   = tmpIsErased.isErased
 
             LEFT JOIN Movement AS Movement_Parent      ON Movement_Parent.Id      = MovementItem.ParentId
             LEFT JOIN Object   AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = MovementItem.GoodsTypeKindId
@@ -71,4 +71,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_WeighingProduction_wms (inMovementId:= 0, inIsErased:= FALSE, inSession:= '5');
+-- SELECT * FROM gpSelect_wms_MI_WeighingProduction (inMovementId:= 0, inIsErased:= FALSE, inSession:= '5');

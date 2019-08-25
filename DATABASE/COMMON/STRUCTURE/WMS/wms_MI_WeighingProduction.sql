@@ -1,15 +1,16 @@
 /*
   Создание 
-    - таблицы MI_WeighingProduction (oбъекты)
+    - таблицы wms_MI_WeighingProduction (oбъекты)
     - связей
     - индексов
 */
 
--- DROP TABLE MI_WeighingProduction
+-- DROP TABLE wms_MI_WeighingProduction
+-- DELETE FROM wms_MI_WeighingProduction
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE MI_WeighingProduction(
+CREATE TABLE wms_MI_WeighingProduction(
    Id                  BIGSERIAL NOT NULL PRIMARY KEY, 
    MovementId          Integer   NOT NULL,
    ParentId            Integer       NULL,
@@ -24,15 +25,15 @@ CREATE TABLE MI_WeighingProduction(
    sku_id              TVarChar  NOT NULL, -- sku_id
    sku_code            TVarChar  NOT NULL, -- sku_code
    PartionDate         TDateTime NOT NULL,
+   StatusId_wms        Integer       NULL,
    isErased            Boolean   NOT NULL
    );
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
-
---CREATE INDEX idx_MI_WeighingProduction_Id	 ON MI_WeighingProduction (Id);
---CREATE INDEX idx_MI_WeighingProduction_OperDate ON MI_WeighingProduction (OperDate);
---CREATE INDEX idx_MI_WeighingProduction_MovementId  ON MI_WeighingProduction (MovementId);
+CREATE INDEX idx_wms_MI_WeighingProduction_Id	        ON wms_MI_WeighingProduction (Id);
+CREATE INDEX idx_wms_MI_WeighingProduction_ParentId     ON wms_MI_WeighingProduction (ParentId);
+CREATE INDEX idx_wms_MI_WeighingProduction_MovementId   ON wms_MI_WeighingProduction (MovementId);
+CREATE INDEX idx_wms_MI_WeighingProduction_MovementId_StatusId_wms ON wms_MI_WeighingProduction (MovementId, StatusId_wms);
 
 /*-------------------------------------------------------------------------------*/
 /*

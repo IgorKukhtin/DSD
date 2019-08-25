@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_GoodsByGoodsKind_wms (Integer, Integer, Integer)
+-- Function: gpInsertUpdate_wms_Object_GoodsByGoodsKind (Integer, Integer, Integer)
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_wms (TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_wms_Object_GoodsByGoodsKind (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_wms(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_Object_GoodsByGoodsKind(
     IN inSession             TVarChar 
 )
 RETURNS VOID
@@ -11,7 +11,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind());
+    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_wms_Object_GoodsByGoodsKind());
    
 
     -- заливаем в линейную табл. - данные из zc_Object_GoodsByGoodsKind
@@ -63,7 +63,7 @@ BEGIN
          ;
            
           -- Обновляем существующие ObjectId
-          UPDATE Object_GoodsByGoodsKind
+          UPDATE wms_Object_GoodsByGoodsKind
            SET GoodsId               = tmp.GoodsId            
              , GoodsKindId           = tmp.GoodsKindId        
              , MeasureId             = tmp.MeasureId          
@@ -91,37 +91,37 @@ BEGIN
              , sku_code_Ves          = tmp.sku_code_Ves
              , isErased              = tmp.isErased           
           FROM _tmpGoodsByGoodsKind AS tmp
-          WHERE tmp.ObjectId = Object_GoodsByGoodsKind.ObjectId;
+          WHERE tmp.ObjectId = wms_Object_GoodsByGoodsKind.ObjectId;
      
      -- добавляем новые ObjectId
-     INSERT INTO Object_GoodsByGoodsKind (ObjectId
-                                        , GoodsId
-                                        , GoodsKindId
-                                        , MeasureId
-                                        , GoodsTypeKindId_Sh
-                                        , GoodsTypeKindId_Nom
-                                        , GoodsTypeKindId_Ves
-                                        , WeightMin
-                                        , WeightMax
-                                        , NormInDays
-                                        , Height
-                                        , Length
-                                        , Width
-                                        , WmsCode
-                                        , GoodsPropertyBoxId
-                                        , BoxId
-                                        , BoxWeight
-                                        , WeightOnBox
-                                        , CountOnBox
-                                        , WmsCellNum
-                                        , sku_id_Sh
-                                        , sku_id_Nom
-                                        , sku_id_Ves
-                                        , sku_code_Sh
-                                        , sku_code_Nom
-                                        , sku_code_Ves
-                                        , isErased
-                                         )
+     INSERT INTO wms_Object_GoodsByGoodsKind (ObjectId
+                                            , GoodsId
+                                            , GoodsKindId
+                                            , MeasureId
+                                            , GoodsTypeKindId_Sh
+                                            , GoodsTypeKindId_Nom
+                                            , GoodsTypeKindId_Ves
+                                            , WeightMin
+                                            , WeightMax
+                                            , NormInDays
+                                            , Height
+                                            , Length
+                                            , Width
+                                            , WmsCode
+                                            , GoodsPropertyBoxId
+                                            , BoxId
+                                            , BoxWeight
+                                            , WeightOnBox
+                                            , CountOnBox
+                                            , WmsCellNum
+                                            , sku_id_Sh
+                                            , sku_id_Nom
+                                            , sku_id_Ves
+                                            , sku_code_Sh
+                                            , sku_code_Nom
+                                            , sku_code_Ves
+                                            , isErased
+                                             )
       SELECT tmp.ObjectId
            , tmp.GoodsId
            , tmp.GoodsKindId
@@ -146,8 +146,8 @@ BEGIN
            , tmp.sku_code_Sh, tmp.sku_code_Nom, tmp.sku_code_Ves
            , tmp.isErased
       FROM _tmpGoodsByGoodsKind AS tmp
-           LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.ObjectId = tmp.ObjectId
-      WHERE Object_GoodsByGoodsKind.ObjectId IS NULL
+           LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.ObjectId = tmp.ObjectId
+      WHERE wms_Object_GoodsByGoodsKind.ObjectId IS NULL
       ;
 
    -- сохранили протокол
@@ -166,4 +166,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsByGoodsKind_wms (zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_wms_Object_GoodsByGoodsKind (zfCalc_UserAdmin())

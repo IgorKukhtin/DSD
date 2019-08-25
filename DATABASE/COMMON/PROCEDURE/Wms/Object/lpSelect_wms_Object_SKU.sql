@@ -1,9 +1,9 @@
 -- Function: lpSelect_Object_wms_SKU()
 -- 4.1.1.1 Справочник товаров <sku>
 
-DROP FUNCTION IF EXISTS lpSelect_Object_wms_SKU ();
+DROP FUNCTION IF EXISTS lpSelect_wms_Object_SKU ();
 
-CREATE OR REPLACE FUNCTION lpSelect_Object_wms_SKU(
+CREATE OR REPLACE FUNCTION lpSelect_wms_Object_SKU(
 )
 RETURNS TABLE (ObjectId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -70,7 +70,7 @@ BEGIN
                                    , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                                    , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                                    , tmp.*
-                              FROM Object_GoodsByGoodsKind AS tmp
+                              FROM wms_Object_GoodsByGoodsKind AS tmp
                                    LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmp.GoodsId
                                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
                                    LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = tmp.MeasureId
@@ -201,4 +201,4 @@ $BODY$
  10.08.19                                       *
 */
 -- тест
--- SELECT * FROM lpSelect_Object_wms_SKU() ORDER BY sku_code
+-- SELECT * FROM lpSelect_wms_Object_SKU() ORDER BY sku_code

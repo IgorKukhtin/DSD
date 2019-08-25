@@ -655,7 +655,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 375
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_WeighingProduction_wms'
+    StoredProcName = 'gpSelect_wms_MI_WeighingProduction'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1311,7 +1311,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 217
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_WeighingProduction_wms'
+    StoredProcName = 'gpGet_wms_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2159,7 +2159,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 88
   end
   object spSelectPrintSticker: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_WeighingProduction_wms_PrintSticker'
+    StoredProcName = 'gpSelect_wms_Movement_WeighingProduction_PrintSticker'
     DataSet = PrintItemsCDS
     DataSets = <
       item

@@ -383,4 +383,4 @@ $BODY$
 
 -- тест
 -- SELECT GoodsTypeKindId_Sh, GoodsTypeKindId_Nom, GoodsTypeKindId_Ves, GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3 FROM gpGet_ScaleLight_Goods (inGoodsId:= 2153, inGoodsKindId:= 8352, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_ScaleLight_Goods (inGoodsId:= 2153, inGoodsKindId:= 8352, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleLight_Goods (inGoodsId:= 3812117, inGoodsKindId:= 8348, inSession:= zfCalc_UserAdmin())

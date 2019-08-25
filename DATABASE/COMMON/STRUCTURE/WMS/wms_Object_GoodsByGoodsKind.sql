@@ -1,14 +1,14 @@
 /*
   Создание 
-    - таблицы Object_GoodsByGoodsKind (oбъекты)
+    - таблицы wms_Object_GoodsByGoodsKind (oбъекты)
     - связей
     - индексов
 */
--- DROP TABLE Object_GoodsByGoodsKind
+-- DROP TABLE wms_Object_GoodsByGoodsKind
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE Object_GoodsByGoodsKind(
+CREATE TABLE wms_Object_GoodsByGoodsKind(
    ObjectId            Integer  NOT NULL PRIMARY KEY, 
    GoodsId             Integer ,
    GoodsKindId	       Integer ,
@@ -38,10 +38,9 @@ CREATE TABLE Object_GoodsByGoodsKind(
    isErased            Boolean  
   );
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
-CREATE UNIQUE INDEX idx_Object_GoodsByGoodsKind_ObjectId            ON Object_GoodsByGoodsKind (ObjectId);
-CREATE UNIQUE INDEX idx_Object_GoodsByGoodsKind_GoodsId_GoodsKindId ON Object_GoodsByGoodsKind (GoodsId, GoodsKindId);
+CREATE UNIQUE INDEX idx_wms_Object_GoodsByGoodsKind_ObjectId            ON wms_Object_GoodsByGoodsKind (ObjectId);
+CREATE UNIQUE INDEX idx_wms_Object_GoodsByGoodsKind_GoodsId_GoodsKindId ON wms_Object_GoodsByGoodsKind (GoodsId, GoodsKindId);
 
 /*-------------------------------------------------------------------------------*/
 /*

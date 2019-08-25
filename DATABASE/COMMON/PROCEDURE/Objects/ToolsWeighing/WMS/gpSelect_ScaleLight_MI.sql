@@ -52,8 +52,8 @@ BEGIN
                   , MovementItem.isErased
                   , Movement.OperDate
                   , Movement.GoodsId
-             FROM MI_WeighingProduction AS MovementItem
-                  LEFT JOIN Movement_WeighingProduction AS Movement ON Movement.Id = MovementItem.MovementId
+             FROM wms_MI_WeighingProduction AS MovementItem
+                  LEFT JOIN wms_Movement_WeighingProduction AS Movement ON Movement.Id = MovementItem.MovementId
              WHERE MovementItem.MovementId = inMovementId
             )
        SELECT

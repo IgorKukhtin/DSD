@@ -1,20 +1,20 @@
 /*
   Создание 
-    - таблицы Movement_WeighingProduction
+    - таблицы wms_Movement_WeighingProduction
     - связей
     - индексов
 */
 
--- DROP TABLE Movement_WeighingProduction
+-- DROP TABLE wms_Movement_WeighingProduction
+-- DELETE FROM wms_Movement_WeighingProduction
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE Movement_WeighingProduction(
+CREATE TABLE wms_Movement_WeighingProduction(
    Id                  BIGSERIAL NOT NULL PRIMARY KEY, 
    InvNumber           TVarChar  NOT NULL,
    OperDate            TDateTime NOT NULL,
    StatusId            Integer   NOT NULL,
-   StatusId_wms        Integer       NULL,
    FromId              Integer   NOT NULL,
    ToId                Integer   NOT NULL,
    GoodsTypeKindId_1   Integer   NOT NULL,
@@ -33,13 +33,10 @@ CREATE TABLE Movement_WeighingProduction(
    EndWeighing         TDateTime     NULL
    );
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
-
---CREATE INDEX idx_Movement_WeighingProduction_Id	  ON Movement_WeighingProduction (Id);
---CREATE INDEX idx_Movement_WeighingProduction_OperDate  ON Movement_WeighingProduction (OperDate);
---CREATE INDEX idx_Movement_WeighingProduction_FromId   ON Movement_WeighingProduction (FromId);
---CREATE INDEX idx_Movement_WeighingProduction_ToId    ON Movement_WeighingProduction (ToId);
+CREATE INDEX idx_wms_Movement_WeighingProduction_Id	           ON wms_Movement_WeighingProduction (Id);
+CREATE INDEX idx_wms_Movement_WeighingProduction_OperDate          ON wms_Movement_WeighingProduction (OperDate);
+CREATE INDEX idx_wms_Movement_WeighingProduction_OperDate_StatusId ON wms_Movement_WeighingProduction (OperDate, StatusId);
 
 /*-------------------------------------------------------------------------------*/
 /*

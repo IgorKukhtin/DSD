@@ -90,13 +90,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Вес = <%> не должен быть больше 9.999 кг.', inRealWeight;
      END IF;
      -- проверка - вес больше 0.010 кг.
-     IF FLOOR (inRealWeight) <= 0.010
+     IF inRealWeight <= 0.010
      THEN
          RAISE EXCEPTION 'Ошибка.Вес = <%> должен быть больше 0.010 кг.', inRealWeight;
      END IF;
 
      -- нашли Дату партии
-     vbOperDate:= (SELECT Movement.OperDate FROM Movement_WeighingProduction AS Movement WHERE Movement.Id = inMovementId);
+     vbOperDate:= (SELECT Movement.OperDate FROM wms_Movement_WeighingProduction AS Movement WHERE Movement.Id = inMovementId);
      
      -- сколько дней
      vbDay:= (1 + EXTRACT (DAY FROM (vbOperDate - DATE_TRUNC ('YEAR', vbOperDate)) :: INTERVAL)) :: TVarChar;
@@ -131,7 +131,7 @@ BEGIN
              -- Id ВМС + код ВМС
              SELECT tmp.sku_id_Sh, tmp.sku_code_Sh
                     INTO vb_sku_id, vb_sku_code
-             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
+             FROM lpInsertFind_wms_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
              vbWmsBarCode:= '3' || vbDay || inWmsCode_Sh || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
@@ -175,7 +175,7 @@ BEGIN
              -- Id ВМС + код ВМС
              SELECT tmp.sku_id_Nom, tmp.sku_code_Nom
                     INTO vb_sku_id, vb_sku_code
-             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
+             FROM lpInsertFind_wms_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
              vbWmsBarCode := '3' || vbDay || inWmsCode_Nom || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
@@ -213,7 +213,7 @@ BEGIN
              -- Id ВМС + код ВМС
              SELECT tmp.sku_id_Ves, tmp.sku_code_Ves
                     INTO vb_sku_id, vb_sku_code
-             FROM lpInsertFind_Object_GoodsByGoodsKind_wms (inGoodsId, inGoodsKindId, inSession) AS tmp;
+             FROM lpInsertFind_wms_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inSession) AS tmp;
              -- 12-значн. Ш/К для ВМС: 3(1)+дни(3)+WmsCode(4)+вес(4)+контрольная(1)
              vbWmsBarCode := '3' || vbDay || inWmsCode_Ves || vbW_1 || vbW_3;
              -- 13-значн. Ш/К для ВМС: +контрольная(1)
@@ -250,7 +250,7 @@ BEGIN
      
      
      -- сохранили
-     vbId:= gpInsertUpdate_MI_WeighingProduction_wms (ioId                  := 0
+     vbId:= gpInsertUpdate_wms_MI_WeighingProduction (ioId                  := 0
                                                     , inMovementId          := inMovementId
                                                     , inGoodsTypeKindId     := vbGoodsTypeKindId
                                                     , inBarCodeBoxId        := vbBarCodeBoxId
@@ -268,7 +268,7 @@ BEGIN
      SELECT SUM (MovementItem.RealWeight)
           , SUM (MovementItem.Amount)
             INTO vbWeightOnBox, vbCountOnBox
-     FROM MI_WeighingProduction AS MovementItem
+     FROM wms_MI_WeighingProduction AS MovementItem
      WHERE MovementItem.MovementId      = inMovementId
        AND MovementItem.isErased        = FALSE
        AND MovementItem.ParentId        IS NULL
@@ -276,6 +276,7 @@ BEGIN
        AND MovementItem.BarCodeBoxId    = vbBarCodeBoxId
             ;
 
+-- RAISE EXCEPTION '<%> %', vbWeightOnBox, inWeightOnBox_2;
 
      -- если уже взвешено >= вложенность - Вес
      vbIsFull:= CASE WHEN vbWeightOnBox >= CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1
@@ -298,7 +299,7 @@ BEGIN
                                                                   , inMovementDescId      := Movement.MovementDescId
                                                                   , inMovementDescNumber  := Movement.MovementDescNumber
                                                                   , inWeighingNumber      := 1 + COALESCE ((SELECT COUNT(*)
-                                                                                                            FROM MI_WeighingProduction AS MovementItem
+                                                                                                            FROM wms_MI_WeighingProduction AS MovementItem
                                                                                                             WHERE MovementItem.MovementId      = inMovementId
                                                                                                               AND MovementItem.isErased        = FALSE
                                                                                                               AND MovementItem.ParentId        > 0
@@ -312,7 +313,7 @@ BEGIN
                                                                   , inIsProductionIn      := FALSE
                                                                   , inSession             := inSession
                                                                    )
-         FROM Movement_WeighingProduction AS Movement WHERE Movement.Id = inMovementId;
+         FROM wms_Movement_WeighingProduction AS Movement WHERE Movement.Id = inMovementId;
 
          -- в Документ еще сохранили <КАТЕГОРИЯ товара (груза)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsTypeKind(), vbMovementId, vbGoodsTypeKindId);
@@ -347,13 +348,13 @@ BEGIN
          FROM (SELECT Movement.GoodsId, Movement.GoodsKindId
                     , SUM (MovementItem.RealWeight) AS RealWeight
                     , SUM (MovementItem.Amount)     AS Amount
-               FROM Movement_WeighingProduction AS Movement
-                    INNER JOIN MI_WeighingProduction AS MovementItem
-                                                     ON MovementItem.MovementId      = Movement.Id
-                                                    AND MovementItem.isErased        = FALSE
-                                                    AND MovementItem.GoodsTypeKindId = vbGoodsTypeKindId
-                                                    AND MovementItem.BarCodeBoxId    = vbBarCodeBoxId
-                                                    AND MovementItem.ParentId        IS NULL
+               FROM wms_Movement_WeighingProduction AS Movement
+                    INNER JOIN wms_MI_WeighingProduction AS MovementItem
+                                                         ON MovementItem.MovementId      = Movement.Id
+                                                        AND MovementItem.isErased        = FALSE
+                                                        AND MovementItem.GoodsTypeKindId = vbGoodsTypeKindId
+                                                        AND MovementItem.BarCodeBoxId    = vbBarCodeBoxId
+                                                        AND MovementItem.ParentId        IS NULL
                WHERE Movement.Id = inMovementId
                GROUP BY Movement.GoodsId, Movement.GoodsKindId
               ) AS Movement;
@@ -361,28 +362,28 @@ BEGIN
 
 
          -- Обнулили одну из линий - Ш/К для ящика
-         UPDATE Movement_WeighingProduction SET BarCodeBoxId_1 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1
-                                                                           THEN 0
-                                                                      ELSE Movement_WeighingProduction.BarCodeBoxId_1
-                                                                 END
-                                              , BarCodeBoxId_2 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_2
-                                                                           THEN 0
-                                                                      ELSE Movement_WeighingProduction.BarCodeBoxId_2
-                                                                 END
-                                              , BarCodeBoxId_3 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_3
-                                                                           THEN 0
-                                                                      ELSE Movement_WeighingProduction.BarCodeBoxId_3
-                                                                 END
-         WHERE Movement_WeighingProduction.Id = inMovementId
+         UPDATE wms_Movement_WeighingProduction SET BarCodeBoxId_1 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1
+                                                                                THEN 0
+                                                                           ELSE wms_Movement_WeighingProduction.BarCodeBoxId_1
+                                                                      END
+                                                   , BarCodeBoxId_2 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_2
+                                                                                THEN 0
+                                                                           ELSE wms_Movement_WeighingProduction.BarCodeBoxId_2
+                                                                      END
+                                                   , BarCodeBoxId_3 = CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_3
+                                                                                THEN 0
+                                                                           ELSE wms_Movement_WeighingProduction.BarCodeBoxId_3
+                                                                      END
+         WHERE wms_Movement_WeighingProduction.Id = inMovementId
         ;
 
          -- сохранили что 1 ящик ЗАКРЫТ
-         UPDATE MI_WeighingProduction SET ParentId = vbMovementId
-         WHERE MI_WeighingProduction.MovementId      = inMovementId
-        -- AND MI_WeighingProduction.isErased        = FALSE
-           AND MI_WeighingProduction.ParentId        IS NULL
-           AND MI_WeighingProduction.GoodsTypeKindId = vbGoodsTypeKindId
-           AND MI_WeighingProduction.BarCodeBoxId    = vbBarCodeBoxId
+         UPDATE wms_MI_WeighingProduction SET ParentId = vbMovementId
+         WHERE wms_MI_WeighingProduction.MovementId      = inMovementId
+        -- AND wms_MI_WeighingProduction.isErased        = FALSE
+           AND wms_MI_WeighingProduction.ParentId        IS NULL
+           AND wms_MI_WeighingProduction.GoodsTypeKindId = vbGoodsTypeKindId
+           AND wms_MI_WeighingProduction.BarCodeBoxId    = vbBarCodeBoxId
         ;
 
      END IF;

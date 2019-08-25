@@ -5,7 +5,7 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1055
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,6 +30,7 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
               Kind = skCount
               Column = GoodsName
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -615,7 +616,7 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind_wms'
+    StoredProcName = 'gpSelect_wms_Object_GoodsByGoodsKind'
     Left = 72
     Top = 160
   end
@@ -680,7 +681,7 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
     Top = 208
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_wms'
+    StoredProcName = 'gpInsertUpdate_wms_Object_GoodsByGoodsKind'
     DataSets = <>
     OutputType = otResult
     Params = <>
@@ -692,248 +693,6 @@ inherited GoodsByGoodsKind_wmsForm: TGoodsByGoodsKind_wmsForm
     Params = <>
     Left = 400
     Top = 216
-  end
-  object spUpdateSh_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Sh'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Sh'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 656
-    Top = 240
-  end
-  object spUpdateNom_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Nom'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Nom'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 648
-    Top = 288
-  end
-  object spUpdateSh_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Sh'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Sh'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 736
-    Top = 240
-  end
-  object spUpdateVes_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Ves'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Ves'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 648
-    Top = 336
-  end
-  object spUpdateNom_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Nom'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Nom'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 728
-    Top = 296
-  end
-  object spUpdateVes_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Ves'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisGoodsTypeKind_Ves'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 720
-    Top = 344
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

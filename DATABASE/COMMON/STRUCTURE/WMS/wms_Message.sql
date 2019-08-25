@@ -1,15 +1,15 @@
 /*
   Создание 
-    - таблицы Object_WMS
+    - таблицы wms_Message
     - связей
     - индексов
 */
 
--- DROP TABLE Object_WMS
+-- DROP TABLE wms_Message
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE Object_WMS(
+CREATE TABLE wms_Message(
    Id                    BIGSERIAL NOT NULL PRIMARY KEY, 
    GUID                  TVarChar  NOT NULL,
    ProcName              TVarChar  NOT NULL,
@@ -18,15 +18,17 @@ CREATE TABLE Object_WMS(
    RowNum                Integer   NOT NULL,
    RowData               Text      NOT NULL,
    ObjectId              Integer   NOT NULL,
-   GroupId               Integer   NOT NULL
+   GroupId               Integer   NOT NULL,
+   InsertDate            TDateTime NOT NULL
    );
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
-CREATE INDEX idx_Object_WMS_ProcName      ON Object_WMS (ProcName);
-CREATE INDEX idx_Object_WMS_TagName       ON Object_WMS (TagName);
-CREATE INDEX idx_Object_WMS_GUID          ON Object_WMS (GUID);
-CREATE INDEX idx_Object_WMS_GUID_ProcName ON Object_WMS (GUID, ProcName);
+CREATE INDEX idx_wms_Message_InsertDate    ON wms_Message (InsertDate);
+CREATE INDEX idx_wms_Message_ProcName      ON wms_Message (ProcName);
+CREATE INDEX idx_wms_Message_TagName       ON wms_Message (TagName);
+CREATE INDEX idx_wms_Message_GUID          ON wms_Message (GUID);
+CREATE INDEX idx_wms_Message_GUID_ProcName ON wms_Message (GUID, ProcName);
+CREATE INDEX idx_wms_Message_GUID_ObjectId ON wms_Message (GUID, ObjectId);
 
 /*-------------------------------------------------------------------------------*/
 /*

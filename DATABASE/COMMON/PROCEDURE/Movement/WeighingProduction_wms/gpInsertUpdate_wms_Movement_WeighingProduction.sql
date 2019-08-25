@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Movement_WeighingProduction_wms()
+-- Function: gpInsertUpdate_wms_Movement_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction_wms (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_wms_Movement_WeighingProduction (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction_wms(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_Movement_WeighingProduction(
  INOUT ioId                  BigInt    , -- Ключ объекта <Документ>
 --  IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -30,7 +30,7 @@ $BODY$
    DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingProduction_wms());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -60,11 +60,11 @@ BEGIN
 
      IF COALESCE (ioId, 0) = 0 THEN
         -- создали <Документ>
-        INSERT INTO Movement_WeighingProduction (InvNumber, OperDate, StatusId, FromId, ToId
-                                               , GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3, BarCodeBoxId_1, BarCodeBoxId_2, BarCodeBoxId_3
-                                               , GoodsId, GoodsKindId, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing
-                                                )
-               VALUES (CAST (NEXTVAL ('Movement_WeighingProduction_wms_seq') AS TVarChar)
+        INSERT INTO wms_Movement_WeighingProduction (InvNumber, OperDate, StatusId, FromId, ToId
+                                                   , GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3, BarCodeBoxId_1, BarCodeBoxId_2, BarCodeBoxId_3
+                                                   , GoodsId, GoodsKindId, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing
+                                                    )
+               VALUES (CAST (NEXTVAL ('wms_Movement_WeighingProduction_seq') AS TVarChar)
                      , inOperDate
                      , zc_Enum_Status_UnComplete()
                      , inFromId
@@ -87,7 +87,7 @@ BEGIN
                  RETURNING Id INTO ioId;
      ELSE
         -- изменили <Документ>
-        UPDATE Movement_WeighingProduction
+        UPDATE wms_Movement_WeighingProduction
                SET OperDate             = inOperDate
               -- , InvNumber            = inInvNumber
                  , FromId               = inFromId

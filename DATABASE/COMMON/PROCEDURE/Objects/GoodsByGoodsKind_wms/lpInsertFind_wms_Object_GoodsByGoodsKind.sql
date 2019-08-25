@@ -1,8 +1,8 @@
--- Function: lpInsertFind_Object_GoodsByGoodsKind_wms
+-- Function: lpInsertFind_wms_Object_GoodsByGoodsKind
 
-DROP FUNCTION IF EXISTS lpInsertFind_Object_GoodsByGoodsKind_wms (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertFind_wms_Object_GoodsByGoodsKind (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION lpInsertFind_Object_GoodsByGoodsKind_wms(
+CREATE OR REPLACE FUNCTION lpInsertFind_wms_Object_GoodsByGoodsKind(
     IN inGoodsId            Integer, -- *
     IN inGoodsKindId        Integer, -- *
     IN inSession            TVarChar -- сессия пользователя
@@ -53,7 +53,7 @@ BEGIN
                , vb_sku_code_Sh
                , vb_sku_code_Nom
                , vb_sku_code_Ves
-     FROM Object_GoodsByGoodsKind
+     FROM wms_Object_GoodsByGoodsKind AS Object_GoodsByGoodsKind
      WHERE Object_GoodsByGoodsKind.GoodsId     = inGoodsId
        AND Object_GoodsByGoodsKind.GoodsKindId = inGoodsKindId
       ;
@@ -63,7 +63,7 @@ BEGIN
      IF COALESCE (vbObjectId, 0) = 0
      THEN
          -- сохранили
-         PERFORM gpInsertUpdate_Object_GoodsByGoodsKind_wms (inSession);
+         PERFORM gpInsertUpdate_wms_Object_GoodsByGoodsKind (inSession);
 
          -- Еще раз - Находим по св-вам
          SELECT Object_GoodsByGoodsKind.ObjectId
@@ -80,7 +80,7 @@ BEGIN
                    , vb_sku_code_Sh
                    , vb_sku_code_Nom
                    , vb_sku_code_Ves
-         FROM Object_GoodsByGoodsKind
+         FROM wms_Object_GoodsByGoodsKind AS Object_GoodsByGoodsKind
          WHERE Object_GoodsByGoodsKind.GoodsId     = inGoodsId
            AND Object_GoodsByGoodsKind.GoodsKindId = inGoodsKindId
           ;
@@ -88,7 +88,7 @@ BEGIN
         -- Если не нашли
         IF COALESCE (vbObjectId, 0) = 0
         THEN
-            RAISE EXCEPTION 'Ошибка.Не нашли в Object_GoodsByGoodsKind : <% (%)> + <% (%)>'
+            RAISE EXCEPTION 'Ошибка.Не нашли в wms_Object_GoodsByGoodsKind : <% (%)> + <% (%)>'
                           , lfGet_Object_ValueData (inGoodsId)
                           , inGoodsId
                           , lfGet_Object_ValueData_sh (inGoodsKindId)
@@ -121,4 +121,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertFind_Object_GoodsByGoodsKind_wms ();
+-- SELECT * FROM lpInsertFind_wms_Object_GoodsByGoodsKind ();

@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Account(TVarChar)
+ -- Function: gpSelect_wms_Object_GoodsByGoodsKind(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKind_wms (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_wms_Object_GoodsByGoodsKind (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind_wms(
+CREATE OR REPLACE FUNCTION gpSelect_wms_Object_GoodsByGoodsKind(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -78,7 +78,7 @@ BEGIN
            
            , Object_GoodsByGoodsKind.IsErased
 
-       FROM Object_GoodsByGoodsKind AS Object_GoodsByGoodsKind
+       FROM wms_Object_GoodsByGoodsKind AS Object_GoodsByGoodsKind
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = Object_GoodsByGoodsKind.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_GoodsByGoodsKind.GoodsKindId
             LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = Object_GoodsByGoodsKind.MeasureId
@@ -130,4 +130,4 @@ $BODY$
  23.05.19        *
 */
 -- тест
---select * from gpSelect_Object_GoodsByGoodsKind_wms('3')
+-- SELECT * FROM gpSelect_wms_Object_GoodsByGoodsKind('3')
