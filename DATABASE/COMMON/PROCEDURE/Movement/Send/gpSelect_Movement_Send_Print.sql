@@ -237,7 +237,8 @@ BEGIN
            , tmpMI.Count
            , tmpMI.CountPack
            , tmpMI.HeadCount
-           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           --, CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE COALESCE (ObjectFloat_Weight.ValueData, 0) END )) AS TFloat) AS Amount_Weight
            , CASE WHEN COALESCE (tmpMI.Count, 0) <> 0 
                   THEN tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.Count
                   ELSE 0
