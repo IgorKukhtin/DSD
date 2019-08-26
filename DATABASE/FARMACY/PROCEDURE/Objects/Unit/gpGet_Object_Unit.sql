@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PartnerMedicalId Integer, PartnerMedicalName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
+               KoeffInSUN TFloat, KoeffOutSUN TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                CreateDate TDateTime, CloseDate TDateTime,
                TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
@@ -89,7 +90,10 @@ BEGIN
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
            , CAST (0 as TFloat)    AS TaxServiceNigth
-           
+
+           , CAST (0 as TFloat)    AS KoeffInSUN
+           , CAST (0 as TFloat)    AS KoeffOutSUN
+
            , CAST (Null as TDateTime) AS StartServiceNigth
            , CAST (Null as TDateTime) AS EndServiceNigth
 
@@ -163,6 +167,9 @@ BEGIN
 
       , ObjectFloat_TaxService.ValueData                   AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData              AS TaxServiceNigth
+
+      , COALESCE (ObjectFloat_KoeffInSUN.ValueData,0)  ::TFloat AS KoeffInSUN
+      , COALESCE (ObjectFloat_KoeffOutSUN.ValueData,0) ::TFloat AS KoeffOutSUN
 
       , CASE WHEN COALESCE(ObjectDate_StartServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartServiceNigth.ValueData ELSE Null END ::TDateTime  AS StartServiceNigth
       , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
@@ -285,6 +292,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
                               ON ObjectFloat_TaxServiceNigth.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN
+                              ON ObjectFloat_KoeffInSUN.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_KoeffInSUN.DescId = zc_ObjectFloat_Unit_KoeffInSUN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffOutSUN
+                              ON ObjectFloat_KoeffOutSUN.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id

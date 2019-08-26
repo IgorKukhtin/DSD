@@ -39,6 +39,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -47,6 +52,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inPhone                   TVarChar,
     IN inTaxService              TFloat    ,    -- % от выручки
     IN inTaxServiceNigth         TFloat    ,    -- % от выручки в ночную смену
+    IN inKoeffInSUN              TFloat    ,    -- Коэффициент баланса приход/расход
+    IN inKoeffOutSUN             TFloat    ,    -- Коэффициент баланса расход/приход
     IN inStartServiceNigth       TDateTime ,
     IN inEndServiceNigth         TDateTime ,
     IN inCreateDate              TDateTime ,    -- дата создания точки
@@ -144,6 +151,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxService(), ioId, inTaxService);
    -- % ночной
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxServiceNigth(), ioId, inTaxServiceNigth);
+
+   -- Коэффициент баланса приход/расход
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_KoeffInSUN(), ioId, inKoeffInSUN);
+   -- Коэффициент баланса расход/приход
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_KoeffOutSUN(), ioId, inKoeffOutSUN);
 
    IF inStartServiceNigth ::Time <> '00:00'
    THEN
@@ -274,6 +286,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.08.19         * inKoeffInSUN, inKoeffOutSUN
  13.08.19                                                        * AutoMCS
  02.07.19                                                        * UnitOverdue
  02.07.19         *
