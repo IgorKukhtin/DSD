@@ -1,8 +1,8 @@
--- Function: gpComplete_Movement_WeighingProduction_wms (Integer, TVarChar)
+-- Function: gpComplete_wms_Movement_WeighingProduction (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_WeighingProduction_wms (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_wms_Movement_WeighingProduction (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpComplete_Movement_WeighingProduction_wms(
+CREATE OR REPLACE FUNCTION gpComplete_wms_Movement_WeighingProduction(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
@@ -15,9 +15,9 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_WeighingProduction());
 
      -- проводим Документ + сохранили протокол
-     UPDATE Movement_WeighingProduction
+     UPDATE wms_Movement_WeighingProduction
             SET StatusId = zc_Enum_Status_Complete()
-     WHERE Movement_WeighingProduction.Id = inMovementId;
+     WHERE wms_Movement_WeighingProduction.Id = inMovementId;
      
      /*PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_WeighingProduction()

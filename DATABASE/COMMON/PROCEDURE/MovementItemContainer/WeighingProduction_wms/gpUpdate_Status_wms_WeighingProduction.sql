@@ -1,8 +1,8 @@
--- Function: gpUpdate_Status_WeighingProduction_wms()
+-- Function: gpUpdate_Status_wms_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpUpdate_Status_WeighingProduction_wms (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Status_wms_WeighingProduction (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Status_WeighingProduction_wms (
+CREATE OR REPLACE FUNCTION gpUpdate_Status_wms_WeighingProduction (
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inSession             TVarChar    -- сессия пользователя
@@ -13,11 +13,11 @@ BEGIN
 
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_WeighingProduction_wms (inMovementId, inSession);
+            PERFORM gpUnComplete_wms_Movement_WeighingProduction (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_WeighingProduction_wms (inMovementId, inSession);
+            PERFORM gpComplete_wms_Movement_WeighingProduction (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_WeighingProduction_wms (inMovementId, inSession);
+            PERFORM gpSetErased_wms_Movement_WeighingProduction (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;

@@ -74,7 +74,7 @@ BEGIN
                                -- Уникальное описание упаковки
                                , tmpGoods.name                   AS description
                                --
-                               , ''                  :: TVarChar AS barcode
+                               , '-'                 :: TVarChar AS barcode
                                -- Признак основной упаковки: t – является основной упаковкой; f – не является основной упаковкой Значение по умолчанию t
                                , 't'                 :: TVarChar AS is_main
                                -- Тип упаковки: единичная упаковка
@@ -108,13 +108,13 @@ BEGIN
                                  -- Уникальное описание упаковки
                                , tmpGoods.name                   AS description
                                --
-                               , ''                  :: TVarChar AS barcode
+                               , '-'                 :: TVarChar AS barcode
                                -- Признак основной упаковки: t – является основной упаковкой; f – не является основной упаковкой Значение по умолчанию t
                                , 't'                 :: TVarChar AS is_main
                                -- Тип упаковки: коробочная упаковка
                                , 'carton'            :: TVarChar AS ctn_type
                                -- Элемент упаковки (идентификатор упаковки из которой состоит данная). Для единичных упаковок равен 0. 
-                               , tmpGoods.BoxId      :: TVarChar AS code_id
+                               , tmpGoods.sku_id     :: TVarChar AS code_id
                                -- Количество элементов упаковки, т.е. количество вложенных элементов
                                , CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END) :: Integer AS units
                                -- Количество единичных упаковок в данной
@@ -141,6 +141,7 @@ BEGIN
         FROM
              (SELECT vbProcName   AS ProcName
                    , vbTagName    AS TagName
+                -- , (ROW_NUMBER() OVER (PARTITION BY tmpData.GroupId ORDER BY tmpData.GroupId, tmpData.sku_id) :: Integer) AS RowNum
                    , (ROW_NUMBER() OVER (ORDER BY tmpData.GroupId, tmpData.sku_id) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName
@@ -169,7 +170,7 @@ BEGIN
               FROM tmpData
               ORDER BY tmpData.GroupId, tmpData.sku_id
              ) AS tmp
-     -- WHERE tmp.RowNum BETWEEN 1 AND 2
+      --WHERE tmp.RowNum BETWEEN 1 AND 1
         ORDER BY 4;
 
 END;

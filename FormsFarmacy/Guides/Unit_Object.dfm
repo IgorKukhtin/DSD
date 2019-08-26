@@ -2,8 +2,9 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 477
   ClientWidth = 955
+  ExplicitLeft = -182
   ExplicitWidth = 971
-  ExplicitHeight = 515
+  ExplicitHeight = 512
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -138,7 +139,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+            HeaderHint = #1045#1089#1083#1080' >= '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072', '#1086#1075#1088#1072#1085#1080#1095#1080#1074#1072#1077#1084' '#1087#1088#1080#1093#1086#1076
             Options.Editing = False
             Width = 57
           end
@@ -149,7 +150,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
+            HeaderHint = #1045#1089#1083#1080' >= '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072', '#1086#1075#1088#1072#1085#1080#1095#1080#1074#1072#1077#1084' '#1088#1072#1089#1093#1086#1076
             Options.Editing = False
             Width = 56
           end

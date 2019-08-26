@@ -41,57 +41,59 @@ BEGIN
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpGoods_all AS (SELECT -- ШК груза (EAN-128)
-                                     COALESCE (Object_BarCodeBox.ValueData, '') AS name
-                                     -- ID товара 
-                                   , MI.sku_id
-                                     -- Количество товара (для весового количество передается в гр.) 
-                                   , SUM (CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
-                                                    THEN MI.RealWeight * 1000.0
-                                               ELSE MI.Amount
-                                          END) AS qty
-                                     -- Дата производства
-                                   , MI.PartionDate AS production_date
-                                     -- Вес (вес товара)
-                                   , SUM (MI.RealWeight) AS real_weight
-                                     -- Вес лотка
-                                   , COALESCE (wms_Object_GoodsByGoodsKind.BoxWeight, 0.0) :: TFloat AS pack_weight
-                                     -- Номер задания на упаковку
-                                   , COALESCE (wms_MI_Incoming.Id, 0) :: Integer AS inc_id
-                                     -- ObjectId
-                                   , MI.ParentId
-                              FROM wms_Movement_WeighingProduction AS Movement
-                                   INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
-                                                                             AND MI.isErased   = FALSE
-                                                                             -- только те по которым ящик закрыт
-                                                                             AND MI.ParentId   > 0 
-                                                                             -- только те которые еще не передавали
-                                                                             AND MI.StatusId_wms IS NULL
-                                   LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
-                                   -- линейная табл.
-                                   LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = Movement.GoodsId
-                                                                        AND wms_Object_GoodsByGoodsKind.GoodsKindId = Movement.GoodsKindId
-                                   -- линейная табл.
-                                   LEFT JOIN wms_MI_Incoming ON wms_MI_Incoming.OperDate        = Movement.OperDate
-                                                            AND wms_MI_Incoming.GoodsId         = Movement.GoodsId
-                                                            AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
-                                                            AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
+        WITH tmpMI AS (SELECT -- ШК груза (EAN-128)
+                           -- COALESCE (Object_BarCodeBox.ValueData, '') AS name
+                              COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar AS name
+                              -- ID товара 
+                            , MI.sku_id
+                              -- Количество товара (для весового количество передается в гр.) 
+                            , SUM (CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
+                                             THEN MI.RealWeight * 1000.0
+                                        ELSE MI.Amount
+                                   END) AS qty
+                              -- Дата производства
+                            , MI.PartionDate AS production_date
+                              -- Вес (вес товара)
+                            , SUM (MI.RealWeight) AS real_weight
+                              -- Вес лотка
+                            , COALESCE (wms_Object_GoodsByGoodsKind.BoxWeight, 0.0) :: TFloat AS pack_weight
+                              -- Номер задания на упаковку
+                            , COALESCE (wms_MI_Incoming.Id, 0) :: Integer AS inc_id
+                              -- ObjectId
+                            , MI.ParentId
+                       FROM wms_Movement_WeighingProduction AS Movement
+                            INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
+                                                                      AND MI.isErased   = FALSE
+                                                                      -- только те по которым ящик закрыт
+                                                                      AND MI.ParentId   > 0 
+                                                                      -- только те которые еще не передавали
+                                                                      AND MI.StatusId_wms IS NULL
+                            LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
+                            -- линейная табл.
+                            LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = Movement.GoodsId
+                                                                 AND wms_Object_GoodsByGoodsKind.GoodsKindId = Movement.GoodsKindId
+                            -- линейная табл.
+                            LEFT JOIN wms_MI_Incoming ON wms_MI_Incoming.OperDate        = Movement.OperDate
+                                                     AND wms_MI_Incoming.GoodsId         = Movement.GoodsId
+                                                     AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
+                                                     AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
 
-                              WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '0 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
-                                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                              GROUP BY -- ШК груза (EAN-128)
-                                       Object_BarCodeBox.ValueData
-                                       -- ID товара 
-                                     , MI.sku_id
-                                       -- Дата производства
-                                     , MI.PartionDate
-                                       -- Вес лотка
-                                     , COALESCE (wms_Object_GoodsByGoodsKind.BoxWeight, 0.0)
-                                       -- Номер задания на упаковку
-                                     , wms_MI_Incoming.Id
-                                       -- ObjectId
-                                     , MI.ParentId
-                             )
+                       WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '0 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                       GROUP BY -- ШК груза (EAN-128)
+                             -- Object_BarCodeBox.ValueData
+                                COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar
+                                -- ID товара 
+                              , MI.sku_id
+                                -- Дата производства
+                              , MI.PartionDate
+                                -- Вес лотка
+                              , COALESCE (wms_Object_GoodsByGoodsKind.BoxWeight, 0.0)
+                                -- Номер задания на упаковку
+                              , wms_MI_Incoming.Id
+                                -- ObjectId
+                              , MI.ParentId
+                      )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
         FROM
@@ -116,7 +118,7 @@ BEGIN
                    , tmpData.ParentId AS ObjectId
                      -- 
                    , 0                AS GroupId
-              FROM tmpGoods_all AS tmpData
+              FROM tmpMI AS tmpData
            -- WHERE tmpData.sku_id = '795292'
              ) AS tmp
      -- WHERE tmp.RowNum = 1

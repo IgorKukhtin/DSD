@@ -40,7 +40,7 @@ BEGIN
      END IF;
 
 
-     -- сформировали новые данные - если надо
+     -- сформировали новые данные - если надо - wms_MI_Incoming
      PERFORM lpInsertUpdate_wms_MI_Incoming (inOperDate:= CURRENT_DATE, inUserId:= vbUserId);
 
 

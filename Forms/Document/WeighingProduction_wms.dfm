@@ -1697,7 +1697,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     Top = 24
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_WeighingProduction_wms'
+    StoredProcName = 'gpUpdate_Status_wms_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <

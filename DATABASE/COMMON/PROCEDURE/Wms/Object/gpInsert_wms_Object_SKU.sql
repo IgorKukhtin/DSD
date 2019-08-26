@@ -97,7 +97,7 @@ $BODY$
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.08.19                                       *
 */
--- 956-16 - select * from wms_Object_GoodsByGoodsKind where sku_id_nom = '38391802'
+-- 956-16 - select * from wms_Object_GoodsByGoodsKind where 38391802' in (sku_id_sh, sku_id_nom, sku_id_ves)
 -- 39-3   - select * from wms_Object_GoodsByGoodsKind where sku_id_nom = '795292'
 -- select * FROM wms_Message WHERE RowData ILIKE '%sync_id=1%
 -- select * FROM wms_Message WHERE GUID = '1' ORDER BY Id

@@ -1,8 +1,8 @@
--- Function: gpSetErased_Movement_WeighingProduction_wms (Integer, TVarChar)
+-- Function: gpSetErased_wms_Movement_WeighingProduction (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSetErased_Movement_WeighingProduction_wms (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_wms_Movement_WeighingProduction (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSetErased_Movement_WeighingProduction_wms (
+CREATE OR REPLACE FUNCTION gpSetErased_wms_Movement_WeighingProduction (
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
@@ -15,9 +15,9 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_WeighingProduction());
 
      -- Удаляем Документ
-     UPDATE Movement_WeighingProduction
+     UPDATE wms_Movement_WeighingProduction
             SET StatusId = zc_Enum_Status_Erased()
-     WHERE Movement_WeighingProduction.Id = inMovementId;
+     WHERE wms_Movement_WeighingProduction.Id = inMovementId;
 
      /*PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
