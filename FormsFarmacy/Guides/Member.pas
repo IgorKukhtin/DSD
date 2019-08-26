@@ -72,6 +72,9 @@ type
     actChoiceEducationForm: TOpenChoiceForm;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    isManagerPharmacy: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    actChoicePosition: TOpenChoiceForm;
   private
     { Private declarations }
   public

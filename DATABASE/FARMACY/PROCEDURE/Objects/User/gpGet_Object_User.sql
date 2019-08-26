@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProjectMobile TVarChar
              , isProjectMobile Boolean
              , isSite Boolean
+             , PasswordWages TVarChar
+             , isManagerPharmacy Boolean
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -40,6 +42,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS ProjectMobile
            , FALSE                  AS isProjectMobile
            , FALSE                  AS isSite
+           , CAST ('' as TVarChar)  AS PasswordWages
+           , FALSE                  AS isManagerPharmacy
 ;
    ELSE
       RETURN QUERY 
@@ -59,6 +63,9 @@ BEGIN
           , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
           , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
           , COALESCE (ObjectBoolean_Site.ValueData, FALSE)          :: Boolean  AS isSite
+
+          , ObjectString_PasswordWages.ValueData
+          , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, FALSE)::Boolean  AS isManagerPharmacy
 
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
@@ -93,6 +100,15 @@ BEGIN
                   ON ObjectLink_User_Member.ObjectId = Object_User.Id
                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+           
+           LEFT JOIN ObjectString AS ObjectString_PasswordWages
+                  ON ObjectString_PasswordWages.DescId = zc_ObjectString_User_PasswordWages() 
+                 AND ObjectString_PasswordWages.ObjectId = Object_User.Id
+           
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                   ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                  AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
+           
       WHERE Object_User.Id = inId;
    END IF;
   
@@ -101,10 +117,10 @@ END;$BODY$
 ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.08.19                                                       *
  06.11.17         *
  21.04.17         *
  12.09.16         *

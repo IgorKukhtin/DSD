@@ -91,6 +91,9 @@ BEGIN
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
            , Object_Unit.ValueData              AS UnitName
+           
+           , Object_Measure.ValueData           AS MeasureName
+           , CAST ((MovementItem.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE COALESCE (ObjectFloat_Weight.ValueData, 0) END )) AS TFloat) AS Amount_Weight
 
 
        FROM MovementItem
@@ -141,6 +144,16 @@ BEGIN
 
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
                                                     AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                    
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = False

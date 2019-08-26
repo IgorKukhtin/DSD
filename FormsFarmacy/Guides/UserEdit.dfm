@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 433
+  ClientHeight = 483
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 403
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 403
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -150,6 +150,26 @@
     Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
     TabOrder = 19
     Width = 82
+  end
+  object ceManagerPharmacy: TcxCheckBox
+    Left = 204
+    Top = 414
+    Caption = #1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 91
+  end
+  object edPasswordWages: TcxTextEdit
+    Left = 13
+    Top = 414
+    Properties.PasswordChar = '*'
+    TabOrder = 21
+    Width = 185
+  end
+  object cxLabel8: TcxLabel
+    Left = 13
+    Top = 393
+    Caption = #1055#1072#1088#1083#1100' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
   end
   object ActionList: TActionList
     Left = 269
@@ -275,6 +295,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPasswordWages'
+        Value = Null
+        Component = edPasswordWages
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 213
@@ -379,6 +407,18 @@
         Value = Null
         Component = ceisSite
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PasswordWages'
+        Component = edPasswordWages
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isManagerPharmacy'
+        Value = Null
+        Component = ceManagerPharmacy
         MultiSelectSeparator = ','
       end>
     PackSize = 1

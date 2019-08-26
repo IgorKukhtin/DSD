@@ -1,43 +1,41 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 346
+  ClientHeight = 410
   ClientWidth = 354
   ExplicitWidth = 360
-  ExplicitHeight = 374
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 45
-    Top = 313
+    Left = 77
+    Top = 369
     TabOrder = 1
-    ExplicitLeft = 45
-    ExplicitTop = 313
+    ExplicitLeft = 77
+    ExplicitTop = 369
   end
   inherited bbCancel: TcxButton
-    Left = 177
-    Top = 313
+    Left = 209
+    Top = 369
     TabOrder = 2
-    ExplicitLeft = 177
-    ExplicitTop = 313
+    ExplicitLeft = 209
+    ExplicitTop = 369
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
     Width = 354
-    Height = 309
+    Height = 353
     Align = alTop
     TabOrder = 0
-    Properties.ActivePage = tsContact
+    Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 287
-    ClientRectBottom = 309
+    ClientRectBottom = 353
     ClientRectRight = 354
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitLeft = 3
-      ExplicitTop = 3
+      ExplicitHeight = 339
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -97,7 +95,7 @@
       end
       object cbOfficial: TcxCheckBox
         Left = 143
-        Top = 22
+        Top = 20
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         TabOrder = 2
@@ -142,11 +140,36 @@
         TabOrder = 16
         Width = 321
       end
+      object cePosition: TcxButtonEdit
+        Left = 7
+        Top = 301
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 17
+        Width = 321
+      end
+      object cxLabel11: TcxLabel
+        Left = 7
+        Top = 284
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+      end
+      object ceManagerPharmacy: TcxCheckBox
+        Left = 143
+        Top = 39
+        Hint = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
+        Caption = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
+        TabOrder = 19
+        Width = 141
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitWidth = 287
+      ExplicitHeight = 285
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -186,7 +209,7 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 107
-    Top = 272
+    Top = 256
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -217,7 +240,7 @@
   end
   inherited FormParams: TdsdFormParams
     Left = 168
-    Top = 264
+    Top = 248
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Member'
@@ -228,12 +251,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -241,6 +266,7 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsOfficial'
@@ -248,6 +274,7 @@
         Component = cbOfficial
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inINN'
@@ -255,6 +282,7 @@
         Component = ceINN
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDriverCertificate'
@@ -262,6 +290,7 @@
         Component = ceDriverCertificate
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -269,6 +298,7 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPhone'
@@ -276,6 +306,7 @@
         Component = edPhone
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAddress'
@@ -283,6 +314,7 @@
         Component = edAddress
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPhoto'
@@ -290,6 +322,7 @@
         Component = Photo
         DataType = ftWideString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEducationId'
@@ -297,6 +330,23 @@
         Component = EducationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inManagerPharmacy'
+        Value = Null
+        Component = ceManagerPharmacy
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionID'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -310,47 +360,55 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsOfficial'
         Value = 'False'
         Component = cbOfficial
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'INN'
         Value = ''
         Component = ceINN
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DriverCertificate'
         Value = ''
         Component = ceDriverCertificate
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EducationId'
         Value = Null
         Component = EducationGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EducationName'
@@ -358,24 +416,50 @@
         Component = EducationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = Null
         Component = edAddress
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Phone'
         Value = Null
         Component = edPhone
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Photo'
         Value = Null
         Component = Photo
         DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerPharmacy'
+        Value = Null
+        Component = ceManagerPharmacy
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionID'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 120
@@ -391,6 +475,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmail'
@@ -398,6 +483,7 @@
         Component = edEmail
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmailSign'
@@ -405,6 +491,7 @@
         Component = EMailSign
         DataType = ftWideString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -421,18 +508,21 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EMail'
         Value = ''
         Component = edEmail
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EMailSign'
         Value = Null
         Component = EMailSign
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -443,6 +533,7 @@
     LookupControl = ceEducation
     FormNameParam.Value = 'TEducationForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TEducationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -453,6 +544,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -461,8 +553,38 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 88
+  end
+  object PositionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 239
+    Top = 320
   end
 end

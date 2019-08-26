@@ -343,10 +343,10 @@ begin
   LoadReportFromFile('PrintMovement_Sale2PriceWithVAT', ReportPath + '\Товарный Учет\PrintMovement_Sale2PriceWithVAT.fr3');
   LoadReportFromFile('PrintMovement_SalePackWeight', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight.fr3');
   LoadReportFromFile('PrintMovement_SalePackWeight_Fozzy', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight_Fozzy.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_SaleInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleInvoice.fr3');
   LoadReportFromFile('PrintMovement_SaleSpec', ReportPath + '\Товарный Учет\PrintMovement_SaleSpec.fr3');
 
@@ -404,13 +404,12 @@ begin
 
   LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
   //exit;
-  {
+  }
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
-  exit;
-
+  {exit;
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Товарный Учет\PrintMovement_Income.fr3');
   LoadReportFromFile('PrintMovement_IncomeAsset', ReportPath + '\Товарный Учет\PrintMovement_IncomeAsset.fr3');
   LoadReportFromFile('PrintMovement_IncomeFuel', ReportPath + '\Товарный Учет\PrintMovement_IncomeFuel.fr3');

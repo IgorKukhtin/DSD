@@ -109,6 +109,10 @@ type
     GuidesUserManager3: TdsdGuides;
     cbSUN: TcxCheckBox;
     cbAutoMCS: TcxCheckBox;
+    cxLabel28: TcxLabel;
+    edKoeffInSUN: TcxCurrencyEdit;
+    edKoeffOutSUN: TcxCurrencyEdit;
+    cxLabel29: TcxLabel;
   private
     { Private declarations }
   public

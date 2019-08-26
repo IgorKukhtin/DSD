@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inSummHS           TFloat
 )
 RETURNS TABLE (Summa TFloat
+             , SummaBase TFloat
              , Formula TVarChar
              )
 AS
@@ -53,7 +54,7 @@ BEGIN
                     '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbFormula;
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
   ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkAS()
   THEN
@@ -75,7 +76,7 @@ BEGIN
                     '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbFormula;
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
   ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkNS()
   THEN
@@ -93,12 +94,25 @@ BEGIN
                     '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSumma, vbFormula;
+        SELECT vbSumma, vbSummaBase, vbFormula;
+
+  ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkS()
+  THEN
+    vbSummaBase := COALESCE (inSummCS, 0) / COALESCE (inCountUserCS, 0);
+    vbSumma := NULL;
+
+    vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummCS, 0), 'G999G999G999G999D99'))||' / '||
+                    CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' = '||
+                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||
+                    '; Количество приходов: '|| CAST(COALESCE (inCountUserAS, 0) AS TVarChar);
+
+    RETURN QUERY
+        SELECT vbSumma, vbSummaBase, vbFormula;
 
   ELSE
 
     RETURN QUERY
-        SELECT Null::TFloat, 'Неизвестный тип расчета.'::TVarChar;
+        SELECT Null::TFloat, Null::TFloat, 'Неизвестный тип расчета.'::TVarChar;
   END IF;
 
 END;
@@ -113,4 +127,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integ
  23.08.19                                                        *
 */
 
--- select * from gpSelect_Calculation_PayrollGroup(zc_Enum_PayrollType_WorkNS(), 3, 0, 1, 2, 2, 2, 2, 1000, 10000, 2000);
+-- select * from gpSelect_Calculation_PayrollGroup(zc_Enum_PayrollType_WorkS(), 3, 0, 1, 2, 2, 2, 2, 1000, 10000, 2000);

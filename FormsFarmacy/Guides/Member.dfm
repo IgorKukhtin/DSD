@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 401
-  ClientWidth = 965
+  ClientWidth = 904
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object MemberForm: TMemberForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 965
+    Width = 904
     Height = 375
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 965
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -43,7 +44,6 @@ object MemberForm: TMemberForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -53,26 +53,26 @@ object MemberForm: TMemberForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 42
+        Width = 35
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 103
+        Width = 85
       end
       object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
-        Width = 74
+        Width = 62
       end
       object DriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 106
       end
       object IsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
@@ -80,7 +80,7 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 94
       end
       object EducationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
@@ -104,42 +104,42 @@ object MemberForm: TMemberForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 133
+        Width = 111
       end
       object EMailSign: TcxGridDBColumn
         Caption = 'E-Mail '#1087#1086#1076#1087#1080#1089#1100
         DataBinding.FieldName = 'EMailSign'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 65
       end
       object EMail: TcxGridDBColumn
         Caption = 'E-Mail'
         DataBinding.FieldName = 'EMail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 66
+        Width = 95
       end
       object Photo: TcxGridDBColumn
         Caption = #1060#1086#1090#1086
         DataBinding.FieldName = 'Photo'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 49
+        Width = 50
       end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'Phone'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 74
       end
       object Address: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 97
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -155,7 +155,28 @@ object MemberForm: TMemberForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 84
+      end
+      object isManagerPharmacy: TcxGridDBColumn
+        Caption = #1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+        DataBinding.FieldName = 'isManagerPharmacy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 62
+      end
+      object PositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePosition
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 132
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -591,6 +612,33 @@ object MemberForm: TMemberForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
+    object actChoicePosition: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePosition'
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -759,6 +807,23 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'EducationId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inManagerPharmacy'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isManagerPharmacy'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PositionID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

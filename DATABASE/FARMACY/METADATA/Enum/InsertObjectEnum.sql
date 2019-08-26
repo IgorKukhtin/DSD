@@ -256,6 +256,10 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4, inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5, inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
 
+-- !!! Группы расчета заработной платы
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_Check(),       inDescId:= zc_Object_PayrollGroup(), inCode:= 1, inName:= 'От суммы проведенных чеков'                    , inEnumName:= 'zc_Enum_PayrollGroup_Check');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_IncomeCheck(), inDescId:= zc_Object_PayrollGroup(), inCode:= 2, inName:= 'Oт суммы реализации оприходоанных накладных '  , inEnumName:= 'zc_Enum_PayrollGroup_IncomeCheck');
+
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(),  inDescId:= zc_Object_DocumentTaxKind(), inCode:= 2, inName:= 'Сводная налоговая по юр.л.(реализация)', inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS');

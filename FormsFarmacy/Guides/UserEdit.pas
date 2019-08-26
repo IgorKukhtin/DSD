@@ -42,6 +42,9 @@ type
     edProjectMobile: TcxTextEdit;
     ceisProjectMobile: TcxCheckBox;
     ceisSite: TcxCheckBox;
+    ceManagerPharmacy: TcxCheckBox;
+    edPasswordWages: TcxTextEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public
