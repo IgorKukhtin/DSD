@@ -25,7 +25,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul,
-  dsdExportToXLSAction;
+  dsdExportToXLSAction, cxMemo;
 
 type
   TWagesForm = class(TAncestorDocumentForm)
@@ -53,6 +53,26 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrintCalculationPerson: TdsdStoredProc;
     actExecSPCalculationPerson: TdsdExecStoredProc;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    spSelect_MI_Child: TdsdStoredProc;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
+    chUnitName: TcxGridDBColumn;
+    chPayrollTypeName: TcxGridDBColumn;
+    chAmountAccrued: TcxGridDBColumn;
+    chSummaBase: TcxGridDBColumn;
+    chFormula: TcxGridDBColumn;
+    actCalculationAll: TMultiAction;
+    actExecCalculationAll: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    spCalculationAll: TdsdStoredProc;
+    AmountCard: TcxGridDBBandedColumn;
+    AmountHand: TcxGridDBBandedColumn;
+    AmountAccrued: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

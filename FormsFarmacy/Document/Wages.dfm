@@ -1,51 +1,30 @@
 inherited WagesForm: TWagesForm
   Caption = #1047'/'#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
-  ClientHeight = 500
+  ClientHeight = 626
   ClientWidth = 953
   AddOnFormData.AddOnFormRefresh.ParentList = 'Wages'
   ExplicitWidth = 969
-  ExplicitHeight = 539
+  ExplicitHeight = 665
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
     Width = 953
-    Height = 423
+    Height = 549
     ExplicitTop = 77
     ExplicitWidth = 953
-    ExplicitHeight = 423
-    ClientRectBottom = 423
+    ExplicitHeight = 549
+    ClientRectBottom = 549
     ClientRectRight = 953
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 953
-      ExplicitHeight = 399
+      ExplicitHeight = 525
       inherited cxGrid: TcxGrid
         Width = 953
-        Height = 399
+        Height = 328
         ExplicitWidth = 953
-        ExplicitHeight = 399
+        ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.000'
-              Kind = skSum
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
-            item
-              Format = ',0.000'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -63,7 +42,26 @@ inherited WagesForm: TWagesForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
           DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AmountCard
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AmountHand
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AmountAccrued
+            end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
@@ -75,6 +73,7 @@ inherited WagesForm: TWagesForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsSelection.InvertSelect = False
+          OptionsView.Footer = True
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -89,14 +88,13 @@ inherited WagesForm: TWagesForm
               Width = 332
             end
             item
-              Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 123
+              Width = 387
             end>
-          object PersonalCode: TcxGridDBBandedColumn
+          object MemberCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PersonalCode'
+            DataBinding.FieldName = 'MemberCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
@@ -105,9 +103,9 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object PersonalName: TcxGridDBBandedColumn
+          object MemberName: TcxGridDBBandedColumn
             Caption = #1060#1048#1054
-            DataBinding.FieldName = 'PersonalName'
+            DataBinding.FieldName = 'MemberName'
             HeaderAlignmentVert = vaCenter
             MinWidth = 67
             Options.Editing = False
@@ -143,23 +141,48 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
-          object Amount: TcxGridDBBandedColumn
-            Caption = #1047#1072' '#1086#1090#1088#1072#1073#1086#1090#1072#1085#1085#1086#1077' '#1074#1088#1077#1084#1103
-            DataBinding.FieldName = 'Amount'
+          object AmountAccrued: TcxGridDBBandedColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+            DataBinding.FieldName = 'AmountAccrued'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            MinWidth = 40
             Options.Editing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object AmountCard: TcxGridDBBandedColumn
+            Caption = #1053#1072' '#1082#1072#1088#1090#1091
+            DataBinding.FieldName = 'AmountCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object AmountHand: TcxGridDBBandedColumn
+            Caption = #1053#1072' '#1088#1091#1082#1080
+            DataBinding.FieldName = 'AmountHand'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 5
             Position.RowIndex = 0
@@ -178,6 +201,98 @@ inherited WagesForm: TWagesForm
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
         end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 336
+        Width = 953
+        Height = 189
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = chAmountAccrued
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chUnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 198
+          end
+          object chPayrollTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1088#1072#1089#1095#1077#1090#1072' '
+            DataBinding.FieldName = 'PayrollTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 189
+          end
+          object chAmountAccrued: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+            DataBinding.FieldName = 'AmountAccrued'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 92
+          end
+          object chSummaBase: TcxGridDBColumn
+            Caption = #1041#1072#1079#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'SummaBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 94
+          end
+          object chFormula: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'Formula'
+            PropertiesClassName = 'TcxMemoProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 347
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 328
+        Width = 953
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
       end
     end
   end
@@ -225,6 +340,9 @@ inherited WagesForm: TWagesForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
         end>
     end
     inherited actShowAll: TBooleanStoredProcAction
@@ -256,15 +374,6 @@ inherited WagesForm: TWagesForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalName'
-          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -496,6 +605,33 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actExportCalculationPerson'
     end
+    object actCalculationAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecCalculationAll
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Hint = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      ImageIndex = 38
+    end
+    object actExecCalculationAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCalculationAll
+      StoredProcList = <
+        item
+          StoredProc = spCalculationAll
+        end>
+      Caption = 'actExecCalculationAll'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -581,6 +717,10 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -663,12 +803,17 @@ inherited WagesForm: TWagesForm
       Action = actCalculationPerson
       Category = 0
     end
+    object dxBarButton8: TdxBarButton
+      Action = actCalculationAll
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
     SummaryItemList = <
       item
         Param.Value = Null
+        Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
@@ -911,14 +1056,14 @@ inherited WagesForm: TWagesForm
     Top = 280
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Wages'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Wages_Summa'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -930,10 +1075,11 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUserID'
+        Name = 'inAmountCard'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'UserID'
+        ComponentItem = 'AmountCard'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1019,5 +1165,90 @@ inherited WagesForm: TWagesForm
     PackSize = 1
     Left = 663
     Top = 216
+  end
+  object spSelect_MI_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Wages_Child'
+    DataSet = DetailDCS
+    DataSets = <
+      item
+        DataSet = DetailDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 536
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    SearchAsFilter = False
+    Left = 318
+    Top = 529
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailDCS
+    Left = 168
+    Top = 544
+  end
+  object DetailDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 80
+    Top = 544
+  end
+  object spCalculationAll: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Wages_CalculationAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 656
+    Top = 288
   end
 end

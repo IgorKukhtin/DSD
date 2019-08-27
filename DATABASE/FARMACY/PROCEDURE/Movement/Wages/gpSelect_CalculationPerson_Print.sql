@@ -20,7 +20,7 @@ BEGIN
     vbUserId:= inSession;
 
     OPEN Cursor1 FOR
-        SELECT 'Расчет з.п. за '||to_char(DATE_TRUNC ('DAY', CURRENT_TIMESTAMP), 'DD.MM.YYYY') as Title
+        SELECT 'Расчет з.п. за '||to_char(DATE_TRUNC ('DAY', inOperDate), 'DD.MM.YYYY') as Title
         UNION ALL
         SELECT 'По сотруднику: '||(SELECT ValueData FROM Object WHERE ID = inPersonID);
 

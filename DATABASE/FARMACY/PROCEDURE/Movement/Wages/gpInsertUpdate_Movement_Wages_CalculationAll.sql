@@ -50,15 +50,13 @@ BEGIN
     IF EXISTS(SELECT 1  FROM MovementItem
                 WHERE MovementItem.MovementID = inMovementId
                   AND MovementItem.isErased =   TRUE
-                  AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.ObjectID IN (SELECT DISTINCT Calculation.UserId
                                                 FROM tmpCalculation AS Calculation))
     THEN
-      PERFORM gpSetUnErased_MovementItem (inMovementItemId:= MovementItem.ID
+      SELECT gpSetUnErased_MovementItem (inMovementItemId:= MovementItem.ID
                                        , inSession:= inSession)
       FROM MovementItem
       WHERE MovementItem.MovementID = inMovementId
-        AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.isErased =   TRUE
         AND MovementItem.ObjectID IN (SELECT DISTINCT Calculation.UserId
                                       FROM tmpCalculation AS Calculation);
@@ -73,7 +71,7 @@ BEGIN
     GROUP BY Calculation.UserId;
 
       -- Удаляем лишних
-/*    IF EXISTS(SELECT 1  FROM MovementItem
+    IF EXISTS(SELECT 1  FROM MovementItem
                 WHERE MovementItem.MovementID = inMovementId
                   AND MovementItem.ObjectID NOT IN (SELECT DISTINCT Calculation.UserId
                                                     FROM tmpCalculation AS Calculation))
@@ -85,7 +83,7 @@ BEGIN
         AND MovementItem.ObjectID NOT IN (SELECT DISTINCT Calculation.UserId
                                           FROM tmpCalculation AS Calculation);
     END IF;
-*/
+    
       -- Удаляем автоматические чилдр
     IF EXISTS(SELECT 1 FROM MovementItem
 
@@ -98,9 +96,9 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Child()
                 AND MovementItem.isErased = False)
     THEN
-      UPDATE MovementItem SET isErased = TRUE WHERE Id IN
+      UPDATE MovementItem SET isErased = TRUE WHERE Id IN 
           (SELECT MovementItem.ID
-          FROM MovementItem
+          FROM MovementItem  
 
                INNER JOIN MovementItemBoolean AS MIB_isAuto
                                               ON MIB_isAuto.MovementItemId = MovementItem.Id
@@ -130,9 +128,6 @@ BEGIN
                   AND MIMaster.ObjectID = Calculation.UserId
                   AND MIMaster.DescId = zc_MI_Master()
     ORDER BY Calculation.UserId, Calculation.OperDate;
-
-      -- Пересчитали итоговые суммы
-    PERFORM lpInsertUpdate_Movement_Wages_TotalSumm (inMovementId);
 
 
 END;

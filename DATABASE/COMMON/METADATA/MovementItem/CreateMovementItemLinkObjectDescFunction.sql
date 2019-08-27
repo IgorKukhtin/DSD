@@ -291,10 +291,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionDateKind() RETURNS Integer AS 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_PartionDateKind', 'Типы срок/не срок' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionDateKind');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PayrollType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PayrollType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PayrollType', 'Типы расчета заработной платы' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PayrollType');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 26.08.19                                                                    * zc_MILinkObject_PayrollType
  11.12.18         * zc_MILinkObject_DiffKind
  07.11.18         * zc_MILinkObject_List
  13.08.18         * for GoodsSP
