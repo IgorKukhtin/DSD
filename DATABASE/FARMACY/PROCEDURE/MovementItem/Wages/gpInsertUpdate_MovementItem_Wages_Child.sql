@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Wages_Child ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Child (Integer, Integer, Integer, Boolean, Integer, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Child (Integer, Integer, Integer, Boolean, Integer, TFloat, TDateTime, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Child(
     IN inAuto                Boolean   , -- Авто расчет
     IN inUnitId              Integer   , -- подразделение
     IN inAmount              TFloat    , -- Сумма начислено
+    IN inDateCalculation     TDateTime , -- Дата расчета
     IN inSummaBase           TFloat    , -- Сумма базы
     IN inPayrollTypeID       Integer   , -- Тип начисления
     IN inComment             TVarChar  , -- Описание
@@ -52,6 +53,7 @@ BEGIN
                                                    , inAuto                := inAuto
                                                    , inUnitId              := inUnitId
                                                    , inAmount              := inAmount
+                                                   , inDateCalculation     := inDateCalculation
                                                    , inSummaBase           := inSummaBase
                                                    , inPayrollTypeID       := inPayrollTypeID
                                                    , inComment             := inComment              

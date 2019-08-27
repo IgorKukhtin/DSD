@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_Wages_Child ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Wages_Child (Integer, Integer, Integer, Boolean, Integer, TFloat, TFloat, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Wages_Child (Integer, Integer, Integer, Boolean, Integer, TFloat, TDateTime, TFloat, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Wages_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Wages_Child(
     IN inAuto                Boolean   , -- Авто расчет
     IN inUnitId              Integer   , -- подразделение
     IN inAmount              TFloat    , -- Сумма начислено
+    IN inDateCalculation     TDateTime , -- Дата расчета
     IN inSummaBase           TFloat    , -- Сумма базы
     IN inPayrollTypeID       Integer   , -- Тип начисления
     IN inComment             TVarChar  , -- Описание
@@ -29,6 +30,9 @@ BEGIN
     
     -- сохранили свойство <Тип начисления>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PayrollType(), ioId, inPayrollTypeID);    
+
+     -- сохранили свойство <Дата расчета>
+    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Calculation(), ioId, inDateCalculation);
 
      -- сохранили свойство <Сумма базы>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaBase(), ioId, inSummaBase);

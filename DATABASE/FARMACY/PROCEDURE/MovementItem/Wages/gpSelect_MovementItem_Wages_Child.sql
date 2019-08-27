@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages_Child(
 RETURNS TABLE (Id Integer, UnitID Integer, ParentID Integer, AmountAccrued TFloat
              , UnitCode Integer, UnitName TVarChar
              , PayrollTypeID Integer, PayrollTypeCode Integer, PayrollTypeName TVarChar
-             , SummaBase TFloat, Formula TVarChar
+             , DateCalculation TDateTime, SummaBase TFloat, Formula TVarChar
              , isErased Boolean
              , Color_Calc Integer
               )
@@ -35,6 +35,8 @@ BEGIN
              , Object_PayrollType.ID              AS PayrollTypeID
              , Object_PayrollType.ObjectCode      AS PayrollTypeCode
              , Object_PayrollType.ValueData       AS PayrollTypeName
+             
+             , MIDate_Calculation.ValueData       AS DateCalculation
 
              , MIF_SummaBase.ValueData            AS SummaBase
              
@@ -58,6 +60,10 @@ BEGIN
               LEFT JOIN MovementItemString AS MIS_Formula
                                           ON MIS_Formula.MovementItemId = MovementItem.Id
                                          AND MIS_Formula.DescId = zc_MIString_Comment()
+
+              LEFT JOIN MovementItemDate AS MIDate_Calculation
+                                         ON MIDate_Calculation.MovementItemId = MovementItem.Id
+                                        AND MIDate_Calculation.DescId = zc_MIDate_Calculation()
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Child()

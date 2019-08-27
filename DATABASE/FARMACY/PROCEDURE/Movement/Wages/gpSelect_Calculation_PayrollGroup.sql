@@ -98,7 +98,12 @@ BEGIN
 
   ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkS()
   THEN
-    vbSummaBase := COALESCE (inSummCS, 0) / COALESCE (inCountUserCS, 0);
+    IF COALESCE (inCountUserCS, 0) = 0
+    THEN
+      vbSummaBase := COALESCE (inSummCS, 0);
+    ELSE
+      vbSummaBase := COALESCE (inSummCS, 0) / COALESCE (inCountUserCS, 0);
+    END IF;
     vbSumma := NULL;
 
     vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummCS, 0), 'G999G999G999G999D99'))||' / '||

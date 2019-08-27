@@ -32,7 +32,7 @@ BEGIN
             Calculation.OperDate                   AS OperDate
           , Calculation.UnitName                   AS UnitName
           , Calculation.ShortName                  AS ShortName
-          , Calculation.PayrollGroupName           AS PayrollGroupName
+          , Calculation.PayrollTypeName            AS PayrollTypeName
           , Calculation.SummaCalc                  AS SummaCalc
           , Calculation.FormulaCalc                AS FormulaCalc
         FROM gpSelect_Calculation_Wages(inOperDate, inPersonID, inSession) AS Calculation

@@ -64,6 +64,8 @@ BEGIN
       THEN 
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
       END IF;     
+
+      RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
     END IF;     
 
      -- проверка

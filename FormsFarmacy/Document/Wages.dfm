@@ -229,10 +229,8 @@ inherited WagesForm: TWagesForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -245,6 +243,7 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 198
           end
           object chPayrollTypeName: TcxGridDBColumn
@@ -252,7 +251,18 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'PayrollTypeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 189
+          end
+          object DateCalculation: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'DateCalculation'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object chAmountAccrued: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -261,6 +271,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 92
           end
           object chSummaBase: TcxGridDBColumn
@@ -270,12 +281,14 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 94
           end
           object chFormula: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1088#1072#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'Formula'
             PropertiesClassName = 'TcxMemoProperties'
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 347
@@ -565,7 +578,7 @@ inherited WagesForm: TWagesForm
         end
         item
           Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
-          FieldName = 'PayrollGroupName'
+          FieldName = 'PayrollTypeName'
           DecimalPlace = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1225,7 +1238,7 @@ inherited WagesForm: TWagesForm
   object DetailDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'ParentId'
+    IndexFieldNames = 'ParentId;DateCalculation'
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0

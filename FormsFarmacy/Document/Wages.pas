@@ -25,7 +25,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul,
-  dsdExportToXLSAction, cxMemo;
+  dsdExportToXLSAction, cxMemo, cxBlobEdit;
 
 type
   TWagesForm = class(TAncestorDocumentForm)
@@ -73,6 +73,7 @@ type
     AmountCard: TcxGridDBBandedColumn;
     AmountHand: TcxGridDBBandedColumn;
     AmountAccrued: TcxGridDBBandedColumn;
+    DateCalculation: TcxGridDBColumn;
   private
     { Private declarations }
   public
