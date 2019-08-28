@@ -391,7 +391,8 @@ type
     MainDeferredSend: TcxGridDBColumn;
     MemDataREMAINSSUN: TFloatField;
     MainRemainsSun: TcxGridDBColumn;
-    actWagesUser: TdsdOpenForm;
+    actOpenWagesUser: TdsdOpenForm;
+    actWagesUser: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -505,6 +506,7 @@ type
     procedure MainColCodeCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
+    procedure actWagesUserExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -3547,6 +3549,47 @@ procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
 begin
   Exit;
   UpdateRemainsFromDiff(nil);
+end;
+
+procedure TMainCashForm2.actWagesUserExecute(Sender: TObject);
+  var cPasswordWages, S : string;
+
+  function GetPasswordWages : string;
+  var dsdPasswordWages: TdsdStoredProc;
+  begin
+    dsdPasswordWages := TdsdStoredProc.Create(nil);
+    try
+      dsdPasswordWages.StoredProcName := 'gpGet_User_PasswordWages';
+      dsdPasswordWages.OutputType := otResult;
+      dsdPasswordWages.Params.Clear;
+      dsdPasswordWages.Params.AddParam('outOperDate', ftDateTime, ptOutput, Null);
+      dsdPasswordWages.Execute(false,false);
+      Result := dsdPasswordWages.ParamByName('outOperDate').AsString;
+    finally
+      FreeAndNil(dsdPasswordWages);
+    end;
+  end;
+
+begin
+  if gc_User.Local then
+  Begin
+    ShowMessage('В отложенном режиме неработает...');
+    Exit;
+  End;
+
+  cPasswordWages := GetPasswordWages;
+
+  if cPasswordWages <> '' then
+  begin
+    if not InputQuery('Ввод пароля', #31'Пароль для просмотра з.п.: ', S) then Exit;
+    if cPasswordWages <> S then
+    begin
+      ShowMessage('Пароль введен неверно...');
+      Exit;
+    end;
+  end;
+
+  actOpenWagesUser.Execute;
 end;
 
 procedure TMainCashForm2.btnCheckClick(Sender: TObject);

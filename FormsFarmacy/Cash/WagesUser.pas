@@ -13,7 +13,8 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxCurrencyEdit;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxCurrencyEdit,
+  cxMemo;
 
 type
   TWagesUserForm = class(TAncestorDBGridForm)
@@ -24,9 +25,6 @@ type
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
     PanelBottom: TPanel;
     ceTotal: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
@@ -36,6 +34,12 @@ type
     cxLabel3: TcxLabel;
     actDataDialog: TExecuteDialog;
     dxBarButton2: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    PayrollTypeName: TcxGridDBColumn;
+    DateCalculation: TcxGridDBColumn;
+    AmountAccrued: TcxGridDBColumn;
+    Formula: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

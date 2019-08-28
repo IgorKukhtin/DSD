@@ -254,7 +254,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 189
           end
-          object DateCalculation: TcxGridDBColumn
+          object chDateCalculation: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'DateCalculation'
             PropertiesClassName = 'TcxDateEditProperties'

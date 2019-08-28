@@ -73,7 +73,7 @@ type
     AmountCard: TcxGridDBBandedColumn;
     AmountHand: TcxGridDBBandedColumn;
     AmountAccrued: TcxGridDBBandedColumn;
-    DateCalculation: TcxGridDBColumn;
+    chDateCalculation: TcxGridDBColumn;
   private
     { Private declarations }
   public

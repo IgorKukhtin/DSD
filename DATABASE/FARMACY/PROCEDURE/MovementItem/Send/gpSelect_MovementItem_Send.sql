@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
              , MinExpirationDate TDateTime
+             , MaxExpirationDate TDateTime
              
              , isErased Boolean
              , GoodsGroupName TVarChar
@@ -235,7 +236,9 @@ BEGIN
           , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
                               , ObjectLink_Unit.ChildObjectId  AS UnitId
                               , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
-                         FROM MovementItem_Send
+                         FROM (SELECT DISTINCT MovementItem_Send.ObjectId
+                              FROM MovementItem_Send) AS MovementItem_Send
+                              
                               INNER JOIN ObjectLink AS ObjectLink_Goods
                                                     ON ObjectLink_Goods.ChildObjectId = MovementItem_Send.ObjectId
                                                    AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
@@ -290,6 +293,7 @@ BEGIN
                                  )
          , tmpMI_Child AS (SELECT MovementItem.ParentId
                                 , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+                                , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MaxExpirationDate
                            FROM MovementItem
                                 INNER JOIN MovementItemFloat AS MIFloat_Container
                                                              ON MIFloat_Container.MovementItemId = MovementItem.Id
@@ -337,6 +341,8 @@ BEGIN
               , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
               , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
               , COALESCE (tmpMI_Child.ExpirationDate, tmpRemains.MinExpirationDate)::TDateTime AS MinExpirationDate   
+              , tmpMI_Child.MaxExpirationDate::TDateTime                   AS MaxExpirationDate
+
               , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
               , tmpGoodsParam.GoodsGroupName                               AS GoodsGroupName
@@ -418,7 +424,9 @@ BEGIN
                                  , Container.ObjectId    AS GoodsId
                                  , SUM(Container.Amount) AS Amount
                                  , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Id  -- AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
-                            FROM MovementItem_Send
+                            FROM (SELECT DISTINCT MovementItem_Send.ObjectId
+                                  FROM MovementItem_Send) AS MovementItem_Send
+                                   
                                 INNER JOIN Container ON Container.ObjectId = MovementItem_Send.ObjectId
                                                     AND Container.DescId = zc_Container_Count()
                                                     AND Container.Amount <> 0
@@ -537,7 +545,9 @@ BEGIN
          , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
                              , ObjectLink_Unit.ChildObjectId  AS UnitId
                              , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
-                        FROM MovementItem_Send
+                        FROM (SELECT DISTINCT MovementItem_Send.ObjectId
+                              FROM MovementItem_Send) AS MovementItem_Send
+                                   
                              INNER JOIN ObjectLink AS ObjectLink_Goods
                                                    ON ObjectLink_Goods.ChildObjectId = MovementItem_Send.ObjectId
                                                   AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
@@ -590,6 +600,7 @@ BEGIN
                                  )
          , tmpMI_Child AS (SELECT MovementItem.ParentId
                                 , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+                                , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MaxExpirationDate
                            FROM MovementItem
                                 INNER JOIN MovementItemFloat AS MIFloat_Container
                                                              ON MIFloat_Container.MovementItemId = MovementItem.Id
@@ -644,6 +655,8 @@ BEGIN
            --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
            , COALESCE (tmpMI_Child.ExpirationDate, 
              CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END)::TDateTime AS MinExpirationDate
+           , tmpMI_Child.MaxExpirationDate::TDateTime                  AS MaxExpirationDate
+           
            , MovementItem_Send.IsErased                                AS isErased
 
            , tmpGoodsParam.GoodsGroupName                                      AS GoodsGroupName
