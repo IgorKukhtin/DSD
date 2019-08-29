@@ -21,7 +21,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
 
-     -- сохранили свойство <На карту>
+     -- сохранили свойство <Выдано>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), inId, NOT inisIssuedBy);
     
     -- сохранили протокол

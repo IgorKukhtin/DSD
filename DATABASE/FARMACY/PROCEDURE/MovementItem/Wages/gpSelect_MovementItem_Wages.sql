@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , AmountCard TFloat, AmountHand TFloat
+             , Marketing TFloat, AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , isIssuedBy Boolean
@@ -65,6 +65,7 @@ BEGIN
                  , tmpPersonal.UserID                 AS UserID
                  , NULL::TFloat                       AS Amount
 
+                 , NULL::TFloat                       AS Marketing
                  , NULL::TFloat                       AS AmountCard
                  , NULL::TFloat                       AS AmountHand
 
@@ -93,8 +94,11 @@ BEGIN
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
 
+                 , MIFloat_Marketing.ValueData        AS Marketing
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount - COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+                 , (MovementItem.Amount + 
+                    COALESCE (MIFloat_Marketing.ValueData, 0) - 
+                    COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
@@ -118,6 +122,10 @@ BEGIN
                                             AND Personal_View.Ord = 1
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                              ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -153,8 +161,11 @@ BEGIN
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
                  
+                 , MIFloat_Marketing.ValueData        AS Marketing
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount - COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+                 , (MovementItem.Amount + 
+                    COALESCE (MIFloat_Marketing.ValueData, 0) - 
+                    COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
@@ -180,6 +191,10 @@ BEGIN
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                              ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -202,4 +217,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  21.08.19                                                        *
 */
--- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

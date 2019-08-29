@@ -190,10 +190,6 @@ object JackdawsChecksForm: TJackdawsChecksForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end>
       OneOnRow = True
       Row = 0
@@ -240,8 +236,11 @@ object JackdawsChecksForm: TJackdawsChecksForm
       Category = 0
     end
     object dxBarButton1: TdxBarButton
-      Action = actInventoryEveryMonth
+      Caption = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
       Category = 0
+      Hint = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
+      Visible = ivAlways
+      ImageIndex = 25
     end
   end
   object ActionList: TActionList
@@ -404,39 +403,6 @@ object JackdawsChecksForm: TJackdawsChecksForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object actInventoryEveryMonth: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecInventoryEveryMonth
-        end
-        item
-          Action = actDOCReportInventoryEveryMonth
-        end>
-      Caption = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
-      Hint = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
-      ImageIndex = 25
-    end
-    object actDOCReportInventoryEveryMonth: TdsdDOCReportFormAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actDOCReportInventoryEveryMonth'
-      DataSet = cdsInventoryEveryMonth
-      BlankName = #1048#1053#1042#1045#1053#1058'_'#1054#1055#1048#1057#1068'_'#1085#1072'_'#1082#1072#1078#1076#1099#1081'_'#1084#1077#1089#1103#1094'.doc'
-      FileName = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094'.doc'
-    end
-    object actExecInventoryEveryMonth: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInventoryEveryMonth
-      StoredProcList = <
-        item
-          StoredProc = spInventoryEveryMonth
-        end>
-      Caption = 'actExecInventoryEveryMonth'
-    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JackdawsChecks'
@@ -518,23 +484,5 @@ object JackdawsChecksForm: TJackdawsChecksForm
     object N4: TMenuItem
       Action = dsdSetUnErased
     end
-  end
-  object cdsInventoryEveryMonth: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 368
-    Top = 208
-  end
-  object spInventoryEveryMonth: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_InventoryEveryMonth'
-    DataSet = cdsInventoryEveryMonth
-    DataSets = <
-      item
-        DataSet = cdsInventoryEveryMonth
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 368
-    Top = 144
   end
 end

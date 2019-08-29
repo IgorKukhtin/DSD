@@ -3561,8 +3561,11 @@ begin
     while not FDataSet.Eof do
     begin
       if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+      begin
+        woApp.Selection.HomeKey($00000006);
         while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
           do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
+      end;
       FDataSet.Next;
     end;
 

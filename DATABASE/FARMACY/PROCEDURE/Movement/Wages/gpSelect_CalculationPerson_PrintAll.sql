@@ -19,7 +19,7 @@ BEGIN
     vbUserId:= inSession;
 
     OPEN Cursor1 FOR
-        SELECT 'Расчет з.п. за '||to_char(DATE_TRUNC ('DAY', inOperDate), 'mmmm YYYY')||' г.' as Title;
+        SELECT 'Расчет з.п. за '||zfCalc_MonthYearName(inOperDate)||' г.' as Title;
 
     RETURN NEXT Cursor1;
 

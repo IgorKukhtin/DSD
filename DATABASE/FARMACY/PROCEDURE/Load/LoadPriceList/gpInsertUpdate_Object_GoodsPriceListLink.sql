@@ -132,32 +132,31 @@ BEGIN
 
     IF vbBarCode <> '' THEN
        SELECT BarCode INTO vbBarCodeOld FROM gpGet_Object_Goods_BarCode (0, vbMainGoodsId, inSession);
-
-       IF (COALESCE (vbBarCodeOld, '') <> '') AND (vbBarCodeOld <> vbBarCode)
-       THEN
-            RAISE EXCEPTION 'Попытка заменить существующий штрих-код "%" на новый "%"', vbBarCodeOld, vbBarCode;
-       END IF;
        
-       -- Устанавливаем связь со штрих-кодом
-  
-       SELECT Id INTO vbBarCodeGoodsId
-           FROM Object_Goods_View 
-          WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = vbBarCode;
+       IF COALESCE (vbBarCodeOld, '') = ''
+       THEN
+         
+         -- Устанавливаем связь со штрих-кодом
+    
+         SELECT Id INTO vbBarCodeGoodsId
+             FROM Object_Goods_View 
+            WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = vbBarCode;
 
-       IF COALESCE(vbBarCodeGoodsId, 0) = 0 THEN
-          -- Создаем штрих коды, которых еще нет
-          vbBarCodeGoodsId := lpInsertUpdate_Object(0, zc_Object_Goods(), 0, vbBarCode);
-          PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), vbBarCodeGoodsId, zc_Enum_GlobalConst_BarCode());
-       END IF;       
+         IF COALESCE(vbBarCodeGoodsId, 0) = 0 THEN
+            -- Создаем штрих коды, которых еще нет
+            vbBarCodeGoodsId := lpInsertUpdate_Object(0, zc_Object_Goods(), 0, vbBarCode);
+            PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), vbBarCodeGoodsId, zc_Enum_GlobalConst_BarCode());
+         END IF;       
 
-       IF (SELECT COUNT(*) FROM Object_LinkGoods_View 
-               WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsId = vbBarCodeGoodsId AND GoodsMainId = vbMainGoodsId) = 0 THEN
-           PERFORM gpInsertUpdate_Object_LinkGoods(
-                0 
-              , vbMainGoodsId -- Главный товар
-              , vbBarCodeGoodsId      -- Товар для замены
-              , inSession                 -- сессия пользователя
-            );
+         IF (SELECT COUNT(*) FROM Object_LinkGoods_View 
+                 WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsId = vbBarCodeGoodsId AND GoodsMainId = vbMainGoodsId) = 0 THEN
+             PERFORM gpInsertUpdate_Object_LinkGoods(
+                  0 
+                , vbMainGoodsId         -- Главный товар
+                , vbBarCodeGoodsId      -- Товар для замены
+                , inSession             -- сессия пользователя
+              );
+         END IF;     
        END IF;     
     END IF;          
  
