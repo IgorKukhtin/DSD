@@ -459,6 +459,13 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object MaxExpirationDate: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1075#1086
+            DataBinding.FieldName = 'MaxExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
         end
       end
       object cxSplitter1: TcxSplitter

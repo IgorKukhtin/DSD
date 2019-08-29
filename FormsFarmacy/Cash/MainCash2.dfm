@@ -3192,17 +3192,22 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = False
     end
-    object actWagesUser: TdsdOpenForm
+    object actOpenWagesUser: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actWagesUser'
-      ShortCut = 16471
+      Caption = 'actOpenWagesUser'
       FormName = 'TWagesUserForm'
       FormNameParam.Value = 'TWagesUserForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = False
+      isShowModal = True
+    end
+    object actWagesUser: TAction
+      Category = 'DSDLib'
+      Caption = 'actWagesUser'
+      ShortCut = 16474
+      OnExecute = actWagesUserExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn

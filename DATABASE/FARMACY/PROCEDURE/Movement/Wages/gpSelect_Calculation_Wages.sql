@@ -8,12 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar, OperDate TDateTime
-             , PersonalId Integer, UserId Integer
+             , PersonalId Integer, UserId Integer, UnitUserId Integer
              , WorkTimeKindID Integer, WorkTimeKindCode Integer, WorkTimeKindName TVarChar, ShortName TVarChar
-             , PayrollGroupID Integer, PayrollGroupCode Integer, PayrollGroupName TVarChar
+             , PayrollTypeID Integer, PayrollTypeCode Integer, PayrollTypeName TVarChar
              , Percent TFloat, MinAccrualAmount TFloat
              , SummCS TFloat, SummSCS TFloat, SummHS TFloat
-             , IncomeCount Integer, SummIncomeCheck TFloat
+             , IncomeCount Integer, IncomeSaleSumm TFloat
              , SummaBase TFloat, SummaCalc TFloat, FormulaCalc TVarChar
               ) AS
 $BODY$
@@ -36,13 +36,15 @@ BEGIN
 
    -- все данные за месяц по табелю
    CREATE TEMP TABLE tmpBoard ON COMMIT DROP AS
-       SELECT MovementLinkObject_Unit.ObjectId              AS UnitId
-            , Movement.OperDate                             AS OperDate
-            , MI_SheetWorkTime.ObjectId                     AS PersonalId
-            , ObjectLink_User_Member.ObjectId               AS UserID
-            , MIObject_WorkTimeKind.ObjectId                AS WorkTimeKindID
-            , ObjectLink_Goods_PayrollType.ChildObjectId    AS PayrollTypeID
-            , ObjectLink_Goods_PayrollGroup.ChildObjectId   AS PayrollGroupID
+       SELECT MovementLinkObject_Unit.ObjectId                                    AS UnitId
+            , Movement.OperDate                                                   AS OperDate
+            , MI_SheetWorkTime.ObjectId                                           AS PersonalId
+            , ObjectLink_User_Member.ObjectId                                     AS UserID
+            , MIObject_WorkTimeKind.ObjectId                                      AS WorkTimeKindID
+            , ObjectLink_Goods_PayrollType.ChildObjectId                          AS PayrollTypeID
+            , ObjectLink_Goods_PayrollGroup.ChildObjectId                         AS PayrollGroupID
+            , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, FALSE)::Boolean  AS isManagerPharmacy
+            , ObjectLink_Personal_Unit.ChildObjectId                              AS UnitUserId
        FROM tmpOperDate
 
             LEFT JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -56,9 +58,17 @@ BEGIN
                                     ON MI_SheetWorkTime.MovementId = Movement.Id
                                    AND MI_SheetWorkTime.DescId = zc_MI_Master()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = MI_SheetWorkTime.ObjectId
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                  ON ObjectLink_Personal_Member.ObjectId = MI_SheetWorkTime.ObjectId
                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                    ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                   AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
@@ -82,20 +92,45 @@ BEGIN
 
    -- все чеки за месяц
    CREATE TEMP TABLE tmpCheck ON COMMIT DROP AS
-      WITH tmpCheck AS (
-              SELECT DATE_TRUNC ('DAY', Movement.OperDate - INTERVAL '8 hour')              AS OperDate
-                   , date_part('HOUR',  Movement.OperDate - INTERVAL '8 hour')::Integer     AS Hour
-                   , MovementLinkObject_Unit.ObjectId                                       AS UnitId
-                   , MovementFloat_TotalSumm.ValueData                                      AS TotalSumm
+      WITH tmpCheck1 AS (
+              SELECT DATE_TRUNC ('DAY', Movement.OperDate)                                   AS OperDate
+                   , MovementLinkObject_Unit.ObjectId                                        AS UnitId
+                   , CASE WHEN Movement.OperDate::Time >= '10:00'::Time
+                           AND Movement.OperDate::Time < '19:01'::Time THEN 2 ELSE 1 END     AS Change
+                   , MovementFloat_TotalSumm.ValueData                                       AS TotalSumm
               FROM Movement
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                AND MovementLinkObject_Unit.ObjectId <> 377606
 
-                   LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                           ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                   INNER JOIN MovementFloat AS MovementFloat_TotalSumm
+                                            ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+              WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                AND Movement.DescId = zc_Movement_Check()
+                AND Movement.StatusId = zc_Enum_Status_Complete()),
+           tmpCheck2 AS (
+              SELECT DATE_TRUNC ('DAY', Movement.OperDate - INTERVAL '8 hour')                 AS OperDate
+                   , MovementLinkObject_Unit.ObjectId                                          AS UnitId
+                   , CASE WHEN (Movement.OperDate - INTERVAL '8 hour')::Time > '13:00'::Time
+                          THEN 3 ELSE
+                     CASE WHEN (Movement.OperDate - INTERVAL '8 hour')::Time >= '02:00'::Time
+                           AND (Movement.OperDate - INTERVAL '8 hour')::Time < '11:01'::Time
+                          THEN 2 ELSE 1 END END                                                AS Change
+                   , MovementFloat_TotalSumm.ValueData                                         AS TotalSumm
+              FROM Movement
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                AND MovementLinkObject_Unit.ObjectId = 377606
+
+                   INNER JOIN MovementFloat AS MovementFloat_TotalSumm
+                                            ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
               WHERE Movement.OperDate BETWEEN vbStartDate + INTERVAL '8 hour' AND vbEndDate + INTERVAL '8 hour'
                 AND Movement.DescId = zc_Movement_Check()
@@ -103,11 +138,19 @@ BEGIN
            tmpCheckSum AS (
                SELECT tmpCheck.OperDate
                     , tmpCheck.UnitId
-                    , SUM(CASE WHEN tmpCheck.Hour < 2 OR
-                                    tmpCheck.Hour >= 11 AND tmpCheck.Hour < 13 THEN tmpCheck.TotalSumm END)::TFloat AS SummCS
-                    , SUM(CASE WHEN tmpCheck.Hour >= 2 AND tmpCheck.Hour < 11 THEN tmpCheck.TotalSumm END)::TFloat AS SummSCS
-                    , SUM(CASE WHEN tmpCheck.Hour > 13    THEN tmpCheck.TotalSumm END)::TFloat AS SummHS
-               FROM tmpCheck
+                    , SUM(CASE WHEN tmpCheck.Change = 1 THEN tmpCheck.TotalSumm END)::TFloat   AS SummCS
+                    , SUM(CASE WHEN tmpCheck.Change = 2 THEN tmpCheck.TotalSumm END)::TFloat   AS SummSCS
+                    , SUM(CASE WHEN tmpCheck.Change = 3  THEN tmpCheck.TotalSumm END)::TFloat  AS SummHS
+               FROM tmpCheck1 AS tmpCheck
+               GROUP BY tmpCheck.OperDate
+                      , tmpCheck.UnitId
+               UNION ALL
+               SELECT tmpCheck.OperDate
+                    , tmpCheck.UnitId
+                    , SUM(CASE WHEN tmpCheck.Change = 1 THEN tmpCheck.TotalSumm END)::TFloat   AS SummCS
+                    , SUM(CASE WHEN tmpCheck.Change = 2 THEN tmpCheck.TotalSumm END)::TFloat   AS SummSCS
+                    , SUM(CASE WHEN tmpCheck.Change = 3  THEN tmpCheck.TotalSumm END)::TFloat  AS SummHS
+               FROM tmpCheck2 AS tmpCheck
                GROUP BY tmpCheck.OperDate
                       , tmpCheck.UnitId),
            tmpUserDey AS (
@@ -162,55 +205,29 @@ BEGIN
    -- реализация про приходам за месяц
    CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
       WITH tmpIncome AS (
-              SELECT Movement.ID
-                   , DATE_TRUNC ('DAY', Movement.OperDate)              AS OperDate
-                   , MovementLinkObject_Unit.ObjectId                   AS UnitId
+              SELECT DATE_TRUNC ('DAY', MovementDate_Branch.ValueData)                AS OperDate
+                   , MovementLinkObject_Unit.ObjectId                                 AS UnitId
+                   , SUM(COALESCE(MovementFloat_TotalSummSale.ValueData, 0))::TFloat  AS SaleSumm
+                   , COUNT(*)::Integer                                                AS IncomeCount
               FROM Movement
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
 
-              WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+
+                   INNER JOIN MovementDate AS MovementDate_Branch
+                                           ON MovementDate_Branch.MovementId = Movement.Id
+                                          AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+                   LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                           ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                          AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+
+              WHERE MovementDate_Branch.ValueData BETWEEN vbStartDate AND vbEndDate
                 AND Movement.DescId = zc_Movement_Income()
-                AND Movement.StatusId = zc_Enum_Status_Complete()),
-           tmpIncomeCount AS (
-               SELECT Movement.OperDate              AS OperDate
-                    , Movement.UnitId                AS UnitId
-                    , COUNT(*)::Integer              AS IncomeCount
-               FROM tmpIncome AS Movement
-               GROUP BY Movement.OperDate, Movement.UnitId
-               ),
-           tmpIncomeContainer AS (
-               SELECT Movement.OperDate                  AS OperDate
-                    , Movement.UnitId                    AS UnitId
-                    , MICIncome.ContainerID              AS ContainerID
-               FROM tmpIncome AS Movement
-
-                    INNER JOIN MovementItemContainer AS MICIncome
-                                                     ON MICIncome.MovementID = Movement.Id
-                                                    AND MICIncome.DescId = zc_MIContainer_Count()
-
-               ),
-           tmpIncomeCheck AS (
-               SELECT Movement.OperDate                  AS OperDate
-                    , Movement.UnitId                    AS UnitId
-                    , SUM((COALESCE(-MICCheck.Amount,0) *
-                      COALESCE(MovementItemFloat_Price.ValueData,0))::NUMERIC (16, 1))::TFloat AS SummCheck
-               FROM tmpIncomeContainer AS Movement
-
-                    INNER JOIN MovementItemContainer AS MICCheck
-                                                     ON MICCheck.ContainerID = Movement.ContainerID
-                                                    AND MICCheck.MovementDescId = zc_Movement_Check()
-                                                    AND MICCheck.DescId = zc_MIContainer_Count()
-                                                    AND MICCheck.OperDate BETWEEN vbStartDate AND vbEndDate
-
-                    INNER JOIN MovementItemFloat AS MovementItemFloat_Price
-                                                 ON MovementItemFloat_Price.MovementItemId = MICCheck.MovementItemId
-                                                AND MovementItemFloat_Price.DescId = zc_MIFloat_Price()
-
-               GROUP BY Movement.OperDate, Movement.UnitId
-               ),
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+              GROUP BY DATE_TRUNC ('DAY', MovementDate_Branch.ValueData), MovementLinkObject_Unit.ObjectId),
            tmpUserDey AS (
               SELECT tmpBoard.OperDate
                    , tmpBoard.UnitId
@@ -220,20 +237,76 @@ BEGIN
               GROUP BY tmpBoard.OperDate
                      , tmpBoard.UnitId)
 
-       SELECT tmpIncomeCheck.OperDate::TDateTime
-            , tmpIncomeCheck.UnitId
-            , IncomeCount.IncomeCount
-            , tmpIncomeCheck.SummCheck
+       SELECT tmpIncome.OperDate::TDateTime
+            , tmpIncome.UnitId
+            , tmpIncome.IncomeCount
+            , tmpIncome.SaleSumm
             , UserDey.CountUser
-       FROM tmpIncomeCheck
+       FROM tmpIncome
 
-            LEFT JOIN tmpIncomeCount AS IncomeCount
-                                     ON IncomeCount.OperDate       = tmpIncomeCheck.OperDate
-                                    AND IncomeCount.UnitId         = tmpIncomeCheck.UnitId
+            LEFT OUTER JOIN tmpUserDey AS UserDey
+                                       ON UserDey.OperDate       = tmpIncome.OperDate
+                                      AND UserDey.UnitId         = tmpIncome.UnitId;
 
-            LEFT JOIN tmpUserDey AS UserDey
-                                 ON UserDey.OperDate       = tmpIncomeCheck.OperDate
-                                AND UserDey.UnitId         = tmpIncomeCheck.UnitId;
+   IF EXISTS(SELECT 1 FROM tmpBoard
+             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
+             GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
+                    , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
+                    , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
+             HAVING count(*) >= 3)
+   THEN
+     WITH
+       tmpBoardUserAll AS (
+             SELECT tmpBoard.UnitId
+                  , tmpBoard.PersonalId
+                  , tmpBoard.UserID
+                  , tmpBoard.WorkTimeKindID
+                  , tmpBoard.PayrollTypeID
+                  , tmpBoard.PayrollGroupID
+                  , tmpBoard.isManagerPharmacy
+                  , tmpBoard.UnitUserId
+             FROM tmpBoard
+             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
+             GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
+                    , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
+                    , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
+             HAVING count(*) >= 18),
+       tmpBoardUser AS (
+             SELECT tmpBoardUserAll.*, tmpIncome.OperDate
+             FROM tmpBoardUserAll
+
+                  INNER JOIN tmpIncome ON tmpIncome.UnitID = tmpBoardUserAll.UnitID
+
+                  LEFT OUTER JOIN tmpBoard ON tmpBoard.UnitID = tmpBoardUserAll.UnitID
+                                          AND tmpBoard.UserID = tmpBoardUserAll.UserID
+                                          AND tmpBoard.OperDate = tmpIncome.OperDate
+                                          AND tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
+
+             WHERE COALESCE (tmpBoard.UserID, 0) = 0)
+
+       INSERT INTO tmpBoard
+       SELECT tmpBoardUser.UnitId
+            , tmpBoardUser.OperDate
+            , tmpBoardUser.PersonalId
+            , tmpBoardUser.UserID
+            , tmpBoardUser.WorkTimeKindID
+            , tmpBoardUser.PayrollTypeID
+            , tmpBoardUser.PayrollGroupID
+            , tmpBoardUser.isManagerPharmacy
+            , tmpBoardUser.UnitUserId
+       FROM tmpBoardUser;
+
+       UPDATE tmpIncome SET CountUser = UserDey.NewCountUser
+       FROM (SELECT tmpBoard.OperDate
+                  , tmpBoard.UnitId
+                  , COUNT(*)::Integer         AS NewCountUser
+             FROM tmpBoard
+             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
+             GROUP BY tmpBoard.OperDate
+                    , tmpBoard.UnitId) AS UserDey
+       WHERE UserDey.OperDate = tmpIncome.OperDate
+         AND UserDey.UnitId   = tmpIncome.UnitId;
+   END IF;
 
    RETURN QUERY
    WITH
@@ -242,13 +315,14 @@ BEGIN
             , tmpBoard.OperDate
             , tmpBoard.PersonalId
             , tmpBoard.UserID
+            , tmpBoard.UnitUserId
 
             , tmpBoard.WorkTimeKindID
             , tmpBoard.PayrollTypeID
             , tmpBoard.PayrollGroupID
 
             , Income.IncomeCount                              AS IncomeCount
-            , Income.SummCheck                                AS SummCheck
+            , Income.SaleSumm                                 AS SaleSumm
 
             , Calculation.SummaBase                           AS SummaBase
             , Calculation.Summa                               AS SummaCalc
@@ -272,7 +346,7 @@ BEGIN
                                                               inCountUserNS      := Null::Integer,
                                                               inCountUserSCS     := Null::Integer,
                                                               inCountUserS       := Null::Integer,
-                                                              inSummCS           := Income.SummCheck,
+                                                              inSummCS           := Income.SaleSumm,
                                                               inSummSCS          := Null::TFloat,
                                                               inSummHS           := Null::TFloat) AS Calculation
                                                                                                   ON 1 = 1
@@ -283,6 +357,7 @@ BEGIN
             , vbEndDate                                       AS OperDate
             , tmpIncomeCalc.PersonalId
             , tmpIncomeCalc.UserID
+            , tmpIncomeCalc.UnitUserId
 
             , tmpIncomeCalc.WorkTimeKindID
             , tmpIncomeCalc.PayrollTypeID
@@ -290,8 +365,23 @@ BEGIN
 
             , SUM(tmpIncomeCalc.SummaBase)::TFloat            AS SummaBase
        FROM tmpIncomeCalc
-       GROUP BY tmpIncomeCalc.UnitId, tmpIncomeCalc.PersonalId, tmpIncomeCalc.UserID
-              , tmpIncomeCalc.WorkTimeKindID, tmpIncomeCalc.PayrollTypeID, tmpIncomeCalc.PayrollGroupID)
+       GROUP BY tmpIncomeCalc.UnitId, tmpIncomeCalc.PersonalId, tmpIncomeCalc.UserID, tmpIncomeCalc.UnitUserId
+              , tmpIncomeCalc.WorkTimeKindID, tmpIncomeCalc.PayrollTypeID, tmpIncomeCalc.PayrollGroupID),
+     tmpManagerPharmacy AS (  -- Заведующие аптекой
+       SELECT tmpBoard.UnitId
+            , vbEndDate                                       AS OperDate
+            , tmpBoard.PersonalId
+            , tmpBoard.UserID
+            , tmpBoard.UnitUserId
+
+            , tmpBoard.WorkTimeKindID
+            , 1000::TFloat                                    AS SummaCalc
+            , 'Доплата заведующим аптекой: 1000.00'::TVarChar AS FormulaCalc
+       FROM tmpBoard
+       WHERE tmpBoard.isManagerPharmacy = TRUE
+         AND tmpBoard.UnitId = tmpBoard.UnitUserId
+         AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
+       GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID, tmpBoard.UnitUserId, tmpBoard.WorkTimeKindID)
 
 
      -- От суммы проведенных чеков по дням
@@ -301,15 +391,16 @@ BEGIN
         , tmpBoard.OperDate
         , tmpBoard.PersonalId
         , tmpBoard.UserID
+        , tmpBoard.UnitUserId
 
         , tmpBoard.WorkTimeKindID
         , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
         , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
         , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
 
-        , Object_PayrollType.Id                           AS PayrollGroupID
-        , Object_PayrollType.ObjectCode                   AS PayrollGroupCode
-        , Object_PayrollType.ValueData                    AS PayrollGroupName
+        , Object_PayrollType.Id                           AS PayrollTypeID
+        , Object_PayrollType.ObjectCode                   AS PayrollTypeCode
+        , Object_PayrollType.ValueData                    AS PayrollTypeName
 
         , ObjectFloat_Percent.ValueData                   AS Percent
         , ObjectFloat_MinAccrualAmount.ValueData          AS MinAccrualAmount
@@ -319,7 +410,7 @@ BEGIN
         , CheckSum.SummHS
 
         , NULL::Integer                                   AS IncomeCount
-        , NULL::TFloat                                    AS SummIncomeCheck
+        , NULL::TFloat                                    AS IncomeSaleSumm
 
         , Calculation.SummaBase                           AS SummaBase
         , Calculation.Summa                               AS SummaCalc
@@ -370,15 +461,16 @@ BEGIN
         , tmpIncomeCalc.OperDate
         , tmpIncomeCalc.PersonalId
         , tmpIncomeCalc.UserID
+        , tmpIncomeCalc.UnitUserId
 
         , tmpIncomeCalc.WorkTimeKindID
         , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
         , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
         , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
 
-        , Object_PayrollType.Id                           AS PayrollGroupID
-        , Object_PayrollType.ObjectCode                   AS PayrollGroupCode
-        , Object_PayrollType.ValueData                    AS PayrollGroupName
+        , Object_PayrollType.Id                           AS PayrollTypeID
+        , Object_PayrollType.ObjectCode                   AS PayrollTypeCode
+        , Object_PayrollType.ValueData                    AS PayrollTypeName
 
         , ObjectFloat_Percent.ValueData                   AS Percent
         , ObjectFloat_MinAccrualAmount.ValueData          AS MinAccrualAmount
@@ -388,7 +480,7 @@ BEGIN
         , NULL::TFloat                                    AS SummHS
 
         , tmpIncomeCalc.IncomeCount                       AS IncomeCount
-        , tmpIncomeCalc.SummCheck                         AS SummIncomeCheck
+        , tmpIncomeCalc.SaleSumm                          AS IncomeSaleSumm
 
         , tmpIncomeCalc.SummaBase                         AS SummaBase
         , tmpIncomeCalc.SummaCalc                         AS SummaCalc
@@ -420,15 +512,16 @@ BEGIN
         , tmpIncomeMonth.OperDate
         , tmpIncomeMonth.PersonalId
         , tmpIncomeMonth.UserID
+        , tmpIncomeMonth.UnitUserId
 
         , tmpIncomeMonth.WorkTimeKindID
         , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
         , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
         , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
 
-        , Object_PayrollType.Id                           AS PayrollGroupID
-        , Object_PayrollType.ObjectCode                   AS PayrollGroupCode
-        , Object_PayrollType.ValueData                    AS PayrollGroupName
+        , Object_PayrollType.Id                           AS PayrollTypeID
+        , Object_PayrollType.ObjectCode                   AS PayrollTypeCode
+        , Object_PayrollType.ValueData                    AS PayrollTypeName
 
         , ObjectFloat_Percent.ValueData                   AS Percent
         , ObjectFloat_MinAccrualAmount.ValueData          AS MinAccrualAmount
@@ -469,6 +562,46 @@ BEGIN
                                                                 inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
                                                                 inSummaBase        := tmpIncomeMonth.SummaBase) AS Calculation
                                                                                                                 ON 1 = 1
+   UNION ALL
+     -- Доплаты заведующим аптекой
+   SELECT tmpManagerPharmacy.UnitId
+        , Object_Unit.ObjectCode                          AS UnitCode
+        , Object_Unit.ValueData                           AS UnitName
+        , tmpManagerPharmacy.OperDate
+        , tmpManagerPharmacy.PersonalId
+        , tmpManagerPharmacy.UserID
+        , tmpManagerPharmacy.UnitUserId
+
+        , tmpManagerPharmacy.WorkTimeKindID
+        , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
+        , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
+        , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
+
+        , NULL::Integer                                   AS PayrollGroupID
+        , NULL::Integer                                   AS PayrollGroupCode
+        , NULL::TVarChar                                  AS PayrollGroupName
+
+        , NULL::TFloat                                    AS Percent
+        , NULL::TFloat                                    AS MinAccrualAmount
+
+        , NULL::TFloat                                    AS SummCS
+        , NULL::TFloat                                    AS SummSCS
+        , NULL::TFloat                                    AS SummHS
+
+        , NULL::Integer                                   AS IncomeCount
+        , NULL::TFloat                                    AS IncomeSaleSumm
+
+        , NULL::TFloat                                    AS SummaBase
+        , 1000::TFloat                                    AS SummaCalc
+        , 'Доплата заведующим аптекой: 1000.00'::TVarChar AS FormulaCalc
+   FROM tmpManagerPharmacy
+
+        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = tmpManagerPharmacy.UnitId
+
+        INNER JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpManagerPharmacy.WorkTimeKindID
+        INNER JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
+                                ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpManagerPharmacy.WorkTimeKindID
+                               AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
 
    ;
 
@@ -487,4 +620,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Calculation_Wages (('01.08.2019')::TDateTime, 0, '3')
+--
+SELECT * FROM gpSelect_Calculation_Wages (('01.08.2019')::TDateTime, 0, '3')

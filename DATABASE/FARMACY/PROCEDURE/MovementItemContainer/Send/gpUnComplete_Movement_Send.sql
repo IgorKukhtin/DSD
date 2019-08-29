@@ -63,7 +63,7 @@ BEGIN
     
     IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE
     THEN 
-      RAISE EXCEPTION 'Ошибка. Работа с прошлыми перемещениями СУН запрещена!.';     
+      RAISE EXCEPTION 'Ошибка. Работа с просроченными перемещениями СУН запрещена!.';     
     END IF;     
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser

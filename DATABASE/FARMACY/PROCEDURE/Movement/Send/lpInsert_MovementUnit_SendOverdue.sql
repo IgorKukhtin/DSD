@@ -277,6 +277,22 @@
     WHERE MovementItem.MovementId = vbMovementID
       AND MovementItem.DescId = zc_MI_Child()
       AND MovementItem.Amount = 0;
+      
+      -- Правим данные мастера
+    PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := tmpContainerOverdue.MasterID,
+                                              inMovementId           := vbMovementID,
+                                              inGoodsId              := tmpContainerOverdue.GoodsId,
+                                              inAmount               := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                              inReasonDifferencesId  := 0,
+                                              inUserId               := vbUserId)
+    FROM tmpContainerOverdue
+         INNER JOIN MovementItem ON MovementItem.MovementId = vbMovementID
+                                AND MovementItem.ID = tmpContainerOverdue.MasterID
+    GROUP BY tmpContainerOverdue.MasterID, tmpContainerOverdue.GoodsId, MovementItem.Amount
+    HAVING COALESCE(SUM(tmpContainerOverdue.Amount), 0) <> MovementItem.Amount;
+      
 
       -- Отмечаем удаленным проданое мастеры
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItemMaster.ID,

@@ -1,32 +1,32 @@
 inherited WagesUserForm: TWagesUserForm
   Caption = #1047#1072#1088#1087#1083#1072#1090#1072
-  ClientHeight = 391
-  ClientWidth = 559
+  ClientHeight = 454
+  ClientWidth = 655
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = actDataDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 575
-  ExplicitHeight = 430
+  ExplicitWidth = 671
+  ExplicitHeight = 493
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 559
-    Height = 316
+    Width = 655
+    Height = 379
     TabOrder = 5
     ExplicitTop = 75
-    ExplicitWidth = 559
-    ExplicitHeight = 316
-    ClientRectBottom = 316
-    ClientRectRight = 559
+    ExplicitWidth = 655
+    ExplicitHeight = 379
+    ClientRectBottom = 379
+    ClientRectRight = 655
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 559
-      ExplicitHeight = 316
+      ExplicitWidth = 655
+      ExplicitHeight = 379
       inherited cxGrid: TcxGrid
-        Width = 559
-        Height = 216
-        ExplicitWidth = 559
-        ExplicitHeight = 216
+        Width = 655
+        Height = 279
+        ExplicitWidth = 655
+        ExplicitHeight = 279
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -34,30 +34,53 @@ inherited WagesUserForm: TWagesUserForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-            Caption = #8470' '#1087'.'#1087
+          object UnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 56
+            Options.Editing = False
+            Width = 135
           end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+          object PayrollTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1088#1072#1089#1095#1077#1090#1072' '
+            DataBinding.FieldName = 'PayrollTypeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 367
+            Options.Editing = False
+            Width = 142
           end
-          object cxGridDBTableViewColumn3: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+          object DateCalculation: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'DateCalculation'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 98
+            Options.Editing = False
+            Width = 93
+          end
+          object AmountAccrued: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+            DataBinding.FieldName = 'AmountAccrued'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object Formula: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'Formula'
+            PropertiesClassName = 'TcxMemoProperties'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 176
           end
         end
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 216
-        Width = 559
+        Top = 279
+        Width = 655
         Height = 100
         Align = alBottom
         ShowCaption = False
@@ -149,7 +172,7 @@ inherited WagesUserForm: TWagesUserForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 559
+    Width = 655
     Height = 49
     Align = alTop
     ShowCaption = False
@@ -193,7 +216,8 @@ inherited WagesUserForm: TWagesUserForm
     object actDataDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actDataDialog'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
       ImageIndex = 35
       FormName = 'TDataDialogForm'
       FormNameParam.Value = 'TDataDialogForm'
@@ -209,6 +233,7 @@ inherited WagesUserForm: TWagesUserForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
   end
@@ -343,21 +368,21 @@ inherited WagesUserForm: TWagesUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Total'
+        Name = 'AmountAccrued'
         Value = Null
         Component = ceTotal
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Card'
+        Name = 'AmountCard'
         Value = Null
         Component = ceCard
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OnHand'
+        Name = 'AmountHand'
         Value = Null
         Component = ceOnHand
         DataType = ftFloat
@@ -366,5 +391,13 @@ inherited WagesUserForm: TWagesUserForm
     PackSize = 1
     Left = 328
     Top = 104
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <>
+    Left = 328
+    Top = 184
   end
 end

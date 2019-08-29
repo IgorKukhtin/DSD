@@ -1096,15 +1096,26 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_RemainsSUN() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_RemainsSUN', 'остаток в тек. аптеке сроковых'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsSUN');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaBase() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaBase'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaBase', 'База начисления'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaBase');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountCard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountCard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountCard', 'Перечислено на карту'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountCard');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 26.08.19                                                                                                     * zc_MIFloat_SummaBase, zc_MIFloat_AmountCard
  31.07.19         * zc_MIFloat_DenumeratorValueSP
  29.07.19         * zc_MIFloat_SummFine, zc_MIFloat_SummHosp, zc_MIFloat_AmountPlan
  24.07.19         * zc_MIFloat_SendDefSUN
  11.07.19         * zc_MIFloat_SendSUN
                     zc_MIFloat_RemainsSUN
- 23.06.19                                                                                                     * zc_MIFloat_PricePartionDate()
+ 23.06.19                                                                                                     * zc_MIFloat_PricePartionDate
  27.05.19         * zc_MIFloat_ChangePercentMin
  02.04.19         * zc_MIFloat_DefermentPrice
                     zc_MIFloat_PriceExp

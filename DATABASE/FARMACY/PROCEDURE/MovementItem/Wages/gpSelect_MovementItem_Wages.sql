@@ -8,112 +8,21 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UserID Integer, Amount TFloat
-             , PersonalCode Integer, PersonalName TVarChar, PositionName TVarChar
+RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
+             , AmountCard TFloat, AmountHand TFloat
+             , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
+             , isIssuedBy Boolean
              , isErased Boolean
              , Color_Calc Integer
               )
 AS
 $BODY$
     DECLARE vbUserId   Integer;
-    DECLARE vbOperDate TDateTime;
-    DECLARE vbSPKindId Integer;
-    DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
     vbUserId:= lpGetUserBySession (inSession);
-
-    -- определяется данные
-    SELECT Movement.OperDate
-         , Movement.StatusId
-    INTO vbOperDate, vbStatusId
-    FROM Movement
-    WHERE Movement.ID = inMovementId;
-
-     -- Получение главніх аптек
-     CREATE TEMP TABLE tmpMainUnit (UserId Integer, UnitId Integer) ON COMMIT DROP;
-
-     WITH   tmpMain AS (SELECT
-                               MovementItem.ObjectId      AS UserId
-                             , MILinkObject_Unit.ObjectId AS UnitId
-                        FROM Movement
-
-                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
-                                                    AND MovementItem.DescId = zc_MI_Master()
-
-                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-
-                        WHERE Movement.ID = inMovementId
-                          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)),
-
-            tmpMainPrev AS (SELECT
-                                   MovementItem.ObjectId      AS UserId
-                                 , MILinkObject_Unit.ObjectId AS UnitId
-                            FROM Movement
-
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
-                                                        AND MovementItem.DescId = zc_MI_Master()
-                                                        AND MovementItem.ObjectId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
-
-                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-
-                            WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
-                              AND Movement.OperDate = vbOperDate - INTERVAL '1 MONTH'
-                              AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)),
-
-            tmLogAll AS (SELECT count(*) as CountLog
-                              , EmployeeWorkLog.UserId
-                              , EmployeeWorkLog.UnitId
-                         FROM EmployeeWorkLog
-                         WHERE EmployeeWorkLog.DateLogIn >= vbOperDate - INTERVAL '1 MONTH' AND EmployeeWorkLog.DateLogIn < vbOperDate - INTERVAL '1 DAY'
-                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
-                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMainPrev.UserId FROM tmpMainPrev)
-                         GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
-
-            tmLog AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAll.UserId ORDER BY tmLogAll.CountLog DESC) AS Ord
-                           , tmLogAll.UserId
-                           , tmLogAll.UnitId
-                      FROM tmLogAll),
-            tmLogAllPrev AS (SELECT count(*) as CountLog
-                              , EmployeeWorkLog.UserId
-                              , EmployeeWorkLog.UnitId
-                         FROM EmployeeWorkLog
-                         WHERE EmployeeWorkLog.DateLogIn >= vbOperDate - INTERVAL '2 MONTH' AND EmployeeWorkLog.DateLogIn < vbOperDate - INTERVAL '1 DAY'
-                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
-                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMainPrev.UserId FROM tmpMainPrev)
-                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmLog.UserId FROM tmLog)
-                         GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
-
-            tmLogPrev AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAllPrev.UserId ORDER BY tmLogAllPrev.CountLog DESC) AS Ord
-                           , tmLogAllPrev.UserId
-                           , tmLogAllPrev.UnitId
-                      FROM tmLogAllPrev)
-
-     INSERT INTO tmpMainUnit (UserId, UnitId)
-     SELECT tmpMain.UserId
-          , tmpMain.UnitId
-     FROM tmpMain
-     UNION ALL
-     SELECT tmpMainPrev.UserId
-          , tmpMainPrev.UnitId
-     FROM tmpMainPrev
-     UNION ALL
-     SELECT tmLog.UserId
-          , tmLog.UnitId
-     FROM tmLog
-     WHERE tmLog.Ord = 1
-     UNION ALL
-     SELECT tmLogPrev.UserId
-          , tmLogPrev.UnitId
-     FROM tmLogPrev
-     WHERE tmLogPrev.Ord = 1;
-
 
     -- Результат
     IF inShowAll THEN
@@ -124,6 +33,7 @@ BEGIN
                                           , Object_User.Id                      AS UserID
                                           , Object_Personal_View.MemberId       AS MemberId
                                           , Object_Personal_View.PositionName   AS PositionName
+                                          , Object_Personal_View.UnitId         AS UnitId
                                      FROM Object AS Object_User
 
                                           INNER JOIN ObjectLink AS ObjectLink_User_Member
@@ -133,61 +43,67 @@ BEGIN
                                           LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                                      WHERE Object_User.DescId = zc_Object_User()),
-                tmpEmployeeSchedule AS (SELECT
-                                               MovementItem.ObjectId      AS UserId
-                                             , MILinkObject_Unit.ObjectId AS UnitId
-                                             , MovementItem.isErased      AS isErased
-                                        FROM Movement
+                tmpPersonal AS (SELECT
+                                       Object_Personal.Id                 AS PersonalId
+                                     , ObjectLink_User_Member.ObjectId    AS UserID
+                                     , Object_Personal.isErased           AS isErased
+                                FROM Object AS Object_Personal
 
-                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
-                                                                    AND MovementItem.DescId = zc_MI_Master()
-                                                                    AND MovementItem.ObjectId NOT IN (SELECT MovementItem.ObjectId FROM  MovementItem  WHERE MovementItem.MovementId = inMovementId)
+                                     INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
+                                                         AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
-                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                     INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                         ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                                         AND ObjectLink_User_Member.ObjectId  NOT IN (SELECT MovementItem.ObjectId FROM  MovementItem  WHERE MovementItem.MovementId = inMovementId)
 
-                                        WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
-                                          AND Movement.OperDate = vbOperDate - INTERVAL '1 MONTH'
-                                          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE))
+                                WHERE Object_Personal.DescId = zc_Object_Personal()
+                                  AND Object_Personal.isErased = FALSE)
 
             SELECT 0                                  AS Id
-                 , tmpEmployeeSchedule.UserID         AS UserID
+                 , tmpPersonal.UserID                 AS UserID
                  , NULL::TFloat                       AS Amount
 
-                 , Object_Member.ObjectCode           AS PersonalCode
-                 , Object_Member.ValueData            AS PersonalName
+                 , NULL::TFloat                       AS AmountCard
+                 , NULL::TFloat                       AS AmountHand
+
+                 , Object_Member.ObjectCode           AS MemberCode
+                 , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
-                 , tmpEmployeeSchedule.isErased       AS isErased
+                 , False                              AS isIssuedBy
+                 , tmpPersonal.isErased               AS isErased
                  , zc_Color_Black()                   AS Color_Calc
-            FROM  tmpEmployeeSchedule
-                  LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                       ON ObjectLink_User_Member.ObjectId = tmpEmployeeSchedule.UserID
+            FROM  tmpPersonal
+                  INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                       ON ObjectLink_User_Member.ObjectId = tmpPersonal.UserID
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                  LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+                  INNER JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
                   LEFT JOIN tmpPersonal_View AS Personal_View
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
-                                            AND COALESCE (Personal_View.UserID, tmpEmployeeSchedule.UserID) =  tmpEmployeeSchedule.UserID
                                             AND Personal_View.Ord = 1
 
-                  LEFT JOIN tmpMainUnit ON tmpMainUnit.UserId = tmpEmployeeSchedule.UserID
-
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMainUnit.UnitID
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
             UNION ALL
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
-                 , MovementItem.Amount                AS Amount
+                 , MovementItem.Amount                AS AmountAccrued
 
-                 , Object_Member.ObjectCode           AS PersonalCode
-                 , Object_Member.ValueData            AS PersonalName
+                 , MIF_AmountCard.ValueData           AS AmountCard
+                 , (MovementItem.Amount - COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+
+                 , Object_Member.ObjectCode           AS MemberCode
+                 , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
@@ -201,9 +117,16 @@ BEGIN
                                             AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                             AND Personal_View.Ord = 1
 
-                  LEFT JOIN tmpMainUnit ON tmpMainUnit.UserId = MovementItem.ObjectId
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMainUnit.UnitID
+                  LEFT JOIN MovementItemFloat AS MIF_AmountCard
+                                              ON MIF_AmountCard.MovementItemId = MovementItem.Id
+                                             AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
@@ -215,6 +138,7 @@ BEGIN
                                           , Object_User.Id                      AS UserID
                                           , Object_Personal_View.MemberId       AS MemberId
                                           , Object_Personal_View.PositionName   AS PositionName
+                                          , Object_Personal_View.UnitId         AS UnitId
                                      FROM Object AS Object_User
 
                                           INNER JOIN ObjectLink AS ObjectLink_User_Member
@@ -227,14 +151,19 @@ BEGIN
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
-                 , MovementItem.Amount                AS Amount
+                 , MovementItem.Amount                AS AmountAccrued
+                 
+                 , MIF_AmountCard.ValueData           AS AmountCard
+                 , (MovementItem.Amount - COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
-                 , Object_Member.ObjectCode           AS PersonalCode
-                 , Object_Member.ValueData            AS PersonalName
+                 , Object_Member.ObjectCode           AS MemberCode
+                 , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
@@ -249,9 +178,16 @@ BEGIN
                                             AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                             AND Personal_View.Ord = 1
 
-                  LEFT JOIN tmpMainUnit ON tmpMainUnit.UserId = MovementItem.ObjectId
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMainUnit.UnitID
+                  LEFT JOIN MovementItemFloat AS MIF_AmountCard
+                                              ON MIF_AmountCard.MovementItemId = MovementItem.Id
+                                             AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
@@ -266,5 +202,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  21.08.19                                                        *
 */
---
-select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');-- select * from gpSelect_MovementItem_Sale(inMovementId := 7784799 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

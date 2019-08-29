@@ -218,7 +218,11 @@ BEGIN
                                                AND MovementLinkObject_From.ObjectId = vbUnitId
              WHERE Movement.DescId = zc_Movement_Send()
                AND Movement.OperDate = CURRENT_DATE
-               AND Movement.StatusId = zc_Enum_Status_Erased())
+               AND Movement.StatusId = zc_Enum_Status_Erased()) AND
+     (date_part('HOUR',    CURRENT_TIME)::Integer <= 12
+      OR date_part('HOUR',    CURRENT_TIME)::Integer > 12
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 16)
    THEN
       IF (SELECT COUNT(*)
           FROM  Movement

@@ -20,7 +20,7 @@ BEGIN
     vbUserId:= inSession;
 
     OPEN Cursor1 FOR
-        SELECT 'Расчет з.п. за '||to_char(DATE_TRUNC ('DAY', CURRENT_TIMESTAMP), 'DD.MM.YYYY') as Title
+        SELECT 'Расчет з.п. за '||to_char(DATE_TRUNC ('DAY', inOperDate), 'DD.MM.YYYY') as Title
         UNION ALL
         SELECT 'По сотруднику: '||(SELECT ValueData FROM Object WHERE ID = inPersonID);
 
@@ -32,7 +32,7 @@ BEGIN
             Calculation.OperDate                   AS OperDate
           , Calculation.UnitName                   AS UnitName
           , Calculation.ShortName                  AS ShortName
-          , Calculation.PayrollGroupName           AS PayrollGroupName
+          , Calculation.PayrollTypeName            AS PayrollTypeName
           , Calculation.SummaCalc                  AS SummaCalc
           , Calculation.FormulaCalc                AS FormulaCalc
         FROM gpSelect_Calculation_Wages(inOperDate, inPersonID, inSession) AS Calculation
@@ -47,8 +47,8 @@ ALTER FUNCTION gpSelect_CalculationPerson_Print (TDateTime, Integer, TVarChar) O
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 07.11.18        *
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.08.19                                                        *
 */
 
 -- SELECT * FROM gpSelect_CalculationPerson_Print (inOperDate := ('01.08.2019')::TDateTime, inPersonID := 5323676,  inSession:= '3');
