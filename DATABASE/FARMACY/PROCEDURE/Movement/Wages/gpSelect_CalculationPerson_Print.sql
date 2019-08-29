@@ -47,8 +47,8 @@ ALTER FUNCTION gpSelect_CalculationPerson_Print (TDateTime, Integer, TVarChar) O
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 07.11.18        *
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.08.19                                                        *
 */
 
 -- SELECT * FROM gpSelect_CalculationPerson_Print (inOperDate := ('01.08.2019')::TDateTime, inPersonID := 5323676,  inSession:= '3');

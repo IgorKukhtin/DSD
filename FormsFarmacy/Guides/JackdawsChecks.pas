@@ -65,6 +65,12 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actInventoryEveryMonth: TMultiAction;
+    actDOCReportInventoryEveryMonth: TdsdDOCReportFormAction;
+    actExecInventoryEveryMonth: TdsdExecStoredProc;
+    cdsInventoryEveryMonth: TClientDataSet;
+    spInventoryEveryMonth: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

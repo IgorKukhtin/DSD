@@ -108,10 +108,15 @@ INSERT INTO MovementItemBooleanDesc (Code, ItemName)
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_ClippedReprice', 'Отсеченные при ночных переоценках' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ClippedReprice'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_isIssuedBy() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isIssuedBy'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_isIssuedBy', 'Выдано' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isIssuedBy'); 
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 28.10.18                                                                       * zc_MIBoolean_isIssuedBy
  25.10.18                                                                       * zc_MIBoolean_ClippedReprice
  24.06.18                                                                       * zc_MIBoolean_Conduct
  26.11.17         * zc_MIBoolean_Report

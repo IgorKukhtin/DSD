@@ -364,7 +364,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
@@ -374,16 +374,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksEditForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
 

@@ -13,6 +13,7 @@ type
     Report: TfrxReport;
     OKPO : array of string;
     procedure LoadReportFromFile(ReportName, ReportPath: string);
+    procedure LoadFileFromFile(FileName, FilePath: string);
     procedure TStrArrAdd(const A : array of string);
   protected
     // подготавливаем данные для тестирования
@@ -21,6 +22,7 @@ type
     procedure TearDown; override;
   published
     procedure LoadAllReportFormTest;
+    procedure LoadAllBlankFormTest;
   end;
 
 implementation
@@ -29,6 +31,7 @@ uses Authentication, FormStorage, CommonData, Storage, UtilConst;
 
 const
   ReportPath = '..\Reports\Farmacy';
+  FarmacyBlankPath = '..\Reports\FarmacyBlank';
 
 { TLoadReportTest }
 
@@ -54,6 +57,20 @@ begin
   // Считывание отчета из базы
   Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
 end;
+
+procedure TLoadReportTest.LoadFileFromFile(FileName, FilePath: string);
+begin
+
+  // Сохранение файла в базу
+  Stream.Clear;
+  Stream.LoadFromFile(FilePath);
+  Stream.Position := 0;
+  TdsdFormStorageFactory.GetStorage.SaveReport(Stream, FileName);
+
+  // Считывание отчета из базы
+  Stream.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(FileName));
+end;
+
 
 procedure TLoadReportTest.LoadAllReportFormTest;
 var
@@ -118,6 +135,12 @@ begin
   {LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
   LoadReportFromFile('Отчет Доходности', ReportPath + '\Отчет Доходности.fr3');
    }
+end;
+
+procedure TLoadReportTest.LoadAllBlankFormTest;
+begin
+  LoadFileFromFile('ИНВЕНТ_ОПИСЬ_на_каждый_месяц.doc', FarmacyBlankPath + '\ИНВЕНТ ОПИСЬ на каждый месяц.doc');
+
 end;
 
 procedure TLoadReportTest.SetUp;

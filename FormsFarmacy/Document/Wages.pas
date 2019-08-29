@@ -45,14 +45,14 @@ type
     Color_Calc: TcxGridDBBandedColumn;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
-    actCalculationPerson: TMultiAction;
+    actPrintCalculationPerson: TMultiAction;
     dxBarButton7: TdxBarButton;
     actOpenChoicePersonal: TOpenChoiceForm;
-    actExportCalculationPerson: TdsdExportToXLS;
+    actExportPrintCalculationPerson: TdsdExportToXLS;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrintCalculationPerson: TdsdStoredProc;
-    actExecSPCalculationPerson: TdsdExecStoredProc;
+    actExecSPPrintCalculationPerson: TdsdExecStoredProc;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
@@ -74,6 +74,16 @@ type
     AmountHand: TcxGridDBBandedColumn;
     AmountAccrued: TcxGridDBBandedColumn;
     chDateCalculation: TcxGridDBColumn;
+    actPrintCalculationAll: TMultiAction;
+    actExecSPPrintCalculationAll: TdsdExecStoredProc;
+    actExportPrintCalculationAll: TdsdExportToXLS;
+    spSelectPrintCalculationAll: TdsdStoredProc;
+    dxBarButton9: TdxBarButton;
+    actUpdate_isIssuedBy: TdsdExecStoredProc;
+    spUpdate_isIssuedBy: TdsdStoredProc;
+    isIssuedBy: TcxGridDBBandedColumn;
+    dxBarButton10: TdxBarButton;
+    actIssuedBy: TMultiAction;
   private
     { Private declarations }
   public

@@ -1,11 +1,10 @@
--- Function: gpInsertUpdate_MovementItem_Wages_Summa()
+-- Function: gpUpdate_MovementItem_Wages_isIssuedBy()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Wages_isIssuedBy(INTEGER, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
-    IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inAmountCard          TFloat    , -- На карту
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Wages_isIssuedBy(
+    IN inId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inisIssuedBy          Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -17,18 +16,17 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
 
-    IF COALESCE (ioId, 0) = 0
+    IF COALESCE (inId, 0) = 0
     THEN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
 
      -- сохранили свойство <На карту>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
-
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), inId, NOT inisIssuedBy);
+    
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
+    PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
 
-    --
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -41,4 +39,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Wages_Summa (, inSession:= '2')
+-- SELECT * FROM gpUpdate_MovementItem_Wages_isIssuedBy (, inSession:= '2')
+

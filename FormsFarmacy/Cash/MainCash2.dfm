@@ -3206,7 +3206,7 @@ inherited MainCashForm2: TMainCashForm2
     object actWagesUser: TAction
       Category = 'DSDLib'
       Caption = 'actWagesUser'
-      ShortCut = 16471
+      ShortCut = 16474
       OnExecute = actWagesUserExecute
     end
   end

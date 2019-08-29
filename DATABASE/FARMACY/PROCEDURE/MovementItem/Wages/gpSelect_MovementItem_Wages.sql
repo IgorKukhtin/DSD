@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
+             , isIssuedBy Boolean
              , isErased Boolean
              , Color_Calc Integer
               )
@@ -73,6 +74,7 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , False                              AS isIssuedBy
                  , tmpPersonal.isErased               AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  tmpPersonal
@@ -100,6 +102,8 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
@@ -118,6 +122,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
@@ -154,6 +162,8 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
@@ -173,6 +183,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
