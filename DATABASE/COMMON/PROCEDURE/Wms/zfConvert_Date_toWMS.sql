@@ -1,8 +1,8 @@
--- Function: zfConvert_DateToWMS
+-- Function: zfConvert_Date_toWMS
 
-DROP FUNCTION IF EXISTS zfConvert_DateToWMS (TDateTime);
+DROP FUNCTION IF EXISTS zfConvert_Date_toWMS (TDateTime);
 
-CREATE OR REPLACE FUNCTION zfConvert_DateToWMS (inValue TDateTime)
+CREATE OR REPLACE FUNCTION zfConvert_Date_toWMS (inValue TDateTime)
 RETURNS TVarChar
 AS
 $BODY$
@@ -12,7 +12,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfConvert_DateToWMS (TDateTime) OWNER TO postgres;
+ALTER FUNCTION zfConvert_Date_toWMS (TDateTime) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -22,4 +22,4 @@ ALTER FUNCTION zfConvert_DateToWMS (TDateTime) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM zfConvert_DateToWMS (CURRENT_DATE)
+-- SELECT * FROM zfConvert_Date_toWMS (CURRENT_DATE)

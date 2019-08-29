@@ -507,9 +507,9 @@ BEGIN
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
 
             INNER JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
-                                 ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
-                                AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
-                                AND ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId > 0
+                                  ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId > 0
             LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
 
        WHERE Object_ArticleLoss.DescId   = zc_Object_ArticleLoss()

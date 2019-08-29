@@ -1,4 +1,4 @@
-unit ExternalLoad;
+п»їunit ExternalLoad;
 
 {$I ..\dsdVer.inc}
 
@@ -29,7 +29,7 @@ type
     FFileFilter: string;
     FExtendedProperties: string;
     FStartRecord: integer;
-    // Создаем тут обработку mmo файлов
+    // РЎРѕР·РґР°РµРј С‚СѓС‚ РѕР±СЂР°Р±РѕС‚РєСѓ mmo С„Р°Р№Р»РѕРІ
     procedure CreateMMODataSet(FileName: string);
   protected
     procedure First; override;
@@ -68,7 +68,7 @@ type
     constructor Create(Owner: TComponent); override;
     function Execute: boolean; override;
   published
-    // Директория загрузки. Сделана published что бы сохранять данные по стандартной схеме
+    // Р”РёСЂРµРєС‚РѕСЂРёСЏ Р·Р°РіСЂСѓР·РєРё. РЎРґРµР»Р°РЅР° published С‡С‚Рѕ Р±С‹ СЃРѕС…СЂР°РЅСЏС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ СЃС…РµРјРµ
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
   end;
 
@@ -165,7 +165,7 @@ begin
         if FileTypeName = 'MMO' then
            result := dtMMO
         else
-          raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+          raise Exception.Create('РўРёРї С„Р°Р№Р»Р° "' + FileTypeName + '" РЅРµ РѕРїСЂРµРґРµР»РµРЅ РІ РїСЂРѕРіСЂР°РјРјРµ');
 end;
 
 { TFileExternalLoad }
@@ -210,7 +210,7 @@ begin
        FStoredProc := GetStoredProc;
        try
          if  FExternalLoad.RecordCount > 0 then
-             with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
+             with TGaugeFactory.GetGauge('Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…', 1, FExternalLoad.RecordCount) do begin
                Start;
                try
                  while not FExternalLoad.EOF do begin
@@ -249,11 +249,11 @@ begin
   case FDataSetType of
     dtDBF: begin
              FFileExtension := '*.dbf';
-             FFileFilter := 'Файлы DBF (*.dbf)|*.dbf|';
+             FFileFilter := 'Р¤Р°Р№Р»С‹ DBF (*.dbf)|*.dbf|';
            end;
     dtXLS: begin
              FFileExtension := '*.xls';
-             FFileFilter := 'Файлы выгрузки Excel|*.xls;*.xlsx|';
+             FFileFilter := 'Р¤Р°Р№Р»С‹ РІС‹РіСЂСѓР·РєРё Excel|*.xls;*.xlsx|';
            end;
   end;
 end;
@@ -288,24 +288,24 @@ begin
   FDataSet.FieldDefs.Add('MakerName', ftString, 255);
   FDataSet.FieldDefs.Add('CommonCode', ftString, 255);
   FDataSet.FieldDefs.Add('VAT', ftInteger);
-  FDataSet.FieldDefs.Add('PartitionGoods', ftString, 255); // Номер серии
-  FDataSet.FieldDefs.Add('ExpirationDate', ftDateTime);    // Срок годности
+  FDataSet.FieldDefs.Add('PartitionGoods', ftString, 255); // РќРѕРјРµСЂ СЃРµСЂРёРё
+  FDataSet.FieldDefs.Add('ExpirationDate', ftDateTime);    // РЎСЂРѕРє РіРѕРґРЅРѕСЃС‚Рё
   FDataSet.FieldDefs.Add('FEA', ftString, 255); //
   FDataSet.FieldDefs.Add('MeasureName', ftString, 255); //
 
   FDataSet.FieldDefs.Add('SertificatNumber', ftString, 255); //
-  FDataSet.FieldDefs.Add('SertificatStart', ftDateTime);    // Срок годности
-  FDataSet.FieldDefs.Add('SertificatEnd', ftDateTime);    // Срок годности
+  FDataSet.FieldDefs.Add('SertificatStart', ftDateTime);    // РЎСЂРѕРє РіРѕРґРЅРѕСЃС‚Рё
+  FDataSet.FieldDefs.Add('SertificatEnd', ftDateTime);    // РЎСЂРѕРє РіРѕРґРЅРѕСЃС‚Рё
 
-  FDataSet.FieldDefs.Add('Amount', ftFloat);    // Количество
-  FDataSet.FieldDefs.Add('Price', ftFloat);     // Цена Отпускная (для аптеки это закупочная)
+  FDataSet.FieldDefs.Add('Amount', ftFloat);    // РљРѕР»РёС‡РµСЃС‚РІРѕ
+  FDataSet.FieldDefs.Add('Price', ftFloat);     // Р¦РµРЅР° РћС‚РїСѓСЃРєРЅР°СЏ (РґР»СЏ Р°РїС‚РµРєРё СЌС‚Рѕ Р·Р°РєСѓРїРѕС‡РЅР°СЏ)
 
   TClientDataSet(FDataSet).CreateDataSet;
-  // Считываем файл
+  // РЎС‡РёС‚С‹РІР°РµРј С„Р°Р№Р»
   StringList := TStringList.Create;
   try
     StringList.LoadFromFile(FileName);
-    // Загрузка заголовка. 3 строки
+    // Р—Р°РіСЂСѓР·РєР° Р·Р°РіРѕР»РѕРІРєР°. 3 СЃС‚СЂРѕРєРё
     ElementList := SplitString(StringList[0], #9);
     OkpoFrom := ElementList[1];
     OkpoTo := ElementList[2];
@@ -326,10 +326,11 @@ begin
     for I := Low(ElementList) to High(ElementList) do
         if ElementList[i] <> '' then begin
            Remark := ReplaceStr(ElementList[i], '""', '"');
+           Remark := ReplaceStr(Remark, 'Вґ', '`');
            break;
         end;
     for I := 3 to StringList.Count - 1 do
-        // разбираем строки
+        // СЂР°Р·Р±РёСЂР°РµРј СЃС‚СЂРѕРєРё
         with FDataSet do begin
           if StringList[i] = '' then
              break;
@@ -342,12 +343,12 @@ begin
           if (ElementList[13] = '') or (ElementList[13] = '.  .') then
              ExpirationDate := OperDate + 365
           else
-             ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
-          // Проверяем задвоенные позиции
+             ExpirationDate := VarToDateTime(ElementList[13]);    // РЎСЂРѕРє РіРѕРґРЅРѕСЃС‚Рё
+          // РџСЂРѕРІРµСЂСЏРµРј Р·Р°РґРІРѕРµРЅРЅС‹Рµ РїРѕР·РёС†РёРё
           if Locate('GoodsCode;PartitionGoods;ExpirationDate;Price',
                       VarArrayOf([ElementList[0], ElementList[10], ExpirationDate, Price]), []) then begin
              Edit;
-             FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[15]);    // Количество
+             FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[15]);    // РљРѕР»РёС‡РµСЃС‚РІРѕ
              Post
           end
           else begin
@@ -367,7 +368,7 @@ begin
             FieldByName('MakerCode').AsString := ElementList[2];
             FieldByName('MakerName').AsString := ElementList[3];
             FieldByName('CommonCode').AsString := ElementList[4];
-            FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
+            FieldByName('SertificatNumber').AsString := ElementList[5]; // РќРѕРјРµСЂ СЂРµРіРёСЃС‚СЂР°С†РёРё
             if (TRIM(ElementList[6]) = '') or (ElementList[6] = '  .  .  ') then
               FieldByName('SertificatStart').Clear
             else
@@ -378,15 +379,15 @@ begin
               FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
 
             FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
-            FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
-            FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
+            FieldByName('PartitionGoods').AsString := ElementList[10]; // РќРѕРјРµСЂ СЃРµСЂРёРё
+            FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // РЎСЂРѕРє РіРѕРґРЅРѕСЃС‚Рё
             if High(ElementList) < 21 then
-               FieldByName('FEA').AsString := '' // КВЭД
+               FieldByName('FEA').AsString := '' // РљР’Р­Р”
             else
-               FieldByName('FEA').AsString := ElementList[21]; // КВЭД
-            FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
-            FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[15], ' ', ''));    // Количество
-            FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
+               FieldByName('FEA').AsString := ElementList[21]; // РљР’Р­Р”
+            FieldByName('MeasureName').AsString := ElementList[14]; // Р•Рґ РР·Рј
+            FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[15], ' ', ''));    // РљРѕР»РёС‡РµСЃС‚РІРѕ
+            FieldByName('Price').AsFloat  := Price;    // Р¦РµРЅР° РћС‚РїСѓСЃРєРЅР°СЏ (РґР»СЏ Р°РїС‚РµРєРё СЌС‚Рѕ Р·Р°РєСѓРїРѕС‡РЅР°СЏ)
             Post;
           end;
         end;
@@ -448,7 +449,7 @@ begin
 
           if (AnsiUpperCase(Sheet.Cells[Row, Col].NumberFormat) = AnsiUpperCase('General')) then
             if TryStrToInt64(Sheet.Cells[Row, Col], X)
-            then // ПРЕОБРАЗУЕМ - Только если там Штрих-код
+            then // РџР Р•РћР‘Р РђР—РЈР•Рњ - РўРѕР»СЊРєРѕ РµСЃР»Рё С‚Р°Рј РЁС‚СЂРёС…-РєРѕРґ
                  if X > 12345678901 then
                  begin
                     Sheet.Cells[Row, Col].NumberFormat := 0;
@@ -457,9 +458,9 @@ begin
                  else
             else
           else
-              if (AnsiUpperCase(Sheet.Cells[Row, Col].NumberFormat) = AnsiUpperCase('Основной')) then
+              if (AnsiUpperCase(Sheet.Cells[Row, Col].NumberFormat) = AnsiUpperCase('РћСЃРЅРѕРІРЅРѕР№')) then
                 if TryStrToInt64(Sheet.Cells[Row, Col], X)
-                then // ПРЕОБРАЗУЕМ - Только если там Штрих-код
+                then // РџР Р•РћР‘Р РђР—РЈР•Рњ - РўРѕР»СЊРєРѕ РµСЃР»Рё С‚Р°Рј РЁС‚СЂРёС…-РєРѕРґ
                      if X > 12345678901 then
                      begin
                        Sheet.Cells[Row, Col].NumberFormat := 0;
@@ -492,7 +493,7 @@ begin
         except
           on E: Exception do begin
              if Pos('TVKSmartDBF.InternalOpen: Open error', E.Message) > -1 then
-                raise Exception.Create('Файл' + copy (E.Message, length('TVKSmartDBF.InternalOpen: Open error') + 1, MaxInt) + ' открыт другой программой. Закройте ее и попробуйте еще раз!')
+                raise Exception.Create('Р¤Р°Р№Р»' + copy (E.Message, length('TVKSmartDBF.InternalOpen: Open error') + 1, MaxInt) + ' РѕС‚РєСЂС‹С‚ РґСЂСѓРіРѕР№ РїСЂРѕРіСЂР°РјРјРѕР№. Р—Р°РєСЂРѕР№С‚Рµ РµРµ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·!')
              else
                 raise Exception.Create(E.Message);
           end;
@@ -634,7 +635,7 @@ var JsonArray: TJSONArray;
     dsdProc: TdsdStoredProc;
     I: integer;
 begin
-  with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
+  with TGaugeFactory.GetGauge('Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…', 1, FExternalLoad.RecordCount) do begin
     Start;
     JSONArray := TJSONArray.Create();
     try
@@ -748,9 +749,9 @@ begin
                    if FexternalParams.ParamByName(StoredProc.Params[i].Name) <> nil then
                      StoredProc.Params.Items[i].Value := FexternalParams.ParamByName(StoredProc.Params[i].Name).Value
                    else
-                     raise Exception.Create('В наборе внешних параметров не найден параметр с именем <'+StoredProc.Params[i].Name+'>')
+                     raise Exception.Create('Р’ РЅР°Р±РѕСЂРµ РІРЅРµС€РЅРёС… РїР°СЂР°РјРµС‚СЂРѕРІ РЅРµ РЅР°Р№РґРµРЅ РїР°СЂР°РјРµС‚СЂ СЃ РёРјРµРЅРµРј <'+StoredProc.Params[i].Name+'>')
                  else
-                   raise Exception.Create('Не определен набор внешних параметров');
+                   raise Exception.Create('РќРµ РѕРїСЂРµРґРµР»РµРЅ РЅР°Р±РѕСЂ РІРЅРµС€РЅРёС… РїР°СЂР°РјРµС‚СЂРѕРІ');
 
                end
                else
@@ -760,7 +761,7 @@ begin
                     vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
                     Field := AExternalLoad.FDataSet.FindField(vbFieldName);
                     if not Assigned(Field) then
-                       raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
+                       raise Exception.Create('РќРµ РЅР°Р№РґРµРЅРѕ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЏС‡РµР№РєРё ' + TImportSettingsItems(Items[i]).ItemName);
                     case TImportSettingsItems(Items[i]).Param.DataType of
                       ftDateTime: begin
                          D := 0;
@@ -834,7 +835,7 @@ begin
     dtXLS, dtDBF, dtMMO: begin
         saFound := TStringList.Create;
         try
-          // Если директории нет, то пусть пользователь выбирает.
+          // Р•СЃР»Рё РґРёСЂРµРєС‚РѕСЂРёРё РЅРµС‚, С‚Рѕ РїСѓСЃС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹Р±РёСЂР°РµС‚.
           if ImportSettings.Directory = '' then begin
              with {File}TOpenDialog.Create(nil) do
              try
@@ -858,14 +859,14 @@ begin
                dtDBF: FilesInDir('*.dbf', ImportSettings.Directory, iFilesCount, saFound, false);
             end;
           end;
-          //сначала - очистили список не загруженных файлов
+          //СЃРЅР°С‡Р°Р»Р° - РѕС‡РёСЃС‚РёР»Рё СЃРїРёСЃРѕРє РЅРµ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ
           if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('outMsgText'))
           then ExternalParams.ParamByName('outMsgText').Value:= '';
 
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
           begin
-              // конвертируем формат для штрихкодов (только для Excel)
+              // РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј С„РѕСЂРјР°С‚ РґР»СЏ С€С‚СЂРёС…РєРѕРґРѕРІ (С‚РѕР»СЊРєРѕ РґР»СЏ Excel)
               if ImportSettings.FileType = dtXLS then
               begin
                 if Copy(saFound[i], 1, 3) = '..\' then
@@ -879,7 +880,7 @@ begin
 
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings, ExternalParams) do
                 try
-                  // Загрузили if + в try с 09.06.2016 - Konstantin
+                  // Р—Р°РіСЂСѓР·РёР»Рё if + РІ try СЃ 09.06.2016 - Konstantin
                   if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('isNext_aftErr')) and (ExternalParams.ParamByName('isNext_aftErr').Value = TRUE)
                   then
                   try
@@ -892,8 +893,8 @@ begin
                               if pos('context', AnsilowerCase(TextMessage)) > 0 then
                                 TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
                               if TextMessage <> ''
-                              then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
-                              //добавили в список не загруженных файлов
+                              then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'РћРЁРР‘РљРђ:');
+                              //РґРѕР±Р°РІРёР»Рё РІ СЃРїРёСЃРѕРє РЅРµ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ
                               if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('outMsgText'))
                               then if ExternalParams.ParamByName('outMsgText').Value <> ''
                                    then ExternalParams.ParamByName('outMsgText').Value:=ExternalParams.ParamByName('outMsgText').Value + #10 + #13 + saFound[i] + TextMessage
@@ -901,7 +902,7 @@ begin
                            end;
                        end
                   else begin Load; fErr:= false; end;
-                  // Перенесли в Archive
+                  // РџРµСЂРµРЅРµСЃР»Рё РІ Archive
                   if fErr = false then
                   begin
                       ForceDirectories(ExtractFilePath(saFound[i]) + cArchive);
@@ -920,7 +921,7 @@ begin
     dtODBC: begin
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, ImportSettings.Query, ImportSettings, ExternalParams) do
                 try
-                  // Загрузили
+                  // Р—Р°РіСЂСѓР·РёР»Рё
                   Load;
                 finally
                   Free;
@@ -967,7 +968,7 @@ begin
   GetStoredProc.Params.AddParam('JSONParamName', ftString, ptOutput, '');
 
   GetStoredProc.Execute;
-  {Заполняем параметрами процедуру}
+  {Р—Р°РїРѕР»РЅСЏРµРј РїР°СЂР°РјРµС‚СЂР°РјРё РїСЂРѕС†РµРґСѓСЂСѓ}
   Result := TImportSettings.Create(TImportSettingsItems);
   Result.StartRow := GetStoredProc.Params.ParamByName('StartRow').Value;
   if Directory_add <> ''
@@ -993,7 +994,7 @@ begin
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
 
   GetStoredProc.Params.Clear;
-  {Заполняем параметрами параметры процедуры}
+  {Р—Р°РїРѕР»РЅСЏРµРј РїР°СЂР°РјРµС‚СЂР°РјРё РїР°СЂР°РјРµС‚СЂС‹ РїСЂРѕС†РµРґСѓСЂС‹}
   GetStoredProc.StoredProcName := 'gpSelect_Object_ImportSettingsItems';
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
   GetStoredProc.OutputType := otDataSet;

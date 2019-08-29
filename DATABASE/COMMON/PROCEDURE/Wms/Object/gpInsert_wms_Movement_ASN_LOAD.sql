@@ -42,15 +42,19 @@ BEGIN
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
         WITH tmpMI AS (SELECT -- ШК груза (EAN-128)
-                           -- COALESCE (Object_BarCodeBox.ValueData, '') AS name
+                              --COALESCE (Object_BarCodeBox.ValueData, '') AS name
                               COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar AS name
                               -- ID товара 
                             , MI.sku_id
-                              -- Количество товара (для весового количество передается в гр.) 
-                            , SUM (CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
-                                             THEN MI.RealWeight * 1000.0
-                                        ELSE MI.Amount
-                                   END) AS qty
+                              -- Количество WMS
+                            , SUM (zfCalc_QTY_toWMS (inGoodsTypeKindId:= MI.GoodsTypeKindId
+                                                   , inMeasureId      := OL_Goods_Measure.ChildObjectId
+                                                   , inAmount         := CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MI.Amount ELSE MI.RealWeight END
+                                                   , inRealWeight     := MI.RealWeight
+                                                   , inCount          := MI.Amount
+                                                   , inWeightMin      := wms_Object_GoodsByGoodsKind.WeightMin
+                                                   , inWeightMax      := wms_Object_GoodsByGoodsKind.WeightMax
+                                                    )) AS qty
                               -- Дата производства
                             , MI.PartionDate AS production_date
                               -- Вес (вес товара)
@@ -69,6 +73,9 @@ BEGIN
                                                                       -- только те которые еще не передавали
                                                                       AND MI.StatusId_wms IS NULL
                             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
+                            LEFT JOIN ObjectLink AS OL_Goods_Measure
+                                                 ON OL_Goods_Measure.ObjectId = Movement.GoodsId
+                                                AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                             -- линейная табл.
                             LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = Movement.GoodsId
                                                                  AND wms_Object_GoodsByGoodsKind.GoodsKindId = Movement.GoodsKindId
@@ -81,7 +88,7 @@ BEGIN
                        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '0 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                        GROUP BY -- ШК груза (EAN-128)
-                             -- Object_BarCodeBox.ValueData
+                                -- Object_BarCodeBox.ValueData
                                 COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar
                                 -- ID товара 
                               , MI.sku_id
@@ -100,7 +107,7 @@ BEGIN
              (-- По факту приемки (на производстве, не в WMS) лотка с товаром, ГС формирует отдельное сообщение «ASN груз» <asn_load> на каждый лоток.
               SELECT vbProcName   AS ProcName
                    , vbTagName    AS TagName
-                   , (ROW_NUMBER() OVER (ORDER BY tmpData.sku_id)) :: Integer AS RowNum
+                   , ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer AS RowNum
                      -- XML
                    , ('<' || vbTagName
                          ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')   :: TVarChar ||'"' -- уникальный идентификатор сообщения
@@ -108,7 +115,7 @@ BEGIN
                             ||' name="' || tmpData.name                              ||'"' -- ШК груза (EAN-128)
                           ||' sku_id="' || tmpData.sku_id                :: TVarChar ||'"' -- ID товара 
                              ||' qty="' || tmpData.qty                   :: TVarChar ||'"' -- Количество товара (для весового количество передается в гр.) 
-                 ||' production_date="' || zfConvert_DateToWMS (tmpData.production_date) :: TVarChar ||'"' -- Дата производства
+                 ||' production_date="' || zfConvert_Date_toWMS (tmpData.production_date) :: TVarChar ||'"' -- Дата производства
                      ||' real_weight="' || tmpData.real_weight           :: TVarChar ||'"' -- Вес (вес товара)
                      ||' pack_weight="' || tmpData.pack_weight           :: TVarChar ||'"' -- Вес лотка
                           ||' inc_id="' || tmpData.inc_id                :: TVarChar ||'"' -- Номер задания на упаковку

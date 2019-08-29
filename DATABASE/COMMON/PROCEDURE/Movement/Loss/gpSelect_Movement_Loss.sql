@@ -112,8 +112,9 @@ BEGIN
                                         AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
             LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
 
-       -- огр. просмотра - Рибалко Вікторія Віталіївна 
-       WHERE vbUserId <> 300550
+       -- огр. просмотра
+       WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна 
+         AND vbUserId <> 929721 -- Решетова И.А.
 
       UNION ALL
        SELECT
@@ -188,11 +189,16 @@ BEGIN
             LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
 
        -- огр. просмотра - Рибалко Вікторія Віталіївна 
-       WHERE vbUserId = 300550
-          AND Object_From.Id in (8447   -- цех колбасный
+       WHERE (vbUserId = 300550
+          AND Object_From.Id IN (8447   -- цех колбасный
                                , 8448   -- ЦЕХ деликатесов
                                , 8449   -- цех с/к
-                                );
+                                )
+                                )
+         OR (vbUserId        = 929721 -- Решетова И.А.
+          AND Object_From.Id = 8459   -- Склад Реализации
+          )
+          ;
 
 END;
 $BODY$

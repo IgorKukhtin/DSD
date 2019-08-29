@@ -69,7 +69,8 @@ BEGIN
              (-- Уведомление поставки в WMS с типом «Производство». На каждое SKU создается отдельное задание на упаковку, соответственно отдельное УП.
               SELECT vbProcName     AS ProcName
                    , vbTagName      AS TagName
-                   , tmpData.RowNum AS RowNum
+                     -- делаем 0 для сортировки, сначала обрабатывается 1-на строчка документа, потом строки
+                   , 0   :: Integer AS RowNum
                      -- XML
                      -- уведомление поставки
                    , ('<' || vbTagName
@@ -77,10 +78,41 @@ BEGIN
                           ||' action="' || vbActionName                              ||'"' -- ???
                           ||' inc_id="' || tmpData.Id                    :: TVarChar ||'"' -- Номер документа
                             ||' type="' || 'A'                                       ||'"' -- Тип уведомления поставки: А - Производство; В - Внешняя поставка; С - Возврат;
-                    ||' date_to_ship="' || zfConvert_DateToWMS (tmpData.OperDate)    ||'"' -- Ожидаемая дата приема
+                    ||' date_to_ship="' || zfConvert_Date_toWMS (tmpData.OperDate)   ||'"' -- Ожидаемая дата приема
                      ||' supplier_id="' || '0'                                       ||'"' -- Код поставщика Для приема с упаковки значение по умолчанию: 0 («Не задан»)
                                         ||'>'
+/*                     -- Детали уведомления поставки
+                          ||'<' || vbTagName_detail
+                         ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')   :: TVarChar ||'"' -- уникальный идентификатор сообщения
+                          ||' action="' || vbActionName                              ||'"' -- ???
+                          ||' inc_id="' || tmpData.Id                    :: TVarChar ||'"' -- Номер документа
+                            ||' line="' || '1'                                       ||'"' -- Номер строки товарной позиции документа
+                          ||' sku_id="' || tmpData.sku_id                :: TVarChar ||'"' -- Уникальный идентификатор товара
+                             ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС 
+                 ||' production_date="' || zfConvert_Date_toWMS (tmpData.PartionDate) ||'"' -- Дата производства
+                                        ||'></' || vbTagName_detail || '>'*/
+                                        || '</' || vbTagName        || '>'
 
+                     ) :: Text AS RowData
+                     --
+                   , tmpData.Id AS ObjectId
+                     --
+                   , tmpData.Id AS GroupId
+              FROM tmpMI AS tmpData
+             UNION ALL
+              -- Детали заказа на отгрузку
+              SELECT vbProcName       AS ProcName
+                   , vbTagName_detail AS TagName
+                   , 1     :: Integer AS RowNum
+                     -- еще раз уведомление поставки
+                   , ('<' || vbTagName
+                         ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')   :: TVarChar ||'"' -- уникальный идентификатор сообщения
+                          ||' action="' || vbActionName                              ||'"' -- ???
+                          ||' inc_id="' || tmpData.Id                    :: TVarChar ||'"' -- Номер документа
+                            ||' type="' || 'A'                                       ||'"' -- Тип уведомления поставки: А - Производство; В - Внешняя поставка; С - Возврат;
+                    ||' date_to_ship="' || zfConvert_Date_toWMS (tmpData.OperDate)   ||'"' -- Ожидаемая дата приема
+                     ||' supplier_id="' || '0'                                       ||'"' -- Код поставщика Для приема с упаковки значение по умолчанию: 0 («Не задан»)
+                                        ||'>'
                      -- Детали уведомления поставки
                           ||'<' || vbTagName_detail
                          ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')   :: TVarChar ||'"' -- уникальный идентификатор сообщения
@@ -89,7 +121,7 @@ BEGIN
                             ||' line="' || '1'                                       ||'"' -- Номер строки товарной позиции документа
                           ||' sku_id="' || tmpData.sku_id                :: TVarChar ||'"' -- Уникальный идентификатор товара
                              ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС 
-                 ||' production_date="' || zfConvert_DateToWMS (tmpData.PartionDate) ||'"' -- Дата производства
+                 ||' production_date="' || zfConvert_Date_toWMS (tmpData.PartionDate) ||'"' -- Дата производства
                                         ||'></' || vbTagName_detail || '>'
                                         || '</' || vbTagName        || '>'
 
@@ -97,31 +129,11 @@ BEGIN
                      --
                    , tmpData.Id AS ObjectId
                      --
-                   , 0          AS GroupId
+                   , tmpData.Id AS GroupId
               FROM tmpMI AS tmpData
-           -- WHERE tmpData.sku_id = '795292'
-            /* UNION ALL
-              -- Детали уведомления поставки
-              SELECT vbProcName       AS ProcName
-                   , vbTagName_detail AS TagName
-                   , tmpData.RowNum + 1   AS RowNum
-                     -- XML
-                   , ('<' || vbTagName_detail
-                          ||' action="' || vbActionName                     ||'"' -- ???
-                          ||' inc_id="' || tmpData.inc_id       :: TVarChar ||'"' -- Номер документа
-                            ||' line="' || '1'                              ||'"' -- Номер строки товарной позиции документа
-                          ||' sku_id="' || tmpData.sku_id       :: TVarChar ||'"' -- Уникальный идентификатор товара
-                             ||' qty="' || '1'                              ||'"' -- Количество товара в базовых единицах ГС 
-                 ||' production_date="' || TO_CHAR (CURRENT_DATE, 'DD-MM-YYYY') :: TVarChar ||'"' -- Дата производства
-                                        ||'></' || vbTagName_detail || '>'
-                     ) :: Text AS RowData
-                     -- Id
-                   , tmpData.ObjectId
-                   , 2 AS GroupId
-              FROM tmpMI AS tmpData*/
              ) AS tmp
      -- WHERE tmp.RowNum = 1
-        ORDER BY 4
+        ORDER BY tmp.GroupId, 4
      -- LIMIT 1
        ;
        

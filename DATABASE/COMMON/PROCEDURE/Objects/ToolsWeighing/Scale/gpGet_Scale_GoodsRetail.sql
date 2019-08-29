@@ -1,6 +1,7 @@
 -- Function: gpGet_Scale_GoodsRetail()
 
-DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_GoodsRetail(
     IN inBarCode               TVarChar,
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_GoodsRetail(
     IN inOperDate              TDateTime,
     IN inOrderExternalId       Integer,
     IN inPriceListId           Integer,
+    IN inBranchCode            Integer,      -- 
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -320,5 +322,5 @@ ALTER FUNCTION gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, I
 
 -- тест
 -- 2852923001644
--- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501978', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036502289', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501978', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inBranchCode:= 1, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036502289', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inBranchCode:= 1, inSession:=zfCalc_UserAdmin())

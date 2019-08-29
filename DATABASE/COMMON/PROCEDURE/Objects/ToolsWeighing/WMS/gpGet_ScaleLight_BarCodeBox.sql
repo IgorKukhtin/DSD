@@ -91,24 +91,20 @@ BEGIN
      THEN
          -- по коду
          vbBarCodeBoxId:= (SELECT Object_BarCodeBox.Id
-                           FROM ObjectLink AS ObjectLink_BarCodeBox_Box
-                                INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id         = ObjectLink_BarCodeBox_Box.ObjectId
-                                                                      AND Object_BarCodeBox.isErased   = FALSE
-                                                                      AND Object_BarCodeBox.ObjectCode = vbBoxCode
-                           WHERE ObjectLink_BarCodeBox_Box.ChildObjectId = vbBoxId
-                             AND ObjectLink_BarCodeBox_Box.DescId        = zc_ObjectLink_BarCodeBox_Box()
+                           FROM Object AS Object_BarCodeBox
+                           WHERE Object_BarCodeBox.ObjectCode = vbBoxCode
+                             AND Object_BarCodeBox.DescId     = zc_Object_BarCodeBox()
+                             AND Object_BarCodeBox.isErased   = FALSE
                           );
 
      ELSEIF TRIM (vbBoxBarCode) <> ''
      THEN
          -- по Ш/К
          vbBarCodeBoxId:= (SELECT Object_BarCodeBox.Id
-                           FROM ObjectLink AS ObjectLink_BarCodeBox_Box
-                                INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id        = ObjectLink_BarCodeBox_Box.ObjectId
-                                                                      AND Object_BarCodeBox.isErased  = FALSE
-                                                                      AND Object_BarCodeBox.ValueData = vbBoxBarCode
-                           WHERE ObjectLink_BarCodeBox_Box.ChildObjectId = vbBoxId
-                             AND ObjectLink_BarCodeBox_Box.DescId        = zc_ObjectLink_BarCodeBox_Box()
+                           FROM Object AS Object_BarCodeBox
+                           WHERE Object_BarCodeBox.ValueData = vbBoxBarCode
+                             AND Object_BarCodeBox.DescId    = zc_Object_BarCodeBox()
+                             AND Object_BarCodeBox.isErased  = FALSE
                           );
          -- если не нашли - ДОБАВИМ
          IF COALESCE (vbBarCodeBoxId, 0) = 0
@@ -126,9 +122,32 @@ BEGIN
      -- проверка - должны найти
      IF COALESCE (vbBarCodeBoxId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найден Ш/К для ящика с кодом <%>.', vbBoxCode;
+         IF vbBoxCode > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найден Ш/К для ящика с кодом <%>.', vbBoxCode;
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Не найден для ящика Ш/К <%>.', vbBoxBarCode;
+         END IF;
      END IF;
 
+     -- еще раз проверим что это тот ящик
+     IF COALESCE (vbBoxId, 0) <> COALESCE ((SELECT ObjectLink_BarCodeBox_Box.ChildObjectId
+                                            FROM ObjectLink AS ObjectLink_BarCodeBox_Box
+                                            WHERE ObjectLink_BarCodeBox_Box.ObjectId = vbBarCodeBoxId
+                                              AND ObjectLink_BarCodeBox_Box.DescId   = zc_ObjectLink_BarCodeBox_Box()
+                                           ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для товара <%> + <%> должен быть Ш/К ящика <%>, а вы выбрали <%>.'
+                       , lfGet_Object_ValueData (inGoodsId)
+                       , lfGet_Object_ValueData_sh (inGoodsKindId)
+                       , lfGet_Object_ValueData_sh (vbBoxId)
+                       , lfGet_Object_ValueData_sh (COALESCE ((SELECT ObjectLink_BarCodeBox_Box.ChildObjectId
+                                                               FROM ObjectLink AS ObjectLink_BarCodeBox_Box
+                                                               WHERE ObjectLink_BarCodeBox_Box.ObjectId = vbBarCodeBoxId
+                                                                 AND ObjectLink_BarCodeBox_Box.DescId   = zc_ObjectLink_BarCodeBox_Box()
+                                                              ), 0)
+                                                   );
+     END IF;
 
       -- Результат
       RETURN QUERY

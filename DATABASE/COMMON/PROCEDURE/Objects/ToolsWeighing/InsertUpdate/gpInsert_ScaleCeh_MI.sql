@@ -57,6 +57,17 @@ BEGIN
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
+     -- !!!замена, приходит вес - из него получаем м. или шт.
+     IF EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
+     THEN
+         inOperCount:= (WITH tmpWeight AS (SELECT OF_Weight.ValueData FROM ObjectFloat AS OF_Weight WHERE OF_Weight.ObjectId = inGoodsId AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight())
+                        SELECT CASE WHEN tmpWeight.ValueData > 0 THEN CAST (tmp.OperCount / tmpWeight.ValueData AS NUMERIC (16, 2)) ELSE tmp.OperCount END
+                        FROM (SELECT inOperCount AS OperCount) AS tmp
+                             CROSS JOIN tmpWeight
+                       );
+     END IF;
+
+
      -- определили <Тип документа>
      vbDocumentKindId:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
                          FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode

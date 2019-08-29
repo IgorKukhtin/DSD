@@ -33,11 +33,13 @@ BEGIN
        WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
          AND Object_ArticleLoss.ObjectCode <> 0
          AND Object_ArticleLoss.isErased = FALSE
+         -- почти ВСЕ
+         AND ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId > 0
          -- Общепроизводственные расходы
-         AND View_ProfitLossDirection.ProfitLossDirectionId IN (zc_Enum_ProfitLossDirection_20100() -- Содержание производства
+         /*AND View_ProfitLossDirection.ProfitLossDirectionId IN (zc_Enum_ProfitLossDirection_20100() -- Содержание производства
                                                               , zc_Enum_ProfitLossDirection_20400() -- Содержание Кухни
                                                            -- , zc_Enum_ProfitLossDirection_20600() -- Отоварка
-                                                               )
+                                                               )*/
        ORDER BY 3
       ;
 

@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpGet_Scale_Goods (TDateTime, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpGet_Scale_Goods (TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_Goods (Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_Goods (Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Goods (Boolean, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Goods(
     IN inIsGoodsComplete Boolean      , -- склад ГП/производство/упаковка or обвалка
     IN inBarCode         TVarChar     ,
+    IN inBranchCode      Integer      , -- 
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsId    Integer
@@ -66,7 +68,33 @@ BEGIN
                                                                                     )
                                    )
                                 AND tmp.ObjectCode > 0
+                                AND (Object.ObjectCode > 0 OR inBranchCode <> 104) -- Scale_SORT.ini
                             )
+   , tmpGoods_wms AS (SELECT OL_Goods.ChildObjectId     AS GoodsId
+                           , OL_GoodsKind.ChildObjectId AS GoodsKindId
+                      FROM Object AS Object_GoodsByGoodsKind
+                           INNER JOIN ObjectLink AS OL_Goods
+                                                 ON OL_Goods.ObjectId      = Object_GoodsByGoodsKind.Id
+                                                AND OL_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                           INNER JOIN ObjectLink AS OL_GoodsKind
+                                                 ON OL_GoodsKind.ObjectId      = Object_GoodsByGoodsKind.Id
+                                                AND OL_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                           LEFT JOIN ObjectLink AS OL_GoodsTypeKind_Sh
+                                                ON OL_GoodsTypeKind_Sh.ObjectId = Object_GoodsByGoodsKind.Id
+                                               AND OL_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh()
+                           LEFT JOIN ObjectLink AS OL_GoodsTypeKind_Nom
+                                                ON OL_GoodsTypeKind_Nom.ObjectId = Object_GoodsByGoodsKind.Id
+                                               AND OL_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom()
+                           LEFT JOIN ObjectLink AS OL_GoodsTypeKind_Ves
+                                                ON OL_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind.Id
+                                               AND OL_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+                      WHERE inBranchCode = 104 -- SORT.ini
+                        AND (OL_GoodsTypeKind_Sh.ChildObjectId  > 0
+                          OR OL_GoodsTypeKind_Nom.ChildObjectId > 0
+                          OR OL_GoodsTypeKind_Ves.ChildObjectId > 0
+                            )
+                     )
+      -- список возможных видов упаковки
     , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                                                 AS GoodsId
                                  , STRING_AGG (COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) :: TVarChar, ',') AS GoodsKindId_List
                                  , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')                          AS GoodsKindName_List
@@ -74,17 +102,24 @@ BEGIN
                             FROM Object_Goods
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                       ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = Object_Goods.GoodsId
-                                                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                 INNER JOIN ObjectBoolean AS ObjectBoolean_ScaleCeh
-                                                          ON ObjectBoolean_ScaleCeh.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                         AND ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
-                                                         AND ObjectBoolean_ScaleCeh.ValueData = TRUE
-                                 INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
+                                                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_ScaleCeh
+                                                         ON ObjectBoolean_ScaleCeh.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
+                                 INNER JOIN Object AS Object_GoodsByGoodsKind
+                                                   ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                  AND Object_GoodsByGoodsKind.isErased = FALSE
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
-                                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                 -- для SORT.ini - ограничиваем
+                                 LEFT JOIN tmpGoods_wms ON tmpGoods_wms.GoodsId     = Object_Goods.GoodsId
+                                                       AND tmpGoods_wms.GoodsKindId = Object_GoodsKind.Id
                             WHERE inIsGoodsComplete = TRUE
+                              AND ((ObjectBoolean_ScaleCeh.ValueData = TRUE AND inBranchCode <> 104) -- SORT.ini
+                                OR tmpGoods_wms.GoodsId > 0
+                                  )
                             GROUP BY ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
                            )
        -- Результат
@@ -113,6 +148,11 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind_max ON Object_GoodsKind_max.Id = tmpGoods_ScaleCeh.GoodsKindId_max
+            LEFT JOIN tmpGoods_wms ON tmpGoods_wms.GoodsId     = Object_Goods.GoodsId
+                                  AND tmpGoods_wms.GoodsKindId = Object_Goods.GoodsKindId
+       WHERE inBranchCode <> 104
+            -- для SORT.ini - ограничиваем
+          OR tmpGoods_ScaleCeh.GoodsId > 0
       ;
 
 
@@ -162,7 +202,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_Goods (Boolean, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -172,4 +211,4 @@ ALTER FUNCTION gpGet_Scale_Goods (Boolean, TVarChar, TVarChar) OWNER TO postgres
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Goods (FALSE, '2010001532224', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Goods (FALSE, '2010001532224', 1, zfCalc_UserAdmin())

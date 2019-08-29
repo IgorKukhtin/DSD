@@ -362,7 +362,7 @@ BEGIN
                         THEN 0
                    WHEN Object_Measure.Id = zc_Measure_Kg()
                         THEN CASE WHEN inIsGoodsComplete = FALSE
-                                       THEN COALESCE (tmpChangePercentAmount.ChangePercentAmount, 0)
+                                       THEN 0 -- COALESCE (tmpChangePercentAmount.ChangePercentAmount, 0)
                                   ELSE 1
                              END
                    ELSE 0
