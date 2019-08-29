@@ -651,6 +651,7 @@ initialization
   RegisterClass (TdsdExportToXLS);
   RegisterClass (TdsdExportToXML);
   RegisterClass (TdsdDuplicateSearchAction);
+  RegisterClass (TdsdDOCReportFormAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
