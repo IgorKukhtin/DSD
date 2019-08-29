@@ -37,7 +37,7 @@ BEGIN
       WHERE Movement.OperDate = inOperDate 
         AND Movement.DescId = zc_Movement_Wages();
     ELSE 
-       RAISE EXCEPTION 'Не найден расчет з.п. за %', to_char(inOperDate, 'dd.mm.yyyy');
+       RAISE EXCEPTION 'Не найден расчет з.п. за %', zfCalc_MonthYearName(inOperDate);
     END IF;
 
     IF EXISTS(SELECT 1 FROM MovementItem 
@@ -54,7 +54,7 @@ BEGIN
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.isErased = FALSE;
     ELSE 
-       RAISE EXCEPTION 'Не найден по вам расчет з.п. за %', to_char(inOperDate, 'dd.mm.yyyy');
+       RAISE EXCEPTION 'Не найден по вам расчет з.п. за %', zfCalc_MonthYearName(inOperDate);
     END IF;
 
     -- Результат

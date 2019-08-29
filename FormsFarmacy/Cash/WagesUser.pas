@@ -40,6 +40,8 @@ type
     AmountAccrued: TcxGridDBColumn;
     Formula: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    ceMarketing: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
