@@ -4,7 +4,7 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
+uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
@@ -839,6 +839,27 @@ type
     property SecondaryShortCuts;
   end;
 
+  TdsdDOCReportFormAction = class(TdsdCustomAction)
+  private
+    FDataSet: TDataSet;
+    FBlankName: string;
+    FFileName: string;
+    procedure SetDataSet(const Value: TDataSet);
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+
+    property DataSet: TDataSet read FDataSet write SetDataSet;
+    property BlankName: string read FBlankName write FBlankName;
+    property FileName: string read FFileName write FFileName;
+  end;
 
 procedure Register;
 
@@ -888,6 +909,7 @@ begin
   RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
   RegisterActions('DSDLib', [TdsdShowPUSHMessage], TdsdShowPUSHMessage);
   RegisterActions('DSDLib', [TdsdDuplicateSearchAction], TdsdDuplicateSearchAction);
+  RegisterActions('DSDLib', [TdsdDOCReportFormAction], TdsdDOCReportFormAction);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -3478,6 +3500,85 @@ begin
 
 end;
 
+
+{ TdsdDOCReportForm }
+
+constructor TdsdDOCReportFormAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFileName := '';
+  FBlankName := '';
+end;
+
+function TdsdDOCReportFormAction.LocalExecute: Boolean;
+  var Stream: TStringStream; woApp, Doc1 : olevariant;
+begin
+  Result := False;
+
+  if FFileName = '' then
+  begin
+    ShowMessage('Не определено имя файла.');
+    Exit;
+  end;
+
+  if not Assigned(FDataSet) then
+  begin
+    ShowMessage('Не определен источник данных.');
+    Exit;
+  end;
+
+  if not FDataSet.Active then
+  begin
+    ShowMessage('Источник данных не открыт.');
+    Exit;
+  end;
+
+  Stream := TStringStream.Create;
+
+  try
+    if FBlankName <> '' then
+    begin
+      Stream.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(FBlankName));
+      Stream.SaveToFile(ExtractFilePath(ParamStr(0)) + FFileName);
+    end;
+
+    if not FileExists(ExtractFilePath(ParamStr(0)) + FFileName) then
+    begin
+      ShowMessage('Файл "' + ExtractFilePath(ParamStr(0)) + FFileName + '" не найден.');
+      Exit;
+    end;
+
+    try
+      woApp := GetActiveOleObject('Word.Application');
+    except
+      woApp := CreateOleObject('Word.Application');
+    end;
+    Doc1 := woApp.Documents.Open(ExtractFilePath(ParamStr(0)) + FFileName);
+
+    woApp.Selection.HomeKey($00000006);
+
+    FDataSet.First;
+    while not FDataSet.Eof do
+    begin
+      if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+        while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
+          do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
+      FDataSet.Next;
+    end;
+
+    Doc1.Save;
+    woApp.WindowState := 2;
+    woApp.Visible:=True;
+    woApp.WindowState := 1;
+  finally
+    Stream.Free;
+  end;
+end;
+
+procedure TdsdDOCReportFormAction.SetDataSet(const Value: TDataSet);
+begin
+  FDataSet := Value;
+end;
 
 end.
 
