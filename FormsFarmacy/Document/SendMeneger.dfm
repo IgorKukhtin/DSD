@@ -5,11 +5,130 @@ inherited SendMenegerForm: TSendMenegerForm
   inherited PageControl: TcxPageControl
     TabOrder = 3
     inherited tsMain: TcxTabSheet
-      inherited cxSplitter1: TcxSplitter [0]
-      end
-      inherited cxGrid1: TcxGrid [1]
-        TabOrder = 0
-        inherited cxGridDBTableView1: TcxGridDBTableView
+      inherited cxGrid: TcxGrid
+        inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPriceIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PartionDateKindName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaUnitFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaUnitTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorageDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colIsErased
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPriceIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PartionDateKindName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaUnitFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaUnitTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorageDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colIsErased
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -17,20 +136,13 @@ inherited SendMenegerForm: TSendMenegerForm
           Styles.Header = nil
         end
       end
-      inherited cxGrid: TcxGrid [2]
-        TabOrder = 2
-        inherited cxGridDBTableView: TcxGridDBTableView
+      inherited cxGrid1: TcxGrid
+        inherited cxGridDBTableView1: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited AmountManual: TcxGridDBColumn
-            Options.Editing = False
-          end
-          inherited AmountStorage: TcxGridDBColumn
-            Options.Editing = False
-          end
         end
       end
     end
@@ -42,16 +154,13 @@ inherited SendMenegerForm: TSendMenegerForm
     TabOrder = 4
   end
   inherited edIsAuto: TcxCheckBox
-    TabOrder = 5
+    TabOrder = 6
   end
   inherited edPeriod: TcxCurrencyEdit
-    TabOrder = 7
+    TabOrder = 8
   end
   inherited edDay: TcxCurrencyEdit
-    TabOrder = 9
-  end
-  inherited ceChecked: TcxCheckBox
-    TabOrder = 11
+    TabOrder = 10
   end
   inherited ActionList: TActionList
     inherited actPrint: TdsdPrintAction
@@ -74,15 +183,11 @@ inherited SendMenegerForm: TSendMenegerForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
-      end>
-  end
-  inherited GuidesFiller: TGuidesFiller
-    GuidesList = <
-      item
       end>
   end
   inherited RefreshAddOn: TRefreshAddOn
@@ -92,7 +197,6 @@ inherited SendMenegerForm: TSendMenegerForm
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','

@@ -13,7 +13,7 @@ uses
   dxBar, cxClasses, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, dsdGuides, cxButtonEdit;
 
 type
   TSendMenegerJournalForm = class(TSendJournalForm)
