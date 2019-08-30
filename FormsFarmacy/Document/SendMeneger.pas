@@ -17,6 +17,7 @@ uses
 
 type
   TSendMenegerForm = class(TSendForm)
+    actPrintNew: TdsdPrintAction;
   private
     { Private declarations }
   public

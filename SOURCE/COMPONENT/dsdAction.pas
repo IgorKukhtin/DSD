@@ -3511,7 +3511,37 @@ begin
 end;
 
 function TdsdDOCReportFormAction.LocalExecute: Boolean;
-  var Stream: TStringStream; woApp, Doc1 : olevariant;
+  var Stream: TStringStream; woApp, ooApp, Doc,
+      StarDesktop, VariantArr, ReplaceDescriptor, SaveParams : olevariant;
+
+  function MakePropertyValue(PropName, PropValue:string):variant;
+    var Struct: variant;
+  begin
+    Struct := ooApp.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    Struct.Name := PropName;
+    Struct.Value := PropValue;
+    Result := Struct;
+  end;
+
+  function ConvertToURL(FileName:string):string;
+  var
+    i:integer;
+    ch:char;
+  begin
+    Result:='';
+    for i:=1 to Length(FileName) do
+      begin
+        ch:=FileName[i];
+        case ch of
+          ' ':Result:=Result+'%20';
+          '\':Result:=Result+'/';
+        else
+          Result:=Result+ch;
+        end;
+      end;
+    Result:='file:///'+Result;
+  end;
+
 begin
   Result := False;
 
@@ -3548,31 +3578,90 @@ begin
       Exit;
     end;
 
+    // Пытаемся подключиться к MS офису
     try
       woApp := GetActiveOleObject('Word.Application');
     except
+      woApp := Null;
+    end;
+
+    // Создаем новый экземпляр MS офиса
+    if VarIsEmpty(woApp) or VarIsNull(woApp) then
+    try
       woApp := CreateOleObject('Word.Application');
+    except
+      woApp := Null;
     end;
-    Doc1 := woApp.Documents.Open(ExtractFilePath(ParamStr(0)) + FFileName);
 
-    woApp.Selection.HomeKey($00000006);
+    // Создаем новый экземпляр MS офиса
+    if VarIsEmpty(woApp) or VarIsNull(woApp) then
+    try
+      woApp := CreateOleObject('Word.Application');
+    except
+      woApp := Null;
+    end;
 
-    FDataSet.First;
-    while not FDataSet.Eof do
+    // Подключаемся к OpenOffice
+    if VarIsEmpty(woApp) or VarIsNull(woApp) then
+    try
+      ooApp := CreateOleObject('com.sun.star.ServiceManager');
+    except
+      ooApp := Unassigned;
+    end;
+
+    if not (VarIsEmpty(ooApp) or VarIsNull(ooApp)) then
     begin
-      if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
-      begin
-        woApp.Selection.HomeKey($00000006);
-        while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
-          do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
-      end;
-      FDataSet.Next;
-    end;
+      try
+        StarDesktop := ooApp.CreateInstance('com.sun.star.frame.Desktop');
+        VariantArr := VarArrayCreate([0, 0], varVariant);
+        VariantArr[0] := MakePropertyValue('FilterName', 'MS Word 97');
+        Doc := StarDesktop.LoadComponentFromURL(
+                      ConvertToURL(ExtractFilePath(ParamStr(0)) + FFileName), '_blank', 0,
+                      VariantArr);
 
-    Doc1.Save;
-    woApp.WindowState := 2;
-    woApp.Visible:=True;
-    woApp.WindowState := 1;
+        if not (VarIsEmpty(Doc) or VarIsNull(Doc)) then
+        begin
+
+          FDataSet.First;
+          while not FDataSet.Eof do
+          begin
+            if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+            begin
+              ReplaceDescriptor:=Doc.createReplaceDescriptor;
+              ReplaceDescriptor.setSearchString('%' + FDataSet.Fields.Fields[0].AsString + '%');
+              ReplaceDescriptor.setReplaceString(FDataSet.Fields.Fields[1].AsString);
+              Doc.replaceAll(ReplaceDescriptor);            end;            FDataSet.Next;          end;
+          SaveParams := VarArrayCreate([0, -1], varVariant);
+          Doc.StoreAsUrl(ConvertToURL(ExtractFilePath(ParamStr(0)) + FFileName),SaveParams);
+        end;
+
+      finally
+        ooApp := Unassigned;
+      end;
+    end else
+    begin
+
+      Doc := woApp.Documents.Open(ExtractFilePath(ParamStr(0)) + FFileName);
+
+      woApp.Selection.HomeKey($00000006);
+
+      FDataSet.First;
+      while not FDataSet.Eof do
+      begin
+        if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+        begin
+          woApp.Selection.HomeKey($00000006);
+          while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
+            do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
+        end;
+        FDataSet.Next;
+      end;
+
+      Doc.Save;
+      woApp.WindowState := 2;
+      woApp.Visible:=True;
+      woApp.WindowState := 1;
+    end;
   finally
     Stream.Free;
   end;

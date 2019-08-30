@@ -17,6 +17,7 @@ uses
 
 type
   TSendMenegerJournalForm = class(TSendJournalForm)
+    actPrintNew: TdsdPrintAction;
   private
     { Private declarations }
   public
