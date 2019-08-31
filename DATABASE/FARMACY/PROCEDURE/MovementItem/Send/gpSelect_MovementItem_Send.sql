@@ -43,6 +43,7 @@ $BODY$
     DECLARE vbOperDate TDateTime;
     DECLARE vbOperDateEnd TDateTime;
     DECLARE vbRetailId Integer;
+    DECLARE vbisDeferred Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
@@ -54,11 +55,13 @@ BEGIN
          , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean
          , date_trunc('day', Movement.OperDate)
          , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
+         , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
     INTO vbUnitFromId
        , vbUnitToId 
        , vbisAuto
        , vbOperDate
        , vbIsSUN
+       , vbisDeferred
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.ID
@@ -76,6 +79,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                   ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
@@ -419,6 +425,12 @@ BEGIN
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
                                 )
+         , MovementItem_Send_All AS (SELECT MovementItem.Id
+                                          , MovementItem.ParentId
+                                     FROM MovementItem   
+                                     WHERE MovementItem.MovementId = inMovementId 
+                                       AND MovementItem.isErased = False
+                                    )
 
          , tmpContainer AS (SELECT Container.Id
                                  , Container.ObjectId    AS GoodsId
@@ -476,7 +488,7 @@ BEGIN
                           )
 
    
-         , tmpMIContainer AS (SELECT MovementItem_Send.Id           AS Id
+         , tmpMIContainer AS (SELECT COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)           AS Id
                                    , COALESCE(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount), 0)                              AS PriceIn
                                    , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)), 0)                                                       AS SumPriceIn
                                    , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   AS Price
@@ -484,11 +496,11 @@ BEGIN
                                    , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)     AS PriceWithVAT
                                    , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                   AS SummaWithVAT
                                    , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
-                              FROM MovementItem_Send
+                              FROM MovementItem_Send_All
                                     LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
-                                                 ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
+                                                 ON MIContainer_Count.MovementItemId = MovementItem_Send_All.Id 
                                                 AND MIContainer_Count.DescId = zc_Container_Count()
-                                                AND MIContainer_Count.isActive = True
+                                                AND MIContainer_Count.isActive = NOT vbisDeferred
                                     LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                  ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                 AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -520,7 +532,7 @@ BEGIN
                                           ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
        
-                              GROUP BY MovementItem_Send.Id    
+                              GROUP BY COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)   
                               )
 
          , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId

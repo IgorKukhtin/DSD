@@ -9,18 +9,18 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
+    Top = 95
     Width = 800
-    Height = 392
+    Height = 372
     TabOrder = 5
-    ExplicitTop = 75
+    ExplicitTop = 95
     ExplicitWidth = 800
-    ExplicitHeight = 392
-    ClientRectBottom = 392
+    ExplicitHeight = 372
+    ClientRectBottom = 372
     ClientRectRight = 800
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 800
-      ExplicitHeight = 392
+      ExplicitHeight = 372
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 217
@@ -150,7 +150,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Left = 0
         Top = 217
         Width = 800
-        Height = 175
+        Height = 155
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -275,13 +275,13 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     Left = 0
     Top = 0
     Width = 800
-    Height = 49
+    Height = 69
     Align = alTop
     ShowCaption = False
     TabOrder = 0
     object edOperDate: TcxDateEdit
       Left = 79
-      Top = 15
+      Top = 18
       TabStop = False
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy'
@@ -292,17 +292,17 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     end
     object cxLabel2: TcxLabel
       Left = 26
-      Top = 16
+      Top = 19
       Caption = #1057#1077#1075#1086#1076#1085#1103
     end
     object cxLabel1: TcxLabel
       Left = 194
-      Top = 16
+      Top = 19
       Caption = #1042#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
     end
     object cbValueUser: TcxComboBox
-      Left = 384
-      Top = 15
+      Left = 194
+      Top = 42
       Properties.Items.Strings = (
         ''
         '7:00'
@@ -315,6 +315,44 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       TabOrder = 0
       Text = 'cbValueUser'
       Width = 121
+    end
+    object cxLabel3: TcxLabel
+      Left = 374
+      Top = 19
+      Caption = #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076#1072':'
+    end
+    object cxLabel4: TcxLabel
+      Left = 374
+      Top = 42
+      Caption = #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1093#1086#1076#1072':'
+    end
+    object edStart: TcxTextEdit
+      Left = 539
+      Top = 18
+      TabOrder = 6
+      Width = 115
+    end
+    object edEnd: TcxTextEdit
+      Left = 539
+      Top = 42
+      TabOrder = 7
+      Width = 115
+    end
+    object cxLabel5: TcxLabel
+      Left = 374
+      Top = 0
+      Caption = 
+        #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072'  '#1074#1074#1086#1076#1080#1090#1100#1089#1103' '#1082#1088#1072#1090#1085#1086' '#1087#1086#1083#1091#1095#1072#1089#1091' '#1074' ' +
+        #1074#1080#1076#1077' '#1063#1063':MM'
+    end
+    object cxButton1: TcxButton
+      Left = 683
+      Top = 26
+      Width = 94
+      Height = 25
+      Action = InsertUpdateGuides
+      Default = True
+      TabOrder = 9
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -348,6 +386,18 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEmployeeScheduleUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEmployeeScheduleUser
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ImageIndex = 14
     end
   end
   inherited MasterDS: TDataSource
@@ -471,6 +521,20 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Component = cbValueUser
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimeStart'
+        Value = Null
+        Component = edStart
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimeEnd'
+        Value = Null
+        Component = edEnd
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -496,6 +560,22 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimeStart'
+        Value = Null
+        Component = edStart
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimeEnd'
+        Value = Null
+        Component = edEnd
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
@@ -509,10 +589,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
     StoredProc = spUpdateEmployeeScheduleUser
-    ControlList = <
-      item
-        Control = cbValueUser
-      end>
+    ControlList = <>
     GetStoredProc = spGet
     ActionAfterExecute = actRefresh
     Left = 344

@@ -13,7 +13,8 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, Vcl.StdCtrls,
+  cxButtons;
 
 type
   TEmployeeScheduleUserForm = class(TAncestorDBGridForm)
@@ -54,6 +55,13 @@ type
     CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
     actEmployeeScheduleUnit: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edStart: TcxTextEdit;
+    edEnd: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxButton1: TcxButton;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

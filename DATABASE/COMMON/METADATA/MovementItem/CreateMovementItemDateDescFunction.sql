@@ -101,10 +101,20 @@ CREATE OR REPLACE FUNCTION zc_MIDate_Calculation() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Calculation', 'Дата расчета' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Calculation');
  
+CREATE OR REPLACE FUNCTION zc_MIDate_Start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Start', 'Дата/время начало' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Start');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_End() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_End'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_End', 'Дата/время завершение' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_End');
+
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 23.08.19                                                                         * zc_MIDate_Start, zc_MIDate_End
  27.08.19                                                                         * zc_MIDate_Calculation
  10.03.19                                                                         * zc_MIDate_Viewed
  19.11.18         * zc_MIDate_Income
