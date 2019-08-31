@@ -26,8 +26,6 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     Note: TcxGridDBBandedColumn;
     Value: TcxGridDBBandedColumn;
-    cxLabel1: TcxLabel;
-    cbValueUser: TcxComboBox;
     spGet: TdsdStoredProc;
     spUpdateEmployeeScheduleUser: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
@@ -57,11 +55,15 @@ type
     dxBarButton1: TdxBarButton;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    edStart: TcxTextEdit;
-    edEnd: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxButton1: TcxButton;
     InsertUpdateGuides: TdsdInsertUpdateGuides;
+    cbStartHour: TcxComboBox;
+    cbStartMin: TcxComboBox;
+    cxLabel6: TcxLabel;
+    cbEndMin: TcxComboBox;
+    cxLabel7: TcxLabel;
+    cbEndHour: TcxComboBox;
   private
     { Private declarations }
   public

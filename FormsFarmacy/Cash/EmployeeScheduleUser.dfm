@@ -287,7 +287,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       Properties.DisplayFormat = 'dd.mm.yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.ReadOnly = True
-      TabOrder = 1
+      TabOrder = 0
       Width = 100
     end
     object cxLabel2: TcxLabel
@@ -295,64 +295,127 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       Top = 19
       Caption = #1057#1077#1075#1086#1076#1085#1103
     end
-    object cxLabel1: TcxLabel
-      Left = 194
-      Top = 19
-      Caption = #1042#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
-    end
-    object cbValueUser: TcxComboBox
-      Left = 194
-      Top = 42
-      Properties.Items.Strings = (
-        ''
-        '7:00'
-        '8:00'
-        '9:00'
-        '10:00'
-        '12:00'
-        '21:00'
-        #1042)
-      TabOrder = 0
-      Text = 'cbValueUser'
-      Width = 121
-    end
     object cxLabel3: TcxLabel
-      Left = 374
+      Left = 206
       Top = 19
       Caption = #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076#1072':'
     end
     object cxLabel4: TcxLabel
-      Left = 374
+      Left = 206
       Top = 42
       Caption = #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1093#1086#1076#1072':'
     end
-    object edStart: TcxTextEdit
-      Left = 539
-      Top = 18
-      TabOrder = 6
-      Width = 115
-    end
-    object edEnd: TcxTextEdit
-      Left = 539
-      Top = 42
-      TabOrder = 7
-      Width = 115
-    end
     object cxLabel5: TcxLabel
-      Left = 374
+      Left = 206
       Top = 0
       Caption = 
-        #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072'  '#1074#1074#1086#1076#1080#1090#1100#1089#1103' '#1082#1088#1072#1090#1085#1086' '#1087#1086#1083#1091#1095#1072#1089#1091' '#1074' ' +
-        #1074#1080#1076#1077' '#1063#1063':MM'
+        #1042#1088#1077#1084#1103' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072'  '#1074#1074#1086#1076#1080#1090#1100#1089#1103' '#1082#1088#1072#1090#1085#1086' 30 '#1084#1080#1085'. '#1074' '#1074 +
+        #1080#1076#1077' '#1063#1063':MM'
     end
     object cxButton1: TcxButton
-      Left = 683
-      Top = 26
+      Left = 523
+      Top = 34
       Width = 94
       Height = 25
       Action = InsertUpdateGuides
       Default = True
+      TabOrder = 5
+    end
+    object cbStartHour: TcxComboBox
+      Left = 371
+      Top = 19
+      Properties.Items.Strings = (
+        ''
+        '0'
+        '1'
+        '2'
+        '3'
+        '4'
+        '5'
+        '6'
+        '7'
+        '8'
+        '9'
+        '10'
+        '11'
+        '12'
+        '13'
+        '14'
+        '15'
+        '16'
+        '17'
+        '18'
+        '19'
+        '20'
+        '21'
+        '22'
+        '23')
+      TabOrder = 6
+      Width = 54
+    end
+    object cbStartMin: TcxComboBox
+      Left = 438
+      Top = 19
+      Properties.Items.Strings = (
+        ''
+        '00'
+        '30')
+      TabOrder = 7
+      Width = 54
+    end
+    object cxLabel6: TcxLabel
+      Left = 425
+      Top = 19
+      Caption = ' : '
+      Visible = False
+    end
+    object cbEndMin: TcxComboBox
+      Left = 438
+      Top = 42
+      Properties.Items.Strings = (
+        ''
+        '00'
+        '30')
       TabOrder = 9
+      Width = 54
+    end
+    object cxLabel7: TcxLabel
+      Left = 425
+      Top = 42
+      Caption = ' : '
+      Visible = False
+    end
+    object cbEndHour: TcxComboBox
+      Left = 371
+      Top = 42
+      Properties.Items.Strings = (
+        ''
+        '0'
+        '1'
+        '2'
+        '3'
+        '4'
+        '5'
+        '6'
+        '7'
+        '8'
+        '9'
+        '10'
+        '11'
+        '12'
+        '13'
+        '14'
+        '15'
+        '16'
+        '17'
+        '18'
+        '19'
+        '20'
+        '21'
+        '22'
+        '23')
+      TabOrder = 11
+      Width = 54
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -498,8 +561,8 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Value = '1'
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 56
+    Left = 280
+    Top = 80
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_EmployeeSchedule_User'
@@ -516,24 +579,30 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ValueUser'
+        Name = 'StartHour'
         Value = Null
-        Component = cbValueUser
+        Component = cbStartHour
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TimeStart'
+        Name = 'StartMin'
         Value = Null
-        Component = edStart
+        Component = cbStartMin
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TimeEnd'
+        Name = 'EndHour'
         Value = Null
-        Component = edEnd
+        Component = cbEndHour
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndMin'
+        Value = Null
+        Component = cbEndMin
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -554,25 +623,33 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValueUser'
+        Name = 'inStartHour'
         Value = ''
-        Component = cbValueUser
+        Component = cbStartHour
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTimeStart'
+        Name = 'inStartMin'
         Value = Null
-        Component = edStart
+        Component = cbStartMin
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTimeEnd'
+        Name = 'inEndHour'
         Value = Null
-        Component = edEnd
+        Component = cbEndHour
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndMin'
+        Value = Null
+        Component = cbEndMin
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

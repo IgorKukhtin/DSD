@@ -6,30 +6,31 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_EmployeeSchedule_User(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (OperDate  TDateTime,
-               ValueUser TVarChar,
-               TimeStart TVarChar,
-               TimeEnd TVarChar 
+               StartHour TVarChar,
+               StartMin TVarChar,
+               EndHour TVarChar, 
+               EndMin TVarChar 
               )
 AS
 $BODY$
    DECLARE vbMovementID Integer;
    DECLARE vbMovementItemID Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbComingValueDay TVarChar;
-   DECLARE vbTypeId Integer;
-   DECLARE vbValue Integer;
-   DECLARE vbResult TVarChar;
-   DECLARE vbTimeStart TVarChar;
-   DECLARE vbTimeEnd TVarChar; 
+
+   DECLARE vbStartHour TVarChar;
+   DECLARE vbStartMin TVarChar; 
+   DECLARE vbEndHour TVarChar;
+   DECLARE vbEndMin TVarChar; 
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
     
-    vbResult := '';
-    vbTimeStart := '';
-    vbTimeEnd := '';
+   vbStartHour := '';
+   vbStartMin := '00'; 
+   vbEndHour := '';
+   vbEndMin := '00'; 
 
     -- проверка наличия графика
     IF EXISTS(SELECT 1 FROM Movement
@@ -50,25 +51,12 @@ BEGIN
                   AND MovementItem.ObjectId = vbUserId)
       THEN
 
-        SELECT MovementItem.ID, COALESCE (MovementItemString.ValueData, '')
-        INTO vbMovementItemID, vbComingValueDay
+        SELECT MovementItem.ID
+        INTO vbMovementItemID
         FROM MovementItem
-         
-             LEFT JOIN MovementItemString ON MovementItemString.DescId = zc_MIString_ComingValueDayUser()
-                                          AND MovementItemString.MovementItemId = MovementItem.ID
-          
         WHERE MovementItem.MovementId = vbMovementID
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.ObjectId = vbUserId;
-
-        IF COALESCE (vbComingValueDay, '') = ''
-        THEN
-          vbComingValueDay := '0000000000000000000000000000000';
-        END IF;
-    
-        vbTypeId :=  date_part('day',  CURRENT_DATE);
-    
-        vbResult :=lpDecodeValueDay(vbTypeId, vbComingValueDay);
 
           -- Наличие записи по дню
         IF EXISTS(SELECT 1 FROM MovementItem
@@ -77,10 +65,11 @@ BEGIN
                     AND MovementItem.ParentId = vbMovementItemID
                     AND MovementItem.Amount = date_part('DAY',  CURRENT_DATE)::Integer)
         THEN
-          SELECT CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE TO_CHAR(MIDate_Start.ValueData, 'HH24:MI')  END
-               , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE TO_CHAR(MIDate_End.ValueData , 'HH24:MI')  END
-          INTO vbTimeStart
-             , vbTimeEnd
+          SELECT CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE date_part('HOUR',  MIDate_Start.ValueData)::TVarChar END
+               , CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_Start.ValueData)::TVarChar  END
+               , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('HOUR',  MIDate_End.ValueData)::TVarChar  END
+               , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_End.ValueData)::TVarChar  END
+          INTO vbStartHour, vbStartMin, vbEndHour, vbEndMin 
           FROM MovementItem
 
                INNER JOIN MovementItemDate AS MIDate_Start
@@ -100,12 +89,22 @@ BEGIN
       END IF;	
     END IF;
 
+    IF Length(vbStartMin) < 2
+    THEN
+      vbStartMin := '0'||vbStartMin; 
+    END IF; 
+    
+    IF Length(vbEndMin) < 2
+    THEN
+      vbEndMin := '0'||vbEndMin; 
+    END IF; 
 
     RETURN QUERY
     SELECT CURRENT_DATE::TDateTime                        AS OperDate
-         , vbResult                                       AS ValueUser
-         , vbTimeStart                                    AS TimeStart
-         , vbTimeEnd                                      AS TimeEnd
+         , vbStartHour 
+         , vbStartMin 
+         , vbEndHour 
+         , vbEndMin 
     ;
 
 END;
