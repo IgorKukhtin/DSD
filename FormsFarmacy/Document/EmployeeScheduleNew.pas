@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxTimeEdit;
 
 type
   TEmployeeScheduleNewForm = class(TAncestorDocumentForm)
@@ -43,7 +43,7 @@ type
     actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
     UnitName: TcxGridDBBandedColumn;
-    ValueUser: TcxGridDBBandedColumn;
+    ValueStart: TcxGridDBBandedColumn;
     actExecPreviousMonth: TdsdExecStoredProc;
     spPreviousMonth: TdsdStoredProc;
     actPreviousMonth: TMultiAction;
@@ -52,7 +52,7 @@ type
     ValuePrev: TcxGridDBBandedColumn;
     CrossDBViewPrevAddOn: TCrossDBViewAddOn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    CrossDBViewStartAddOn: TCrossDBViewAddOn;
     Color_CalcUser: TcxGridDBBandedColumn;
     actUpdateUnit: TMultiAction;
     actChoiceUnitTreeForm: TOpenChoiceForm;
@@ -65,6 +65,9 @@ type
     spUpdateUnit: TdsdStoredProc;
     spUpdateSubstitutionUnit: TdsdStoredProc;
     actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId;
+    ValueEnd: TcxGridDBBandedColumn;
+    actPayrollTypeChoice: TOpenChoiceForm;
+    CrossDBViewEndAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

@@ -159,16 +159,13 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
           end
           object Value: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Value'
-            PropertiesClassName = 'TcxComboBoxProperties'
-            Properties.Items.Strings = (
-              ''
-              '7:00'
-              '8:00'
-              '9:00'
-              '10:00'
-              '12:00'
-              '21:00'
-              #1042)
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPayrollTypeChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -178,18 +175,11 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Position.ColIndex = 0
             Position.RowIndex = 1
           end
-          object ValueUser: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'ValueUser'
-            PropertiesClassName = 'TcxComboBoxProperties'
-            Properties.Items.Strings = (
-              ''
-              '7:00'
-              '8:00'
-              '9:00'
-              '10:00'
-              '12:00'
-              '21:00'
-              #1042)
+          object ValueStart: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueStart'
+            PropertiesClassName = 'TcxTimeEditProperties'
+            Properties.SpinButtons.Visible = False
+            Properties.TimeFormat = tfHourMin
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -199,6 +189,17 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Position.ColIndex = 0
             Position.RowIndex = 2
           end
+          object ValueEnd: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueEnd'
+            PropertiesClassName = 'TcxTimeEditProperties'
+            Properties.SpinButtons.Visible = False
+            Properties.TimeFormat = tfHourMin
+            Visible = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 3
+          end
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
@@ -207,7 +208,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Position.RowIndex = 0
           end
           object Color_CalcUser: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Color_CalcUser'
+            DataBinding.FieldName = 'Color_Calc'
             Visible = False
             Position.BandIndex = 0
             Position.ColIndex = 6
@@ -536,6 +537,32 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
           StoredProc = spUpdateSubstitutionUnit
         end>
       Caption = 'actExecStoredUpdateSubstitutionUnit'
+    end
+    object actPayrollTypeChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceForm1'
+      FormName = 'TPayrollTypeForm'
+      FormNameParam.Value = 'TPayrollTypeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'TypeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShortName'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'Value'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1031,10 +1058,19 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioValueUser'
+        Name = 'ioValueStart'
         Value = Null
-        Component = CrossDBViewUserAddOn
-        ComponentItem = 'ValueUser'
+        Component = CrossDBViewStartAddOn
+        ComponentItem = 'ValueStart'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioValueEnd'
+        Value = Null
+        Component = CrossDBViewEndAddOn
+        ComponentItem = 'ValueEnd'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -1122,7 +1158,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Left = 800
     Top = 160
   end
-  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+  object CrossDBViewStartAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView1
     OnDblClickActionList = <>
@@ -1131,7 +1167,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = ValueUser
+        ColorColumn = ValueStart
         BackGroundValueColumn = Color_CalcUser
         ColorValueList = <>
       end>
@@ -1140,7 +1176,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
-    TemplateColumn = ValueUser
+    TemplateColumn = ValueStart
     Left = 800
     Top = 208
   end
@@ -1221,7 +1257,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       end>
     PackSize = 1
     Left = 802
-    Top = 288
+    Top = 305
   end
   object spUpdateSubstitutionUnit: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_EmployeeScheduleNew_SubstitutionUnit'
@@ -1254,6 +1290,30 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       end>
     PackSize = 1
     Left = 802
-    Top = 344
+    Top = 361
+  end
+  object CrossDBViewEndAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = ValueStart
+        BackGroundValueColumn = Color_CalcUser
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueFieldNull'
+    TemplateColumn = ValueEnd
+    Left = 800
+    Top = 256
   end
 end
