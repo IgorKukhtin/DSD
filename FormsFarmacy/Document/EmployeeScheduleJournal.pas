@@ -22,6 +22,8 @@ type
     ExecuteDialog: TExecuteDialog;
     bbmacPrint: TdxBarButton;
     OperDate: TcxGridDBColumn;
+    getEmployeeScheduleForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
   private
     { Private declarations }
   public

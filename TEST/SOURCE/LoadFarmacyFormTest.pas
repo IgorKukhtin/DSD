@@ -48,6 +48,7 @@ type
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
+    procedure LoadEmployeeScheduleFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsGroupPromoFormTest;
@@ -1993,6 +1994,27 @@ begin
     (GetForm('TSheetWorkTimeAddRecordForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 
+end;
+
+procedure TLoadFormTest.LoadEmployeeScheduleFormTest;
+begin
+
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleNewForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleNewForm');
+
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
+}
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

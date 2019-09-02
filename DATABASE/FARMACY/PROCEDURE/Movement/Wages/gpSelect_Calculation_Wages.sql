@@ -73,6 +73,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId 
 
             LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                              ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
@@ -87,6 +88,7 @@ BEGIN
                                 AND ObjectLink_Goods_PayrollGroup.DescId = zc_ObjectLink_PayrollType_PayrollGroup()
 
        WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+          AND COALESCE (Object_User.isErased, FALSE) = False
           AND Movement.OperDate  BETWEEN vbStartDate AND vbEndDate;
 
 
@@ -175,6 +177,7 @@ BEGIN
             , UserDeyNS.CountUser     AS CountUserNS
             , UserDeySCS.CountUser    AS CountUserSCS
             , UserDeyS.CountUser      AS CountUserS
+            , UserDeyS.CountUser      AS CountUserSAS
        FROM tmpCheckSum
 
             LEFT JOIN tmpUserDey AS UserDeyCS
@@ -200,7 +203,12 @@ BEGIN
             LEFT JOIN tmpUserDey AS UserDeyS
                                  ON UserDeyS.OperDate       = tmpCheckSum.OperDate
                                 AND UserDeyS.UnitId         = tmpCheckSum.UnitId
-                                AND UserDeyS.PayrollTypeID  = zc_Enum_PayrollType_WorkS();
+                                AND UserDeyS.PayrollTypeID  = zc_Enum_PayrollType_WorkS()
+
+            LEFT JOIN tmpUserDey AS UserDeySAS
+                                 ON UserDeySAS.OperDate       = tmpCheckSum.OperDate
+                                AND UserDeySAS.UnitId         = tmpCheckSum.UnitId
+                                AND UserDeySAS.PayrollTypeID  = zc_Enum_PayrollType_WorkSAS();
 
    -- реализация про приходам за месяц
    CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
@@ -346,6 +354,7 @@ BEGIN
                                                               inCountUserNS      := Null::Integer,
                                                               inCountUserSCS     := Null::Integer,
                                                               inCountUserS       := Null::Integer,
+                                                              inCountUserSAS     := Null::Integer,
                                                               inSummCS           := Income.SaleSumm,
                                                               inSummSCS          := Null::TFloat,
                                                               inSummHS           := Null::TFloat) AS Calculation
@@ -448,6 +457,7 @@ BEGIN
                                                           inCountUserNS      := CheckSum.CountUserNS,
                                                           inCountUserSCS     := CheckSum.CountUserSCS,
                                                           inCountUserS       := CheckSum.CountUserS,
+                                                          inCountUserSAS       := CheckSum.CountUserS,
                                                           inSummCS           := CheckSum.SummCS,
                                                           inSummSCS          := CheckSum.SummSCS,
                                                           inSummHS           := CheckSum.SummHS) AS Calculation
@@ -615,10 +625,10 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                        *
  22.08.19                                                        *
 
 */
 
 -- тест
---
-SELECT * FROM gpSelect_Calculation_Wages (('01.08.2019')::TDateTime, 0, '3')
+-- SELECT * FROM gpSelect_Calculation_Wages (('01.08.2019')::TDateTime, 0, '3')

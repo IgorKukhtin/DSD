@@ -248,6 +248,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkNS(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 9, inName:= 'ночная смена'              , inEnumName:= 'zc_Enum_WorkTimeKind_WorkNS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkSCS(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 10, inName:= 'подмена полной смены'     , inEnumName:= 'zc_Enum_WorkTimeKind_WorkSCS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkS(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 11, inName:= 'кладовщик'                , inEnumName:= 'zc_Enum_WorkTimeKind_WorkS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkSAS(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 12, inName:= 'подмена средней смены'     , inEnumName:= 'zc_Enum_WorkTimeKind_WorkSAS');
 
 -- !!! Типы расчета заработной платы
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkCS(),    inDescId:= zc_Object_PayrollType(), inCode:= 1, inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkCS');
@@ -255,6 +256,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSCS(),   inDescId:= zc_Object_PayrollType(), inCode:= 3, inName:= 'Подмена полной смены'        , inEnumName:= 'zc_Enum_PayrollType_WorkSCS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4, inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5, inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSAS(),   inDescId:= zc_Object_PayrollType(), inCode:= 6, inName:= 'Подмена средней смены'       , inEnumName:= 'zc_Enum_PayrollType_WorkSAS');
 
 -- !!! Группы расчета заработной платы
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_Check(),       inDescId:= zc_Object_PayrollGroup(), inCode:= 1, inName:= 'От суммы проведенных чеков'                    , inEnumName:= 'zc_Enum_PayrollGroup_Check');

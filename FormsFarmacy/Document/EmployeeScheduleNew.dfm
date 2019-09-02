@@ -1,8 +1,8 @@
-inherited EmployeeScheduleForm: TEmployeeScheduleForm
-  Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' ('#1085#1086#1074#1099#1081')'
+inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
+  Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1085#1086#1074#1099#1081
   ClientHeight = 500
   ClientWidth = 953
-  AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeSchedule'
+  AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeScheduleNew'
   ExplicitWidth = 969
   ExplicitHeight = 539
   PixelsPerInch = 96
@@ -545,7 +545,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 224
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_EmployeeSchedule'
+    StoredProcName = 'gpSelect_MovementItem_EmployeeScheduleNew'
     DataSet = HeaderCDS
     DataSets = <
       item
@@ -805,7 +805,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 232
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_EmployeeSchedule'
+    StoredProcName = 'gpUpdate_Status_EmployeeScheduleNew'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Top = 232
@@ -995,7 +995,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 280
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_EmployeeSchedule'
+    StoredProcName = 'gpInsertUpdate_MovementItem_EmployeeScheduleNew'
     Params = <
       item
         Name = 'ioId'
@@ -1057,7 +1057,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 336
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EmployeeSchedule_TotalSumm'
+    StoredProcName = 'gpGet_Movement_EmployeeScheduleNew_TotalSumm'
     Left = 668
     Top = 228
   end
@@ -1151,7 +1151,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 112
   end
   object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_User'
+    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleNew_User'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1176,7 +1176,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 336
   end
   object spPreviousMonth: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_PreviousMonth'
+    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleNew_PreviousMonth'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1199,7 +1199,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 168
   end
   object spUpdateUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_Unit'
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeScheduleNew_Unit'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1224,7 +1224,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Top = 288
   end
   object spUpdateSubstitutionUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_SubstitutionUnit'
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeScheduleNew_SubstitutionUnit'
     DataSets = <>
     OutputType = otResult
     Params = <

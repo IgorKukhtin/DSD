@@ -744,7 +744,8 @@ uses
   PayrollGroupEdit in '..\..\FormsFarmacy\Guides\PayrollGroupEdit.pas' {PayrollGroupEditForm: TParentForm},
   PayrollType in '..\..\FormsFarmacy\Guides\PayrollType.pas' {PayrollTypeForm: TParentForm},
   PayrollTypeEdit in '..\..\FormsFarmacy\Guides\PayrollTypeEdit.pas' {PayrollTypeEditForm: TParentForm},
-  WagesAdditionalExpenses in '..\..\FormsFarmacy\Document\WagesAdditionalExpenses.pas' {WagesAdditionalExpensesForm: TParentForm};
+  WagesAdditionalExpenses in '..\..\FormsFarmacy\Document\WagesAdditionalExpenses.pas' {WagesAdditionalExpensesForm: TParentForm},
+  EmployeeScheduleNew in '..\..\FormsFarmacy\Document\EmployeeScheduleNew.pas' {EmployeeScheduleNewForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

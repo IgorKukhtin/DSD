@@ -95,6 +95,7 @@ type
     FEnabledTimer: Boolean;
     FPostDataSetAfterExecute: Boolean;
     FAfterAction: TCustomAction;
+    FBeforeAction: TCustomAction;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
     procedure SetEnabledTimer(const Value: Boolean);
     procedure OnTimer(Sender: TObject);
@@ -127,6 +128,8 @@ type
     property CancelAction: TCustomAction read FCancelAction write FCancelAction;
     // действие вызывается если результат вызова основного действия true
     property AfterAction: TCustomAction read FAfterAction write FAfterAction;
+    // действие вызывается вызываеться перед выполнение основного действия
+    property BeforeAction: TCustomAction read FBeforeAction write FBeforeAction;
     property Enabled;
     property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
       write FPostDataSetBeforeExecute default true;
@@ -2087,6 +2090,10 @@ begin
     for i := 0 to MoveParams.Count - 1 do
       TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
         TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
+  if Assigned(BeforeAction) then
+  begin
+    if not BeforeAction.Execute then Exit;
+  end;
   result := LocalExecute;
   if PostDataSetAfterExecute then
     PostDataSet;
