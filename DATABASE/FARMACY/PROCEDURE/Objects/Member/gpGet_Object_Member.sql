@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EducationId Integer, EducationCode Integer, EducationName TVarChar
              , isManagerPharmacy Boolean
              , PositionID Integer, PositionName TVarChar
+             , UnitID Integer, UnitName TVarChar
              , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -47,6 +48,9 @@ BEGIN
            , CAST (0 as Integer)    AS PositionId
            , CAST ('' as TVarChar)  AS PositionName   
 
+           , CAST (0 as Integer)    AS UnitID
+           , CAST ('' as TVarChar)  AS UnitName
+
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
@@ -74,6 +78,9 @@ BEGIN
          , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
          , Object_Position.Id                       AS PositionID
          , Object_Position.ValueData                AS PositionName
+
+         , Object_Unit.Id                           AS UnitID
+         , Object_Unit.ValueData                    AS UnitName
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 
@@ -122,6 +129,11 @@ BEGIN
                              AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                              ON ObjectLink_Member_Unit.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
      WHERE Object_Member.Id = inId;
      
    END IF;
@@ -133,6 +145,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 02.09.19                                                       *
  25.08.19                                                       *
  25.01.11         * 
 */

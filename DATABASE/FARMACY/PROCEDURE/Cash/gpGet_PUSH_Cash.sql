@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbMovementID Integer;
-   DECLARE vbEmployeeSchedule TVarChar;
+   DECLARE vbEmployeeShow Boolean;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -34,7 +34,7 @@ BEGIN
                            , ValueParams TVarChar) ON COMMIT DROP;
 
      -- Отметка посещаемости
-    vbEmployeeSchedule := '';
+    vbEmployeeShow := True;
     IF EXISTS(SELECT 1 FROM Movement
               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
               AND Movement.DescId = zc_Movement_EmployeeSchedule())
@@ -46,33 +46,29 @@ BEGIN
       WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
         AND Movement.DescId = zc_Movement_EmployeeSchedule();
 
-      IF EXISTS(SELECT 1 FROM MovementItem
-                WHERE MovementItem.MovementId = vbMovementID
-                  AND MovementItem.DescId = zc_MI_Master()
-                  AND MovementItem.ObjectId = vbUserId)
+      IF EXISTS(SELECT 1 FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = vbMovementID
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+                       INNER JOIN MovementItemDate AS MIDate_Start
+                                                   ON MIDate_Start.MovementItemId = MIChild.Id
+                                                  AND MIDate_Start.DescId = zc_MIDate_Start()
+                       INNER JOIN MovementItemDate AS MIDate_End
+                                                   ON MIDate_End.MovementItemId = MIChild.Id
+                                                  AND MIDate_End.DescId = zc_MIDate_End()
+                WHERE MIMaster.MovementId = vbMovementID
+                  AND MIMaster.DescId = zc_MI_Master()
+                  AND MIMaster.ObjectId = vbUserId)
       THEN
-
-        SELECT MovementItemString.ValueData
-        INTO vbEmployeeSchedule
-        FROM MovementItem
-
-             INNER JOIN MovementItemString ON MovementItemString.DescId = zc_MIString_ComingValueDayUser()
-                                          AND MovementItemString.MovementItemId = MovementItem.ID
-
-        WHERE MovementItem.MovementId = vbMovementID
-          AND MovementItem.DescId = zc_MI_Master()
-          AND MovementItem.ObjectId = vbUserId;
+        vbEmployeeShow := False;
       END IF;
     END IF;
 
-    IF COALESCE (vbEmployeeSchedule, '') = ''
-    THEN
-      vbEmployeeSchedule := '0000000000000000000000000000000';
-    END IF;
-
-   IF SUBSTRING(vbEmployeeSchedule, date_part('day',  CURRENT_DATE)::Integer, 1) = '0'
+   IF vbEmployeeShow = True
    THEN
-      INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в  график (Ctrl+T) исходя из персонального графика работы (07:00, 08:00, 10:00)');
+      INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметки времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
    END IF;
 
    -- Уведомление по рецептам Хелси и Фармасикеш

@@ -1,4 +1,4 @@
-unit Wages;
+unit WagesAdditionalExpenses;
 
 interface
 
@@ -28,65 +28,28 @@ uses
   dsdExportToXLSAction, cxMemo, cxBlobEdit;
 
 type
-  TWagesForm = class(TAncestorDocumentForm)
+  TWagesAdditionalExpensesForm = class(TAncestorDocumentForm)
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
-    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    actDataDialog: TExecuteDialog;
-    actUserNickDialig: TOpenChoiceForm;
-    actAddUser: TMultiAction;
-    actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
-    UnitName: TcxGridDBBandedColumn;
     dxBarButton4: TdxBarButton;
-    Color_Calc: TcxGridDBBandedColumn;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
-    actPrintCalculationPerson: TMultiAction;
     dxBarButton7: TdxBarButton;
-    actOpenChoicePersonal: TOpenChoiceForm;
-    actExportPrintCalculationPerson: TdsdExportToXLS;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrintCalculationPerson: TdsdStoredProc;
-    actExecSPPrintCalculationPerson: TdsdExecStoredProc;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    cxGridLevel1: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
-    spSelect_MI_Child: TdsdStoredProc;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    DetailDS: TDataSource;
-    DetailDCS: TClientDataSet;
-    chUnitName: TcxGridDBColumn;
-    chPayrollTypeName: TcxGridDBColumn;
-    chAmountAccrued: TcxGridDBColumn;
-    chSummaBase: TcxGridDBColumn;
-    chFormula: TcxGridDBColumn;
-    actCalculationAll: TMultiAction;
-    actExecCalculationAll: TdsdExecStoredProc;
     dxBarButton8: TdxBarButton;
     spCalculationAll: TdsdStoredProc;
-    AmountCard: TcxGridDBBandedColumn;
-    AmountHand: TcxGridDBBandedColumn;
-    AmountAccrued: TcxGridDBBandedColumn;
-    chDateCalculation: TcxGridDBColumn;
-    actPrintCalculationAll: TMultiAction;
-    actExecSPPrintCalculationAll: TdsdExecStoredProc;
-    actExportPrintCalculationAll: TdsdExportToXLS;
-    spSelectPrintCalculationAll: TdsdStoredProc;
     dxBarButton9: TdxBarButton;
-    actUpdate_isIssuedBy: TdsdExecStoredProc;
-    spUpdate_isIssuedBy: TdsdStoredProc;
-    isIssuedBy: TcxGridDBBandedColumn;
     dxBarButton10: TdxBarButton;
-    actIssuedBy: TMultiAction;
-    Marketing: TcxGridDBBandedColumn;
-    actWagesAdditionalExpenses: TdsdOpenForm;
-    dxBarButton11: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    SummaCleaning: TcxGridDBColumn;
+    SummaSP: TcxGridDBColumn;
+    SummaOther: TcxGridDBColumn;
+    SummaTotal: TcxGridDBColumn;
+    isIssuedBy: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -98,6 +61,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWagesForm);
+  RegisterClass(TWagesAdditionalExpensesForm);
 
 end.

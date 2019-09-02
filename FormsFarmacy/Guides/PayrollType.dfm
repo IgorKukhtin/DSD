@@ -51,14 +51,21 @@ object PayrollTypeForm: TPayrollTypeForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 91
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 323
+        Width = 258
+      end
+      object cxGridDBTableViewColumn1: TcxGridDBColumn
+        Caption = ' '#1050#1086#1088'. '#1085#1072#1080#1084#1077#1085#1102
+        DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 89
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

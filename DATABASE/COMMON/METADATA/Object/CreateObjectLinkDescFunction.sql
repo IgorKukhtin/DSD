@@ -2229,10 +2229,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Position() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Member_Position', 'Связь Физ. лица с должностью', zc_Object_Member(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Position');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_Unit', 'Связь Физ. лица с Подразделением', zc_Object_Member(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Unit');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.09.19                                                                                      * zc_ObjectLink_Member_Unit
  25.08.19                                                                                      * zc_ObjectLink_Member_Position
  22.08.19                                                                                      * zc_ObjectLink_PayrollType_PayrollGroup, zc_ObjectLink_WorkTimeKind_PayrollType
  07.08.19                                                                                      * zc_ObjectLink_Unit_Driver

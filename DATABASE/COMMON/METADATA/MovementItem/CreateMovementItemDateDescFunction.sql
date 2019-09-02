@@ -109,11 +109,15 @@ CREATE OR REPLACE FUNCTION zc_MIDate_End() RETURNS Integer AS $BODY$BEGIN RETURN
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_End', 'Дата/время завершение' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_End');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_IssuedBy() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_IssuedBy'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_IssuedBy', 'Дата выдачи' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_IssuedBy');
 
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 01.09.19                                                                         * zc_MIDate_IssuedBy
  23.08.19                                                                         * zc_MIDate_Start, zc_MIDate_End
  27.08.19                                                                         * zc_MIDate_Calculation
  10.03.19                                                                         * zc_MIDate_Viewed

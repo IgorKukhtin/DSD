@@ -75,6 +75,8 @@ type
     isManagerPharmacy: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
     actChoicePosition: TOpenChoiceForm;
+    UnitName: TcxGridDBColumn;
+    actUnitChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

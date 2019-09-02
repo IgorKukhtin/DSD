@@ -20,8 +20,7 @@ $BODY$
 BEGIN
 
     -- проверка прав пользовател€ на вызов процедуры
-    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- »щем свободные zc_MI_Child() 
     IF COALESCE (ioId, 0) = 0

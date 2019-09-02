@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PayrollType(
 )
 RETURNS TABLE (Id Integer
              , Code Integer, Name TVarChar
+             , ShortName TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -15,12 +16,19 @@ $BODY$BEGIN
 
    RETURN QUERY
    SELECT
-          Object_PayrollType.Id         AS Id
-        , Object_PayrollType.ObjectCode AS Code
-        , Object_PayrollType.ValueData  AS Name
+          Object_PayrollType.Id             AS Id
+        , Object_PayrollType.ObjectCode     AS Code
+        , Object_PayrollType.ValueData      AS Name
+        
+        , ObjectString_ShortName.ValueData  AS ShortName
 
-        , Object_PayrollType.isErased   AS isErased
+        , Object_PayrollType.isErased       AS isErased
    FROM Object AS Object_PayrollType
+
+        LEFT JOIN ObjectString AS ObjectString_ShortName
+                               ON ObjectString_ShortName.ObjectId = Object_PayrollType.Id 
+                              AND ObjectString_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
+
    WHERE Object_PayrollType.DescId = zc_Object_PayrollType();
 
 END;$BODY$
@@ -32,6 +40,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                        *
  22.08.19                                                        *
 */
 

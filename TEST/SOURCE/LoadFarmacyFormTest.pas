@@ -1367,6 +1367,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');

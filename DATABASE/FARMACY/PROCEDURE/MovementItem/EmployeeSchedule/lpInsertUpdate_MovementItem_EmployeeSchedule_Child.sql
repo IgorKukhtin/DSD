@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MovementItem_Wages_Child ()
+-- Function: lpInsertUpdate_MovementItem_EmployeeSchedule_Child ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_EmployeeSchedule_Child (Integer, Integer, Integer, Integer, TFloat, Integer, TDateTime, TDateTime, Integer);
 

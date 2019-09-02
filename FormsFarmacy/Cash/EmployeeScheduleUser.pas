@@ -31,10 +31,10 @@ type
     HeaderSaver: THeaderSaver;
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
-    NoteUser: TcxGridDBBandedColumn;
-    ValueUser: TcxGridDBBandedColumn;
+    NoteStart: TcxGridDBBandedColumn;
+    ValueStart: TcxGridDBBandedColumn;
     HeaderUserCDS: TClientDataSet;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    CrossDBViewStartAddOn: TCrossDBViewAddOn;
     Color_Calc: TcxGridDBBandedColumn;
     Color_CalcFont: TcxGridDBBandedColumn;
     Color_CalcFontUser: TcxGridDBBandedColumn;
@@ -64,6 +64,12 @@ type
     cbEndMin: TcxComboBox;
     cxLabel7: TcxLabel;
     cbEndHour: TcxComboBox;
+    ValueEnd: TcxGridDBBandedColumn;
+    ValueNext: TcxGridDBBandedColumn;
+    NoteEnd: TcxGridDBBandedColumn;
+    NoteNext: TcxGridDBBandedColumn;
+    CrossDBViewNextAddOn: TCrossDBViewAddOn;
+    CrossDBViewEndAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

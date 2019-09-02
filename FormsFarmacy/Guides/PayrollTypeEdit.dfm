@@ -63,7 +63,7 @@
   end
   object cePercent: TcxCurrencyEdit
     Left = 23
-    Top = 177
+    Top = 215
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 6
@@ -71,25 +71,25 @@
   end
   object cxLabel6: TcxLabel
     Left = 23
-    Top = 154
+    Top = 192
     Caption = ' '#1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1073#1072#1079#1099' '
   end
   object ceMinAccrualAmount: TcxCurrencyEdit
-    Left = 23
-    Top = 223
+    Left = 234
+    Top = 215
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 8
     Width = 186
   end
   object cxLabel2: TcxLabel
-    Left = 23
-    Top = 204
+    Left = 234
+    Top = 196
     Caption = #1052#1080#1085' '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
   end
   object edPayrollGroup: TcxButtonEdit
     Left = 20
-    Top = 121
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -100,8 +100,19 @@
   end
   object cxLabel3: TcxLabel
     Left = 23
-    Top = 102
+    Top = 144
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
+  end
+  object edShortName: TcxTextEdit
+    Left = 20
+    Top = 122
+    TabOrder = 12
+    Width = 400
+  end
+  object cxLabel4: TcxLabel
+    Left = 20
+    Top = 99
+    Caption = ' '#1050#1086#1088#1086#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '
   end
   object ActionList: TActionList
     Left = 252
@@ -160,6 +171,14 @@
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShortName'
+        Value = Null
+        Component = edShortName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -227,6 +246,13 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShortName'
+        Value = Null
+        Component = edShortName
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

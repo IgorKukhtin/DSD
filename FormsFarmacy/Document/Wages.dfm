@@ -844,6 +844,33 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actUpdate_isIssuedBy'
     end
+    object actWagesAdditionalExpenses: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+      Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+      ImageIndex = 56
+      FormName = 'TWagesAdditionalExpensesForm'
+      FormNameParam.Value = 'TWagesAdditionalExpensesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -914,6 +941,10 @@ inherited WagesForm: TWagesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -1029,6 +1060,10 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton10: TdxBarButton
       Action = actIssuedBy
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actWagesAdditionalExpenses
       Category = 0
     end
   end

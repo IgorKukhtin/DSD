@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PayrollType(
     IN inId          Integer,       -- ключ объекта <>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar
              , PayrollGroupID Integer, PayrollGroupName TVarChar
              , Percent TFloat, MinAccrualAmount TFloat
              , isErased boolean) AS
@@ -23,6 +23,7 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_PayrollType()) AS Code
            , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS ShortName
            
            , CAST (0 as Integer)    AS PayrollGroupID
            , CAST ('' as TVarChar)  AS PayrollGroupName
@@ -36,6 +37,8 @@ BEGIN
              Object_PayrollType.Id                       AS Id
            , Object_PayrollType.ObjectCode               AS Code
            , Object_PayrollType.ValueData                AS Name
+
+           , ObjectString_ShortName.ValueData            AS ShortName
 
            , Object_PayrollGroup.ID                      AS PayrollGroupID
            , Object_PayrollGroup.ValueData               AS PayrollGroupName
@@ -58,6 +61,10 @@ BEGIN
                                   ON ObjectFloat_MinAccrualAmount.ObjectId = Object_PayrollType.Id
                                  AND ObjectFloat_MinAccrualAmount.DescId = zc_ObjectFloat_PayrollType_MinAccrualAmount()
 
+            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                   ON ObjectString_ShortName.ObjectId = Object_PayrollType.Id 
+                                  AND ObjectString_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
+
        WHERE Object_PayrollType.Id = inId;
    END IF;
 
@@ -69,6 +76,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                        *
  22.08.19                                                        *
 
 */
