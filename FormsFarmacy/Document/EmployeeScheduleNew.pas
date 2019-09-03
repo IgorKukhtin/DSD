@@ -37,7 +37,7 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
-    HeaderPrewCDS: TClientDataSet;
+    HeaderPrevCDS: TClientDataSet;
     actUserNickDialig: TOpenChoiceForm;
     actAddUser: TMultiAction;
     actspInsertUser: TdsdExecStoredProc;

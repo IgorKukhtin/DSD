@@ -1,113 +1,206 @@
 -- Function: gpInsertUpdate_MovementItem_EmployeeScheduleNew()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_EmployeeScheduleNew(INTEGER, INTEGER, INTEGER, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_EmployeeScheduleNew(INTEGER, INTEGER, INTEGER, TVarChar, TVarChar, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_EmployeeScheduleNew(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа мастер>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUserId              Integer   , -- Сотрудник
- INOUT ioValue               TVarChar  , -- часы
- INOUT ioValueUser           TVarChar  , -- часы
- INOUT ioTypeId              Integer   ,
+ INOUT ioValue               TVarChar  , -- Тип дня
+ INOUT ioValueStart          TVarChar  , -- Время прихода
+ INOUT ioValueEnd            TVarChar  , -- Время ухода
+ INOUT ioTypeId              Integer   , -- День
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbComingValueDay TVarChar;
-   DECLARE vbComingValueDayUser TVarChar;
+   DECLARE vbUnitID Integer;
+   DECLARE vbParentId Integer;
 
-   DECLARE vbValue INTEGER;
-   DECLARE vbValueUser INTEGER;
+   DECLARE vbDate TDateTime;
+   DECLARE vbDateStart TDateTime;
+   DECLARE vbDateEnd TDateTime;
+   DECLARE vbPayrollType Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
 
-     IF inSession <> '3'
+/*     IF inSession <> '3'
      THEN
         RAISE EXCEPTION 'Ошибка. В разработке';
      END IF;
-
+*/
     -- проверка прав пользователя на вызов процедуры
-    IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer AND 9383066  <> inSession::Integer
+    IF vbUserId NOT IN (3, 758920, 4183126, 9383066)
     THEN
       RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
     END IF;
 
-    IF COALESCE (ioId, 0) <> 0
+    IF COALESCE (inMovementId, 0) = 0
     THEN
-      SELECT MovementItemString.ValueData
-      INTO vbComingValueDay
-      FROM MovementItemString
-      WHERE MovementItemString.DescId = zc_MIString_ComingValueDay()
-        AND MovementItemString.MovementItemId = ioId;
+        RAISE EXCEPTION 'Ошибка. График не сохранен.';
     ELSE
-      vbComingValueDay := '0000000000000000000000000000000';
-    END IF;
-
-    IF COALESCE (vbComingValueDay, '') = ''
-    THEN
-      vbComingValueDay := '0000000000000000000000000000000';
+      SELECT date_trunc('MONTH', Movement.OperDate)
+      INTO vbDate
+      FROM Movement
+      WHERE Movement.Id = inMovementId;
     END IF;
     
-    IF COALESCE (ioId, 0) <> 0
+    IF EXISTS(SELECT COALESCE (ObjectLink_Member_Unit.ChildObjectId, 0)
+              FROM ObjectLink AS ObjectLink_User_Member
+
+                   INNER JOIN ObjectLink AS ObjectLink_Member_Unit
+                                        ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                       AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+              WHERE ObjectLink_User_Member.ObjectId = inUserId
+                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())
     THEN
-      SELECT MovementItemString.ValueData
-      INTO vbComingValueDayUser
-      FROM MovementItemString
-      WHERE MovementItemString.DescId = zc_MIString_ComingValueDayUser()
-        AND MovementItemString.MovementItemId = ioId;
+       SELECT COALESCE (ObjectLink_Member_Unit.ChildObjectId, 0)
+       INTO vbUnitID
+       FROM ObjectLink AS ObjectLink_User_Member
+
+            INNER JOIN ObjectLink AS ObjectLink_Member_Unit
+                                 ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+       WHERE ObjectLink_User_Member.ObjectId = inUserId
+         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member();
     ELSE
-      vbComingValueDayUser := '0000000000000000000000000000000';
+       vbUnitID := 0;
     END IF;
 
-    IF COALESCE (vbComingValueDayUser, '') = ''
+    IF COALESCE(ioId, 0) = 0 AND vbUnitID = 0
     THEN
-      vbComingValueDayUser := '0000000000000000000000000000000';
-    END IF;
+        RAISE EXCEPTION 'Ошибка. У физ. лица не заполнено подразделение.';
+    END IF;    
 
-    IF ioTypeId > 0
+    IF ioValueStart <> ''
     THEN
-      vbValue := CASE ioValue WHEN '8:00' THEN 1
-                              WHEN '9:00' THEN 2
-                              WHEN '10:00' THEN 3
-                              WHEN '7:00' THEN 4
-                              WHEN '12:00' THEN 5
-                              WHEN '21:00' THEN 7
-                              WHEN 'В' THEN 9
-                              ELSE 0 END;
+       vbDateStart := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueStart::Time;
 
-      vbComingValueDay := SUBSTRING(vbComingValueDay, 1, ioTypeId - 1) || vbValue::TVarChar || SUBSTRING(vbComingValueDay, ioTypeId + 1, 31);
-
-      vbValueUser := CASE ioValueUser WHEN '8:00' THEN 1
-                                      WHEN '9:00' THEN 2
-                                      WHEN '10:00' THEN 3
-                                      WHEN '7:00' THEN 4
-                                      WHEN '12:00' THEN 5
-                                      WHEN '21:00' THEN 7
-                                      WHEN 'В' THEN 9
-                                      ELSE 0 END;
-
-      vbComingValueDayUser := SUBSTRING(vbComingValueDayUser, 1, ioTypeId - 1) || vbValueUser::TVarChar || SUBSTRING(vbComingValueDayUser, ioTypeId + 1, 31);
+      IF date_part('minute',  vbDateStart) not in (0, 30) 
+      THEN
+        RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
+      END IF;
     END IF;
 
+    IF ioValueEnd <> ''
+    THEN
+       vbDateEnd := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueEnd::Time;
+
+      IF date_part('minute',  vbDateEnd) not in (0, 30)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
+      END IF;
+    END IF;
+      
+    IF ioValueStart <> '' and ioValueEnd <> '' and vbDateStart > vbDateEnd
+    THEN
+      vbDateEnd := vbDateEnd + interval '1 day';
+    END IF;
+    
+    -- сохранили мастер если надо
+    IF COALESCE(ioId, 0) = 0 
+    THEN
+      ioId := lpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := ioId                  -- Ключ объекта <Элемент мастера>
+                                                          , inMovementId          := inMovementId          -- ключ Документа
+                                                          , inPersonId            := inUserId              -- сотрудник
+                                                          , inComingValueDay      := ''                    -- Приходы на работу по дням
+                                                          , inComingValueDayUser  := ''                    -- Приходы на работу по дням
+                                                          , inUserId              := vbUserId              -- пользователь
+                                                            );
+    ELSEIF vbUnitID <> 0 AND
+           COALESCE((SELECT COALESCE (MovementItemLinkObject.ObjectId, 0) 
+                     FROM MovementItemLinkObject 
+                     WHERE MovementItemLinkObject.MovementItemId = ioId
+                       AND MovementItemLinkObject.DescId = zc_MILinkObject_Unit())) = 0
+    THEN
+       -- сохранили связь с <Подразделением>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, vbUnitID);    
+    END IF;
+    
+    IF EXISTS(SELECT ID
+              FROM MovementItem
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.ParentID = ioId
+                AND MovementItem.Amount = ioTypeId
+                AND MovementItem.DescId = zc_MI_Child())
+    THEN
+       SELECT ID
+       INTO vbParentId
+       FROM MovementItem
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.ParentID = ioId
+         AND MovementItem.Amount = ioTypeId
+         AND MovementItem.DescId = zc_MI_Child();
+    END IF;
+
+    IF COALESCE(vbParentId, 0) <> 0 AND COALESCE ((SELECT ObjectId FROM MovementItem WHERE ID = vbParentId), 0) <> 0
+    THEN
+       SELECT ObjectId 
+       INTO vbUnitID
+       FROM MovementItem WHERE ID = vbParentId;
+    END IF;    
+    
+    IF ioValue <> '' AND 
+       EXISTS(SELECT ValueData FROM ObjectString AS PayrollType_ShortName
+              WHERE PayrollType_ShortName.ValueData = ioValue
+                AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName())
+    THEN
+      SELECT ObjectId 
+      INTO vbPayrollType
+      FROM ObjectString AS PayrollType_ShortName
+      WHERE PayrollType_ShortName.ValueData = ioValue
+        AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName();
+    ELSE
+      vbPayrollType := 0;
+    END IF;
+    
+    --RAISE EXCEPTION 'Ошибка. В разработке % % % % % %', vbParentId, vbUnitID, ioTypeId, vbPayrollType, vbDateStart, vbDateEnd;
+        
     -- сохранили
-    ioId := lpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := ioId                  -- Ключ объекта <Элемент документа>
-                                                        , inMovementId          := inMovementId          -- ключ Документа
-                                                        , inPersonId            := inUserId              -- сотрудник
-                                                        , inComingValueDay      := vbComingValueDay      -- Приходы на работу по дням
-                                                        , inComingValueDayUser  := vbComingValueDayUser  -- Приходы на работу по дням
-                                                        , inUserId              := vbUserId              -- пользователь
-                                                         );
+    vbParentId := lpInsertUpdate_MovementItem_EmployeeSchedule_Child (ioId                  := vbParentId            -- Ключ объекта <Элемент документа>
+                                                                    , inMovementId          := inMovementId          -- ключ Документа
+                                                                    , inParentId            := ioId                  -- элемент мастер
+                                                                    , inUnitID              := vbUnitID              -- Подразделение
+                                                                    , inAmount              := ioTypeId              -- День
+                                                                    , inPayrollTypeID       := vbPayrollType         -- Тип дня
+                                                                    , inDateStart           := vbDateStart           -- Приходы на работу по дням
+                                                                    , inDateEnd             := vbDateEnd             -- Приходы на работу по дням
+                                                                    , inUserId              := vbUserId              -- пользователь
+                                                                     );
 
     --
     IF ioTypeId > 0
     THEN
-      ioValue := lpDecodeValueDay(ioTypeId, vbComingValueDay);
-      ioValueUser := lpDecodeValueDay(ioTypeId, vbComingValueDayUser);
+       SELECT PayrollType_ShortName.ValueData                                              AS PThortName
+            , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')                                   AS TimeStart
+            , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')                                     AS TimeEnd
+       INTO ioValue, ioValueStart, ioValueEnd 
+
+       FROM  MovementItem AS MIChild
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                             ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                            AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+
+            LEFT JOIN ObjectString AS PayrollType_ShortName
+                                   ON PayrollType_ShortName.ObjectId = MILinkObject_PayrollType.ObjectId
+                                  AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
+
+            LEFT JOIN MovementItemDate AS MIDate_Start
+                                       ON MIDate_Start.MovementItemId = MIChild.Id
+                                      AND MIDate_Start.DescId = zc_MIDate_Start()
+
+            LEFT JOIN MovementItemDate AS MIDate_End
+                                       ON MIDate_End.MovementItemId = MIChild.Id
+                                      AND MIDate_End.DescId = zc_MIDate_End()
+
+       WHERE MIChild.ID = vbParentId;
     END IF;
 
 END;
@@ -126,5 +219,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_EmployeeScheduleNew (, inSession:= '2')
-
 

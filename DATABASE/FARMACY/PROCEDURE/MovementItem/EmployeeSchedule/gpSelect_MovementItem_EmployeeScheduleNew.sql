@@ -82,8 +82,7 @@ BEGIN
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
                           ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField,
-                          EXTRACT(DAY FROM tmpOperDate.OperDate)::TVarChar   AS ValueFieldUser,
-                          ' '::TVarChar                                      AS ValueFieldNull
+                          EXTRACT(DAY FROM tmpOperDate.OperDate)::TVarChar   AS ValueFieldUser
                FROM tmpOperDate
                    LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
                    LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1
@@ -1250,5 +1249,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleNew (Integer, TDateTime, Bo
 */
 
 -- тест
---
-select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15463866 , inDate := ('01.09.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15463866 , inDate := ('01.09.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

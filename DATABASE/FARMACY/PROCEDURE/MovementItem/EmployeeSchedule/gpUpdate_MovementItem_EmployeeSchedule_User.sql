@@ -1,7 +1,7 @@
 -- Function: gpUpdate_MovementItem_EmployeeSchedule_User()
 
 DROP FUNCTION IF EXISTS gpUpdate_MovementItem_EmployeeSchedule_User(TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_EmployeeSchedule_User(TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_EmployeeSchedule_User(TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_EmployeeSchedule_User(
     IN inOperDate            TDateTime,  -- Дата
@@ -84,9 +84,9 @@ BEGIN
       vbDateEnd := vbDateEnd + interval '1 day';
     END IF;
       
-    IF date_part('minute',  vbDateStart) not in (0, 30) AND date_part('minute',  vbDateEnd) not in (0, 30)
+    IF date_part('minute',  vbDateStart) not in (0, 30) OR date_part('minute',  vbDateEnd) not in (0, 30)
     THEN
-      RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны получасу.';
+      RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
     END IF;
     
       -- Наличие записи по дню

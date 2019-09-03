@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_EmployeeSchedule_Child(
     IN inMovementId          Integer   , -- ключ Документа
     IN inParentId            Integer   , -- элемент мастер
     IN inUnitId              Integer   , -- подразделение
-    IN inAmount              TFloat    , -- Сумма начислено
+    IN inAmount              TFloat    , -- День
     IN inPayrollTypeID       Integer   , -- Тип начисления
     IN inDateStart           TDateTime , -- Дата время начала смены
     IN inDateEnd             TDateTime , -- Дата время конца счены
@@ -30,10 +30,16 @@ BEGIN
     END IF;
 
      -- сохранили свойство <Дата время начала смены>
-    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Start(), ioId, inDateStart);
+    IF inDateStart IS NOT NULL
+    THEN
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Start(), ioId, inDateStart);
+    END IF;
 
      -- сохранили свойство <Дата время конца счены>
-    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_End(), ioId, inDateEnd);
+    IF inDateEnd IS NOT NULL
+    THEN
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_End(), ioId, inDateEnd);
+    END IF;
 
     -- сохранили протокол
     --PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
@@ -47,6 +53,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.09.19                                                        *
  31.08.19                                                        *
 */
 

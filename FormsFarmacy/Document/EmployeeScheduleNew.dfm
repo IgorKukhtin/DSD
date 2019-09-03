@@ -195,6 +195,8 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Properties.SpinButtons.Visible = False
             Properties.TimeFormat = tfHourMin
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -549,13 +551,6 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = CrossDBViewAddOn
-          ComponentItem = 'TypeId'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ShortName'
           Value = Null
           Component = CrossDBViewAddOn
@@ -579,7 +574,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         DataSet = HeaderCDS
       end
       item
-        DataSet = HeaderPrewCDS
+        DataSet = HeaderPrevCDS
       end
       item
         DataSet = MasterCDS
@@ -1093,7 +1088,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Top = 336
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EmployeeScheduleNew_TotalSumm'
+    StoredProcName = 'gpGet_Movement_EmployeeSchedule_TotalSumm'
     Left = 668
     Top = 228
   end
@@ -1130,7 +1125,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    HeaderDataSet = HeaderPrewCDS
+    HeaderDataSet = HeaderPrevCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = ValuePrev
     Left = 800
@@ -1225,17 +1220,17 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
+    Left = 664
     Top = 296
   end
-  object HeaderPrewCDS: TClientDataSet
+  object HeaderPrevCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 568
     Top = 168
   end
   object spUpdateUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeScheduleNew_Unit'
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_Unit'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1260,7 +1255,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Top = 305
   end
   object spUpdateSubstitutionUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeScheduleNew_SubstitutionUnit'
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_SubstitutionUnit'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1311,7 +1306,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnEnterList = <>
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueFieldNull'
+    HeaderColumnName = 'ValueFieldUser'
     TemplateColumn = ValueEnd
     Left = 800
     Top = 256
