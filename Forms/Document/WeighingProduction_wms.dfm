@@ -314,7 +314,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             Width = 121
           end
           object BoxName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1103#1097#1080#1082#1072
+            Caption = #1058#1080#1087' '#1103#1097#1080#1082#1072
             DataBinding.FieldName = 'BoxName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -322,7 +322,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             Width = 79
           end
           object BarCodeBoxName: TcxGridDBColumn
-            Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072
+            Caption = #1064'/'#1050' '#1103#1097#1080#1082#1072
             DataBinding.FieldName = 'BarCodeBoxName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -330,23 +330,25 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
             Width = 148
           end
           object InvNumber_Parent: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+            Caption = #8470' '#1076#1086#1082'. '#1042#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             Options.Editing = False
             Width = 123
           end
           object WmsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1042#1052#1057
+            Caption = #1064'/'#1050' '#1090#1086#1074#1072#1088#1072' ('#1042#1052#1057')'
             DataBinding.FieldName = 'WmsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064'/'#1050' 1-'#1086#1081' '#1077#1076'. '#1090#1086#1074#1072#1088#1072' ('#1042#1052#1057')'
             Options.Editing = False
             Width = 117
           end
           object LineCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1083#1080#1085#1080#1080
+            Caption = #8470' '#1083#1080#1085#1080#1080
             DataBinding.FieldName = 'LineCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -153,6 +153,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+				<Form>PUSHMessageForm</Form>
+			</DCCReference>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>
@@ -202,10 +205,8 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4 Embarcadero edition\LibD16\dclfsDB16.bpl">File C:\Program Files (x86)\FastReports\FastReport 4 Embarcadero edition\LibD16\dclfsDB16.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4 Embarcadero edition\LibD16\dclfrxe16.bpl">File C:\Program Files (x86)\FastReports\FastReport 4 Embarcadero edition\LibD16\dclfrxe16.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>

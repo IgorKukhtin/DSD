@@ -64,6 +64,8 @@ $BODY$
    DECLARE vbIsJuridical_where Boolean;
    DECLARE vbIsJuridical_Branch Boolean;
    DECLARE vbIsCost Boolean;
+   
+   DECLARE vbEndDate_olap TDateTime;
 
    DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
@@ -83,6 +85,16 @@ BEGIN
         inStartDate:= inEndDate + (INTERVAL '1 DAY');
     END IF;
 */
+
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inIsOLAP = TRUE AND inEndDate > (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable)
+       AND inStartDate <> inEndDate
+       AND 1=0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Данные для отчета есть до <%>. Измените дату отчета до <%>.', zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable)), zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable));
+    END IF;
+
+
 
     IF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
          AND ((1+7)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
@@ -113,9 +125,7 @@ BEGIN
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
-       SELECT * 
-            , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
-            , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+       SELECT *
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -131,7 +141,7 @@ BEGIN
                                              , inIsGoods
                                              , inIsGoodsKind
                                              , inSession
-                                              );
+                                              ) AS gpReport;
        RETURN;
     ELSE
     IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
@@ -222,35 +232,181 @@ BEGIN
 
 
     IF inIsOLAP = TRUE -- AND inSession = '5'
-      AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
+    AND EXISTS (SELECT 1 FROM SoldTable WHERE SoldTable.OperDate >= inStartDate)
+   -- AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
     THEN
+       -- нашли максимальную какая есть в olap
+       vbEndDate_olap:= (SELECT MAX (SoldTable.OperDate) FROM SoldTable WHERE SoldTable.OperDate >= inStartDate);
+       -- если надо раньше, меняем дату для olap
+       IF vbEndDate_olap > inEndDate THEN vbEndDate_olap:= inEndDate; END IF;
+       --
        RETURN QUERY
-       SELECT * 
+       WITH -- данные только из олап
+            tmpReport_olap AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
+                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+                                    , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+                                    , gpReport.TradeMarkId, gpReport.TradeMarkName
+                                    , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
+                                    , gpReport.GoodsPlatformName
+                                    , gpReport.JuridicalGroupName
+                                    , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
+                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+                                    , gpReport.RetailName, gpReport.RetailReportName
+                                    , gpReport.AreaName, gpReport.PartnerTagName
+                                    , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
+                                    , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
+                                    , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+                                    , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
+                                    , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
+                                    , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
+                                    , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+                        
+                                    , (gpReport.Promo_Summ) :: TFloat AS Promo_Summ, (gpReport.Sale_Summ) :: TFloat AS Sale_Summ, (gpReport.Sale_SummReal) :: TFloat AS Sale_SummReal, (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200, (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250, (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
+                                    , (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost, (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost, (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500, (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
+                                    , (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight, (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
+                                    , (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh, (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh, (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
+                                    , (gpReport.Return_Summ) :: TFloat AS Return_Summ, (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300, (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, (gpReport.Return_SummCost) :: TFloat AS Return_SummCost, (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
+                                    , (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh, (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
+                                    , (gpReport.Sale_Amount_10500_Weight) :: TFloat AS Sale_Amount_10500_Weight
+                                    , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
+                                    , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
+                                    , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                                  --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+                                  --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+                               FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
+                                                                      , vbEndDate_olap
+                                                                      , inBranchId
+                                                                      , inAreaId
+                                                                      , inRetailId
+                                                                      , inJuridicalId
+                                                                      , inPaidKindId
+                                                                      , inTradeMarkId
+                                                                      , inGoodsGroupId
+                                                                      , inInfoMoneyId
+                                                                      , inIsPartner
+                                                                      , inIsTradeMark
+                                                                      , inIsGoods
+                                                                      , inIsGoodsKind
+                                                                      , inIsContract
+                                                                      , vbIsJuridical_Branch
+                                                                      , vbIsJuridical_where
+                                                                      , vbIsPartner_where
+                                                                      , vbIsGoods_where
+                                                                      , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
+                                                                      , inSession
+                                                                       ) AS gpReport
+                              )
+           -- данные из проводок - открываются долго, по идее здесь будет 1 день
+         , tmpReport_after AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
+                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+                                    , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+                                    , gpReport.TradeMarkId, gpReport.TradeMarkName
+                                    , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
+                                    , gpReport.GoodsPlatformName
+                                    , gpReport.JuridicalGroupName
+                                    , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
+                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+                                    , gpReport.RetailName, gpReport.RetailReportName
+                                    , gpReport.AreaName, gpReport.PartnerTagName
+                                    , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
+                                    , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
+                                    , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+                                    , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
+                                    , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
+                                    , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
+                                    , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+                        
+                                    , (gpReport.Promo_Summ) :: TFloat AS Promo_Summ, (gpReport.Sale_Summ) :: TFloat AS Sale_Summ, (gpReport.Sale_SummReal) :: TFloat AS Sale_SummReal, (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200, (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250, (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
+                                    , (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost, (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost, (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500, (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
+                                    , (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight, (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
+                                    , (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh, (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh, (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
+                                    , (gpReport.Return_Summ) :: TFloat AS Return_Summ, (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300, (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, (gpReport.Return_SummCost) :: TFloat AS Return_SummCost, (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
+                                    , (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh, (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
+                                    , (gpReport.Sale_Amount_10500_Weight) :: TFloat AS Sale_Amount_10500_Weight
+                                    , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
+                                    , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
+                                    , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                                  --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+                                  --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+                               FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
+                                                                 , inEndDate
+                                                                 , inBranchId
+                                                                 , inAreaId
+                                                                 , inRetailId
+                                                                 , inJuridicalId
+                                                                 , inPaidKindId
+                                                                 , inTradeMarkId
+                                                                 , inGoodsGroupId
+                                                                 , inInfoMoneyId
+                                                                 , inIsPartner
+                                                                 , inIsTradeMark
+                                                                 , inIsGoods
+                                                                 , inIsGoodsKind
+                                                                 , inIsContract
+                                                                 , FALSE -- inIsOLAP
+                                                                 , inSession
+                                                                  ) AS gpReport
+                               WHERE vbEndDate_olap < inEndDate
+                              )
+          , tmpData AS (SELECT * FROM tmpReport_olap
+                       UNION ALL
+                        SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
+                       )
+       --
+       SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
+            , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+            , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+            , gpReport.TradeMarkId, gpReport.TradeMarkName
+            , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
+            , gpReport.GoodsPlatformName
+            , gpReport.JuridicalGroupName
+            , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
+            , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+            , gpReport.RetailName, gpReport.RetailReportName
+            , gpReport.AreaName, gpReport.PartnerTagName
+            , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
+            , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
+            , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+            , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
+            , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
+            , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
+            , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+
+            , SUM (gpReport.Promo_Summ) :: TFloat AS Promo_Summ, SUM (gpReport.Sale_Summ) :: TFloat AS Sale_Summ, SUM (gpReport.Sale_SummReal) :: TFloat AS Sale_SummReal, SUM (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200, SUM (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250, SUM (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
+            , SUM (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost, SUM (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost, SUM (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500, SUM (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
+            , SUM (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight, SUM (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
+            , SUM (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, SUM (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh, SUM (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, SUM (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh, SUM (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, SUM (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
+            , SUM (gpReport.Return_Summ) :: TFloat AS Return_Summ, SUM (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300, SUM (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, SUM (gpReport.Return_SummCost) :: TFloat AS Return_SummCost, SUM (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
+            , SUM (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, SUM (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh, SUM (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, SUM (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
+            , SUM (gpReport.Sale_Amount_10500_Weight) :: TFloat AS Sale_Amount_10500_Weight
+            , SUM (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
+            , SUM (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
+            , SUM (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
-       FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
-                                              , inEndDate
-                                              , inBranchId
-                                              , inAreaId
-                                              , inRetailId
-                                              , inJuridicalId
-                                              , inPaidKindId
-                                              , inTradeMarkId
-                                              , inGoodsGroupId
-                                              , inInfoMoneyId
-                                              , inIsPartner
-                                              , inIsTradeMark
-                                              , inIsGoods
-                                              , inIsGoodsKind
-                                              , inIsContract
-                                              , vbIsJuridical_Branch
-                                              , vbIsJuridical_where
-                                              , vbIsPartner_where
-                                              , vbIsGoods_where
-                                              , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
-                                              , inSession
-                                               );
+       FROM tmpData AS gpReport
+       GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
+              , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+              , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+              , gpReport.TradeMarkId, gpReport.TradeMarkName
+              , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
+              , gpReport.GoodsPlatformName
+              , gpReport.JuridicalGroupName
+              , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
+              , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+              , gpReport.RetailName, gpReport.RetailReportName
+              , gpReport.AreaName, gpReport.PartnerTagName
+              , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
+              , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
+              , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+              , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
+              , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
+              , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
+              , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+               ;
+       --
        RETURN;
+       
     END IF;
 
 
@@ -766,4 +922,4 @@ $BODY$
 Склад Приход / Расход по дате склад
 */
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.02.2019', inEndDate:= '01.02.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());

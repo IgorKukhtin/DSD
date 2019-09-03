@@ -125,8 +125,8 @@ BEGIN
              , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
              , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
         FROM ObjectBoolean AS ObjectBoolean_SUN
-             LEFT JOIN ObjectFloat AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = ObjectBoolean_SUN.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN
-             LEFT JOIN ObjectFloat AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = ObjectBoolean_SUN.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN
+             LEFT JOIN ObjectFloat AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = ObjectBoolean_SUN.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
+             LEFT JOIN ObjectFloat AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = ObjectBoolean_SUN.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
         WHERE ObjectBoolean_SUN.ValueData = TRUE AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN();
 
      IF inStep = 1
@@ -509,7 +509,7 @@ BEGIN
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = _tmpRemains_all.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = _tmpRemains_all.UnitId
         -- !!!только с таким НТЗ!!!
-        WHERE _tmpRemains_all.MCS >= 0.5
+         WHERE _tmpRemains_all.MCS >= 1.0
          AND (_tmpUnit_SUN.KoeffInSUN = 0 OR _tmpUnit_SUN_balance.KoeffInSUN < _tmpUnit_SUN.KoeffInSUN)
        ;
 
@@ -1176,7 +1176,7 @@ BEGIN
              IF vbAmountResult > vbAmount
              THEN
                  -- если в остатках "дробное" - отдаем "всю дробную часть", т.к. нельзя что б дробная была более чем в 1-ой аптеке
-                 IF FLOOR(vbAmount) <> vbAmount
+                 /*IF FLOOR(vbAmount) <> vbAmount
                  THEN
                      -- отбрас.дробную.Остаток + дробная часть "весь" остаток
                      vbAmount_calc:= FLOOR (vbAmount) + vbAmount_save - FLOOR (vbAmount_save);
@@ -1187,7 +1187,7 @@ BEGIN
                      ELSE -- заменили
                           vbAmount:= vbAmount_calc;
                      END IF;
-                 END IF;
+                 END IF;*/
                  -- получилось в Автозаказе больше чем в остатках, т.е. отдаем весь "СРОК"
                  INSERT INTO _tmpResult_Partion (UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
                     SELECT vbUnitId_from

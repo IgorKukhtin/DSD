@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummNalog TFloat, SummMinus TFloat, SummFine TFloat, SummAdd TFloat, SummHoliday TFloat, SummHosp TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
-             , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
+             , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
              , SummRemains TFloat, SummCardSecondRemains TFloat
              , isCalculated Boolean
              , Comment TVarChar
@@ -376,7 +376,8 @@ BEGIN
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmpContainer.isAvance = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmpContainer.isAvance = TRUE AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmpContainer.isAvance = TRUE AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond())  THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
@@ -423,6 +424,7 @@ BEGIN
                                    , tmpParent.SummPhone
                                    , tmpMIContainer.Amount_current
                                    , tmpMIContainer.Amount_avance
+                                   , tmpMIContainer.Amount_avance_ret
                                    , tmpMIContainer.AmountCardSecond_avance
                                    , tmpMIContainer.Amount_service
                               FROM tmpParent
@@ -457,6 +459,7 @@ BEGIN
                                    , tmpService.SummPhone
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
+                                   , tmpService.Amount_avance_ret
                                    , tmpService.AmountCardSecond_avance
                                    , tmpService.Amount_service
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
@@ -515,10 +518,11 @@ BEGIN
             , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
             , tmpData.SummPhone            :: TFloat AS SummPhone
 
-            , tmpData.Amount_current :: TFloat AS Amount_current
-            , tmpData.Amount_avance  :: TFloat AS Amount_avance
-            , tmpData.Amount_service :: TFloat AS Amount_service
-            , (COALESCE (tmpData.SummToPay_cash, 0)       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
+            , tmpData.Amount_current     :: TFloat AS Amount_current
+            , tmpData.Amount_avance      :: TFloat AS Amount_avance
+            , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
+            , tmpData.Amount_service     :: TFloat AS Amount_service
+            , (COALESCE (tmpData.SummToPay_cash, 0)       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END - COALESCE (tmpData.Amount_avance_ret, 0) - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
             , (COALESCE (tmpData.SummCardSecond, 0) + COALESCE (tmpData.SummCardSecondCash, 0) - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END - COALESCE (tmpData.AmountCardSecond_avance, 0)) :: TFloat AS SummCardSecondRemains
 
             , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated

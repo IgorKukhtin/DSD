@@ -4,9 +4,9 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -364
+  ExplicitLeft = -572
   ExplicitWidth = 1378
-  ExplicitHeight = 425
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1389,6 +1389,7 @@
           ToParam.DataType = ftBoolean
           ToParam.MultiSelectSeparator = ','
         end>
+      ShortCut = 0
     end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
@@ -1759,10 +1760,9 @@
         item
           StoredProc = spSelect
         end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1086#1085'-'#1083#1072#1081#1085', '#1076#1086#1083#1075#1086')'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1086#1085'-'#1083#1072#1081#1085', '#1076#1086#1083#1075#1086')'
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' - '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1089#1077#1081#1095#1072#1089' ('#1086#1085'-'#1083#1072#1081#1085', '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1076#1086#1083#1075#1086')'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' - '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1089#1077#1081#1095#1072#1089' ('#1086#1085'-'#1083#1072#1081#1085', '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1076#1086#1083#1075#1086')'
       ImageIndex = 41
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

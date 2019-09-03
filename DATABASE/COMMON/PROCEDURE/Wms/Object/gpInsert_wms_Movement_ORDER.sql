@@ -221,11 +221,13 @@ BEGIN
                                  --
                                , COALESCE (' №' || tmpMovement.InvNumber
                                         || ' Товар: (' || Object_Goods.ObjectCode :: TVarChar || ')'
-                                        || Object_Goods.ValueData || ' ' || COALESCE (Object_GoodsKind.ValueData, '')
+                                        || zfCalc_Text_replace (zfCalc_Text_replace (Object_Goods.ValueData, CHR(39), '`'), '"', '`')
+                                 || ' ' || zfCalc_Text_replace (zfCalc_Text_replace (COALESCE (Object_GoodsKind.ValueData, ''), CHR(39), '`'), '"', '`')
                                          , tmpMI_all.sku_id   :: TVarChar) AS sku_id
                                , COALESCE (' №' || tmpMovement.InvNumber
                                         || ' Товар: (' || Object_Goods.ObjectCode :: TVarChar || ')'
-                                        || Object_Goods.ValueData || ' ' || COALESCE (Object_GoodsKind.ValueData, '')
+                                        || zfCalc_Text_replace (zfCalc_Text_replace (Object_Goods.ValueData, CHR(39), '`'), '"', '`')
+                                 || ' ' || zfCalc_Text_replace (zfCalc_Text_replace (COALESCE (Object_GoodsKind.ValueData, ''), CHR(39), '`'), '"', '`')
                                          , tmpMI_all.sku_code :: TVarChar) AS sku_code
                                  -- Количество WMS
                                , (zfCalc_QTY_toWMS (inGoodsTypeKindId:= tmpMI_all.GoodsTypeKindId

@@ -125,8 +125,8 @@ BEGIN
                             -- минус Списание
                             SELECT MIContainer.ContainerId
                                  , MIContainer.OperDate
-                                 , zc_MI_Child() AS DescId_mi
-                                 , 1 * SUM (MIContainer.Amount) AS OperCount
+                                 , zc_MI_Master() AS DescId_mi
+                                 , -1 * SUM (MIContainer.Amount) AS OperCount
                             FROM MovementItemContainer AS MIContainer 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
@@ -935,7 +935,7 @@ BEGIN
                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                               INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                               AND Object_InfoMoney_View.InfoMoneyGroupId        <> zc_Enum_InfoMoneyGroup_30000()       -- Доходы
-                                                           -  AND (Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                              AND (Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                 OR inUnitId = 8451 -- Цех Упаковки
                                                                   )
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId  <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные  + Ирна

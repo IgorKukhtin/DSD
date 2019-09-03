@@ -379,6 +379,7 @@ type
     procedure pLoadDocumentItem_Delete_Fl(SaveCount:Integer);
 
     procedure pLoadFillSoldTable;
+    procedure pLoadFillSoldTable_curr;
     procedure pLoadGoodsListSale;
     procedure pLoadFillAuto;
 
@@ -1559,50 +1560,54 @@ begin
      zc_rvYes:=0;
      zc_rvNo:=1;
      //
-     if ParamStr(1)='alan_dp_ua' then
-     with toZConnection do begin
-        Connected:=false;
-        HostName:='integer-srv.alan.dp.ua';
-        User:='admin';
-        Password:='vas6ok';
-        try Connected:=true; except ShowMessage ('not Connected');end;
-        //
-        isGlobalLoad:=zc_rvYes;
-        if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
-        Connected:=false;
-     end
-     else
-     if ParamStr(1)='alan_dp_ua_test' then
-     with toZConnection do begin
-        Connected:=false;
-        HostName:='integer-srv-r.alan.dp.ua';
-        User:='admin';
-        Password:='vas6ok';
-        try Connected:=true; except ShowMessage ('not Connected');end;
-        //
-        isGlobalLoad:=zc_rvYes;
-        if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
-        Connected:=false;
-     end
-     else
-     with toZConnection do begin
-        Connected:=false;
-        HostName:='localhost';
-        User:='postgres';
-        Password:='postgres';
-        try Connected:=true; except ShowMessage ('not Connected');end;
-        //
-        //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
-        isGlobalLoad:=zc_rvNo;
-        if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
-        //
-        Connected:=false;
+     try
+         if ParamStr(1)='alan_dp_ua' then
+         with toZConnection do begin
+            Connected:=false;
+            HostName:='integer-srv.alan.dp.ua';
+            User:='admin';
+            Password:='vas6ok';
+            Connected:=true;
+            //
+            isGlobalLoad:=zc_rvYes;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            Connected:=false;
+         end
+         else
+         if ParamStr(1)='alan_dp_ua_test' then
+         with toZConnection do begin
+            Connected:=false;
+            HostName:='integer-srv-r.alan.dp.ua';
+            User:='admin';
+            Password:='vas6ok';
+            Connected:=true;
+            //
+            isGlobalLoad:=zc_rvYes;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            Connected:=false;
+         end
+         else
+         with toZConnection do begin
+            Connected:=false;
+            HostName:='localhost';
+            User:='postgres';
+            Password:='postgres';
+            Connected:=true;
+            //
+            //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
+            isGlobalLoad:=zc_rvNo;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            //
+            Connected:=false;
+         end;
+     except
+          ShowMessage ('not Connected');
      end;
      //
      //cbAllGuide.Checked:=true;
@@ -1620,10 +1625,14 @@ begin
      //
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'јдмин', 'qsxqsxw1', gc_User);
      //
-     fOpenSqToQuery ('select zc_Enum_PaidKind_FirstForm from zc_Enum_PaidKind_FirstForm()');
-     zc_Enum_PaidKind_FirstForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_FirstForm').AsInteger;
-     fOpenSqToQuery ('select zc_Enum_PaidKind_SecondForm from zc_Enum_PaidKind_SecondForm()');
-     zc_Enum_PaidKind_SecondForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_SecondForm').AsInteger;
+     try
+         fOpenSqToQuery ('select zc_Enum_PaidKind_FirstForm from zc_Enum_PaidKind_FirstForm()');
+         zc_Enum_PaidKind_FirstForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_FirstForm').AsInteger;
+         fOpenSqToQuery ('select zc_Enum_PaidKind_SecondForm from zc_Enum_PaidKind_SecondForm()');
+         zc_Enum_PaidKind_SecondForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_SecondForm').AsInteger;
+     except
+          ShowMessage ('not zc_Enum_PaidKind_FirstForm + zc_Enum_PaidKind_SecondForm');
+     end;
      //
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1679,6 +1688,9 @@ begin
      // !!!важно!!!
      cbOnlySale.Checked:=  System.Pos('_SALE',ParamStr(2))>0;
 
+     if (ParamStr(2)='autoFillSoldTable_curr')
+     then pLoadFillSoldTable_curr;
+
      if (ParamStr(2)='autoFillSoldTable') or (ParamStr(2)='autoFillGoodsList')
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-28)+') as RetV');
@@ -1702,7 +1714,8 @@ begin
 
                // !!!за "текущий" - не надо!!! + или надо ...
                if  ((EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))
-                 or (ParamStr(3)='++'))
+                 or (ParamStr(3)='++')
+                   )
                 and (ParamStr(2)='autoFillSoldTable')
                then begin
                     cbFillSoldTable.Checked:=true;
@@ -20522,11 +20535,57 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadFillSoldTable_curr;
+var Date1, Date2 : TDateTime;
+begin
+     fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
+     Date1:= fromSqlQuery.FieldByName('RetV').AsDateTime;
+
+     //fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-1)+') as RetV');
+     Date2:=Date-1;
+
+     StartDateEdit.Text:=DateToStr(Date1);
+     EndDateEdit.Text:=DateToStr(Date2);
+     cbFillSoldTable.Checked:= true;
+     //
+     OKPOEdit.Text:= ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2);
+
+     fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(DateToStr(Date1))
+                                               +','+FormatToVarCharServer_isSpace(DateToStr(Date2))
+                                               +',zfCalc_UserAdmin())')
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillSoldTable;
+var Date1, Date2 : TDateTime;
 begin
      if (not cbFillSoldTable.Checked)or(not cbFillSoldTable.Enabled) then exit;
      //
-     fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateEdit.Text)+',zfCalc_UserAdmin())')
+     if (ParamStr(2)='autoFillSoldTable') then
+     begin
+          fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-28)+') as RetV');
+          Date1:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+
+          fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-28)+') as RetV');
+          Date2:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+          // текущий мес€ц
+          fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-2)+') as RetV');
+          // !!!за "текущий" - надо!!! -2 дн€
+          if Date2 = fromSqlQuery.FieldByName('RetV').AsDateTime
+          then Date2:= Date-2;
+          //
+          OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
+     end
+     else
+     begin
+          Date1:= StrToDate (StartDateEdit.Text);
+          Date2:= StrToDate (EndDateEdit.Text);
+          //
+          OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + 'pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
+     end;
+     //
+     fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(DateToStr(Date1))
+                                               +','+FormatToVarCharServer_isSpace(DateToStr(Date2))
+                                               +',zfCalc_UserAdmin())');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillAuto;

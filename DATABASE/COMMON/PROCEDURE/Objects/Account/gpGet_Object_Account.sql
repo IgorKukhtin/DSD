@@ -52,7 +52,7 @@ BEGIN
            , CAST (0 as Integer)    AS AccountKindId
            , CAST (0 as Integer)    AS AccountKindCode
            , CAST ('' as TVarChar)  AS AccountKindName
-           , CAST (NULL AS Boolean) AS isPrintDetail
+           , CAST (FALSE AS Boolean) AS isPrintDetail
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
