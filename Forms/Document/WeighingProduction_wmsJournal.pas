@@ -46,6 +46,7 @@ type
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     StatusCode: TcxGridDBColumn;
+    StatusCode_wms: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
@@ -100,6 +101,16 @@ type
     BarCodeBoxName_2: TcxGridDBColumn;
     BarCodeBoxName_3: TcxGridDBColumn;
     BarCodeBoxName_1: TcxGridDBColumn;
+    OperDate_parent: TcxGridDBColumn;
+    InvNumber_parent: TcxGridDBColumn;
+    WeighingNumber_parent: TcxGridDBColumn;
+    OperDate_parent_main: TcxGridDBColumn;
+    InvNumber_parent_main: TcxGridDBColumn;
+    GoodsTypeKindName: TcxGridDBColumn;
+    BarCodeBoxName: TcxGridDBColumn;
+    BoxName: TcxGridDBColumn;
+    sku_id: TcxGridDBColumn;
+    sku_code: TcxGridDBColumn;
   private
   public
   end;

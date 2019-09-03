@@ -151,7 +151,7 @@ BEGIN
             LEFT JOIN tmpGoods_wms ON tmpGoods_wms.GoodsId     = Object_Goods.GoodsId
                                   AND tmpGoods_wms.GoodsKindId = Object_Goods.GoodsKindId
        WHERE inBranchCode <> 104
-            -- для SORT.ini - ограничиваем
+             -- для SORT.ini - ограничиваем
           OR tmpGoods_ScaleCeh.GoodsId > 0
       ;
 
@@ -196,6 +196,7 @@ BEGIN
                -- ProtocolData
              , inIsGoodsComplete :: TVarChar
     || ', ' || inBarCode
+    || ', ' || inBranchCode      :: TVarChar
     || ', ' || inSession
         ;
 

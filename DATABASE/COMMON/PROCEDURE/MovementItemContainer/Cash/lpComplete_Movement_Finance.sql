@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbTmp Integer;
 BEGIN
      -- Проверка
-     IF EXISTS (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) <> 0)
+     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE), (SELECT SUM (OperSumm) FROM _tmpItem);
      END IF;
@@ -342,6 +342,9 @@ BEGIN
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
+                                           OR (_tmpItem.OperSumm_Diff  <> 0
+                                           AND _tmpItem.MovementDescId = zc_Movement_Cash()
+                                              )
                                               THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
 
                                          WHEN _tmpItem.MovementDescId = zc_Movement_LossPersonal()
@@ -507,6 +510,7 @@ BEGIN
                                                                                                                                              , zc_Enum_AccountDirection_40200()
                                                                                                                                              , zc_Enum_AccountDirection_40500()
                                                                                                                                              , zc_Enum_AccountDirection_40600()
+                                                                                                                                             , 4144357 -- Курсовая разница - zc_Enum_AccountDirection_40800
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
@@ -724,7 +728,8 @@ BEGIN
                                                                              )
                                             ELSE 0
                                        END
-                  , ContainerId_Diff = CASE WHEN _tmpItem.OperSumm_Diff <> 0
+                  , ContainerId_Diff = CASE WHEN _tmpItem.OperSumm_Diff  <> 0
+                                             AND _tmpItem.MovementDescId <> zc_Movement_Cash()
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := zc_Enum_Account_100301() -- прибыль текущего периода
@@ -739,8 +744,10 @@ BEGIN
                                                                              )
                                             ELSE 0
                                        END
-     WHERE _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
-        OR _tmpItem.OperSumm_Diff <> 0
+     WHERE _tmpItem.CurrencyId      <> zc_Enum_Currency_Basis()
+        OR (_tmpItem.OperSumm_Diff  <> 0
+        AND _tmpItem.MovementDescId = zc_Movement_Cash()
+           )
     ;
 
 
@@ -773,7 +780,7 @@ BEGIN
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
 
             , 0                                   AS ParentId
-            , _tmpItem.OperSumm + COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
+            , _tmpItem.OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) END AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
@@ -818,7 +825,7 @@ BEGIN
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
 
             , 0                                   AS ParentId
-            , -1 * COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
+            , -1 * CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) END AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive  -- !!!такая же!!!
        FROM _tmpItem
@@ -849,7 +856,7 @@ BEGIN
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
-            , _tmpItem.OperSumm_Diff
+            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem.OperSumm_Diff, 0) END AS OperSumm
             , _tmpItem.OperDate
             , FALSE AS IsActive -- !!!всегда по Кредиту!!!
        FROM _tmpItem

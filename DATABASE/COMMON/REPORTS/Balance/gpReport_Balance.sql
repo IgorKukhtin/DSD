@@ -155,7 +155,7 @@ end if;*/
 
            , ObjectDesc_by.ItemName    AS ByObjectItemName
            -- , Object_by.ObjectCode         AS ByObjectCode
-           , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_by.ValueData) :: TVarChar AS ByObjectName
+           , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_by.ValueData || COALESCE (' * ' || Object_Currency.ValueData, '')) :: TVarChar AS ByObjectName
 
            , ObjectDesc_Goods.ItemName AS GoodsItemName
            -- , Object_Goods.ObjectCode      AS GoodsCode
@@ -229,6 +229,7 @@ end if;*/
                  , tmpReportOperation_two.InfoMoneyId
                  , tmpReportOperation_two.InfoMoneyId_Detail
                  , tmpReportOperation_two.CashId
+                 , tmpReportOperation_two.CurrencyId
                  , tmpReportOperation_two.BankAccountId
                  , tmpReportOperation_two.JuridicalId
                  , tmpReportOperation_two.MemberId
@@ -256,6 +257,7 @@ end if;*/
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                  , 0 AS InfoMoneyId_Detail -- ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                  , ContainerLinkObject_Cash.ObjectId AS CashId
+                 , ContainerLinkObject_Currency.ObjectId AS CurrencyId
                  , ContainerLinkObject_BankAccount.ObjectId AS BankAccountId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
                  , ContainerLinkObject_Member.ObjectId AS MemberId
@@ -309,6 +311,9 @@ end if;*/
                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
                                              AND ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401()
 
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Currency
+                                              ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_Currency.DescId      = zc_ContainerLinkObject_Currency()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
@@ -349,6 +354,7 @@ end if;*/
                    , ContainerLinkObject_InfoMoney.ObjectId
                    -- , ContainerLinkObject_InfoMoneyDetail.ObjectId
                    , ContainerLinkObject_Cash.ObjectId
+                   , ContainerLinkObject_Currency.ObjectId
                    , ContainerLinkObject_BankAccount.ObjectId
                    , ContainerLinkObject_Juridical.ObjectId
                    , ContainerLinkObject_Member.ObjectId
@@ -377,6 +383,7 @@ end if;*/
            -- LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, CASE WHEN CarId <> 0 THEN CarId WHEN MemberId <> 0 THEN MemberId ELSE UnitId END)))
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
+           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = CurrencyId
 
            LEFT JOIN ObjectDesc AS ObjectDesc_by    ON ObjectDesc_by.Id    = Object_by.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId

@@ -10,11 +10,16 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbServiceDate TDateTime;
+   DECLARE vbOperDate_currency TDateTime;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbPositionId Integer;
+   DECLARE vbSumm_diff TFloat;
 BEGIN
      -- определили <Месяц начислений:
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId) AND MovementDate.DescId = zc_MovementDate_ServiceDate());
+     
+     -- определили 
+     vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
 
 
          -- пока определяется "из справочника", доработать - вывести на форму
@@ -72,7 +77,7 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 1.1. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -186,7 +191,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;
 
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 1.2. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpMI_Child AS (SELECT MI.*, COALESCE (MIB.ValueData, FALSE) AS isCalculated FROM MovementItem AS MI LEFT JOIN MovementItemBoolean AS MIB ON MIB.MovementItemId = MI.Id AND MIB.DescId = zc_MIBoolean_Calculated() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
@@ -388,7 +393,6 @@ BEGIN
                                  AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
        ;
 
-
      -- Проверка
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0)
         AND EXISTS (SELECT 1 FROM ObjectBoolean
@@ -400,7 +404,220 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Для статьи <%> нельзя проводить затраты по оплате.Необходимо заполнить <От кого, кому>.'
                         , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1))
                          ;
-   END IF;
+     END IF;
+
+
+     -- !!!Курсовая разница!!!
+     vbSumm_diff:= (WITH tmpItem AS (SELECT _tmpItem.ObjectId AS CashId, _tmpItem.CurrencyId, _tmpItem.OperSumm, _tmpItem.OperSumm_Currency, _tmpItem.OperDate
+                                     FROM _tmpItem
+                                     WHERE _tmpItem.IsMaster          = TRUE
+                                       AND _tmpItem.OperSumm_Currency <> 0
+                                    )
+                      -- итоговые суммы, по ним - курс
+                    , tmpSumm AS (SELECT SUM (tmp.OperSumm_Currency) AS OperSumm_Currency
+                                       , SUM (tmp.OperSumm)          AS OperSumm
+                                  FROM (-- остаток суммы на дату в Валюте
+                                        SELECT tmpContainer.ContainerId
+                                             , tmpContainer.AccountId
+                                             , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm_Currency
+                                             , 0                                                            AS OperSumm
+                                        FROM (SELECT Container.ParentId AS ContainerId
+                                                   , Container.Id       AS ContainerId_Currency
+                                                   , Container.ObjectId AS AccountId
+                                                   , Container.Amount
+                                                   , tmpItem.OperDate
+                                              FROM tmpItem
+                                                   INNER JOIN ContainerLinkObject AS CLO_Currency
+                                                                                  ON CLO_Currency.ObjectId = tmpItem.CurrencyId
+                                                                                 AND CLO_Currency.DescId   = zc_ContainerLinkObject_Currency()
+                                                   INNER JOIN Container ON Container.Id     = CLO_Currency.ContainerId
+                                                                       AND Container.DescId = zc_Container_SummCurrency()
+                                                   INNER JOIN Object_Account_View AS View_Account
+                                                                                  ON View_Account.AccountId      = Container.ObjectId
+                                                                                 AND View_Account.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства 
+                                                   INNER JOIN ContainerLinkObject AS CLO_Cash
+                                                                                  ON CLO_Cash.ContainerId = CLO_Currency.ContainerId
+                                                                                 AND CLO_Cash.DescId      = zc_ContainerLinkObject_Cash()
+                                                                                 AND CLO_Cash.ObjectId    = tmpItem.CashId
+                                             ) AS tmpContainer
+                                             LEFT JOIN MovementItemContainer AS MIContainer
+                                                                             ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                            AND MIContainer.OperDate    >= vbOperDate_currency
+                                        GROUP BY tmpContainer.ContainerId
+                                               , tmpContainer.ContainerId_Currency
+                                               , tmpContainer.AccountId
+                                               , tmpContainer.Amount
+                                       UNION ALL
+                                        -- остаток суммы на дату в ГРН
+                                        SELECT tmpContainer.ContainerId
+                                             , tmpContainer.AccountId
+                                             , 0                                                            AS OperSumm_Currency
+                                             , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
+                                        FROM (SELECT Container.Id       AS ContainerId
+                                                   , Container.ObjectId AS AccountId
+                                                   , Container.Amount
+                                                   , tmpItem.OperDate
+                                              FROM tmpItem
+                                                   INNER JOIN ContainerLinkObject AS CLO_Currency
+                                                                                  ON CLO_Currency.ObjectId = tmpItem.CurrencyId
+                                                                                 AND CLO_Currency.DescId   = zc_ContainerLinkObject_Currency()
+                                                   INNER JOIN Container ON Container.Id     = CLO_Currency.ContainerId
+                                                                       AND Container.DescId = zc_Container_Summ()
+                                                   INNER JOIN Object_Account_View AS View_Account
+                                                                                  ON View_Account.AccountId      = Container.ObjectId
+                                                                                 AND View_Account.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства 
+                                                   INNER JOIN ContainerLinkObject AS CLO_Cash
+                                                                                  ON CLO_Cash.ContainerId = CLO_Currency.ContainerId
+                                                                                 AND CLO_Cash.DescId      = zc_ContainerLinkObject_Cash()
+                                                                                 AND CLO_Cash.ObjectId    = tmpItem.CashId
+                                             ) AS tmpContainer
+                                             LEFT JOIN MovementItemContainer AS MIContainer
+                                                                             ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                            AND MIContainer.OperDate    >= vbOperDate_currency
+                                        GROUP BY tmpContainer.ContainerId
+                                               , tmpContainer.AccountId
+                                               , tmpContainer.Amount
+                                       ) AS tmp
+                                 )
+                    -- результат - курс "накопительный" - "факт"
+                    SELECT CASE WHEN tmpSumm.OperSumm_Currency <> 0 AND tmpItem.OperSumm_Currency <> 0 
+                                     THEN tmpItem.OperSumm_Currency
+                                        * (tmpSumm.OperSumm / tmpSumm.OperSumm_Currency
+                                         - tmpItem.OperSumm / tmpItem.OperSumm_Currency
+                                          )
+                                ELSE 0
+                           END
+                    FROM tmpItem
+                         CROSS JOIN tmpSumm
+                   );
+
+     -- 2.1. курсовая разница - баланс
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Diff
+                         , MovementItemId, ContainerId
+                         , AccountGroupId, AccountDirectionId, AccountId
+                         , ProfitLossGroupId, ProfitLossDirectionId
+                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , CurrencyId
+                         , IsActive, IsMaster
+                          )
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+             , -1 * vbSumm_diff  AS OperSumm
+             , 0                 AS OperSumm_Diff
+             , _tmpItem.MovementItemId
+
+              -- сформируем позже
+             , 0 AS ContainerId                                               
+             , 0 AS AccountGroupId
+               -- сформируем позже
+             , 4144357 AS AccountDirectionId -- Курсовая разница
+             , 4144358 AS AccountId          -- Курсовая разница
+
+               -- Группы ОПиУ: не используется
+             , 0 AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления: не используется
+             , 0 AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения: не используется
+             , 0 AS InfoMoneyGroupId
+               -- Управленческие назначения: не используется
+             , 0 AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения: не используется
+             , 0 AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: всегда 0
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: всегда из ...
+             , _tmpItem.JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , zc_Enum_Currency_Basis() AS CurrencyId
+
+             , FALSE AS IsActive
+             , FALSE AS IsMaster
+        FROM _tmpItem
+        WHERE _tmpItem.IsMaster = TRUE
+          AND vbSumm_diff <> 0
+
+       UNION ALL
+        -- ОПиУ или ...
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN Object.Id     ELSE 0 END AS ObjectId
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN Object.DescId ELSE 0 END AS ObjectDescId
+             , 1 * vbSumm_diff   AS OperSumm
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN 0 ELSE 1 * vbSumm_diff END AS OperSumm_Diff
+             , _tmpItem.MovementItemId
+
+              -- сформируем позже
+             , 0 AS ContainerId                                               
+             , 0 AS AccountGroupId
+               -- сформируем позже
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN 4144357 ELSE 0 END AS AccountDirectionId -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN 4144358 ELSE 0 END AS AccountId          -- Курсовая разница
+
+               -- Группы ОПиУ: не используется
+             , 0 AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления: не используется
+             , 0 AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения: не используется
+             , 0 AS InfoMoneyGroupId
+               -- Управленческие назначения: не используется
+             , 0 AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения: не используется
+             , 0 AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: всегда 0
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: всегда из ...
+             , _tmpItem.JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , zc_Enum_Currency_Basis() AS CurrencyId
+
+             , FALSE AS IsActive
+             , FALSE AS IsMaster
+        FROM _tmpItem
+             --
+             LEFT JOIN Object ON Object.Id = _tmpItem.ObjectId
+        WHERE _tmpItem.IsMaster = FALSE
+          AND vbSumm_diff <> 0
+       ;
 
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

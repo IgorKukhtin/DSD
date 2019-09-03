@@ -57,103 +57,107 @@ BEGIN
         FROM
        (SELECT lpInsertUpdate_MovementItem (COALESCE (MovementItem.Id, 0), zc_MI_Child(), COALESCE (tmpSumm.ObjectId, MovementItem.ObjectId), inMovementId, COALESCE (tmpSumm.OperSumm, 0), NULL) AS MovementItemId
              , COALESCE (tmpSumm.ContainerId, MovementItem.ContainerId) AS ContainerId
-        FROM (SELECT MovementItem.Id, MovementItem.ObjectId, MIFloat_ContainerId.ValueData AS ContainerId
+        FROM -- существующие элементы
+             (SELECT MovementItem.Id, MovementItem.ObjectId, MIFloat_ContainerId.ValueData AS ContainerId
               FROM MovementItem
                    LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
               WHERE MovementItem.MovementId = inMovementId
-                AND MovementItem.DescId = zc_MI_Child()
+                AND MovementItem.DescId     = zc_MI_Child()
              ) AS MovementItem
+             -- сумма курсовой разницы в грн
              FULL JOIN (SELECT tmpSumm.ContainerId
                              , tmpSumm.ObjectId
                              , SUM (tmpSumm.OperSumm) AS OperSumm
-                         FROM
-                         -- это суммы в Валюте (их надо перевести в валюту баланса и прибавить)
-                        (SELECT tmpContainer.ContainerId
-                              , tmpContainer.AccountId
-                              , tmpContainer.ObjectId
-                              , CAST ((tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0))
-                                       -- так переводится в валюту баланса
-                                     * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
-                                AS NUMERIC (16, 2)) AS OperSumm
-                         FROM (SELECT Container.ParentId                       AS ContainerId
-                                    , ContainerLinkObject_Currency.ContainerId AS ContainerId_Currency
-                                    , Container.ObjectId                       AS AccountId
-                                    , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
-                                    , Container.Amount
-                               FROM ContainerLinkObject AS ContainerLinkObject_Currency
-                                    INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
-                                                        AND Container.DescId  = zc_Container_SummCurrency()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
-                                                                  ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
-                                                                 AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
-                                                                  ON ContainerLinkObject_BankAccount.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_BankAccount.DescId       = zc_ContainerLinkObject_BankAccount()
-                                                                 AND vbPaidKindId                                 = zc_Enum_PaidKind_FirstForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
-                                                                  ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
-                                                                 AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                                                  ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
-                                                                 AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
-                               WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
-                                 AND ContainerLinkObject_Currency.DescId   = zc_ContainerLinkObject_Currency()
-                                 AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
-                              ) AS tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                             AND MIContainer.OperDate >= vbOperDate
-                         GROUP BY tmpContainer.ContainerId
-                                , tmpContainer.ContainerId_Currency
-                                , tmpContainer.AccountId
-                                , tmpContainer.ObjectId
-                                , tmpContainer.Amount
-                       UNION ALL
-                         -- это суммы в валюте баланса (их надо вычесть)
-                         SELECT tmpContainer.ContainerId
-                              , tmpContainer.AccountId
-                              , tmpContainer.ObjectId
-                              , -1 * (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) AS OperSumm
-                         FROM (SELECT ContainerLinkObject_Currency.ContainerId
-                                    , Container.ObjectId AS AccountId
-                                    , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
-                                    , Container.Amount
-                               FROM ContainerLinkObject AS ContainerLinkObject_Currency
-                                    INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
-                                                        AND Container.DescId  = zc_Container_Summ()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
-                                                                  ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
-                                                                 AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
-                                                                  ON ContainerLinkObject_BankAccount.ContainerId = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_BankAccount.DescId      = zc_ContainerLinkObject_BankAccount()
-                                                                 AND vbPaidKindId                                = zc_Enum_PaidKind_FirstForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
-                                                                  ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
-                                                                 AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                                                  ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
-                                                                 AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
-                               WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
-                                 AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
-                                 AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
-                              ) AS tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                             AND MIContainer.OperDate >= vbOperDate
-                         GROUP BY tmpContainer.ContainerId
-                                , tmpContainer.AccountId
-                                , tmpContainer.ObjectId
-                                , tmpContainer.Amount
-                        ) AS tmpSumm
+                         FROM -- это остаток суммы на дату в Валюте (их надо перевести в валюту баланса и прибавить)
+                              (SELECT tmpContainer.ContainerId
+                                    , tmpContainer.AccountId
+                                    , tmpContainer.ObjectId
+                                    , CAST ((tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0))
+                                             -- так переводится в валюту баланса
+                                           * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                      AS NUMERIC (16, 2)) AS OperSumm
+                               FROM (SELECT Container.ParentId                       AS ContainerId
+                                          , ContainerLinkObject_Currency.ContainerId AS ContainerId_Currency
+                                          , Container.ObjectId                       AS AccountId
+                                          , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
+                                          , Container.Amount
+                                     FROM ContainerLinkObject AS ContainerLinkObject_Currency
+                                          INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
+                                                              AND Container.DescId  = zc_Container_SummCurrency()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
+                                                                        ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
+                                                                       AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
+                                                                        ON ContainerLinkObject_BankAccount.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_BankAccount.DescId       = zc_ContainerLinkObject_BankAccount()
+                                                                       AND vbPaidKindId                                 = zc_Enum_PaidKind_FirstForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
+                                                                        ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
+                                                                       AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
+                                                                        ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
+                                                                       AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                     WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
+                                       AND ContainerLinkObject_Currency.DescId   = zc_ContainerLinkObject_Currency()
+                                       AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
+                                    ) AS tmpContainer
+                                    LEFT JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                   AND MIContainer.OperDate >= vbOperDate
+                               GROUP BY tmpContainer.ContainerId
+                                      , tmpContainer.ContainerId_Currency
+                                      , tmpContainer.AccountId
+                                      , tmpContainer.ObjectId
+                                      , tmpContainer.Amount
+
+                              UNION ALL
+                               -- это остаток суммы на дату в ГРН (их надо вычесть)
+                               SELECT tmpContainer.ContainerId
+                                    , tmpContainer.AccountId
+                                    , tmpContainer.ObjectId
+                                    , -1 * (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) AS OperSumm
+                               FROM (SELECT ContainerLinkObject_Currency.ContainerId
+                                          , Container.ObjectId AS AccountId
+                                          , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
+                                          , Container.Amount
+                                     FROM ContainerLinkObject AS ContainerLinkObject_Currency
+                                          INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
+                                                              AND Container.DescId  = zc_Container_Summ()
+                                                              -- !!!без виртуальной курсовой разницы!!!
+                                                              AND Container.ObjectId <> 4144358 -- Курсовая разница
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
+                                                                        ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
+                                                                       AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
+                                                                        ON ContainerLinkObject_BankAccount.ContainerId = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_BankAccount.DescId      = zc_ContainerLinkObject_BankAccount()
+                                                                       AND vbPaidKindId                                = zc_Enum_PaidKind_FirstForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
+                                                                        ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
+                                                                       AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
+                                                                        ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
+                                                                       AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                     WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
+                                       AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
+                                       AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
+                                    ) AS tmpContainer
+                                    LEFT JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                   AND MIContainer.OperDate >= vbOperDate
+                               GROUP BY tmpContainer.ContainerId
+                                      , tmpContainer.AccountId
+                                      , tmpContainer.ObjectId
+                                      , tmpContainer.Amount
+                              ) AS tmpSumm
                          GROUP BY tmpSumm.ContainerId
                                 , tmpSumm.ObjectId
                         ) AS tmpSumm ON tmpSumm.ContainerId = MovementItem.ContainerId
@@ -170,14 +174,15 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
-             , COALESCE (Object.DescId, 0) AS ObjectDescId
+             , COALESCE (Object.DescId, 0)         AS ObjectDescId
              , MovementItem.Amount AS OperSumm
-             , MovementItem.Id AS MovementItemId
+             , MovementItem.Id     AS MovementItemId
 
              , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId           -- есть значение
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                         -- не используется
@@ -212,6 +217,8 @@ BEGIN
 
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
+             
+             , vbCurrencyId AS CurrencyId
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -242,17 +249,22 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , 0 AS ObjectId
-             , 0 AS ObjectDescId
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.Id     ELSE 0 END AS ObjectId
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.DescId ELSE 0 END AS ObjectDescId
              , -1 * _tmpItem.OperSumm
              , _tmpItem.MovementItemId
 
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+              -- сформируем позже
+             , 0 AS ContainerId                                               
+             , 0 AS AccountGroupId
+               -- сформируем позже
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 4144357 ELSE 0 END AS AccountDirectionId -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 4144358 ELSE 0 END AS AccountId          -- Курсовая разница
 
                -- Группы ОПиУ: не используется
              , 0 AS ProfitLossGroupId
@@ -279,8 +291,9 @@ BEGIN
 
                -- Филиал Баланс: не используется
              , 0 AS BranchId_Balance
-               -- Филиал ОПиУ: если юр лицо относится к филиалу (захардкодил для Крыма)
-             , CASE WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
+             , CASE WHEN Object.DescId = zc_Object_Cash()
+                         THEN 0 -- т.е. НЕ ОПиУ
+                    WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                      AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
@@ -292,6 +305,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
+             , vbCurrencyId AS CurrencyId
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -300,7 +315,10 @@ BEGIN
                                           AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CLO_InfoMoney.ObjectId
              -- !!!не ошибка, это действительно св-во юр.лица!!!
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = _tmpItem.ObjectId AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch();
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = _tmpItem.ObjectId AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+             --
+             LEFT JOIN Object ON Object.Id = _tmpItem.ObjectId
+       ;
 
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

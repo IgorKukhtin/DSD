@@ -103,6 +103,7 @@ type
     bb: TdxBarButton;
     isCalculated: TcxGridDBColumn;
     SummCardSecondRemains: TcxGridDBColumn;
+    Amount_avance_ret: TcxGridDBColumn;
   private
     { Private declarations }
   public

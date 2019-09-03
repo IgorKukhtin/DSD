@@ -68,7 +68,7 @@ BEGIN
                                              ELSE 0
                                         END) AS Amount_Send_in
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
                                               AND MIContainer.IsActive       = FALSE
                                               AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
                                                 OR MLO_DocumentKind.ObjectId > 0
@@ -90,7 +90,7 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                              AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Loss())
                               -- AND MIContainer.Amount <> 0
                             GROUP BY MIContainer.ObjectId_Analyzer
                                    , MIContainer.ObjectIntId_Analyzer

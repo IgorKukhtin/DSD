@@ -13,14 +13,30 @@ RETURNS TABLE (Id Integer
           -- , Id BigInt
              , InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer
              , MovementDescName TVarChar
              , PlaceNumber Integer
+
+             , OperDate_parent TDateTime
+             , InvNumber_parent TVarChar
+             , WeighingNumber_parent TFloat
+             , OperDate_parent_main TDateTime
+             , InvNumber_parent_main TVarChar
+
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+
+             , GoodsTypeKindName TVarChar
+             , BarCodeBoxName TVarChar
+             , BoxName TVarChar
+             , sku_id TVarChar
+             , sku_code TVarChar
+             , StatusCode_wms Integer
+             , StatusName_wms TVarChar
+
              , GoodsTypeKindId_1 Integer, GoodsTypeKindName_1 TVarChar
              , GoodsTypeKindId_2 Integer, GoodsTypeKindName_2 TVarChar
              , GoodsTypeKindId_3 Integer, GoodsTypeKindName_3 TVarChar
@@ -41,7 +57,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
 
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
@@ -49,19 +65,88 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
-
+              , tmpMI AS (SELECT DISTINCT
+                                 MovementItem.MovementId, MovementItem.ParentId, MovementItem.GoodsTypeKindId, MovementItem.BarCodeBoxId, MovementItem.StatusId_wms
+                               , Movement.GoodsId, Movement.GoodsKindId
+                          FROM tmpStatus
+                               INNER JOIN wms_Movement_WeighingProduction AS Movement
+                                                                          ON Movement.StatusId = tmpStatus.StatusId
+                                                                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               INNER JOIN wms_MI_WeighingProduction AS MovementItem
+                                                                    ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.isErased   = FALSE
+                         )
+      , tmpGoods_list AS (SELECT DISTINCT tmpMI.GoodsId, tmpMI.GoodsKindId
+                          FROM tmpMI
+                         )
+   , tmpGoods_wms_all AS (SELECT tmp.*
+                          FROM wms_Object_GoodsByGoodsKind AS tmp
+                               JOIN tmpGoods_list ON tmpGoods_list.GoodsId     = tmp.GoodsId
+                                                 AND tmpGoods_list.GoodsKindId     = tmp.GoodsKindId
+                         )
+       , tmpGoods_wms AS (SELECT tmp.*
+                          FROM wms_Object_GoodsByGoodsKind AS tmp
+                               JOIN tmpGoods_list ON tmpGoods_list.GoodsId     = tmp.GoodsId
+                                                 AND tmpGoods_list.GoodsKindId = tmp.GoodsKindId
+                         )
+               , tmpGoods AS (-- Штучный
+                              SELECT tmpGoods_all.sku_id_Sh           AS sku_id
+                                   , tmpGoods_all.sku_code_Sh         AS sku_code
+                                   , tmpGoods_all.GoodsTypeKindId_Sh  AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsId             AS GoodsId
+                                   , tmpGoods_all.GoodsKindId         AS GoodsKindId
+                              FROM tmpGoods_wms_all AS tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Sh  = zc_Enum_GoodsTypeKind_Sh()
+                             UNION ALL
+                              -- Номинальный
+                              SELECT tmpGoods_all.sku_id_Nom          AS sku_id
+                                   , tmpGoods_all.sku_code_Nom        AS sku_code
+                                   , tmpGoods_all.GoodsTypeKindId_Nom AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsId             AS GoodsId
+                                   , tmpGoods_all.GoodsKindId         AS GoodsKindId
+                              FROM tmpGoods_wms_all AS tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Nom = zc_Enum_GoodsTypeKind_Nom()
+                             UNION ALL
+                              -- Весовой
+                              SELECT tmpGoods_all.sku_id_Ves          AS sku_id
+                                   , tmpGoods_all.sku_code_Ves        AS sku_code
+                                   , tmpGoods_all.GoodsTypeKindId_Ves AS GoodsTypeKindId
+                                   , tmpGoods_all.GoodsId             AS GoodsId
+                                   , tmpGoods_all.GoodsKindId         AS GoodsKindId
+                              FROM tmpGoods_wms_all AS tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Ves = zc_Enum_GoodsTypeKind_Ves()
+                             )
+       -- Результат
        SELECT  Movement.Id :: Integer
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate                    AS OperDate
              , Object_Status.ObjectCode             AS StatusCode
              , Object_Status.ValueData              AS StatusName
 
-             , Movement.StartWeighing               AS StartWeighing  
+             , Movement.StartWeighing               AS StartWeighing
              , Movement.EndWeighing                 AS EndWeighing
 
              , Movement.MovementDescNumber          AS MovementDescNumber
              , MovementDesc.ItemName                AS MovementDescName
              , Movement.PlaceNumber                 AS PlaceNumber
+
+             , Movement_Parent.OperDate             AS OperDate_parent
+             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
+                         THEN Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()
+                         THEN '*' || Movement_Parent.InvNumber
+                    ELSE ''
+               END :: TVarChar AS InvNumber_parent
+             , MovementFloat_WeighingNumber_parent.ValueData AS WeighingNumber_parent
+
+             , Movement_Parent_main.OperDate          AS OperDate_parent_main
+             , CASE WHEN Movement_Parent_main.StatusId = zc_Enum_Status_Complete()
+                         THEN Movement_Parent_main.InvNumber
+                    WHEN Movement_Parent_main.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Parent_main.InvNumber
+                    WHEN Movement_Parent_main.StatusId = zc_Enum_Status_Erased()
+                         THEN '*' || Movement_Parent_main.InvNumber
+                    ELSE ''
+               END :: TVarChar AS InvNumber_parent_main
 
              , Object_From.Id                       AS FromId
              , Object_From.ValueData                AS FromName
@@ -73,6 +158,13 @@ BEGIN
              , Object_Goods.ValueData               AS GoodsName
              , Object_GoodsKind.Id                  AS GoodsKindId
              , Object_GoodsKind.ValueData           AS GoodsKindName
+             , Object_GoodsTypeKind.ValueData       AS GoodsTypeKindName
+             , Object_BarCodeBox.ValueData          AS BarCodeBoxName
+             , Object_Box.ValueData                 AS BoxName
+             , tmpGoods.sku_id          :: TVarChar AS sku_id
+             , tmpGoods.sku_code                    AS sku_code
+             , Object_Status_wms.ObjectCode         AS StatusCode_wms
+             , Object_Status_wms.ValueData          AS StatusName_wms
 
              , Object_GoodsTypeKind_1.Id        AS GoodsTypeKindId_1
              , Object_GoodsTypeKind_1.ValueData AS GoodsTypeKindName_1
@@ -92,17 +184,34 @@ BEGIN
              , Object_Box2.ValueData            AS BoxName_2
              , Object_Box3.Id                   AS BoxId_3
              , Object_Box3.ValueData            AS BoxName_3
-             
+
              , Object_User.Id                       AS UserId
              , Object_User.ValueData                AS UserName
        FROM tmpStatus
             INNER JOIN wms_Movement_WeighingProduction AS Movement
                                                        ON Movement.StatusId = tmpStatus.StatusId
                                                       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = tmpMI.GoodsTypeKindId
+            LEFT JOIN Object AS Object_BarCodeBox    ON Object_BarCodeBox.Id    = tmpMI.BarCodeBoxId
+            LEFT JOIN Object AS Object_Status_wms    ON Object_Status_wms.Id    = tmpMI.StatusId_wms
+            LEFT JOIN tmpGoods ON tmpGoods.GoodsTypeKindId = tmpMI.GoodsTypeKindId
+                              AND tmpGoods.GoodsId         = tmpMI.GoodsId
+                              AND tmpGoods.GoodsKindId     = tmpMI.GoodsKindId
+            LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box
+                                 ON ObjectLink_BarCodeBox_Box.ObjectId = tmpMI.BarCodeBoxId
+                                AND ObjectLink_BarCodeBox_Box.DescId = zc_ObjectLink_BarCodeBox_Box()
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = ObjectLink_BarCodeBox_Box.ChildObjectId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.MovementDescId
-            
+
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = tmpMI.ParentId
+            LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber_Parent
+                                    ON MovementFloat_WeighingNumber_Parent.MovementId =  Movement_Parent.Id
+                                   AND MovementFloat_WeighingNumber_Parent.DescId = zc_MovementFloat_WeighingNumber()
+            LEFT JOIN Movement AS Movement_Parent_main ON Movement_Parent_main.Id = Movement_Parent.ParentId
+
             LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
             LEFT JOIN Object AS Object_To   ON Object_To.Id   = Movement.ToId
             LEFT JOIN Object AS Object_User ON Object_User.Id = Movement.UserId
@@ -132,7 +241,7 @@ BEGIN
                                 AND ObjectLink_BarCodeBox_Box3.DescId = zc_ObjectLink_BarCodeBox_Box()
             LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = ObjectLink_BarCodeBox_Box3.ChildObjectId
        ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

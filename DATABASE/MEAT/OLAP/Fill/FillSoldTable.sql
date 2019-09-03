@@ -695,4 +695,4 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 */
 -- тест
 -- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('01.01.2016', '01.01.2016', zfCalc_UserAdmin()) 
+-- SELECT * FROM FillSoldTable ('01.08.2019', '26.08.2019', zfCalc_UserAdmin()) 

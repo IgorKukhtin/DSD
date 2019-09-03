@@ -44,7 +44,7 @@ BEGIN
      -- –езультат - сформировали новые данные - Ёлементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
         WITH tmpPartner_all AS (-- zc_Object_Partner
-                                SELECT Object_Partner.DescId, Object_Partner.Id AS client_id, Object_Partner.ValueData AS name
+                                /*SELECT Object_Partner.DescId, Object_Partner.Id AS client_id, Object_Partner.ValueData AS name
                                      , COALESCE (ObjectString_Address.ValueData, '') AS address
                                 FROM Object AS Object_Partner
                                      INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -74,7 +74,7 @@ BEGIN
     --                                                                                    , 257163 -- покупатели ƒнепр
     --                                                                                     )
      
-                               UNION ALL
+                               UNION ALL*/
                                 -- zc_Object_Unit
                                 SELECT Object_Unit.DescId, Object_Unit.Id AS client_id, Object_Unit.ValueData AS name
                                      , COALESCE (ObjectString_Address.ValueData, '') AS address
@@ -123,7 +123,7 @@ BEGIN
                                                         ON ObjectString_Address.ObjectId = Object_From.Id
                                                        AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address()
                                                        AND Object_From.DescId = zc_Object_Partner()
-                           WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '2 DAY'
+                           WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '32 DAY'
                              AND Movement.DescId   = zc_Movement_OrderExternal() 
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND tmpPartner_all.client_id IS NULL
