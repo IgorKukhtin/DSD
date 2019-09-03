@@ -151,7 +151,7 @@ end if;*/
                      AND MI_Child.Amount     <> 0
                   )
     THEN
-        -- кол-во Master должно быть не меньше Child
+        -- кол-во Master должно быть равно Child
         IF EXISTS (SELECT 1
                    FROM MovementItem AS MI_Master
                         LEFT JOIN MovementItem AS MI_Child
@@ -164,7 +164,8 @@ end if;*/
                      AND MI_Master.DescId     = zc_MI_Master()
                      AND MI_Master.IsErased   = FALSE
                    GROUP BY MI_Master.Id
-                   HAVING MI_Master.Amount < COALESCE (SUM (MI_Child.Amount), 0)
+                   HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0)
+                      AND COALESCE (SUM (MI_Child.Amount), 0) <> 0
                   )
         THEN
            SELECT Object_Goods.ValueData, MI_Master.Amount, COALESCE (SUM (MI_Child.Amount), 0)
@@ -182,7 +183,8 @@ end if;*/
              AND MI_Master.DescId     = zc_MI_Master()
              AND MI_Master.IsErased   = FALSE
            GROUP BY MI_Master.Id, Object_Goods.ValueData, MI_Master.Amount
-           HAVING MI_Master.Amount < COALESCE (SUM (MI_Child.Amount), 0) LIMIT 1;
+           HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0) 
+              AND COALESCE (SUM (MI_Child.Amount), 0) <> 0 LIMIT 1;
 
            RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> меньше распределено <%>. Испревте количество или распределение по срокам.', vbGoodsName, vbAmountM, vbAmountC;
         END IF;
@@ -250,6 +252,7 @@ end if;*/
             -- итого для сроковых перемещений по zc_Container_Count
           DDChild AS (SELECT
                             Container.ParentId             AS ContainerId
+                          , Container.Id                   AS ContainerPartionId
                           , Container.ObjectId             AS ObjectId
                           , MovementItem.Id                AS MovementItemId
                           , SUM (MovementItem.Amount)      AS Amount
@@ -270,7 +273,7 @@ end if;*/
                            AND MovementItem.Amount     > 0
                            -- если это сроковый документ
                            AND vbPartionDateId <> 0
-                         GROUP BY Container.ParentId, Container.ObjectId, MovementItem.Id
+                         GROUP BY Container.Id, Container.ParentId, Container.ObjectId, MovementItem.Id
                        )
            -- находим товары для сети куда идет перемещение, если они разные
         , GoodsRetial_to AS (SELECT tmp.ObjectId
@@ -295,6 +298,7 @@ end if;*/
                         -- для сроковых перемещений - сразу ContainerId
                         SELECT
                             DDChild.ContainerId                AS ContainerId_count
+                          , DDChild.ContainerPartionId         AS ContainerPartionId_count
                           , NULL                    :: Integer AS ContainerId_summ
                           , PartionMovementItem.Id             AS PartionMovementItemId
                           , DDChild.MovementItemID             AS MovementItemId
@@ -315,6 +319,7 @@ end if;*/
           , tmpAll AS  (-- расход с подразделения "From"
                         SELECT
                              ContainerId_count
+                           , ContainerPartionId_count  
                            , MovementItemId
                            , ObjectId
                            , vbSendDate  AS OperDate
@@ -337,6 +342,7 @@ end if;*/
                                                   , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                   , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
                                                    ) AS ContainerId_count
+                           , Null
                            , tmpItem.MovementItemId  AS MovementItemId
                            , tmpItem.ObjectId_to     AS ObjectId
                            , vbSendDate              AS OperDate
@@ -406,6 +412,21 @@ end if;*/
              , tmpAll.OperDate
              , tmpAll.isActive
            FROM tmpAll
+
+          UNION ALL
+           -- проводки по партиям по количеству
+           SELECT
+               zc_MIContainer_CountPartionDate()
+             , zc_Movement_Send()
+             , inMovementId
+             , tmpAll.MovementItemId
+             , tmpAll.ContainerPartionId_count
+             , Null
+             , tmpAll.Amount
+             , tmpAll.OperDate
+             , Null
+           FROM tmpAll
+           WHERE COALESCE (tmpAll.ContainerPartionId_count, 0) <> 0
 
           UNION ALL
            -- обычные проводки по суммам
@@ -632,37 +653,65 @@ end if;*/
        FROM tmpSumm
       ;
 
---    RAISE EXCEPTION 'Проводок %', (select Count(*) from _tmpMIContainer_insert);
-
-
-    -- Списуем сроковые партии
+    -- Списуем сроковые партии которые не попали в распределение
     IF EXISTS (SELECT 1 FROM Container
                WHERE Container.DescId   = zc_Container_CountPartionDate()
                  AND Container.Amount   > 0
-                 AND Container.ParentId IN (-- только расход
+                 AND Container.ParentId IN (-- только расход которые не распределены по партиям
                                             SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
                                             WHERE _tmpMIContainer_insert.DescId   = zc_MIContainer_Count()
                                             AND _tmpMIContainer_insert.isActive = FALSE
-                                            ))
+                                            AND _tmpMIContainer_insert.MovementItemId NOT IN
+                                                 (SELECT DISTINCT _tmpMIContainer_insert.MovementItemId
+                                                  FROM _tmpMIContainer_insert
+                                                  WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_CountPartionDate()))
+                                            )
     THEN
-      WITH -- Остатки сроковых партий - zc_Container_CountPartionDate
-           DD AS (SELECT _tmpMIContainer_insert.MovementItemId
+      WITH -- Что уже рпспределено по партиям
+           ContainerPDUse AS (SELECT _tmpMIContainer_insert.ContainerId
+                                     -- сколько списано с партионных
+                                   , Sum(_tmpMIContainer_insert.Amount) AS Amount
+                              FROM _tmpMIContainer_insert
+                              WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_CountPartionDate()
+                              GROUP BY _tmpMIContainer_insert.ContainerId
+                              )
+         , ContainerPD AS (SELECT Container.Id 
+                                , Container.ParentId 
+                                  -- сколько осталось
+                                , Container.Amount + COALESCE (ContainerPDUse.Amount, 0) AS Amount
+                           FROM _tmpMIContainer_insert
+                                JOIN Container ON Container.ParentId = _tmpMIContainer_insert.ContainerId
+                                              AND Container.DescId   = zc_Container_CountPartionDate()
+                                              AND Container.Amount > 0.0
+                                LEFT JOIN ContainerPDUse ON ContainerPDUse.ContainerId = Container.Id 
+                           WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
+                             AND _tmpMIContainer_insert.isActive    = FALSE -- только расход
+                             AND _tmpMIContainer_insert.MovementItemId NOT IN
+                                 (SELECT DISTINCT _tmpMIContainer_insert.MovementItemId
+                                  FROM _tmpMIContainer_insert
+                                  WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_CountPartionDate())
+                           )
+           -- Остатки сроковых партий - zc_Container_CountPartionDate 
+         , DD AS (SELECT _tmpMIContainer_insert.MovementItemId
                          -- сколько надо получить
-                       , -1 * _tmpMIContainer_insert.Amount AS Amount
+                       , -1 * _tmpMIContainer_insert.Amount                  AS Amount
                          -- остаток
-                       , Container.Amount AS AmountRemains
-                       , vbSendDate       AS OperDate
-                       , Container.Id     AS ContainerId
+                       , Container.Amount                                    AS AmountRemains
+                       , vbSendDate                                          AS OperDate
+                       , Container.Id                                        AS ContainerId
                          -- итого "накопительный" остаток
-                       , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id) AS AmountRemains_sum
+                       , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id, _tmpMIContainer_insert.MovementItemId) AS AmountRemains_sum
                          -- для последнего элемента - не смотрим на остаток
-                       , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY Container.Id DESC) AS DOrd
-                   FROM _tmpMIContainer_insert
-                        JOIN Container ON Container.ParentId = _tmpMIContainer_insert.ContainerId
-                                      AND Container.DescId   = zc_Container_CountPartionDate()
-                                      AND Container.Amount   > 0.0
-                   WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
-                     AND _tmpMIContainer_insert.isActive    = FALSE -- только расход
+                       , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY Container.Id DESC, _tmpMIContainer_insert.MovementItemId DESC) AS DOrd
+                   FROM ContainerPD AS Container 
+                        JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId 
+                                                   AND _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
+                                                   AND _tmpMIContainer_insert.isActive    = FALSE -- только расход
+                                                   AND _tmpMIContainer_insert.MovementItemId NOT IN
+                                                       (SELECT DISTINCT _tmpMIContainer_insert.MovementItemId
+                                                        FROM _tmpMIContainer_insert
+                                                        WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_CountPartionDate())
+                   WHERE Container.Amount > 0.0
                   )
 
            -- распределение
@@ -670,11 +719,12 @@ end if;*/
                             , MovementItemId
                             , OperDate
                             , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
-                                        THEN DD.AmountRemains
+                                   THEN DD.AmountRemains
                                    ELSE DD.Amount - DD.AmountRemains_sum + DD.AmountRemains
                               END AS Amount
                          FROM DD
-                         WHERE (DD.Amount > 0 AND DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0))
+                         WHERE (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
+                       )
         -- Результат - проводки по срокам - расход
         INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
           SELECT zc_MIContainer_CountPartionDate()
@@ -767,4 +817,4 @@ $BODY$
  29.07.15                                                                     *
 */
 
--- SELECT * FROM lpComplete_Movement_Send (inMovementId:= 14931454, inUserId:= 3)
+-- select * from gpUpdate_Movement_Send_Deferred(inMovementId := 15529825 , inisDeferred := 'True' ,  inSession := '3');-- SELECT * FROM lpComplete_Movement_Send (inMovementId:= 14931454, inUserId:= 3)

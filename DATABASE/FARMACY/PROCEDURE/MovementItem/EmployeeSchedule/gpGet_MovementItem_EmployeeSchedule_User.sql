@@ -6,23 +6,31 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_EmployeeSchedule_User(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (OperDate  TDateTime,
-               ValueUser TVarChar 
+               StartHour TVarChar,
+               StartMin TVarChar,
+               EndHour TVarChar, 
+               EndMin TVarChar 
               )
 AS
 $BODY$
    DECLARE vbMovementID Integer;
+   DECLARE vbMovementItemID Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbComingValueDay TVarChar;
-   DECLARE vbTypeId Integer;
-   DECLARE vbValue Integer;
-   DECLARE vbResult TVarChar;
+
+   DECLARE vbStartHour TVarChar;
+   DECLARE vbStartMin TVarChar; 
+   DECLARE vbEndHour TVarChar;
+   DECLARE vbEndMin TVarChar; 
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
     
-    vbResult := '';
+   vbStartHour := '';
+   vbStartMin := '00'; 
+   vbEndHour := '';
+   vbEndMin := '00'; 
 
     -- проверка наличия графика
     IF EXISTS(SELECT 1 FROM Movement
@@ -36,38 +44,68 @@ BEGIN
       WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
         AND Movement.DescId = zc_Movement_EmployeeSchedule();
     
+        -- Наличие записи по сотруднику
       IF EXISTS(SELECT 1 FROM MovementItem
                 WHERE MovementItem.MovementId = vbMovementID
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.ObjectId = vbUserId)
       THEN
 
-        SELECT MovementItemString.ValueData
-        INTO vbComingValueDay
+        SELECT MovementItem.ID
+        INTO vbMovementItemID
         FROM MovementItem
-         
-             INNER JOIN MovementItemString ON MovementItemString.DescId = zc_MIString_ComingValueDayUser()
-                                          AND MovementItemString.MovementItemId = MovementItem.ID
-          
         WHERE MovementItem.MovementId = vbMovementID
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.ObjectId = vbUserId;
 
-        IF COALESCE (vbComingValueDay, '') = ''
+          -- Наличие записи по дню
+        IF EXISTS(SELECT 1 FROM MovementItem
+                  WHERE MovementItem.MovementId = vbMovementID
+                    AND MovementItem.DescId = zc_MI_Child()
+                    AND MovementItem.ParentId = vbMovementItemID
+                    AND MovementItem.Amount = date_part('DAY',  CURRENT_DATE)::Integer)
         THEN
-          vbComingValueDay := '0000000000000000000000000000000';
-        END IF;
-    
-        vbTypeId :=  date_part('day',  CURRENT_DATE);
-    
-        vbResult :=lpDecodeValueDay(vbTypeId, vbComingValueDay);
+          SELECT CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE date_part('HOUR',  MIDate_Start.ValueData)::TVarChar END
+               , CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_Start.ValueData)::TVarChar  END
+               , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('HOUR',  MIDate_End.ValueData)::TVarChar  END
+               , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_End.ValueData)::TVarChar  END
+          INTO vbStartHour, vbStartMin, vbEndHour, vbEndMin 
+          FROM MovementItem
+
+               INNER JOIN MovementItemDate AS MIDate_Start
+                                           ON MIDate_Start.MovementItemId = MovementItem.Id
+                                          AND MIDate_Start.DescId = zc_MIDate_Start()
+
+               INNER JOIN MovementItemDate AS MIDate_End
+                                           ON MIDate_End.MovementItemId = MovementItem.Id
+                                          AND MIDate_End.DescId = zc_MIDate_End()
+
+          WHERE MovementItem.MovementId = vbMovementID
+            AND MovementItem.DescId = zc_MI_Child()
+            AND MovementItem.ParentId = vbMovementItemID
+            AND MovementItem.Amount = date_part('DAY',  CURRENT_DATE)::Integer;        
+          
+        END IF;	
       END IF;	
     END IF;
 
+    IF Length(vbStartMin) < 2
+    THEN
+      vbStartMin := '0'||vbStartMin; 
+    END IF; 
+    
+    IF Length(vbEndMin) < 2
+    THEN
+      vbEndMin := '0'||vbEndMin; 
+    END IF; 
 
     RETURN QUERY
     SELECT CURRENT_DATE::TDateTime                        AS OperDate
-         , vbResult                                       AS ValueUser;
+         , vbStartHour 
+         , vbStartMin 
+         , vbEndHour 
+         , vbEndMin 
+    ;
 
 END;
 $BODY$
@@ -82,4 +120,4 @@ ALTER FUNCTION gpGet_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO post
 */
 
 -- тест
--- select * from gpGet_MovementItem_EmployeeSchedule_User(inSession := '308120');
+-- select * from gpGet_MovementItem_EmployeeSchedule_User(inSession := '3');

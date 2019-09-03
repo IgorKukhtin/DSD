@@ -1,6 +1,7 @@
 -- Function: gpSelect_Сalculation_PayrollGroup()
 
 DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inPayrollTypeID    Integer,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inCountUserNS      Integer,
     IN inCountUserSCS     Integer,
     IN inCountUserS       Integer,
+    IN inCountUserSAS     Integer,
 
     IN inSummCS           TFloat,
     IN inSummSCS          TFloat,
@@ -30,21 +32,23 @@ BEGIN
 
   IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS())
   THEN
-    vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0)) > 0
-                        THEN COALESCE (inSummCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0))
+    vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0)) > 0
+                        THEN COALESCE (inSummCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0))
                         ELSE 0 END +
-                   CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0)) > 0
-                        THEN COALESCE (inSummSCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0))
+                   CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0)) > 0
+                        THEN COALESCE (inSummSCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0))
                         ELSE 0 END;
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
 
     vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummCS, 0), 'G999G999G999G999D99'))||' / ('||
                     CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' + '||
-                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||') + '||
+                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserSAS, 0) AS TVarChar)||') + '||
                     TRIM(to_char( COALESCE (inSummSCS, 0), 'G999G999G999G999D99'))||' / ('||
                     CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' + '||
                     CAST(COALESCE (inCountUserAS, 0) AS TVarChar)||' + '||
-                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||') = '||
+                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserSAS, 0) AS TVarChar)||') = '||
                     TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
                     'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
                     ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
@@ -56,17 +60,18 @@ BEGIN
     RETURN QUERY
         SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
-  ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkAS()
+  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS())
   THEN
-    vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0)) > 0
-                        THEN COALESCE (inSummSCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0))
+    vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0)) > 0
+                        THEN COALESCE (inSummSCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0))
                         ELSE 0 END;
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
 
     vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummSCS, 0), 'G999G999G999G999D99'))||' / ('||
                     CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' + '||
                     CAST(COALESCE (inCountUserAS, 0) AS TVarChar)||' + '||
-                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||') = '||
+                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserSAS, 0) AS TVarChar)||') = '||
                     TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
                     'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
                     ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
@@ -123,12 +128,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                        *
  23.08.19                                                        *
 */
 

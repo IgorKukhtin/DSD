@@ -84,6 +84,9 @@ type
     isIssuedBy: TcxGridDBBandedColumn;
     dxBarButton10: TdxBarButton;
     actIssuedBy: TMultiAction;
+    Marketing: TcxGridDBBandedColumn;
+    actWagesAdditionalExpenses: TdsdOpenForm;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

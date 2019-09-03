@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesUser(
     IN inSession     TVarChar         -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , AmountCard TFloat, AmountHand TFloat
+             , Marketing TFloat, AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
@@ -35,7 +35,7 @@ BEGIN
       WHERE Movement.OperDate = inOperDate 
         AND Movement.DescId = zc_Movement_Wages();
     ELSE 
-       RAISE EXCEPTION 'Не найден расчет з.п. за %', to_char(inOperDate, 'dd.mm.yyyy');
+       RAISE EXCEPTION 'Не найден расчет з.п. за %', zfCalc_MonthYearName(inOperDate);
     END IF;
 
     IF EXISTS(SELECT 1 FROM MovementItem 
@@ -65,8 +65,12 @@ BEGIN
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
                  
+                 , MIFloat_Marketing.ValueData        AS Marketing
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount - COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+                 , (MovementItem.Amount + 
+                    COALESCE (MIFloat_Marketing.ValueData, 0) - 
+                    COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
@@ -89,6 +93,10 @@ BEGIN
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                              ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -98,7 +106,7 @@ BEGIN
               AND MovementItem.DescId = zc_MI_Master()
               AND MovementItem.isErased = FALSE;
     ELSE 
-       RAISE EXCEPTION 'Не найден по вам расчет з.п. за %', to_char(inOperDate, 'dd.mm.yyyy');
+       RAISE EXCEPTION 'Не найден по вам расчет з.п. за %', zfCalc_MonthYearName(inOperDate);
     END IF;
 
 END;

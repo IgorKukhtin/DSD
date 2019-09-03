@@ -13,7 +13,8 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, Vcl.StdCtrls,
+  cxButtons;
 
 type
   TEmployeeScheduleUserForm = class(TAncestorDBGridForm)
@@ -25,17 +26,15 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     Note: TcxGridDBBandedColumn;
     Value: TcxGridDBBandedColumn;
-    cxLabel1: TcxLabel;
-    cbValueUser: TcxComboBox;
     spGet: TdsdStoredProc;
     spUpdateEmployeeScheduleUser: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
-    NoteUser: TcxGridDBBandedColumn;
-    ValueUser: TcxGridDBBandedColumn;
+    NoteStart: TcxGridDBBandedColumn;
+    ValueStart: TcxGridDBBandedColumn;
     HeaderUserCDS: TClientDataSet;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    CrossDBViewStartAddOn: TCrossDBViewAddOn;
     Color_Calc: TcxGridDBBandedColumn;
     Color_CalcFont: TcxGridDBBandedColumn;
     Color_CalcFontUser: TcxGridDBBandedColumn;
@@ -54,6 +53,23 @@ type
     CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
     actEmployeeScheduleUnit: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
+    cxButton1: TcxButton;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
+    cbStartHour: TcxComboBox;
+    cbStartMin: TcxComboBox;
+    cxLabel6: TcxLabel;
+    cbEndMin: TcxComboBox;
+    cxLabel7: TcxLabel;
+    cbEndHour: TcxComboBox;
+    ValueEnd: TcxGridDBBandedColumn;
+    ValueNext: TcxGridDBBandedColumn;
+    NoteEnd: TcxGridDBBandedColumn;
+    NoteNext: TcxGridDBBandedColumn;
+    CrossDBViewNextAddOn: TCrossDBViewAddOn;
+    CrossDBViewEndAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

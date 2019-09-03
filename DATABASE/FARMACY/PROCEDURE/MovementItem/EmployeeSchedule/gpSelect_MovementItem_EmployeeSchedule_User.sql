@@ -31,6 +31,11 @@ BEGIN
      END IF;
      vbUnitId := vbUnitKey::Integer;
 
+     IF vbUserId = 3
+     THEN
+       vbUserId:= 11698275;
+     END IF;
+
      vbDate := DATE_TRUNC ('MONTH', CURRENT_DATE);
 
      -- проверка наличия графика
@@ -46,6 +51,50 @@ BEGIN
      FROM Movement
      WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
        AND Movement.OperDate = vbDate;
+
+     CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
+     SELECT MIMaster.ObjectId                                                            AS UserID
+          , MILinkObject_Unit.ObjectId                                                   AS MainUnitID
+          , MIChild.ObjectId                                                             AS UnitID
+          , MIChild.Amount                                                               AS Day
+          , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
+          , PayrollType_ShortName.ValueData                                              AS PThortName
+          , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')                                   AS TimeStart
+          , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')                                     AS TimeEnd
+          , NULL::TVarChar                                                               AS PThortNameNext
+     FROM Movement
+
+          INNER JOIN MovementItem AS MIMaster
+                                  ON MIMaster.MovementId = Movement.id
+                                 AND MIMaster.DescId = zc_MI_Master()
+                                 AND MIMaster.ObjectId = vbUserId
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                           ON MILinkObject_Unit.MovementItemId = MIMaster.Id
+                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+          LEFT JOIN MovementItem AS MIChild
+                                 ON MIChild.MovementId = Movement.id
+                                AND MIChild.ParentId = MIMaster.ID
+                                AND MIChild.DescId = zc_MI_Child()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                           ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                          AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+
+          LEFT JOIN ObjectString AS PayrollType_ShortName
+                                 ON PayrollType_ShortName.ObjectId = MILinkObject_PayrollType.ObjectId
+                                AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
+
+          LEFT JOIN MovementItemDate AS MIDate_Start
+                                     ON MIDate_Start.MovementItemId = MIChild.Id
+                                    AND MIDate_Start.DescId = zc_MIDate_Start()
+
+          LEFT JOIN MovementItemDate AS MIDate_End
+                                     ON MIDate_End.MovementItemId = MIChild.Id
+                                    AND MIDate_End.DescId = zc_MIDate_End()
+
+     WHERE Movement.ID = vbMovementId;
 
      -- Получение главных аптек
      CREATE TEMP TABLE tmpMainUnit (ID integer, MovementItemID integer, UnitId Integer) ON COMMIT DROP;
@@ -289,7 +338,8 @@ BEGIN
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
-                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField,
+                          ' '::TVarChar AS ValueFieldNill
                FROM tmpOperDate
                    LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
                    LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1
@@ -310,74 +360,139 @@ BEGIN
      OPEN cur3 FOR
      SELECT
        tmpMainUnit.Id                                          AS ID,
-       CASE WHEN tmpMainUnit.Id = 1
-         THEN 'Регламент '||zfCalc_MonthName(CURRENT_DATE)
-         ELSE 'Регламент '||zfCalc_MonthName(vbDate) END       AS Note,
-       CASE WHEN tmpMainUnit.Id = 1
-         THEN 'Факт '||zfCalc_MonthName(CURRENT_DATE)
-         ELSE '' END                                           AS NoteUser,
-       lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
-       lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
-       lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
-       lpDecodeValueDay(4, MIString_ComingValueDay.ValueData)  AS Value4,
-       lpDecodeValueDay(5, MIString_ComingValueDay.ValueData)  AS Value5,
-       lpDecodeValueDay(6, MIString_ComingValueDay.ValueData)  AS Value6,
-       lpDecodeValueDay(7, MIString_ComingValueDay.ValueData)  AS Value7,
-       lpDecodeValueDay(8, MIString_ComingValueDay.ValueData)  AS Value8,
-       lpDecodeValueDay(9, MIString_ComingValueDay.ValueData)  AS Value9,
-       lpDecodeValueDay(10, MIString_ComingValueDay.ValueData) AS Value10,
-       lpDecodeValueDay(11, MIString_ComingValueDay.ValueData) AS Value11,
-       lpDecodeValueDay(12, MIString_ComingValueDay.ValueData) AS Value12,
-       lpDecodeValueDay(13, MIString_ComingValueDay.ValueData) AS Value13,
-       lpDecodeValueDay(14, MIString_ComingValueDay.ValueData) AS Value14,
-       lpDecodeValueDay(15, MIString_ComingValueDay.ValueData) AS Value15,
-       lpDecodeValueDay(16, MIString_ComingValueDay.ValueData) AS Value16,
-       lpDecodeValueDay(17, MIString_ComingValueDay.ValueData) AS Value17,
-       lpDecodeValueDay(18, MIString_ComingValueDay.ValueData) AS Value18,
-       lpDecodeValueDay(19, MIString_ComingValueDay.ValueData) AS Value19,
-       lpDecodeValueDay(20, MIString_ComingValueDay.ValueData) AS Value20,
-       lpDecodeValueDay(21, MIString_ComingValueDay.ValueData) AS Value21,
-       lpDecodeValueDay(22, MIString_ComingValueDay.ValueData) AS Value22,
-       lpDecodeValueDay(23, MIString_ComingValueDay.ValueData) AS Value23,
-       lpDecodeValueDay(24, MIString_ComingValueDay.ValueData) AS Value24,
-       lpDecodeValueDay(25, MIString_ComingValueDay.ValueData) AS Value25,
-       lpDecodeValueDay(26, MIString_ComingValueDay.ValueData) AS Value26,
-       lpDecodeValueDay(27, MIString_ComingValueDay.ValueData) AS Value27,
-       lpDecodeValueDay(28, MIString_ComingValueDay.ValueData) AS Value28,
-       lpDecodeValueDay(29, MIString_ComingValueDay.ValueData) AS Value29,
-       lpDecodeValueDay(30, MIString_ComingValueDay.ValueData) AS Value30,
-       lpDecodeValueDay(31, MIString_ComingValueDay.ValueData) AS Value31,
-       lpDecodeValueDay(1, MIString_ComingValueDayUser.ValueData)  AS ValueUser1,
-       lpDecodeValueDay(2, MIString_ComingValueDayUser.ValueData)  AS ValueUser2,
-       lpDecodeValueDay(3, MIString_ComingValueDayUser.ValueData)  AS ValueUser3,
-       lpDecodeValueDay(4, MIString_ComingValueDayUser.ValueData)  AS ValueUser4,
-       lpDecodeValueDay(5, MIString_ComingValueDayUser.ValueData)  AS ValueUser5,
-       lpDecodeValueDay(6, MIString_ComingValueDayUser.ValueData)  AS ValueUser6,
-       lpDecodeValueDay(7, MIString_ComingValueDayUser.ValueData)  AS ValueUser7,
-       lpDecodeValueDay(8, MIString_ComingValueDayUser.ValueData)  AS ValueUser8,
-       lpDecodeValueDay(9, MIString_ComingValueDayUser.ValueData)  AS ValueUser9,
-       lpDecodeValueDay(10, MIString_ComingValueDayUser.ValueData) AS ValueUser10,
-       lpDecodeValueDay(11, MIString_ComingValueDayUser.ValueData) AS ValueUser11,
-       lpDecodeValueDay(12, MIString_ComingValueDayUser.ValueData) AS ValueUser12,
-       lpDecodeValueDay(13, MIString_ComingValueDayUser.ValueData) AS ValueUser13,
-       lpDecodeValueDay(14, MIString_ComingValueDayUser.ValueData) AS ValueUser14,
-       lpDecodeValueDay(15, MIString_ComingValueDayUser.ValueData) AS ValueUser15,
-       lpDecodeValueDay(16, MIString_ComingValueDayUser.ValueData) AS ValueUser16,
-       lpDecodeValueDay(17, MIString_ComingValueDayUser.ValueData) AS ValueUser17,
-       lpDecodeValueDay(18, MIString_ComingValueDayUser.ValueData) AS ValueUser18,
-       lpDecodeValueDay(19, MIString_ComingValueDayUser.ValueData) AS ValueUser19,
-       lpDecodeValueDay(20, MIString_ComingValueDayUser.ValueData) AS ValueUser20,
-       lpDecodeValueDay(21, MIString_ComingValueDayUser.ValueData) AS ValueUser21,
-       lpDecodeValueDay(22, MIString_ComingValueDayUser.ValueData) AS ValueUser22,
-       lpDecodeValueDay(23, MIString_ComingValueDayUser.ValueData) AS ValueUser23,
-       lpDecodeValueDay(24, MIString_ComingValueDayUser.ValueData) AS ValueUser24,
-       lpDecodeValueDay(25, MIString_ComingValueDayUser.ValueData) AS ValueUser25,
-       lpDecodeValueDay(26, MIString_ComingValueDayUser.ValueData) AS ValueUser26,
-       lpDecodeValueDay(27, MIString_ComingValueDayUser.ValueData) AS ValueUser27,
-       lpDecodeValueDay(28, MIString_ComingValueDayUser.ValueData) AS ValueUser28,
-       lpDecodeValueDay(29, MIString_ComingValueDayUser.ValueData) AS ValueUser29,
-       lpDecodeValueDay(30, MIString_ComingValueDayUser.ValueData) AS ValueUser30,
-       lpDecodeValueDay(31, MIString_ComingValueDayUser.ValueData) AS ValueUser31,
+       'Тип дня '||zfCalc_MonthName(CURRENT_DATE)              AS Note,
+       'Приход '||zfCalc_MonthName(CURRENT_DATE)               AS NoteStart,
+       'Уход '||zfCalc_MonthName(CURRENT_DATE)                 AS NoteEnd,
+       'Тип дня '||zfCalc_MonthName(vbDate)                    AS NoteNext,
+
+       UserData_01.PThortName                        AS Value1,
+       UserData_02.PThortName                        AS Value2,
+       UserData_03.PThortName                        AS Value3,
+       UserData_04.PThortName                        AS Value4,
+       UserData_05.PThortName                        AS Value5,
+       UserData_06.PThortName                        AS Value6,
+       UserData_07.PThortName                        AS Value7,
+       UserData_08.PThortName                        AS Value8,
+       UserData_09.PThortName                        AS Value9,
+       UserData_10.PThortName                        AS Value10,
+       UserData_11.PThortName                        AS Value11,
+       UserData_12.PThortName                        AS Value12,
+       UserData_13.PThortName                        AS Value13,
+       UserData_14.PThortName                        AS Value14,
+       UserData_15.PThortName                        AS Value15,
+       UserData_16.PThortName                        AS Value16,
+       UserData_17.PThortName                        AS Value17,
+       UserData_18.PThortName                        AS Value18,
+       UserData_19.PThortName                        AS Value19,
+       UserData_20.PThortName                        AS Value20,
+       UserData_21.PThortName                        AS Value21,
+       UserData_22.PThortName                        AS Value22,
+       UserData_23.PThortName                        AS Value23,
+       UserData_24.PThortName                        AS Value24,
+       UserData_25.PThortName                        AS Value25,
+       UserData_26.PThortName                        AS Value26,
+       UserData_27.PThortName                        AS Value27,
+       UserData_28.PThortName                        AS Value28,
+       UserData_29.PThortName                        AS Value29,
+       UserData_30.PThortName                        AS Value30,
+       UserData_31.PThortName                        AS Value31,
+
+       UserData_01.TimeStart                                   AS ValueStart1,
+       UserData_02.TimeStart                                   AS ValueStart2,
+       UserData_03.TimeStart                                   AS ValueStart3,
+       UserData_04.TimeStart                                   AS ValueStart4,
+       UserData_05.TimeStart                                   AS ValueStart5,
+       UserData_06.TimeStart                                   AS ValueStart6,
+       UserData_07.TimeStart                                   AS ValueStart7,
+       UserData_08.TimeStart                                   AS ValueStart8,
+       UserData_09.TimeStart                                   AS ValueStart9,
+       UserData_10.TimeStart                                   AS ValueStart10,
+       UserData_11.TimeStart                                   AS ValueStart11,
+       UserData_12.TimeStart                                   AS ValueStart12,
+       UserData_13.TimeStart                                   AS ValueStart13,
+       UserData_14.TimeStart                                   AS ValueStart14,
+       UserData_15.TimeStart                                   AS ValueStart15,
+       UserData_16.TimeStart                                   AS ValueStart16,
+       UserData_17.TimeStart                                   AS ValueStart17,
+       UserData_18.TimeStart                                   AS ValueStart18,
+       UserData_19.TimeStart                                   AS ValueStart19,
+       UserData_20.TimeStart                                   AS ValueStart20,
+       UserData_21.TimeStart                                   AS ValueStart21,
+       UserData_22.TimeStart                                   AS ValueStart22,
+       UserData_23.TimeStart                                   AS ValueStart23,
+       UserData_24.TimeStart                                   AS ValueStart24,
+       UserData_25.TimeStart                                   AS ValueStart25,
+       UserData_26.TimeStart                                   AS ValueStart26,
+       UserData_27.TimeStart                                   AS ValueStart27,
+       UserData_28.TimeStart                                   AS ValueStart28,
+       UserData_29.TimeStart                                   AS ValueStart29,
+       UserData_30.TimeStart                                   AS ValueStart30,
+       UserData_31.TimeStart                                   AS ValueStart31,
+
+       UserData_01.TimeEnd                                     AS ValueEnd1,
+       UserData_02.TimeEnd                                     AS ValueEnd2,
+       UserData_03.TimeEnd                                     AS ValueEnd3,
+       UserData_04.TimeEnd                                     AS ValueEnd4,
+       UserData_05.TimeEnd                                     AS ValueEnd5,
+       UserData_06.TimeEnd                                     AS ValueEnd6,
+       UserData_07.TimeEnd                                     AS ValueEnd7,
+       UserData_08.TimeEnd                                     AS ValueEnd8,
+       UserData_09.TimeEnd                                     AS ValueEnd9,
+       UserData_10.TimeEnd                                     AS ValueEnd10,
+       UserData_11.TimeEnd                                     AS ValueEnd11,
+       UserData_12.TimeEnd                                     AS ValueEnd12,
+       UserData_13.TimeEnd                                     AS ValueEnd13,
+       UserData_14.TimeEnd                                     AS ValueEnd14,
+       UserData_15.TimeEnd                                     AS ValueEnd15,
+       UserData_16.TimeEnd                                     AS ValueEnd16,
+       UserData_17.TimeEnd                                     AS ValueEnd17,
+       UserData_18.TimeEnd                                     AS ValueEnd18,
+       UserData_19.TimeEnd                                     AS ValueEnd19,
+       UserData_20.TimeEnd                                     AS ValueEnd20,
+       UserData_21.TimeEnd                                     AS ValueEnd21,
+       UserData_22.TimeEnd                                     AS ValueEnd22,
+       UserData_23.TimeEnd                                     AS ValueEnd23,
+       UserData_24.TimeEnd                                     AS ValueEnd24,
+       UserData_25.TimeEnd                                     AS ValueEnd25,
+       UserData_26.TimeEnd                                     AS ValueEnd26,
+       UserData_27.TimeEnd                                     AS ValueEnd27,
+       UserData_28.TimeEnd                                     AS ValueEnd28,
+       UserData_29.TimeEnd                                     AS ValueEnd29,
+       UserData_30.TimeEnd                                     AS ValueEnd30,
+       UserData_31.TimeEnd                                     AS ValueEnd31,
+
+       UserData_01.PThortNameNext                        AS ValueNext1,
+       UserData_02.PThortNameNext                        AS ValueNext2,
+       UserData_03.PThortNameNext                        AS ValueNext3,
+       UserData_04.PThortNameNext                        AS ValueNext4,
+       UserData_05.PThortNameNext                        AS ValueNext5,
+       UserData_06.PThortNameNext                        AS ValueNext6,
+       UserData_07.PThortNameNext                        AS ValueNext7,
+       UserData_08.PThortNameNext                        AS ValueNext8,
+       UserData_09.PThortNameNext                        AS ValueNext9,
+       UserData_10.PThortNameNext                        AS ValueNext10,
+       UserData_11.PThortNameNext                        AS ValueNext11,
+       UserData_12.PThortNameNext                        AS ValueNext12,
+       UserData_13.PThortNameNext                        AS ValueNext13,
+       UserData_14.PThortNameNext                        AS ValueNext14,
+       UserData_15.PThortNameNext                        AS ValueNext15,
+       UserData_16.PThortNameNext                        AS ValueNext16,
+       UserData_17.PThortNameNext                        AS ValueNext17,
+       UserData_18.PThortNameNext                        AS ValueNext18,
+       UserData_19.PThortNameNext                        AS ValueNext19,
+       UserData_20.PThortNameNext                        AS ValueNext20,
+       UserData_21.PThortNameNext                        AS ValueNext21,
+       UserData_22.PThortNameNext                        AS ValueNext22,
+       UserData_23.PThortNameNext                        AS ValueNext23,
+       UserData_24.PThortNameNext                        AS ValueNext24,
+       UserData_25.PThortNameNext                        AS ValueNext25,
+       UserData_26.PThortNameNext                        AS ValueNext26,
+       UserData_27.PThortNameNext                        AS ValueNext27,
+       UserData_28.PThortNameNext                        AS ValueNext28,
+       UserData_29.PThortNameNext                        AS ValueNext29,
+       UserData_30.PThortNameNext                        AS ValueNext30,
+       UserData_31.PThortNameNext                        AS ValueNext31,
+
        1                                                       AS TypeId1,
        2                                                       AS TypeId2,
        3                                                       AS TypeId3,
@@ -409,68 +524,39 @@ BEGIN
        29                                                      AS TypeId29,
        30                                                      AS TypeId30,
        31                                                      AS TypeId31,
-       CASE WHEN vbCurrDay >= 1 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 1, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 1, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc1,
-       CASE WHEN vbCurrDay >= 2 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 2, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 2, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc2,
-       CASE WHEN vbCurrDay >= 3 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 3, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 3, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc3,
-       CASE WHEN vbCurrDay >= 4 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 4, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 4, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc4,
-       CASE WHEN vbCurrDay >= 5 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 5, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 5, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc5,
-       CASE WHEN vbCurrDay >= 6 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 6, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 6, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc6,
-       CASE WHEN vbCurrDay >= 7 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 7, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 7, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc7,
-       CASE WHEN vbCurrDay >= 8 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 8, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 8, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc8,
-       CASE WHEN vbCurrDay >= 9 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 9, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 9, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc9,
-       CASE WHEN vbCurrDay >= 10 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 10, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 10, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc10,
-       CASE WHEN vbCurrDay >= 11 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 11, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 11, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc11,
-       CASE WHEN vbCurrDay >= 12 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 12, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 12, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc12,
-       CASE WHEN vbCurrDay >= 13 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 13, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 13, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc13,
-       CASE WHEN vbCurrDay >= 14 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 14, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 14, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc14,
-       CASE WHEN vbCurrDay >= 15 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 15, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 15, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc15,
-       CASE WHEN vbCurrDay >= 16 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 16, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 16, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc16,
-       CASE WHEN vbCurrDay >= 17 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 17, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 17, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc17,
-       CASE WHEN vbCurrDay >= 18 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 18, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 18, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc18,
-       CASE WHEN vbCurrDay >= 19 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 19, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 19, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc19,
-       CASE WHEN vbCurrDay >= 20 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 20, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 20, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc20,
-       CASE WHEN vbCurrDay >= 21 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 21, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 21, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc21,
-       CASE WHEN vbCurrDay >= 22 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 22, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 22, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc22,
-       CASE WHEN vbCurrDay >= 23 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 23, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 23, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc23,
-       CASE WHEN vbCurrDay >= 24 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 24, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 24, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc24,
-       CASE WHEN vbCurrDay >= 25 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 25, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 25, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc25,
-       CASE WHEN vbCurrDay >= 26 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 26, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 26, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc26,
-       CASE WHEN vbCurrDay >= 27 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 27, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 27, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc27,
-       CASE WHEN vbCurrDay >= 28 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 28, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 28, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc28,
-       CASE WHEN vbCurrDay >= 29 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 29, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 29, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc29,
-       CASE WHEN vbCurrDay >= 30 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 30, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 30, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc30,
-       CASE WHEN vbCurrDay >= 31 AND tmpMainUnit.Id = 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 31, 1) <>
-         SUBSTRING(MIString_ComingValueDayUser.ValueData, 31, 1) THEN zc_Color_Red() ELSE zc_Color_White() END AS Color_Calc31,
+       zc_Color_White()                                        AS Color_Calc1,
+       zc_Color_White()                                        AS Color_Calc2,
+       zc_Color_White()                                        AS Color_Calc3,
+       zc_Color_White()                                        AS Color_Calc4,
+       zc_Color_White()                                        AS Color_Calc5,
+       zc_Color_White()                                        AS Color_Calc6,
+       zc_Color_White()                                        AS Color_Calc7,
+       zc_Color_White()                                        AS Color_Calc8,
+       zc_Color_White()                                        AS Color_Calc9,
+       zc_Color_White()                                        AS Color_Calc10,
+       zc_Color_White()                                        AS Color_Calc11,
+       zc_Color_White()                                        AS Color_Calc12,
+       zc_Color_White()                                        AS Color_Calc13,
+       zc_Color_White()                                        AS Color_Calc14,
+       zc_Color_White()                                        AS Color_Calc15,
+       zc_Color_White()                                        AS Color_Calc16,
+       zc_Color_White()                                        AS Color_Calc17,
+       zc_Color_White()                                        AS Color_Calc18,
+       zc_Color_White()                                        AS Color_Calc19,
+       zc_Color_White()                                        AS Color_Calc20,
+       zc_Color_White()                                        AS Color_Calc21,
+       zc_Color_White()                                        AS Color_Calc22,
+       zc_Color_White()                                        AS Color_Calc23,
+       zc_Color_White()                                        AS Color_Calc24,
+       zc_Color_White()                                        AS Color_Calc25,
+       zc_Color_White()                                        AS Color_Calc26,
+       zc_Color_White()                                        AS Color_Calc27,
+       zc_Color_White()                                        AS Color_Calc28,
+       zc_Color_White()                                        AS Color_Calc29,
+       zc_Color_White()                                        AS Color_Calc30,
+       zc_Color_White()                                        AS Color_Calc31,
+
+
        CASE WHEN tmpMainUnit.Id = 1 THEN zc_Color_Black() ELSE 32768 END AS Color_CalcFont1,
        CASE WHEN tmpMainUnit.Id = 1 THEN zc_Color_Black() ELSE 32768 END AS Color_CalcFont2,
        CASE WHEN tmpMainUnit.Id = 1 THEN zc_Color_Black() ELSE 32768 END AS Color_CalcFont3,
@@ -504,13 +590,98 @@ BEGIN
        CASE WHEN tmpMainUnit.Id = 1 THEN zc_Color_Black() ELSE 32768 END AS Color_CalcFont31
      FROM tmpMainUnit
 
-          INNER JOIN MovementItemString AS MIString_ComingValueDay
-                                        ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                       AND MIString_ComingValueDay.MovementItemId = tmpMainUnit.MovementItemId
+          LEFT JOIN tmpUserData AS UserData_01
+                                 ON UserData_01.Day = 1
 
-          LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
-                                       ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
-                                      AND MIString_ComingValueDayUser.MovementItemId = tmpMainUnit.MovementItemId
+          LEFT JOIN tmpUserData AS UserData_02
+                                 ON UserData_02.Day = 2
+
+          LEFT JOIN tmpUserData AS UserData_03
+                                 ON UserData_03.Day = 3
+
+          LEFT JOIN tmpUserData AS UserData_04
+                                 ON UserData_04.Day = 4
+
+          LEFT JOIN tmpUserData AS UserData_05
+                                 ON UserData_05.Day = 5
+
+          LEFT JOIN tmpUserData AS UserData_06
+                                 ON UserData_06.Day = 6
+
+          LEFT JOIN tmpUserData AS UserData_07
+                                 ON UserData_07.Day = 7
+
+          LEFT JOIN tmpUserData AS UserData_08
+                                 ON UserData_08.Day = 8
+
+          LEFT JOIN tmpUserData AS UserData_09
+                                 ON UserData_09.Day = 9
+
+          LEFT JOIN tmpUserData AS UserData_10
+                                 ON UserData_10.Day = 10
+
+          LEFT JOIN tmpUserData AS UserData_11
+                                 ON UserData_11.Day = 11
+
+          LEFT JOIN tmpUserData AS UserData_12
+                                 ON UserData_12.Day = 12
+
+          LEFT JOIN tmpUserData AS UserData_13
+                                 ON UserData_13.Day = 13
+
+          LEFT JOIN tmpUserData AS UserData_14
+                                 ON UserData_14.Day = 14
+
+          LEFT JOIN tmpUserData AS UserData_15
+                                 ON UserData_15.Day = 15
+
+          LEFT JOIN tmpUserData AS UserData_16
+                                 ON UserData_16.Day = 16
+
+          LEFT JOIN tmpUserData AS UserData_17
+                                 ON UserData_17.Day = 17
+
+          LEFT JOIN tmpUserData AS UserData_18
+                                 ON UserData_18.Day = 18
+
+          LEFT JOIN tmpUserData AS UserData_19
+                                 ON UserData_19.Day = 19
+
+          LEFT JOIN tmpUserData AS UserData_20
+                                 ON UserData_20.Day = 20
+
+          LEFT JOIN tmpUserData AS UserData_21
+                                 ON UserData_21.Day = 21
+
+          LEFT JOIN tmpUserData AS UserData_22
+                                 ON UserData_22.Day = 22
+
+          LEFT JOIN tmpUserData AS UserData_23
+                                 ON UserData_23.Day = 23
+
+          LEFT JOIN tmpUserData AS UserData_24
+                                 ON UserData_24.Day = 24
+
+          LEFT JOIN tmpUserData AS UserData_25
+                                 ON UserData_25.Day = 25
+
+          LEFT JOIN tmpUserData AS UserData_26
+                                 ON UserData_26.Day = 26
+
+          LEFT JOIN tmpUserData AS UserData_27
+                                 ON UserData_27.Day = 27
+
+          LEFT JOIN tmpUserData AS UserData_28
+                                 ON UserData_28.Day = 28
+
+          LEFT JOIN tmpUserData AS UserData_29
+                                 ON UserData_29.Day = 29
+
+          LEFT JOIN tmpUserData AS UserData_30
+                                 ON UserData_30.Day = 30
+
+          LEFT JOIN tmpUserData AS UserData_31
+                                 ON UserData_31.Day = 31
 
      ORDER BY ID;
 
@@ -677,8 +848,10 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                       *
  27.03.19                                                       *
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeSchedule_User(inSession := '308120');
+--
+select * from gpSelect_MovementItem_EmployeeSchedule_User(inSession := '11698275');

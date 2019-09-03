@@ -1105,10 +1105,27 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountCard', 'Перечислено на карту'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountCard');
 
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_Marketing() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Marketing'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Marketing', 'Маркетинг'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Marketing');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaCleaning() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaCleaning'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaCleaning', 'Звтраты на уборку'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaCleaning');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaSP', 'Звтраты на СП'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaSP');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaOther() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOther'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaOther', 'Прочее звтраты'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOther');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.09.19                                                                                                     * zc_MIFloat_SummaCleaning, zc_MIFloat_SummaSP, zc_MIFloat_SummaOther
+ 29.08.19                                                                                                     * zc_MIFloat_Marketing
  26.08.19                                                                                                     * zc_MIFloat_SummaBase, zc_MIFloat_AmountCard
  31.07.19         * zc_MIFloat_DenumeratorValueSP
  29.07.19         * zc_MIFloat_SummFine, zc_MIFloat_SummHosp, zc_MIFloat_AmountPlan

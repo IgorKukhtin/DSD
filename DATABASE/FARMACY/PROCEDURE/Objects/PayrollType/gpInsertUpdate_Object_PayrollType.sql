@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_PayrollType()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, TVarChar, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PayrollType (
   INOUT ioId integer,
      IN inCode integer,
      IN inName TVarChar,
+     IN inShortName TVarChar,
      IN inPayrollGroupID integer,
      IN inPercent TFloat,
      IN inMinAccrualAmount TFloat,
@@ -35,6 +37,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PayrollType(), vbCode_calc, inName);
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_PayrollType_ShortName(), ioId, inShortName);
+
    -- сохранили связь с <Группа расчета заработной платы>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PayrollType_PayrollGroup(), ioId, inPayrollGroupID);
    
@@ -54,6 +59,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                        *
  22.08.19                                                        *
 
 */

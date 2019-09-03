@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 401
-  ClientWidth = 904
+  ClientWidth = 924
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object MemberForm: TMemberForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 904
+    Width = 924
     Height = 375
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 965
+    ExplicitWidth = 904
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -177,6 +177,20 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actUnitChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 119
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -639,6 +653,33 @@ object MemberForm: TMemberForm
         end>
       isShowModal = False
     end
+    object actUnitChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actUnitChoice'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -824,6 +865,14 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PositionID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UnitID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

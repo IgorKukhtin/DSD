@@ -3150,7 +3150,7 @@ inherited MainCashForm2: TMainCashForm2
       isShowModal = False
     end
     object actReport_GoodsRemainsCash: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
       Hint = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
@@ -3160,6 +3160,22 @@ inherited MainCashForm2: TMainCashForm2
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    object actInventoryEveryMonth: TMultiAction
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDataDialog
+        end
+        item
+          Action = actExecInventoryEveryMonth
+        end
+        item
+          Action = actDOCReportInventoryEveryMonth
+        end>
+      Caption = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
+      Hint = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094
     end
     object actSendCashJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -3208,6 +3224,46 @@ inherited MainCashForm2: TMainCashForm2
       Caption = 'actWagesUser'
       ShortCut = 16474
       OnExecute = actWagesUserExecute
+    end
+    object actDataDialog: TExecuteDialog
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = 'actDataDialog'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecInventoryEveryMonth: TdsdExecStoredProc
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInventoryEveryMonth
+      StoredProcList = <
+        item
+          StoredProc = spInventoryEveryMonth
+        end>
+      Caption = 'actExecInventoryEveryMonth'
+    end
+    object actDOCReportInventoryEveryMonth: TdsdDOCReportFormAction
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = 'actDOCReportInventoryEveryMonth'
+      DataSet = cdsInventoryEveryMonth
+      BlankName = #1048#1053#1042#1045#1053#1058'_'#1054#1055#1048#1057#1068'_'#1085#1072'_'#1082#1072#1078#1076#1099#1081'_'#1084#1077#1089#1103#1094'.doc'
+      FileName = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094'.doc'
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -3414,6 +3470,12 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1054#1090#1095#1077#1090#1099
       object actReportGoodsRemainsCash1: TMenuItem
         Action = actReport_GoodsRemainsCash
+      end
+      object N33: TMenuItem
+        Caption = '-'
+      end
+      object N34: TMenuItem
+        Action = actInventoryEveryMonth
       end
     end
     object N12: TMenuItem
@@ -3720,7 +3782,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = 43678d
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -3763,6 +3825,12 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'PartionDateKindId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -4945,5 +5013,32 @@ inherited MainCashForm2: TMainCashForm2
       Properties.BlobPaintStyle = bpsText
       Properties.ReadOnly = True
     end
+  end
+  object spInventoryEveryMonth: TdsdStoredProc
+    StoredProcName = 'gpSelect_Cash_InventoryEveryMonth'
+    DataSet = cdsInventoryEveryMonth
+    DataSets = <
+      item
+        DataSet = cdsInventoryEveryMonth
+      end>
+    Params = <
+      item
+        Name = 'inRemainsDate'
+        Value = 43678d
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 32
+  end
+  object cdsInventoryEveryMonth: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 528
+    Top = 80
   end
 end

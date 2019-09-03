@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -23,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     
     IN inManagerPharmacy     Boolean   ,    -- Заведующая аптекой
     IN inPositionID          Integer   ,    -- Должность
+    IN inUnitID              Integer   ,    -- Подразделение
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -81,6 +84,9 @@ BEGIN
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Member_Position(), ioId, inPositionID);
 
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Member_Unit(), ioId, inUnitID);
+
    -- синхронизируем <Физические лица> и <Сотрудники>
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
@@ -94,6 +100,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                       *
  25.08.19                                                       *
  25.01.16         *
 */

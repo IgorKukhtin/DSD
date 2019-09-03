@@ -48,6 +48,7 @@ type
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
+    procedure LoadEmployeeScheduleFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsGroupPromoFormTest;
@@ -1367,6 +1368,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
@@ -1909,11 +1912,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
 
@@ -1923,11 +1926,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
 
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');       {
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
@@ -1991,6 +1994,27 @@ begin
     (GetForm('TSheetWorkTimeAddRecordForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 
+end;
+
+procedure TLoadFormTest.LoadEmployeeScheduleFormTest;
+begin
+
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleNewForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleNewForm');
+
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
+}
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

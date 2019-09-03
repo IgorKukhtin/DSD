@@ -90,7 +90,7 @@ inherited WagesForm: TWagesForm
             item
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 413
+              Width = 497
             end>
           object MemberCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -154,6 +154,18 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object Marketing: TcxGridDBBandedColumn
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+            DataBinding.FieldName = 'Marketing'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
           object AmountCard: TcxGridDBBandedColumn
             Caption = #1053#1072' '#1082#1072#1088#1090#1091
             DataBinding.FieldName = 'AmountCard'
@@ -163,7 +175,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -176,7 +188,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -184,10 +196,9 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 30
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -833,6 +844,33 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actUpdate_isIssuedBy'
     end
+    object actWagesAdditionalExpenses: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+      Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+      ImageIndex = 56
+      FormName = 'TWagesAdditionalExpensesForm'
+      FormNameParam.Value = 'TWagesAdditionalExpensesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -882,10 +920,6 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton10'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -907,6 +941,10 @@ inherited WagesForm: TWagesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -1022,6 +1060,10 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton10: TdxBarButton
       Action = actIssuedBy
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actWagesAdditionalExpenses
       Category = 0
     end
   end
@@ -1292,12 +1334,38 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMarketing'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Marketing'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountCard'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountCard'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisIssuedBy'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isIssuedBy'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountHand'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountHand'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     NeedResetData = True

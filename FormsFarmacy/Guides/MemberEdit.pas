@@ -45,6 +45,9 @@ type
     cxLabel11: TcxLabel;
     PositionGuides: TdsdGuides;
     ceManagerPharmacy: TcxCheckBox;
+    ceUnit: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

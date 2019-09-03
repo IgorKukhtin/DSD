@@ -1,24 +1,24 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 410
+  ClientHeight = 440
   ClientWidth = 354
   ExplicitWidth = 360
-  ExplicitHeight = 439
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 77
-    Top = 369
+    Left = 73
+    Top = 407
     TabOrder = 1
-    ExplicitLeft = 77
-    ExplicitTop = 369
+    ExplicitLeft = 73
+    ExplicitTop = 407
   end
   inherited bbCancel: TcxButton
-    Left = 209
-    Top = 369
+    Left = 205
+    Top = 407
     TabOrder = 2
-    ExplicitLeft = 209
-    ExplicitTop = 369
+    ExplicitLeft = 205
+    ExplicitTop = 407
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
@@ -35,7 +35,6 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 339
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -169,7 +168,6 @@
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitHeight = 285
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -206,6 +204,23 @@
         Width = 322
       end
     end
+  end
+  object ceUnit: TcxButtonEdit [3]
+    Left = 8
+    Top = 371
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 3
+    Width = 320
+  end
+  object cxLabel12: TcxLabel [4]
+    Left = 8
+    Top = 354
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 107
@@ -460,6 +475,20 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitID'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 120
@@ -586,5 +615,35 @@
       end>
     Left = 239
     Top = 320
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 240
+    Top = 367
   end
 end

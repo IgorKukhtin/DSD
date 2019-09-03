@@ -46,6 +46,8 @@ type
     edPayrollGroup: TcxButtonEdit;
     cxLabel3: TcxLabel;
     PayrollGroupGuides: TdsdGuides;
+    edShortName: TcxTextEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

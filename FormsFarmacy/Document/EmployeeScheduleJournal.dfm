@@ -140,34 +140,14 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
     Left = 55
     Top = 154
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TEmployeeScheduleForm'
-      FormNameParam.Value = 'TEmployeeScheduleForm'
+      FormName = 'TEmployeeScheduleNewForm'
+      FormNameParam.Value = 'TEmployeeScheduleNewForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TEmployeeScheduleForm'
-      FormNameParam.Value = 'TEmployeeScheduleForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
+      BeforeAction = actGetForm
+      FormNameParam.Value = nil
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -199,6 +179,17 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getEmployeeScheduleForm
+      StoredProcList = <
+        item
+          StoredProc = getEmployeeScheduleForm
+        end>
+      Caption = 'actGetForm'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -329,6 +320,33 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
     Top = 216
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 32
     Top = 400
   end
@@ -444,5 +462,38 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
     PackSize = 1
     Left = 168
     Top = 99
+  end
+  object getEmployeeScheduleForm: TdsdStoredProc
+    StoredProcName = 'gpGet_EmployeeSchedule_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 121
   end
 end

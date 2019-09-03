@@ -961,12 +961,17 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectString_Driver_E_Mail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Driver_E_Mail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Driver_E_Mail', zc_Object_Driver(), 'e-mail для отправки реестра перемещений' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Driver_E_Mail');
+ 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PayrollType_ShortName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollType_ShortName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PayrollType_ShortName', zc_Object_PayrollType(), 'Короткое наименование' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollType_ShortName');
 
-  
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
- 25.09.19                                                                                                         * zc_ObjectString_User_PasswordWages
+ 01.09.19                                                                                                         * zc_ObjectString_PayrollType_ShortName
+ 25.08.19                                                                                                         * zc_ObjectString_User_PasswordWages
  07.08.19                                                                                                         * zc_ObjectString_Driver_E_Mail
  29.07.19         * zc_ObjectString_OrderFinance_Comment
  14.06.19                                                                                                         * zc_ObjectString_Goods_Analog
