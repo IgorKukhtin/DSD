@@ -1205,12 +1205,16 @@ BEGIN
                            --AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
                            AND ObjectHistory_Price.EndDate = zc_DateEnd()
                          )
-       , tmpOH_Float AS (SELECT ObjectHistoryFloat.*
-                         FROM ObjectHistoryFloat
-                         WHERE ObjectHistoryFloat.DescId IN (zc_ObjectHistoryFloat_Price_MCSPeriod()
-                                                           , zc_ObjectHistoryFloat_Price_MCSDay())
-                           AND ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price.Id FROM tmpOH_Price)
-                        )
+       , tmpOH_FloatMCSPeriod AS (SELECT ObjectHistoryFloat.*
+                                  FROM ObjectHistoryFloat
+                                  WHERE ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+                                    AND ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price.Id FROM tmpOH_Price)
+                                  )
+       , tmpOH_FloatMCSDay AS (SELECT ObjectHistoryFloat.*
+                               FROM ObjectHistoryFloat
+                               WHERE ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_MCSDay()
+                                 AND ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price.Id FROM tmpOH_Price)
+                               )
 
    -- выбираем отложенные Чеки (как в кассе колонка VIP) 
    , tmpMovementChek AS (SELECT Movement.Id
@@ -1456,13 +1460,11 @@ BEGIN
                LEFT JOIN tmpOH_Price AS ObjectHistory_Price
                                        ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
                -- получаем значения Количество дней для анализа НТЗ из истории значений на дату                    
-               LEFT JOIN tmpOH_Float AS ObjectHistoryFloat_MCSPeriod
-                                     ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
-                                    AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+               LEFT JOIN tmpOH_FloatMCSPeriod AS ObjectHistoryFloat_MCSPeriod
+                                              ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
                -- получаем значения Страховой запас дней НТЗ из истории значений на дату    
-               LEFT JOIN tmpOH_Float AS ObjectHistoryFloat_MCSDay
-                                     ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
-                                    AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+               LEFT JOIN tmpOH_FloatMCSDay AS ObjectHistoryFloat_MCSDay
+                                           ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
  
                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
  

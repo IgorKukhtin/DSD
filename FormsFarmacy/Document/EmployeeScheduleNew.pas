@@ -53,7 +53,7 @@ type
     CrossDBViewPrevAddOn: TCrossDBViewAddOn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     CrossDBViewStartAddOn: TCrossDBViewAddOn;
-    Color_CalcUser: TcxGridDBBandedColumn;
+    Color_CalcStart: TcxGridDBBandedColumn;
     actUpdateUnit: TMultiAction;
     actChoiceUnitTreeForm: TOpenChoiceForm;
     actExecStoredUpdateUnit: TdsdExecStoredProc;
@@ -68,6 +68,7 @@ type
     ValueEnd: TcxGridDBBandedColumn;
     actPayrollTypeChoice: TOpenChoiceForm;
     CrossDBViewEndAddOn: TCrossDBViewAddOn;
+    Color_CalcEnd: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isSite Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , InDate TDateTime, FarmacyCashDate TDateTime
+             , PasswordWages TVarChar
               )
 AS
 $BODY$
@@ -76,7 +77,8 @@ END IF;
        
        , ObjectDate_User_In.ValueData               AS InDate
        , ObjectDate_User_FarmacyCash.ValueData      AS FarmacyCashDate
-        
+       , ObjectString_PasswordWages.ValueData
+       
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
@@ -139,6 +141,11 @@ END IF;
         LEFT JOIN ObjectDate AS ObjectDate_User_FarmacyCash
                              ON ObjectDate_User_FarmacyCash.ObjectId = Object_User.Id
                             AND ObjectDate_User_FarmacyCash.DescId = zc_ObjectDate_User_FarmacyCash()
+
+        LEFT JOIN ObjectString AS ObjectString_PasswordWages
+               ON ObjectString_PasswordWages.DescId = zc_ObjectString_User_PasswordWages() 
+              AND ObjectString_PasswordWages.ObjectId = Object_User.Id
+              
    WHERE Object_User.DescId = zc_Object_User();
   
 END;
@@ -146,7 +153,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.

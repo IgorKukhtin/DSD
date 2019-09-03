@@ -77,6 +77,7 @@ type
     actChoicePosition: TOpenChoiceForm;
     UnitName: TcxGridDBColumn;
     actUnitChoice: TOpenChoiceForm;
+    UserList: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -21,7 +21,7 @@ BEGIN
 --    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
 
     -- проверка прав пользователя на вызов процедуры
-    IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer AND 9383066  <> inSession::Integer
+    IF vbUserId NOT IN (3, 758920, 4183126, 9383066)
     THEN
       RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
     END IF;

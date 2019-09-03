@@ -1916,19 +1916,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-
+    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-
+     {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
 
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');       {
   // диалог изменения цены получателя

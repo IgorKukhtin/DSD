@@ -134,7 +134,8 @@ type
     actUpdateDataSetDetailDS: TdsdUpdateDataSet;
     spInsertUpdateMIChild: TdsdStoredProc;
     chColor_calc: TcxGridDBColumn;
-    MaxExpirationDate: TcxGridDBColumn;
+    DateInsertChild: TcxGridDBColumn;
+    chDateInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public

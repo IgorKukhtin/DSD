@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , FromName_Income     TVarChar
              , ContractName_Income TVarChar
              , PartionDateKindName TVarChar
+             , DateInsert          TDateTime
              , Color_calc Integer
               )
 AS
@@ -397,6 +398,8 @@ BEGIN
            , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar  AS ContractName_Income
 
            , Object_PartionDateKind.ValueData                  :: TVarChar  AS PartionDateKindName
+           , DATE_TRUNC ('DAY', MIDate_Insert.ValueData)       :: TDateTime AS DateInsert
+           
            , zc_Color_Black()                                               AS Color_calc
        FROM tmpMI_Child AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -406,6 +409,9 @@ BEGIN
             LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIFloat_ContainerId.ContainerId
             LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainer.PartionDateKindId
+            LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
+                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                             AND MIDate_Insert.DescId = zc_MIDate_Insert()
        UNION ALL
        SELECT
              - 1
@@ -423,6 +429,7 @@ BEGIN
            , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar  AS ContractName_Income
 
            , Object_PartionDateKind.ValueData                  :: TVarChar  AS PartionDateKindName
+           , NULL::TDAteTime                                                AS DateInsert
            , 694938                                                         AS Color_calc
        FROM tmpMIContainer
             INNER JOIN MovementItem ON MovementItem.ID = tmpMIContainer.ID

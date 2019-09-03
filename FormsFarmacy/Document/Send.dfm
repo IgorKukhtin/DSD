@@ -459,9 +459,9 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object MaxExpirationDate: TcxGridDBColumn
-            Caption = #1052#1072#1082#1089'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1075#1086
-            DataBinding.FieldName = 'MaxExpirationDate'
+          object DateInsertChild: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1087#1072#1088#1090#1080#1099
+            DataBinding.FieldName = 'DateInsertChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
@@ -589,6 +589,14 @@ inherited SendForm: TSendForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 80
+          end
+          object chDateInsert: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'DateInsert'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object chisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -819,8 +827,8 @@ inherited SendForm: TSendForm
     Width = 214
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 203
-    Top = 440
+    Left = 259
+    Top = 432
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40

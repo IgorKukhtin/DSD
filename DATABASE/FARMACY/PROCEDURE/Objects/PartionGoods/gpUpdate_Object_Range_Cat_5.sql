@@ -92,6 +92,8 @@ BEGIN
 
          LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.ObjectId
 
+         LEFT OUTER JOIN tmpNotSale ON tmpNotSale.ContainerId = Container.Id
+
     WHERE Container.DescId = zc_container_countpartiondate()
       AND Container.Amount > 0
       AND COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()) <= CURRENT_DATE
@@ -112,5 +114,4 @@ $BODY$
  19.07.19                                                       *
 */
 
--- тест
--- SELECT * FROM gpUpdate_Object_Range_Cat_5 (inMovementId:= 1, inOperDate:= NULL);
+-- тест SELECT * FROM gpUpdate_Object_Range_Cat_5 (0, 0, '3');

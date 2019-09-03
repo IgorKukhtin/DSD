@@ -26,6 +26,10 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, inContainerId);
 
+    IF vbIsInsert = TRUE
+    THEN
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+    END IF;
 
     -- сохранили протокол
     --PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

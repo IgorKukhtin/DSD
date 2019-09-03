@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
              , MinExpirationDate TDateTime
-             , MaxExpirationDate TDateTime
+             , DateInsertChild TDateTime
              
              , isErased Boolean
              , GoodsGroupName TVarChar
@@ -299,7 +299,7 @@ BEGIN
                                  )
          , tmpMI_Child AS (SELECT MovementItem.ParentId
                                 , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
-                                , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MaxExpirationDate
+                                , MAX(DATE_TRUNC ('DAY', MIDate_Insert.ValueData))                   AS DateInsertChild
                            FROM MovementItem
                                 INNER JOIN MovementItemFloat AS MIFloat_Container
                                                              ON MIFloat_Container.MovementItemId = MovementItem.Id
@@ -309,6 +309,9 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                      ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
+                                                                  ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                 AND MIDate_Insert.DescId = zc_MIDate_Insert()
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId = zc_MI_Child()
                              AND MovementItem.IsErased = FALSE
@@ -347,7 +350,7 @@ BEGIN
               , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
               , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
               , COALESCE (tmpMI_Child.ExpirationDate, tmpRemains.MinExpirationDate)::TDateTime AS MinExpirationDate   
-              , tmpMI_Child.MaxExpirationDate::TDateTime                   AS MaxExpirationDate
+              , tmpMI_Child.DateInsertChild::TDateTime                     AS DateInsertChild
 
               , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
@@ -612,7 +615,7 @@ BEGIN
                                  )
          , tmpMI_Child AS (SELECT MovementItem.ParentId
                                 , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
-                                , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MaxExpirationDate
+                                , MAX(DATE_TRUNC ('DAY', MIDate_Insert.ValueData))                   AS DateInsertChild
                            FROM MovementItem
                                 INNER JOIN MovementItemFloat AS MIFloat_Container
                                                              ON MIFloat_Container.MovementItemId = MovementItem.Id
@@ -622,6 +625,9 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                      ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
+                                                                  ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                 AND MIDate_Insert.DescId = zc_MIDate_Insert()
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId = zc_MI_Child()
                              AND MovementItem.IsErased = FALSE
@@ -667,7 +673,7 @@ BEGIN
            --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
            , COALESCE (tmpMI_Child.ExpirationDate, 
              CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END)::TDateTime AS MinExpirationDate
-           , tmpMI_Child.MaxExpirationDate::TDateTime                  AS MaxExpirationDate
+           , tmpMI_Child.DateInsertChild::TDateTime                    AS DateInsertChild
            
            , MovementItem_Send.IsErased                                AS isErased
 

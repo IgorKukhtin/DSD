@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isManagerPharmacy Boolean
              , PositionID Integer, PositionName TVarChar
              , UnitID Integer, UnitName TVarChar
+             , UserList TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -33,13 +34,25 @@ BEGIN
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
    -- Результат
-   RETURN QUERY 
-                     
-     SELECT 
+   RETURN QUERY
+     WITH tmpUser AS (SELECT ObjectLink_User_Member.ChildObjectId               AS MemberID
+                           , string_agg(Object_User.ObjectCode::TVarChar, ', ') AS CodeList
+                      FROM Object AS Object_User
+
+                           INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+                      WHERE Object_User.DescId = zc_Object_User()
+                        AND Object_User.isErased = False
+                        AND COALESCE (ObjectLink_User_Member.ChildObjectId, 0) <> 0
+                      GROUP BY ObjectLink_User_Member.ChildObjectId)
+
+     SELECT
            Object_Member.Id         AS Id
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
-         
+
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Comment.ValueData           AS Comment
@@ -53,16 +66,18 @@ BEGIN
          , ObjectBlob_Photo.ValueData               AS Photo
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
- 
+
          , Object_Education.Id                      AS EducationId
          , Object_Education.ObjectCode              AS EducationCode
          , Object_Education.ValueData               AS EducationName
-         
+
          , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
          , Object_Position.Id                       AS PositionID
          , Object_Position.ValueData                AS PositionName
          , Object_Unit.Id                           AS UnitID
          , Object_Unit.ValueData                    AS UnitName
+
+         , tmpUser.CodeList::TVarChar               AS UserList
 
          , Object_Member.isErased                   AS isErased
 
@@ -94,23 +109,23 @@ BEGIN
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
           LEFT JOIN ObjectString AS ObjectString_INN
-                                 ON ObjectString_INN.ObjectId = Object_Member.Id 
+                                 ON ObjectString_INN.ObjectId = Object_Member.Id
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
-                                 ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
+                                 ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
           LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Member.Id 
+                                 ON ObjectString_Comment.ObjectId = Object_Member.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
 
           LEFT JOIN ObjectString AS ObjectString_EMail
-                                 ON ObjectString_EMail.ObjectId = Object_Member.Id 
+                                 ON ObjectString_EMail.ObjectId = Object_Member.Id
                                 AND ObjectString_EMail.DescId = zc_ObjectString_Member_EMail()
           LEFT JOIN ObjectString AS ObjectString_Phone
-                                 ON ObjectString_Phone.ObjectId = Object_Member.Id 
+                                 ON ObjectString_Phone.ObjectId = Object_Member.Id
                                 AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
           LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = Object_Member.Id 
+                                 ON ObjectString_Address.ObjectId = Object_Member.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Member_Address()
 
          LEFT JOIN ObjectLink AS ObjectLink_Member_Education
@@ -118,11 +133,11 @@ BEGIN
                              AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
          LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
 
-         
+
          LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign
                               ON ObjectBlob_EMailSign.ObjectId = Object_Member.Id
                              AND ObjectBlob_EMailSign.DescId = zc_ObjectBlob_Member_EMailSign()
-         
+
          LEFT JOIN ObjectBlob AS ObjectBlob_Photo
                               ON ObjectBlob_Photo.ObjectId = Object_Member.Id
                              AND ObjectBlob_Photo.DescId = zc_ObjectBlob_Member_Photo()
@@ -140,6 +155,8 @@ BEGIN
                               ON ObjectLink_Member_Unit.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+         
+         LEFT JOIN tmpUser ON tmpUser.MemberID =  Object_Member.Id
 
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
@@ -148,7 +165,7 @@ BEGIN
        AND (View_Personal.MemberId > 0
             OR vbIsAllUnit = TRUE
            )
-       
+
   UNION ALL
           SELECT
              CAST (0 as Integer)    AS Id
@@ -168,19 +185,21 @@ BEGIN
            , FALSE                  AS isOfficial
            , CAST (0 as Integer)    AS EducationId
            , CAST (0 as Integer)    AS EducationCode
-           , CAST ('' as TVarChar)  AS EducationName   
+           , CAST ('' as TVarChar)  AS EducationName
 
            , FALSE                  AS isManagerPharmacy
            , CAST (0 as Integer)    AS PositionId
-           , CAST ('' as TVarChar)  AS PositionName   
+           , CAST ('' as TVarChar)  AS PositionName
 
            , CAST (0 as Integer)    AS UnitID
            , CAST ('' as TVarChar)  AS UnitName
 
+           , CAST ('' as TVarChar)  AS UserList
+
            , FALSE AS isErased
 
     ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -193,7 +212,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
  02.09.19                                                       *
  25.08.19                                                       *
  25.01.16         *
-          
+
 */
 
 -- тест

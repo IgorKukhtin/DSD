@@ -1188,7 +1188,7 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inUserName'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Name'
@@ -1264,6 +1264,15 @@ object UserForm: TUserForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPasswordWages'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PasswordWages'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

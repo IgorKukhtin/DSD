@@ -27,7 +27,8 @@ BEGIN
      CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
      SELECT MIMaster.ID                                                                  AS ID
           , MIMaster.ObjectId                                                            AS UserID
-          , MILinkObject_Unit.ObjectId                                                   AS MainUnitID
+          , (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
+            COALESCE(MIChild.ObjectId, ObjectLink_Member_Unit.ChildObjectId))::Boolean   AS MainUnit
           , MIChild.ObjectId                                                             AS UnitID
           , MIChild.Amount                                                               AS Day
           , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
@@ -40,6 +41,14 @@ BEGIN
           INNER JOIN MovementItem AS MIMaster
                                   ON MIMaster.MovementId = Movement.id
                                  AND MIMaster.DescId = zc_MI_Master()
+
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = MIMaster.ObjectId
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                               ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                            ON MILinkObject_Unit.MovementItemId = MIMaster.Id
@@ -78,6 +87,19 @@ BEGIN
      CREATE TEMP TABLE tmpOperDatePrev ON COMMIT DROP AS
         SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', vbDate), DATE_TRUNC ('MONTH', vbDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
+
+     IF (SELECT count(*) FROM tmpOperDatePrev) <> (SELECT count(*) FROM tmpOperDate)
+     THEN
+       WHILE (SELECT count(*) FROM tmpOperDatePrev) <> (SELECT count(*) FROM tmpOperDate)
+       LOOP
+         IF (SELECT count(*) FROM tmpOperDatePrev) > (SELECT count(*) FROM tmpOperDate)
+         THEN
+           INSERT INTO tmpOperDate (OperDate) VALUES (NULL);
+         ELSE
+           INSERT INTO tmpOperDatePrev (OperDate) VALUES (NULL);
+         END IF;
+       END LOOP;
+     END IF;
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
@@ -280,6 +302,38 @@ BEGIN
          29                                   AS TypeId29,
          30                                   AS TypeId30,
          31                                   AS TypeId31,
+
+         zc_Color_White()                     AS Color_CalcUser1,
+         zc_Color_White()                     AS Color_CalcUser2,
+         zc_Color_White()                     AS Color_CalcUser3,
+         zc_Color_White()                     AS Color_CalcUser4,
+         zc_Color_White()                     AS Color_CalcUser5,
+         zc_Color_White()                     AS Color_CalcUser6,
+         zc_Color_White()                     AS Color_CalcUser7,
+         zc_Color_White()                     AS Color_CalcUser8,
+         zc_Color_White()                     AS Color_CalcUser9,
+         zc_Color_White()                     AS Color_CalcUser10,
+         zc_Color_White()                     AS Color_CalcUser11,
+         zc_Color_White()                     AS Color_CalcUser12,
+         zc_Color_White()                     AS Color_CalcUser13,
+         zc_Color_White()                     AS Color_CalcUser14,
+         zc_Color_White()                     AS Color_CalcUser15,
+         zc_Color_White()                     AS Color_CalcUser16,
+         zc_Color_White()                     AS Color_CalcUser17,
+         zc_Color_White()                     AS Color_CalcUser18,
+         zc_Color_White()                     AS Color_CalcUser19,
+         zc_Color_White()                     AS Color_CalcUser20,
+         zc_Color_White()                     AS Color_CalcUser21,
+         zc_Color_White()                     AS Color_CalcUser22,
+         zc_Color_White()                     AS Color_CalcUser23,
+         zc_Color_White()                     AS Color_CalcUser24,
+         zc_Color_White()                     AS Color_CalcUser25,
+         zc_Color_White()                     AS Color_CalcUser26,
+         zc_Color_White()                     AS Color_CalcUser27,
+         zc_Color_White()                     AS Color_CalcUser28,
+         zc_Color_White()                     AS Color_CalcUser29,
+         zc_Color_White()                     AS Color_CalcUser30,
+         zc_Color_White()                     AS Color_CalcUser31,
 
          zc_Color_White()                     AS Color_Calc1,
          zc_Color_White()                     AS Color_Calc2,
@@ -634,38 +688,37 @@ BEGIN
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
 
-/*         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser1,
-         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser2,
-         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser3,
-         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser4,
-         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser5,
-         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser6,
-         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser7,
-         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser8,
-         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser9,
-         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser10,
-         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser11,
-         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser12,
-         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser13,
-         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser14,
-         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser15,
-         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser16,
-         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser17,
-         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser18,
-         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser19,
-         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser20,
-         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser21,
-         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser22,
-         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser23,
-         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser24,
-         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser25,
-         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser26,
-         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser27,
-         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser28,
-         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser29,
-         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser30,
-         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser31,
-*/
+         CASE WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser1,
+         CASE WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser2,
+         CASE WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser3,
+         CASE WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser4,
+         CASE WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser5,
+         CASE WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser6,
+         CASE WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser7,
+         CASE WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser8,
+         CASE WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser9,
+         CASE WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser10,
+         CASE WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser11,
+         CASE WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser12,
+         CASE WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser13,
+         CASE WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser14,
+         CASE WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser15,
+         CASE WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser16,
+         CASE WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser17,
+         CASE WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser18,
+         CASE WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser19,
+         CASE WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser20,
+         CASE WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser21,
+         CASE WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser22,
+         CASE WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser23,
+         CASE WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser24,
+         CASE WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser25,
+         CASE WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser26,
+         CASE WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser27,
+         CASE WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser28,
+         CASE WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser29,
+         CASE WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser30,
+         CASE WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser31,
 
          zc_Color_White()                                        AS Color_Calc1,
          zc_Color_White()                                        AS Color_Calc2,
@@ -1019,38 +1072,37 @@ BEGIN
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
 
-/*         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser1,
-         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser2,
-         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser3,
-         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser4,
-         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser5,
-         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser6,
-         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser7,
-         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser8,
-         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser9,
-         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser10,
-         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser11,
-         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser12,
-         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser13,
-         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser14,
-         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser15,
-         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser16,
-         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser17,
-         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser18,
-         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser19,
-         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser20,
-         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser21,
-         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser22,
-         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser23,
-         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser24,
-         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser25,
-         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser26,
-         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser27,
-         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser28,
-         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser29,
-         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser30,
-         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser31,
-*/
+         CASE WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser1,
+         CASE WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser2,
+         CASE WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser3,
+         CASE WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser4,
+         CASE WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser5,
+         CASE WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser6,
+         CASE WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser7,
+         CASE WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser8,
+         CASE WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser9,
+         CASE WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser10,
+         CASE WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser11,
+         CASE WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser12,
+         CASE WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser13,
+         CASE WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser14,
+         CASE WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser15,
+         CASE WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser16,
+         CASE WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser17,
+         CASE WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser18,
+         CASE WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser19,
+         CASE WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser20,
+         CASE WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser21,
+         CASE WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser22,
+         CASE WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser23,
+         CASE WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser24,
+         CASE WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser25,
+         CASE WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser26,
+         CASE WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser27,
+         CASE WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser28,
+         CASE WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser29,
+         CASE WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser30,
+         CASE WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser31,
 
          zc_Color_White()                                        AS Color_Calc1,
          zc_Color_White()                                        AS Color_Calc2,

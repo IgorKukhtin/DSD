@@ -92,7 +92,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
               Caption = #1055#1077#1088#1080#1086#1076
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 50
+              Width = 65
             end>
           object PersonalCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -152,7 +152,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Options.Editing = False
             Styles.Content = dmMain.cxGreenEdit
             Styles.Header = dmMain.cxHeaderL4Style
-            Width = 60
+            Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -170,7 +170,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
-            Width = 60
+            Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 1
@@ -184,7 +184,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
-            Width = 60
+            Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 2
@@ -197,23 +197,31 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 3
           end
           object Color_Calc: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Color_Calc'
+            DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
             Position.BandIndex = 0
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
-          object Color_CalcUser: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Color_Calc'
+          object Color_CalcStart: TcxGridDBBandedColumn
+            Caption = 'Color_CalcStart'
+            DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
             Position.BandIndex = 0
             Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object Color_CalcEnd: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_CalcUser'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object isErased: TcxGridDBBandedColumn
@@ -1135,7 +1143,9 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView1
     OnDblClickActionList = <>
-    ActionItemList = <>
+    ActionItemList = <
+      item
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
@@ -1163,7 +1173,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColorRuleList = <
       item
         ColorColumn = ValueStart
-        BackGroundValueColumn = Color_CalcUser
+        BackGroundValueColumn = Color_CalcStart
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -1298,8 +1308,8 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = ValueStart
-        BackGroundValueColumn = Color_CalcUser
+        ColorColumn = ValueEnd
+        BackGroundValueColumn = Color_CalcEnd
         ColorValueList = <>
       end>
     ColumnAddOnList = <>

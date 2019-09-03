@@ -24,17 +24,18 @@
     Left = 0
     Top = 0
     Width = 354
-    Height = 353
+    Height = 401
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 353
+    ClientRectBottom = 401
     ClientRectRight = 354
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitHeight = 324
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -164,10 +165,28 @@
         TabOrder = 19
         Width = 141
       end
+      object ceUnit: TcxButtonEdit
+        Left = 8
+        Top = 346
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 20
+        Width = 320
+      end
+      object cxLabel12: TcxLabel
+        Left = 7
+        Top = 328
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
+      ExplicitHeight = 329
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -204,23 +223,6 @@
         Width = 322
       end
     end
-  end
-  object ceUnit: TcxButtonEdit [3]
-    Left = 8
-    Top = 371
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 3
-    Width = 320
-  end
-  object cxLabel12: TcxLabel [4]
-    Left = 8
-    Top = 354
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 107
@@ -590,6 +592,7 @@
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -619,6 +622,7 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
