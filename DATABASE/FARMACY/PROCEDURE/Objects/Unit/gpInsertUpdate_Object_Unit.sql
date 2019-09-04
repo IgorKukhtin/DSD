@@ -44,6 +44,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, TVarChar);
 
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, TVarChar);
+                                                   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -83,6 +89,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inRedeemByHandSP          Boolean   ,    -- Погашать через сайт вручную (без использования API)
     IN inUnitOverdueId           Integer   ,    -- Подразделение для перемещения просроченного товара
     IN inisAutoMCS               Boolean   ,    -- Автоматический пересчет НТЗ
+    IN inisTopNo                 Boolean   ,    -- Не учитывать ТОП для аптеки
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -273,6 +280,10 @@ BEGIN
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_AutoMCS(), ioId, inisAutoMCS);
 
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_TopNo(), ioId, inisTopNo);
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -286,6 +297,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 04.09.19         * inisTopNo
  26.08.19         * inKoeffInSUN, inKoeffOutSUN
  13.08.19                                                        * AutoMCS
  02.07.19                                                        * UnitOverdue

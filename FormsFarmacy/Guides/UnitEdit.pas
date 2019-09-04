@@ -113,6 +113,7 @@ type
     edKoeffInSUN: TcxCurrencyEdit;
     edKoeffOutSUN: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
+    cbTopNo: TcxCheckBox;
   private
     { Private declarations }
   public

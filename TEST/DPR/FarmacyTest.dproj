@@ -2573,6 +2573,10 @@
 				<Form>EmployeeScheduleNewForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_KoeffSUN_Edit.pas">
+				<Form>Unit_KoeffSUN_EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

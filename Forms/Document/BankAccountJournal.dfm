@@ -491,6 +491,36 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end>
   end
   inherited ActionList: TActionList
+    object macUpdateMoneyPlace: TMultiAction [2]
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceMoneyPlace
+        end
+        item
+          Action = actUpdateMoneyPlace
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
+      ImageIndex = 55
+    end
+    object actUpdateMoneyPlace: TdsdDataSetRefresh [3]
+      Category = 'Update'
+      MoveParams = <>
+      StoredProc = spUpdateJuridical
+      StoredProcList = <
+        item
+          StoredProc = spUpdateJuridical
+        end>
+      Caption = 'actUpdateContract'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 55
+      RefreshOnTabSetChanges = True
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
       GuiParams = <
@@ -562,8 +592,51 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actChoiceContract: TOpenChoiceForm [16]
-      Category = 'DSDLib'
+    object actChoiceMoneyPlace: TOpenChoiceForm [18]
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'JuridicalChoice'
+      ImageIndex = 55
+      FormName = 'TMoneyPlace_ObjectForm'
+      FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MoneyPlaceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceContract: TOpenChoiceForm [19]
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ContractChoice'
@@ -605,8 +678,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       isShowModal = True
     end
-    object actUpdateContract: TdsdDataSetRefresh [17]
-      Category = 'DSDLib'
+    object actUpdateContract: TdsdDataSetRefresh [20]
+      Category = 'Update'
       MoveParams = <>
       StoredProc = spUpdateContract
       StoredProcList = <
@@ -948,7 +1021,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       RefreshOnTabSetChanges = False
     end
     object macUpdateContract: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -1087,6 +1160,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMoneyPlace'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1145,6 +1226,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bb: TdxBarButton
       Action = macUpdateContract
+      Category = 0
+    end
+    object bbUpdateMoneyPlace: TdxBarButton
+      Action = macUpdateMoneyPlace
       Category = 0
     end
   end
@@ -1406,5 +1491,38 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 904
     Top = 169
+  end
+  object spUpdateJuridical: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankAccount_MoneyPlace'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MoneyPlaceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 217
   end
 end

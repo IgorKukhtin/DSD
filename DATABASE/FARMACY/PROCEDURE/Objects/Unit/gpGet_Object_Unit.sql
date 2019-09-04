@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PharmacyItem Boolean,
                isGoodsCategory Boolean,
                isSUN Boolean,
+               isTopNo Boolean,
                DateSP      TDateTime,
                StartTimeSP TDateTime,
                EndTimeSP   TDateTime,
@@ -107,6 +108,7 @@ BEGIN
            , False                 AS PharmacyItem
            , False                 AS isGoodsCategory
            , FALSE                 AS isSUN
+           , FALSE                 AS isTopNo
 
            , CAST (Null as TDateTime) AS DateSP
            , CAST (Null as TDateTime) AS StartTimeSP
@@ -186,6 +188,7 @@ BEGIN
       , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False)    AS PharmacyItem
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
       , COALESCE(ObjectBoolean_SUN.ValueData, FALSE)             AS isSUN
+      , COALESCE(ObjectBoolean_TopNo.ValueData, FALSE)           AS isTopNo
 
       , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
       , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
@@ -335,6 +338,10 @@ BEGIN
                                 ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
+                                ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
                              ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitStart.DescId = zc_ObjectDate_Unit_TaxUnitStart()
@@ -387,6 +394,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 04.09.19         * isTopNo
  13.08.19                                                        * AutoMCS
  11.07.19         *
  02.07.19                                                        * add UnitOverdue

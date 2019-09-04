@@ -88,6 +88,14 @@ type
     actUpdate_Unit_isSUN: TdsdExecStoredProc;
     bbUpdate_Unit_isSUN: TdxBarButton;
     isSUN: TcxGridDBColumn;
+    spUpdate_Unit_isTopNo: TdsdStoredProc;
+    actUpdateisTopNo: TdsdExecStoredProc;
+    bbUpdateisTopNo: TdxBarButton;
+    ExecuteDialogKoeffSUN: TExecuteDialog;
+    actUpdateKoeffSUN: TdsdDataSetRefresh;
+    spUpdate_KoeffSUN: TdsdStoredProc;
+    macUpdateKoeffSUN: TMultiAction;
+    bbUpdateKoeffSUN: TdxBarButton;
   private
     { Private declarations }
   public

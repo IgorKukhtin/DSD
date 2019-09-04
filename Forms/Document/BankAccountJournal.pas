@@ -82,6 +82,11 @@ type
     actUpdateContract: TdsdDataSetRefresh;
     bb: TdxBarButton;
     actChoiceContract: TOpenChoiceForm;
+    spUpdateJuridical: TdsdStoredProc;
+    actChoiceMoneyPlace: TOpenChoiceForm;
+    actUpdateMoneyPlace: TdsdDataSetRefresh;
+    macUpdateMoneyPlace: TMultiAction;
+    bbUpdateMoneyPlace: TdxBarButton;
   private
     { Private declarations }
   public

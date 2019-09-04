@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EndTimeSP   TDateTime
              , isSP        Boolean
              , isSUN       Boolean
+             , isTopNo     Boolean
 ) AS
 $BODY$
 BEGIN
@@ -132,6 +133,7 @@ BEGIN
       , ObjectDate_EndSP.ValueData                    :: TDateTime AS EndTimeSP
       , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
       , COALESCE (ObjectBoolean_SUN.ValueData, FALSE) :: Boolean   AS isSUN
+      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
       
 
     FROM Object AS Object_Unit
@@ -237,6 +239,10 @@ BEGIN
                                 ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
+                                ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -326,6 +332,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.09.19         * isTopNo
  11.07.19         *
  02.07.19         *
  20.03.19         *

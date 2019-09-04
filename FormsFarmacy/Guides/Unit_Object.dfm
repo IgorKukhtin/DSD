@@ -2,9 +2,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 477
   ClientWidth = 955
-  ExplicitLeft = -182
   ExplicitWidth = 971
-  ExplicitHeight = 512
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -187,6 +186,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+            Options.Editing = False
+            Width = 70
+          end
+          object isTopNo: TcxGridDBColumn
+            Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055
+            DataBinding.FieldName = 'isTopNo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' '#1076#1083#1103' '#1072#1087#1090#1077#1082#1080
             Options.Editing = False
             Width = 70
           end
@@ -507,6 +515,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateisTopNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isTopNo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isTopNo
+        end>
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' ('#1044#1072' / '#1053#1077#1090')'
+      Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' ('#1044#1072' / '#1053#1077#1090')'
+      ImageIndex = 78
     end
     object actUpdateisReport: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -885,6 +906,68 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isSetErased = False
       DataSource = MasterDS
     end
+    object ExecuteDialogKoeffSUN: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      ImageIndex = 26
+      FormName = 'TUnit_KoeffSUN_EditForm'
+      FormNameParam.Value = 'TUnit_KoeffSUN_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKoeffInSUN'
+          Value = 42261d
+          Component = MasterCDS
+          ComponentItem = 'KoeffInSUN'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeffOutSUN'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'KoeffOutSUN'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateKoeffSUN: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_KoeffSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_KoeffSUN
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      ImageIndex = 26
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateKoeffSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogKoeffSUN
+        end
+        item
+          Action = actUpdateKoeffSUN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1012,7 +1095,23 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateKoeffSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateisReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisTopNo'
         end
         item
           Visible = True
@@ -1093,6 +1192,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = actUpdate_Unit_isSUN
       Category = 0
       ImageIndex = 54
+    end
+    object bbUpdateisTopNo: TdxBarButton
+      Action = actUpdateisTopNo
+      Category = 0
+    end
+    object bbUpdateKoeffSUN: TdxBarButton
+      Action = macUpdateKoeffSUN
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1488,5 +1595,74 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 312
     Top = 307
+  end
+  object spUpdate_Unit_isTopNo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isTopNo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTopNo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTopNo'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisTopNo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTopNo'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 339
+  end
+  object spUpdate_KoeffSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_KoeffSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffInSUN'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'KoeffInSUN'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffOutSUN'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'KoeffOutSUN'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 450
+    Top = 384
   end
 end
