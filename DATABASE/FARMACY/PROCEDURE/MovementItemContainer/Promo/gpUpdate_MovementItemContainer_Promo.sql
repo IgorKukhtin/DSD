@@ -15,6 +15,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Promo());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    -- Запрет запуска второй копии
+    PERFORM  zfCheckRunProc ('gpUpdate_MovementItemContainer_Promo', 1);
 
     SELECT StatusId
     INTO vbStatusID
@@ -60,5 +63,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 04.09.19        *
  16.10.18        *
 */

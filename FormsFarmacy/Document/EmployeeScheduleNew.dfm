@@ -1,29 +1,29 @@
 inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
   Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1085#1086#1074#1099#1081
   ClientHeight = 500
-  ClientWidth = 953
+  ClientWidth = 1042
   AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeScheduleNew'
-  ExplicitWidth = 969
+  ExplicitWidth = 1058
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
-    Width = 953
-    Height = 423
-    ExplicitTop = 77
-    ExplicitWidth = 953
-    ExplicitHeight = 423
-    ClientRectBottom = 423
-    ClientRectRight = 953
+    Top = 82
+    Width = 1042
+    Height = 418
+    ExplicitTop = 82
+    ExplicitWidth = 1006
+    ExplicitHeight = 418
+    ClientRectBottom = 418
+    ClientRectRight = 1042
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 953
-      ExplicitHeight = 399
+      ExplicitWidth = 1006
+      ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 953
-        Height = 399
-        ExplicitWidth = 953
-        ExplicitHeight = 399
+        Width = 1042
+        Height = 394
+        ExplicitWidth = 1006
+        ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -242,11 +242,11 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 953
-    Height = 51
+    Width = 1042
+    Height = 56
     TabOrder = 3
-    ExplicitWidth = 953
-    ExplicitHeight = 51
+    ExplicitWidth = 1006
+    ExplicitHeight = 56
     inherited edInvNumber: TcxTextEdit
       Top = 22
       ExplicitTop = 22
@@ -275,6 +275,46 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       ExplicitLeft = 12
       ExplicitTop = 22
       ExplicitHeight = 22
+    end
+    object cxLabel3: TcxLabel
+      Left = 390
+      Top = 4
+      Caption = #1055#1057' ('#1087#1086#1083#1085#1072#1103' '#1089#1084#1077#1085#1072'),  '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1087#1088#1086#1088#1086#1073#1086#1090#1072#1083' => 12 '#1095#1072#1089#1086#1074';'
+    end
+    object cxLabel4: TcxLabel
+      Left = 390
+      Top = 19
+      Caption = #1057#1088#1057' ('#1089#1088#1077#1076#1085#1103#1103' '#1089#1084#1077#1085#1072') ,  '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
+    end
+    object cxLabel5: TcxLabel
+      Left = 390
+      Top = 35
+      Caption = #1053#1057' ('#1085#1086#1095#1085#1072#1103' '#1089#1084#1077#1085#1072')- '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' 11 '#1095#1072#1089#1086#1074';'
+    end
+    object cxLabel6: TcxLabel
+      Left = 690
+      Top = 19
+      Caption = #1055#1057#1088#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1089#1088#1077#1076#1085#1077#1081' '#1089#1084#1077#1085#1099') - '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
+    end
+    object cxLabel7: TcxLabel
+      Left = 690
+      Top = 4
+      Caption = #1055#1055#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1087#1086#1083#1085#1086#1081' '#1089#1084#1077#1085#1099') -  => 12 '#1095#1072#1089#1086#1074';'
+    end
+    object cxLabel8: TcxLabel
+      Left = 690
+      Top = 35
+      Caption = #1050' ('#1082#1083#1072#1076#1086#1074#1097#1080#1082') - '#1085#1077' '#1084#1077#1085#1077#1077' 8 '#1095#1072#1089#1086#1074
+    end
+    object cxLabel9: TcxLabel
+      Left = 958
+      Top = 4
+      Caption = #1078#1105#1083#1090#1099#1081'  - '#1089#1084#1077#1085#1072' '#1074' '#1086#1089#1085#1086#1074#1085#1086#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
+    end
+    object cxLabel10: TcxLabel
+      Left = 958
+      Top = 19
+      Caption = #1079#1077#1083#1105#1085#1099#1081' - '#1087#1086#1076#1084#1077#1085#1072
     end
   end
   inherited ActionList: TActionList

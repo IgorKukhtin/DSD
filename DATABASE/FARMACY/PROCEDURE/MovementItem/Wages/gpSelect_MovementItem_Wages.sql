@@ -59,7 +59,21 @@ BEGIN
                                                          AND ObjectLink_User_Member.ObjectId  NOT IN (SELECT MovementItem.ObjectId FROM  MovementItem  WHERE MovementItem.MovementId = inMovementId)
 
                                 WHERE Object_Personal.DescId = zc_Object_Personal()
-                                  AND Object_Personal.isErased = FALSE)
+                                  AND Object_Personal.isErased = FALSE),
+                tmpAdditionalExpenses AS (SELECT MovementItem.ObjectId                                    AS UnitID
+                                               , MovementItem.Amount                                      AS SummaTotal
+                                               , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                                               , MovementItem.isErased                                    AS isErased
+                                          FROM  MovementItem
+
+                                                LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                                              ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                                                             AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                                          WHERE MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId = zc_MI_Sign()
+                                            AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                            AND MovementItem.Amount <> 0)
 
             SELECT 0                                  AS Id
                  , tmpPersonal.UserID                 AS UserID
@@ -89,6 +103,9 @@ BEGIN
                                             AND Personal_View.Ord = 1
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
+
+                  LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
+                                                  ON AdditionalExpenses.UnitID = Object_Unit.ID
             UNION ALL
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -96,8 +113,8 @@ BEGIN
 
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount + 
-                    COALESCE (MIFloat_Marketing.ValueData, 0) - 
+                 , (MovementItem.Amount +
+                    COALESCE (MIFloat_Marketing.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
@@ -135,9 +152,35 @@ BEGIN
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
+                  LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
+                                                  ON AdditionalExpenses.UnitID = Object_Unit.ID
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
-              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+            UNION ALL
+            SELECT Null::Integer                      AS Id
+                 , Null::Integer                      AS UserID
+                 , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
+
+                 , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS AmountCard
+                 , tmpAdditionalExpenses.SummaTotal   AS AmountHand
+
+                 , Null::Integer                      AS MemberCode
+                 , 'Дополнительные расходы'::TVarChar AS MemberName
+                 , Null::TVarChar                     AS PositionName
+                 , Object_Unit.ID                     AS UnitID
+                 , Object_Unit.ObjectCode             AS UnitCode
+                 , Object_Unit.ValueData              AS UnitName
+                 , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
+
+                 , tmpAdditionalExpenses.isErased     AS isErased
+                 , zc_Color_Black()                   AS Color_Calc
+            FROM  tmpAdditionalExpenses
+
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAdditionalExpenses.UnitID
+            ;
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -156,15 +199,29 @@ BEGIN
                                           INNER JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                                      WHERE Object_User.DescId = zc_Object_User())
+              , tmpAdditionalExpenses AS (SELECT MovementItem.ObjectId                                    AS UnitID
+                                               , MovementItem.Amount                                      AS SummaTotal
+                                               , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                                               , MovementItem.isErased                                    AS isErased
+                                          FROM  MovementItem
+
+                                                LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                                              ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
+                                                                             AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                                          WHERE MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId = zc_MI_Sign()
+                                            AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                            AND MovementItem.Amount <> 0)
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
-                 
+
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount + 
-                    COALESCE (MIFloat_Marketing.ValueData, 0) - 
+                 , (MovementItem.Amount +
+                    COALESCE (MIFloat_Marketing.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
@@ -203,9 +260,35 @@ BEGIN
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
+                  LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
+                                                  ON AdditionalExpenses.UnitID = Object_Unit.ID
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
-              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+            UNION ALL
+            SELECT Null::Integer                      AS Id
+                 , Null::Integer                      AS UserID
+                 , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
+
+                 , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS AmountCard
+                 , tmpAdditionalExpenses.SummaTotal   AS AmountHand
+
+                 , Null::Integer                      AS MemberCode
+                 , 'Дополнительные расходы'::TVarChar AS MemberName
+                 , Null::TVarChar                     AS PositionName
+                 , Object_Unit.ID                     AS UnitID
+                 , Object_Unit.ObjectCode             AS UnitCode
+                 , Object_Unit.ValueData              AS UnitName
+                 , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
+
+                 , tmpAdditionalExpenses.isErased     AS isErased
+                 , zc_Color_Black()                   AS Color_Calc
+            FROM  tmpAdditionalExpenses
+
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAdditionalExpenses.UnitID
+            ;
 
      END IF;
 END;
@@ -217,4 +300,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  21.08.19                                                        *
 */
--- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

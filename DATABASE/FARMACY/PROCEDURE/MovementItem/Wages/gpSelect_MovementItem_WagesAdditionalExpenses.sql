@@ -91,7 +91,7 @@ BEGIN
                                            AND MovementItem.DescId = zc_MI_Sign())
             UNION ALL
             SELECT MovementItem.Id                    AS Id
-                 , MovementItem.ObjectId              AS UserID
+                 , MovementItem.ObjectId              AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
 
@@ -142,7 +142,7 @@ BEGIN
         -- Результат другой
         RETURN QUERY
             SELECT MovementItem.Id                    AS Id
-                 , MovementItem.ObjectId              AS UserID
+                 , MovementItem.ObjectId              AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
 

@@ -69,6 +69,14 @@ type
     actPayrollTypeChoice: TOpenChoiceForm;
     CrossDBViewEndAddOn: TCrossDBViewAddOn;
     Color_CalcEnd: TcxGridDBBandedColumn;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

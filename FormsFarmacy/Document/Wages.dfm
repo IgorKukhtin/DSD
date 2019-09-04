@@ -745,17 +745,6 @@ inherited WagesForm: TWagesForm
           CalcColumnLists = <>
         end
         item
-          Caption = #1044#1077#1085#1100' '#1088#1072#1089#1095#1077#1090#1072
-          FieldName = 'OperDate'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-        end
-        item
           Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           FieldName = 'UnitName'
           DecimalPlace = 0
@@ -765,29 +754,6 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           Width = 30
-          CalcColumnLists = <>
-        end
-        item
-          Caption = #1050#1088#1072#1090'. '#1085#1072#1080#1084'.'
-          FieldName = 'ShortName'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-        end
-        item
-          Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
-          FieldName = 'PayrollTypeName'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Width = 15
           CalcColumnLists = <>
         end
         item
@@ -803,18 +769,6 @@ inherited WagesForm: TWagesForm
           CalcColumnLists = <>
           Kind = skSumma
           KindText = #1048#1090#1086#1075#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1086':'
-        end
-        item
-          FieldName = 'FormulaCalc'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Width = 100
-          WrapText = True
-          CalcColumnLists = <>
         end>
       Caption = 'actExportPrintCalculationAll'
     end

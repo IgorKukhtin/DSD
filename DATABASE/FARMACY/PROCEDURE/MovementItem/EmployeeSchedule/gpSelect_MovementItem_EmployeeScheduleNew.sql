@@ -21,7 +21,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-
+     
      inDate := DATE_TRUNC ('MONTH', inDate);
 
      CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
@@ -688,37 +688,99 @@ BEGIN
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
 
-         CASE WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser1,
-         CASE WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser2,
-         CASE WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser3,
-         CASE WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser4,
-         CASE WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser5,
-         CASE WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser6,
-         CASE WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser7,
-         CASE WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser8,
-         CASE WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser9,
-         CASE WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser10,
-         CASE WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser11,
-         CASE WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser12,
-         CASE WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser13,
-         CASE WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser14,
-         CASE WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser15,
-         CASE WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser16,
-         CASE WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser17,
-         CASE WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser18,
-         CASE WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser19,
-         CASE WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser20,
-         CASE WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser21,
-         CASE WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser22,
-         CASE WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser23,
-         CASE WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser24,
-         CASE WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser25,
-         CASE WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser26,
-         CASE WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser27,
-         CASE WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser28,
-         CASE WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser29,
-         CASE WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser30,
-         CASE WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser31,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_01.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser1,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_02.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser2,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_03.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser3,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_04.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser4,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_05.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser5,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_06.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser6,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_07.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser7,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_08.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser8,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_09.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser9,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_10.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser10,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_11.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser11,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_12.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser12,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_13.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser13,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_14.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser14,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_15.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser15,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_16.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser16,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_17.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser17,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_18.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser18,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_19.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser19,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_20.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser20,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_21.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser21,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_22.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser22,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_23.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser23,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_24.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser24,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_25.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser25,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_26.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser26,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_27.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser27,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_28.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser28,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_29.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser29,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_30.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser30,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_31.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser31,
 
          zc_Color_White()                                        AS Color_Calc1,
          zc_Color_White()                                        AS Color_Calc2,
@@ -772,6 +834,13 @@ BEGIN
                                  ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Member_Unit.ChildObjectId
+                                AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
             LEFT JOIN tmpUserData AS UserData_01
                                   ON UserData_01.Day = 1
@@ -1072,37 +1141,99 @@ BEGIN
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
 
-         CASE WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser1,
-         CASE WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser2,
-         CASE WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser3,
-         CASE WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser4,
-         CASE WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser5,
-         CASE WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser6,
-         CASE WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser7,
-         CASE WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser8,
-         CASE WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser9,
-         CASE WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser10,
-         CASE WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser11,
-         CASE WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser12,
-         CASE WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser13,
-         CASE WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser14,
-         CASE WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser15,
-         CASE WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser16,
-         CASE WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser17,
-         CASE WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser18,
-         CASE WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser19,
-         CASE WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser20,
-         CASE WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser21,
-         CASE WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser22,
-         CASE WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser23,
-         CASE WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser24,
-         CASE WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser25,
-         CASE WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser26,
-         CASE WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser27,
-         CASE WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser28,
-         CASE WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser29,
-         CASE WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser30,
-         CASE WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_CalcUser31,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_01.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_01.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser1,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_02.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_02.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser2,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_03.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_03.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser3,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_04.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_04.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser4,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_05.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_05.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser5,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_06.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_06.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser6,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_07.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_07.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser7,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_08.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_08.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser8,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_09.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_09.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser9,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_10.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_10.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser10,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_11.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_11.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser11,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_12.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_12.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser12,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_13.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_13.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser13,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_14.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_14.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser14,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_15.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_15.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser15,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_16.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_16.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser16,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_17.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_17.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser17,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_18.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_18.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser18,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_19.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_19.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser19,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_20.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_20.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser20,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_21.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_21.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser21,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_22.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_22.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser22,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_23.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_23.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser23,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_24.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_24.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser24,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_25.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_25.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser25,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_26.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_26.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser26,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_27.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_27.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser27,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_28.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_28.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser28,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_29.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_29.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser29,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_30.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_30.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser30,
+         CASE WHEN COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4) <> 4 THEN 12903679
+              WHEN COALESCE(UserData_31.ID, 0) = 0 THEN zc_Color_White()
+              WHEN COALESCE(UserData_31.MainUnit, False) = TRUE THEN zc_Color_Yelow() ELSE 65407 END AS Color_CalcUser31,
 
          zc_Color_White()                                        AS Color_Calc1,
          zc_Color_White()                                        AS Color_Calc2,
@@ -1156,6 +1287,13 @@ BEGIN
                                  ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Member_Unit.ChildObjectId
+                                AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
             LEFT JOIN tmpUserData AS UserData_01
                                   ON UserData_01.Day = 1

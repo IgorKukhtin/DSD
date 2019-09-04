@@ -14,7 +14,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbUnitID Boolean;
+   DECLARE vbUnitID Integer;
 BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -46,7 +46,7 @@ BEGIN
        vbUnitID := 0;
     END IF;
        
-    IF (vbIsInsert = TRUE OR vbUnitID = 0) AND 
+    IF (vbIsInsert = TRUE OR COALESCE(vbUnitID, 0) = 0) AND 
        EXISTS(SELECT COALESCE (ObjectLink_Member_Unit.ChildObjectId, 0)
               FROM ObjectLink AS ObjectLink_User_Member
 

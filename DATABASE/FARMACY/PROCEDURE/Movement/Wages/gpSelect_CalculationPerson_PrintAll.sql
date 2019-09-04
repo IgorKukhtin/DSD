@@ -25,27 +25,40 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-        SELECT
-            Object_Personal.ValueData              AS PersonalName
-          , Object_Position.ValueData              AS PositionName
-          , CASE WHEN COALESCE (Calculation.UserId, 0) = 0 THEN 'Не связан' END AS UserId
-          , Calculation.OperDate                   AS OperDate
-          , Calculation.UnitName                   AS UnitName
-          , Calculation.ShortName                  AS ShortName
-          , Calculation.PayrollTypeName            AS PayrollTypeName
-          , Calculation.SummaCalc                  AS SummaCalc
-          , Calculation.FormulaCalc                AS FormulaCalc
-        FROM gpSelect_Calculation_Wages(inOperDate, 0, inSession) AS Calculation
+        WITH tmpCalculation AS (SELECT
+                                       ObjectLink_Personal_Member.ChildObjectId                                 AS MemberId
+                                     , CASE WHEN COALESCE (Max(Calculation.UserId), 0) = 0 THEN 'Не связан' END AS UserId
+                                     , Sum(Calculation.SummaCalc)                                               AS SummaCalc
+                                FROM gpSelect_Calculation_Wages(inOperDate, 0, inSession) AS Calculation
 
-             INNER JOIN Object AS Object_Personal ON Object_Personal.Id = Calculation.PersonalId
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = Calculation.PersonalId
+                                                         AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+                                GROUP BY ObjectLink_Personal_Member.ChildObjectId)
+          
+          
+        SELECT
+            Object_Member.ValueData                    AS PersonalName
+          , Object_Position.ValueData                    AS PositionName
+          , Calculation.UserId                           AS UserId
+          , Object_Unit.ValueData                        AS UnitName
+          , Calculation.SummaCalc                        AS SummaCalc
+        FROM tmpCalculation AS Calculation
+
+             INNER JOIN Object AS Object_Member ON Object_Member.Id = Calculation.MemberId
       
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                  ON ObjectLink_Personal_Position.ObjectId = Calculation.PersonalId
-                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                  ON ObjectLink_Member_Position.ObjectId = Calculation.MemberId
+                                 AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
                                  
-             LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
-             
-        ORDER BY Object_Personal.ValueData, Calculation.OperDate;
+             LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                  ON ObjectLink_Member_Unit.ObjectId = Calculation.MemberId
+                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+             INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
+        ORDER BY Object_Member.ValueData;
 
     RETURN NEXT Cursor2;
 

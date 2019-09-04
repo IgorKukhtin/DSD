@@ -578,6 +578,7 @@ begin
     'select '#13#10 +
     '  GoodsCode AS "Код", '#13#10 +
     '  GoodsName AS "Название", '#13#10 +
+    '  UnitName AS "Подразделение", '#13#10 +
     '  PartionDateKindName AS "Тип срока", '#13#10 +
     '  Remains AS "Остаток", '#13#10 +
     '  ExpirationDate AS "Срок годности", '#13#10 +
