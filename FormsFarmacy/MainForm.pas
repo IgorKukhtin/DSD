@@ -544,6 +544,8 @@ type
     miReport_CheckSendSUN_InOut: TMenuItem;
     actPayrollType: TdsdOpenForm;
     N191: TMenuItem;
+    actReport_CheckSUN: TdsdOpenForm;
+    miReport_CheckSUN: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
