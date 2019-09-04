@@ -1,28 +1,28 @@
 inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
   Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1085#1086#1074#1099#1081
   ClientHeight = 500
-  ClientWidth = 1042
+  ClientWidth = 1315
   AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeScheduleNew'
-  ExplicitWidth = 1058
+  ExplicitWidth = 1331
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 82
-    Width = 1042
+    Width = 1315
     Height = 418
     ExplicitTop = 82
-    ExplicitWidth = 1006
+    ExplicitWidth = 1042
     ExplicitHeight = 418
     ClientRectBottom = 418
-    ClientRectRight = 1042
+    ClientRectRight = 1315
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1006
+      ExplicitWidth = 1042
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 1042
+        Width = 1315
         Height = 394
-        ExplicitWidth = 1006
+        ExplicitWidth = 1042
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -100,7 +100,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 32
+            Width = 30
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -112,7 +112,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 207
+            Width = 205
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -124,10 +124,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 75
+            Width = 205
             Position.BandIndex = 0
-            Position.ColIndex = 2
-            Position.RowIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 1
           end
           object UnitName: TcxGridDBBandedColumn
             Caption = #1040#1087#1090#1077#1082#1072
@@ -140,7 +140,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Styles.Content = dmMain.cxSelection
             Width = 165
             Position.BandIndex = 0
-            Position.ColIndex = 4
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object ValuePrev: TcxGridDBBandedColumn
@@ -197,6 +197,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.ShowCaption = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -206,7 +207,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 5
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object Color_CalcStart: TcxGridDBBandedColumn
@@ -214,14 +215,14 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 6
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object Color_CalcEnd: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 7
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object isErased: TcxGridDBBandedColumn
@@ -231,7 +232,78 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             Options.Editing = False
             Width = 50
             Position.BandIndex = 0
-            Position.ColIndex = 3
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object Empty1: TcxGridDBBandedColumn
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 30
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object Name1: TcxGridDBBandedColumn
+            Caption = '  '
+            DataBinding.FieldName = 'Name1'
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 1
+          end
+          object Empty2: TcxGridDBBandedColumn
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 241
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 2
+          end
+          object Name2: TcxGridDBBandedColumn
+            Caption = '  '
+            DataBinding.FieldName = 'Name2'
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 77
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 2
+          end
+          object Empty3: TcxGridDBBandedColumn
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 240
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 3
+          end
+          object Name3: TcxGridDBBandedColumn
+            Caption = '  '
+            DataBinding.FieldName = 'Name3'
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 77
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 3
+          end
+          object Name0: TcxGridDBBandedColumn
+            Caption = '  '
+            DataBinding.FieldName = 'Name0'
+            Options.Editing = False
+            Options.Focusing = False
+            Options.ShowCaption = False
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
         end
@@ -242,10 +314,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1042
+    Width = 1315
     Height = 56
     TabOrder = 3
-    ExplicitWidth = 1006
+    ExplicitWidth = 1042
     ExplicitHeight = 56
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -276,45 +348,72 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       ExplicitTop = 22
       ExplicitHeight = 22
     end
-    object cxLabel3: TcxLabel
-      Left = 390
-      Top = 4
-      Caption = #1055#1057' ('#1087#1086#1083#1085#1072#1103' '#1089#1084#1077#1085#1072'),  '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1087#1088#1086#1088#1086#1073#1086#1090#1072#1083' => 12 '#1095#1072#1089#1086#1074';'
-    end
-    object cxLabel4: TcxLabel
-      Left = 390
-      Top = 19
-      Caption = #1057#1088#1057' ('#1089#1088#1077#1076#1085#1103#1103' '#1089#1084#1077#1085#1072') ,  '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
-    end
-    object cxLabel5: TcxLabel
-      Left = 390
-      Top = 35
-      Caption = #1053#1057' ('#1085#1086#1095#1085#1072#1103' '#1089#1084#1077#1085#1072')- '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' 11 '#1095#1072#1089#1086#1074';'
-    end
-    object cxLabel6: TcxLabel
-      Left = 690
-      Top = 19
-      Caption = #1055#1057#1088#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1089#1088#1077#1076#1085#1077#1081' '#1089#1084#1077#1085#1099') - '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
-    end
-    object cxLabel7: TcxLabel
-      Left = 690
-      Top = 4
-      Caption = #1055#1055#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1087#1086#1083#1085#1086#1081' '#1089#1084#1077#1085#1099') -  => 12 '#1095#1072#1089#1086#1074';'
-    end
-    object cxLabel8: TcxLabel
-      Left = 690
-      Top = 35
-      Caption = #1050' ('#1082#1083#1072#1076#1086#1074#1097#1080#1082') - '#1085#1077' '#1084#1077#1085#1077#1077' 8 '#1095#1072#1089#1086#1074
-    end
-    object cxLabel9: TcxLabel
-      Left = 958
-      Top = 4
-      Caption = #1078#1105#1083#1090#1099#1081'  - '#1089#1084#1077#1085#1072' '#1074' '#1086#1089#1085#1086#1074#1085#1086#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
-    end
-    object cxLabel10: TcxLabel
-      Left = 958
-      Top = 19
-      Caption = #1079#1077#1083#1105#1085#1099#1081' - '#1087#1086#1076#1084#1077#1085#1072
+    object Panel1: TPanel
+      Left = 409
+      Top = 2
+      Width = 889
+      Height = 52
+      BevelInner = bvLowered
+      Caption = 'Panel1'
+      TabOrder = 6
+      object cxLabel3: TcxLabel
+        Left = 8
+        Top = 4
+        Caption = #1055#1057' ('#1087#1086#1083#1085#1072#1103' '#1089#1084#1077#1085#1072'),  '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1087#1088#1086#1088#1086#1073#1086#1090#1072#1083' => 12 '#1095#1072#1089#1086#1074';'
+      end
+      object cxLabel4: TcxLabel
+        Left = 8
+        Top = 18
+        Caption = #1057#1088#1057' ('#1089#1088#1077#1076#1085#1103#1103' '#1089#1084#1077#1085#1072') ,  '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
+      end
+      object cxLabel5: TcxLabel
+        Left = 8
+        Top = 32
+        Caption = #1053#1057' ('#1085#1086#1095#1085#1072#1103' '#1089#1084#1077#1085#1072')- '#1087#1088#1086#1088#1072#1073#1086#1090#1072#1083' 11 '#1095#1072#1089#1086#1074';'
+      end
+      object cxLabel6: TcxLabel
+        Left = 319
+        Top = 18
+        Caption = #1055#1057#1088#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1089#1088#1077#1076#1085#1077#1081' '#1089#1084#1077#1085#1099') - '#1086#1090' 5 '#1076#1086' 10 '#1095#1072#1089#1086#1074';'
+      end
+      object cxLabel7: TcxLabel
+        Left = 319
+        Top = 4
+        Caption = #1055#1055#1057' ('#1087#1086#1076#1084#1077#1085#1072' '#1087#1086#1083#1085#1086#1081' '#1089#1084#1077#1085#1099') -  => 12 '#1095#1072#1089#1086#1074';'
+      end
+      object cxLabel8: TcxLabel
+        Left = 319
+        Top = 32
+        Caption = #1050' ('#1082#1083#1072#1076#1086#1074#1097#1080#1082') - '#1085#1077' '#1084#1077#1085#1077#1077' 8 '#1095#1072#1089#1086#1074
+      end
+      object cxLabel9: TcxLabel
+        Left = 609
+        Top = 4
+        Caption = #1078#1105#1083#1090#1099#1081'  - '#1089#1084#1077#1085#1072' '#1074' '#1086#1089#1085#1086#1074#1085#1086#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
+        ParentColor = False
+        ParentFont = False
+        Style.Color = clYellow
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object cxLabel10: TcxLabel
+        Left = 609
+        Top = 18
+        Caption = #1079#1077#1083#1105#1085#1099#1081' - '#1087#1086#1076#1084#1077#1085#1072
+        ParentColor = False
+        ParentFont = False
+        Style.Color = 12910564
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
     end
   end
   inherited ActionList: TActionList

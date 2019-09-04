@@ -77,6 +77,14 @@ type
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
+    Panel1: TPanel;
+    Empty1: TcxGridDBBandedColumn;
+    Name1: TcxGridDBBandedColumn;
+    Empty2: TcxGridDBBandedColumn;
+    Name2: TcxGridDBBandedColumn;
+    Empty3: TcxGridDBBandedColumn;
+    Name3: TcxGridDBBandedColumn;
+    Name0: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

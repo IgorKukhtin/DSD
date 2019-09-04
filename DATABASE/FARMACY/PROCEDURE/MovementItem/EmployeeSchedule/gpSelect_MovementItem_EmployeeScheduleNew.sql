@@ -527,6 +527,10 @@ BEGIN
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
+         'Пр. месяц'::TVarChar                                   AS Name0,
+         'Тип дня'::TVarChar                                     AS Name1,
+         'Приход'::TVarChar                                      AS Name2,
+         'Уход'::TVarChar                                        AS Name3,
 
          UserData_01.PThortName                        AS Value1,
          UserData_02.PThortName                        AS Value2,
@@ -980,6 +984,10 @@ BEGIN
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
+         'Пр. месяц'::TVarChar                                   AS Name0,
+         'Тип дня'::TVarChar                                     AS Name1,
+         'Приход'::TVarChar                                      AS Name2,
+         'Уход'::TVarChar                                        AS Name3,
 
          UserData_01.PThortName                        AS Value1,
          UserData_02.PThortName                        AS Value2,

@@ -56,16 +56,16 @@ BEGIN
     IF EXISTS(SELECT 1
               FROM MovementItem
               WHERE MovementItem.MovementID = vbMovementId 
-                AND MovementItem.DescId = inTypeId
-                AND MovementItem.Amount = zc_MI_Child() 
+                AND MovementItem.Amount = inTypeId
+                AND MovementItem.DescId = zc_MI_Child() 
                 AND MovementItem.ParentId = inId)
     THEN
       SELECT MovementItem.Id
       INTO vbId
       FROM MovementItem
       WHERE MovementItem.MovementID = vbMovementId 
-        AND MovementItem.DescId = inTypeId
-        AND MovementItem.Amount = zc_MI_Child() 
+        AND MovementItem.Amount = inTypeId
+        AND MovementItem.DescId = zc_MI_Child() 
         AND MovementItem.ParentId = inId;
     ELSE
       vbId := 0;

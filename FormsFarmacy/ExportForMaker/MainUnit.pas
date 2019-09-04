@@ -595,7 +595,7 @@ begin
 
   with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
   begin
-    Column := grtvMaker.Columns[3];
+    Column := grtvMaker.Columns[4];
     Format := '0.###';
     Kind := skSum;
   end;
