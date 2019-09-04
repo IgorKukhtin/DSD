@@ -53,17 +53,19 @@ RETURNS TABLE (
     isIncome            Boolean ,   -- приход сегодня
     IsTop               Boolean ,   -- Топ точки
     IsTop_Goods         Boolean ,   -- Топ сети
+    isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
     Reprice             Boolean     --
     )
 
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbObjectId Integer;
+  DECLARE vbUserId           Integer;
+  DECLARE vbObjectId         Integer;
   DECLARE vbMarginCategoryId Integer;
   DECLARE vbMarginPercent_ExpirationDate TFloat;
-  DECLARE vbInterval_ExpirationDate Interval;
+  DECLARE vbInterval_ExpirationDate      Interval;
+  DECLARE vbisTopNo_Unit     Boolean;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -75,14 +77,14 @@ BEGIN
     vbInterval_ExpirationDate:= '6 MONTH' :: Interval;
 
     --
-    SELECT
-        COALESCE(Object_Unit_View.MarginCategoryId,0)
-    INTO
-        vbMarginCategoryId
-    FROM
-        Object_Unit_View
-    WHERE
-        Object_Unit_View.Id = inUnitId;
+    SELECT COALESCE(Object_Unit_View.MarginCategoryId,0) AS MarginCategoryId
+         , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
+    INTO vbMarginCategoryId, vbisTopNo_Unit
+    FROM Object_Unit_View
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
+                                 ON ObjectBoolean_TopNo.ObjectId = inUnitId
+                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+    WHERE Object_Unit_View.Id = inUnitId;
 
   RETURN QUERY
     WITH DD
@@ -396,6 +398,7 @@ BEGIN
         ResultSet.IsTop,
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
+        vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
         CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate > zc_DateStart()
@@ -481,6 +484,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.09.19         * isTopNo_Unit
  11.02.19         * признак Товары соц-проект берем и документа
  03.05.18                                                                                      *
  17.04.18                                                                                      *
