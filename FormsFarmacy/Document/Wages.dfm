@@ -90,7 +90,7 @@ inherited WagesForm: TWagesForm
             item
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 497
+              Width = 587
             end>
           object MemberCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -154,6 +154,18 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object HolidaysHospital: TcxGridDBBandedColumn
+            Caption = #1054#1090#1087#1091#1089#1082' / '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1081
+            DataBinding.FieldName = 'HolidaysHospital'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
           object Marketing: TcxGridDBBandedColumn
             Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
             DataBinding.FieldName = 'Marketing'
@@ -163,7 +175,19 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object Director: TcxGridDBBandedColumn
+            Caption = #1044#1080#1088#1077#1082#1090#1086#1088'. '#1087#1088#1077#1084#1080#1080' / '#1096#1090#1088#1072#1092#1099
+            DataBinding.FieldName = 'Director'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object AmountCard: TcxGridDBBandedColumn
@@ -175,7 +199,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 2
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -188,7 +212,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -196,9 +220,9 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 30
+            Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 4
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -1288,10 +1312,28 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inHolidaysHospital'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'HolidaysHospital'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMarketing'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Marketing'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDirector'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Director'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

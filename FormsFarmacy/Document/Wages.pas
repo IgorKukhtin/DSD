@@ -87,6 +87,8 @@ type
     Marketing: TcxGridDBBandedColumn;
     actWagesAdditionalExpenses: TdsdOpenForm;
     dxBarButton11: TdxBarButton;
+    HolidaysHospital: TcxGridDBBandedColumn;
+    Director: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

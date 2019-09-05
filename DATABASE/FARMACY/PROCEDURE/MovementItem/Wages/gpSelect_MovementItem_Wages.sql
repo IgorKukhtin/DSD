@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , Marketing TFloat, AmountCard TFloat, AmountHand TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat
+             , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , isIssuedBy Boolean
@@ -79,7 +80,9 @@ BEGIN
                  , tmpPersonal.UserID                 AS UserID
                  , NULL::TFloat                       AS Amount
 
-                 , NULL::TFloat                       AS Marketing
+                 , Null::TFloat                       AS HolidaysHospital
+                 , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS Director
                  , NULL::TFloat                       AS AmountCard
                  , NULL::TFloat                       AS AmountHand
 
@@ -111,7 +114,9 @@ BEGIN
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
 
+                 , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
+                 , MIFloat_Director.ValueData         AS Director
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_Marketing.ValueData, 0) -
@@ -140,9 +145,17 @@ BEGIN
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                              ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                             AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_Marketing
                                               ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                              AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                              ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -163,7 +176,9 @@ BEGIN
                  , Null::Integer                      AS UserID
                  , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
 
+                 , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS Director
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand
 
@@ -218,7 +233,9 @@ BEGIN
                  , MovementItem.ObjectId              AS UserID
                  , MovementItem.Amount                AS AmountAccrued
 
+                 , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
+                 , MIFloat_Director.ValueData         AS Director
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_Marketing.ValueData, 0) -
@@ -248,9 +265,17 @@ BEGIN
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                              ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                             AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_Marketing
                                               ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                              AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                              ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -271,7 +296,9 @@ BEGIN
                  , Null::Integer                      AS UserID
                  , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
 
+                 , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS Director
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand
 
