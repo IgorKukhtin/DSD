@@ -24,8 +24,8 @@ BEGIN
   
    -- определяем
    SELECT FromId
-        , REPLACE (REPLACE (ToName, '/', '_'), '\', '_')
-        , Object_Unit_View.JuridicalName
+        , REPLACE (REPLACE (REPLACE (ToName, '/', '_'), '\', '_'), '"', '_')
+        , REPLACE (REPLACE (REPLACE (Object_Unit_View.JuridicalName, '/', '_'), '\', '_'), '"', '_')
         , StatusId
           INTO vbJuridicalId
              , vbUnitName

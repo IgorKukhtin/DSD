@@ -73,6 +73,7 @@ type
     FIntervalVal: Integer;
     FProccessing: Boolean;
     isPrevDay_begin: Boolean;
+    gErr: Boolean;
     Hour_onDel: Integer;
     fStartTime: TDateTime;
     procedure AddToLog(S: string);
@@ -170,7 +171,9 @@ begin
     FIntervalVal := 1;
 
   if IntervalVal > 0 then
-    Timer.Interval := IntervalVal * 60 * 1000;
+    Timer.Interval := IntervalVal * 60 * 1000
+  else
+    Timer.Interval := 1 * 1 * 1000;
 
   if cbPrevDay.Checked = TRUE
   then deStart.EditValue := Date - 1
@@ -272,8 +275,10 @@ begin
     Result:= TRUE;
 
   except
-     on E: Exception do
+     on E: Exception do begin
+        gErr:= TRUE;
         AddToLog(E.Message);
+     end;
   end;
 end;
 
@@ -379,8 +384,10 @@ begin
 
   //
   // !!! Только Загрузка !!!
+  gErr:= FALSE;
   try fEdi_LoadData_from;
   except
+        gErr:= TRUE;
         AddToLog('**** Ошибка *** LoadData - from ***');
   end;
   //
@@ -390,12 +397,18 @@ begin
         AddToLog('**** Ошибка *** SendData - to ***');
   end;
   //
+  if gErr = TRUE then
+  begin
+      FIntervalVal := 0;
+      AddToLog('Текущий интервал изменен до : ' + IntToStr(3) + ' сек.');
+  end
+  else
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 1)
   else
     FIntervalVal := 1;
 
-  if Hour > 18 then
+  if (Hour > 18) and (IntervalVal >= 1) then
   begin
     //Timer.Interval := (IntervalVal * 15)  * 60 * 1000;
     //AddToLog('Текущий интервал изменен до : ' + IntToStr(IntervalVal * 15) + ' мин.');
@@ -403,7 +416,11 @@ begin
     AddToLog('Текущий интервал изменен до : ' + IntToStr(30) + ' мин.');
   end
   else
-    Timer.Interval := (IntervalVal * 1)  * 60 * 1000;
+    if IntervalVal >= 1
+    then
+       Timer.Interval := (IntervalVal * 1)  * 60 * 1000
+    else
+       Timer.Interval := (3 * 1)  * 1 * 1000;
 
   Proccessing := False;
   Timer.Enabled:=True;
