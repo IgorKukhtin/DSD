@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbToId             Integer;
    DECLARE vbInvNumberPoint   TVarChar;
    DECLARE vbRetailId         Integer;
+   DECLARE vbisTopNo_Unit     Boolean;
 BEGIN
      
      -- определяем <Статус>
@@ -97,6 +98,13 @@ BEGIN
      -- Параметры из Документа
      SELECT ToId, InvNumberBranch INTO vbToId, vbInvNumberPoint FROM Movement_Income_View WHERE Id = inMovementId;
 
+     --свойство Аптеки isTopNo
+     vbisTopNo_Unit := COALESCE ( (SELECT COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
+                                   FROM ObjectBoolean AS ObjectBoolean_TopNo
+                                   WHERE ObjectBoolean_TopNo.ObjectId = vbToId
+                                     AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+                                    ), FALSE) :: Boolean;
+
 
     -- Сохранили новую цену
     PERFORM (WITH DD AS (SELECT DISTINCT MarginPercent, MinPrice
@@ -140,14 +148,20 @@ BEGIN
                                   OR COALESCE(Price_Top.ValueData,False) = True
                                   OR COALESCE(Price_PercentMarkup.ValueData, 0) <> 0)
                            )
-       
-     SELECT COUNT(lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id, 
+     --  если стоит свойство подразделнеия не учитывать ТОП , тогда при расчете цены берем обычную наценку!!! 05,09,2019
+     SELECT COUNT(lpInsertUpdate_MovementItemFloat 
+                        (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id, 
                          zfCalc_SalePrice(MovementItem_Income.PriceWithVAT                            -- Цена С НДС
                                         , MarginCondition.MarginPercent                               -- % наценки в КАТЕГОРИИ
-                                        , COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_View.isTOP)             -- ТОП позиция
-                                        , COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_View.PercentMarkup) -- % наценки у товара
+                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_View.isTOP) END             -- ТОП позиция
+                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_View.PercentMarkup) END -- % наценки у товара
                                         , vbJuridicalPercent                                          -- % корректировки у Юр Лица для ТОПа
-                                        , CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0 /*AND COALESCE (Object_Goods_View.Price, 0) = 0*/ THEN View_Price.Price ELSE Object_Goods_View.Price END))) -- Цена у товара (фиксированная)
+                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     
+                                               ELSE CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0 
+                                                         THEN View_Price.Price ELSE Object_Goods_View.Price 
+                                                    END
+                                          END)                                                        -- Цена у товара (фиксированная)
+                         )) 
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
               LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
               LEFT JOIN tmpPrice_View AS View_Price
@@ -186,6 +200,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.09.19         * учет нового св-ва подразделения TopNo
  29.10.18         * перенесла проверку привязки товара поставщика к товару сети в др. процку
  25.10.18         * проверка привязки товара поставщика к товару сети
  12.06.17         *

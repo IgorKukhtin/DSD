@@ -81,6 +81,8 @@ type
     actOpenReport_AccountMotion: TdsdOpenForm;
     macReport_AccountMotion: TMultiAction;
     bbReport_AccountMotion: TdxBarButton;
+    actPrintBranch: TdsdPrintAction;
+    bbPrintBranch: TdxBarButton;
   private
   public
   end;

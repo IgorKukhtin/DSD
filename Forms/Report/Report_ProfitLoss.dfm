@@ -349,6 +349,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBranch'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarControlContainerItem1'
         end
         item
@@ -405,6 +413,10 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object bbReport_AccountMotion: TdxBarButton
       Action = macReport_AccountMotion
+      Category = 0
+    end
+    object bbPrintBranch: TdxBarButton
+      Action = actPrintBranch
       Category = 0
     end
   end
@@ -839,6 +851,89 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrintBranch: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43466d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43466d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1092#1080#1083#1080#1072#1083#1099')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1092#1080#1083#1080#1072#1083#1099')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'ProfitLossGroupName;ProfitLossDirectionName;ProfitLossName'
+          PivotGrid = cxDBPivotGrid
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'maintext'
+          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTotal'
+          Value = 'False'
+          Component = cbTotal
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1054#1055#1080#1059' ('#1092#1080#1083#1080#1072#1083#1099')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1054#1055#1080#1059' ('#1092#1080#1083#1080#1072#1083#1099')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1144,6 +1239,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Action = macReport_Account
         ShortCut = 13
       end>
+    ColorRuleList = <>
+    SummaryList = <>
     Left = 424
     Top = 240
   end

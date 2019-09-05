@@ -255,6 +255,10 @@ begin
 
   // Отчеты УП
   LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
+  }
+  LoadReportFromFile('Отчет УП ОПиУ (филиалы)', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ (филиалы).fr3');
+  exit;
+  {
   LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
 
   LoadReportFromFile('Отчет УП Баланс (Дебет Кредит)', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит).fr3');
