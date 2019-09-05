@@ -38,7 +38,6 @@ $BODY$
   DECLARE vbMainJuridicalId Integer;
   DECLARE vbIsGoodsPromo Boolean;
   DECLARE vbCostCredit TFloat;
-  DECLARE vbisTopNo_Unit Boolean;
 BEGIN
     -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
     vbIsGoodsPromo:= inObjectId >=0;
@@ -47,14 +46,7 @@ BEGIN
 
 
     -- Нашли у Аптеки "Главное юр лицо"
-    SELECT Object_Unit_View.JuridicalId
-         , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
-     INTO vbMainJuridicalId, vbisTopNo_Unit
-    FROM Object_Unit_View
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
-                                 ON ObjectBoolean_TopNo.ObjectId = inUnitId
-                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
-    WHERE Object_Unit_View.Id = inUnitId;
+    SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
 
      -- получаем значение константы % кредитных средств
      vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
@@ -389,7 +381,7 @@ BEGIN
              WHEN ddd.Deferment = 0
                   THEN FinalPrice
              -- если ТОП-позиция
-             WHEN ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE
+             WHEN ddd.isTOP = TRUE
                   THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
@@ -399,10 +391,10 @@ BEGIN
      
      /*  --было до 07,04,2019
      , CASE -- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
-             WHEN ddd.Deferment = 0 AND (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                   THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- если Дней отсрочки по договору = 0 + НЕ ТОП-позиция = учитывает % из Установки для ценовых групп (что б уравновесить ... )
-             WHEN ddd.Deferment = 0 AND (ddd.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                   THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
              -- иначе НЕ учитывает
              ELSE FinalPrice

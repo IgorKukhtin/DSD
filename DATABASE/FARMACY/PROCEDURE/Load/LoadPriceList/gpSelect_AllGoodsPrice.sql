@@ -267,12 +267,16 @@ BEGIN
 
                                    WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                        THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
-                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
+                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)    -- % наценки в КАТЕГОРИИ
                               END
-                            , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
-                            , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
                             , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
-                            , CASE WHEN Object_Price.Fix = TRUE THEN Object_Price.Price ELSE Object_Goods.Price END -- Цена у товара (почти фиксированная)
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     
+                                   ELSE CASE WHEN Object_Price.Fix = TRUE 
+                                             THEN Object_Price.Price ELSE Object_Goods.Price
+                                        END -- Цена у товара (почти фиксированная)
+                              END
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,

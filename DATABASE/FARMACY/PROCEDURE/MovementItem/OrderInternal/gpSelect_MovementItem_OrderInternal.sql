@@ -33,8 +33,6 @@ $BODY$
 
   DECLARE vbCostCredit TFloat;
   
-  DECLARE vbisTopNo_Unit     Boolean;
-  
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -82,15 +80,6 @@ BEGIN
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
-
-    --свойство Аптеки isTopNo
-    SELECT COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
-   INTO vbisTopNo_Unit
-    FROM ObjectBoolean AS ObjectBoolean_TopNo
-    WHERE ObjectBoolean_TopNo.ObjectId = vbUnitId
-      AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo();
-
-    vbisTopNo_Unit := COALESCE (vbisTopNo_Unit, FALSE) :: Boolean;
 
     -- определим дату документа
     SELECT date_trunc('day', Movement.OperDate)  
@@ -617,7 +606,6 @@ BEGIN
 
            , tmpMI.isTOP                                            AS isTOP
            , tmpMI.isUnitTOP                                        AS isTOP_Price
-           
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
@@ -968,9 +956,9 @@ BEGIN
                END :: TFloat AS Percent
 */
 ---
-             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND (tmpMI.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND tmpMI.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND (tmpMI.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+                   WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND tmpMI.isTOP = FALSE
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
@@ -1045,7 +1033,7 @@ BEGIN
 
 --     RETURN NEXT Cursor2;
 
-       OPEN Cursor1 FOR SELECT *, vbisTopNo_Unit AS isTopNo_Unit FROM _tmpRes1;
+       OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
        RETURN NEXT Cursor1;
 
        OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
@@ -1247,27 +1235,27 @@ BEGIN
 /* * /
             , CASE WHEN ddd.Deferment = 0
                         THEN 0
-                   WHEN ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE
+                   WHEN ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    ELSE PriceSettings.Percent
               END :: TFloat AS Percent
             , CASE WHEN ddd.Deferment = 0
                         THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
                         THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
               END :: TFloat AS SuperFinalPrice
 / */
-            , CASE WHEN ddd.Deferment = 0 AND (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN ddd.Deferment = 0 AND (ddd.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
               
-            , CASE WHEN ddd.Deferment = 0 AND (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND (ddd.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
@@ -2347,7 +2335,6 @@ BEGIN
            , Object_Retail.ValueData                        AS RetailName
            , tmpMI.isTOP                                    AS isTOP
            , COALESCE (Object_Price_View.isTOP, FALSE)      AS isTOP_Price
-           , vbisTopNo_Unit                                 AS isTopNo_Unit
 
            , tmpMI.GoodsGroupId                             AS GoodsGroupId
            , tmpMI.NDSKindId                                AS NDSKindId
@@ -2567,7 +2554,6 @@ BEGIN
 
               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
               , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
-              , vbisTopNo_Unit                                               AS isTopNo_Unit
 
         FROM _tmpMI
              LEFT JOIN tmpObjectFloat AS ObjectFloat_Goods_MinimumLot
@@ -2597,9 +2583,7 @@ BEGIN
 ;
 
 
-   OPEN Cursor1 FOR SELECT *
-                         , vbisTopNo_Unit AS isTopNo_Unit 
-                    FROM _tmpRes1
+   OPEN Cursor1 FOR SELECT * FROM _tmpRes1
                     /*WHERE inSession <> '7670317' OR _tmpRes1.Id > 0 OR _tmpRes1.Income_Amount <> 0 OR _tmpRes1.AmountSecond <> 0
                        OR _tmpRes1.CheckAmount <> 0 OR _tmpRes1.SendAmount <> 0 OR _tmpRes1.AmountDeferred <> 0
                    UNION ALL
@@ -2682,7 +2666,7 @@ BEGIN
                              , SuperFinalPrice_Deferment TFloat) ON COMMIT DROP;
 
 
-      -- Сохранили данные
+      -- Сохраниели данные
       INSERT INTO _tmpMI
 
            WITH -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
@@ -2823,16 +2807,16 @@ BEGIN
                    ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
               END :: TFloat AS SuperFinalPrice
 / */
-            , CASE WHEN ddd.Deferment = 0 AND (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN ddd.Deferment = 0 AND (ddd.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
               
-            , CASE WHEN ddd.Deferment = 0 AND (ddd.isTOP = TRUE AND vbisTopNo_Unit = FALSE)
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND (ddd.isTOP = FALSE OR vbisTopNo_Unit = TRUE)
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
@@ -3877,7 +3861,6 @@ BEGIN
            , Object_Retail.ValueData                        AS RetailName
            , tmpMI.isTOP                                    AS isTOP
            , COALESCE (Object_Price_View.isTOP, FALSE)      AS isTOP_Price
-           , vbisTopNo_Unit                                 AS isTopNo_Unit
 
            , tmpMI.GoodsGroupId                             AS GoodsGroupId
            , tmpMI.NDSKindId                                AS NDSKindId
@@ -4126,9 +4109,7 @@ BEGIN
 ;
 
 
-   OPEN Cursor1 FOR SELECT * 
-                         , vbisTopNo_Unit AS isTopNo_Unit
-                    FROM _tmpRes1
+   OPEN Cursor1 FOR SELECT * FROM _tmpRes1
                     /*WHERE inSession <> '7670317' OR _tmpRes1.Id > 0 OR _tmpRes1.Income_Amount <> 0 OR _tmpRes1.AmountSecond <> 0
                        OR _tmpRes1.CheckAmount <> 0 OR _tmpRes1.SendAmount <> 0 OR _tmpRes1.AmountDeferred <> 0
                    UNION ALL
