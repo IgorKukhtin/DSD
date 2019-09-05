@@ -17,6 +17,17 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
              , MovementDescName TVarChar
              , Amount TFloat
+
+             , Amount_Dn  TFloat    -- Днепр
+             , Amount_Kh  TFloat    -- Харьков
+             , Amount_Od  TFloat    -- Одесса
+             , Amount_Zp  TFloat    -- Запорожье
+             , Amount_Kv  TFloat    -- Киев
+             , Amount_Kr  TFloat    -- Кр.Рог
+             , Amount_Nik TFloat    -- Николаев
+             , Amount_Ch  TFloat    -- Черкассы
+             , Amount_Lv  TFloat    -- Львов
+             , Amount_0   TFloat    -- без филиала
               )
 AS
 $BODY$
@@ -255,6 +266,17 @@ BEGIN
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount :: TFloat AS Amount
+           
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Киев%'      THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kv
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Кр.Рог%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kr
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Николаев%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Nik
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
+           , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
 
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 
