@@ -35,7 +35,7 @@ BEGIN
           , Calculation.PayrollTypeName            AS PayrollTypeName
           , Calculation.SummaCalc                  AS SummaCalc
           , Calculation.FormulaCalc                AS FormulaCalc
-        FROM gpSelect_Calculation_Wages(inOperDate, inPersonID, inSession) AS Calculation
+        FROM gpSelect_Calculation_WagesBoard(inOperDate, inPersonID, inSession) AS Calculation
         ORDER BY Calculation.OperDate;
 
     RETURN NEXT Cursor2;

@@ -1,4 +1,4 @@
-unit EmployeeScheduleNew;
+unit EmployeeScheduleEditUser;
 
 interface
 
@@ -27,65 +27,42 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxTimeEdit;
 
 type
-  TEmployeeScheduleNewForm = class(TAncestorDocumentForm)
+  TEmployeeScheduleEditUserForm = class(TAncestorDocumentForm)
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
-    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
-    HeaderPrevCDS: TClientDataSet;
     actUserNickDialig: TOpenChoiceForm;
     actAddUser: TMultiAction;
     actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
-    UnitName: TcxGridDBBandedColumn;
-    ValueStart: TcxGridDBBandedColumn;
     actExecPreviousMonth: TdsdExecStoredProc;
-    spPreviousMonth: TdsdStoredProc;
     actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
-    Color_Calc: TcxGridDBBandedColumn;
-    ValuePrev: TcxGridDBBandedColumn;
-    CrossDBViewPrevAddOn: TCrossDBViewAddOn;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
-    CrossDBViewStartAddOn: TCrossDBViewAddOn;
-    Color_CalcStart: TcxGridDBBandedColumn;
     actUpdateUnit: TMultiAction;
     actChoiceUnitTreeForm: TOpenChoiceForm;
     actExecStoredUpdateUnit: TdsdExecStoredProc;
-    actUpdateSubstitutionUnit: TMultiAction;
-    actChoiceSubstitutionUnitTreeForm: TOpenChoiceForm;
-    actExecStoredUpdateSubstitutionUnit: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
     spUpdateUnit: TdsdStoredProc;
-    spUpdateSubstitutionUnit: TdsdStoredProc;
-    actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId;
-    ValueEnd: TcxGridDBBandedColumn;
     actPayrollTypeChoice: TOpenChoiceForm;
-    CrossDBViewEndAddOn: TCrossDBViewAddOn;
-    Color_CalcEnd: TcxGridDBBandedColumn;
+    edUserName: TcxTextEdit;
     cxLabel3: TcxLabel;
+    edUnitName: TcxTextEdit;
     cxLabel4: TcxLabel;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    cxLabel10: TcxLabel;
-    Panel1: TPanel;
-    Empty1: TcxGridDBBandedColumn;
-    Name1: TcxGridDBBandedColumn;
-    Empty2: TcxGridDBBandedColumn;
-    Name2: TcxGridDBBandedColumn;
-    Empty3: TcxGridDBBandedColumn;
-    Name3: TcxGridDBBandedColumn;
-    Name0: TcxGridDBBandedColumn;
-    actUpdate: TdsdInsertUpdateAction;
-    dxBarButton7: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    ShortName: TcxGridDBColumn;
+    PayrollTypeName: TcxGridDBColumn;
+    TimeStart: TcxGridDBColumn;
+    TimeEnd: TcxGridDBColumn;
+    DateStart: TcxGridDBColumn;
+    DateEnd: TcxGridDBColumn;
+    Color_CalcUser: TcxGridDBColumn;
+    Day: TcxGridDBColumn;
+    actUnitChoice: TOpenChoiceForm;
+    isSubstitution: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -97,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TEmployeeScheduleNewForm);
+  RegisterClass(TEmployeeScheduleEditUserForm);
 
 end.
