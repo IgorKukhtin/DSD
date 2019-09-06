@@ -43,7 +43,7 @@ BEGIN
 
     INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
     SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
-    FROM gpSelect_Calculation_Wages (vbOperDate, 0, '3') AS Calculation
+    FROM gpSelect_Calculation_WagesBoard (vbOperDate, 0, '3') AS Calculation
     WHERE COALESCE (Calculation.UserId, 0) <> 0;
 
       -- Востанавливаем удаленные

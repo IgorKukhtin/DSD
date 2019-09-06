@@ -1972,20 +1972,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPUSHJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPUSHJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPUSHForm'));
@@ -2011,6 +1997,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleNewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleNewForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleEditUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleEditUserForm');
+
 
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));

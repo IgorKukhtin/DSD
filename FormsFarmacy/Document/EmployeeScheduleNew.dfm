@@ -12,17 +12,17 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Width = 1315
     Height = 418
     ExplicitTop = 82
-    ExplicitWidth = 1042
+    ExplicitWidth = 1315
     ExplicitHeight = 418
     ClientRectBottom = 418
     ClientRectRight = 1315
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1042
+      ExplicitWidth = 1315
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 1315
         Height = 394
-        ExplicitWidth = 1042
+        ExplicitWidth = 1315
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -317,7 +317,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Width = 1315
     Height = 56
     TabOrder = 3
-    ExplicitWidth = 1042
+    ExplicitWidth = 1315
     ExplicitHeight = 56
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -433,6 +433,9 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
         end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      AfterAction = actRefresh
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
@@ -706,6 +709,45 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end>
       isShowModal = False
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TEmployeeScheduleEditUserForm'
+      FormNameParam.Value = 'TEmployeeScheduleEditUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementID'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -788,6 +830,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -915,8 +961,22 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       Action = actUpdateSubstitutionUnit
       Category = 0
     end
+    object dxBarButton7: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -926,6 +986,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    Left = 334
     Top = 241
   end
   inherited FormParams: TdsdFormParams
@@ -1238,28 +1299,6 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     StoredProcName = 'gpGet_Movement_EmployeeSchedule_TotalSumm'
     Left = 668
     Top = 228
-  end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = 0.000000000000000000
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = -1
-      end>
-    SearchAsFilter = False
-    Left = 214
-    Top = 353
   end
   object CrossDBViewPrevAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'

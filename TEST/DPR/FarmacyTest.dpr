@@ -748,7 +748,8 @@ uses
   EmployeeScheduleNew in '..\..\FormsFarmacy\Document\EmployeeScheduleNew.pas' {EmployeeScheduleNewForm: TParentForm},
   Unit_KoeffSUN_Edit in '..\..\FormsFarmacy\Guides\Unit_KoeffSUN_Edit.pas' {Unit_KoeffSUN_EditForm: TParentForm},
   Report_CheckSUNDialog in '..\..\FormsFarmacy\Report\Report_CheckSUNDialog.pas' {Report_CheckSUNDialogForm: TParentForm},
-  Report_CheckSUN in '..\..\FormsFarmacy\Report\Report_CheckSUN.pas' {Report_CheckSUNForm: TParentForm};
+  Report_CheckSUN in '..\..\FormsFarmacy\Report\Report_CheckSUN.pas' {Report_CheckSUNForm: TParentForm},
+  EmployeeScheduleEditUser in '..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas' {EmployeeScheduleEditUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

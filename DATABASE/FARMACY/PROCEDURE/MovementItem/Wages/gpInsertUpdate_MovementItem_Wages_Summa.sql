@@ -2,11 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inHolidaysHospital    TFloat    , -- Отпуск / Больничный
     IN inMarketing           TFloat    , -- Маркетинг
+    IN inDirector            TFloat    , -- Директор. премии / штрафы
     IN inAmountCard          TFloat    , -- На карту
     IN inisIssuedBy          Boolean   , -- 
    OUT outAmountHand         TFloat    , -- На руки
@@ -26,8 +29,13 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
 
+     -- сохранили свойство <Отпуск / Больничный>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
      -- сохранили свойство <Маркетинг>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Marketing(), ioId, inMarketing);
+     -- сохранили свойство <Директор. премии / штрафы>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Director(), ioId, inDirector);
+
      -- сохранили свойство <На карту>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
 
@@ -38,14 +46,24 @@ BEGIN
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
 
     SELECT (MovementItem.Amount + 
-            COALESCE (MIFloat_Marketing.ValueData, 0) - 
+            COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
+            COALESCE (MIFloat_Marketing.ValueData, 0) +
+            COALESCE (MIFloat_Director.ValueData, 0) - 
             COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
     INTO outAmountHand
     FROM  MovementItem
 
+          LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                      ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                     AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+
           LEFT JOIN MovementItemFloat AS MIFloat_Marketing
                                       ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                      AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
+          LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                      ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                     AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
           LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                       ON MIF_AmountCard.MovementItemId = MovementItem.Id

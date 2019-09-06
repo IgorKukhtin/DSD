@@ -60,6 +60,26 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_In
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSend_In
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSend_Out
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,6 +120,26 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_In
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSend_In
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSend_Out
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -160,9 +200,57 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object AmountSend_In: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1077#1088#1077#1084'., '#1096#1090'.'
+            DataBinding.FieldName = 'AmountSend_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102', '#1096#1090'.'
+            Width = 75
+          end
+          object AmountSend_Out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1086' '#1087#1077#1088#1077#1084'., '#1096#1090'.'
+            DataBinding.FieldName = 'AmountSend_Out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102', '#1096#1090'.'
+            Width = 75
+          end
           object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object PriceSend_In: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1077#1088#1077#1084'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'PriceSend_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object PriceSend_Out: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1077#1088#1077#1084'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'PriceSend_Out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -180,6 +268,30 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object SumSend_In: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1080#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
+            DataBinding.FieldName = 'SumSend_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1088#1080#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102
+            Options.Editing = False
+            Width = 89
+          end
+          object SumSend_Out: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1056#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
+            DataBinding.FieldName = 'SumSend_Out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1056#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102
             Options.Editing = False
             Width = 89
           end

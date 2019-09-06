@@ -1109,6 +1109,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Marketing() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Marketing', 'Маркетинг'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Marketing');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_HolidaysHospital() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_HolidaysHospital'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_HolidaysHospital', 'Отпуск / Больничный'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_HolidaysHospital');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_Director() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Director'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Director', 'Директор. премии / штрафы'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Director');
+
 CREATE OR REPLACE FUNCTION zc_MIFloat_SummaCleaning() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaCleaning'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaCleaning', 'Звтраты на уборку'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaCleaning');
@@ -1124,6 +1132,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 05.09.19                                                                                                     * zc_MIFloat_HolidaysHospital, zc_MIFloat_Director
  01.09.19                                                                                                     * zc_MIFloat_SummaCleaning, zc_MIFloat_SummaSP, zc_MIFloat_SummaOther
  29.08.19                                                                                                     * zc_MIFloat_Marketing
  26.08.19                                                                                                     * zc_MIFloat_SummaBase, zc_MIFloat_AmountCard

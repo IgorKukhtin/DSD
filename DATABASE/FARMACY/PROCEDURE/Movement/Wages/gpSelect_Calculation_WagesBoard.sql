@@ -1,8 +1,8 @@
--- Function: gpSelect_Calculation_Wages()
+-- Function: gpSelect_Calculation_WagesBoard()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_Wages (TDateTime, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_WagesBoard (TDateTime, integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Calculation_Wages(
+CREATE OR REPLACE FUNCTION gpSelect_Calculation_WagesBoard(
     IN inOperDate    TDateTime,     -- Дата начисления
     IN inUserID      Integer,       -- Сотрудник
     IN inSession     TVarChar       -- сессия пользователя
@@ -639,4 +639,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Calculation_Wages (('01.08.2019')::TDateTime, 0, '3')
+-- SELECT * FROM gpSelect_Calculation_WagesBoard (('01.08.2019')::TDateTime, 0, '3')

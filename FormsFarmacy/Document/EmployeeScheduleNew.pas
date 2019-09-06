@@ -28,7 +28,6 @@ uses
 
 type
   TEmployeeScheduleNewForm = class(TAncestorDocumentForm)
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
@@ -85,6 +84,8 @@ type
     Empty3: TcxGridDBBandedColumn;
     Name3: TcxGridDBBandedColumn;
     Name0: TcxGridDBBandedColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

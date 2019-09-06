@@ -1,4 +1,4 @@
-unit Wages;
+unit EmployeeScheduleEditUser;
 
 interface
 
@@ -24,71 +24,45 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul,
-  dsdExportToXLSAction, cxMemo, cxBlobEdit;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxTimeEdit;
 
 type
-  TWagesForm = class(TAncestorDocumentForm)
+  TEmployeeScheduleEditUserForm = class(TAncestorDocumentForm)
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
-    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     actDataDialog: TExecuteDialog;
     actUserNickDialig: TOpenChoiceForm;
     actAddUser: TMultiAction;
     actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
-    UnitName: TcxGridDBBandedColumn;
+    actExecPreviousMonth: TdsdExecStoredProc;
+    actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
-    Color_Calc: TcxGridDBBandedColumn;
+    actUpdateUnit: TMultiAction;
+    actChoiceUnitTreeForm: TOpenChoiceForm;
+    actExecStoredUpdateUnit: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
-    actPrintCalculationPerson: TMultiAction;
-    dxBarButton7: TdxBarButton;
-    actOpenChoicePersonal: TOpenChoiceForm;
-    actExportPrintCalculationPerson: TdsdExportToXLS;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrintCalculationPerson: TdsdStoredProc;
-    actExecSPPrintCalculationPerson: TdsdExecStoredProc;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    cxGridLevel1: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
-    spSelect_MI_Child: TdsdStoredProc;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    DetailDS: TDataSource;
-    DetailDCS: TClientDataSet;
-    chUnitName: TcxGridDBColumn;
-    chPayrollTypeName: TcxGridDBColumn;
-    chAmountAccrued: TcxGridDBColumn;
-    chSummaBase: TcxGridDBColumn;
-    chFormula: TcxGridDBColumn;
-    actCalculationAll: TMultiAction;
-    actExecCalculationAll: TdsdExecStoredProc;
-    dxBarButton8: TdxBarButton;
-    spCalculationAll: TdsdStoredProc;
-    AmountCard: TcxGridDBBandedColumn;
-    AmountHand: TcxGridDBBandedColumn;
-    AmountAccrued: TcxGridDBBandedColumn;
-    chDateCalculation: TcxGridDBColumn;
-    actPrintCalculationAll: TMultiAction;
-    actExecSPPrintCalculationAll: TdsdExecStoredProc;
-    actExportPrintCalculationAll: TdsdExportToXLS;
-    spSelectPrintCalculationAll: TdsdStoredProc;
-    dxBarButton9: TdxBarButton;
-    actUpdate_isIssuedBy: TdsdExecStoredProc;
-    spUpdate_isIssuedBy: TdsdStoredProc;
-    isIssuedBy: TcxGridDBBandedColumn;
-    dxBarButton10: TdxBarButton;
-    actIssuedBy: TMultiAction;
-    Marketing: TcxGridDBBandedColumn;
-    actWagesAdditionalExpenses: TdsdOpenForm;
-    dxBarButton11: TdxBarButton;
-    HolidaysHospital: TcxGridDBBandedColumn;
-    Director: TcxGridDBBandedColumn;
+    spUpdateUnit: TdsdStoredProc;
+    actPayrollTypeChoice: TOpenChoiceForm;
+    edUserName: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edUnitName: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    UnitName: TcxGridDBColumn;
+    ShortName: TcxGridDBColumn;
+    PayrollTypeName: TcxGridDBColumn;
+    TimeStart: TcxGridDBColumn;
+    TimeEnd: TcxGridDBColumn;
+    DateStart: TcxGridDBColumn;
+    DateEnd: TcxGridDBColumn;
+    Color_CalcUser: TcxGridDBColumn;
+    Day: TcxGridDBColumn;
+    actUnitChoice: TOpenChoiceForm;
+    isSubstitution: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -100,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWagesForm);
+  RegisterClass(TEmployeeScheduleEditUserForm);
 
 end.

@@ -29,7 +29,7 @@ BEGIN
                                        ObjectLink_Personal_Member.ChildObjectId                                 AS MemberId
                                      , CASE WHEN COALESCE (Max(Calculation.UserId), 0) = 0 THEN 'Не связан' END AS UserId
                                      , Sum(Calculation.SummaCalc)                                               AS SummaCalc
-                                FROM gpSelect_Calculation_Wages(inOperDate, 0, inSession) AS Calculation
+                                FROM gpSelect_Calculation_WagesBoard(inOperDate, 0, inSession) AS Calculation
 
                                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                           ON ObjectLink_Personal_Member.ObjectId = Calculation.PersonalId
