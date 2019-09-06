@@ -129,11 +129,11 @@ BEGIN
                              , tmpContainer_Check.GoodsId
                              , tmpContainer_Check.MovementId
                              , SUM (tmpContainer_Check.Amount)  AS Amount
-                             , SUM (COALESCE (tmpSUN_Container.AmountIn,0) )        AS AmountSend_In
-                             , SUM (COALESCE (tmpSUN_Container.AmountOut,0)* (-1))  AS AmountSend_Out
+                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE (tmpSUN_Container.AmountIn,0) ELSE 0 END)         AS AmountSend_In
+                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE (tmpSUN_Container.AmountOut,0)* (-1) ELSE 0 END)  AS AmountSend_Out
                              , SUM (tmpContainer_Check.SumSale) AS SumSale
-                             , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountIn,0) )        AS SumSend_In
-                             , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountOut,0) * (-1)) AS SumSend_Out
+                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountIn,0) ELSE 0 END)         AS SumSend_In
+                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountOut,0) * (-1) ELSE 0 END) AS SumSend_Out
                         FROM tmpSUN_Container
                              INNER JOIN tmpContainer_Check ON tmpContainer_Check.ContainerId = tmpSUN_Container.ContainerId
 

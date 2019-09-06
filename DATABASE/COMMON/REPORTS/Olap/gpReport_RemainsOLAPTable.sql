@@ -223,33 +223,33 @@ BEGIN
            , Object_Goods.ValueData           AS GoodsName  
            , Object_GoodsKind.ValueData       AS GoodsKindName
 
-           , tmpData.AmountStart_inf            ::TFloat
-           , tmpData.AmountEnd_inf              ::TFloat
-           , tmpData.AmountStart                ::TFloat
-           , tmpData.AmountEnd                  ::TFloat
-           , tmpData.AmountIncome               ::TFloat
-           , tmpData.AmountReturnOut            ::TFloat
-           , tmpData.AmountSendIn               ::TFloat
-           , tmpData.AmountSendOut              ::TFloat
-           , tmpData.AmountSendOnPriceIn        ::TFloat
-           , tmpData.AmountSendOnPriceOut       ::TFloat
-           , tmpData.AmountSendOnPriceOut_10900 ::TFloat
-           , tmpData.AmountSendOnPrice_10500    ::TFloat
-           , tmpData.AmountSendOnPrice_40200    ::TFloat
-           , tmpData.AmountSale                 ::TFloat
-           , tmpData.AmountSale_10500           ::TFloat
-           , tmpData.AmountSale_40208           ::TFloat
-           , tmpData.AmountSaleReal             ::TFloat
-           , tmpData.AmountSaleReal_10500       ::TFloat
-           , tmpData.AmountSaleReal_40208       ::TFloat
-           , tmpData.AmountReturnIn             ::TFloat
-           , tmpData.AmountReturnIn_40208       ::TFloat
-           , tmpData.AmountReturnInReal         ::TFloat
-           , tmpData.AmountReturnInReal_40208   ::TFloat
-           , tmpData.AmountLoss                 ::TFloat
-           , tmpData.AmountInventory            ::TFloat
-           , tmpData.AmountProductionIn         ::TFloat
-           , tmpData.AmountProductionOut        ::TFloat
+           , (tmpData.AmountStart_inf            * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountStart_inf
+           , (tmpData.AmountEnd_inf              * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountEnd_inf
+           , (tmpData.AmountStart                * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountStart
+           , (tmpData.AmountEnd                  * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountEnd
+           , (tmpData.AmountIncome               * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountIncome
+           , (tmpData.AmountReturnOut            * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountReturnOut
+           , (tmpData.AmountSendIn               * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendIn
+           , (tmpData.AmountSendOut              * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOut
+           , (tmpData.AmountSendOnPriceIn        * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOnPriceIn
+           , (tmpData.AmountSendOnPriceOut       * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOnPriceOut
+           , (tmpData.AmountSendOnPriceOut_10900 * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOnPriceOut_10900
+           , (tmpData.AmountSendOnPrice_10500    * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOnPrice_10500
+           , (tmpData.AmountSendOnPrice_40200    * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSendOnPrice_40200
+           , (tmpData.AmountSale                 * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSale
+           , (tmpData.AmountSale_10500           * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSale_10500
+           , (tmpData.AmountSale_40208           * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSale_40208
+           , (tmpData.AmountSaleReal             * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSaleReal
+           , (tmpData.AmountSaleReal_10500       * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSaleReal_10500
+           , (tmpData.AmountSaleReal_40208       * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountSaleReal_40208
+           , (tmpData.AmountReturnIn             * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountReturnIn
+           , (tmpData.AmountReturnIn_40208       * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountReturnIn_40208
+           , (tmpData.AmountReturnInReal         * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountReturnInReal
+           , (tmpData.AmountReturnInReal_40208   * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountReturnInReal_40208
+           , (tmpData.AmountLoss                 * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountLoss
+           , (tmpData.AmountInventory            * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountInventory
+           , (tmpData.AmountProductionIn         * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountProductionIn
+           , (tmpData.AmountProductionOut        * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountProductionOut
 
         FROM tmpData
 
