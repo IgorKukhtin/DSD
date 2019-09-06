@@ -24,7 +24,7 @@ inherited WagesUserForm: TWagesUserForm
       ExplicitHeight = 379
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 304
+        Height = 264
         ExplicitWidth = 655
         ExplicitHeight = 304
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -79,9 +79,9 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 304
+        Top = 264
         Width = 655
-        Height = 75
+        Height = 115
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
@@ -113,8 +113,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceCard: TcxCurrencyEdit
-          Left = 157
-          Top = 35
+          Left = 478
+          Top = 39
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -128,8 +128,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel1: TcxLabel
-          Left = 15
-          Top = 35
+          Left = 327
+          Top = 39
           Caption = #1047'/'#1055' '#1085#1072' '#1082#1072#1088#1090#1091' :'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -140,8 +140,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceOnHand: TcxCurrencyEdit
-          Left = 469
-          Top = 35
+          Left = 478
+          Top = 72
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -156,7 +156,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object cxLabel3: TcxLabel
           Left = 327
-          Top = 35
+          Top = 72
           Caption = #1048#1090#1086#1075#1086' '#1085#1072' '#1088#1091#1082#1080':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -167,8 +167,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceMarketing: TcxCurrencyEdit
-          Left = 469
-          Top = 6
+          Left = 157
+          Top = 72
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -182,9 +182,63 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel5: TcxLabel
+          Left = 15
+          Top = 72
+          Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
+        object ceHolidaysHospital: TcxCurrencyEdit
+          Left = 157
+          Top = 39
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 8
+          Width = 156
+        end
+        object cxLabel6: TcxLabel
+          Left = 15
+          Top = 39
+          Caption = #1041#1086#1083#1100#1085'. '#1086#1090#1087#1091#1089#1082':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
+        object ceDirector: TcxCurrencyEdit
+          Left = 478
+          Top = 6
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 10
+          Width = 156
+        end
+        object cxLabel7: TcxLabel
           Left = 327
           Top = 6
-          Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075':'
+          Caption = #1044#1080#1088#1077#1082#1090#1086#1088' '#1076#1086#1087'. '#1091#1076'.:'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
@@ -402,9 +456,23 @@ inherited WagesUserForm: TWagesUserForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'HolidaysHospital'
+        Value = Null
+        Component = ceHolidaysHospital
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Marketing'
         Value = Null
         Component = ceMarketing
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Director'
+        Value = Null
+        Component = ceDirector
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

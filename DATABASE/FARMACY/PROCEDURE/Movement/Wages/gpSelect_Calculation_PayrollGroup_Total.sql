@@ -39,6 +39,8 @@ BEGIN
                       ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
                       ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
                       '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
+
+      vbSumma := CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END;
     END IF;
     
     RETURN QUERY
@@ -62,5 +64,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup_Total (Integer, TFloat, TFloat,
  23.08.19                                                        *
 */
 
--- 
-select * from gpSelect_Calculation_PayrollGroup_Total(zc_Enum_PayrollType_WorkS(), 0.55, 7000, 11000, 12);
+-- select * from gpSelect_Calculation_PayrollGroup_Total(zc_Enum_PayrollType_WorkS(), 0.55, 7000, 2000, 19);

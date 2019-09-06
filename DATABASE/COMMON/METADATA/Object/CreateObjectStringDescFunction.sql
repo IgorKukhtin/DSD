@@ -966,10 +966,29 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PayrollType_ShortName() RETURNS Integ
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PayrollType_ShortName', zc_Object_PayrollType(), 'Короткое наименование' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollType_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_CBName', zc_Object_Juridical(), 'Полное название поставщика для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBName');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBMFO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBMFO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_CBMFO', zc_Object_Juridical(), 'МФО для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBMFO');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_CBAccount', zc_Object_Juridical(), 'Расчетный счет для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBAccount');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBPurposePayment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBPurposePayment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_CBPurposePayment', zc_ObjectString_Juridical_CBPurposePayment(), 'Назначение платежа для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBPurposePayment');
+
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 06.09.19                                                                                                         * zc_ObjectString_Juridical_CB...
  01.09.19                                                                                                         * zc_ObjectString_PayrollType_ShortName
  25.08.19                                                                                                         * zc_ObjectString_User_PasswordWages
  07.08.19                                                                                                         * zc_ObjectString_Driver_E_Mail

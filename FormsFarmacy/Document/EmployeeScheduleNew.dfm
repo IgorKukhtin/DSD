@@ -170,6 +170,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
+            Styles.Content = dmMain.cxFooterStyle
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0

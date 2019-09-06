@@ -98,7 +98,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 32
+            Width = 24
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -110,7 +110,7 @@ inherited WagesForm: TWagesForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 207
+            Width = 172
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -122,9 +122,19 @@ inherited WagesForm: TWagesForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 75
+            Width = 81
             Position.BandIndex = 0
             Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object isManagerPharmacy: TcxGridDBBandedColumn
+            Caption = #1047#1072#1074'. '#1072#1087#1090'.'
+            DataBinding.FieldName = 'isManagerPharmacy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 37
+            Position.BandIndex = 0
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object UnitName: TcxGridDBBandedColumn

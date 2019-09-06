@@ -28,48 +28,72 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
+    
+    IF EXISTS(SELECT 1 FROM MovementItem WHERE ID = ioId AND MovementItem.DescId = zc_MI_Sign())
+    THEN
+      IF COALESCE(inHolidaysHospital, 0) <> 0 OR
+         COALESCE(inMarketing, 0) <> 0 OR
+         COALESCE(inDirector, 0) <> 0 OR
+         COALESCE(inAmountCard, 0) <> 0
+      THEN
+        RAISE EXCEPTION 'Ошибка. Для дополнительных расходов можно изменять только признак "Выдано".';      
+      END IF;
+    
+       -- сохранили свойство <Дата выдачи>
+      IF inisIssuedBy <> COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE DescID = zc_MIBoolean_isIssuedBy() AND MovementItemID = ioId) , inisIssuedBy)
+      THEN
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_IssuedBy(), ioId, CURRENT_TIMESTAMP);
+      
+         -- сохранили свойство <Выдано>
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), ioId, inisIssuedBy);
+      
 
-     -- сохранили свойство <Отпуск / Больничный>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
-     -- сохранили свойство <Маркетинг>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Marketing(), ioId, inMarketing);
-     -- сохранили свойство <Директор. премии / штрафы>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Director(), ioId, inDirector);
+        -- сохранили протокол
+        PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);    
+      END IF;
+    ELSE
+       -- сохранили свойство <Отпуск / Больничный>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
+       -- сохранили свойство <Маркетинг>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Marketing(), ioId, inMarketing);
+       -- сохранили свойство <Директор. премии / штрафы>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Director(), ioId, inDirector);
 
-     -- сохранили свойство <На карту>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
+       -- сохранили свойство <На карту>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
 
-     -- сохранили свойство <Выдано>
-    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), ioId, inisIssuedBy);
+       -- сохранили свойство <Выдано>
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), ioId, inisIssuedBy);
 
-    -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
+      -- сохранили протокол
+      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
 
-    SELECT (MovementItem.Amount + 
-            COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
-            COALESCE (MIFloat_Marketing.ValueData, 0) +
-            COALESCE (MIFloat_Director.ValueData, 0) - 
-            COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
-    INTO outAmountHand
-    FROM  MovementItem
+      SELECT (MovementItem.Amount + 
+              COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
+              COALESCE (MIFloat_Marketing.ValueData, 0) +
+              COALESCE (MIFloat_Director.ValueData, 0) - 
+              COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+      INTO outAmountHand
+      FROM  MovementItem
 
-          LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
-                                      ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
-                                     AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+            LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                        ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_Marketing
-                                      ON MIFloat_Marketing.MovementItemId = MovementItem.Id
-                                     AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+            LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                        ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_Director
-                                      ON MIFloat_Director.MovementItemId = MovementItem.Id
-                                     AND MIFloat_Director.DescId = zc_MIFloat_Director()
+            LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                        ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
-          LEFT JOIN MovementItemFloat AS MIF_AmountCard
-                                      ON MIF_AmountCard.MovementItemId = MovementItem.Id
-                                     AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+            LEFT JOIN MovementItemFloat AS MIF_AmountCard
+                                        ON MIF_AmountCard.MovementItemId = MovementItem.Id
+                                       AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
 
-    WHERE MovementItem.Id = ioId;
+      WHERE MovementItem.Id = ioId;
+  END IF;
 
     --
 END;

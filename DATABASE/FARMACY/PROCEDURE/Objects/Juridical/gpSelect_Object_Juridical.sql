@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
                Percent TFloat, PayOrder TFloat,
                isLoadBarcode Boolean,
                isDeferred Boolean,
+               CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
                isErased boolean,
                
                StartDate TDateTime, 
@@ -115,6 +116,11 @@ BEGIN
            
            , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE)     AS isLoadBarcode
            , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
+           
+           , ObjectString_CBName.ValueData             AS CBName 
+           , ObjectString_CBMFO.ValueData              AS CBMFO
+           , ObjectString_CBAccount.ValueData          AS CBAccount
+           , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
 
            , Object_Juridical.isErased           AS isErased
            
@@ -162,6 +168,22 @@ BEGIN
                                    ON ObjectBoolean_Deferred.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_Deferred.DescId = zc_ObjectBoolean_Juridical_Deferred()
 
+           LEFT JOIN ObjectString AS ObjectString_CBName
+                                  ON ObjectString_CBName.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBName.DescId = zc_ObjectString_Juridical_CBName()
+
+           LEFT JOIN ObjectString AS ObjectString_CBMFO
+                                  ON ObjectString_CBMFO.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBMFO.DescId = zc_ObjectString_Juridical_CBMFO()
+
+           LEFT JOIN ObjectString AS ObjectString_CBAccount
+                                  ON ObjectString_CBAccount.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBAccount.DescId = zc_ObjectString_Juridical_CBAccount()
+
+           LEFT JOIN ObjectString AS ObjectString_CBPurposePayment
+                                  ON ObjectString_CBPurposePayment.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBPurposePayment.DescId = zc_ObjectString_Juridical_CBPurposePayment()
+
            LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = Object_Juridical.Id
 
        WHERE Object_Juridical.DescId = zc_Object_Juridical();
@@ -171,10 +193,11 @@ $BODY$
 
 LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 06.09.19                                                                                      * 
  20.03.19         * add JuridicalDetails
  22.02.18         * dell OrderSumm, OrderSummComment, OrderTime
  17.08.17         * add isDeferred

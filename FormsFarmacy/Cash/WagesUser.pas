@@ -42,6 +42,10 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     ceMarketing: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    ceHolidaysHospital: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceDirector: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

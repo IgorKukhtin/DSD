@@ -609,7 +609,7 @@ BEGIN
         , NULL::Integer                                   AS IncomeCount
         , NULL::TFloat                                    AS IncomeSaleSumm
 
-        , NULL::TFloat                                    AS SummaBase
+        , 0::TFloat                                       AS SummaBase
         , 1000::TFloat                                    AS SummaCalc
         , 'Доплата заведующим аптекой: 1000.00'::TVarChar AS FormulaCalc
    FROM tmpManagerPharmacy

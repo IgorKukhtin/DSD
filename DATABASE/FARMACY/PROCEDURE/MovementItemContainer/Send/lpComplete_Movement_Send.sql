@@ -657,6 +657,7 @@ end if;*/
     IF EXISTS (SELECT 1 FROM Container
                WHERE Container.DescId   = zc_Container_CountPartionDate()
                  AND Container.Amount   > 0
+                 AND Container.WhereObjectId = vbUnitFromId
                  AND Container.ParentId IN (-- только расход которые не распределены по партиям
                                             SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
                                             WHERE _tmpMIContainer_insert.DescId   = zc_MIContainer_Count()
@@ -742,8 +743,10 @@ end if;*/
 
       -- Проводки если затронуты контейнера сроков в подразделении получателя "To"
     IF EXISTS(SELECT 1 FROM Container
-              WHERE Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
+              WHERE Container.WhereObjectId = vbUnitToId
+                AND Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
                                            WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_Count()
+                                             AND _tmpMIContainer_insert.isActive = TRUE
                                              AND _tmpMIContainer_insert.Amount > 0.0))
     THEN
 

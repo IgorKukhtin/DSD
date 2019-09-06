@@ -89,6 +89,7 @@ type
     dxBarButton11: TdxBarButton;
     HolidaysHospital: TcxGridDBBandedColumn;
     Director: TcxGridDBBandedColumn;
+    isManagerPharmacy: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
