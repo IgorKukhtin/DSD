@@ -12,6 +12,7 @@ AS
 $BODY$
    DECLARE vbMovementId_check      Integer;
    DECLARE vbServiceDate           TDateTime;
+   DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbMovementItemId_err    Integer;
    DECLARE vbInsertDate            TDateTime;
@@ -62,6 +63,7 @@ BEGIN
 
      -- Нашли
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      -- Нашли
      vbPersonalServiceListId:= (SELECT MLO.ObjectId AS PersonalServiceListId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
@@ -373,7 +375,7 @@ BEGIN
 
                -- Месяц начислений - есть
              , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
-                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MovementDate_ServiceDate.ValueData)
+                         THEN vbServiceDateId
                     ELSE 0
                END AS ServiceDateId
 
@@ -1093,17 +1095,8 @@ BEGIN
        ;
 */
 
-     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
-     PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
-                                        , inUserId     := ABS (inUserId)
-                                         );
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_PersonalService()
-                                , inUserId     := ABS (inUserId)
-                                 );
-     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
+     -- 4.10. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + tmpMovement.SummSocialAdd
                                                                                                  - tmpMovement.SummTransport
@@ -1130,8 +1123,12 @@ BEGIN
              -- Сумма Моб.связь (удержание)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone()           , tmpMovement.MovementItemId, tmpMovement.SummPhone)
      FROM (WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
-                               , _tmpItem.ContainerId
+                             --, _tmpItem.ContainerId
                                , _tmpItem.ObjectId
+                               , _tmpItem.PersonalServiceListId
+                               , _tmpItem.UnitId
+                               , _tmpItem.PositionId
+                               , _tmpItem.InfoMoneyId
                                , _tmpItem.ObjectIntId_Analyzer
                                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
                                , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) AS SummSocialAdd
@@ -1164,6 +1161,43 @@ BEGIN
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId     = zc_MI_Master()
                         )
+    , tmpListContainer AS (SELECT DISTINCT CLO_Personal.ContainerId         AS ContainerId
+                                         , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                                         , CLO_Unit.ObjectId                AS UnitId
+                                         , CLO_Personal.ObjectId            AS PersonalId
+                                         , CLO_Position.ObjectId            AS PositionId
+                                         , CLO_InfoMoney.ObjectId           AS InfoMoneyId
+                           FROM _tmpItem
+                                INNER JOIN ObjectLink AS OL_Personal_Member
+                                                      ON OL_Personal_Member.ObjectId = _tmpItem.ObjectId
+                                                     AND OL_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS OL_Personal_Member_f
+                                                      ON OL_Personal_Member_f.ChildObjectId = OL_Personal_Member.ChildObjectId
+                                                     AND OL_Personal_Member_f.DescId        = zc_ObjectLink_Personal_Member()
+
+                                INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                               ON CLO_Personal.ObjectId = OL_Personal_Member_f.ObjectId
+                                                              AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                               ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
+                                                              AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                              AND CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                               ON CLO_PersonalServiceList.ContainerId = CLO_Personal.ContainerId
+                                                              AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                                              AND CLO_PersonalServiceList.ObjectId    = _tmpItem.PersonalServiceListId
+                                INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                               ON CLO_InfoMoney.ContainerId = CLO_Personal.ContainerId
+                                                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                              AND CLO_InfoMoney.ObjectId    = _tmpItem.InfoMoneyId
+                                LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                              ON CLO_Unit.ContainerId = CLO_Personal.ContainerId
+                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                              ON CLO_Position.ContainerId = CLO_Personal.ContainerId
+                                                             AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                           WHERE _tmpItem.ObjectDescId = zc_Object_Personal()
+                          )
    , tmpMIContainer AS (SELECT MIContainer.ContainerId
                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()                      THEN  1 * MIContainer.Amount ELSE 0 END)  AS SummTransport
                              , SUM (CASE WHEN MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()        THEN -1 * MIContainer.Amount ELSE 0 END)  AS SummTransportAdd
@@ -1171,7 +1205,7 @@ BEGIN
                              , SUM (CASE WHEN MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()       THEN -1 * MIContainer.Amount ELSE 0 END)  AS SummTransportTaxi
                              , SUM (CASE WHEN MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_MobileBills_Personal() THEN  1 * MIContainer.Amount ELSE 0 END)  AS SummPhone
                         FROM MovementItemContainer AS MIContainer
-                        WHERE MIContainer.ContainerId IN (SELECT ContainerId FROM _tmpItem)
+                        WHERE MIContainer.ContainerId IN (SELECT tmpListContainer.ContainerId FROM tmpListContainer)
                           AND MIContainer.OperDate >= DATE_TRUNC ('MONTH', (SELECT DISTINCT OperDate FROM _tmpItem ) - INTERVAL '3 MONTH')
                         GROUP BY MIContainer.ContainerId
                        )
@@ -1190,7 +1224,12 @@ BEGIN
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportTaxi    ELSE 0 END), 0) AS SummTransportTaxi
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummPhone            ELSE 0 END), 0) AS SummPhone
            FROM tmpMI
-                LEFT JOIN tmpMIContainer ON tmpMIContainer.ContainerId = tmpMI.ContainerId
+                LEFT JOIN tmpListContainer ON tmpListContainer.PersonalId            = tmpMI.ObjectId
+                                          AND tmpListContainer.PersonalServiceListId = tmpMI.PersonalServiceListId
+                                          AND tmpListContainer.UnitId                = tmpMI.UnitId
+                                          AND tmpListContainer.PositionId            = tmpMI.PositionId
+                                          AND tmpListContainer.InfoMoneyId           = tmpMI.InfoMoneyId
+                LEFT JOIN tmpMIContainer ON tmpMIContainer.ContainerId = tmpListContainer.ContainerId
            GROUP BY tmpMI.MovementItemId
                   , tmpMI.OperSumm
                   , tmpMI.SummSocialAdd
@@ -1199,11 +1238,88 @@ BEGIN
                   , tmpMI.SummChild
                   , tmpMI.SummMinusExt
                   , tmpMI.SummAddOth
+          UNION ALL
+           SELECT lpInsertUpdate_MovementItem_PersonalService_item (ioId                     := 0
+                                                                  , inMovementId             := inMovementId
+                                                                  , inPersonalId             := tmpMI.PersonalId
+                                                                  , inIsMain                 := FALSE
+                                                                  , inSummService            := 0 :: TFloat
+                                                                  , inSummCardRecalc         := 0 :: TFloat
+                                                                  , inSummCardSecondRecalc   := 0 :: TFloat
+                                                                  , inSummCardSecondCash     := 0 :: TFloat
+                                                                  , inSummNalogRecalc        := 0 :: TFloat
+                                                                  , inSummNalogRetRecalc     := 0 :: TFloat
+                                                                  , inSummMinus              := 0 :: TFloat
+                                                                  , inSummAdd                := 0 :: TFloat
+                                                                  , inSummAddOthRecalc       := 0 :: TFloat
+                                                                  , inSummHoliday            := 0 :: TFloat
+                                                                  , inSummSocialIn           := 0 :: TFloat
+                                                                  , inSummSocialAdd          := 0 :: TFloat
+                                                                  , inSummChildRecalc        := 0 :: TFloat
+                                                                  , inSummMinusExtRecalc     := 0 :: TFloat
+                                                                  , inSummFine               := 0 :: TFloat
+                                                                  , inSummHosp               := 0 :: TFloat
+                                                                  , inComment                := ''
+                                                                  , inInfoMoneyId            := tmpMI.InfoMoneyId
+                                                                  , inUnitId                 := tmpMI.UnitId
+                                                                  , inPositionId             := tmpMI.PositionId
+                                                                  , inMemberId               := NULL
+                                                                  , inPersonalServiceListId  := NULL
+                                                                  , inUserId                 := inUserId
+                                                                   ) AS MovementItemId
+                , 0 AS OperSumm
+                , 0 AS SummSocialAdd
+                , 0 AS SummNalog
+                , 0 AS SummNalogRet
+                , 0 AS SummChild
+                , 0 AS SummMinusExt
+                , 0 AS SummAddOth
+                , tmpMI.SummTransport
+                , tmpMI.SummTransportAdd
+                , tmpMI.SummTransportAddLong
+                , tmpMI.SummTransportTaxi
+                , tmpMI.SummPhone
+           FROM (SELECT tmpListContainer.PersonalServiceListId
+                      , tmpListContainer.UnitId
+                      , tmpListContainer.PersonalId
+                      , tmpListContainer.PositionId
+                      , tmpListContainer.InfoMoneyId
+                      , COALESCE (SUM (tmpMIContainer.SummTransport), 0)        AS SummTransport
+                      , COALESCE (SUM (tmpMIContainer.SummTransportAdd), 0)     AS SummTransportAdd
+                      , COALESCE (SUM (tmpMIContainer.SummTransportAddLong), 0) AS SummTransportAddLong
+                      , COALESCE (SUM (tmpMIContainer.SummTransportTaxi), 0)    AS SummTransportTaxi
+                      , COALESCE (SUM (tmpMIContainer.SummPhone), 0)            AS SummPhone
+                 FROM tmpMIContainer
+                      LEFT JOIN tmpListContainer ON tmpListContainer.ContainerId = tmpMIContainer.ContainerId
+                      LEFT JOIN _tmpItem AS tmpMI ON tmpMI.ObjectId              = tmpListContainer.PersonalId
+                                                 AND tmpMI.PersonalServiceListId = tmpListContainer.PersonalServiceListId
+                                                 AND tmpMI.UnitId                = tmpListContainer.UnitId
+                                                 AND tmpMI.PositionId            = tmpListContainer.PositionId
+                                                 AND tmpMI.InfoMoneyId           = tmpListContainer.InfoMoneyId
+                 WHERE tmpMI.ObjectId IS NULL
+                 GROUP BY tmpListContainer.PersonalServiceListId
+                        , tmpListContainer.UnitId
+                        , tmpListContainer.PersonalId
+                        , tmpListContainer.PositionId
+                        , tmpListContainer.InfoMoneyId
+                ) AS tmpMI
+           WHERE inUserId > 0
           ) AS tmpMovement
            ;
 
 
-     -- 6.2. ФИНИШ - пересчитали Итоговые суммы
+     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
+     PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
+                                        , inUserId     := ABS (inUserId)
+                                         );
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_PersonalService()
+                                , inUserId     := ABS (inUserId)
+                                 );
+
+     -- 6.1. ФИНИШ - пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 

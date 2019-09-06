@@ -169,10 +169,14 @@ BEGIN
                     ELSE COALESCE (Object.DescId, 0)
                END AS ObjectDescId
 
-             , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+             , CASE WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                         _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
+
+                    WHEN _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
-                     AND*/ _tmpItem.isActive = TRUE
-                       AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
 
                     WHEN _tmpItem.CurrencyId             = zc_Enum_Currency_Basis()
@@ -194,11 +198,16 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
 
-                    WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
-                     AND _tmpItem.isActive = TRUE
-                     AND*/ _tmpItem.isActive = TRUE
-                       AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                    WHEN --_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                         _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
+
+                    WHEN _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
+                         THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
+
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
@@ -369,7 +378,7 @@ BEGIN
                                 , inDescId     := zc_Movement_BankAccount()
                                 , inUserId     := inUserId
                                  );
-O
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

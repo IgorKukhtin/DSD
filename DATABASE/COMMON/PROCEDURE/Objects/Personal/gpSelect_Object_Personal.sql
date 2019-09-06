@@ -44,6 +44,7 @@ BEGIN
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND Object_RoleAccessKeyGuide_View.UserId = vbUserId)
               OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (447972)) -- Просмотр СБ
+              OR vbUserId = 80830
                 ;
 
    -- определяется уровень доступа

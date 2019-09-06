@@ -201,5 +201,5 @@ $BODY$
  10.08.19                                       *
 */
 -- тест
--- SELECT * FROM lpSelect_wms_Object_SKU() where sku_id = 795222 ORDER BY sku_code
+-- SELECT * FROM lpSelect_wms_Object_SKU() where sku_id = 7065093 ORDER BY sku_code
 

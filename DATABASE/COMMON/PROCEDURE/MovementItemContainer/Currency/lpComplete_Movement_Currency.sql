@@ -217,7 +217,7 @@ BEGIN
 
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
-             
+
              , vbCurrencyId AS CurrencyId
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
@@ -243,7 +243,7 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
-                         , MovementItemId, ContainerId
+                         , MovementItemId, ContainerId, ObjectIntId_Analyzer
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -260,7 +260,8 @@ BEGIN
              , _tmpItem.MovementItemId
 
               -- сформируем позже
-             , 0 AS ContainerId                                               
+             , 0 AS ContainerId
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 0 ELSE _tmpItem.ObjectId END AS ObjectIntId_Analyzer
              , 0 AS AccountGroupId
                -- сформируем позже
              , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 4144357 ELSE 0 END AS AccountDirectionId -- Курсовая разница

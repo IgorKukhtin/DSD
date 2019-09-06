@@ -127,7 +127,13 @@ BEGIN
                            GROUP BY MovementItem.ParentId
                        )
 
-          , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В.
+          , tmpUserAll AS (-- Админ видит ВСЕХ
+                           SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/ -- Документы-меню (управленцы) AND <> Рудик Н.В.
+                          UNION
+                           -- Кисличная Т.А. видит ВСЕХ
+                           SELECT vbUserId WHERE vbUserId = 80830
+                          )
+          
           , tmpPersonal AS (SELECT 0 AS MovementItemId
                                  , 0 AS Amount
                                  , View_Personal.PersonalId
@@ -141,7 +147,8 @@ BEGIN
                             FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                  UNION
                                   -- Админ видит ВСЕХ
-                                  SELECT Object.Id AS UnitId_PersonalService FROM tmpUserAll INNER JOIN Object ON Object.DescId = zc_Object_Unit() AND inShowAll = TRUE
+                                  SELECT Object.Id AS UnitId_PersonalService FROM Object WHERE Object.DescId = zc_Object_Unit() AND inShowAll = TRUE
+                                                                                           AND EXISTS (SELECT 1 FROM tmpUserAll)
                                  ) AS View_RoleAccessKeyGuide
                                  INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
                                                                                  -- AND View_Personal.isErased = FALSE
