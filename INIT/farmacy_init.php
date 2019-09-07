@@ -3,3 +3,4 @@
   $host = "http://farmacy.neboley.dp.ua/index.php";
   $isArchive = true;
 ?>
+
