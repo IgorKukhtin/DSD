@@ -410,6 +410,15 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 65
           end
+          object isDifferent: TcxGridDBColumn
+            Caption = #1058#1086#1095#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+            DataBinding.FieldName = 'isDifferent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1095#1082#1072' '#1076#1088#1091#1075#1086#1075#1086' '#1102#1088'.'#1083#1080#1094#1072
+            Options.Editing = False
+            Width = 76
+          end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'

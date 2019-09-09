@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , IsPay Boolean, DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , isDeferred Boolean
+             , isDifferent Boolean
              , UpdateDate_Order TDateTime
              , OrderKindId Integer, OrderKindName TVarChar
               )
@@ -71,6 +72,7 @@ BEGIN
              , CAST('' as TVarChar)                             AS Movement_OrderInvNumber
              , CAST('' as TVarChar)                             AS Movement_OrderInvNumber_full
              , false                                            AS isDeferred 
+             , false                                            AS isDifferent
 
              , NULL ::TDateTime                                 AS UpdateDate_Order
              , 0                                                AS OrderKindId
@@ -154,7 +156,8 @@ BEGIN
           , Movement_Order.Id                              AS Movement_OrderId
           , Movement_Order.InvNumber                       AS Movement_OrderInvNumber
           , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
-          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)  :: Boolean  AS isDeferred
+          , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
 
           , COALESCE (MovementDate_Update_Order.ValueData, NULL) :: TDateTime AS UpdateDate_Order
           , Object_OrderKind.Id                            AS OrderKindId
@@ -168,6 +171,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                        ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+             -- точка другого юр.лица
+             LEFT JOIN MovementBoolean AS MovementBoolean_Different
+                                       ON MovementBoolean_Different.MovementId = Movement_Income.Id
+                                      AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
 
              LEFT JOIN MovementLinkMovement AS MLM_Master
                                             ON MLM_Master.MovementId = Movement_Order.Id
@@ -210,6 +217,7 @@ BEGIN
           , Movement_Order.InvNumber
           , Movement_Order.Id  
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)
+          , COALESCE (MovementBoolean_Different.ValueData, FALSE)
           , COALESCE (MovementDate_Update_Order.ValueData, NULL)
           , Object_OrderKind.Id
           , Object_OrderKind.ValueData
@@ -225,6 +233,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.09.19         * isDifferent
  23.07.19         *
  18.10.16         * add isRegistered
  22.04.16         *

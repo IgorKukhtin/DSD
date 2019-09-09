@@ -110,6 +110,14 @@ type
     actGetImportSettingSecond: TdsdExecStoredProc;
     macStartLoadSecond: TMultiAction;
     bbStartLoadSecond: TdxBarButton;
+    macStartLoadIBAN: TMultiAction;
+    actGetImportSettingIBAN: TdsdExecStoredProc;
+    spGetImportSettingIdIBAN: TdsdStoredProc;
+    spGetImportSettingIdIBANSecond: TdsdStoredProc;
+    macStartLoadIBANSecond: TMultiAction;
+    actGetImportSettingIBANSecond: TdsdExecStoredProc;
+    bbStartLoadIBAN: TdxBarButton;
+    bbStartLoadIBANSecond: TdxBarButton;
   private
     { Private declarations }
   public

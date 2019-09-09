@@ -53,6 +53,10 @@ type
     BankGuides: TdsdGuides;
     BankSecondGuides: TdsdGuides;
     BankChildGuides: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edCardIBAN: TcxTextEdit;
+    edCardIBANSecond: TcxTextEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

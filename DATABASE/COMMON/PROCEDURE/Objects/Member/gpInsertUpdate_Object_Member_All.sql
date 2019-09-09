@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Member_All(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member_All(
  INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
@@ -12,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member_All(
     IN inCard                TVarChar  ,    -- № карточного счета ЗП
     IN inCardSecond          TVarChar  ,    -- № карточного счета ЗП - вторая форма
     IN inCardChild           TVarChar  ,    -- № карточного счета ЗП - - алименты (удержание)
+    IN inCardIBAN            TVarChar  ,    -- № карточного счета IBAN ЗП - первая форма
+    IN inCardIBANSecond      TVarChar  ,    -- № карточного счета IBAN ЗП - вторая форма
     IN inComment             TVarChar  ,    -- Примечание 
     IN inInfoMoneyId         Integer   ,    --
     IN inObjectToId          Integer   ,    --
@@ -79,6 +82,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardChild(), ioId, inCardChild);
 
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBAN(), ioId, inCardIBAN);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBANSecond(), ioId, inCardIBANSecond);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
    
     -- сохранили свойство <>
@@ -109,6 +117,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.09.19         * inCardIBAN, inCardIBANSecond
  05.03.17         * add banks
  20.02.17         *
  02.02.17         * 

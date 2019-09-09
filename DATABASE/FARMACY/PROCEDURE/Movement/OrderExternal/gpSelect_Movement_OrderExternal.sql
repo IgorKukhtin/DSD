@@ -20,10 +20,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isZakazToday       Boolean
              , isDostavkaToday    Boolean
              , isDeferred         Boolean
+             , isDifferent        Boolean
              , OperDate_Zakaz     TVarChar
              , OperDate_Dostavka  TVarChar
-             , Zakaz_Text          TVarChar
-             , Dostavka_Text          TVarChar
+             , Zakaz_Text         TVarChar
+             , Dostavka_Text      TVarChar
               )
 
 AS
@@ -203,6 +204,7 @@ BEGIN
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
 
            , Movement_OrderExternal_View.isDeferred
+           , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
 
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar
            , OrderSheduleList.OperDate_Dostavka ::TVarChar
@@ -234,6 +236,11 @@ BEGIN
                                          AND OrderSheduleListToday.ContractId = Movement_OrderExternal_View.ContractId
           LEFT JOIN tmpOrderSheduleText ON tmpOrderSheduleText.UnitId     = Movement_OrderExternal_View.ToId
                                        AND tmpOrderSheduleText.ContractId = Movement_OrderExternal_View.ContractId
+
+          -- точка другого юр.лица
+          LEFT JOIN MovementBoolean AS MovementBoolean_Different
+                                    ON MovementBoolean_Different.MovementId = Movement_OrderExternal_View.Id
+                                   AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
     ;
 
 END;

@@ -1,25 +1,25 @@
 ﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
-  ClientWidth = 1054
-  ExplicitWidth = 1070
+  ClientWidth = 1081
+  ExplicitWidth = 1097
   ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 141
-    Width = 1054
+    Width = 1081
     Height = 375
     ExplicitTop = 141
     ExplicitWidth = 1054
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 1054
+    ClientRectRight = 1081
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1054
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
-        Width = 1054
+        Width = 1081
         Height = 351
         ExplicitWidth = 1054
         ExplicitHeight = 351
@@ -660,7 +660,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1054
+    Width = 1081
     Height = 115
     TabOrder = 3
     ExplicitWidth = 1054
@@ -983,6 +983,16 @@
       Left = 903
       Top = 46
       Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
+    end
+    object cbDifferent: TcxCheckBox
+      Left = 973
+      Top = 88
+      Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+      Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 38
+      Width = 108
     end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
@@ -2485,6 +2495,13 @@
         Component = edCheckDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDifferent'
+        Value = Null
+        Component = cbDifferent
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 280
@@ -2520,6 +2537,14 @@
         Name = 'inPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDifferent'
+        Value = ''
+        Component = cbDifferent
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2603,12 +2628,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2660,6 +2679,7 @@
         Control = edInvNumberOrder
       end
       item
+        Control = cbDifferent
       end
       item
       end
