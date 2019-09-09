@@ -1,35 +1,35 @@
 ﻿inherited Member_ObjectToEditForm: TMember_ObjectToEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 476
+  ClientHeight = 521
   ClientWidth = 287
   ExplicitWidth = 293
-  ExplicitHeight = 504
+  ExplicitHeight = 549
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 41
-    Top = 441
+    Top = 487
     TabOrder = 1
     ExplicitLeft = 41
-    ExplicitTop = 441
+    ExplicitTop = 487
   end
   inherited bbCancel: TcxButton
     Left = 173
-    Top = 441
+    Top = 487
     TabOrder = 2
     ExplicitLeft = 173
-    ExplicitTop = 441
+    ExplicitTop = 487
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
     Width = 287
-    Height = 425
+    Height = 473
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 425
+    ClientRectBottom = 473
     ClientRectRight = 287
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
@@ -50,6 +50,28 @@
         Left = 7
         Top = 4
         Caption = #1050#1086#1076
+      end
+      object cxLabel15: TcxLabel
+        Left = 7
+        Top = 402
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'. IBAN '#1047#1055' - '#1060'1'
+      end
+      object edCardIBAN: TcxTextEdit
+        Left = 7
+        Top = 419
+        TabOrder = 28
+        Width = 130
+      end
+      object edCardIBANSecond: TcxTextEdit
+        Left = 150
+        Top = 419
+        TabOrder = 29
+        Width = 130
+      end
+      object cxLabel16: TcxLabel
+        Left = 150
+        Top = 400
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'. IBAN '#1047#1055' -'#1060'2'
       end
       object cxLabel8: TcxLabel
         Left = 7
@@ -125,7 +147,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 10
+        TabOrder = 9
         Width = 273
       end
       object cxLabel9: TcxLabel
@@ -159,7 +181,7 @@
         StyleFocused.LookAndFeel.NativeStyle = False
         StyleHot.LookAndFeel.Kind = lfOffice11
         StyleHot.LookAndFeel.NativeStyle = False
-        TabOrder = 12
+        TabOrder = 10
         Width = 273
       end
       object cxLabel10: TcxLabel
@@ -374,6 +396,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCardIBAN'
+        Value = Null
+        Component = edCardIBAN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardIBANSecond'
+        Value = Null
+        Component = edCardIBANSecond
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -487,6 +525,20 @@
         Name = 'CardChild'
         Value = Null
         Component = ceCardChild
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardIBAN'
+        Value = Null
+        Component = edCardIBAN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardIBANSecond'
+        Value = Null
+        Component = edCardIBANSecond
         DataType = ftString
         MultiSelectSeparator = ','
       end

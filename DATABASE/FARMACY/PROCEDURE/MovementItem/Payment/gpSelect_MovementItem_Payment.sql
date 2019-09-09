@@ -92,7 +92,8 @@ BEGIN
                    , MovementFloat_TotalSumm.ValueData          AS TotalSumm
                    , tmpContainer.Amount                        AS PaySumm
                    , COALESCE (NULLIF (ObjectFloat_Juridical_PayOrder.ValueData, 0), 999999) :: TFloat AS PayOrder
-                   , tmpContainer.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%' AS tmpFind
+                   --, tmpContainer.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%' AS tmpFind
+                   , tmpContainer.KeyValue LIKE '%,' || TRIM(vbJuridicalId:: TVarChar) || ';%' AS tmpFind                      -- 09.09.19 
               FROM tmpContainer
 
                     INNER JOIN MovementDate AS MovementDate_Payment
@@ -525,6 +526,7 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 09.09.19         * 
  05.01.18         * Income_NDS
  06.04.16         *
  21.12.15                                                          *

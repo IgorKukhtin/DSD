@@ -1,35 +1,35 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 455
+  ClientHeight = 500
   ClientWidth = 294
   ExplicitWidth = 300
-  ExplicitHeight = 483
+  ExplicitHeight = 528
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 37
-    Top = 421
+    Left = 32
+    Top = 468
     TabOrder = 1
-    ExplicitLeft = 37
-    ExplicitTop = 421
+    ExplicitLeft = 32
+    ExplicitTop = 468
   end
   inherited bbCancel: TcxButton
-    Left = 169
-    Top = 421
+    Left = 164
+    Top = 468
     TabOrder = 2
-    ExplicitLeft = 169
-    ExplicitTop = 421
+    ExplicitLeft = 164
+    ExplicitTop = 468
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
     Width = 294
-    Height = 409
+    Height = 457
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 409
+    ClientRectBottom = 457
     ClientRectRight = 294
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
@@ -50,6 +50,28 @@
         Left = 7
         Top = 4
         Caption = #1050#1086#1076
+      end
+      object cxLabel14: TcxLabel
+        Left = 7
+        Top = 385
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'. IBAN '#1047#1055' - '#1060'1'
+      end
+      object edCardIBAN: TcxTextEdit
+        Left = 7
+        Top = 401
+        TabOrder = 26
+        Width = 130
+      end
+      object cxLabel15: TcxLabel
+        Left = 150
+        Top = 383
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'. IBAN '#1047#1055' -'#1060'2'
+      end
+      object edCardIBANSecond: TcxTextEdit
+        Left = 150
+        Top = 401
+        TabOrder = 28
+        Width = 130
       end
       object cxLabel10: TcxLabel
         Left = 7
@@ -242,8 +264,8 @@
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 119
-    Top = 30
+    Left = 215
+    Top = 86
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -337,6 +359,22 @@
         Name = 'inCardChild'
         Value = Null
         Component = ceCardChild
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardIBAN'
+        Value = Null
+        Component = edCardIBAN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardIBANSecond'
+        Value = Null
+        Component = edCardIBANSecond
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -447,6 +485,20 @@
         Name = 'CardChild'
         Value = Null
         Component = ceCardChild
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardIBAN'
+        Value = Null
+        Component = edCardIBAN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardIBANSecond'
+        Value = Null
+        Component = edCardIBANSecond
         DataType = ftString
         MultiSelectSeparator = ','
       end

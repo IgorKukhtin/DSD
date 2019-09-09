@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Dostavka_Text TVarChar
              , OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
              , isDeferred Boolean
+             , isDifferent Boolean
               )
 AS
 $BODY$
@@ -53,6 +54,7 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS OrderTime
              , CAST ('' AS TVarChar) 		                AS OrderSummComment
              , FALSE                                            AS isDeferred
+             , FALSE                                            AS isDifferent
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -130,7 +132,8 @@ BEGIN
            , COALESCE (ObjectString_OrderTime_Contract.ValueData,'')            ::TVarChar AS OrderTime
            , COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')            ::TVarChar AS OrderSummComment
 
-           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)  :: Boolean  AS isDeferred
+           , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -142,6 +145,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+            -- точка другого юр.лица
+            LEFT JOIN MovementBoolean AS MovementBoolean_Different
+                                      ON MovementBoolean_Different.MovementId = Movement.Id
+                                     AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -218,4 +226,4 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inOperDate:= '01.01.2019':: TDateTime,inSession:= '9818')

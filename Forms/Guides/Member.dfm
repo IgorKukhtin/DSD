@@ -133,6 +133,20 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CardIBAN: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'CardIBAN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object CardIBANSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
+        DataBinding.FieldName = 'CardIBANSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
+      end
       object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
@@ -396,6 +410,22 @@ object MemberForm: TMemberForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadIBAN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadIBANSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarControlContainerItem1'
         end
         item
@@ -515,11 +545,85 @@ object MemberForm: TMemberForm
       Category = 0
       ImageIndex = 68
     end
+    object bbStartLoadIBAN: TdxBarButton
+      Action = macStartLoadIBAN
+      Category = 0
+    end
+    object bbStartLoadIBANSecond: TdxBarButton
+      Action = macStartLoadIBANSecond
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inBankId'
+          Value = '0'
+          Component = BankGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+      ImageIndex = 41
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macStartLoadSecond: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingSecond
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+      ImageIndex = 41
+    end
     object actGetImportSettingSecond: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -565,25 +669,6 @@ object MemberForm: TMemberForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
-    end
-    object macStartLoadSecond: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSettingSecond
-        end
-        item
-          Action = actDoLoad
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)?'
-      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
-      ImageIndex = 41
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -950,40 +1035,12 @@ object MemberForm: TMemberForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
       ImageIndex = 76
     end
-    object actGetImportSetting: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingId
-        end>
-      Caption = 'actGetImportSetting'
-    end
-    object actDoLoad: TExecuteImportSettingsAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = Null
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inBankId'
-          Value = '0'
-          Component = BankGuides
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
-    object macStartLoad: TMultiAction
+    object macStartLoadIBAN: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetImportSetting
+          Action = actGetImportSettingIBAN
         end
         item
           Action = actDoLoad
@@ -991,11 +1048,52 @@ object MemberForm: TMemberForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
-      ImageIndex = 41
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      ImageIndex = 69
+    end
+    object actGetImportSettingIBAN: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdIBAN
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdIBAN
+        end>
+      Caption = 'actGetImportSettingIBAN'
+    end
+    object macStartLoadIBANSecond: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIBANSecond
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
+      ImageIndex = 70
+    end
+    object actGetImportSettingIBANSecond: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdIBANSecond
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdIBANSecond
+        end>
+      Caption = 'actGetImportSetting'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1147,6 +1245,24 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'CardChild'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardIBAN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardIBAN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardIBANSecond'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardIBANSecond'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1382,8 +1498,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 112
+    Left = 672
+    Top = 72
   end
   object spGetImportSettingIdSecond: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1415,6 +1531,70 @@ object MemberForm: TMemberForm
       end>
     PackSize = 1
     Left = 680
-    Top = 248
+    Top = 128
+  end
+  object spGetImportSettingIdIBAN: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TMemberForm;zc_Object_ImportSetting_MemberIBANZP1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 216
+  end
+  object spGetImportSettingIdIBANSecond: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TMemberForm;zc_Object_ImportSetting_MemberIBANZP2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 272
   end
 end

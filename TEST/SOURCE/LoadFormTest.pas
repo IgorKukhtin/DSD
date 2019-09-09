@@ -2830,24 +2830,26 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  {exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerForm');
 
@@ -2860,10 +2862,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToForm');
 end;
