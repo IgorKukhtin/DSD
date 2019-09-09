@@ -3,7 +3,7 @@ unit dsdExportToXLSAction;
 interface
 
 uses Data.DB, System.Classes, System.SysUtils, System.Win.ComObj, Vcl.Graphics,
-     Vcl.ActnList, dsdAction;
+     Vcl.ActnList, Vcl.Dialogs, dsdAction, dsdDB;
 
 type
 
@@ -90,6 +90,7 @@ type
     FOrientation : TdsdOrientationType;
     FTitle: String;
     FFileName: String;
+    FFileNameParam: TdsdParam;
     FTitleHeight : Currency;
     FTitleFont: TFont;
     FHeaderFont: TFont;
@@ -99,6 +100,8 @@ type
     procedure SetHeaderFont(Value: TFont);
     procedure SetItemsDataSet(const Value: TDataSet);
     procedure SetTitleDataSet(const Value: TDataSet);
+    procedure SetFileName(const Value: string);
+    function GetFileName: string;
   protected
     function LocalExecute: Boolean; override;
   public
@@ -110,7 +113,8 @@ type
     property ItemsDataSet: TDataSet read FItemsDataSet write SetItemsDataSet;
     property TitleDataSet: TDataSet read FTitleDataSet write SetTitleDataSet;
     property Title: String read FTitle write FTitle;
-    property FileName: String read FFileName write FFileName;
+    property FileName: string read GetFileName write SetFileName;
+    property FileNameParam: TdsdParam read FFileNameParam write FFileNameParam;
     property TitleHeight : Currency read FTitleHeight write FTitleHeight;
     property Orientation : TdsdOrientationType read FOrientation write FOrientation default orPortrait;
     property TitleFont: TFont read FTitleFont write SetTitleFont;
@@ -313,6 +317,10 @@ begin
   FColumnParams := TdsdColumnParams.Create(Self, TdsdColumnParam);
   FTitleFont := TFont.Create;
   FHeaderFont := TFont.Create;
+  FFileNameParam := TdsdParam.Create(nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
+  FFileName := '';
   FTitleHeight := 1;
   FFooter := True;
 end;
@@ -322,6 +330,7 @@ begin
   FTitleFont.Free;
   FHeaderFont.Free;
   FColumnParams.Free;
+  FFileNameParam.Free;
   inherited;
 end;
 
@@ -344,6 +353,22 @@ procedure TdsdExportToXLS.SetHeaderFont(Value: TFont);
 begin
   FHeaderFont.Assign(Value);
 end;
+
+procedure TdsdExportToXLS.SetFileName(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FormNameParam')
+  else
+    FFileName := Value;
+end;
+
+function TdsdExportToXLS.GetFileName: string;
+begin
+  result := FFileNameParam.AsString;
+  if result = '' then
+    result := FFileName
+end;
+
 
 function TdsdExportToXLS.ColumnNumber(AFieldName : string) : integer;
   var I : integer;
@@ -687,8 +712,8 @@ begin
       xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
     end;
 
-    if FFileName <> '' then
-      xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FFileName)
+    if FileName <> '' then
+      xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FileName)
     else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + 'ExportToXLS');
     xlApp.Application.ScreenUpdating := true;
     xlApp.WindowState := xlMinimized;

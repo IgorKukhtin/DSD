@@ -1,4 +1,5 @@
 -- Function: gpSelect_AllGoodsPrice()
+-- Функция вызываеться из gpRun_Object_RepriceUnitSheduler_UnitReprice и gpRun_Object_RepriceUnitSheduler_UnitEqual если чтотоь глобально то и тпам править надо
 
 -- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);

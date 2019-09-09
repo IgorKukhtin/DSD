@@ -12,18 +12,18 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Width = 877
     Height = 463
     ExplicitTop = 77
-    ExplicitWidth = 953
-    ExplicitHeight = 549
+    ExplicitWidth = 877
+    ExplicitHeight = 463
     ClientRectBottom = 463
     ClientRectRight = 877
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 953
-      ExplicitHeight = 525
+      ExplicitWidth = 877
+      ExplicitHeight = 439
       inherited cxGrid: TcxGrid
         Width = 877
         Height = 439
-        ExplicitWidth = 953
-        ExplicitHeight = 328
+        ExplicitWidth = 877
+        ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -123,7 +123,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Width = 877
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 953
+    ExplicitWidth = 877
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -406,7 +406,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    View = nil
     SummaryItemList = <
       item
         Param.Value = Null
@@ -417,6 +416,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    Left = 334
     Top = 241
   end
   inherited FormParams: TdsdFormParams

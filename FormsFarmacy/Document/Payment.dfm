@@ -4,7 +4,7 @@ inherited PaymentForm: TPaymentForm
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
   ExplicitWidth = 1021
-  ExplicitHeight = 551
+  ExplicitHeight = 552
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -527,6 +527,7 @@ inherited PaymentForm: TPaymentForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 87
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -623,6 +624,7 @@ inherited PaymentForm: TPaymentForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -630,6 +632,7 @@ inherited PaymentForm: TPaymentForm
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Income_InvNumber'
           DataType = ftString
@@ -773,6 +776,156 @@ inherited PaymentForm: TPaymentForm
           StoredProc = spInsertUpdate_MovementFloat_TotalSummPayment
         end>
       Caption = 'actInsertUpdate_MovementFloat_TotalSummPayment'
+    end
+    object actExportToXLSPrivat: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecStoredProcPrivat
+      ItemsDataSet = ExportBankCDS
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      Footer = False
+      ColumnParams = <
+        item
+          Caption = 'N_D'
+          FieldName = 'Number'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'SUMMA'
+          FieldName = 'SummaPay'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'COUNT_A'
+          FieldName = 'PayerAccount'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'NAME_B'
+          FieldName = 'CBName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'MFO_B'
+          FieldName = 'CBMFO'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'COUNT_B'
+          FieldName = 'CBAccount'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'N_P'
+          FieldName = 'CBPurposePayment'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'OKPO_B'
+          FieldName = 'OKPO'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'SER_PAS_B'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'NOM_PAS_B'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end>
+      Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1087#1088#1080#1074#1072#1090' '#1073#1072#1085#1082
+      Hint = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1087#1088#1080#1074#1072#1090' '#1073#1072#1085#1082
+      ImageIndex = 56
+    end
+    object actExecStoredProcPrivat: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExportBankPrivat
+      StoredProcList = <
+        item
+          StoredProc = spExportBankPrivat
+        end
+        item
+          StoredProc = spExportBankPrivatFileName
+        end>
+      Caption = 'actExecStoredProcPrivat'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -928,6 +1081,10 @@ inherited PaymentForm: TPaymentForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -964,9 +1121,16 @@ inherited PaymentForm: TPaymentForm
       Action = macUpdateMI_NeedPay
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actExportToXLSPrivat
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Top = 201
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1021,6 +1185,12 @@ inherited PaymentForm: TPaymentForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1674,5 +1844,60 @@ inherited PaymentForm: TPaymentForm
     ParamKeyField = 'inMovementId'
     Left = 208
     Top = 376
+  end
+  object ExportBankCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 756
+    Top = 217
+  end
+  object spExportBankPrivat: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Payment_ExportPrivat'
+    DataSet = ExportBankCDS
+    DataSets = <
+      item
+        DataSet = ExportBankCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 879
+    Top = 208
+  end
+  object spExportBankPrivatFileName: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Payment_ExportPrivatFileName'
+    DataSet = ExportBankCDS
+    DataSets = <
+      item
+        DataSet = ExportBankCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 879
+    Top = 264
   end
 end

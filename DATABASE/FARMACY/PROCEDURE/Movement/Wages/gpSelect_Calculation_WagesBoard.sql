@@ -261,7 +261,7 @@ BEGIN
              GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
                     , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
                     , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
-             HAVING count(*) >= 3)
+             HAVING count(*) >= 18)
    THEN
      WITH
        tmpBoardUserAll AS (
@@ -346,18 +346,18 @@ BEGIN
                                       ON Income.OperDate  = tmpBoard.OperDate
                                      AND Income.UnitId    = tmpBoard.UnitId
 
-            LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup(inPayrollTypeID    := tmpBoard.PayrollTypeID,
-                                                              inPercent          := Null::TFloat,
-                                                              inMinAccrualAmount := Null::TFloat,
-                                                              inCountUserCS      := Income.CountUser,
-                                                              inCountUserAS      := Income.IncomeCount ,
-                                                              inCountUserNS      := Null::Integer,
-                                                              inCountUserSCS     := Null::Integer,
-                                                              inCountUserS       := Null::Integer,
-                                                              inCountUserSAS     := Null::Integer,
-                                                              inSummCS           := Income.SaleSumm,
-                                                              inSummSCS          := Null::TFloat,
-                                                              inSummHS           := Null::TFloat) AS Calculation
+            LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := tmpBoard.PayrollTypeID,
+                                                                   inPercent          := Null::TFloat,
+                                                                   inMinAccrualAmount := Null::TFloat,
+                                                                   inCountUserCS      := Income.CountUser,
+                                                                   inCountUserAS      := Income.IncomeCount ,
+                                                                   inCountUserNS      := Null::Integer,
+                                                                   inCountUserSCS     := Null::Integer,
+                                                                   inCountUserS       := Null::Integer,
+                                                                   inCountUserSAS     := Null::Integer,
+                                                                   inSummCS           := Income.SaleSumm,
+                                                                   inSummSCS          := Null::TFloat,
+                                                                   inSummHS           := Null::TFloat) AS Calculation
                                                                                                   ON 1 = 1
        WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
          AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)),
@@ -471,19 +471,19 @@ BEGIN
                                  ON CheckSum.OperDate  = tmpBoard.OperDate
                                 AND CheckSum.UnitId    = tmpBoard.UnitId
 
-        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup(inPayrollTypeID    := Object_PayrollType.Id,
-                                                          inPercent          := ObjectFloat_Percent.ValueData,
-                                                          inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
-                                                          inCountUserCS      := CheckSum.CountUserCS,
-                                                          inCountUserAS      := CheckSum.CountUserAS,
-                                                          inCountUserNS      := CheckSum.CountUserNS,
-                                                          inCountUserSCS     := CheckSum.CountUserSCS,
-                                                          inCountUserS       := CheckSum.CountUserS,
-                                                          inCountUserSAS       := CheckSum.CountUserS,
-                                                          inSummCS           := CheckSum.SummCS,
-                                                          inSummSCS          := CheckSum.SummSCS,
-                                                          inSummHS           := CheckSum.SummHS) AS Calculation
-                                                                                                 ON 1 = 1
+        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := Object_PayrollType.Id,
+                                                               inPercent          := ObjectFloat_Percent.ValueData,
+                                                               inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
+                                                               inCountUserCS      := CheckSum.CountUserCS,
+                                                               inCountUserAS      := CheckSum.CountUserAS,
+                                                               inCountUserNS      := CheckSum.CountUserNS,
+                                                               inCountUserSCS     := CheckSum.CountUserSCS,
+                                                               inCountUserS       := CheckSum.CountUserS,
+                                                               inCountUserSAS       := CheckSum.CountUserS,
+                                                               inSummCS           := CheckSum.SummCS,
+                                                               inSummSCS          := CheckSum.SummSCS,
+                                                               inSummHS           := CheckSum.SummHS) AS Calculation
+                                                                                                      ON 1 = 1
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_Check()
      AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
    UNION ALL  -- Oт суммы реализации оприходоанных накладных по дням
