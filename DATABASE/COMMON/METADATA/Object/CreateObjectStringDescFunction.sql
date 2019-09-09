@@ -260,6 +260,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardChild() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_CardChild', zc_object_Member(), '№ карточного счета ЗП - алименты (удержание)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardChild');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBAN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBAN', zc_object_Member(), '№ карточного счета IBAN ЗП - первая форма' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBANSecond', zc_object_Member(), '№ карточного IBANсчета ЗП - вторая форма' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_ModelService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ModelService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -988,6 +996,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 09.09.19         * zc_ObjectString_Member_CardIBAN
+                    zc_ObjectString_Member_CardIBANSecond
  06.09.19                                                                                                         * zc_ObjectString_Juridical_CB...
  01.09.19                                                                                                         * zc_ObjectString_PayrollType_ShortName
  25.08.19                                                                                                         * zc_ObjectString_User_PasswordWages

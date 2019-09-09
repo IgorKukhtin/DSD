@@ -158,6 +158,7 @@ type
     actExport_Grid: TExportGrid;
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
+    bbExport: TdxBarButton;
   private
   public
   end;
