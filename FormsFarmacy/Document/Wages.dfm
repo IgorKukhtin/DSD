@@ -534,30 +534,30 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actspInsertUser'
     end
-    object actPrintCalculationPerson: TMultiAction
+    object actPrintCalculationUser: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actOpenChoicePersonal
+          Action = actOpenChoiceUser
         end
         item
-          Action = actExecSPPrintCalculationPerson
+          Action = actExecSPPrintCalculationUser
         end
         item
-          Action = actExportPrintCalculationPerson
+          Action = actExportPrintCalculationUser
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Hint = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       ImageIndex = 3
     end
-    object actOpenChoicePersonal: TOpenChoiceForm
+    object actOpenChoiceUser: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actOpenChoicePersonal'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
+      Caption = 'actOpenChoiceUser'
+      FormName = 'TUserNickForm'
+      FormNameParam.Value = 'TUserNickForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -565,27 +565,30 @@ inherited WagesForm: TWagesForm
           Name = 'Key'
           Value = Null
           Component = FormParams
-          ComponentItem = 'PersonID'
+          ComponentItem = 'UserPrintID'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object actExecSPPrintCalculationPerson: TdsdExecStoredProc
+    object actExecSPPrintCalculationUser: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrintCalculationPerson
+      StoredProc = spSelectPrintCalculationUser
       StoredProcList = <
         item
-          StoredProc = spSelectPrintCalculationPerson
+          StoredProc = spSelectPrintCalculationUser
         end>
-      Caption = 'actExecSPPrintCalculationPerson'
+      Caption = 'actExecSPPrintCalculationUser'
     end
-    object actExportPrintCalculationPerson: TdsdExportToXLS
+    object actExportPrintCalculationUser: TdsdExportToXLS
       Category = 'DSDLibExport'
       MoveParams = <>
       ItemsDataSet = PrintItemsCDS
       TitleDataSet = PrintHeaderCDS
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
@@ -672,7 +675,7 @@ inherited WagesForm: TWagesForm
           WrapText = True
           CalcColumnLists = <>
         end>
-      Caption = 'actExportPrintCalculationPerson'
+      Caption = 'actExportPrintCalculationUser'
     end
     object actCalculationAll: TMultiAction
       Category = 'DSDLib'
@@ -732,6 +735,9 @@ inherited WagesForm: TWagesForm
       MoveParams = <>
       ItemsDataSet = PrintItemsCDS
       TitleDataSet = PrintHeaderCDS
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
@@ -1035,7 +1041,7 @@ inherited WagesForm: TWagesForm
       ImageIndex = 35
     end
     object dxBarButton7: TdxBarButton
-      Action = actPrintCalculationPerson
+      Action = actPrintCalculationUser
       Category = 0
     end
     object dxBarButton8: TdxBarButton
@@ -1109,7 +1115,7 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonID'
+        Name = 'UserPrintID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1425,7 +1431,7 @@ inherited WagesForm: TWagesForm
     Left = 868
     Top = 214
   end
-  object spSelectPrintCalculationPerson: TdsdStoredProc
+  object spSelectPrintCalculationUser: TdsdStoredProc
     StoredProcName = 'gpSelect_CalculationPerson_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -1446,10 +1452,10 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonID'
+        Name = 'inUserID'
         Value = Null
         Component = FormParams
-        ComponentItem = 'PersonID'
+        ComponentItem = 'UserPrintID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
