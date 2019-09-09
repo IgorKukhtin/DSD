@@ -1041,6 +1041,8 @@ type
     miJuridicalOrderFinance: TMenuItem;
     actReport_RemainsOLAPTable: TdsdOpenForm;
     N205: TMenuItem;
+    actReport_GoodsMI_SaleReturnInNotOlap: TdsdOpenForm;
+    miReport_GoodsMI_SaleReturnInNotOlap: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

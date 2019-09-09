@@ -193,6 +193,15 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 96
           end
+          object LinkINN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'LinkINN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1053#1053' ('#1086#1090' '#1082#1086#1075#1086', '#1082#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086'))'
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -510,6 +519,14 @@ inherited BankStatementForm: TBankStatementForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OKPO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkINN'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

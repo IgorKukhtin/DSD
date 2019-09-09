@@ -198,10 +198,14 @@ BEGIN
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
-          , ''::TVarChar AS OKPO
+          , ObjectString_INN.ValueData ::TVarChar AS OKPO   --INN 
      FROM Object AS Object_Member
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60104() -- Удержания сторон. юр.л.
+
+          LEFT JOIN ObjectString AS ObjectString_INN
+                                 ON ObjectString_INN.ObjectId = Object_Member.Id
+                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
     WHERE Object_Member.DescId = zc_Object_Member()
       AND Object_Member.isErased = FALSE
     ;
@@ -214,6 +218,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.09.19         * add INN для Member
  29.08.14                                        * add InfoMoneyName_all
  20.05.14                                        * change ContractKindName
  25.04.14                                        * add ContractTagName
