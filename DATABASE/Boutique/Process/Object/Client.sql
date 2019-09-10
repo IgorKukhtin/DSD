@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_Client() RETURNS 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Client_DiscountTax()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Client_DiscountTax'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Client_DiscountTaxTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Client_DiscountTaxTwo' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Client_isErased() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Client_isErased' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Client_isOutlet() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Client_isOutlet' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -30,4 +31,9 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Client_
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Client())||'> - удаление/восстановление.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Client_isErased');
 
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Client_isOutlet()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 5
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Client())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Client_isOutlet');
 END $$;
