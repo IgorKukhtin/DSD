@@ -89,7 +89,8 @@ BEGIN
                                        ,MI_Payment.Income_NDS
                                        ,MI_Payment.Income_OperDate
                                        ,MI_Payment.Income_InvNumber)::Integer AS Number
-          , ''::TVarChar                              AS PayerAccount
+
+          , OS_BankAccount_CBAccount.ValueData        AS PayerAccount
 
           , ObjectString_CBName.ValueData             AS CBName 
           , ObjectString_CBMFO.ValueData              AS CBMFO
@@ -133,6 +134,10 @@ BEGIN
                                     ON ObjectString_CBPurposePayment.ObjectId = MI_Payment.income_JuridicalId
                                    AND ObjectString_CBPurposePayment.DescId = zc_ObjectString_Juridical_CBPurposePayment()
                                    
+             LEFT JOIN ObjectString AS OS_BankAccount_CBAccount
+                                    ON OS_BankAccount_CBAccount.ObjectId = MI_Payment.BankAccountId
+                                   AND OS_BankAccount_CBAccount.DescId = zc_ObjectString_BankAccount_CBAccount()
+
         WHERE MI_Payment.MovementId = inMovementId
           AND MI_Payment.isErased = FALSE
           AND MI_Payment.NeedPay = TRUE
@@ -155,5 +160,4 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportPrivat (Integer,TVarChar) OWNER T
  08.09.19                                                                       *
 */
 
---
- SELECT * FROM gpSelect_Movement_Payment_ExportPrivat (inMovementId := 15499959 , inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Payment_ExportPrivat (inMovementId := 15499959 , inSession:= '5');

@@ -593,8 +593,8 @@ BEGIN
                               AND ObjectFloat_MinAccrualAmount.DescId = zc_ObjectFloat_PayrollType_MinAccrualAmount()
 
         LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup_Total(inPayrollTypeID    := Object_PayrollType.Id,
-                                                                inPercent          := ObjectFloat_Percent.ValueData,
-                                                                inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
+                                                                inPercent          := 0.45,
+                                                                inMinAccrualAmount := 7000,
                                                                 inSummaBase        := tmpIncomeMonth.SummaBase,
                                                                 inCountShift       := CountShifts.CountShift) AS Calculation
                                                                                                                 ON 1 = 1
