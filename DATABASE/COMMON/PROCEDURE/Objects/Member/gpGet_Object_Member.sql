@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
+             , CardIBAN TVarChar, CardIBANSecond TVarChar
              , Comment TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , BankId Integer, BankName TVarChar
@@ -39,6 +40,8 @@ BEGIN
            , CAST ('' AS TVarChar)  AS Card
            , CAST ('' AS TVarChar)  AS CardSecond
            , CAST ('' AS TVarChar)  AS CardChild
+           , CAST ('' AS TVarChar)  AS CardIBAN
+           , CAST ('' AS TVarChar)  AS CardIBANSecond
            , CAST ('' AS TVarChar)  AS Comment
            , CAST (0 AS Integer)    AS InfoMoneyId
            , CAST (0 AS Integer)    AS InfoMoneyCode
@@ -109,6 +112,8 @@ BEGIN
             , ObjectString_Card.ValueData              AS Card
             , ObjectString_CardSecond.ValueData        AS CardSecond3
             , ObjectString_CardChild.ValueData         AS CardChild
+            , ObjectString_CardIBAN.ValueData          AS CardIBAN
+            , ObjectString_CardIBANSecond.ValueData    AS CardIBANSecond
             , ObjectString_Comment.ValueData           AS Comment
             
             , Object_InfoMoney_View.InfoMoneyId
@@ -155,7 +160,14 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CardChild
                                     ON ObjectString_CardChild.ObjectId = Object_Member.Id 
                                    AND ObjectString_CardChild.DescId = zc_ObjectString_Member_CardChild()
-      
+
+             LEFT JOIN ObjectString AS ObjectString_CardIBAN
+                                    ON ObjectString_CardIBAN.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardIBAN.DescId = zc_ObjectString_Member_CardIBAN()
+             LEFT JOIN ObjectString AS ObjectString_CardIBANSecond
+                                    ON ObjectString_CardIBANSecond.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
+
              LEFT JOIN ObjectString AS ObjectString_DriverCertificate 
                                     ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
                                    AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -195,6 +207,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.09.19         * CardIBAN, CardIBANSecond
  03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond
  19.02.15         * add InfoMoney

@@ -119,6 +119,11 @@ inherited PriceForm: TPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaReserved
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DeferredSend
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -155,6 +160,11 @@ inherited PriceForm: TPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaReserved
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DeferredSend
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -502,6 +512,18 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1086#1090#1083#1086#1078#1077#1085#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091' ('#1095#1077#1082')'
             Options.Editing = False
             Width = 55
+          end
+          object DeferredSend: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1074' '#1087#1077#1088#1077#1084#1077#1097'.'
+            DataBinding.FieldName = 'DeferredSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093
+            Options.Editing = False
+            Width = 64
           end
           object RemainsNotMCS: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090

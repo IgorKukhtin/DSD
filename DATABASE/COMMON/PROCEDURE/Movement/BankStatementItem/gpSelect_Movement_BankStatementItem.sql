@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Debet TFloat, Kredit TFloat
              , AmountSumm TFloat, AmountCurrency TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
-             , LinkJuridicalId integer, LinkJuridicalName TVarChar
+             , LinkJuridicalId integer, LinkJuridicalName TVarChar, LinkINN TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -60,8 +60,9 @@ BEGIN
            , MovementString_JuridicalName.ValueData AS JuridicalName
            , MovementString_Comment.ValueData       AS Comment
 
-           , Object_Juridical.Id          AS LinkJuridicalId
+           , Object_Juridical.Id                    AS LinkJuridicalId
            , (Object_Juridical.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS LinkJuridicalName
+           , ObjectString_INN.ValueData  ::TVarChar AS LinkINN
 
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -195,6 +196,10 @@ BEGIN
             LEFT JOIN MovementString AS MS_Comment_Invoice
                                      ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = MovementLinkObject_Juridical.ObjectId
+                                  AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
 
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;

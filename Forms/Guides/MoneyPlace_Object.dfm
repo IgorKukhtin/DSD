@@ -2,7 +2,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientWidth = 961
   ExplicitWidth = 977
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -121,11 +121,11 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Width = 181
           end
           object OKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
+            Caption = #1054#1050#1055#1054' '#1080#1083#1080' '#1048#1053#1053
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 115
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -255,6 +255,14 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OKPO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OKPO'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

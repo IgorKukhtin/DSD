@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_CalculationPerson_Print (TDateTime, Integer, TV
 
 CREATE OR REPLACE FUNCTION gpSelect_CalculationPerson_Print(
     IN inOperDate      TDateTime,
-    IN inPersonID      Integer  ,
+    IN inUserID        Integer  ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -22,21 +22,42 @@ BEGIN
     OPEN Cursor1 FOR
         SELECT 'Расчет з.п. за '||zfCalc_MonthYearName(inOperDate)||' г.' as Title
         UNION ALL
-        SELECT 'По сотруднику: '||(SELECT ValueData FROM Object WHERE ID = inPersonID);
+        SELECT 'По юр. лицу: '||(SELECT COALESCE(Object_Member.ValueData, Object.ValueData) FROM Object 
+                                        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                             ON ObjectLink_User_Member.ObjectId = Object.Id
+                                                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                        LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+                                 WHERE Object.ID = inUserID);
 
     RETURN NEXT Cursor1;
 
 
-    OPEN Cursor2 FOR
-        SELECT
-            Calculation.OperDate                   AS OperDate
-          , Calculation.UnitName                   AS UnitName
-          , Calculation.ShortName                  AS ShortName
-          , Calculation.PayrollTypeName            AS PayrollTypeName
-          , Calculation.SummaCalc                  AS SummaCalc
-          , Calculation.FormulaCalc                AS FormulaCalc
-        FROM gpSelect_Calculation_WagesBoard(inOperDate, inPersonID, inSession) AS Calculation
-        ORDER BY Calculation.OperDate;
+    IF inOperDate < '01.09.2019'
+    THEN
+      OPEN Cursor2 FOR
+          SELECT
+              Calculation.OperDate                   AS OperDate
+            , Calculation.UnitName                   AS UnitName
+            , Calculation.ShortName                  AS ShortName
+            , Calculation.PayrollTypeName            AS PayrollTypeName
+            , Calculation.SummaCalc                  AS SummaCalc
+            , Calculation.FormulaCalc                AS FormulaCalc
+          FROM gpSelect_Calculation_WagesBoard(inOperDate, 0, inSession) AS Calculation
+          WHERE Calculation.UserId = inUserID
+          ORDER BY Calculation.OperDate;
+    ELSE
+      OPEN Cursor2 FOR
+          SELECT
+              Calculation.OperDate                   AS OperDate
+            , Calculation.UnitName                   AS UnitName
+            , Calculation.ShortName                  AS ShortName
+            , Calculation.PayrollTypeName            AS PayrollTypeName
+            , Calculation.SummaCalc                  AS SummaCalc
+            , Calculation.FormulaCalc                AS FormulaCalc
+          FROM gpSelect_Calculation_Wages(inOperDate, inUserID, inSession) AS Calculation
+          ORDER BY Calculation.OperDate;
+    
+    END IF;
 
     RETURN NEXT Cursor2;
 
@@ -51,4 +72,5 @@ ALTER FUNCTION gpSelect_CalculationPerson_Print (TDateTime, Integer, TVarChar) O
  23.08.19                                                        *
 */
 
--- SELECT * FROM gpSelect_CalculationPerson_Print (inOperDate := ('01.08.2019')::TDateTime, inPersonID := 5323676,  inSession:= '3');
+-- 
+select * from gpSelect_CalculationPerson_Print(inOperDate := ('01.09.2019')::TDateTime , inUserID := 3999200 ,  inSession := '3');

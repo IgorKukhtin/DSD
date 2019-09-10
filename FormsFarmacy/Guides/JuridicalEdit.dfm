@@ -306,6 +306,19 @@
           TabOrder = 28
           Width = 193
         end
+        object cxLabel4: TcxLabel
+          Left = 250
+          Top = 182
+          Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1056#1086#1076'.'#1087#1072#1076#1077#1078')'
+        end
+        object edMainName_cut: TcxDBTextEdit
+          Left = 248
+          Top = 202
+          DataBinding.DataField = 'MainName_cut'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 30
+          Width = 193
+        end
       end
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
@@ -379,6 +392,54 @@
           end
         end
       end
+      object cxTabSheet1: TcxTabSheet
+        Caption = #1044#1083#1103' "'#1050#1083#1080#1077#1085#1090' '#1073#1072#1085#1082#1072'"'
+        ImageIndex = 2
+        object cxLabel5: TcxLabel
+          Left = 16
+          Top = -1
+          Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        end
+        object cxLabel14: TcxLabel
+          Left = 16
+          Top = 47
+          Caption = #1052#1060#1054
+        end
+        object cxLabel22: TcxLabel
+          Left = 16
+          Top = 98
+          Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        end
+        object cxLabel23: TcxLabel
+          Left = 16
+          Top = 153
+          Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
+        end
+        object edCBName: TcxTextEdit
+          Left = 16
+          Top = 17
+          TabOrder = 4
+          Width = 537
+        end
+        object edCBMFO: TcxTextEdit
+          Left = 16
+          Top = 63
+          TabOrder = 5
+          Width = 537
+        end
+        object edCBAccount: TcxTextEdit
+          Left = 16
+          Top = 115
+          TabOrder = 6
+          Width = 537
+        end
+        object edCBPurposePayment: TcxTextEdit
+          Left = 16
+          Top = 171
+          TabOrder = 7
+          Width = 537
+        end
+      end
     end
   end
   object cxLabel19: TcxLabel [8]
@@ -435,21 +496,8 @@
     Left = 8
     Top = 306
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
-    TabOrder = 16
+    TabOrder = 15
     Width = 270
-  end
-  object cxLabel4: TcxLabel [16]
-    Left = 546
-    Top = 206
-    Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1056#1086#1076'.'#1087#1072#1076#1077#1078')'
-  end
-  object edMainName_cut: TcxDBTextEdit [17]
-    Left = 546
-    Top = 226
-    DataBinding.DataField = 'MainName_cut'
-    DataBinding.DataSource = JuridicalDetailsDS
-    TabOrder = 21
-    Width = 193
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -772,6 +820,38 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCBName'
+        Value = Null
+        Component = edCBName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCBMFO'
+        Value = Null
+        Component = edCBMFO
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCBAccount'
+        Value = Null
+        Component = edCBAccount
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCBPurposePayment'
+        Value = Null
+        Component = edCBPurposePayment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -872,6 +952,34 @@
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CBName'
+        Value = Null
+        Component = edCBName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CBMFO'
+        Value = Null
+        Component = edCBMFO
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CBAccount'
+        Value = Null
+        Component = edCBAccount
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CBPurposePayment'
+        Value = Null
+        Component = edCBPurposePayment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -950,8 +1058,8 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 448
-    Top = 136
+    Left = 472
+    Top = 168
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>

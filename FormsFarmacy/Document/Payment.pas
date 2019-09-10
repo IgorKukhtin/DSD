@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox, cxSplitter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox, cxSplitter,
+  dsdExportToXLSAction;
 
 type
   TPaymentForm = class(TAncestorDocumentForm)
@@ -88,6 +89,12 @@ type
     actUpdateMI_NeedPay: TdsdExecStoredProc;
     macUpdateMI_NeedPay: TMultiAction;
     bbUpdateMI_NeedPay: TdxBarButton;
+    actExportToXLSPrivat: TdsdExportToXLS;
+    actExecStoredProcPrivat: TdsdExecStoredProc;
+    ExportBankCDS: TClientDataSet;
+    spExportBankPrivat: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    spExportBankPrivatFileName: TdsdStoredProc;
   private
     { Private declarations }
   public

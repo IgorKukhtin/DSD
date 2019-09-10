@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , HolidaysHospital TFloat, Marketing TFloat, Director TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
+             , isManagerPharmacy boolean
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , isIssuedBy Boolean
              , isErased Boolean
@@ -61,7 +62,8 @@ BEGIN
 
                                 WHERE Object_Personal.DescId = zc_Object_Personal()
                                   AND Object_Personal.isErased = FALSE),
-                tmpAdditionalExpenses AS (SELECT MovementItem.ObjectId                                    AS UnitID
+                tmpAdditionalExpenses AS (SELECT MovementItem.Id                                          AS ID
+                                               , MovementItem.ObjectId                                    AS UnitID
                                                , MovementItem.Amount                                      AS SummaTotal
                                                , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                                                , MovementItem.isErased                                    AS isErased
@@ -89,6 +91,7 @@ BEGIN
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
+                 , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
@@ -99,11 +102,15 @@ BEGIN
                   INNER JOIN ObjectLink AS ObjectLink_User_Member
                                        ON ObjectLink_User_Member.ObjectId = tmpPersonal.UserID
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                  INNER JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+                  INNER JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
                   LEFT JOIN tmpPersonal_View AS Personal_View
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
                                             AND Personal_View.Ord = 1
+
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                          ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                         AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
@@ -119,12 +126,15 @@ BEGIN
                  , MIFloat_Director.ValueData         AS Director
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
-                    COALESCE (MIFloat_Marketing.ValueData, 0) -
+                    COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
+                    COALESCE (MIFloat_Marketing.ValueData, 0) +
+                    COALESCE (MIFloat_Director.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
+                 , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
@@ -143,6 +153,9 @@ BEGIN
                                             AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                             AND Personal_View.Ord = 1
 
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                          ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                         AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
                   LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
@@ -172,7 +185,7 @@ BEGIN
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
             UNION ALL
-            SELECT Null::Integer                      AS Id
+            SELECT tmpAdditionalExpenses.ID           AS Id
                  , Null::Integer                      AS UserID
                  , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
 
@@ -185,6 +198,7 @@ BEGIN
                  , Null::Integer                      AS MemberCode
                  , 'Дополнительные расходы'::TVarChar AS MemberName
                  , Null::TVarChar                     AS PositionName
+                 , False                              AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
@@ -214,7 +228,8 @@ BEGIN
                                           INNER JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                                      WHERE Object_User.DescId = zc_Object_User())
-              , tmpAdditionalExpenses AS (SELECT MovementItem.ObjectId                                    AS UnitID
+              , tmpAdditionalExpenses AS (SELECT MovementItem.Id                                          AS ID
+                                               , MovementItem.ObjectId                                    AS UnitID
                                                , MovementItem.Amount                                      AS SummaTotal
                                                , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                                                , MovementItem.isErased                                    AS isErased
@@ -238,12 +253,15 @@ BEGIN
                  , MIFloat_Director.ValueData         AS Director
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
-                    COALESCE (MIFloat_Marketing.ValueData, 0) -
+                    COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
+                    COALESCE (MIFloat_Marketing.ValueData, 0) +
+                    COALESCE (MIFloat_Director.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
                  , Personal_View.PositionName         AS PositionName
+                 , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
@@ -262,6 +280,10 @@ BEGIN
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
                                             AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                             AND Personal_View.Ord = 1
+
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
+                                          ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                         AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
 
@@ -292,7 +314,7 @@ BEGIN
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
             UNION ALL
-            SELECT Null::Integer                      AS Id
+            SELECT tmpAdditionalExpenses.ID           AS Id
                  , Null::Integer                      AS UserID
                  , tmpAdditionalExpenses.SummaTotal   AS AmountAccrued
 
@@ -305,6 +327,7 @@ BEGIN
                  , Null::Integer                      AS MemberCode
                  , 'Дополнительные расходы'::TVarChar AS MemberName
                  , Null::TVarChar                     AS PositionName
+                 , False                              AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName

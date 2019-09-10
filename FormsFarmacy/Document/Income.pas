@@ -164,6 +164,7 @@ type
     actLinkCheck: TdsdExecStoredProc;
     spCheckObject: TdsdStoredProc;
     actCheckObject: TdsdExecStoredProc;
+    cbDifferent: TcxCheckBox;
   private
     { Private declarations }
   public

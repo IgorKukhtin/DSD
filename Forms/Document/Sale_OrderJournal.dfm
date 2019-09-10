@@ -1,29 +1,29 @@
 inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 535
-  ClientWidth = 1186
+  ClientWidth = 1492
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1202
-  ExplicitHeight = 570
+  ExplicitWidth = 1508
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 1186
+    Width = 1492
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1186
     ExplicitHeight = 374
     ClientRectBottom = 374
-    ClientRectRight = 1186
+    ClientRectRight = 1492
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1186
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
-        Width = 1186
+        Width = 1492
         Height = 374
         ExplicitWidth = 1186
         ExplicitHeight = 374
@@ -761,7 +761,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1186
+    Width = 1492
     Height = 50
     ExplicitWidth = 1186
     ExplicitHeight = 50
@@ -811,11 +811,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
     Top = 450
-    Width = 1186
+    Width = 1492
     Height = 85
     Align = alBottom
     TabOrder = 6
     Visible = False
+    ExplicitWidth = 1186
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -4773,8 +4774,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 480
+    Left = 440
+    Top = 472
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Email_FileName'
@@ -4822,8 +4823,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 464
+    Left = 168
+    Top = 456
   end
   object spGet_Export_Email: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Email_Send'
@@ -4842,8 +4843,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 480
+    Left = 240
+    Top = 488
   end
   object ExportEmailCDS: TClientDataSet
     Aggregates = <>

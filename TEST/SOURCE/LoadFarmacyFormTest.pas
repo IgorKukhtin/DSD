@@ -1578,12 +1578,12 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 end;
@@ -1683,14 +1683,14 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  }
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
@@ -1713,12 +1713,13 @@ end;
 
 procedure TLoadFormTest.LoadPriceFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceOnDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceOnDateForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCS_LiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCS_LiteForm');
   exit;
@@ -1738,7 +1739,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceGoodsDialogForm');
-
+   }
 end;
 
 procedure TLoadFormTest.LoadPriceChangeFormTest;

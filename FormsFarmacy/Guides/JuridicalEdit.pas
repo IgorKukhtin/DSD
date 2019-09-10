@@ -111,6 +111,15 @@ type
     cbisDeferred: TcxCheckBox;
     cxLabel4: TcxLabel;
     edMainName_cut: TcxDBTextEdit;
+    cxTabSheet1: TcxTabSheet;
+    cxLabel5: TcxLabel;
+    cxLabel14: TcxLabel;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    edCBName: TcxTextEdit;
+    edCBMFO: TcxTextEdit;
+    edCBAccount: TcxTextEdit;
+    edCBPurposePayment: TcxTextEdit;
   private
     { Private declarations }
   public

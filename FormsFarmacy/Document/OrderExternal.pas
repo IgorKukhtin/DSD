@@ -98,6 +98,7 @@ type
     spPUSHInfo: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
     spPUSHError: TdsdStoredProc;
+    cbDifferent: TcxCheckBox;
   private
     { Private declarations }
   public

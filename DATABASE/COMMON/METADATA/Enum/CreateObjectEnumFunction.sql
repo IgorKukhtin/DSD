@@ -1165,6 +1165,16 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberZP1() RETURNS Integer AS 
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberZP2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MemberZP2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberZP2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberZP2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-------
+--Загрузка № карт счета IBAN ЗП (ф1) в справочник физ. лиц
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberIBANZP1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MemberIBANZP1' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberIBANZP1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberIBANZP1' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+--Загрузка № карт счета IBAN ЗП (ф2) в справочник физ. лиц
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberIBANZP2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MemberIBANZP2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberIBANZP2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberIBANZP2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 
 -- !!!
 -- !!! Категория товара

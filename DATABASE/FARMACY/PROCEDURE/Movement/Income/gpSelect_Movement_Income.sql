@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , isDeferred Boolean
+             , isDifferent Boolean
              , UpdateDate_Order TDateTime
              , OrderKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -199,6 +200,7 @@ BEGIN
              , Movement_Order.InvNumber             AS Movement_OrderInvNumber
              , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
              , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean   AS isDeferred
+             , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
              , COALESCE (MovementDate_Update_Order.ValueData, NULL) :: TDateTime AS UpdateDate_Order
              , Object_OrderKind.ValueData           AS OrderKindName
 
@@ -268,6 +270,11 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                   ON MovementBoolean_Document.MovementId = Movement_Income.Id
                                  AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+        -- точка другого юр.лица
+        LEFT JOIN MovementBoolean AS MovementBoolean_Different
+                                  ON MovementBoolean_Different.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
 
         LEFT JOIN MovementDate    AS MovementDate_Payment
                                   ON MovementDate_Payment.MovementId = Movement_Income.Id
@@ -371,7 +378,8 @@ BEGIN
                , Movement_Income.PayColor
                , Movement_Order.Id              
                , Movement_Order.InvNumber  
-               , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)     
+               , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)   
+               , COALESCE (MovementBoolean_Different.ValueData, FALSE)  
                , Object_Insert.ValueData        
                , MovementDate_Insert.ValueData  
                , Object_Update.ValueData        
@@ -392,6 +400,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 09.09.19         *
  23.07.19         *
  24.09.18         *
  05.01.18         * add NDS

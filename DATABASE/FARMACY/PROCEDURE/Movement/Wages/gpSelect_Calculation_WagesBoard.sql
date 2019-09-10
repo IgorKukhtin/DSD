@@ -261,7 +261,7 @@ BEGIN
              GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
                     , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
                     , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
-             HAVING count(*) >= 3)
+             HAVING count(*) >= 18)
    THEN
      WITH
        tmpBoardUserAll AS (
@@ -346,18 +346,18 @@ BEGIN
                                       ON Income.OperDate  = tmpBoard.OperDate
                                      AND Income.UnitId    = tmpBoard.UnitId
 
-            LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup(inPayrollTypeID    := tmpBoard.PayrollTypeID,
-                                                              inPercent          := Null::TFloat,
-                                                              inMinAccrualAmount := Null::TFloat,
-                                                              inCountUserCS      := Income.CountUser,
-                                                              inCountUserAS      := Income.IncomeCount ,
-                                                              inCountUserNS      := Null::Integer,
-                                                              inCountUserSCS     := Null::Integer,
-                                                              inCountUserS       := Null::Integer,
-                                                              inCountUserSAS     := Null::Integer,
-                                                              inSummCS           := Income.SaleSumm,
-                                                              inSummSCS          := Null::TFloat,
-                                                              inSummHS           := Null::TFloat) AS Calculation
+            LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := tmpBoard.PayrollTypeID,
+                                                                   inPercent          := Null::TFloat,
+                                                                   inMinAccrualAmount := Null::TFloat,
+                                                                   inCountUserCS      := Income.CountUser,
+                                                                   inCountUserAS      := Income.IncomeCount ,
+                                                                   inCountUserNS      := Null::Integer,
+                                                                   inCountUserSCS     := Null::Integer,
+                                                                   inCountUserS       := Null::Integer,
+                                                                   inCountUserSAS     := Null::Integer,
+                                                                   inSummCS           := Income.SaleSumm,
+                                                                   inSummSCS          := Null::TFloat,
+                                                                   inSummHS           := Null::TFloat) AS Calculation
                                                                                                   ON 1 = 1
        WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
          AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)),
@@ -381,20 +381,38 @@ BEGIN
                         FROM tmpBoard
                         GROUP BY tmpBoard.PersonalId),
      tmpManagerPharmacy AS (  -- Заведующие аптекой
-       SELECT tmpBoard.UnitId
-            , vbEndDate                                       AS OperDate
+       SELECT ROW_NUMBER() OVER (PARTITION BY tmpBoard.UserID ORDER BY tmpBoard.PersonalId DESC) AS Ord
+            , COALESCE(ObjectLink_Member_Unit.ChildObjectId, tmpBoard.UnitId) AS UnitId
+            , vbEndDate                                                       AS OperDate
             , tmpBoard.PersonalId
             , tmpBoard.UserID
-            , tmpBoard.UnitUserId
+            , COALESCE(ObjectLink_Member_Unit.ChildObjectId, tmpBoard.UnitId) AS UnitUserId
 
             , tmpBoard.WorkTimeKindID
-            , 1000::TFloat                                    AS SummaCalc
-            , 'Доплата заведующим аптекой: 1000.00'::TVarChar AS FormulaCalc
-       FROM tmpBoard
-       WHERE tmpBoard.isManagerPharmacy = TRUE
-         AND tmpBoard.UnitId = tmpBoard.UnitUserId
-         AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
-       GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID, tmpBoard.UnitUserId, tmpBoard.WorkTimeKindID)
+            , 1000::TFloat                                                    AS SummaCalc
+            , 'Доплата заведующим аптекой: 1000.00'::TVarChar                 AS FormulaCalc
+       FROM (SELECT tmpBoard.UnitId
+                  , tmpBoard.PersonalId
+                  , tmpBoard.UserID
+                  , tmpBoard.UnitUserId
+                  , tmpBoard.WorkTimeKindID
+             FROM tmpBoard
+             WHERE tmpBoard.isManagerPharmacy = TRUE
+               AND tmpBoard.UnitId = tmpBoard.UnitUserId   
+               AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
+             GROUP BY tmpBoard.UnitId
+                    , tmpBoard.PersonalId
+                    , tmpBoard.UserID
+                    , tmpBoard.UnitUserId
+                    , tmpBoard.WorkTimeKindID) tmpBoard
+
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId =  tmpBoard.UserID
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                               ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit())
 
 
      -- От суммы проведенных чеков по дням
@@ -453,19 +471,19 @@ BEGIN
                                  ON CheckSum.OperDate  = tmpBoard.OperDate
                                 AND CheckSum.UnitId    = tmpBoard.UnitId
 
-        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup(inPayrollTypeID    := Object_PayrollType.Id,
-                                                          inPercent          := ObjectFloat_Percent.ValueData,
-                                                          inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
-                                                          inCountUserCS      := CheckSum.CountUserCS,
-                                                          inCountUserAS      := CheckSum.CountUserAS,
-                                                          inCountUserNS      := CheckSum.CountUserNS,
-                                                          inCountUserSCS     := CheckSum.CountUserSCS,
-                                                          inCountUserS       := CheckSum.CountUserS,
-                                                          inCountUserSAS       := CheckSum.CountUserS,
-                                                          inSummCS           := CheckSum.SummCS,
-                                                          inSummSCS          := CheckSum.SummSCS,
-                                                          inSummHS           := CheckSum.SummHS) AS Calculation
-                                                                                                 ON 1 = 1
+        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := Object_PayrollType.Id,
+                                                               inPercent          := ObjectFloat_Percent.ValueData,
+                                                               inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
+                                                               inCountUserCS      := CheckSum.CountUserCS,
+                                                               inCountUserAS      := CheckSum.CountUserAS,
+                                                               inCountUserNS      := CheckSum.CountUserNS,
+                                                               inCountUserSCS     := CheckSum.CountUserSCS,
+                                                               inCountUserS       := CheckSum.CountUserS,
+                                                               inCountUserSAS       := CheckSum.CountUserS,
+                                                               inSummCS           := CheckSum.SummCS,
+                                                               inSummSCS          := CheckSum.SummSCS,
+                                                               inSummHS           := CheckSum.SummHS) AS Calculation
+                                                                                                      ON 1 = 1
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_Check()
      AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
    UNION ALL  -- Oт суммы реализации оприходоанных накладных по дням
@@ -609,7 +627,7 @@ BEGIN
         , NULL::Integer                                   AS IncomeCount
         , NULL::TFloat                                    AS IncomeSaleSumm
 
-        , NULL::TFloat                                    AS SummaBase
+        , 0::TFloat                                       AS SummaBase
         , 1000::TFloat                                    AS SummaCalc
         , 'Доплата заведующим аптекой: 1000.00'::TVarChar AS FormulaCalc
    FROM tmpManagerPharmacy
@@ -620,6 +638,7 @@ BEGIN
         INNER JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                 ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpManagerPharmacy.WorkTimeKindID
                                AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+   WHERE tmpManagerPharmacy.Ord = 1
 
    ;
 

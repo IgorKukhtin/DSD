@@ -57,7 +57,6 @@ type
     pvGoodsName_basis: TcxDBPivotGridField;
     dxBarStatic: TdxBarStatic;
     pvGoodsKindName: TcxDBPivotGridField;
-    pvAmountStart_inf: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     cxLabel4: TcxLabel;
@@ -69,6 +68,8 @@ type
     GuidesGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
     actRefreshDay: TdsdDataSetRefresh;
+    cfAmountStart_Weight_avg: TdsdPivotGridCalcFields;
+    cfAmountEnd_Weight_avg: TdsdPivotGridCalcFields;
   private
   public
   end;

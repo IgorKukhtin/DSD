@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inisDifferent         Boolean   , -- точка др. юр. лица
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
@@ -64,6 +66,9 @@ BEGIN
                                          , inPaymentDate, ioJuridicalId, vbUserId);
 
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
+
+    -- сохранили свойство <точка др. юр.лица>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Different(), ioId, inisDifferent);
 
     -- 
     IF inOperDateBranch IS NOT NULL

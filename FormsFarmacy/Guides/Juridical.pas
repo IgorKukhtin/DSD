@@ -35,6 +35,10 @@ type
     OKPO: TcxGridDBColumn;
     isLoadBarcode: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;
+    CBName: TcxGridDBColumn;
+    CBMFO: TcxGridDBColumn;
+    CBAccount: TcxGridDBColumn;
+    CBPurposePayment: TcxGridDBColumn;
   private
     { Private declarations }
   public

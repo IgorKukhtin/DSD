@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbRetailId Integer;
    DECLARE vbMovementID Integer;
    DECLARE vbEmployeeShow Boolean;
 BEGIN
@@ -24,6 +25,14 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+
+    vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
     CREATE TEMP TABLE _PUSH (Id  Integer
                            , Text TBlob
@@ -66,7 +75,7 @@ BEGIN
       END IF;
     END IF;
 
-   IF vbEmployeeShow = True
+   IF vbEmployeeShow = True AND  vbRetailId = 4
    THEN
       INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметки времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
    END IF;

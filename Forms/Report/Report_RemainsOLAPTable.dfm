@@ -250,7 +250,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSale: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSale'
@@ -258,13 +258,12 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountSale_10500: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072', '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSale_10500'
@@ -277,7 +276,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSale_40208: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSale_40208'
@@ -290,7 +289,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSaleReal: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountSaleReal'
@@ -303,7 +302,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSaleReal_10500: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 20
+      AreaIndex = 49
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountSaleReal_10500'
@@ -315,7 +314,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSaleReal_40208: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 15
+      AreaIndex = 35
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountSaleReal_40208'
@@ -327,7 +326,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOnPriceIn: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 6
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendOnPriceIn'
@@ -335,13 +334,12 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountSendOnPrice_10500: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 7
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
       DataBinding.FieldName = 'AmountSendOnPrice_10500'
@@ -354,7 +352,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOnPrice_40200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 8
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
       DataBinding.FieldName = 'AmountSendOnPrice_40200'
@@ -367,7 +365,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOnPriceOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 10
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendOnPriceOut'
@@ -378,45 +376,20 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvAmountStart_inf: TcxDBPivotGridField
+    object pvAmountStart: TcxDBPivotGridField
       Area = faData
       AreaIndex = 0
-      IsCaptionAssigned = True
-      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'. '#1080#1085#1092'.'
-      DataBinding.FieldName = 'AmountStart_inf'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Width = 70
-      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
-    end
-    object pvAmountEnd_inf: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'. '#1080#1085#1092'.'
-      DataBinding.FieldName = 'AmountEnd_inf'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Width = 70
-      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
-    end
-    object pvAmountStart: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountStart'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountEnd: TcxDBPivotGridField
-      Area = faRow
+      Area = faData
       AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'.'
@@ -424,39 +397,84 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountTotalIn_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 43
+      IsCaptionAssigned = True
+      Caption = #1048#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076' '#1074#1077#1089
+      DataBinding.FieldName = 'AmountTotalIn_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountTotalOut_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 44
+      IsCaptionAssigned = True
+      Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1074#1077#1089
+      DataBinding.FieldName = 'AmountTotalOut_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountTotalIn: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 45
+      IsCaptionAssigned = True
+      Caption = #1048#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
+      DataBinding.FieldName = 'AmountTotalIn'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountTotalOut: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 46
+      IsCaptionAssigned = True
+      Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
+      DataBinding.FieldName = 'AmountTotalOut'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountIncome: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 19
+      AreaIndex = 47
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountIncome'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountReturnOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 16
+      AreaIndex = 37
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountReturnOut'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountSendIn: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 18
+      AreaIndex = 41
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendIn'
@@ -468,7 +486,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 21
+      AreaIndex = 51
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountSendOut'
@@ -480,7 +498,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountSendOnPriceOut_10900: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 23
+      AreaIndex = 55
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'. ('#1091#1090#1080#1083#1100')'
       DataBinding.FieldName = 'AmountSendOnPriceOut_10900'
@@ -492,17 +510,16 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountReturnIn: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 17
+      AreaIndex = 39
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountReturnIn'
-      Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountReturnIn_40208: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 11
+      AreaIndex = 27
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnIn_40208'
@@ -511,17 +528,16 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountReturnInReal: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 9
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnInReal'
-      Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAmountReturnInReal_40208: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 12
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.) ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'AmountReturnInReal_40208'
@@ -530,7 +546,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountLoss: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 22
+      AreaIndex = 53
       IsCaptionAssigned = True
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountLoss'
@@ -539,7 +555,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountInventory: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 14
+      AreaIndex = 33
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
       DataBinding.FieldName = 'AmountInventory'
@@ -548,7 +564,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountProductionIn: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 13
+      AreaIndex = 31
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1080#1079#1074'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountProductionIn'
@@ -557,10 +573,362 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object pvAmountProductionOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 24
+      AreaIndex = 57
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1080#1079#1074'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'AmountProductionOut'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountSale_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 10
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSale_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSale_10500_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 12
+      IsCaptionAssigned = True
+      Caption = #1057#1082#1080#1076#1082#1072', '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSale_10500_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSale_40208_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 14
+      IsCaptionAssigned = True
+      Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSale_40208_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSaleReal_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 16
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074#1077#1089' ('#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountSaleReal_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSaleReal_10500_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 50
+      IsCaptionAssigned = True
+      Caption = #1057#1082#1080#1076#1082#1072' '#1074#1077#1089' ('#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountSaleReal_10500_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountSaleReal_40208_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 36
+      IsCaptionAssigned = True
+      Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountSaleReal_40208_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountSendOnPriceIn_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 18
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSendOnPriceIn_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSendOnPrice_10500_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 20
+      IsCaptionAssigned = True
+      Caption = #1057#1082#1080#1076#1082#1072' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+      DataBinding.FieldName = 'AmountSendOnPrice_10500_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSendOnPrice_40200_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 22
+      IsCaptionAssigned = True
+      Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+      DataBinding.FieldName = 'AmountSendOnPrice_40200_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSendOnPriceOut_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 26
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSendOnPriceOut_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountStart_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072' '#1085#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072', '#1074#1077#1089
+      DataBinding.FieldName = 'AmountStart_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 104
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountEnd_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072' '#1086#1082#1086#1085#1095'. '#1087#1077#1088#1080#1086#1076#1072', '#1074#1077#1089
+      DataBinding.FieldName = 'AmountEnd_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 112
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvCountDays: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1044#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+      DataBinding.FieldName = 'CountDays'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountStart_Weight_sum: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089' ('#1091#1089#1088#1077#1076#1085'.)'
+      DataBinding.FieldName = 'AmountStart_Weight_sum'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountStart_Weight_avg: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089' ('#1091#1089#1088#1077#1076#1085'.)'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 103
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountEnd_Weight_sum: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1074#1077#1089' ('#1091#1089#1088#1077#1076#1085'.)'
+      DataBinding.FieldName = 'AmountEnd_Weight_sum'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountEnd_Weight_avg: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1074#1077#1089' ('#1091#1089#1088#1077#1076#1085'.)'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 107
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountIncome_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 48
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountIncome_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountReturnOut_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 38
+      IsCaptionAssigned = True
+      Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountReturnOut_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountSendIn_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 42
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSendIn_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountSendOut_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 52
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountSendOut_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountSendOnPriceOut_10900_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 56
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1074#1077#1089' ('#1091#1090#1080#1083#1100')'
+      DataBinding.FieldName = 'AmountSendOnPriceOut_10900_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvAmountReturnIn_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 40
+      IsCaptionAssigned = True
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountReturnIn_Weight'
+      Visible = True
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountReturnIn_40208_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 28
+      IsCaptionAssigned = True
+      Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountReturnIn_40208_Weight'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountReturnInReal_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 24
+      IsCaptionAssigned = True
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082'. '#1074#1077#1089' ('#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountReturnInReal_Weight'
+      Visible = True
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountReturnInReal_40208_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 30
+      IsCaptionAssigned = True
+      Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.) ('#1087#1086#1082'.)'
+      DataBinding.FieldName = 'AmountReturnInReal_40208_Weight'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountLoss_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 54
+      IsCaptionAssigned = True
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1074#1077#1089
+      DataBinding.FieldName = 'AmountLoss_Weight'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountInventory_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 34
+      IsCaptionAssigned = True
+      Caption = '(-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountInventory_Weight'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountProductionIn_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 32
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1080#1079#1074'. '#1087#1088#1080#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountProductionIn_Weight'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountProductionOut_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 58
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1080#1079#1074'. '#1088#1072#1089#1093'. '#1074#1077#1089
+      DataBinding.FieldName = 'AmountProductionOut_Weight'
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
@@ -722,6 +1090,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Caption = #1055#1086' '#1076#1085#1103#1084' '#1044#1072' / '#1053#1077#1090
       Hint = #1055#1086' '#1076#1085#1103#1084' '#1044#1072' / '#1053#1077#1090
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1037,5 +1406,33 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       end>
     Left = 616
     Top = 19
+  end
+  object cfAmountStart_Weight_avg: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvAmountStart_Weight_avg
+    GridFields = <
+      item
+        Field = pvAmountStart_Weight_sum
+      end
+      item
+        Field = pvCountDays
+      end>
+    CalcFieldsType = cfDivision
+    Left = 616
+    Top = 376
+  end
+  object cfAmountEnd_Weight_avg: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvAmountEnd_Weight_avg
+    GridFields = <
+      item
+        Field = pvAmountEnd_Weight_sum
+      end
+      item
+        Field = pvCountDays
+      end>
+    CalcFieldsType = cfDivision
+    Left = 760
+    Top = 376
   end
 end

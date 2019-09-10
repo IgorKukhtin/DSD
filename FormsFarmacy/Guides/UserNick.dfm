@@ -26,8 +26,6 @@ object UserNickForm: TUserNickForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 0
-    ExplicitWidth = 649
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -105,7 +103,6 @@ object UserNickForm: TUserNickForm
     Width = 2
     Height = 331
     Control = cxGrid
-    ExplicitLeft = 649
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -341,14 +338,6 @@ object UserNickForm: TUserNickForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'BranchName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BranchName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'UnitName'
           Value = Null
           Component = ClientDataSet
@@ -378,7 +367,7 @@ object UserNickForm: TUserNickForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_User'
+    StoredProcName = 'gpSelect_Object_UserNick'
     DataSet = ClientDataSet
     DataSets = <
       item

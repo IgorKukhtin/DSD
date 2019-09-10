@@ -82,6 +82,7 @@ type
     ServiceDate: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edServiceDate: TcxDateEdit;
+    LinkINN: TcxGridDBColumn;
   private
     { Private declarations }
   public

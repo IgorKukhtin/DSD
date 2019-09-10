@@ -1751,7 +1751,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
@@ -1863,13 +1863,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
   //
@@ -1958,7 +1958,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byPriceDifForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byPriceDifDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byPriceDifDialogForm');
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInNotOlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInNotOlapForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
 
@@ -2365,13 +2368,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoragePlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoragePlace_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
 
@@ -2830,24 +2833,26 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  {exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerForm');
 
@@ -2860,10 +2865,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToForm');
 end;

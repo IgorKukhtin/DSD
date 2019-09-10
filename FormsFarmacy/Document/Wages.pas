@@ -45,14 +45,14 @@ type
     Color_Calc: TcxGridDBBandedColumn;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
-    actPrintCalculationPerson: TMultiAction;
+    actPrintCalculationUser: TMultiAction;
     dxBarButton7: TdxBarButton;
-    actOpenChoicePersonal: TOpenChoiceForm;
-    actExportPrintCalculationPerson: TdsdExportToXLS;
+    actOpenChoiceUser: TOpenChoiceForm;
+    actExportPrintCalculationUser: TdsdExportToXLS;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrintCalculationPerson: TdsdStoredProc;
-    actExecSPPrintCalculationPerson: TdsdExecStoredProc;
+    spSelectPrintCalculationUser: TdsdStoredProc;
+    actExecSPPrintCalculationUser: TdsdExecStoredProc;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
@@ -89,6 +89,7 @@ type
     dxBarButton11: TdxBarButton;
     HolidaysHospital: TcxGridDBBandedColumn;
     Director: TcxGridDBBandedColumn;
+    isManagerPharmacy: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

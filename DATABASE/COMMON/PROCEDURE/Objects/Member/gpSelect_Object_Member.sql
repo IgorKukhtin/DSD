@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
+             , CardIBAN TVarChar, CardIBANSecond TVarChar
              , Comment TVarChar
              , isOfficial Boolean
              , BankId Integer, BankName TVarChar
@@ -85,6 +86,8 @@ end if;
          , ObjectString_Card.ValueData              AS Card
          , ObjectString_CardSecond.ValueData        AS CardSecond
          , ObjectString_CardChild.ValueData         AS CardChild
+         , ObjectString_CardIBAN.ValueData          AS CardIBAN
+         , ObjectString_CardIBANSecond.ValueData    AS CardIBANSecond
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
@@ -169,6 +172,12 @@ end if;
           LEFT JOIN ObjectString AS ObjectString_CardChild
                                  ON ObjectString_CardChild.ObjectId = Object_Member.Id
                                 AND ObjectString_CardChild.DescId = zc_ObjectString_Member_CardChild()
+          LEFT JOIN ObjectString AS ObjectString_CardIBAN
+                                 ON ObjectString_CardIBAN.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardIBAN.DescId = zc_ObjectString_Member_CardIBAN()
+          LEFT JOIN ObjectString AS ObjectString_CardIBANSecond
+                                 ON ObjectString_CardIBANSecond.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -261,6 +270,8 @@ end if;
            , CAST ('' as TVarChar)  AS Card
            , CAST ('' as TVarChar)  AS CardSecond
            , CAST ('' as TVarChar)  AS CardChild
+           , CAST ('' AS TVarChar)  AS CardIBAN
+           , CAST ('' AS TVarChar)  AS CardIBANSecond
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
 
@@ -315,6 +326,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.09.19         *
  03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond
  02.02.17         * add ObjectTo

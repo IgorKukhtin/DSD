@@ -1096,7 +1096,8 @@ uses
   OrderFinanceJournal in '..\..\Forms\Document\OrderFinanceJournal.pas' {OrderFinanceJournalForm: TParentForm},
   JuridicalOrderFinance in '..\..\Forms\Guides\JuridicalOrderFinance.pas' {JuridicalOrderFinanceForm: TParentForm},
   Report_RemainsOLAPTable in '..\..\Forms\Report\Report_RemainsOLAPTable.pas' {Report_RemainsOLAPTableForm: TParentForm},
-  Report_RemainsOLAPTableDialog in '..\..\Forms\Report\Report_RemainsOLAPTableDialog.pas' {Report_RemainsOLAPTableDialogForm: TParentForm};
+  Report_RemainsOLAPTableDialog in '..\..\Forms\Report\Report_RemainsOLAPTableDialog.pas' {Report_RemainsOLAPTableDialogForm: TParentForm},
+  Report_GoodsMI_SaleReturnInNotOlap in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInNotOlap.pas' {Report_GoodsMI_SaleReturnInNotOlapForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

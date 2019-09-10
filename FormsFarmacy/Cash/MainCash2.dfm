@@ -297,7 +297,9 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
+        OnSelectionChanged = MainGridDBTableViewSelectionChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.KeyFieldNames = 'Id;PartionDateKindId'
@@ -3050,6 +3052,8 @@ inherited MainCashForm2: TMainCashForm2
     object actEmployeeScheduleUser: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      CancelAction = actBanCash
+      AfterAction = actBanCash
       Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072
       ShortCut = 16468
       FormName = 'TEmployeeScheduleUserForm'
@@ -3264,6 +3268,11 @@ inherited MainCashForm2: TMainCashForm2
       DataSet = cdsInventoryEveryMonth
       BlankName = #1048#1053#1042#1045#1053#1058'_'#1054#1055#1048#1057#1068'_'#1085#1072'_'#1082#1072#1078#1076#1099#1081'_'#1084#1077#1089#1103#1094'.doc'
       FileName = #1048#1053#1042#1045#1053#1058' '#1054#1055#1048#1057#1068' '#1085#1072' '#1082#1072#1078#1076#1099#1081' '#1084#1077#1089#1103#1094'.doc'
+    end
+    object actBanCash: TAction
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = 'actBanCash'
+      OnExecute = actBanCashExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -5040,5 +5049,20 @@ inherited MainCashForm2: TMainCashForm2
     Params = <>
     Left = 528
     Top = 80
+  end
+  object spGet_BanCash: TdsdStoredProc
+    StoredProcName = 'gpGet_EmployeeSchedule_Ban_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outBanCash'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 176
   end
 end

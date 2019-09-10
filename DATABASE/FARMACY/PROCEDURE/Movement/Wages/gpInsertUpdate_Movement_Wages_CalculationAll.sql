@@ -41,10 +41,18 @@ BEGIN
                                     , SummaCalc TFloat
                                     , FormulaCalc TVarChar) ON COMMIT DROP;
 
-    INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
-    SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
-    FROM gpSelect_Calculation_WagesBoard (vbOperDate, 0, '3') AS Calculation
-    WHERE COALESCE (Calculation.UserId, 0) <> 0;
+    IF vbOperDate < '01.09.2019'
+    THEN
+      INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
+      SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
+      FROM gpSelect_Calculation_WagesBoard (vbOperDate, 0, '3') AS Calculation
+      WHERE COALESCE (Calculation.UserId, 0) <> 0;
+    ELSE
+      INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
+      SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
+      FROM gpSelect_Calculation_Wages (vbOperDate, 0, '3') AS Calculation
+      WHERE COALESCE (Calculation.UserId, 0) <> 0;    
+    END IF;
 
       -- ¬останавливаем удаленные
     IF EXISTS(SELECT 1  FROM MovementItem
@@ -120,7 +128,7 @@ BEGIN
                                                    , inUnitId              := Calculation.UnitId
                                                    , inAmount              := COALESCE (Calculation.SummaCalc, 0)
                                                    , inDateCalculation     := Calculation.OperDate
-                                                   , inSummaBase           := Calculation.SummaBase
+                                                   , inSummaBase           := COALESCE (Calculation.SummaBase, 0)
                                                    , inPayrollTypeID       := Calculation.PayrollTypeID
                                                    , inComment             := Calculation.FormulaCalc
                                                    , inSession             := inSession              -- пользователь

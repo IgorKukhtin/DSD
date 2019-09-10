@@ -3,7 +3,7 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -183,6 +183,38 @@ inherited JuridicalForm: TJuridicalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object CBName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072' '#1076#1083#1103' '#1082#1083'. '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'CBName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 122
+          end
+          object CBMFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1076#1083#1103' '#1082#1083'. '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'CBMFO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object CBAccount: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1083'. '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'CBAccount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+          object CBPurposePayment: TcxGridDBColumn
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072' '#1076#1083#1103' '#1082#1083'. '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'CBPurposePayment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

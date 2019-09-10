@@ -1,27 +1,27 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 611
-  ClientWidth = 820
+  ClientWidth = 821
   AddOnFormData.PUSHMessage = actPUSHInfo
-  ExplicitWidth = 836
+  ExplicitWidth = 837
   ExplicitHeight = 649
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 151
-    Width = 820
-    Height = 460
+    Top = 189
+    Width = 821
+    Height = 422
     ExplicitTop = 151
     ExplicitWidth = 820
     ExplicitHeight = 460
-    ClientRectBottom = 460
-    ClientRectRight = 820
+    ClientRectBottom = 422
+    ClientRectRight = 821
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 820
       ExplicitHeight = 436
       inherited cxGrid: TcxGrid
-        Width = 820
-        Height = 436
+        Width = 821
+        Height = 398
         ExplicitWidth = 820
         ExplicitHeight = 436
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -275,11 +275,11 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 820
-    Height = 125
+    Width = 821
+    Height = 163
     TabOrder = 3
-    ExplicitWidth = 820
-    ExplicitHeight = 125
+    ExplicitWidth = 965
+    ExplicitHeight = 163
     inherited edInvNumber: TcxTextEdit
       Left = 12
       ExplicitLeft = 12
@@ -366,8 +366,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 190
     end
     object edisDeferred: TcxCheckBox
-      Left = 580
-      Top = 60
+      Left = 663
+      Top = 58
       Caption = #1054#1090#1083#1086#1078#1077#1085
       TabOrder = 12
       Width = 70
@@ -383,6 +383,16 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.ReadOnly = True
       TabOrder = 14
       Width = 149
+    end
+    object cbDifferent: TcxCheckBox
+      Left = 12
+      Top = 133
+      Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+      Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 15
+      Width = 133
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -402,15 +412,15 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 156
   end
   object edComment: TcxTextEdit [4]
-    Left = 656
-    Top = 60
+    Left = 202
+    Top = 137
     Properties.ReadOnly = False
     TabOrder = 8
-    Width = 156
+    Width = 609
   end
   object cxLabel7: TcxLabel [5]
-    Left = 656
-    Top = 45
+    Left = 202
+    Top = 122
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxLabel8: TcxLabel [6]
@@ -429,7 +439,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 174
+    Width = 250
   end
   object cxLabel9: TcxLabel [8]
     Left = 12
@@ -1201,6 +1211,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edOrderSummComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDifferent'
+        Value = Null
+        Component = cbDifferent
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1279,6 +1296,14 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDifferent'
+        Value = Null
+        Component = cbDifferent
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1310,6 +1335,9 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = cbDifferent
       end>
     Left = 232
     Top = 193

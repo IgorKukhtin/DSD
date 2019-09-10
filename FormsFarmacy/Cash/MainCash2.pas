@@ -401,6 +401,8 @@ type
     cdsInventoryEveryMonth: TClientDataSet;
     N33: TMenuItem;
     N34: TMenuItem;
+    spGet_BanCash: TdsdStoredProc;
+    actBanCash: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -515,6 +517,11 @@ type
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
     procedure actWagesUserExecute(Sender: TObject);
+    procedure actBanCashExecute(Sender: TObject);
+    procedure MainGridDBTableViewSelectionChanged(
+      Sender: TcxCustomGridTableView);
+    procedure MainGridDBTableViewCanFocusRecord(Sender: TcxCustomGridTableView;
+      ARecord: TcxCustomGridRecord; var AAllow: Boolean);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -532,8 +539,8 @@ type
     VipCDS, VIPListCDS: TClientDataSet;
     VIPForm: TParentForm;
     // для мигания кнопки
-    fBlinkVIP, fBlinkCheck : Boolean;
-    time_onBlink, time_onBlinkCheck :TDateTime;
+    fBlinkVIP, fBlinkCheck, fBanCash : Boolean;
+    time_onBlink, time_onBlinkCheck, time_onBanCash :TDateTime;
     MovementId_BlinkVIP:String;
     FSaveCheckToMemData: boolean;
     FShowMessageCheckConnection: boolean;
@@ -547,6 +554,7 @@ type
 
     procedure SetBlinkVIP (isRefresh : boolean);
     procedure SetBlinkCheck (isRefresh : boolean);
+    procedure SetBanCash (isRefresh : boolean);
 
     procedure SetSoldRegim(const Value: boolean);
     // процедура обновляет параметры для введения нового чека
@@ -1717,6 +1725,12 @@ begin
   else ActiveControl := lcName;
 end;
 
+procedure TMainCashForm2.actBanCashExecute(Sender: TObject);
+begin
+  inherited;
+  SetBanCash (True);
+end;
+
 procedure TMainCashForm2.actListDiffAddGoodsExecute(Sender: TObject);
 begin
 
@@ -1917,6 +1931,12 @@ begin
   if (FormParams.ParamByName('CheckId').Value = 0) and (FormParams.ParamByName('SiteDiscount').Value > 0) then
   begin
     ShowMessage('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
+    Exit;
+  end;
+
+  if not gc_User.Local and fBanCash then
+  begin
+    ShowMessage('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
     Exit;
   end;
 
@@ -4058,6 +4078,7 @@ begin
   EmployeeWorkLog_LogIn;
   SetBlinkVIP (true);
   SetBlinkCheck (true);
+  SetBanCash (true);
   TimerBlinkBtn.Enabled := true;
   FNeedFullRemains := true;
   TimerServiceRun.Enabled := true;
@@ -4842,6 +4863,16 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.MainGridDBTableViewCanFocusRecord(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  var AAllow: Boolean);
+begin
+  inherited;
+
+  if AAllow and not gc_User.Local and fBanCash then
+     ShowMessage('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+end;
+
 procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
@@ -4872,6 +4903,13 @@ begin
 
   Cnt := Sender.ViewInfo.RecordsViewInfo.VisibleCount;
   Sender.Controller.TopRecordIndex := Sender.Controller.FocusedRecordIndex - Round((Cnt+1)/2);
+end;
+
+procedure TMainCashForm2.MainGridDBTableViewSelectionChanged(
+  Sender: TcxCustomGridTableView);
+begin
+  inherited;
+
 end;
 
 // процедура обновляет параметры для введения нового чека
@@ -6352,6 +6390,7 @@ begin
 
   SetBlinkVIP (false);
   SetBlinkCheck (false);
+  SetBanCash (false);
 
 
   if fBlinkVIP = true
@@ -6438,6 +6477,24 @@ begin
 
   except
         Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+  end;
+end;
+
+procedure TMainCashForm2.SetBanCash (isRefresh : boolean);
+begin
+  if gc_User.Local then Exit;   // только 2 форма
+  // если прошло > 50 сек - захардкодил
+  if ((now - time_onBanCash) > 0.003) and (fBanCash = True) or (isRefresh = true) then
+
+  try
+      //сохранили время "последней" обработки
+      time_onBanCash:= now;
+
+      //Получили статус не отметился
+      spGet_BanCash.Execute;
+      fBanCash := spGet_BanCash.ParamByName('outBanCash').Value;
+  except
+    fBanCash := True;
   end;
 end;
 
