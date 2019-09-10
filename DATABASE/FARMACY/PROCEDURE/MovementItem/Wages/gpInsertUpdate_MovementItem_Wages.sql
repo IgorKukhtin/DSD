@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_Wages()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages(INTEGER, INTEGER, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages(Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages(Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUserId              Integer   , -- Сотрудник
+    IN inUnitId              Integer   , -- подразделение
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -47,6 +49,7 @@ BEGIN
                                              , inMovementId          := inMovementId          -- ключ Документа
                                              , inUserWagesId         := inUserId              -- сотрудник
                                              , inUserId              := vbUserId              -- пользователь
+                                             , inUnitId              := inUnitId              -- подразделение
                                                );
 
     --

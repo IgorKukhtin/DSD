@@ -501,14 +501,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
-				<Form>BankAccountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
-				<Form>BankAccountEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Bank.pas">
 				<Form>BankForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2587,6 +2579,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas">
 				<Form>EmployeeScheduleEditUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
