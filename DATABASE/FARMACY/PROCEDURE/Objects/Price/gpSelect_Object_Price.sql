@@ -224,7 +224,7 @@ BEGIN
                                 FROM Container
                                      LEFT JOIN tmpDeferredSend ON tmpDeferredSend.Id = Container.Id
                                 WHERE Container.descid = zc_Container_Count() 
-                                  AND Amount <> 0
+                                  AND Container.Amount <> 0
                                   AND Container.WhereObjectId = inUnitId
                                   AND (Container.objectid = inGoodsId OR inGoodsId = 0)
                                 GROUP BY Container.ObjectId, Container.Id
