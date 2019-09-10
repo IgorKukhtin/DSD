@@ -7,21 +7,21 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 141
+    Top = 176
     Width = 1081
-    Height = 375
+    Height = 340
     ExplicitTop = 141
-    ExplicitWidth = 1054
+    ExplicitWidth = 1081
     ExplicitHeight = 375
-    ClientRectBottom = 375
+    ClientRectBottom = 340
     ClientRectRight = 1081
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1054
+      ExplicitWidth = 1081
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
         Width = 1081
-        Height = 351
-        ExplicitWidth = 1054
+        Height = 316
+        ExplicitWidth = 1081
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -661,10 +661,10 @@
   end
   inherited DataPanel: TPanel
     Width = 1081
-    Height = 115
+    Height = 150
     TabOrder = 3
-    ExplicitWidth = 1054
-    ExplicitHeight = 115
+    ExplicitWidth = 1081
+    ExplicitHeight = 150
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -985,14 +985,26 @@
       Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
     end
     object cbDifferent: TcxCheckBox
-      Left = 973
-      Top = 88
+      Left = 8
+      Top = 124
       Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
-      Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+      Caption = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       ParentShowHint = False
       ShowHint = True
       TabOrder = 38
-      Width = 108
+      Width = 137
+    end
+    object cxLabel18: TcxLabel
+      Left = 215
+      Top = 109
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object edComment: TcxTextEdit
+      Left = 215
+      Top = 124
+      Properties.ReadOnly = False
+      TabOrder = 40
+      Width = 824
     end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
@@ -2502,6 +2514,13 @@
         Component = cbDifferent
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 280
@@ -2628,6 +2647,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2682,6 +2709,7 @@
         Control = cbDifferent
       end
       item
+        Control = edComment
       end
       item
       end
