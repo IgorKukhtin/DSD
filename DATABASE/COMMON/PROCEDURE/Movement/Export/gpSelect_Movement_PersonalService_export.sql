@@ -110,30 +110,47 @@ BEGIN
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-95, '');
 	-- Дата документа
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-90, 'DATE_DOC='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
-	-- Дата валютирования
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-85, 'VALUE_DATE='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
 	-- Номер документа
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-80, 'NUM_DOC='||inInvNumber);
-	-- МФО банка плтельщика
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-75, 'PAYER_BANK_MFO=307123');
-	-- Счет списания
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-70, 'PAYER_ACCOUNT=26007010192834');
-	-- Сумма зачисления
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-65, 'AMOUNT='||ROUND(inAmount::numeric, 2));
-	-- Счет банка плательщика
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_ACCOUNT=29244006');
-	-- Тип документа импорта
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-55, 'ONFLOW_TYPE=Виплата заробітної плати');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-85, 'NUM_DOC='||inInvNumber);
 	-- Наименование клиента
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-50, 'CLN_NAME=ТОВ "АЛАН"');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-80, 'CLN_NAME=ТОВ "АЛАН"');
 	-- Код ЕГРПОУ клиента
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-45, 'CLN_OKPO=24447183');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-75, 'CLN_OKPO=24447183');
+	-- Счет списания
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-70, 'PAYER_ACCOUNT=UA823071230000026007010192834'); -- 26007010192834
+	-- МФО банка плтельщика
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-68, 'PAYER_BANK_MFO=307123');
+	-- найменування обслуговуючого банку
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_NAME=ПАТ "БАНК ВОСТОК"');
+
+        -- номер рахунка клiєнта для списання комiсiї за РКО
+      --INSERT INTO _tmpResult (NPP, RowData) VALUES (-46, 'PAYER_COMMISSION_ACCOUNT=UA823071230000026007010192834');
+	-- код МФО обслуговуючого банку, в якому вiдкрито зазначений в полi PAYER_COMMISSION_ACCOUNT рахунок
+      --INSERT INTO _tmpResult (NPP, RowData) VALUES (-45, 'PAYER_COMMISSION_BANK_MFO=307123');
+	-- найменування обслуговуючого банку, в якому вiдкрито зазначений в полi PAYER_COMMISSION_ACCOUNT рахунок
+      --INSERT INTO _tmpResult (NPP, RowData) VALUES (-44, 'PAYER_COMMISSION_BANK_NAME=ПАТ "БАНК ВОСТОК"');
+	
+	-- Тип документа импорта
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-41, 'ONFLOW_TYPE=Виплата заробітної плати');
+
+	-- Сумма зачисления
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-35, 'AMOUNT='||ROUND(inAmount::numeric, 2));
+	-- Дата валютирования
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-25, 'VALUE_DATE='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
+	-- Счет банка плательщика
+	-- INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_ACCOUNT=29244006');
 	-- Период начисления
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-40, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
+     -- INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD=0' || EXTRACT (MONTH FROM CURRENT_DATE) :: TVarChar || ',' || EXTRACT (YEAR FROM CURRENT_DATE) :: TVarChar);
+	
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
-	FOR r IN (SELECT gpSelect.card, gpSelect.personalname, gpSelect.inn, COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
+	FOR r IN (-- SELECT gpSelect.card
+	          SELECT substring( gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) AS card
+	               , gpSelect.personalname
+	               , gpSelect.inn
+	               , COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
 	         )
 	LOOP
@@ -238,4 +255,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_export (4989071, '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_export (14377537, '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());

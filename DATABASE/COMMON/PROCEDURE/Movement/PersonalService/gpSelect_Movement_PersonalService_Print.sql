@@ -519,7 +519,8 @@ BEGIN
                                 AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
                              )
      , tmpMIContainer_pay AS (SELECT -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                     SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                     SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance(), zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance(), zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
                                    , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    , tmpContainer_pay.MemberId
                                    , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
@@ -674,6 +675,7 @@ BEGIN
              - tmpAll.SummCardSecond
              - tmpAll.SummCardSecondCash
              - COALESCE (tmpMIContainer_pay.Amount_avance, 0)
+             - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
               ) :: TFloat AS AmountCash
 
@@ -702,7 +704,8 @@ BEGIN
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
 
-            , tmpMIContainer_pay.Amount_avance  :: TFloat AS Amount_avance
+            , ( 1 * tmpMIContainer_pay.Amount_avance)      :: TFloat AS Amount_avance
+            , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
 
             , tmpAll.Comment
@@ -754,8 +757,9 @@ BEGIN
           OR 0 <> tmpAll.SummAddOth
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
-          OR tmpMIContainer_pay.Amount_avance  <> 0
-          OR tmpMIContainer_pay.Amount_service <> 0
+          OR tmpMIContainer_pay.Amount_avance      <> 0
+          OR tmpMIContainer_pay.Amount_avance_ret  <> 0
+          OR tmpMIContainer_pay.Amount_service     <> 0
        ORDER BY Object_Personal.ValueData
       ;
 

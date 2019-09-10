@@ -92,6 +92,16 @@ type
     bbPrintArticleLoss: TdxBarButton;
     Amount_Send_pl: TcxGridDBColumn;
     cbComment: TcxCheckBox;
+    BranchCode_from: TcxGridDBColumn;
+    BranchName_from: TcxGridDBColumn;
+    UnitCode_from: TcxGridDBColumn;
+    UnitName_from: TcxGridDBColumn;
+    PositionName_from: TcxGridDBColumn;
+    BranchCode_to: TcxGridDBColumn;
+    BranchName_to: TcxGridDBColumn;
+    UnitCode_to: TcxGridDBColumn;
+    UnitName_to: TcxGridDBColumn;
+    PositionName_to: TcxGridDBColumn;
     actPrintComment: TdsdPrintAction;
     bbPrintComment: TdxBarButton;
   private

@@ -42,7 +42,6 @@ $BODY$
    DECLARE vbChildKeyValue BigInt;
 
    DECLARE vbLock Integer;
-   DECLARE vbSec Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
      -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
@@ -159,16 +158,16 @@ BEGIN
      THEN
          -- так определяется дополнительное поле (для оптимизации)
          vbWhereObjectId:= (SELECT CASE WHEN inDescId_1 = zc_ContainerLinkObject_Unit() THEN inObjectId_1
-                                        WHEN inDescId_2 = zc_ContainerLinkObject_Unit() THEN inObjectId_2
-                                        WHEN inDescId_3 = zc_ContainerLinkObject_Unit() THEN inObjectId_3
-                                        WHEN inDescId_4 = zc_ContainerLinkObject_Unit() THEN inObjectId_4
-                                        WHEN inDescId_5 = zc_ContainerLinkObject_Unit() THEN inObjectId_5
-                                        WHEN inDescId_6 = zc_ContainerLinkObject_Unit() THEN inObjectId_6
-                                        WHEN inDescId_7 = zc_ContainerLinkObject_Unit() THEN inObjectId_7
-                                        WHEN inDescId_8 = zc_ContainerLinkObject_Unit() THEN inObjectId_8
-                                        WHEN inDescId_9 = zc_ContainerLinkObject_Unit() THEN inObjectId_9
-                                        WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
-                                   END);
+                                       WHEN inDescId_2 = zc_ContainerLinkObject_Unit() THEN inObjectId_2
+                                       WHEN inDescId_3 = zc_ContainerLinkObject_Unit() THEN inObjectId_3
+                                       WHEN inDescId_4 = zc_ContainerLinkObject_Unit() THEN inObjectId_4
+                                       WHEN inDescId_5 = zc_ContainerLinkObject_Unit() THEN inObjectId_5
+                                       WHEN inDescId_6 = zc_ContainerLinkObject_Unit() THEN inObjectId_6
+                                       WHEN inDescId_7 = zc_ContainerLinkObject_Unit() THEN inObjectId_7
+                                       WHEN inDescId_8 = zc_ContainerLinkObject_Unit() THEN inObjectId_8
+                                       WHEN inDescId_9 = zc_ContainerLinkObject_Unit() THEN inObjectId_9
+                                       WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
+                                  END);
 
          -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
          IF zc_IsLockTable() = TRUE
@@ -223,26 +222,12 @@ BEGIN
                     vbLock := 0;
                  EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
-                                      vbSec:= CASE WHEN 0 <> SUBSTR (vbContainerId :: TVarChar,  0 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                        THEN SUBSTR (vbContainerId :: TVarChar,  0 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                        THEN SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -2 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                        THEN SUBSTR (vbContainerId :: TVarChar, -2 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -3 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                        THEN SUBSTR (vbContainerId :: TVarChar, -3 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
-                                                   ELSE SUBSTR (vbContainerId :: TVarChar, 1, 1) :: Integer
-                                               END;
-                                      --
                                       IF vbLock <= 5
                                       THEN PERFORM pg_sleep (zc_IsLockTableSecond());
-
                                       ELSE IF vbLock <= 10
-                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
-
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, LENGTH (vbContainerId :: TVarChar)) :: Integer);
                                       ELSE IF vbLock <= 15
-                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
-
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar)) :: Integer);
                                       ELSE RAISE EXCEPTION 'Deadlock <%>', vbContainerId;
                                       END IF;
                                       END IF;

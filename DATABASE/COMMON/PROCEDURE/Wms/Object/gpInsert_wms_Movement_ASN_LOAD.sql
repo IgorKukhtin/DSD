@@ -42,8 +42,8 @@ BEGIN
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
         WITH tmpMI AS (SELECT -- ШК груза (EAN-128)
-                              --COALESCE (Object_BarCodeBox.ValueData, '') AS name
-                              COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar AS name
+                              COALESCE (Object_BarCodeBox.ValueData, '') AS name
+                              --COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar AS name
                               -- ID товара 
                             , MI.sku_id
                               -- Количество WMS

@@ -32,6 +32,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ProfitLossCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar
              , ProfitLossName_All TVarChar
              , Comment TVarChar
+             , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
+             , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
              )
 AS
 $BODY$
@@ -60,8 +62,13 @@ BEGIN
     -- Результат
     RETURN QUERY
 
-     WITH -- Ограничения по товару
-          _tmpGoods AS -- (GoodsId, MeasureId, Weight)
+     WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                               , lfSelect.UnitId
+                               , lfSelect.PositionId
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                         )
+          -- Ограничения по товару
+        , _tmpGoods AS -- (GoodsId, MeasureId, Weight)
           (SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
@@ -316,6 +323,18 @@ BEGIN
          , View_ProfitLoss.ProfitLossName_all
          , tmpOperationGroup.Comment  :: TVarChar
 
+         , Object_Branch_from.ObjectCode  AS BranchCode_from
+         , Object_Branch_from.ValueData   AS BranchName_from
+         , Object_Unit_from.ObjectCode    AS UnitCode_from
+         , Object_Unit_from.ValueData     AS UnitName_from
+         , Object_Position_from.ValueData AS PositionName_from
+
+         , Object_Branch_to.ObjectCode  AS BranchCode_to
+         , Object_Branch_to.ValueData   AS BranchName_to
+         , Object_Unit_to.ObjectCode    AS UnitCode_to
+         , Object_Unit_to.ValueData     AS UnitName_to
+         , Object_Position_to.ValueData AS PositionName_to
+
      FROM (SELECT tmpContainer.ArticleLossId
                 , tmpContainer.ContainerId_Analyzer
                 , tmpContainer.UnitId
@@ -418,6 +437,30 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_from
+                               ON ObjectLink_Personal_Member_from.ObjectId = tmpOperationGroup.UnitId
+                              AND ObjectLink_Personal_Member_from.DescId   = zc_ObjectLink_Personal_Member()
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_to
+                               ON ObjectLink_Personal_Member_to.ObjectId = tmpOperationGroup.UnitId_by
+                              AND ObjectLink_Personal_Member_to.DescId   = zc_ObjectLink_Personal_Member()
+
+          LEFT JOIN tmpPersonal AS tmpPersonal_from ON tmpPersonal_from.MemberId = COALESCE (ObjectLink_Personal_Member_from.ChildObjectId, tmpOperationGroup.UnitId)
+          LEFT JOIN tmpPersonal AS tmpPersonal_to   ON tmpPersonal_to.MemberId   = COALESCE (ObjectLink_Personal_Member_to.ChildObjectId,   tmpOperationGroup.UnitId_by)
+          LEFT JOIN Object AS Object_Position_from ON Object_Position_from.Id = tmpPersonal_from.PositionId
+          LEFT JOIN Object AS Object_Unit_from     ON Object_Unit_from.Id     = tmpPersonal_from.UnitId
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_from
+                               ON ObjectLink_Unit_Branch_from.ObjectId = Object_Unit_from.Id
+                              AND ObjectLink_Unit_Branch_from.DescId   = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch_from ON Object_Branch_from.Id = ObjectLink_Unit_Branch_from.ChildObjectId
+
+          LEFT JOIN Object AS Object_Position_to ON Object_Position_to.Id = tmpPersonal_to.PositionId
+          LEFT JOIN Object AS Object_Unit_to     ON Object_Unit_to.Id     = tmpPersonal_to.UnitId
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_to
+                               ON ObjectLink_Unit_Branch_to.ObjectId = Object_Unit_to.Id
+                              AND ObjectLink_Unit_Branch_to.DescId   = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch_to ON Object_Branch_to.Id = ObjectLink_Unit_Branch_to.ChildObjectId
+
   ;
 
 END;

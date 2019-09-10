@@ -49,13 +49,13 @@ BEGIN
                                , COALESCE (tmp.WeightMax, 0) AS WeightMax
                                , COALESCE (tmp.WeightAvg, 0) AS WeightAvg
                                  -- размеры 1-ой ед.
-                               , COALESCE (tmp.Height, 0)    AS Height
-                               , COALESCE (tmp.Length, 0)    AS Length
-                               , COALESCE (tmp.Width, 0)     AS Width
+                               , CASE WHEN tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.01 ELSE COALESCE (tmp.Height, 0) END AS Height
+                               , CASE WHEN tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.01 ELSE COALESCE (tmp.Length, 0) END AS Length
+                               , CASE WHEN tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.01 ELSE COALESCE (tmp.Width, 0)  END AS Width
                                  -- Ящик (E2/E3)
                                , COALESCE (tmp.GoodsPropertyBoxId, 0) AS GoodsPropertyBoxId
                                , COALESCE (tmp.BoxId, 0) AS BoxId, COALESCE (tmp.BoxCode, 0) AS BoxCode, COALESCE (tmp.BoxName, '') AS BoxName
-                               , COALESCE (tmp.WeightOnBox, 0)    AS WeightOnBox               -- Кол-во кг. в ящ. (E2/E3)
+                               , COALESCE (tmp.WeightOnBox, 0)    AS WeightOnBox              -- Кол-во кг. в ящ. (E2/E3)
                                , COALESCE (tmp.CountOnBox, 0)     AS CountOnBox               -- Кол-во ед. в ящ. (E2/E3)
                                , COALESCE (tmp.BoxVolume, 0)      AS BoxVolume                -- Объем ящ., м3. (E2/E3)
                                , COALESCE (tmp.BoxWeight, 0)      AS BoxWeight                -- Вес самогно ящ. (E2/E3)
@@ -88,11 +88,11 @@ BEGIN
                                -- Остается пустым, т.к. нет прима палетными нормами
                                , 0                   :: Integer  AS layer_qty
                                -- Ширина упаковки (см)
-                               , tmpGoods.Width      :: Integer  AS width
+                               , tmpGoods.Width      :: TFloat   AS width
                                -- Длина упаковки (см)
-                               , tmpGoods.Length     :: Integer  AS length
+                               , tmpGoods.Length     :: TFloat   AS length
                                -- Высота упаковки (см)
-                               , tmpGoods.Height     :: Integer  AS height
+                               , tmpGoods.Height     :: TFloat   AS height
                                -- Вес упаковки (кг)
                                , 0                   :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
@@ -123,11 +123,11 @@ BEGIN
                                -- Остается пустым, т.к. нет прима палетными нормами
                                , 0                   :: Integer  AS layer_qty
                                -- Ширина упаковки (см)
-                               , tmpGoods.BoxWidth   :: Integer  AS width
+                               , tmpGoods.BoxWidth   :: TFloat   AS width
                                -- Длина упаковки (см)
-                               , tmpGoods.BoxLength  :: Integer  AS length
+                               , tmpGoods.BoxLength  :: TFloat   AS length
                                -- Высота упаковки (см)
-                               , tmpGoods.BoxHeight  :: Integer  AS height
+                               , tmpGoods.BoxHeight  :: TFloat   AS height
                                -- Вес упаковки (кг)
                                , tmpGoods.BoxWeight  :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
