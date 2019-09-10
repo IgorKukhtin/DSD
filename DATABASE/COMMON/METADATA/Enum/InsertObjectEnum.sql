@@ -69,6 +69,9 @@ BEGIN
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
 
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_EndDateOlapSR(),  inDescId:= zc_Object_GlobalConst(), inCode:= 111, inName:= 'До какой даты сформированы данные Олап Продажа/возврат', inEnumName:= 'zc_Enum_GlobalConst_EndDateOlapSR');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ProtocolDateOlapSR(),  inDescId:= zc_Object_GlobalConst(), inCode:= 112, inName:= 'Дата формирования данных Олап Продажа/возврат', inEnumName:= 'zc_Enum_GlobalConst_ProtocolDateOlapSR');
+
 END $$;
 
 /*
