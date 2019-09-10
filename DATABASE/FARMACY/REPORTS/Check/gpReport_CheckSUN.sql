@@ -24,13 +24,13 @@ RETURNS TABLE (MovementId    Integer
              , Amount        TFloat
              , AmountSend_In  TFloat
              , AmountSend_Out TFloat
-             , PriceSale     TFloat
-             , PriceSend_In  TFloat
-             , PriceSend_Out TFloat
-             , SumSale       TFloat
-             , SumSend_In    TFloat
-             , SumSend_Out   TFloat
-
+             , PriceSale      TFloat
+             , PriceSend_In   TFloat
+             , PriceSend_Out  TFloat
+             , SumSale        TFloat
+             , SumSend_In     TFloat
+             , SumSend_Out    TFloat
+             , ExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -91,6 +91,7 @@ BEGIN
       , tmpSUN_Container AS (SELECT MIContainer.ContainerId
                                   , tmpContainer_Check.GoodsId
                                   , tmpContainer_Check.UnitId
+                                  , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                                   , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 THEN MIContainer.Amount ELSE 0 END) AS AmountIn    -- пришло по перемещению
                                   , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 THEN MIContainer.Amount ELSE 0 END) AS AmountOut   -- ушло по перемещению
                              FROM tmpContainer_Check
@@ -105,6 +106,7 @@ BEGIN
                              GROUP BY MIContainer.ContainerId
                                     , tmpContainer_Check.GoodsId
                                     , tmpContainer_Check.UnitId
+                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                              )
         -- текущие цены
       , tmpPrice AS (SELECT tmpGoods.GoodsId               AS GoodsId
@@ -124,27 +126,133 @@ BEGIN
                                                 AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
                     )
 
+      , tmpCLOPartionMovementItem AS (SELECT ContainerlinkObject.ContainerId
+                                           , ContainerlinkObject.ObjectId ::Integer
+                                      FROM ContainerlinkObject
+                                      WHERE ContainerlinkObject.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                        AND ContainerlinkObject.ContainerId IN (SELECT DISTINCT tmpSUN_Container.ContainerId FROM tmpSUN_Container)
+                                      )
       --
-      , tmpCheckSUN AS (SELECT tmpContainer_Check.UnitId
+/*      , tmpCheckSUN AS (SELECT tmpContainer_Check.UnitId
                              , tmpContainer_Check.GoodsId
-                             , tmpContainer_Check.MovementId
-                             , SUM (tmpContainer_Check.Amount)  AS Amount
-                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE (tmpSUN_Container.AmountIn,0) ELSE 0 END)         AS AmountSend_In
-                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE (tmpSUN_Container.AmountOut,0)* (-1) ELSE 0 END)  AS AmountSend_Out
-                             , SUM (tmpContainer_Check.SumSale) AS SumSale
-                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountIn,0) ELSE 0 END)         AS SumSend_In
-                             , SUM (CASE WHEN inisMovement = FALSE THEN COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountOut,0) * (-1) ELSE 0 END) AS SumSend_Out
+                             , COALESCE (tmpContainer_Check.MovementId, tmpSUN_Container.MovementId) AS MovementId
+                             , SUM (tmpContainer_Check.Amount)                      AS Amount
+                             , SUM (COALESCE (tmpSUN_Container.AmountIn,0))         AS AmountSend_In
+                             , SUM (COALESCE (tmpSUN_Container.AmountOut,0)* (-1))  AS AmountSend_Out
+                             , SUM (tmpContainer_Check.SumSale)                     AS SumSale
+                             , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountIn,0))         AS SumSend_In
+                             , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountOut,0) * (-1)) AS SumSend_Out
+                             
+                             , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) ::TDateTime AS ExpirationDate
                         FROM tmpSUN_Container
                              INNER JOIN tmpContainer_Check ON tmpContainer_Check.ContainerId = tmpSUN_Container.ContainerId
 
                              LEFT JOIN tmpPrice AS Object_Price
                                                 ON Object_Price.GoodsId = tmpSUN_Container.GoodsId
                                                AND Object_Price.UnitId  = tmpSUN_Container.UnitId
+
+                            LEFT JOIN tmpCLOPartionMovementItem AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.ContainerId = tmpSUN_Container.ContainerId
+                                                               --AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId-- ::Integer
+                            -- элемент прихода
+                            LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode ::Integer
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                       
+                            LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                         GROUP BY tmpContainer_Check.UnitId
                                , tmpContainer_Check.GoodsId
                                , tmpContainer_Check.MovementId
+                               --, COALESCE ( MIDate_ExpirationDate.ValueData, zc_DateEnd())
                        )
-                 
+*/
+      , tmpExpirationDate AS (SELECT tmp.ContainerId
+                                   , (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) ::TDateTime AS ExpirationDate
+                              FROM (SELECT DISTINCT tmpSUN_Container.ContainerId FROM tmpSUN_Container) AS tmp
+                                   LEFT JOIN tmpCLOPartionMovementItem AS ContainerLinkObject_MovementItem
+                                                                       ON ContainerLinkObject_MovementItem.ContainerId = tmp.ContainerId
+                                                                      --AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                   LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId-- ::Integer
+                                   -- элемент прихода
+                                   LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode ::Integer
+                                   -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                               ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                   -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                   LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                              
+                                   LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                              ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                              )
+
+      , tmpCheckSUN AS (SELECT tmp.UnitId
+                             , tmp.GoodsId
+                             , tmp.MovementId
+                             , SUM (COALESCE( tmp.Amount,0))         AS Amount
+                             , SUM (COALESCE (tmp.AmountSend_In,0))  AS AmountSend_In
+                             , SUM (COALESCE (tmp.AmountSend_Out,0)) AS AmountSend_Out
+                             , SUM (COALESCE( tmp.SumSale,0))        AS SumSale
+                             , SUM (COALESCE(tmp.SumSend_In,0))      AS SumSend_In
+                             , SUM (COALESCE(tmp.SumSend_Out,0))     AS SumSend_Out
+                             , (tmp.ExpirationDate)  ::TDateTime AS ExpirationDate
+                        FROM
+                             (SELECT tmpContainer_Check.UnitId
+                                   , tmpContainer_Check.GoodsId
+                                   , tmpSUN_Container.MovementId
+                                   , 0                                                    AS Amount
+                                   , SUM (COALESCE (tmpSUN_Container.AmountIn,0))         AS AmountSend_In
+                                   , SUM (COALESCE (tmpSUN_Container.AmountOut,0)* (-1))  AS AmountSend_Out
+                                   , 0                                                    AS SumSale
+                                   , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountIn,0))         AS SumSend_In
+                                   , SUM (COALESCE(Object_Price.Price,0) * COALESCE (tmpSUN_Container.AmountOut,0) * (-1)) AS SumSend_Out
+                                   , (tmpExpirationDate.ExpirationDate) ::TDateTime AS ExpirationDate
+                              FROM tmpSUN_Container
+                                   INNER JOIN tmpContainer_Check ON tmpContainer_Check.ContainerId = tmpSUN_Container.ContainerId
+      
+                                   LEFT JOIN tmpPrice AS Object_Price
+                                                      ON Object_Price.GoodsId = tmpSUN_Container.GoodsId
+                                                     AND Object_Price.UnitId  = tmpSUN_Container.UnitId
+      
+                                  LEFT JOIN tmpExpirationDate ON tmpExpirationDate.ContainerId = tmpSUN_Container.ContainerId
+      
+                              GROUP BY tmpContainer_Check.UnitId
+                                     , tmpContainer_Check.GoodsId
+                                     , tmpSUN_Container.MovementId
+                                     , (tmpExpirationDate.ExpirationDate)
+                           UNION 
+                              SELECT tmpContainer_Check.UnitId
+                                   , tmpContainer_Check.GoodsId
+                                   , tmpContainer_Check.MovementId
+                                   , SUM (tmpContainer_Check.Amount)  AS Amount
+                                   , 0                                AS AmountSend_In
+                                   , 0                                AS AmountSend_Out
+                                   , SUM (tmpContainer_Check.SumSale) AS SumSale
+                                   , 0                                AS SumSend_In
+                                   , 0                                AS SumSend_Out
+                                   , (tmpExpirationDate.ExpirationDate) ::TDateTime AS ExpirationDate
+                              FROM tmpContainer_Check
+                                   LEFT JOIN tmpExpirationDate ON tmpExpirationDate.ContainerId = tmpContainer_Check.ContainerId
+                              WHERE tmpContainer_Check.ContainerId IN (SELECT DISTINCT tmpSUN_Container.ContainerId FROM tmpSUN_Container)
+                              GROUP BY tmpContainer_Check.UnitId
+                                     , tmpContainer_Check.GoodsId
+                                     , tmpContainer_Check.MovementId
+                                     , (tmpExpirationDate.ExpirationDate)
+                              ) AS tmp
+                        GROUP BY tmp.UnitId
+                               , tmp.GoodsId
+                               , tmp.MovementId
+                               , (tmp.ExpirationDate)
+                       )
+ 
         -- результат
         SELECT Movement.Id              AS MovementId
              , Movement.OperDate        AS OperDate
@@ -164,6 +272,7 @@ BEGIN
              , tmpData.SumSale     ::TFloat
              , tmpData.SumSend_In  ::TFloat
              , tmpData.SumSend_Out ::TFloat
+             , tmpData.ExpirationDate ::TDateTime
  
         FROM tmpCheckSUN AS tmpData 
              LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpData.UnitId
