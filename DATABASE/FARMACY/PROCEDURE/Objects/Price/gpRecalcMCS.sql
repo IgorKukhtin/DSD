@@ -165,8 +165,8 @@ BEGIN
            WHERE MIContainer.WhereObjectId_analyzer = inUnitId
              AND MIContainer.MovementDescId = zc_Movement_Check()
              AND MIContainer.DescId = zc_MIContainer_Count()   
-             AND MIContainer.OperDate >= DATE_TRUNC('day', CURRENT_DATE - inPeriod - 1)
-             AND MIContainer.OperDate < DATE_TRUNC('day', CURRENT_DATE - 1)   
+             AND MIContainer.OperDate >= DATE_TRUNC('day', CURRENT_DATE - inPeriod) + CASE WHEN date_part('HOUR',  CURRENT_TIME)::Integer < 12 THEN '0:00'::Time ELSE '12:00'::Time END
+             AND MIContainer.OperDate < DATE_TRUNC('day', CURRENT_DATE) + CASE WHEN date_part('HOUR',  CURRENT_TIME)::Integer < 12 THEN '0:00'::Time ELSE '12:00'::Time END   
              AND COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE
            GROUP BY MIContainer.ObjectId_analyzer   
                   , DATE_PART ('DAY', CURRENT_DATE - MIContainer.OperDate)
@@ -236,6 +236,7 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.  Âîðîáêàëî À.À.  Øàáëèé Î.Â.
+ 11.09.19                                                                      * ïîñëå 12 áðàòü òåêóùèé äåíü äî 12
  23.12.18                                                                      * 
  03.12.18         * 
  24.02.17         *

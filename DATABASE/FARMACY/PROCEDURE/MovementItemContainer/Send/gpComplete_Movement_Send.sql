@@ -27,6 +27,8 @@ $BODY$
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
   DECLARE vbisDefSUN      Boolean;
+  DECLARE vbisSUN      Boolean;
+  DECLARE vbisReceived Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -42,13 +44,19 @@ BEGIN
         Movement.InvNumber,
         Movement_From.ObjectId AS Unit_From,
         Movement_To.ObjectId AS Unit_To,
-        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
+        COALESCE (MovementBoolean_SUN.ValueData, FALSE),
+        COALESCE (MovementBoolean_Received.ValueData, FALSE)
+        
     INTO
         outOperDate,
         vbInvNumber,
         vbUnit_From,
         vbUnit_To,
-        vbisDefSUN
+        vbisDefSUN,
+        vbisSUN,
+        vbisReceived
+
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -59,6 +67,12 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                   ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                  ON MovementBoolean_Received.MovementId = Movement.Id
+                                 AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
     WHERE Movement.Id = inMovementId;
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -85,6 +99,12 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. Коллеги, отложенные переиещение по СУН проводить нельзя.';
     END IF;
+    
+    IF COALESCE (vbisSUN, FALSE) = True AND COALESCE (vbisReceived, False) = False
+    THEN
+      RAISE EXCEPTION 'Ошибка. Коллеги, переиещение по СУН можно проводить тллько с признаком "Получено-да".';
+    END IF;
+    
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение

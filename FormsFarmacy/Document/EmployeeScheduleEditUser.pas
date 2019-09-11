@@ -63,6 +63,9 @@ type
     Day: TcxGridDBColumn;
     actUnitChoice: TOpenChoiceForm;
     isSubstitution: TcxGridDBColumn;
+    actDelUserDay: TdsdExecStoredProc;
+    dxBarButton7: TdxBarButton;
+    spDelUserDay: TdsdStoredProc;
   private
     { Private declarations }
   public

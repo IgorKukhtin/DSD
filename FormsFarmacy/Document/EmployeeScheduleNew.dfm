@@ -749,6 +749,21 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actDeleteUser: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelUser
+      StoredProcList = <
+        item
+          StoredProc = spDelUser
+        end>
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -884,11 +899,15 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton4'
+          ItemName = 'dxBarButton8'
         end
         item
           Visible = True
@@ -964,6 +983,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
     object dxBarButton7: TdxBarButton
       Action = actUpdate
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actDeleteUser
       Category = 0
     end
   end
@@ -1499,5 +1522,30 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     TemplateColumn = ValueEnd
     Left = 800
     Top = 256
+  end
+  object spDelUser: TdsdStoredProc
+    StoredProcName = 'gpDelete_MovementItem_EmployeeSchedule_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 353
   end
 end
