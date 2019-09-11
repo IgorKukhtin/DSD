@@ -1,5 +1,5 @@
 inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_OrderForm
-  Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074' '#1080' '#1087#1088#1080#1093#1086#1076#1072'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074'. '#1080' '#1087#1088#1080#1093#1086#1076#1072'>'
   ClientHeight = 445
   ClientWidth = 1176
   AddOnFormData.isSingle = False
@@ -14,19 +14,19 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
     Width = 1176
     Height = 362
     TabOrder = 3
-    ExplicitTop = 99
-    ExplicitWidth = 931
-    ExplicitHeight = 328
+    ExplicitTop = 83
+    ExplicitWidth = 1176
+    ExplicitHeight = 362
     ClientRectBottom = 362
     ClientRectRight = 1176
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 931
-      ExplicitHeight = 328
+      ExplicitWidth = 1176
+      ExplicitHeight = 362
       inherited cxGrid: TcxGrid
         Width = 1176
         Height = 362
-        ExplicitWidth = 931
-        ExplicitHeight = 328
+        ExplicitWidth = 1176
+        ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -427,6 +427,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
     inherited deStart: TcxDateEdit
       Left = 14
       Top = 24
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 14
       ExplicitTop = 24
@@ -436,6 +437,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
     inherited deEnd: TcxDateEdit
       Left = 132
       Top = 24
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 132
       ExplicitTop = 24
@@ -680,8 +682,8 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_ProductionSeparate_CheckPriceDialogForm'
-      FormNameParam.Value = 'TReport_ProductionSeparate_CheckPriceDialogForm'
+      FormName = 'TReport_ProductionUnionTech_OrderDialogForm'
+      FormNameParam.Value = 'TReport_ProductionUnionTech_OrderDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -732,26 +734,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PriceListId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PriceListName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Persent'
-          Value = 'False'
-          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -821,7 +803,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_ProductionSeparate_CheckPrice'
+    StoredProcName = 'gpReport_ProductionUnionTech_Order'
     Params = <
       item
         Name = 'inStartDate'
@@ -854,22 +836,9 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceListId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersent'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 208
+    Left = 192
+    Top = 272
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -940,8 +909,8 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 72
-    Top = 176
+    Left = 24
+    Top = 320
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

@@ -29,11 +29,6 @@ type
     cxLabel8: TcxLabel;
     edToGroup: TcxButtonEdit;
     GuidesTo: TdsdGuides;
-    edPriceList: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GuidesPriceList: TdsdGuides;
-    cePersent: TcxCurrencyEdit;
-    Код: TcxLabel;
   private
     { Private declarations }
   public

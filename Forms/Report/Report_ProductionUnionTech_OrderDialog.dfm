@@ -1,9 +1,9 @@
-﻿object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_OrderDialogForm
+object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_OrderDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074' '#1080' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 277
+  ClientHeight = 242
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 34
-    Top = 225
+    Top = 193
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 225
+    Top = 193
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -96,38 +96,6 @@
     TabOrder = 9
     Width = 308
   end
-  object edPriceList: TcxButtonEdit
-    Left = 11
-    Top = 187
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Text = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-    Width = 308
-  end
-  object cxLabel3: TcxLabel
-    Left = 11
-    Top = 167
-    Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090':'
-  end
-  object cePersent: TcxCurrencyEdit
-    Left = 241
-    Top = 27
-    EditValue = 20.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 12
-    Width = 78
-  end
-  object Код: TcxLabel
-    Left = 241
-    Top = 7
-    Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
-  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -148,7 +116,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 176
-    Top = 230
+    Top = 198
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -201,34 +169,9 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Persent'
-        Value = Null
-        Component = cePersent
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListId'
-        Value = Null
-        Component = GuidesPriceList
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListName'
-        Value = Null
-        Component = GuidesPriceList
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 112
-    Top = 218
+    Top = 186
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -291,36 +234,5 @@
       end>
     Left = 150
     Top = 105
-  end
-  object GuidesPriceList: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPriceList
-    Key = '2707438'
-    TextValue = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-    FormNameParam.Value = 'TPriceList_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPriceList_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '2707438'
-        Component = GuidesPriceList
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-        Component = GuidesPriceList
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 208
-    Top = 171
   end
 end
