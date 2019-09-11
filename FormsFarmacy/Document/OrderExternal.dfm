@@ -11,19 +11,19 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 189
     Width = 821
     Height = 422
-    ExplicitTop = 151
-    ExplicitWidth = 820
-    ExplicitHeight = 460
+    ExplicitTop = 189
+    ExplicitWidth = 821
+    ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 821
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 820
-      ExplicitHeight = 436
+      ExplicitWidth = 821
+      ExplicitHeight = 398
       inherited cxGrid: TcxGrid
         Width = 821
         Height = 398
-        ExplicitWidth = 820
-        ExplicitHeight = 436
+        ExplicitWidth = 821
+        ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -278,7 +278,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 821
     Height = 163
     TabOrder = 3
-    ExplicitWidth = 965
+    ExplicitWidth = 821
     ExplicitHeight = 163
     inherited edInvNumber: TcxTextEdit
       Left = 12
@@ -385,8 +385,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 149
     end
     object cbDifferent: TcxCheckBox
-      Left = 12
-      Top = 133
+      Left = 665
+      Top = 137
       Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       ParentShowHint = False
@@ -412,14 +412,14 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 156
   end
   object edComment: TcxTextEdit [4]
-    Left = 202
+    Left = 12
     Top = 137
     Properties.ReadOnly = False
     TabOrder = 8
-    Width = 609
+    Width = 638
   end
   object cxLabel7: TcxLabel [5]
-    Left = 202
+    Left = 12
     Top = 122
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
