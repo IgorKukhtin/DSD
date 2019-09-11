@@ -136,6 +136,7 @@ type
     cxLabel11: TcxLabel;
     edEndDateOlapSR: TcxDateEdit;
     spGetGlobalConst_DateOlapSR: TdsdStoredProc;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public
