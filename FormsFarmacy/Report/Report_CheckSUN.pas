@@ -50,7 +50,6 @@ type
     bbExecuteDialog: TdxBarButton;
     actRefreshIsPartion: TdsdDataSetRefresh;
     actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
     cbMovement: TcxCheckBox;
     actRefreshMov: TdsdDataSetRefresh;
     cxLabel19: TcxLabel;
@@ -62,6 +61,12 @@ type
     actRefreshList: TdsdDataSetRefresh;
     cbList: TcxCheckBox;
     UnitName: TcxGridDBColumn;
+    actOpenReportPartionDateForm: TdsdOpenForm;
+    actOpenReportPartionHistoryForm: TdsdOpenForm;
+    bbOpenReportPartionDateForm: TdxBarButton;
+    bbOpenReportPartionHistoryForm: TdxBarButton;
+    MultiAction1: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

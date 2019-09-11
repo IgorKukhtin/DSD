@@ -9,21 +9,21 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 107
     Width = 1362
-    Height = 307
+    Height = 280
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1362
     ExplicitHeight = 307
-    ClientRectBottom = 307
+    ClientRectBottom = 280
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 1362
-        Height = 307
+        Height = 280
         ExplicitWidth = 1362
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1080,9 +1080,9 @@
   end
   inherited Panel: TPanel
     Width = 1362
-    Height = 54
+    Height = 81
     ExplicitWidth = 1362
-    ExplicitHeight = 54
+    ExplicitHeight = 81
     inherited deStart: TcxDateEdit
       Left = 60
       Properties.SaveTime = False
@@ -1245,6 +1245,39 @@
       TabOrder = 19
       Width = 120
     end
+    object cxLabel10: TcxLabel
+      Left = 31
+      Top = 58
+      Caption = #1044#1072#1090#1072' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1054#1083#1072#1087' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090' :'
+    end
+    object edProtocolDateOlapSR: TcxDateEdit
+      Left = 315
+      Top = 57
+      EditValue = 42370d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 21
+      Width = 140
+    end
+    object cxLabel11: TcxLabel
+      Left = 470
+      Top = 58
+      Hint = 
+        #1055#1086' '#1082#1072#1082#1091#1102' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1054#1083#1072#1087' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074 +
+        #1088#1072#1090
+      Caption = #1052#1072#1082#1089'. '#1076#1072#1090#1072' '#1076#1072#1085#1085#1099#1093' '#1054#1083#1072#1087' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090' :'
+    end
+    object edEndDateOlapSR: TcxDateEdit
+      Left = 709
+      Top = 57
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 23
+      Width = 85
+    end
   end
   object cbPartner: TcxCheckBox [2]
     Left = 212
@@ -1387,6 +1420,14 @@
           ToParam.ComponentItem = 'isOLAP'
           ToParam.DataType = ftBoolean
           ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spGetGlobalConst_DateOlapSR
+      StoredProcList = <
+        item
+          StoredProc = spGetGlobalConst_DateOlapSR
+        end
+        item
+          StoredProc = spSelect
         end>
       ShortCut = 0
     end
@@ -2372,7 +2413,30 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 816
-    Top = 34
+    Left = 784
+    Top = 10
+  end
+  object spGetGlobalConst_DateOlapSR: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GlobalConst_DateOlapSR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ProtocolDateOlapSR'
+        Value = 'NULL'
+        Component = edProtocolDateOlapSR
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDateOlapSR'
+        Value = 'NULL'
+        Component = edEndDateOlapSR
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 232
   end
 end

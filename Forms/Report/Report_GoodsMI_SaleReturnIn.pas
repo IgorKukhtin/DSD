@@ -131,6 +131,11 @@ type
     Sale_SummReal: TcxGridDBColumn;
     Sale_AmountPartnerR_Weight: TcxGridDBColumn;
     Sale_AmountPartnerR_Sh: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edProtocolDateOlapSR: TcxDateEdit;
+    cxLabel11: TcxLabel;
+    edEndDateOlapSR: TcxDateEdit;
+    spGetGlobalConst_DateOlapSR: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -488,7 +488,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId_Income'
+          ComponentItem = 'MovementId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -516,7 +516,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
           Action = actOpenDocument
         end>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 1
+      ImageIndex = 28
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -712,6 +712,154 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenReportPartionDateForm: TdsdOpenForm
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'>'
+      ImageIndex = 24
+      FormName = 'TReport_GoodsPartionDateForm'
+      FormNameParam.Value = 'TReport_GoodsPartionDateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDetail'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportPartionHistoryForm: TdsdOpenForm
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 25
+      FormName = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.Value = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MultiAction1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+      ShortCut = 115
+    end
   end
   inherited MasterDS: TDataSource
     Top = 136
@@ -811,6 +959,30 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportPartionDateForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportPartionHistoryForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -822,8 +994,16 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbOpenReportPartionDateForm: TdxBarButton
+      Action = actOpenReportPartionDateForm
+      Category = 0
+    end
+    object bbOpenReportPartionHistoryForm: TdxBarButton
+      Action = actOpenReportPartionHistoryForm
+      Category = 0
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = mactOpenDocument
       Category = 0
     end
   end
@@ -944,7 +1124,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
         Name = 'inMovementId'
         Value = ''
         Component = MasterCDS
-        ComponentItem = 'MovementId_Income'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
