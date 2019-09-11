@@ -1066,14 +1066,14 @@ object MainForm: TMainForm
     end
     object OKPOEdit: TEdit
       Left = 3
-      Top = 640
+      Top = 625
       Width = 104
       Height = 21
       TabOrder = 21
     end
     object cbOKPO: TCheckBox
       Left = 3
-      Top = 621
+      Top = 606
       Width = 104
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1054#1050#1055#1054
@@ -1088,7 +1088,7 @@ object MainForm: TMainForm
     object cbDeleteFl: TCheckBox
       Tag = 20
       Left = 199
-      Top = 563
+      Top = 561
       Width = 235
       Height = 17
       Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
@@ -1105,7 +1105,7 @@ object MainForm: TMainForm
     object cbDeleteInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 578
+      Top = 576
       Width = 235
       Height = 17
       Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
@@ -1137,7 +1137,7 @@ object MainForm: TMainForm
     end
     object cbClearDelete: TCheckBox
       Left = 3
-      Top = 561
+      Top = 559
       Width = 190
       Height = 17
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083' '#1091#1076#1072#1083#1077#1085#1080#1103
@@ -1230,7 +1230,7 @@ object MainForm: TMainForm
     end
     object cbBill_List: TCheckBox
       Left = 3
-      Top = 598
+      Top = 591
       Width = 235
       Height = 17
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1087#1080#1089#1082#1091' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
@@ -1319,7 +1319,7 @@ object MainForm: TMainForm
     end
     object cbLossDebt: TCheckBox
       Left = 133
-      Top = 577
+      Top = 575
       Width = 107
       Height = 17
       Caption = #1044#1086#1083#1075#1080' Int-'#1053#1040#1051
@@ -1395,7 +1395,7 @@ object MainForm: TMainForm
     end
     object cbBranchSendOnPrice: TCheckBox
       Left = 137
-      Top = 621
+      Top = 606
       Width = 110
       Height = 17
       Caption = #1050#1086#1076' '#1087'. '#1076#1083#1103' 2.2.'
@@ -1409,7 +1409,7 @@ object MainForm: TMainForm
     end
     object UnitCodeSendOnPriceEdit: TEdit
       Left = 129
-      Top = 640
+      Top = 625
       Width = 104
       Height = 21
       TabOrder = 44
@@ -1417,7 +1417,7 @@ object MainForm: TMainForm
     end
     object cbFillSoldTable: TCheckBox
       Left = 3
-      Top = 541
+      Top = 539
       Width = 104
       Height = 17
       Caption = 'FillSoldTable'
@@ -1529,14 +1529,14 @@ object MainForm: TMainForm
     end
     object Label5: TLabel
       Left = 15
-      Top = 623
+      Top = 609
       Width = 95
       Height = 13
       Caption = #1057#1082#1083#1072#1076' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1080
     end
     object Label6: TLabel
       Left = 127
-      Top = 623
+      Top = 609
       Width = 46
       Height = 13
       Caption = 'SessionId'
@@ -1785,7 +1785,7 @@ object MainForm: TMainForm
     object cbCompleteSaleInt: TCheckBox
       Tag = 30
       Left = 15
-      Top = 511
+      Top = 501
       Width = 200
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
@@ -1801,7 +1801,7 @@ object MainForm: TMainForm
     object cbCompleteReturnInInt: TCheckBox
       Tag = 30
       Left = 15
-      Top = 529
+      Top = 519
       Width = 200
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
@@ -1817,7 +1817,7 @@ object MainForm: TMainForm
     object cbCompleteTaxFl: TCheckBox
       Tag = 30
       Left = 162
-      Top = 513
+      Top = 503
       Width = 194
       Height = 17
       Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
@@ -1835,7 +1835,7 @@ object MainForm: TMainForm
     object cbCompleteTaxCorrective: TCheckBox
       Tag = 30
       Left = 162
-      Top = 529
+      Top = 519
       Width = 194
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
@@ -1853,7 +1853,7 @@ object MainForm: TMainForm
     object cbCompleteTaxInt: TCheckBox
       Tag = 30
       Left = 15
-      Top = 546
+      Top = 536
       Width = 194
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
@@ -1868,7 +1868,7 @@ object MainForm: TMainForm
     end
     object cbSelectData_afterLoad: TCheckBox
       Left = 15
-      Top = 579
+      Top = 569
       Width = 176
       Height = 17
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1076#1072#1085#1085#1099#1093' '
@@ -1883,7 +1883,7 @@ object MainForm: TMainForm
     end
     object cbSelectData_afterLoad_Sale: TCheckBox
       Left = 15
-      Top = 603
+      Top = 584
       Width = 71
       Height = 17
       Caption = #1055#1088#1086#1076'.'#1087#1086#1082'.'
@@ -1900,7 +1900,7 @@ object MainForm: TMainForm
     end
     object cbSelectData_afterLoad_Tax: TCheckBox
       Left = 89
-      Top = 603
+      Top = 584
       Width = 52
       Height = 17
       Caption = #1053#1072#1083#1086#1075
@@ -1915,7 +1915,7 @@ object MainForm: TMainForm
     end
     object cbSelectData_afterLoad_ReturnIn: TCheckBox
       Left = 147
-      Top = 603
+      Top = 584
       Width = 63
       Height = 17
       Caption = #1042#1086#1079'.'#1087#1086#1082'.'
@@ -1930,7 +1930,7 @@ object MainForm: TMainForm
     end
     object UnitIdEdit: TEdit
       Left = 15
-      Top = 637
+      Top = 625
       Width = 98
       Height = 21
       TabOrder = 25
@@ -1938,7 +1938,7 @@ object MainForm: TMainForm
     end
     object cbBeforeSave: TCheckBox
       Left = 15
-      Top = 563
+      Top = 553
       Width = 146
       Height = 17
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1952,7 +1952,7 @@ object MainForm: TMainForm
     end
     object SessionIdEdit: TEdit
       Left = 127
-      Top = 637
+      Top = 625
       Width = 48
       Height = 21
       TabOrder = 27

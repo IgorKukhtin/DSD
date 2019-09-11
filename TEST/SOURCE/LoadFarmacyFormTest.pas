@@ -767,13 +767,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNDialogForm');
-    exit;
+    {exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutDialogForm');
    // exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceGoodsSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceGoodsSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceGoodsSUNDialogForm'));

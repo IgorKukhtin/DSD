@@ -100,7 +100,7 @@ BEGIN
                                --
                                , 1 AS GroupId
                           FROM tmpGoods
-                        --WHERE tmpGoods.sku_id IN (34570361)
+                          --WHERE tmpGoods.sku_id IN (795662)
 
                          UNION ALL
                           -- carton Ц коробочна€ упаковка
@@ -136,7 +136,7 @@ BEGIN
                                , 2 AS GroupId
                           FROM tmpGoods
                           WHERE tmpGoods.BoxId > 0
-                          --AND tmpGoods.sku_id = 795223
+                          --AND tmpGoods.sku_id = 795662
                          ) 
         -- –езультат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

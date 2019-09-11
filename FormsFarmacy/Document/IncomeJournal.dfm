@@ -1623,7 +1623,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
+    Left = 504
     Top = 152
   end
   object spGetDataForSendNew: TdsdStoredProc
@@ -1738,7 +1738,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end>
     PackSize = 1
     Left = 551
-    Top = 160
+    Top = 216
   end
   object MemberIncomeCheckGuides: TdsdGuides
     KeyField = 'Id'

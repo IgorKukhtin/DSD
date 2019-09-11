@@ -657,16 +657,29 @@ BEGIN
    ;
 
 
-  --
-  UPDATE SoldTable SET               -- Прибыль (только реализ)
-                       Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0)
-                                     -- Прибыль с учетом бонусов (только реализ)
-                , SaleBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
-                                     -- Прибыль с учетом !!!возврата!!!
-               , SaleReturn_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0)
-                                     -- Прибыль с учетом !!!возврата!!! и бонусов
-          , SaleReturnBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
-  WHERE OperDate BETWEEN inStartDate AND inEndDate;
+    --
+    UPDATE SoldTable SET               -- Прибыль (только реализ)
+                         Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0)
+                                       -- Прибыль с учетом бонусов (только реализ)
+                  , SaleBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
+                                       -- Прибыль с учетом !!!возврата!!!
+                 , SaleReturn_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0)
+                                       -- Прибыль с учетом !!!возврата!!! и бонусов
+            , SaleReturnBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
+    WHERE OperDate BETWEEN inStartDate AND inEndDate;
+
+
+
+    IF DATE_TRUNC ('MONTH', CURRENT_TIMESTAMP) = DATE_TRUNC ('MONTH', inEndDate)
+       AND (EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 8 OR EXTRACT (DAY FROM CURRENT_TIMESTAMP) > 1)
+    THEN
+        -- сохранили <По какую дату включительно сформированы данные Олап Продажа/возврат>
+        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GlobalConst_ActualBankStatement(), zc_Enum_GlobalConst_EndDateOlapSR(), inEndDate);
+
+        -- сохранили <Дата формирования данных Олап Продажа/возврат>
+        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GlobalConst_ActualBankStatement(), zc_Enum_GlobalConst_ProtocolDateOlapSR(), CURRENT_TIMESTAMP);
+
+    END IF;
 
   
 END;

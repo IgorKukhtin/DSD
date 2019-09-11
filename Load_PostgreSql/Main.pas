@@ -1881,7 +1881,7 @@ begin
      then
          if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').')
                   else ShowMessage('Справочники загружены. Time=('+StrTime+').')
-     else OKPOEdit.Text:=OKPOEdit.Text + ' Guide:'+StrTime;
+     else OKPOEdit.Text:=StrTime+':Guide' + ' ' + OKPOEdit.Text;
      //
      fStop:=true;
 end;
@@ -2043,7 +2043,7 @@ begin
      else
          if System.Pos('auto',ParamStr(2))<=0
          then ShowMessage('Документы загружены. Time=('+StrTime+').')
-         else OKPOEdit.Text:=OKPOEdit.Text + ' Doc:'+StrTime;
+         else OKPOEdit.Text:=StrTime+':Doc' + ' ' + OKPOEdit.Text;
      //
      fStop:=true;
 end;
@@ -2280,7 +2280,7 @@ begin
                else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
                     else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
      end
-     else OKPOEdit.Text:=OKPOEdit.Text + ' Complete:'+StrTime;
+     else OKPOEdit.Text:=StrTime+':Compl' + ' ' + OKPOEdit.Text;
      //
      fStop:=true;
 end;
@@ -20537,7 +20537,11 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillSoldTable_curr;
 var Date1, Date2 : TDateTime;
+    tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
 begin
+     tmpDate1:=NOw;
+
      fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
      Date1:= fromSqlQuery.FieldByName('RetV').AsDateTime;
 
@@ -20548,11 +20552,15 @@ begin
      EndDateEdit.Text:=DateToStr(Date2);
      cbFillSoldTable.Checked:= true;
      //
-     OKPOEdit.Text:= ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2);
-
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(DateToStr(Date1))
                                                +','+FormatToVarCharServer_isSpace(DateToStr(Date2))
-                                               +',zfCalc_UserAdmin())')
+                                               +',zfCalc_UserAdmin())');
+     //
+     //
+     tmpDate2:=NOw;
+     DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+     //
+     OKPOEdit.Text:= IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillSoldTable;

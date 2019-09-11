@@ -10,19 +10,19 @@
     Top = 176
     Width = 1081
     Height = 340
-    ExplicitTop = 141
+    ExplicitTop = 176
     ExplicitWidth = 1081
-    ExplicitHeight = 375
+    ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 1081
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1081
-      ExplicitHeight = 351
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1081
         Height = 316
         ExplicitWidth = 1081
-        ExplicitHeight = 351
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -985,7 +985,7 @@
       Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
     end
     object cbDifferent: TcxCheckBox
-      Left = 8
+      Left = 902
       Top = 124
       Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       Caption = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
@@ -995,16 +995,16 @@
       Width = 137
     end
     object cxLabel18: TcxLabel
-      Left = 215
+      Left = 8
       Top = 109
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 215
+      Left = 9
       Top = 124
       Properties.ReadOnly = False
       TabOrder = 40
-      Width = 824
+      Width = 888
     end
   end
   object edInvNumberOrder: TcxButtonEdit [2]

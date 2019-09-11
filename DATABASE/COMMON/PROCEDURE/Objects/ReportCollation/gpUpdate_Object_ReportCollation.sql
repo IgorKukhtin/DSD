@@ -69,6 +69,14 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= FALSE);
+
+
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Errr _end <%>', inBarCode;
+    -- 'ѕовторите действие через 3 мин.'
+end if;
+
    
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;

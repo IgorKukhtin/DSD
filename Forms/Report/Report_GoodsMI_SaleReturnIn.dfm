@@ -4,28 +4,29 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -572
   ExplicitWidth = 1378
-  ExplicitHeight = 425
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 107
     Width = 1362
-    Height = 307
+    Height = 280
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 107
     ExplicitWidth = 1362
-    ExplicitHeight = 307
-    ClientRectBottom = 307
+    ExplicitHeight = 280
+    ClientRectBottom = 280
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 307
+      ExplicitHeight = 280
       inherited cxGrid: TcxGrid
         Width = 1362
-        Height = 307
+        Height = 280
         ExplicitWidth = 1362
-        ExplicitHeight = 307
+        ExplicitHeight = 280
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1080,9 +1081,9 @@
   end
   inherited Panel: TPanel
     Width = 1362
-    Height = 54
+    Height = 81
     ExplicitWidth = 1362
-    ExplicitHeight = 54
+    ExplicitHeight = 81
     inherited deStart: TcxDateEdit
       Left = 60
       Properties.SaveTime = False
@@ -1245,6 +1246,58 @@
       TabOrder = 19
       Width = 120
     end
+    object cxLabel10: TcxLabel
+      Left = 8
+      Top = 58
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090
+      Caption = '!'#1074#1072#1078#1085#1086'! '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1072#1082#1090#1091#1072#1083#1100#1085#1086#1089#1090#1080' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edProtocolDateOlapSR: TcxDateEdit
+      Left = 306
+      Top = 57
+      EditValue = 42370d
+      Enabled = False
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 21
+      Width = 140
+    end
+    object cxLabel11: TcxLabel
+      Left = 452
+      Top = 58
+      Hint = 
+        #1055#1086' '#1082#1072#1082#1091#1102' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088 +
+        #1072#1090
+      Caption = #1040#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1087#1086':'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edEndDateOlapSR: TcxDateEdit
+      Left = 661
+      Top = 57
+      EditValue = 42370d
+      Enabled = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 23
+      Width = 85
+    end
+    object cxLabel12: TcxLabel
+      Left = 755
+      Top = 58
+      Hint = 
+        #1040#1082#1090#1091#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' 1 '#1088#1072#1079' '#1074' '#1089#1091#1090#1082#1080', '#1087#1086#1089#1083#1077' '#1095#1077#1075#1086' '#1073#1099#1089#1090#1088#1077#1077 +
+        ' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' '#1086#1090#1082#1088#1099#1090#1080#1077' '#1086#1090#1095#1077#1090#1072
+      Caption = 
+        #1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'/'#1074#1086#1079#1074#1088#1072#1090#1072#1084', '#1074#1099#1087#1086#1083#1085#1077#1085#1085#1099#1077' '#1087#1086#1089#1083#1077' '#1072#1082#1090#1091#1072#1083#1080#1079#1072#1094#1080#1080' ' +
+        #1076#1072#1085#1085#1099#1093', '#1074' '#1086#1090#1095#1077#1090' '#1085#1077' '#1087#1086#1087#1072#1076#1072#1102#1090
+      ParentShowHint = False
+      ShowHint = True
+    end
   end
   object cbPartner: TcxCheckBox [2]
     Left = 212
@@ -1387,6 +1440,14 @@
           ToParam.ComponentItem = 'isOLAP'
           ToParam.DataType = ftBoolean
           ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spGetGlobalConst_DateOlapSR
+      StoredProcList = <
+        item
+          StoredProc = spGetGlobalConst_DateOlapSR
+        end
+        item
+          StoredProc = spSelect
         end>
       ShortCut = 0
     end
@@ -2372,7 +2433,30 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 816
-    Top = 34
+    Left = 784
+    Top = 10
+  end
+  object spGetGlobalConst_DateOlapSR: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GlobalConst_DateOlapSR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ProtocolDateOlapSR'
+        Value = 'NULL'
+        Component = edProtocolDateOlapSR
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDateOlapSR'
+        Value = 'NULL'
+        Component = edEndDateOlapSR
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 232
   end
 end
