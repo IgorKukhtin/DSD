@@ -464,8 +464,8 @@ BEGIN
             , tmpData.Amount_Order
             , tmpData.CuterCount_Order
             
-            , (tmpData.Amount_Order - tmpData.Amount)         ::TFloat AS Amount_diff
-            , (tmpData.CuterCount_Order - tmpData.CuterCount) ::TFloat AS CuterCount_diff
+            , (tmpData.Amount - tmpData.Amount_Order)         ::TFloat AS Amount_diff
+            , (tmpData.CuterCount - tmpData.CuterCount_Order) ::TFloat AS CuterCount_diff
 
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode

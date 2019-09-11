@@ -391,27 +391,26 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 110
           end
-          object Diff_in: TcxGridDBColumn
-            Caption = '% '#1076#1083#1103' '#1090#1077#1082'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'Diff_in'
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '+,0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1090#1077#1082#1091#1097#1077#1081' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
+            HeaderHint = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
             Options.Editing = False
             Width = 86
           end
-          object Diff_max: TcxGridDBColumn
-            Caption = '% '#1076#1083#1103' '#1084#1072#1082#1089' '#1094#1077#1085#1099
-            DataBinding.FieldName = 'Diff_max'
+          object CuterCount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1091#1090#1077#1088
+            DataBinding.FieldName = 'CuterCount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '+,0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1081' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
             Options.Editing = False
             Width = 79
           end
@@ -869,10 +868,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True
