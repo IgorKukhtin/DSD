@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UpdateName TVarChar, UpdateDate TDateTime
              , PaymentDays TFloat
              , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
-             
+             , Comment TVarChar
              )
 
 AS
@@ -214,6 +214,7 @@ BEGIN
              , Object_MemberIncomeCheck.Id          AS MemberIncomeCheckId
              , Object_MemberIncomeCheck.ValueData   AS MemberIncomeCheckName
              , MovementDate_Check.ValueData         AS CheckDate
+             , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
         FROM Movement_Income
 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
@@ -270,6 +271,10 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                   ON MovementBoolean_Document.MovementId = Movement_Income.Id
                                  AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+        LEFT JOIN MovementString AS MovementString_Comment
+                                 ON MovementString_Comment.MovementId = Movement_Income.Id
+                                AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
         -- точка другого юр.лица
         LEFT JOIN MovementBoolean AS MovementBoolean_Different
@@ -389,6 +394,7 @@ BEGIN
                , MovementDate_Check.ValueData
                , COALESCE (MovementDate_Update_Order.ValueData, NULL)
                , Object_OrderKind.ValueData
+               , COALESCE (MovementString_Comment.ValueData,'')
 ;
 
 END;

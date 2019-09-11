@@ -317,7 +317,8 @@ uses
   Report_ProfitDemoPeriod in '..\..\FormsBoutique\Report\Report_ProfitDemoPeriod.pas' {Report_ProfitDemoPeriodForm: TParentForm},
   ImportType in '..\..\FormsBoutique\Import\ImportType.pas' {ImportTypeForm: TParentForm},
   ImportSettings in '..\..\FormsBoutique\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
-  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -182,8 +182,6 @@ uses
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
   NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
   ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
-  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   Bank in '..\..\Forms\Bank.pas' {BankForm: TParentForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
@@ -749,7 +747,9 @@ uses
   Unit_KoeffSUN_Edit in '..\..\FormsFarmacy\Guides\Unit_KoeffSUN_Edit.pas' {Unit_KoeffSUN_EditForm: TParentForm},
   Report_CheckSUNDialog in '..\..\FormsFarmacy\Report\Report_CheckSUNDialog.pas' {Report_CheckSUNDialogForm: TParentForm},
   Report_CheckSUN in '..\..\FormsFarmacy\Report\Report_CheckSUN.pas' {Report_CheckSUNForm: TParentForm},
-  EmployeeScheduleEditUser in '..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas' {EmployeeScheduleEditUserForm: TParentForm};
+  EmployeeScheduleEditUser in '..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas' {EmployeeScheduleEditUserForm: TParentForm},
+  BankAccount in '..\..\FormsFarmacy\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\FormsFarmacy\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

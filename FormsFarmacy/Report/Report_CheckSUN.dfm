@@ -173,15 +173,6 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             HeaderAlignmentVert = vaCenter
             Width = 217
           end
-          object PartionDateKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
-            DataBinding.FieldName = 'PartionDateKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 129
-          end
           object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
@@ -296,7 +287,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Width = 89
           end
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -305,7 +296,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Width = 90
           end
           object Invnumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #8470' '#1076#1086#1082'. '
             DataBinding.FieldName = 'Invnumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

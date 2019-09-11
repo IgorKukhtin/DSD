@@ -579,6 +579,14 @@ object ClientForm: TClientForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisOutlet'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -645,6 +653,12 @@ object ClientForm: TClientForm
     object bbReport_CollationByPartner: TdxBarButton
       Action = actReport_CollationByPartner
       Category = 0
+    end
+    object bbUpdateisOutlet: TdxBarButton
+      Action = actUpdateisOutlet
+      Category = 0
+      Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'  '#1074' '#1084#1072#1075#1072#1079#1080#1085#1072#1093' Outlet '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 77
     end
   end
   object ActionList: TActionList
@@ -961,6 +975,18 @@ object ClientForm: TClientForm
         end>
       isShowModal = False
     end
+    object actUpdateisOutlet: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isOutlet
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isOutlet
+        end>
+      Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1087#1086#1082#1091#1087'. '#1074' '#1084#1072#1075'. Outlet '#1044#1072'/'#1053#1077#1090
+      Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1087#1086#1082#1091#1087'. '#1074' '#1084#1072#1075'. Outlet '#1044#1072'/'#1053#1077#1090
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Client'
@@ -1131,5 +1157,39 @@ object ClientForm: TClientForm
       end>
     Left = 568
     Top = 152
+  end
+  object spUpdate_isOutlet: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Client_isOutlet'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOutlet'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOutlet'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOutlet'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOutlet'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 131
   end
 end

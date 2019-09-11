@@ -165,6 +165,8 @@ type
     spCheckObject: TdsdStoredProc;
     actCheckObject: TdsdExecStoredProc;
     cbDifferent: TcxCheckBox;
+    cxLabel18: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

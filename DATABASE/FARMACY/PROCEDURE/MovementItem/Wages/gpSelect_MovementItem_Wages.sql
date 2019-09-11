@@ -133,7 +133,7 @@ BEGIN
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
-                 , Personal_View.PositionName         AS PositionName
+                 , Object_Position.ValueData          AS PositionName
                  , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
@@ -143,10 +143,23 @@ BEGIN
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
+
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
                   LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                        ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                       ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                       ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
                   LEFT JOIN tmpPersonal_View AS Personal_View
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
@@ -156,7 +169,9 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
                                           ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
                                          AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
+
+                  LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId, Personal_View.UnitID)
 
                   LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
                                               ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
@@ -271,6 +286,10 @@ BEGIN
                  , zc_Color_Black()                   AS Color_Calc
             FROM  MovementItem
 
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
                   LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                        ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -285,7 +304,7 @@ BEGIN
                                           ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
                                          AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Personal_View.UnitID
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, Personal_View.UnitID)
 
                   LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
                                               ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
@@ -350,4 +369,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  21.08.19                                                        *
 */
---select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

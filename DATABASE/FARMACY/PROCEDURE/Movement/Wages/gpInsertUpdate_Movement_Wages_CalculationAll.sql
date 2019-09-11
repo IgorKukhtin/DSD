@@ -34,6 +34,7 @@ BEGIN
 
     -- таблица
     CREATE TEMP TABLE tmpCalculation (UnitId Integer
+                                    , UnitUserId Integer
                                     , OperDate TDateTime
                                     , UserId Integer
                                     , PayrollTypeID Integer
@@ -43,13 +44,13 @@ BEGIN
 
     IF vbOperDate < '01.09.2019'
     THEN
-      INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
-      SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
+      INSERT INTO tmpCalculation (UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
+      SELECT UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
       FROM gpSelect_Calculation_WagesBoard (vbOperDate, 0, '3') AS Calculation
       WHERE COALESCE (Calculation.UserId, 0) <> 0;
     ELSE
-      INSERT INTO tmpCalculation (UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
-      SELECT UnitId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
+      INSERT INTO tmpCalculation (UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
+      SELECT UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
       FROM gpSelect_Calculation_Wages (vbOperDate, 0, '3') AS Calculation
       WHERE COALESCE (Calculation.UserId, 0) <> 0;    
     END IF;
@@ -76,6 +77,7 @@ BEGIN
     PERFORM gpInsertUpdate_MovementItem_Wages (ioId         := 0
                                              , inMovementId := inMovementId
                                              , inUserId     := Calculation.UserId
+                                             , inUnitId     := MAX(Calculation.UnitUserId)
                                              , inSession    := inSession)
     FROM tmpCalculation AS Calculation
     GROUP BY Calculation.UserId;

@@ -97,6 +97,9 @@ type
     InsertName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     isOutlet: TcxGridDBColumn;
+    spUpdate_isOutlet: TdsdStoredProc;
+    actUpdateisOutlet: TdsdExecStoredProc;
+    bbUpdateisOutlet: TdxBarButton;
   private
     { Private declarations }
   public

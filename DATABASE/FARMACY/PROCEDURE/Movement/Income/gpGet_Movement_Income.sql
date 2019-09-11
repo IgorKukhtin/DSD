@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDifferent Boolean
              , UpdateDate_Order TDateTime
              , OrderKindId Integer, OrderKindName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -77,6 +78,7 @@ BEGIN
              , NULL ::TDateTime                                 AS UpdateDate_Order
              , 0                                                AS OrderKindId
              , CAST('' as TVarChar)                             AS OrderKindName
+             , CAST ('' AS TVarChar) 		                    AS Comment
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -162,6 +164,7 @@ BEGIN
           , COALESCE (MovementDate_Update_Order.ValueData, NULL) :: TDateTime AS UpdateDate_Order
           , Object_OrderKind.Id                            AS OrderKindId
           , Object_OrderKind.ValueData                     AS OrderKindName
+          , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
 
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
@@ -175,6 +178,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Different
                                        ON MovementBoolean_Different.MovementId = Movement_Income.Id
                                       AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
+
+             LEFT JOIN MovementString AS MovementString_Comment
+                                      ON MovementString_Comment.MovementId = Movement_Income.Id
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
              LEFT JOIN MovementLinkMovement AS MLM_Master
                                             ON MLM_Master.MovementId = Movement_Order.Id
@@ -221,6 +228,7 @@ BEGIN
           , COALESCE (MovementDate_Update_Order.ValueData, NULL)
           , Object_OrderKind.Id
           , Object_OrderKind.ValueData
+          , COALESCE (MovementString_Comment.ValueData,'')
           ;
     END IF;
 

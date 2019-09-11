@@ -108,8 +108,8 @@ BEGIN
            , Object_OrderKind.ValueData                         AS OrderKindName
            , COALESCE (MovementString_Comment.ValueData,'')       :: TVarChar AS Comment
 
-          , COALESCE (tmpOrderShedule.Zakaz_Text, '')   ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
-          , COALESCE (tmpOrderShedule.Dostavka_Text,'') ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
+           , COALESCE (tmpOrderShedule.Zakaz_Text, '')   ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
+           , COALESCE (tmpOrderShedule.Dostavka_Text,'') ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
 
           /* , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
                   THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
