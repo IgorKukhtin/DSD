@@ -86,6 +86,9 @@ type
     Name0: TcxGridDBBandedColumn;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton7: TdxBarButton;
+    spDelUser: TdsdStoredProc;
+    actDeleteUser: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
   private
     { Private declarations }
   public

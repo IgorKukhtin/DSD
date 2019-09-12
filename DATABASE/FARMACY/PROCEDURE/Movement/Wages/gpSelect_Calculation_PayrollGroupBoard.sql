@@ -108,15 +108,21 @@ BEGIN
     ELSE
       vbSummaBase := COALESCE (inSummCS, 0) / COALESCE (inCountUserCS, 0);
     END IF;
-    vbSumma := NULL;
+    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
 
     vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummCS, 0), 'G999G999G999G999D99'))||' / '||
                     CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' = '||
                     TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||
-                    '; Количество приходов: '|| CAST(COALESCE (inCountUserAS, 0) AS TVarChar);
+                    '; Количество приходов: '|| CAST(COALESCE (inCountUserAS, 0) AS TVarChar)||
+                    '; Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
+                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSumma, vbSummaBase, vbFormula;
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
   ELSE
 

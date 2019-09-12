@@ -499,6 +499,21 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end>
       isShowModal = False
     end
+    object actDelUserDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelUserDay
+      StoredProcList = <
+        item
+          StoredProc = spDelUserDay
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1079#1072' '#1076#1077#1085#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1079#1072' '#1076#1077#1085#1100
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1079#1072' '#1076#1077#1085#1100'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -614,6 +629,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -682,6 +701,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
       Visible = ivAlways
       ImageIndex = 35
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actDelUserDay
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1023,5 +1046,30 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     PackSize = 1
     Left = 672
     Top = 297
+  end
+  object spDelUserDay: TdsdStoredProc
+    StoredProcName = 'gpDelete_MovementItem_EmployeeSchedule_UserDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 353
   end
 end

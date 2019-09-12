@@ -597,7 +597,7 @@ begin
                                                     FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then xlRange.Value := nCurr
                                                   else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
                 ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
-                else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                else begin xlRange.NumberFormat := '0000'; xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString; end;
               end;
           end;
         end;
@@ -615,7 +615,7 @@ begin
               ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsDateTime;
               ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsExtended;
               ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
-              else xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
+              else begin xlRange.NumberFormat := '0000'; xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString; end;
             end;
         end;
       end;

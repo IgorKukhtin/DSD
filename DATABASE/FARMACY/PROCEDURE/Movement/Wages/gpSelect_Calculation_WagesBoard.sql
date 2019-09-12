@@ -256,130 +256,8 @@ BEGIN
                                        ON UserDey.OperDate       = tmpIncome.OperDate
                                       AND UserDey.UnitId         = tmpIncome.UnitId;
 
-   IF EXISTS(SELECT 1 FROM tmpBoard
-             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
-             GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
-                    , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
-                    , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
-             HAVING count(*) >= 18)
-   THEN
-     WITH
-       tmpBoardUserAll AS (
-             SELECT tmpBoard.UnitId
-                  , tmpBoard.PersonalId
-                  , tmpBoard.UserID
-                  , tmpBoard.WorkTimeKindID
-                  , tmpBoard.PayrollTypeID
-                  , tmpBoard.PayrollGroupID
-                  , tmpBoard.isManagerPharmacy
-                  , tmpBoard.UnitUserId
-             FROM tmpBoard
-             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
-             GROUP BY tmpBoard.UnitId, tmpBoard.PersonalId, tmpBoard.UserID
-                    , tmpBoard.WorkTimeKindID, tmpBoard.PayrollTypeID, tmpBoard.PayrollGroupID
-                    , tmpBoard.isManagerPharmacy, tmpBoard.UnitUserId
-             HAVING count(*) >= 18),
-       tmpBoardUser AS (
-             SELECT tmpBoardUserAll.*, tmpIncome.OperDate
-             FROM tmpBoardUserAll
-
-                  INNER JOIN tmpIncome ON tmpIncome.UnitID = tmpBoardUserAll.UnitID
-
-                  LEFT OUTER JOIN tmpBoard ON tmpBoard.UnitID = tmpBoardUserAll.UnitID
-                                          AND tmpBoard.UserID = tmpBoardUserAll.UserID
-                                          AND tmpBoard.OperDate = tmpIncome.OperDate
-                                          AND tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
-
-             WHERE COALESCE (tmpBoard.UserID, 0) = 0)
-
-       INSERT INTO tmpBoard
-       SELECT tmpBoardUser.UnitId
-            , tmpBoardUser.OperDate
-            , tmpBoardUser.PersonalId
-            , tmpBoardUser.UserID
-            , tmpBoardUser.WorkTimeKindID
-            , tmpBoardUser.PayrollTypeID
-            , tmpBoardUser.PayrollGroupID
-            , tmpBoardUser.isManagerPharmacy
-            , tmpBoardUser.UnitUserId
-       FROM tmpBoardUser;
-
-       UPDATE tmpIncome SET CountUser = UserDey.NewCountUser
-       FROM (SELECT tmpBoard.OperDate
-                  , tmpBoard.UnitId
-                  , COUNT(*)::Integer         AS NewCountUser
-             FROM tmpBoard
-             WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
-             GROUP BY tmpBoard.OperDate
-                    , tmpBoard.UnitId) AS UserDey
-       WHERE UserDey.OperDate = tmpIncome.OperDate
-         AND UserDey.UnitId   = tmpIncome.UnitId;
-   END IF;
-
    RETURN QUERY
    WITH
-     tmpIncomeCalc AS (  -- Oт суммы реализации оприходоанных накладных
-       SELECT tmpBoard.UnitId
-            , tmpBoard.OperDate
-            , tmpBoard.PersonalId
-            , tmpBoard.UserID
-            , tmpBoard.UnitUserId
-
-            , tmpBoard.WorkTimeKindID
-            , tmpBoard.PayrollTypeID
-            , tmpBoard.PayrollGroupID
-
-            , Income.IncomeCount                              AS IncomeCount
-            , Income.SaleSumm                                 AS SaleSumm
-
-            , Calculation.SummaBase                           AS SummaBase
-            , Calculation.Summa                               AS SummaCalc
-            , Calculation.Formula                             AS FormulaCalc
-       FROM tmpBoard
-
-            INNER JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpBoard.WorkTimeKindID
-            INNER JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
-                                             ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpBoard.WorkTimeKindID
-                                            AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-
-            LEFT OUTER JOIN tmpIncome AS Income
-                                      ON Income.OperDate  = tmpBoard.OperDate
-                                     AND Income.UnitId    = tmpBoard.UnitId
-
-            LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := tmpBoard.PayrollTypeID,
-                                                                   inPercent          := Null::TFloat,
-                                                                   inMinAccrualAmount := Null::TFloat,
-                                                                   inCountUserCS      := Income.CountUser,
-                                                                   inCountUserAS      := Income.IncomeCount ,
-                                                                   inCountUserNS      := Null::Integer,
-                                                                   inCountUserSCS     := Null::Integer,
-                                                                   inCountUserS       := Null::Integer,
-                                                                   inCountUserSAS     := Null::Integer,
-                                                                   inSummCS           := Income.SaleSumm,
-                                                                   inSummSCS          := Null::TFloat,
-                                                                   inSummHS           := Null::TFloat) AS Calculation
-                                                                                                  ON 1 = 1
-       WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
-         AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)),
-     tmpIncomeMonth AS (  -- Oт суммы реализации оприходоанных накладных база месяца
-       SELECT tmpIncomeCalc.UnitId
-            , vbEndDate                                       AS OperDate
-            , tmpIncomeCalc.PersonalId
-            , tmpIncomeCalc.UserID
-            , tmpIncomeCalc.UnitUserId
-
-            , tmpIncomeCalc.WorkTimeKindID
-            , tmpIncomeCalc.PayrollTypeID
-            , tmpIncomeCalc.PayrollGroupID
-
-            , SUM(tmpIncomeCalc.SummaBase)::TFloat            AS SummaBase
-       FROM tmpIncomeCalc
-       GROUP BY tmpIncomeCalc.UnitId, tmpIncomeCalc.PersonalId, tmpIncomeCalc.UserID, tmpIncomeCalc.UnitUserId
-              , tmpIncomeCalc.WorkTimeKindID, tmpIncomeCalc.PayrollTypeID, tmpIncomeCalc.PayrollGroupID),
-     tmpCountShifts AS (SELECT tmpBoard.PersonalId
-                            , count(*)::Integer      AS CountShift
-                        FROM tmpBoard
-                        GROUP BY tmpBoard.PersonalId),
      tmpManagerPharmacy AS (  -- Заведующие аптекой
        SELECT ROW_NUMBER() OVER (PARTITION BY tmpBoard.UserID ORDER BY tmpBoard.PersonalId DESC) AS Ord
             , COALESCE(ObjectLink_Member_Unit.ChildObjectId, tmpBoard.UnitId) AS UnitId
@@ -479,7 +357,7 @@ BEGIN
                                                                inCountUserNS      := CheckSum.CountUserNS,
                                                                inCountUserSCS     := CheckSum.CountUserSCS,
                                                                inCountUserS       := CheckSum.CountUserS,
-                                                               inCountUserSAS       := CheckSum.CountUserS,
+                                                               inCountUserSAS     := CheckSum.CountUserS,
                                                                inSummCS           := CheckSum.SummCS,
                                                                inSummSCS          := CheckSum.SummSCS,
                                                                inSummHS           := CheckSum.SummHS) AS Calculation
@@ -487,15 +365,15 @@ BEGIN
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_Check()
      AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
    UNION ALL  -- Oт суммы реализации оприходоанных накладных по дням
-   SELECT tmpIncomeCalc.UnitId
+   SELECT tmpBoard.UnitId
         , Object_Unit.ObjectCode                          AS UnitCode
         , Object_Unit.ValueData                           AS UnitName
-        , tmpIncomeCalc.OperDate
-        , tmpIncomeCalc.PersonalId
-        , tmpIncomeCalc.UserID
-        , tmpIncomeCalc.UnitUserId
+        , tmpBoard.OperDate
+        , tmpBoard.PersonalId
+        , tmpBoard.UserID
+        , tmpBoard.UnitUserId
 
-        , tmpIncomeCalc.WorkTimeKindID
+        , tmpBoard.WorkTimeKindID
         , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
         , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
         , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
@@ -511,93 +389,52 @@ BEGIN
         , NULL::TFloat                                    AS SummSCS
         , NULL::TFloat                                    AS SummHS
 
-        , tmpIncomeCalc.IncomeCount                       AS IncomeCount
-        , tmpIncomeCalc.SaleSumm                          AS IncomeSaleSumm
-
-        , tmpIncomeCalc.SummaBase                         AS SummaBase
-        , tmpIncomeCalc.SummaCalc                         AS SummaCalc
-        , tmpIncomeCalc.FormulaCalc                       AS FormulaCalc
-   FROM tmpIncomeCalc
-
-        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = tmpIncomeCalc.UnitId
-
-        INNER JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpIncomeCalc.WorkTimeKindID
-        INNER JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
-                                         ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpIncomeCalc.WorkTimeKindID
-                                        AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-
-        INNER JOIN Object AS Object_PayrollType ON Object_PayrollType.Id = tmpIncomeCalc.PayrollTypeID
-
-        INNER JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = tmpIncomeCalc.PayrollGroupID
-
-        INNER JOIN ObjectFloat AS ObjectFloat_Percent
-                               ON ObjectFloat_Percent.ObjectId = tmpIncomeCalc.PayrollTypeID
-                              AND ObjectFloat_Percent.DescId = zc_ObjectFloat_PayrollType_Percent()
-
-        INNER JOIN ObjectFloat AS ObjectFloat_MinAccrualAmount
-                               ON ObjectFloat_MinAccrualAmount.ObjectId = tmpIncomeCalc.PayrollTypeID
-                              AND ObjectFloat_MinAccrualAmount.DescId = zc_ObjectFloat_PayrollType_MinAccrualAmount()
-   UNION ALL  -- Oт суммы реализации оприходоанных накладных месячные итоги
-   SELECT tmpIncomeMonth.UnitId
-        , Object_Unit.ObjectCode                          AS UnitCode
-        , Object_Unit.ValueData                           AS UnitName
-        , tmpIncomeMonth.OperDate
-        , tmpIncomeMonth.PersonalId
-        , tmpIncomeMonth.UserID
-        , tmpIncomeMonth.UnitUserId
-
-        , tmpIncomeMonth.WorkTimeKindID
-        , Object_WorkTimeKind.ObjectCode                  AS WorkTimeKindCode
-        , Object_WorkTimeKind.ValueData                   AS WorkTimeKindName
-        , ObjectString_WorkTimeKind_ShortName.ValueData   AS ShortName
-
-        , Object_PayrollType.Id                           AS PayrollTypeID
-        , Object_PayrollType.ObjectCode                   AS PayrollTypeCode
-        , Object_PayrollType.ValueData                    AS PayrollTypeName
-
-        , ObjectFloat_Percent.ValueData                   AS Percent
-        , ObjectFloat_MinAccrualAmount.ValueData          AS MinAccrualAmount
-
-        , NULL::TFloat                                    AS SummCS
-        , NULL::TFloat                                    AS SummSCS
-        , NULL::TFloat                                    AS SummHS
-
-        , NULL::Integer                                   AS IncomeCount
-        , tmpIncomeMonth.SummaBase                        AS SummaCalc
+        , Income.IncomeCount                              AS IncomeCount
+        , Income.SaleSumm                                 AS SaleSumm
 
         , Calculation.SummaBase                           AS SummaBase
         , Calculation.Summa                               AS SummaCalc
         , Calculation.Formula                             AS FormulaCalc
-   FROM tmpIncomeMonth
+   FROM tmpBoard
 
-        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = tmpIncomeMonth.UnitId
+        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = tmpBoard.UnitId
 
-        INNER JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpIncomeMonth.WorkTimeKindID
+        INNER JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpBoard.WorkTimeKindID
         INNER JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
-                                         ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpIncomeMonth.WorkTimeKindID
+                                         ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpBoard.WorkTimeKindID
                                         AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-                                        
-        INNER JOIN tmpCountShifts AS CountShifts
-                                  ON CountShifts.PersonalId = tmpIncomeMonth.PersonalId
 
-        INNER JOIN Object AS Object_PayrollType ON Object_PayrollType.Id = tmpIncomeMonth.PayrollTypeID
+        INNER JOIN Object AS Object_PayrollType ON Object_PayrollType.Id = tmpBoard.PayrollTypeID
 
-        INNER JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = tmpIncomeMonth.PayrollGroupID
+        INNER JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = tmpBoard.PayrollGroupID
 
         INNER JOIN ObjectFloat AS ObjectFloat_Percent
-                               ON ObjectFloat_Percent.ObjectId = tmpIncomeMonth.PayrollTypeID
+                               ON ObjectFloat_Percent.ObjectId = tmpBoard.PayrollTypeID
                               AND ObjectFloat_Percent.DescId = zc_ObjectFloat_PayrollType_Percent()
 
         INNER JOIN ObjectFloat AS ObjectFloat_MinAccrualAmount
-                               ON ObjectFloat_MinAccrualAmount.ObjectId = tmpIncomeMonth.PayrollTypeID
+                               ON ObjectFloat_MinAccrualAmount.ObjectId = tmpBoard.PayrollTypeID
                               AND ObjectFloat_MinAccrualAmount.DescId = zc_ObjectFloat_PayrollType_MinAccrualAmount()
 
-        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup_Total(inPayrollTypeID    := Object_PayrollType.Id,
-                                                                inPercent          := ObjectFloat_Percent.ValueData,
-                                                                inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
-                                                                inSummaBase        := tmpIncomeMonth.SummaBase,
-                                                                inCountShift       := CountShifts.CountShift) AS Calculation
-                                                                                                                ON 1 = 1
+        LEFT OUTER JOIN tmpIncome AS Income
+                                  ON Income.OperDate  = tmpBoard.OperDate
+                                 AND Income.UnitId    = tmpBoard.UnitId
+
+        LEFT OUTER JOIN gpSelect_Calculation_PayrollGroupBoard(inPayrollTypeID    := tmpBoard.PayrollTypeID,
+                                                               inPercent          := ObjectFloat_Percent.ValueData,
+                                                               inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
+                                                               inCountUserCS      := Income.CountUser,
+                                                               inCountUserAS      := Income.IncomeCount ,
+                                                               inCountUserNS      := Null::Integer,
+                                                               inCountUserSCS     := Null::Integer,
+                                                               inCountUserS       := Null::Integer,
+                                                               inCountUserSAS     := Null::Integer,
+                                                               inSummCS           := Income.SaleSumm,
+                                                               inSummSCS          := Null::TFloat,
+                                                               inSummHS           := Null::TFloat) AS Calculation
+                                                                                              ON 1 = 1
+   WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
+     AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
    UNION ALL
      -- Доплаты заведующим аптекой
    SELECT tmpManagerPharmacy.UnitId

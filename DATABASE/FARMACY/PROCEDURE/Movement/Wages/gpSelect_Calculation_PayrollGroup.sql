@@ -55,7 +55,7 @@ BEGIN
                     '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSumma, vbSummaBase, vbFormula;
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
   ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkS()
   THEN
@@ -65,15 +65,21 @@ BEGIN
     ELSE
       vbSummaBase := COALESCE (inSummBase, 0) / COALESCE (inCountUser, 0);
     END IF;
-    vbSumma := NULL;
 
-    vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummBase, 0), 'G999G999G999G999D99'))||' / '||
-                    CAST(COALESCE (inCountUser, 0) AS TVarChar)||' = '||
-                    TRIM(to_char(inSummBase, 'G999G999G999G999D99'))||
-                    '; Количество приходов: '|| CAST(COALESCE (inCountDoc, 0) AS TVarChar);
+    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
+
+    vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummBase, 0), 'G999G999G999G999D99'))||' / ('||
+                    CAST(COALESCE (inCountUser, 1) AS TVarChar)||') = '||
+                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
+                    'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
+                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSumma, vbSummaBase, vbFormula;
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
   ELSE
 
@@ -94,4 +100,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integ
  23.08.19                                                        *
 */
 
--- select * from gpSelect_Calculation_PayrollGroup(zc_Enum_PayrollType_WorkNS(), 3, 0, 3, 1000, 0, 'dddd');
+-- select * from gpSelect_Calculation_PayrollGroup(zc_Enum_PayrollType_WorkS(), 3, 0, 3, 1000, 0, '');

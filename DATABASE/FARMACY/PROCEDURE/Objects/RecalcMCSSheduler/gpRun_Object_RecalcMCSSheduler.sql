@@ -35,7 +35,7 @@ BEGIN
   END IF;
 
 
-    -- По сети
+    -- По сетям без вынесенных отдельно
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit_Juridical_Run.ObjectId,
                        inPeriod := ObjectFloat_Period.ValueData::Integer,
                        inDay := ObjectFloat_Day.ValueData::Integer,
@@ -120,10 +120,26 @@ BEGIN
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
     AND Object_Unit_Run.isErased = FALSE
     AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-    AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE;
+    AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
+    AND ObjectLink_Unit_Juridical_Run.ObjectId not in 
+                                             (SELECT Object_Unit.Id
+                                              FROM Object AS Object_RecalcMCSSheduler
+                                                   LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                                         ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
+                                                                        AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
+                                                   LEFT JOIN Object AS Object_Unit
+                                                                     ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+                                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                                                           ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                                                          AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
+
+                                              WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
+                                                AND Object_RecalcMCSSheduler.isErased = False
+                                                AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False);
 
 
-    -- По аптекам не вошедшим в сети
+    -- По отдельным аптекам 
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit.ChildObjectId,
                        inPeriod := ObjectFloat_Period.ValueData::Integer,
                        inDay := ObjectFloat_Day.ValueData::Integer,
@@ -136,8 +152,12 @@ BEGIN
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
 
            INNER JOIN ObjectBoolean AS ObjectBoolean_Unit_AutoMCS
-                                    ON ObjectBoolean_Unit_AutoMCS.ObjectId = ObjectLink_Unit.ObjectId
+                                    ON ObjectBoolean_Unit_AutoMCS.ObjectId = ObjectLink_Unit.ChildObjectId
                                    AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                   ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                  AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
 
            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
@@ -184,49 +204,7 @@ BEGIN
     AND COALESCE (ObjectFloat_Period.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
-    AND ObjectLink_Unit.ChildObjectId not in
-     (SELECT ObjectLink_Unit_Juridical_Run.ObjectId
-      FROM Object AS Object_RecalcMCSSheduler
-
-               INNER JOIN ObjectBoolean AS ObjectBoolean_AllRetail
-                                        ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
-                                       AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
-
-               INNER JOIN ObjectLink AS ObjectLink_Unit
-                                     ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
-                                    AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
-
-               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                     ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
-                                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-
-               INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-
-               INNER JOIN ObjectLink AS ObjectLink_User
-                                     ON ObjectLink_User.ObjectId = Object_RecalcMCSSheduler.Id
-                                    AND ObjectLink_User.DescId = zc_ObjectLink_RecalcMCSSheduler_User()
-
-               INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail_Run
-                                     ON ObjectLink_Juridical_Retail_Run.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
-                                    AND ObjectLink_Juridical_Retail_Run.DescId = zc_ObjectLink_Juridical_Retail()
-
-               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical_Run
-                                     ON ObjectLink_Unit_Juridical_Run.ChildObjectId = ObjectLink_Juridical_Retail_Run.ObjectId
-                                    AND ObjectLink_Unit_Juridical_Run.DescId = zc_ObjectLink_Unit_Juridical()
-               LEFT JOIN Object AS Object_Unit_Run
-                                ON Object_Unit_Run.Id = ObjectLink_Unit_Juridical_Run.ObjectId
-
-               INNER JOIN ObjectLink AS ObjectLink_Unit_Parent_Run
-                                     ON ObjectLink_Unit_Parent_Run.ObjectId = ObjectLink_Unit_Juridical_Run.ObjectId
-                                    AND ObjectLink_Unit_Parent_Run.DescId = zc_ObjectLink_Unit_Parent()
-
-      WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
-        AND Object_RecalcMCSSheduler.isErased = FALSE
-        AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
-        AND Object_Unit_Run.isErased = FALSE
-        AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0);
+    AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False;
 
 END;
 $BODY$

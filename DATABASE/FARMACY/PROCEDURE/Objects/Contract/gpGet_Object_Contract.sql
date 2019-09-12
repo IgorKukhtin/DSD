@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
                SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
-               isErased boolean) AS
+               isMorionCode Boolean, isBarCode Boolean,
+               isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -62,6 +63,8 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartDate
            , CURRENT_DATE :: TDateTime AS EndDate   
        
+           , CAST (NULL AS Boolean) AS isMorionCode
+           , CAST (NULL AS Boolean) AS isBarCode
            , CAST (NULL AS Boolean) AS isErased;
    
    ELSE
@@ -102,6 +105,9 @@ BEGIN
            , COALESCE (ObjectDate_Start.ValueData, CURRENT_DATE)   :: TDateTime AS StartDate 
            , COALESCE (ObjectDate_End.ValueData, CURRENT_DATE)     :: TDateTime AS EndDate  
            
+           , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)  :: Boolean   AS isMorionCode
+           , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
+
            , Object_Contract_View.isErased
        FROM Object_Contract_View
             LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -135,7 +141,15 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_OrderTime
                                    ON ObjectString_OrderTime.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_OrderTime.DescId = zc_ObjectString_Contract_OrderTime()
-                                 
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_MorionCode
+                                    ON ObjectBoolean_MorionCode.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_MorionCode.DescId = zc_ObjectBoolean_Contract_MorionCode()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCode
+                                    ON ObjectBoolean_BarCode.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
+
       WHERE Object_Contract_View.Id = inId;
    END IF;
   
@@ -150,6 +164,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.09.19         *
  24.09.18         * Member
  20.08.18         * TotalSumm
  14.02.18         *

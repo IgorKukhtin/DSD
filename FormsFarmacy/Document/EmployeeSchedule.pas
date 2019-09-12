@@ -65,6 +65,9 @@ type
     spUpdateUnit: TdsdStoredProc;
     spUpdateSubstitutionUnit: TdsdStoredProc;
     actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId;
+    actDeleteUser: TdsdExecStoredProc;
+    spDelUser: TdsdStoredProc;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

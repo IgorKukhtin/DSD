@@ -135,6 +135,24 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 90
           end
+          object isMorionCode: TcxGridDBColumn
+            Caption = #1048#1084#1087#1086#1088#1090' '#1082#1086#1076#1086#1074' '#1052#1086#1088#1080#1086#1085#1072' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'isMorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1084#1087#1086#1088#1090' '#1082#1086#1076#1086#1074' '#1052#1086#1088#1080#1086#1085#1072' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            Options.Editing = False
+            Width = 90
+          end
+          object isBarCode: TcxGridDBColumn
+            Caption = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'isBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            Options.Editing = False
+            Width = 90
+          end
           object GroupMemberSPName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072' ('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'GroupMemberSPName'
@@ -245,6 +263,32 @@ inherited ContractForm: TContractForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
+    object actUpdate_isMorionCode: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMorionCode
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMorionCode
+        end>
+      Caption = #1048#1084#1087#1086#1088#1090' '#1082#1086#1076#1086#1074' '#1052#1086#1088#1080#1086#1085#1072' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1044#1072'/'#1053#1077#1090
+      Hint = #1048#1084#1087#1086#1088#1090' '#1082#1086#1076#1086#1074' '#1052#1086#1088#1080#1086#1085#1072' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 76
+    end
+    object actUpdate_isBarCode: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isBarCode
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isBarCode
+        end>
+      Caption = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1044#1072'/'#1053#1077#1090
+      Hint = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 77
+    end
   end
   inherited MasterDS: TDataSource
     Top = 96
@@ -312,6 +356,22 @@ inherited ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isMorionCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isBarCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -325,6 +385,14 @@ inherited ContractForm: TContractForm
     end
     object bbUpdateisReport: TdxBarButton
       Action = actUpdateisReport
+      Category = 0
+    end
+    object bbUpdate_isMorionCode: TdxBarButton
+      Action = actUpdate_isMorionCode
+      Category = 0
+    end
+    object bbUpdate_isBarCode: TdxBarButton
+      Action = actUpdate_isBarCode
       Category = 0
     end
   end
@@ -431,5 +499,81 @@ inherited ContractForm: TContractForm
     PackSize = 1
     Left = 312
     Top = 171
+  end
+  object spUpdate_isBarCode: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Contract_isBarCode'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBarCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBarCode'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisBarCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBarCode'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 139
+  end
+  object spUpdate_isMorionCode: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Contract_isMorionCode'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMorionCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMorionCode'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMorionCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMorionCode'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 91
   end
 end

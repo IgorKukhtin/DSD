@@ -1,5 +1,5 @@
 inherited EmployeeScheduleForm: TEmployeeScheduleForm
-  Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' ('#1085#1086#1074#1099#1081')'
+  Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 500
   ClientWidth = 953
   AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeSchedule'
@@ -537,6 +537,21 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end>
       Caption = 'actExecStoredUpdateSubstitutionUnit'
     end
+    object actDeleteUser: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelUser
+      StoredProcList = <
+        item
+          StoredProc = spDelUser
+        end>
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -668,11 +683,15 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton4'
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -744,6 +763,10 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     end
     object dxBarButton6: TdxBarButton
       Action = actUpdateSubstitutionUnit
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actDeleteUser
       Category = 0
     end
   end
@@ -1255,5 +1278,30 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     PackSize = 1
     Left = 802
     Top = 344
+  end
+  object spDelUser: TdsdStoredProc
+    StoredProcName = 'gpDelete_MovementItem_EmployeeSchedule_UserDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 353
   end
 end

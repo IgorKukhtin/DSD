@@ -821,6 +821,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 15
           CalcColumnLists = <>
         end
         item
@@ -832,6 +833,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 30
           CalcColumnLists = <>
         end
         item
@@ -843,6 +845,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 50
           CalcColumnLists = <>
         end
         item
@@ -854,6 +857,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 15
           CalcColumnLists = <>
         end
         item
@@ -865,6 +869,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 30
           CalcColumnLists = <>
         end
         item
@@ -876,6 +881,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 60
           CalcColumnLists = <>
         end
         item
@@ -887,6 +893,7 @@ inherited PaymentForm: TPaymentForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          Width = 15
           CalcColumnLists = <>
         end
         item

@@ -41,6 +41,12 @@ type
     OrderSummComment: TcxGridDBColumn;
     OrderTime: TcxGridDBColumn;
     actUpdateMainDS: TdsdUpdateDataSet;
+    spUpdate_isBarCode: TdsdStoredProc;
+    spUpdate_isMorionCode: TdsdStoredProc;
+    actUpdate_isMorionCode: TdsdExecStoredProc;
+    actUpdate_isBarCode: TdsdExecStoredProc;
+    bbUpdate_isMorionCode: TdxBarButton;
+    bbUpdate_isBarCode: TdxBarButton;
   private
     { Private declarations }
   public
