@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Comment TVarChar,
                SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
                isReport Boolean,
+               isMorionCode Boolean, isBarCode Boolean,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -63,7 +64,10 @@ BEGIN
            , ObjectDate_Start.ValueData   AS StartDate 
            , ObjectDate_End.ValueData     AS EndDate   
  
-           , COALESCE (ObjectBoolean_Report.ValueData, FALSE)  AS isReport
+           , COALESCE (ObjectBoolean_Report.ValueData, FALSE)      :: Boolean   AS isReport
+           , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)  :: Boolean   AS isMorionCode
+           , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
+           
            , Object_Contract_View.isErased
        FROM Object_Contract_View
             LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -101,6 +105,14 @@ BEGIN
                                    ON ObjectBoolean_Report.ObjectId = Object_Contract_View.Id
                                   AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Contract_Report()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_MorionCode
+                                   ON ObjectBoolean_MorionCode.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectBoolean_MorionCode.DescId = zc_ObjectBoolean_Contract_MorionCode()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCode
+                                   ON ObjectBoolean_BarCode.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
+
            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
@@ -117,6 +129,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.09.19         *
  24.09.18         * Member
  20.08.18         * TotalSumm
  14.02.18         *
