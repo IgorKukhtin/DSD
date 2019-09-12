@@ -44,6 +44,64 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             item
               Format = '0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order
+            end
+            item
+              Format = ',0.####'
+              Column = CuterCount_diff
+            end
+            item
+              Format = ',0.####'
+              Column = Amount_diff
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = CuterCount_diff
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = Amount_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -65,6 +123,56 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             item
               Format = '0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -299,6 +407,29 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 60
           end
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            Options.Editing = False
+            Width = 86
+          end
+          object CuterCount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1091#1090#1077#1088
+            DataBinding.FieldName = 'CuterCount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
           object IsMain: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085'.'
             DataBinding.FieldName = 'isMain'
@@ -390,29 +521,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
-          end
-          object Amount_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
-            Options.Editing = False
-            Width = 86
-          end
-          object CuterCount_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1082#1091#1090#1077#1088
-            DataBinding.FieldName = 'CuterCount_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
           end
         end
       end
@@ -773,7 +881,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementId'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -868,6 +976,10 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True
@@ -1024,7 +1136,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
