@@ -1100,7 +1100,8 @@ uses
   Report_GoodsMI_SaleReturnInNotOlap in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInNotOlap.pas' {Report_GoodsMI_SaleReturnInNotOlapForm: TParentForm},
   Report_ProductionUnionTech_OrderDialog in '..\..\Forms\Report\Report_ProductionUnionTech_OrderDialog.pas' {Report_ProductionUnionTech_OrderDialogForm: TParentForm},
   Report_ProductionUnionTech_Order in '..\..\Forms\Report\Report_ProductionUnionTech_Order.pas' {Report_ProductionUnionTech_OrderForm: TParentForm},
-  Report_ReceiptAnalyze in '..\..\Forms\Report\Report_ReceiptAnalyze.pas' {Report_ReceiptAnalyzeForm: TParentForm};
+  Report_ReceiptAnalyze in '..\..\Forms\Report\Report_ReceiptAnalyze.pas' {Report_ReceiptAnalyzeForm: TParentForm},
+  Report_ReceiptAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptAnalyzeDialog.pas' {Report_ReceiptAnalyzeDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

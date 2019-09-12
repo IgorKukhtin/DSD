@@ -1,12 +1,9 @@
 -- Function: gpReport_ReceiptAnalyze ()
 
 DROP FUNCTION IF EXISTS gpReport_ReceiptAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ReceiptAnalyze (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ReceiptAnalyze (
-    IN inStartDate        TDateTime ,  
-    IN inEndDate          TDateTime ,
-    IN inUnitFromId       Integer   , 
-    IN inUnitToId         Integer   , 
     IN inGoodsGroupId     Integer   ,
     IN inGoodsId          Integer   ,
     IN inPriceListId_1    Integer, 
@@ -438,4 +435,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptAnalyze (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inUnitFromId:= 8447, inUnitToId:= 8447, inGoodsGroupId:= 0, inGoodsId:=0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptAnalyze (inGoodsGroupId:= 0, inGoodsId:=0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inSession:= zfCalc_UserAdmin())

@@ -1,31 +1,29 @@
 inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088'>'
   ClientHeight = 430
-  ClientWidth = 1171
+  ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1187
+  ExplicitWidth = 1229
   ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1171
+    Width = 1213
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1171
+    ExplicitWidth = 1213
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 1171
+    ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1171
+      ExplicitWidth = 1213
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 1171
+        Width = 1213
         Height = 347
-        ExplicitLeft = 3
-        ExplicitTop = -3
-        ExplicitWidth = 1171
+        ExplicitWidth = 1213
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -825,45 +823,48 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     end
   end
   inherited Panel: TPanel
-    Width = 1171
+    Width = 1213
     Height = 57
-    ExplicitWidth = 1171
+    ExplicitWidth = 1213
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 115
-      Top = 6
+      Left = 891
+      Top = 4
       EditValue = 43831d
-      Properties.OnChange = deStartPropertiesChange
-      ExplicitLeft = 115
-      ExplicitTop = 6
+      Visible = False
+      ExplicitLeft = 891
+      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 115
-      Top = 30
+      Left = 891
+      Top = 28
       EditValue = 43831d
-      ExplicitLeft = 115
-      ExplicitTop = 30
+      Visible = False
+      ExplicitLeft = 891
+      ExplicitTop = 28
     end
     inherited cxLabel1: TcxLabel
-      Left = 27
-      Top = 8
-      ExplicitLeft = 27
-      ExplicitTop = 8
+      Left = 1019
+      Top = 5
+      Visible = False
+      ExplicitLeft = 1019
+      ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 8
-      Top = 31
-      ExplicitLeft = 8
-      ExplicitTop = 31
+      Left = 1019
+      Top = 28
+      Visible = False
+      ExplicitLeft = 1019
+      ExplicitTop = 28
     end
     object cxLabel4: TcxLabel
-      Left = 936
-      Top = 5
+      Left = 482
+      Top = 6
       Caption = #1043#1088'. '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 1004
-      Top = 5
+      Left = 550
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
@@ -873,13 +874,13 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       TabOrder = 5
       Width = 163
     end
-    object cxLabel3: TcxLabel
-      Left = 201
+    object cxLabel11: TcxLabel
+      Left = 24
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
     end
-    object edFromUnit: TcxButtonEdit
-      Left = 335
+    object edPriceList_1: TcxButtonEdit
+      Left = 93
       Top = 5
       Properties.Buttons = <
         item
@@ -888,15 +889,15 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 169
+      Width = 125
     end
-    object cxLabel5: TcxLabel
-      Left = 215
-      Top = 29
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+    object cxLabel6: TcxLabel
+      Left = 25
+      Top = 32
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
     end
-    object edToUnit: TcxButtonEdit
-      Left = 335
+    object edPriceList_2: TcxButtonEdit
+      Left = 93
       Top = 30
       Properties.Buttons = <
         item
@@ -905,15 +906,15 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 169
+      Width = 125
     end
-    object cxLabel11: TcxLabel
-      Left = 504
+    object cxLabel7: TcxLabel
+      Left = 236
       Top = 6
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
     end
-    object edPriceList_1: TcxButtonEdit
-      Left = 573
+    object edPriceList_3: TcxButtonEdit
+      Left = 341
       Top = 5
       Properties.Buttons = <
         item
@@ -924,13 +925,13 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       TabOrder = 11
       Width = 125
     end
-    object cxLabel6: TcxLabel
-      Left = 505
-      Top = 32
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
+    object cxLabel8: TcxLabel
+      Left = 235
+      Top = 31
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
     end
-    object edPriceList_2: TcxButtonEdit
-      Left = 573
+    object edPriceList_sale: TcxButtonEdit
+      Left = 342
       Top = 30
       Properties.Buttons = <
         item
@@ -941,14 +942,14 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       TabOrder = 13
       Width = 125
     end
-    object cxLabel7: TcxLabel
-      Left = 700
-      Top = 6
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
+    object cxLabel9: TcxLabel
+      Left = 482
+      Top = 32
+      Caption = #1058#1086#1074#1072#1088':'
     end
-    object edPriceList_3: TcxButtonEdit
-      Left = 805
-      Top = 5
+    object edGoods: TcxButtonEdit
+      Left = 550
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -956,40 +957,6 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 125
-    end
-    object cxLabel8: TcxLabel
-      Left = 699
-      Top = 31
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
-    end
-    object edPriceList_sale: TcxButtonEdit
-      Left = 806
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 17
-      Width = 125
-    end
-    object cxLabel9: TcxLabel
-      Left = 936
-      Top = 31
-      Caption = #1058#1086#1074#1072#1088':'
-    end
-    object edGoods: TcxButtonEdit
-      Left = 1004
-      Top = 32
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 19
       Width = 163
     end
   end
@@ -1008,12 +975,6 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         Component = deStart
         Properties.Strings = (
           'Date')
-      end
-      item
-        Component = FromUnitGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end
       item
         Component = GoodsGroupGuides
@@ -1046,12 +1007,6 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
           'TextValue')
       end
       item
-        Component = ToUnitGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = GuidesGoods
         Properties.Strings = (
           'Key'
@@ -1067,61 +1022,11 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_ReceiptProductionAnalyzeDialogForm'
-      FormNameParam.Value = 'TReport_ReceiptProductionAnalyzeDialogForm'
+      FormName = 'TReport_ReceiptAnalyzeDialogForm'
+      FormNameParam.Value = 'TReport_ReceiptAnalyzeDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 42186d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42186d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromUnitId'
-          Value = ''
-          Component = FromUnitGuides
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromUnitName'
-          Value = ''
-          Component = FromUnitGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToUnitId'
-          Value = ''
-          Component = ToUnitGuides
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToUnitName'
-          Value = ''
-          Component = ToUnitGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
         item
           Name = 'PriceListId_1'
           Value = ''
@@ -1670,16 +1575,12 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       item
         Name = 'inUnitFromId'
         Value = Null
-        Component = FromUnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitToId'
         Value = Null
-        Component = ToUnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1877,67 +1778,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1072
-    Top = 65528
-  end
-  object FromUnitGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edFromUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = FromUnitGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = FromUnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 408
-  end
-  object ToUnitGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edToUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ToUnitGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ToUnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 464
-    Top = 24
+    Left = 640
+    Top = 8
   end
   object PriceList_1_Guides: TdsdGuides
     KeyField = 'Id'
@@ -1995,8 +1837,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 636
-    Top = 65528
+    Left = 164
+    Top = 8
   end
   object PriceList_2_Guides: TdsdGuides
     KeyField = 'Id'
@@ -2054,8 +1896,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 644
-    Top = 40
+    Left = 124
+    Top = 16
   end
   object PriceList_3_Guides: TdsdGuides
     KeyField = 'Id'
@@ -2113,8 +1955,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 836
-    Top = 16
+    Left = 396
+    Top = 8
   end
   object PriceList_sale_Guides: TdsdGuides
     KeyField = 'Id'
@@ -2172,8 +2014,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 828
-    Top = 48
+    Left = 364
+    Top = 32
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -2314,7 +2156,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1032
+    Left = 584
     Top = 31
   end
 end

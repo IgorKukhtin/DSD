@@ -31,12 +31,6 @@ type
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    edFromUnit: TcxButtonEdit;
-    FromUnitGuides: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edToUnit: TcxButtonEdit;
-    ToUnitGuides: TdsdGuides;
     colGoodsGroupNameFull: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     edPriceList_1: TcxButtonEdit;
