@@ -95,6 +95,11 @@ type
     spExportBankPrivat: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     spExportBankPrivatFileName: TdsdStoredProc;
+    spExportBankUkrximFileName: TdsdStoredProc;
+    spExportBankUkrxim: TdsdStoredProc;
+    actExportToXLSUkrxim: TdsdExportToXLS;
+    actExecStoredProcUkrxim: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

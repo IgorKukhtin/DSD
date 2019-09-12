@@ -916,6 +916,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           CalcColumnLists = <>
         end>
+      FileType = ftExcel8
       Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1087#1088#1080#1074#1072#1090' '#1073#1072#1085#1082
       Hint = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1087#1088#1080#1074#1072#1090' '#1073#1072#1085#1082
       ImageIndex = 56
@@ -933,6 +934,234 @@ inherited PaymentForm: TPaymentForm
           StoredProc = spExportBankPrivatFileName
         end>
       Caption = 'actExecStoredProcPrivat'
+    end
+    object actExportToXLSUkrxim: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecStoredProcUkrxim
+      ItemsDataSet = ExportBankCDS
+      FileNameParam.Value = Null
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      Footer = False
+      ColumnParams = <
+        item
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          FieldName = 'OperDate'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          FieldName = 'Number'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1057#1091#1084#1084#1072
+          FieldName = 'SummaPay'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1052#1060#1054
+          FieldName = 'PayerMFO'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1057#1095#1077#1090
+          FieldName = 'PayerAccount'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
+          FieldName = 'PayerIBAN'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1052#1060#1054' '#1073#1072#1085#1082#1072'  '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
+          FieldName = 'CBMFO'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1057#1095#1077#1090' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
+          FieldName = 'CBAccount'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = 'IBAN '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
+          FieldName = 'CBIBAN'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1048#1076'. '#1082#1086#1076' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
+          FieldName = 'CBID'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1050#1086#1076' '#1089#1090#1088#1072#1085#1080' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
+          FieldName = 'CountryCode'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1050#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090
+          FieldName = 'CBName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 50
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1072#1090#1072' '#1074#1072#1083#1102#1090#1080#1088#1086#1074#1072#1085#1080#1103
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+          FieldName = 'Priority'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
+          FieldName = 'CBPurposePayment'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 60
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1086#1087'. '#1056#1077#1082#1074#1080#1079#1080#1090#1099
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end>
+      FileType = ftExcel8
+      Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1059#1082#1088#1077#1082#1089#1080#1084#1073#1072#1085#1082' '#1073#1072#1085#1082
+      Hint = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1059#1082#1088#1077#1082#1089#1080#1084#1073#1072#1085#1082' '#1073#1072#1085#1082
+      ImageIndex = 56
+    end
+    object actExecStoredProcUkrxim: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExportBankUkrxim
+      StoredProcList = <
+        item
+          StoredProc = spExportBankUkrxim
+        end
+        item
+          StoredProc = spExportBankUkrximFileName
+        end>
+      Caption = 'actExecStoredProcUkrxim'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1092,6 +1321,10 @@ inherited PaymentForm: TPaymentForm
         item
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -1130,6 +1363,10 @@ inherited PaymentForm: TPaymentForm
     end
     object dxBarButton2: TdxBarButton
       Action = actExportToXLSPrivat
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actExportToXLSUkrxim
       Category = 0
     end
   end
@@ -1906,5 +2143,54 @@ inherited PaymentForm: TPaymentForm
     PackSize = 1
     Left = 879
     Top = 264
+  end
+  object spExportBankUkrximFileName: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Payment_ExportUkrximFileName'
+    DataSet = ExportBankCDS
+    DataSets = <
+      item
+        DataSet = ExportBankCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 879
+    Top = 376
+  end
+  object spExportBankUkrxim: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Payment_ExportUkrxim'
+    DataSet = ExportBankCDS
+    DataSets = <
+      item
+        DataSet = ExportBankCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 879
+    Top = 320
   end
 end

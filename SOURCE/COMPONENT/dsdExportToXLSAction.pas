@@ -10,6 +10,7 @@ type
   TdsdOrientationType = (orPortrait, orLandscape);
   TdsdCalcColumnType = (ccNone, ccSumma, ccMultiplication, ccDivision, ccPercent, ccMulDiv);
   TdsdKindType = (skNone, skSumma, skMax, skMin, skAverage, skText);
+  TdsdFileType = (ftOpenXMLWorkbook, ftExcel8);
 
   TdsdExportToXLS = class;
 
@@ -96,6 +97,7 @@ type
     FHeaderFont: TFont;
     FFooter : boolean;
     FColumnParams : TdsdColumnParams;
+    FFileType : TdsdFileType;
     procedure SetTitleFont(Value: TFont);
     procedure SetHeaderFont(Value: TFont);
     procedure SetItemsDataSet(const Value: TDataSet);
@@ -121,6 +123,7 @@ type
     property HeaderFont: TFont read FHeaderFont write SetHeaderFont;
     property Footer : boolean  read FFooter write FFooter default True;
     property ColumnParams : TdsdColumnParams read FColumnParams write FColumnParams;
+    property FileType : TdsdFileType read FFileType write FFileType default ftOpenXMLWorkbook;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -323,6 +326,7 @@ begin
   FFileName := '';
   FTitleHeight := 1;
   FFooter := True;
+  FFileType := ftOpenXMLWorkbook;
 end;
 
 destructor TdsdExportToXLS.Destroy;
@@ -405,6 +409,7 @@ function TdsdExportToXLS.LocalExecute: Boolean;
      nColumnCount, // Количество колонок
      I, J : Integer;
      nCurr : Extended;
+     cFileName : string;
 
  const xlLeft = - 4131;
        xlRight = -4152;
@@ -424,6 +429,8 @@ function TdsdExportToXLS.LocalExecute: Boolean;
        xlMaximized = -4137;
        xlMinimized = -4140;
        xlNormal = -4143;
+       xlExcel8	= 56;
+       xlOpenXMLWorkbook = 51;
 
   function GetThousandSeparator : string;
   begin
@@ -712,9 +719,13 @@ begin
       xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
     end;
 
-    if FileName <> '' then
-      xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FileName)
-    else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + 'ExportToXLS');
+    if FileName <> '' then cFileName := FileName else FileName := 'ExportToXLS';
+
+    case FFileType of
+      ftExcel8 :  xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FileName, xlExcel8);
+      else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FileName)
+    end;
+
     xlApp.Application.ScreenUpdating := true;
     xlApp.WindowState := xlMinimized;
     xlApp.WindowState := xlMaximized or xlNormal;
