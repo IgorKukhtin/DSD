@@ -92,7 +92,7 @@ BEGIN
                          COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                END AS BranchId_Balance
                -- ‘илиал ќѕи”: всегда по подразделению или "√лавный филиал" (здесь не используетс€, нужен дл€ следующей проводки)
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_ProfitLoss
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0 /*zc_Branch_Basis()*/) AS BranchId_ProfitLoss
 
                -- ћес€ц начислений: не используетс€
              , 0 AS ServiceDateId
