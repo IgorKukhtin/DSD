@@ -1045,6 +1045,8 @@ type
     miReport_GoodsMI_SaleReturnInNotOlap: TMenuItem;
     actReport_ProductionUnionTech_Order: TdsdOpenForm;
     miReport_ProductionUnionTech_Order: TMenuItem;
+    actReport_ReceiptAnalyze: TdsdOpenForm;
+    miReport_ReceiptAnalyze: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

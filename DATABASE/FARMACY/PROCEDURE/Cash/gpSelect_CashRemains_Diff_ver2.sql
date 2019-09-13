@@ -34,8 +34,8 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
 
    DECLARE vbOperDate_StartBegin TDateTime;
-   DECLARE vb1 TVarChar;
-   DECLARE vb2 TVarChar;
+-- DECLARE vb1 TVarChar;
+-- DECLARE vb2 TVarChar;
 
    DECLARE vbDay_6  Integer;
    DECLARE vbDate_6 TDateTime;
@@ -325,9 +325,8 @@ BEGIN
     ;
 */
 
-    vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
+    /*vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
     vb2:= ((CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: INTERVAL) :: TVarChar;
-
     -- !!!Протокол - отладка Скорости!!!
     INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
       VALUES (CURRENT_TIMESTAMP, vbOperDate_StartBegin, CLOCK_TIMESTAMP(), vbUnitId, vbUserId
@@ -337,7 +336,8 @@ BEGIN
     || ' + ' || lfGet_Object_ValueData_sh (vbUserId)
     || ','   || vbUnitId              :: TVarChar
     || ','   || CHR (39) || inCashSessionId || CHR (39)
-             );
+             );*/
+
 
 /*
 -- TRUNCATE TABLE Log_Reprice
@@ -478,6 +478,15 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = _DIFF.ObjectId
                                    AND tmpRenainsSUN.PartionDateKindId = _DIFF.PartionDateKindId;
 
+    -- !!!Протокол - отладка Скорости!!!
+    PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_StartBegin
+                                     , inTime2        := NULL :: INTERVAL
+                                     , inTime3        := NULL :: INTERVAL
+                                     , inTime4        := NULL :: INTERVAL
+                                     , inProcName     := 'gpSelect_CashRemains_Diff_ver2'
+                                     , inProtocolData := lfGet_Object_ValueData_sh (vbUnitId) || ' ,' || CHR (39) || inCashSessionId || CHR (39) || ', '   || CHR (39) || inSession || CHR (39)
+                                     , inUserId       := vbUserId
+                                      );
 
 END;
 $BODY$

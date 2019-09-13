@@ -1197,6 +1197,36 @@ BEGIN
                                                               ON CLO_Position.ContainerId = CLO_Personal.ContainerId
                                                              AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
                            WHERE _tmpItem.ObjectDescId = zc_Object_Personal()
+                          UNION
+                           SELECT DISTINCT CLO_Personal.ContainerId         AS ContainerId
+                                         , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                                         , CLO_Unit.ObjectId                AS UnitId
+                                         , CLO_Personal.ObjectId            AS PersonalId
+                                         , CLO_Position.ObjectId            AS PositionId
+                                         , CLO_InfoMoney.ObjectId           AS InfoMoneyId
+                           FROM (SELECT DISTINCT _tmpItem.PersonalServiceListId, _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.ObjectDescId = zc_Object_Personal()
+                                ) AS tmp
+                                INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                               ON CLO_PersonalServiceList.ObjectId    = tmp.PersonalServiceListId
+                                                              AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                               ON CLO_Personal.ContainerId = CLO_PersonalServiceList.ContainerId
+                                                              AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                               ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
+                                                              AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                              AND CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                               ON CLO_InfoMoney.ContainerId = CLO_Personal.ContainerId
+                                                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                              AND CLO_InfoMoney.ObjectId    = tmp.InfoMoneyId
+                                LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                              ON CLO_Unit.ContainerId = CLO_Personal.ContainerId
+                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                              ON CLO_Position.ContainerId = CLO_Personal.ContainerId
+                                                             AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                           
                           )
    , tmpMIContainer AS (SELECT MIContainer.ContainerId
                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()                      THEN  1 * MIContainer.Amount ELSE 0 END)  AS SummTransport

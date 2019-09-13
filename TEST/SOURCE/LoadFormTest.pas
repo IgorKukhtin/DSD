@@ -1751,6 +1751,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));

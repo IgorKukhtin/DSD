@@ -73,6 +73,7 @@ BEGIN
                                               AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
                                                 OR MLO_DocumentKind.ObjectId > 0
                                                 OR MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                                OR MIContainer.MovementDescId = zc_Movement_Loss()
                                                   )
                                                   THEN -1 * MIContainer.Amount
                                              ELSE 0
