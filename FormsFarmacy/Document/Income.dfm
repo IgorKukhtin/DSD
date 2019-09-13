@@ -10,19 +10,19 @@
     Top = 195
     Width = 1083
     Height = 321
-    ExplicitTop = 176
-    ExplicitWidth = 1081
-    ExplicitHeight = 340
+    ExplicitTop = 195
+    ExplicitWidth = 1083
+    ExplicitHeight = 321
     ClientRectBottom = 321
     ClientRectRight = 1083
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1081
-      ExplicitHeight = 316
+      ExplicitWidth = 1083
+      ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Width = 1083
         Height = 297
-        ExplicitWidth = 1081
-        ExplicitHeight = 316
+        ExplicitWidth = 1083
+        ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -669,24 +669,24 @@
       Left = 8
       Properties.ReadOnly = False
       ExplicitLeft = 8
-      ExplicitWidth = 108
-      Width = 108
+      ExplicitWidth = 160
+      Width = 160
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 122
+      Left = 174
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 122
+      ExplicitLeft = 174
       ExplicitWidth = 83
       Width = 83
     end
     inherited cxLabel2: TcxLabel
-      Left = 122
-      ExplicitLeft = 122
+      Left = 174
+      ExplicitLeft = 174
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -701,12 +701,12 @@
       Width = 145
     end
     object cxLabel3: TcxLabel
-      Left = 212
+      Left = 263
       Top = 5
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 212
+      Left = 263
       Top = 23
       Properties.Buttons = <
         item
@@ -714,7 +714,7 @@
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 174
+      Width = 133
     end
     object edTo: TcxButtonEdit
       Left = 546
@@ -733,19 +733,22 @@
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 951
+      Left = 994
       Top = 23
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 14
-      Width = 130
+      Width = 85
     end
     object cxLabel10: TcxLabel
-      Left = 859
+      Left = 902
       Top = 5
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 859
+      Left = 902
       Top = 23
       Properties.Buttons = <
         item
@@ -756,12 +759,12 @@
       Width = 86
     end
     object cxLabel5: TcxLabel
-      Left = 392
+      Left = 403
       Top = 5
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
     end
     object edContract: TcxButtonEdit
-      Left = 392
+      Left = 403
       Top = 23
       Properties.Buttons = <
         item
@@ -769,10 +772,10 @@
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 185
+      Width = 218
     end
     object edPaymentDate: TcxDateEdit
-      Left = 583
+      Left = 627
       Top = 23
       EditValue = 42144d
       Properties.SaveTime = False
@@ -781,7 +784,7 @@
       Width = 83
     end
     object cxLabel6: TcxLabel
-      Left = 583
+      Left = 627
       Top = 5
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
     end
@@ -915,7 +918,7 @@
       Width = 137
     end
     object chbIsPay: TcxCheckBox
-      Left = 670
+      Left = 713
       Top = 23
       Caption = #1054#1087#1083#1072#1095#1077#1085#1072
       Properties.ReadOnly = True
@@ -923,7 +926,7 @@
       Width = 73
     end
     object вуDateLastPay: TcxDateEdit
-      Left = 747
+      Left = 790
       Top = 23
       EditValue = 42144d
       Properties.ReadOnly = True
@@ -933,7 +936,7 @@
       Width = 103
     end
     object cxLabel17: TcxLabel
-      Left = 747
+      Left = 790
       Top = 5
       Hint = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
       Caption = #1044#1072#1090#1072' '#1086#1087#1083'. '#1087#1086' '#1073#1072#1085#1082#1091
@@ -941,7 +944,7 @@
       ShowHint = True
     end
     object cbisDocument: TcxCheckBox
-      Left = 564
+      Left = 312
       Top = 141
       Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -949,7 +952,7 @@
       Width = 150
     end
     object cbisRegistered: TcxCheckBox
-      Left = 724
+      Left = 479
       Top = 141
       Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
       Properties.ReadOnly = True
@@ -957,7 +960,7 @@
       Width = 111
     end
     object cbisDeferred: TcxCheckBox
-      Left = 203
+      Left = 669
       Top = 141
       Caption = #1086#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
@@ -965,7 +968,7 @@
       Width = 68
     end
     object edMemberIncomeCheck: TcxTextEdit
-      Left = 422
+      Left = 153
       Top = 141
       Properties.ReadOnly = True
       Style.BorderColor = clFuchsia
@@ -973,7 +976,7 @@
       Width = 136
     end
     object edCheckDate: TcxDateEdit
-      Left = 277
+      Left = 8
       Top = 141
       EditValue = 42144d
       Properties.ReadOnly = True
@@ -983,7 +986,7 @@
       Width = 136
     end
     object cxLabel16: TcxLabel
-      Left = 277
+      Left = 8
       Top = 126
       Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
     end
@@ -1011,7 +1014,7 @@
     end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
-    Left = 8
+    Left = 747
     Top = 141
     Properties.Buttons = <
       item
@@ -1020,15 +1023,15 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 189
+    Width = 198
   end
   object cxLabel25: TcxLabel [3]
-    Left = 8
+    Left = 747
     Top = 126
     Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 422
+    Left = 230
     Top = 126
     Caption = #1060#1048#1054' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1072
   end
@@ -1762,10 +1765,6 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -1774,42 +1773,6 @@
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalculateSalePrice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefreshGoodsCode'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateisDeferredNo'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1876,6 +1839,50 @@
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalculateSalePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefreshGoodsCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisDeferredNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint_Bill: TdxBarButton [5]
@@ -1895,6 +1902,14 @@
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Visible = ivAlways
       ImageIndex = 18
+    end
+    inherited bbStatic: TdxBarStatic
+      Caption = 
+        '                                                                ' +
+        '                              '
+      Hint = 
+        '                                                                ' +
+        '                              '
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -3168,8 +3183,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 8
+    Left = 320
+    Top = 88
   end
   object spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_AmountManual'
