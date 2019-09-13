@@ -98,6 +98,7 @@ type
     FFooter : boolean;
     FColumnParams : TdsdColumnParams;
     FFileType : TdsdFileType;
+    FSheetName : string;
     procedure SetTitleFont(Value: TFont);
     procedure SetHeaderFont(Value: TFont);
     procedure SetItemsDataSet(const Value: TDataSet);
@@ -124,6 +125,8 @@ type
     property Footer : boolean  read FFooter write FFooter default True;
     property ColumnParams : TdsdColumnParams read FColumnParams write FColumnParams;
     property FileType : TdsdFileType read FFileType write FFileType default ftOpenXMLWorkbook;
+    property SheetName : string read FSheetName write FSheetName;
+
     property Caption;
     property Hint;
     property ImageIndex;
@@ -327,6 +330,7 @@ begin
   FTitleHeight := 1;
   FFooter := True;
   FFileType := ftOpenXMLWorkbook;
+  FSheetName := '';
 end;
 
 destructor TdsdExportToXLS.Destroy;
@@ -410,6 +414,7 @@ function TdsdExportToXLS.LocalExecute: Boolean;
      I, J : Integer;
      nCurr : Extended;
      cFileName : string;
+     i64 : Currency;
 
  const xlLeft = - 4131;
        xlRight = -4152;
@@ -604,7 +609,12 @@ begin
                                                     FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then xlRange.Value := nCurr
                                                   else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
                 ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
-                else begin xlRange.NumberFormat := '0000'; xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString; end;
+                else
+                begin
+                  if TryStrToCurr(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, i64) and (i64 > 1000000) then
+                    xlRange.NumberFormat := '0000';
+                  xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                end;
               end;
           end;
         end;
@@ -622,7 +632,12 @@ begin
               ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsDateTime;
               ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsExtended;
               ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
-              else begin xlRange.NumberFormat := '0000'; xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString; end;
+              else
+              begin
+                if TryStrToCurr(FItemsDataSet.Fields.Fields[I].AsString, i64) and (i64 > 1000000) then
+                  xlRange.NumberFormat := '0000';
+                xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
+              end;
             end;
         end;
       end;
@@ -718,6 +733,9 @@ begin
       xlRange.Borders[xlInsideVertical].Weight := xlThin;
       xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
     end;
+
+     // Переименовываем лист
+    if FSheetName <> '' then xlSheet.Name := FSheetName;
 
     if FileName <> '' then cFileName := FileName else FileName := 'ExportToXLS';
 

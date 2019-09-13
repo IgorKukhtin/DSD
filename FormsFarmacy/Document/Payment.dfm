@@ -984,8 +984,8 @@ inherited PaymentForm: TPaymentForm
         item
           Caption = #1057#1091#1084#1084#1072
           FieldName = 'SummaPay'
-          DataType = ftCurrency
-          DecimalPlace = 2
+          DataType = ftLargeint
+          DecimalPlace = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1145,6 +1145,7 @@ inherited PaymentForm: TPaymentForm
           CalcColumnLists = <>
         end>
       FileType = ftExcel8
+      SheetName = 'cbdocument'
       Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1059#1082#1088#1077#1082#1089#1080#1084#1073#1072#1085#1082' '#1073#1072#1085#1082
       Hint = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1059#1082#1088#1077#1082#1089#1080#1084#1073#1072#1085#1082' '#1073#1072#1085#1082
       ImageIndex = 56

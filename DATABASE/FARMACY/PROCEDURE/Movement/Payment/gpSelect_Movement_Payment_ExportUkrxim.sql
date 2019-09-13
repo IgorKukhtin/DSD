@@ -113,14 +113,18 @@ BEGIN
           , ROW_NUMBER() OVER (ORDER BY MI_Payment.Income_JuridicalName
                                       , MI_Payment.Income_NDS)::Integer AS Number
           , OS_Bank_MFO.ValueData                     AS PayerMFO
-          , OS_BankAccount_CBAccount.ValueData        AS PayerAccount
-          , OS_BankAccount_CBAccount.ValueData        AS PayerIBAN
+          , CASE WHEN TRIM(upper(SUBSTRING(OS_BankAccount_CBAccount.ValueData, 1, 2))) <> 'UA' 
+            THEN OS_BankAccount_CBAccount.ValueData END::TVarChar AS PayerAccount
+          , CASE WHEN TRIM(upper(SUBSTRING(OS_BankAccount_CBAccount.ValueData, 1, 2))) = 'UA' 
+            THEN OS_BankAccount_CBAccount.ValueData END::TVarChar AS PayerIBAN
 
           , ObjectString_CBMFO.ValueData              AS CBMFO
-          , ObjectString_CBAccount.ValueData          AS CBAccount
-          , ObjectString_CBAccount.ValueData          AS CBIBAN
+          , CASE WHEN TRIM(upper(SUBSTRING(ObjectString_CBAccount.ValueData, 1, 2))) <> 'UA' 
+            THEN ObjectString_CBAccount.ValueData END::TVarChar AS CBAccount
+          , CASE WHEN TRIM(upper(SUBSTRING(ObjectString_CBAccount.ValueData, 1, 2))) = 'UA' 
+            THEN ObjectString_CBAccount.ValueData END::TVarChar AS CBIBAN
           , MI_Payment.OKPO                           AS CBID
-          , 980                                       AS CountryCode
+          , 804                                       AS CountryCode
           , ObjectString_CBName.ValueData             AS CBName
           , 50                                        AS Priority
           
@@ -176,3 +180,5 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportUkrxim (Integer,TVarChar) OWNER T
 */
 
 -- SELECT * FROM gpSelect_Movement_Payment_ExportUkrxim (inMovementId := 15584404 , inSession:= '5');
+
+
