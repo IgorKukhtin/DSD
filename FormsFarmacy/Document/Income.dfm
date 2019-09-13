@@ -789,7 +789,7 @@
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 947
+      Left = 958
       Top = 62
       EditValue = 1111111.000000000000000000
       Enabled = False
@@ -810,8 +810,8 @@
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
-      Left = 947
-      Top = 81
+      Left = 958
+      Top = 83
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -820,7 +820,7 @@
       Style.BorderColor = clBtnFace
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
-      Style.Font.Height = -11
+      Style.Font.Height = -13
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
@@ -831,7 +831,7 @@
       Width = 94
     end
     object cxLabel7: TcxLabel
-      Left = 852
+      Left = 860
       Top = 63
       Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
       ParentFont = False
@@ -843,13 +843,13 @@
       Style.IsFontAssigned = True
     end
     object cxLabel8: TcxLabel
-      Left = 866
+      Left = 847
       Top = 82
       Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
-      Style.Font.Height = -11
+      Style.Font.Height = -15
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
@@ -952,15 +952,15 @@
       Width = 150
     end
     object cbisRegistered: TcxCheckBox
-      Left = 479
-      Top = 141
+      Left = 713
+      Top = 102
       Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
       Properties.ReadOnly = True
       TabOrder = 33
       Width = 111
     end
     object cbisDeferred: TcxCheckBox
-      Left = 669
+      Left = 490
       Top = 141
       Caption = #1086#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
@@ -1014,7 +1014,7 @@
     end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
-    Left = 747
+    Left = 564
     Top = 141
     Properties.Buttons = <
       item
@@ -1023,10 +1023,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 198
+    Width = 269
   end
   object cxLabel25: TcxLabel [3]
-    Left = 747
+    Left = 564
     Top = 126
     Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090'.'
   end
@@ -1904,12 +1904,8 @@
       ImageIndex = 18
     end
     inherited bbStatic: TdxBarStatic
-      Caption = 
-        '                                                                ' +
-        '                              '
-      Hint = 
-        '                                                                ' +
-        '                              '
+      Caption = '                                    '
+      Hint = '                                    '
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -3061,8 +3057,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 928
-    Top = 88
+    Left = 720
+    Top = 48
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'

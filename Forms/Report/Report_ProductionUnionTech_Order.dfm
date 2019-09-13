@@ -102,6 +102,15 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Kind = skSum
               Position = spFooter
               Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_fact
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -173,6 +182,15 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Format = ',0.####'
               Kind = skSum
               Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_fact
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -231,6 +249,14 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object OperDate_fact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1074#1099#1093#1086#1076' '#1043#1055
+            DataBinding.FieldName = 'OperDate_fact'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -333,6 +359,17 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object Amount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Amount_fact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1043#1055
+            DataBinding.FieldName = 'Amount_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -493,33 +530,41 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 100
           end
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 110
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 90
           end
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 110
           end
         end
@@ -593,6 +638,13 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
       TabOrder = 7
       Width = 261
     end
+    object cbMovement: TcxCheckBox
+      Left = 811
+      Top = 24
+      Action = actRefreshMov
+      TabOrder = 8
+      Width = 147
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -620,6 +672,19 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshMov: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actPrintTotal: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -843,6 +908,14 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -941,6 +1014,14 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

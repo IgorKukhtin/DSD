@@ -29,6 +29,7 @@ type
     cxLabel8: TcxLabel;
     edToGroup: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public

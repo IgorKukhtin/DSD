@@ -46,6 +46,8 @@ type
     actOpenForm: TdsdOpenForm;
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
+    cbMovement: TcxCheckBox;
+    actRefreshMov: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
