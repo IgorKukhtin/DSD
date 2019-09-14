@@ -47,16 +47,24 @@ BEGIN
                                                    AND vbStatusId = zc_Enum_Status_UnComplete() 
                                                  GROUP BY MovementItemContainer.ContainerID
                                                  )
+                   ,tmpRemainsAll AS(
+                                    SELECT 
+                                         Container.Id
+                                       , Container.ObjectId
+                                       , Container.Amount 
+                                    FROM Container
+                                    WHERE Container.DescId = zc_Container_Count()
+                                      AND Container.WhereObjectId = vbUnitId
+                                      AND Container.Amount > 0
+                                 )
                    ,tmpRemains AS(
                                     SELECT 
                                          Container.Id
                                        , Container.ObjectId
                                        , Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
-                                    FROM Container
+                                    FROM tmpRemainsAll AS Container
                                          LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
-                                    WHERE Container.DescId = zc_Container_Count()
-                                      AND Container.WhereObjectId = vbUnitId
-                                      AND (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
+                                    WHERE (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
                                  )
                   ,tmpRemainsIncome AS (SELECT tmpRemains.*
                                                , MI_Income.Id              AS IncomeId
@@ -80,6 +88,11 @@ BEGIN
                                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                  )
                                                                  
+                  ,tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                       , ObjectFloat_NDSKind_NDS.ValueData
+                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                 )
                                  
                                  
                   ,tmpRemainsPartion AS (SELECT tmpRemains.*
@@ -97,9 +110,8 @@ BEGIN
                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                                          ON MovementLinkObject_NDSKind.MovementId = tmpRemains.MovementId
                                                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                                                   ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
                                                                  
                                                                  
                                           )
@@ -288,7 +300,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SalePartion (Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_SalePartion (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -297,4 +309,4 @@ ALTER FUNCTION gpSelect_MovementItem_SalePartion (Integer, Boolean, TVarChar) OW
  18.01.18         *
  26.12.15                                                          *
 */
---select * from gpSelect_MovementItem_SalePartion(inMovementId := 3959856 , inShowAll := 'True' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_SalePartion(inMovementId := 15702629 , inShowAll := 'True' ,  inSession := '3');
