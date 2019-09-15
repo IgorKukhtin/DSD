@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Boolean, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -26,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inManagerPharmacy     Boolean   ,    -- Заведующая аптекой
     IN inPositionID          Integer   ,    -- Должность
     IN inUnitID              Integer   ,    -- Подразделение
+    IN isNotSchedule         Boolean   ,    -- Не требовать отмечаться в кассе 
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -80,6 +82,8 @@ BEGIN
 
    -- сохранили свойство <Заведующая аптекой>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_ManagerPharmacy(), ioId, inManagerPharmacy);
+   -- сохранили свойство <Не требовать отмечаться в кассе>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_NotSchedule(), ioId, isNotSchedule);
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Member_Position(), ioId, inPositionID);
@@ -100,6 +104,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.09.19                                                       *
  02.09.19                                                       *
  25.08.19                                                       *
  25.01.16         *

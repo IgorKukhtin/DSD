@@ -199,6 +199,13 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 126
       end
+      object isNotSchedule: TcxGridDBColumn
+        Caption = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103
+        DataBinding.FieldName = 'isNotSchedule'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 91
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -880,6 +887,15 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotSchedule'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNotSchedule'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

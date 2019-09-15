@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
    DECLARE vbRetailId Integer;
    DECLARE vbMovementID Integer;
+   DECLARE vbNotSchedule Boolean;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -32,10 +33,23 @@ BEGIN
                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
+                     
+    SELECT COALESCE (ObjectBoolean_NotSchedule.ValueData, False)
+    INTO vbNotSchedule
+    FROM Object AS Object_User
+         LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                ON ObjectLink_User_Member.ObjectId = Object_User.Id
+               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSchedule
+                                 ON ObjectBoolean_NotSchedule.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                AND ObjectBoolean_NotSchedule.DescId = zc_ObjectBoolean_Member_NotSchedule()
+    WHERE Object_User.Id = vbUserId;
+       
     
 
     IF  EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-       OR vbRetailId <> 4
+       OR vbRetailId <> 4 
+       OR vbNotSchedule = True
     THEN
       outBanCash := False;
       RETURN;

@@ -48,6 +48,7 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel12: TcxLabel;
     UnitGuides: TdsdGuides;
+    ceNotSchedule: TcxCheckBox;
   private
     { Private declarations }
   public

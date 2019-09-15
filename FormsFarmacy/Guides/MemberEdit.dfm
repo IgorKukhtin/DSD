@@ -35,7 +35,6 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 324
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -95,7 +94,7 @@
       end
       object cbOfficial: TcxCheckBox
         Left = 143
-        Top = 20
+        Top = 2
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         TabOrder = 2
@@ -159,7 +158,7 @@
       end
       object ceManagerPharmacy: TcxCheckBox
         Left = 143
-        Top = 39
+        Top = 20
         Hint = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
         Caption = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
         TabOrder = 19
@@ -182,11 +181,18 @@
         Top = 328
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       end
+      object ceNotSchedule: TcxCheckBox
+        Left = 143
+        Top = 39
+        Hint = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103' '#1074' '#1082#1072#1089#1089#1077'  '
+        Caption = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103' '#1074' '#1082#1072#1089#1089#1077'  '
+        TabOrder = 22
+        Width = 211
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitHeight = 329
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -364,6 +370,22 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotSchedule'
+        Value = Null
+        Component = ceNotSchedule
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -490,6 +512,13 @@
         Value = Null
         Component = UnitGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotSchedule'
+        Value = Null
+        Component = ceNotSchedule
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

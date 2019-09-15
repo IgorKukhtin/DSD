@@ -43,41 +43,53 @@ BEGIN
                            , ValueParams TVarChar) ON COMMIT DROP;
 
      -- Отметка посещаемости
-    vbEmployeeShow := True;
-    IF EXISTS(SELECT 1 FROM Movement
-              WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
-              AND Movement.DescId = zc_Movement_EmployeeSchedule())
+    IF EXISTS(SELECT COALESCE (ObjectBoolean_NotSchedule.ValueData, False)
+              FROM Object AS Object_User
+                   LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                          ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSchedule
+                                           ON ObjectBoolean_NotSchedule.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                          AND ObjectBoolean_NotSchedule.DescId = zc_ObjectBoolean_Member_NotSchedule()
+              WHERE Object_User.Id = vbUserId
+                AND COALESCE (ObjectBoolean_NotSchedule.ValueData, False) = False)
     THEN
-
-      SELECT Movement.ID
-      INTO vbMovementID
-      FROM Movement
-      WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
-        AND Movement.DescId = zc_Movement_EmployeeSchedule();
-
-      IF EXISTS(SELECT 1 FROM MovementItem AS MIMaster
-                       INNER JOIN MovementItem AS MIChild
-                                               ON MIChild.MovementId = vbMovementID
-                                              AND MIChild.DescId = zc_MI_Child()
-                                              AND MIChild.ParentId = MIMaster.ID
-                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
-                       INNER JOIN MovementItemDate AS MIDate_Start
-                                                   ON MIDate_Start.MovementItemId = MIChild.Id
-                                                  AND MIDate_Start.DescId = zc_MIDate_Start()
-                       INNER JOIN MovementItemDate AS MIDate_End
-                                                   ON MIDate_End.MovementItemId = MIChild.Id
-                                                  AND MIDate_End.DescId = zc_MIDate_End()
-                WHERE MIMaster.MovementId = vbMovementID
-                  AND MIMaster.DescId = zc_MI_Master()
-                  AND MIMaster.ObjectId = vbUserId)
+      vbEmployeeShow := True;
+      IF EXISTS(SELECT 1 FROM Movement
+                WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                AND Movement.DescId = zc_Movement_EmployeeSchedule())
       THEN
-        vbEmployeeShow := False;
-      END IF;
-    END IF;
 
-   IF vbEmployeeShow = True AND  vbRetailId = 4
-   THEN
-      INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметки времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+        SELECT Movement.ID
+        INTO vbMovementID
+        FROM Movement
+        WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+          AND Movement.DescId = zc_Movement_EmployeeSchedule();
+
+        IF EXISTS(SELECT 1 FROM MovementItem AS MIMaster
+                         INNER JOIN MovementItem AS MIChild
+                                                 ON MIChild.MovementId = vbMovementID
+                                                AND MIChild.DescId = zc_MI_Child()
+                                                AND MIChild.ParentId = MIMaster.ID
+                                                AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+                         INNER JOIN MovementItemDate AS MIDate_Start
+                                                     ON MIDate_Start.MovementItemId = MIChild.Id
+                                                    AND MIDate_Start.DescId = zc_MIDate_Start()
+                         INNER JOIN MovementItemDate AS MIDate_End
+                                                     ON MIDate_End.MovementItemId = MIChild.Id
+                                                    AND MIDate_End.DescId = zc_MIDate_End()
+                  WHERE MIMaster.MovementId = vbMovementID
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId)
+        THEN
+          vbEmployeeShow := False;
+        END IF;
+      END IF;
+
+     IF vbEmployeeShow = True AND  vbRetailId = 4
+     THEN
+        INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметки времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+     END IF;
    END IF;
 
    -- Уведомление по рецептам Хелси и Фармасикеш

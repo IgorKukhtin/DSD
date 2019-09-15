@@ -170,9 +170,9 @@ object MainForm: TMainForm
         Options.Editing = False
         Width = 42
       end
-      object Name: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 198

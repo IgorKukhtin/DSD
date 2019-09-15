@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EducationId Integer, EducationCode Integer, EducationName TVarChar
              , isManagerPharmacy Boolean
              , PositionID Integer, PositionName TVarChar
-             , UnitID Integer, UnitName TVarChar
+             , UnitID Integer, UnitName TVarChar, isNotSchedule Boolean
              , UserList TVarChar
              , isErased boolean) AS
 $BODY$
@@ -76,6 +76,7 @@ BEGIN
          , Object_Position.ValueData                AS PositionName
          , Object_Unit.Id                           AS UnitID
          , Object_Unit.ValueData                    AS UnitName
+         , COALESCE (ObjectBoolean_NotSchedule.ValueData, False)  AS isNotSchedule
 
          , tmpUser.CodeList::TVarChar               AS UserList
 
@@ -156,6 +157,10 @@ BEGIN
                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
          
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSchedule
+                                 ON ObjectBoolean_NotSchedule.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_NotSchedule.DescId = zc_ObjectBoolean_Member_NotSchedule()
+
          LEFT JOIN tmpUser ON tmpUser.MemberID =  Object_Member.Id
 
      WHERE Object_Member.DescId = zc_Object_Member()
@@ -193,6 +198,7 @@ BEGIN
 
            , CAST (0 as Integer)    AS UnitID
            , CAST ('' as TVarChar)  AS UnitName
+           , FALSE                  AS isNotSchedule
 
            , CAST ('' as TVarChar)  AS UserList
 

@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EducationId Integer, EducationCode Integer, EducationName TVarChar
              , isManagerPharmacy Boolean
              , PositionID Integer, PositionName TVarChar
-             , UnitID Integer, UnitName TVarChar
+             , UnitID Integer, UnitName TVarChar, isNotSchedule Boolean
              , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -50,6 +50,7 @@ BEGIN
 
            , CAST (0 as Integer)    AS UnitID
            , CAST ('' as TVarChar)  AS UnitName
+           , FALSE                  AS isNotSchedule
 
            , FALSE AS isOfficial;
    ELSE
@@ -81,6 +82,7 @@ BEGIN
 
          , Object_Unit.Id                           AS UnitID
          , Object_Unit.ValueData                    AS UnitName
+         , COALESCE (ObjectBoolean_NotSchedule.ValueData, False)  AS isNotSchedule
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 
@@ -134,6 +136,10 @@ BEGIN
                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
 
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSchedule
+                                 ON ObjectBoolean_NotSchedule.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_NotSchedule.DescId = zc_ObjectBoolean_Member_NotSchedule()
+
      WHERE Object_Member.Id = inId;
      
    END IF;
@@ -145,6 +151,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 16.09.19                                                       *
  02.09.19                                                       *
  25.08.19                                                       *
  25.01.11         * 
