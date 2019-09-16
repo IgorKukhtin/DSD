@@ -123,9 +123,9 @@ BEGIN
                WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsId = vbMarionGoodsId AND GoodsMainId = vbMainGoodsId) = 0 THEN
            PERFORM gpInsertUpdate_Object_LinkGoods(
                 0 
-              , vbMainGoodsId -- Главный товар
+              , vbMainGoodsId        -- Главный товар
               , vbMarionGoodsId      -- Товар для замены
-              , inSession                 -- сессия пользователя
+              , inSession            -- сессия пользователя
             );
        END IF;     
     END IF;          
