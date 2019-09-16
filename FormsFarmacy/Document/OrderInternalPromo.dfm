@@ -1170,6 +1170,33 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
+    object actPromoJournalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PromoJournalForm'
+      FormName = 'TPromoJournalForm'
+      FormNameParam.Value = 'TPromoJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_promo'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumber_promo'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actOpenReport: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1387,10 +1414,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsert
+      StoredProc = spInsertByPromo
       StoredProcList = <
         item
-          StoredProc = spInsert
+          StoredProc = spInsertByPromo
         end
         item
           StoredProc = spSelect
@@ -1398,9 +1425,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spSelectPromoPartner
         end>
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080'  '#1084#1072#1088#1082#1077#1090'-'#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080'  '#1084#1072#1088#1082#1077#1090'-'#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
-      ImageIndex = 74
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1084#1072#1088#1082#1077#1090'- '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1084#1072#1088#1082#1077#1090'- '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+      ImageIndex = 27
     end
     object actInsertOrderInternal: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1434,6 +1461,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ImageIndex = 7
       QuestionBeforeExecute = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'?'
       InfoAfterExecute = #1047#1072#1082#1072#1079#1099' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1099
+    end
+    object macInsertByPromo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPromoJournalChoiceForm
+        end
+        item
+          Action = actInsertMaster
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1084#1072#1088#1082#1077#1090'- '#1082#1086#1085#1090#1088#1072#1082#1090#1072'?'
+      InfoAfterExecute = #1058#1086#1074#1072#1088#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1084#1072#1088#1082#1077#1090'- '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1084#1072#1088#1082#1077#1090'- '#1082#1086#1085#1090#1088#1072#1082#1090#1072
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1493,6 +1535,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Visible = True
           ItemName = 'bbInsertRecordPromoMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertByPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1670,6 +1724,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = actUpdateMasterAmount
       Category = 0
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077
+    end
+    object bbInsertByPromo: TdxBarButton
+      Action = macInsertByPromo
+      Category = 0
+      ImageIndex = 27
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2465,8 +2524,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'ioId'
-    Left = 562
-    Top = 288
+    Left = 530
+    Top = 312
   end
   object spInsert: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderInternalPromo'
@@ -2484,8 +2543,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 432
-    Top = 176
+    Left = 744
+    Top = 304
   end
   object spInsertChild: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderInternalPromoChild'
@@ -2562,5 +2621,32 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 728
     Top = 96
+  end
+  object spInsertByPromo: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_OrderInternalPromo_byPromo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_promo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_promo'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 744
+    Top = 352
   end
 end

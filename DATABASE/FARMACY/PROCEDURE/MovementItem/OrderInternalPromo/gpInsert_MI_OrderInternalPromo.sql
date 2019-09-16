@@ -52,6 +52,7 @@ BEGIN
     FROM (WITH SelectMinPrice_AllGoods AS (SELECT * FROM lpSelect_GoodsMinPrice_onDate (inOperdate := vbOperDate, inUnitId := 0, inObjectId := vbRetailId, inUserId := vbUserId) AS SelectMinPrice_AllGoods)
              , tmpGoodsPromoMain AS (SELECT DISTINCT tmp.MovementId, tmp.GoodsId, tmp.JuridicalId FROM lpSelect_MovementItem_Promo_onDate(inOperDate:= vbOperDate) AS tmp)
              -- товары сети для PromoMovement
+             
              , tmpGoodsPromo AS (SELECT tmpGoodsPromoMain.*, ObjectLink_Child_retail.ChildObjectId AS GoodsId_retail
                                  FROM tmpGoodsPromoMain
                                       INNER JOIN ObjectLink AS ObjectLink_Child

@@ -1465,8 +1465,7 @@ end;
 procedure TLoadFormTest.LoadPromoCodeFormTest;
 begin
   //
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TReport_Check_byPromoCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_byPromoCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_byPromoCodeForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeForm'));

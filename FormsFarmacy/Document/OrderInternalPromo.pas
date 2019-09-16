@@ -135,6 +135,10 @@ type
     spUpdateMasterAmount: TdsdStoredProc;
     actUpdateMasterAmount: TdsdExecStoredProc;
     bbUpdateMasterAmount: TdxBarButton;
+    bbInsertByPromo: TdxBarButton;
+    actPromoJournalChoiceForm: TOpenChoiceForm;
+    spInsertByPromo: TdsdStoredProc;
+    macInsertByPromo: TMultiAction;
   private
     { Private declarations }
   public

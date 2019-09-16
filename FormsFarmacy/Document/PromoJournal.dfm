@@ -2,6 +2,7 @@ inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' <'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090'>'
   ClientHeight = 491
   ClientWidth = 769
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Promo'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
@@ -9,7 +10,7 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Promo
   ExplicitWidth = 785
-  ExplicitHeight = 530
+  ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -315,6 +316,31 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       isShowModal = False
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
@@ -364,6 +390,14 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -431,6 +465,10 @@ inherited PromoJournalForm: TPromoJournalForm
       Category = 0
       ImageIndex = 24
     end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 488
@@ -441,12 +479,11 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 424
-    Top = 8
+    Left = 672
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 456
-    Top = 8
+    Left = 568
+    Top = 112
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Promo'

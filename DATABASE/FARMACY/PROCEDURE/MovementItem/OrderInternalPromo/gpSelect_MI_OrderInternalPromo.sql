@@ -26,9 +26,9 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-    DECLARE vbUserId Integer;
+    DECLARE vbUserId   Integer;
     DECLARE vbObjectId Integer;
-    DECLARE vbDays TFloat;
+    DECLARE vbDays     TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternalPromo());

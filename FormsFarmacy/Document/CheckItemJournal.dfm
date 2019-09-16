@@ -798,6 +798,10 @@ inherited CheckItemJournalForm: TCheckItemJournalForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 368
+    Top = 392
+  end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [11]
       Action = actSimpleReCompleteList

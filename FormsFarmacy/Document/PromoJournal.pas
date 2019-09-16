@@ -34,6 +34,8 @@ type
     actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
     Prescribe: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public
