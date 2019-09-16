@@ -2004,8 +2004,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleEditUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleEditUserForm');
 
-
-{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
 
@@ -2014,7 +2012,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
-}
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

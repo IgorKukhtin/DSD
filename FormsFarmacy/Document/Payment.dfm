@@ -488,13 +488,23 @@ inherited PaymentForm: TPaymentForm
       Caption = #1048#1090#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
     object edTotalCount: TcxCurrencyEdit
-      Left = 633
+      Left = 629
       Top = 17
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 63
+    end
+    object cbPaymentFormed: TcxCheckBox
+      Left = 811
+      Top = 17
+      Hint = #1055#1083#1072#1090#1077#1078' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1055#1083#1072#1090#1077#1078' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 12
+      Width = 142
     end
   end
   object deDateStart: TcxDateEdit [2]
@@ -1549,6 +1559,13 @@ inherited PaymentForm: TPaymentForm
         Component = deDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPaymentFormed'
+        Value = Null
+        Component = cbPaymentFormed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -1587,6 +1604,14 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPaymentFormed'
+        Value = Null
+        Component = cbPaymentFormed
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1615,11 +1640,10 @@ inherited PaymentForm: TPaymentForm
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edJuridical
       end
       item
+        Control = cbPaymentFormed
       end>
     Left = 200
     Top = 177

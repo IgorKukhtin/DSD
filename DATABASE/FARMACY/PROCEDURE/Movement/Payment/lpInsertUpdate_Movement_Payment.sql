@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Payment(
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inJuridicalId           Integer    , -- Юрлицо
-    IN inUserId                Integer     -- сессия пользователя
+    IN inisPaymentFormed       Boolean    , -- Платеж сформирован 
+    IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -28,6 +29,9 @@ BEGIN
     -- сохранили связь с юрлицом
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
     
+    -- сохранили <Платеж сформирован >
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PaymentFormed(), ioId, inisPaymentFormed);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 

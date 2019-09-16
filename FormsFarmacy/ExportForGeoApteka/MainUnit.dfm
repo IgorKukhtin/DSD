@@ -79,14 +79,14 @@ object MainForm: TMainForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    object btnSendMail: TButton
+    object btnSendHTTPS: TButton
       Left = 775
       Top = 0
       Width = 113
       Height = 25
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' HTTPS'
       TabOrder = 3
-      OnClick = btnSendMailClick
+      OnClick = btnSendHTTPSClick
     end
     object btnExport: TButton
       Left = 711
@@ -123,15 +123,6 @@ object MainForm: TMainForm
       Caption = #1042#1089#1105' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
       TabOrder = 0
       OnClick = btnAllUnitClick
-    end
-    object Button2: TButton
-      Left = 167
-      Top = 0
-      Width = 106
-      Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1072#1087#1090#1077#1082
-      TabOrder = 5
-      OnClick = Button2Click
     end
   end
   object cxGrid: TcxGrid

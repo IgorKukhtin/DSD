@@ -1,30 +1,30 @@
 inherited PaymentJournalForm: TPaymentJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1086#1087#1083#1072#1090
   ClientHeight = 374
-  ClientWidth = 663
+  ClientWidth = 766
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Payment'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Payment
-  ExplicitWidth = 679
+  ExplicitWidth = 782
   ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 663
+    Width = 766
     Height = 317
     TabOrder = 3
     ExplicitWidth = 663
     ExplicitHeight = 317
     ClientRectBottom = 317
-    ClientRectRight = 663
+    ClientRectRight = 766
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 663
       ExplicitHeight = 317
       inherited cxGrid: TcxGrid
-        Width = 663
+        Width = 766
         Height = 317
         ExplicitWidth = 663
         ExplicitHeight = 317
@@ -89,12 +89,20 @@ inherited PaymentJournalForm: TPaymentJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 86
           end
+          object isPaymentFormed: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1077#1078' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085' '
+            DataBinding.FieldName = 'isPaymentFormed'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 663
+    Width = 766
     ExplicitWidth = 663
   end
   inherited ActionList: TActionList

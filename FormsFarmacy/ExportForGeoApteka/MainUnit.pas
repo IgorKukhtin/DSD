@@ -25,7 +25,7 @@ type
     qryUnit: TZQuery;
     dsUnit: TDataSource;
     Panel2: TPanel;
-    btnSendMail: TButton;
+    btnSendHTTPS: TButton;
     btnExport: TButton;
     btnExecute: TButton;
     btnAll: TButton;
@@ -46,21 +46,19 @@ type
     GoodsName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     Quant: TcxGridDBColumn;
-    Button2: TButton;
     UnitName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
-    procedure btnSendMailClick(Sender: TObject);
+    procedure btnSendHTTPSClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAllUnitClick(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
 
-    FileName: String;
+    UnitFile: String;
     SavePath: String;
     Subject: String;
 
@@ -116,7 +114,7 @@ begin
 
     btnExecuteClick(Nil);
     btnExportClick(Nil);
-    btnSendMailClick(Nil);
+    btnSendHTTPSClick(Nil);
 
   except
     on E: Exception do
@@ -162,7 +160,6 @@ begin
   qryReport_Upload.DisableControls;
   try
     try
-      FileName := qryUnit.FieldByName('ID').AsString;
       Subject := 'Данные по подразделению: ' + qryUnit.FieldByName('Address').AsString;
       qryReport_Upload.Params.ParamByName('UnitID').AsInteger := qryUnit.FieldByName('ID').AsInteger;
       qryReport_Upload.Open;
@@ -179,7 +176,20 @@ begin
   end;
 end;
 
+function StrToJSON(AStr : string) : string;
+begin
+  Result := StringReplace(AStr, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '"', '\"', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+function CurrToJSON(ACurr : currency) : string;
+begin
+  Result := CurrToStr(ACurr);
+  Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]);
+end;
+
 procedure TMainForm.btnExportClick(Sender: TObject);
+  var sl : TStringList;
 begin
   if not qryReport_Upload.Active then Exit;
   if qryReport_Upload.IsEmpty then Exit;
@@ -190,46 +200,49 @@ begin
     exit;
   end;
 
-  // обычный отчет
+  // Формирование отчет
+  sl := TStringList.Create;
   try
-    try
-      ExportGridToExcel(SavePath + FileName, grReportUnit);
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-        exit;
-      end;
+    sl.Add('{');
+    sl.Add('  "Meta": {');
+    sl.Add('    "id": "' + qryUnit.FieldByName('UnitCode').AsString + '"');
+    sl.Add('    "head": "' + StrToJSON(qryUnit.FieldByName('Head').AsString) + '"');
+    sl.Add('    "name": "' + StrToJSON(qryUnit.FieldByName('UnitName').AsString) + '"');
+    sl.Add('    "addr": "' + StrToJSON(qryUnit.FieldByName('Address').AsString) + '"');
+    sl.Add('    "code": "' + qryUnit.FieldByName('Code').AsString + '"');
+
+    sl.Add('  },');
+    sl.Add('  "Data": [');
+    qryReport_Upload.First;
+    while not qryReport_Upload.Eof do
+    begin
+      sl.Add('    {');
+      sl.Add('      "id": "' + qryReport_Upload.FieldByName('GoodsCode').AsString + '"');
+      sl.Add('      "name": "' + StrToJSON(qryReport_Upload.FieldByName('GoodsName').AsString) + '"');
+      sl.Add('      "quant": "' + CurrToJSON(qryReport_Upload.FieldByName('Quant').AsCurrency) + '"');
+      sl.Add('      "price": "' + CurrToJSON(qryReport_Upload.FieldByName('Price').AsCurrency) + '"');
+      qryReport_Upload.Next;
+      if qryReport_Upload.Eof then sl.Add('    }') else sl.Add('    },');
     end;
+    sl.Add('  ]');
+    sl.Add('}');
+
+    sl.SaveToFile(UnitFile, TEncoding.UTF8)
   finally
+    sl.Free;
   end;
 end;
 
-procedure TMainForm.btnSendMailClick(Sender: TObject);
-  var vExt : string;
-
-  function GetFileSizeByName(AFileName: string): DWord;
-  var
-    Handle: THandle;
-  begin
-    if not FileExists(AFilename) then exit;
-    Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
-    Result := GetFileSize(Handle, nil);
-    CloseHandle(Handle);
-  end;
-
+procedure TMainForm.btnSendHTTPSClick(Sender: TObject);
 begin
 
-  if not FileExists(SavePath + FileName + '.xls') then Exit;
+  if not FileExists(SavePath + UnitFile) then Exit;
 
-  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.xls');
-  vExt := '.xls';
-
+  Add_Log('Начало отправки прайса: ' + SavePath + UnitFile);
 
   begin
     try
-      DeleteFile(SavePath + FileName + '.xls');
-      if FileExists(SavePath + FileName + vExt) then DeleteFile(SavePath + FileName + vExt);
+      DeleteFile(SavePath + UnitFile);
     except
       on E: Exception do
       begin
@@ -237,36 +250,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure TMainForm.Button2Click(Sender: TObject);
-begin
-  if not qryUnit.Active then Exit;
-  if qryUnit.IsEmpty then Exit;
-  Add_Log('Начало выгрузки аптек');
-  if not ForceDirectories(SavePath) then
-  Begin
-    Add_Log('Не могу создать директорию выгрузки');
-    exit;
-  end;
-
-  FileName := 'Unit';
-  Subject := 'Информация о подразделениях';
-
-  // обычный отчет
-  try
-    try
-      ExportGridToExcel(SavePath + FileName, cxGrid);
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-        exit;
-      end;
-    end;
-  finally
-  end;
-
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -278,7 +261,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForCostless.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForGeoApteka.ini');
 
   try
     SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
@@ -296,6 +279,9 @@ begin
 
     ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'eej9oponahT4gah3');
     Ini.WriteString('Connect', 'Password', ZConnection1.Password);
+
+    UnitFile := SavePath + 'data.json';
+
 
   finally
     Ini.free;
@@ -335,7 +321,7 @@ begin
       btnAllUnit.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
-      btnSendMail.Enabled := false;
+      btnSendHTTPS.Enabled := false;
       Timer1.Enabled := true;
     end;
   end;

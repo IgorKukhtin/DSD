@@ -190,11 +190,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Different() RETURNS integer AS $BO
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Different', 'Точка другого юр.лица'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Different');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PaymentFormed() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PaymentFormed'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_PaymentFormed', 'Платеж сформирован '  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PaymentFormed');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 16.09.19                                                                                    * zc_MovementBoolean_PaymentFormed
  09.09.19         * zc_MovementBoolean_Different
  06.08.19                                                                                    * zc_MovementBoolean_Received, zc_MovementBoolean_Sent
  24.07.19         * zc_MovementBoolean_DefSUN

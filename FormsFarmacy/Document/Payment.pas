@@ -100,6 +100,7 @@ type
     actExportToXLSUkrxim: TdsdExportToXLS;
     actExecStoredProcUkrxim: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    cbPaymentFormed: TcxCheckBox;
   private
     { Private declarations }
   public

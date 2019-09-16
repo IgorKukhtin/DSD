@@ -57,7 +57,6 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
-          OptionsSelection.CellSelect = False
           OptionsView.GroupByBox = False
           Styles.Content = dmMain.cxContentStyle
           Styles.Inactive = dmMain.cxSelection
@@ -90,6 +89,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'NoteStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 239
             Position.BandIndex = 0
             Position.ColIndex = 0
@@ -100,6 +100,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'NoteEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 239
             Position.BandIndex = 0
             Position.ColIndex = 0
@@ -110,6 +111,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'NoteNext'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Styles.Header = dmMain.cxHeaderL4Style
             Width = 239
             Position.BandIndex = 0
@@ -134,6 +136,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 45
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -144,6 +147,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -154,6 +158,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Styles.Header = dmMain.cxHeaderL4Style
             Width = 65
             Position.BandIndex = 1
@@ -163,6 +168,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -170,6 +176,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color_CalcFont: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcFont'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -177,6 +184,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color_CalcFontUser: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcFont'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -237,7 +245,6 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
-          OptionsSelection.CellSelect = False
           OptionsView.GroupByBox = False
           Styles.Content = dmMain.cxContentStyle
           Styles.Inactive = dmMain.cxSelection
@@ -270,6 +277,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 193
             Position.BandIndex = 0
             Position.ColIndex = 2
@@ -292,6 +300,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Styles.Header = dmMain.cxHeaderL4Style
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -300,6 +309,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Substitution_Color_CalcFont: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcFont'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0

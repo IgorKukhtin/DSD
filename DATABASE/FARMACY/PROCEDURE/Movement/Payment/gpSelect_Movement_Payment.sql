@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , TotalSumm TFloat
              , JuridicalId Integer
              , JuridicalName TVarChar
+             , isPaymentFormed Boolean
               )
 
 AS
@@ -43,6 +44,7 @@ BEGIN
           , Movement_Payment.TotalSumm
           , Movement_Payment.JuridicalId
           , Movement_Payment.JuridicalName
+          , Movement_Payment.isPaymentFormed
         FROM
             Movement_Payment_View AS Movement_Payment
             INNER JOIN tmpStatus ON Movement_Payment.StatusId = tmpStatus.StatusId
@@ -60,6 +62,7 @@ ALTER FUNCTION gpSelect_Movement_Payment (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.09.19                                                                                       *
  04.07.18                                                                                       *
  29.10.15                                                                        *
 */

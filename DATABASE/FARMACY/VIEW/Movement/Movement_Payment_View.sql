@@ -12,6 +12,7 @@ CREATE OR REPLACE VIEW Movement_Payment_View AS
       , Object_Status.ValueData                                        AS StatusName
       , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat         AS TotalCount
       , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat          AS TotalSumm
+      , COALESCE(MovementBoolean_PaymentFormed.ValueData,False)        AS isPaymentFormed
       
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -28,17 +29,21 @@ CREATE OR REPLACE VIEW Movement_Payment_View AS
                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
         LEFT OUTER JOIN Object AS Object_Juridical
                                ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+        LEFT JOIN MovementBoolean AS MovementBoolean_PaymentFormed
+                                  ON MovementBoolean_PaymentFormed.MovementId =  Movement.Id
+                                 AND MovementBoolean_PaymentFormed.DescId = zc_MovementBoolean_PaymentFormed()
     WHERE Movement.DescId = zc_Movement_Payment();
 
 ALTER TABLE Movement_Payment_View
   OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 16.09.19                                                                        * 
  29.10.15                                                         * 
 */
 
 -- тест
--- SELECT * FROM Movement_Payment_View  where id = 805
+-- SELECT * FROM Movement_Payment_View  where id = 15636064 

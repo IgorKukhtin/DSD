@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Movement_Payment()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Payment(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Оплаты приходов>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inJuridicalId           Integer    , -- Юрлицо плательщик
+    IN inisPaymentFormed       Boolean    , -- Платеж сформирован 
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -42,16 +43,17 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. В одной дате <%>, по одному юрлицу <%> может быть только один документ оплаты.', inOperDate,(Select ValueData from Object Where Id = inJuridicalId);
     END IF; */
     -- сохранили <Документ>
-    ioId := lpInsertUpdate_Movement_Payment (ioId          := ioId
-                                           , inInvNumber   := inInvNumber
-                                           , inOperDate    := inOperDate
-                                           , inJuridicalId := inJuridicalId
-                                           , inUserId      := vbUserId);
+    ioId := lpInsertUpdate_Movement_Payment (ioId              := ioId
+                                           , inInvNumber       := inInvNumber
+                                           , inOperDate        := inOperDate
+                                           , inJuridicalId     := inJuridicalId
+                                           , inisPaymentFormed := inisPaymentFormed
+                                           , inUserId          := vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.

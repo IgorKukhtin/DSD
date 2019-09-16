@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer
              , JuridicalName TVarChar
              , DateStart TDateTime
-             , DateEnd TDateTime)
+             , DateEnd TDateTime
+             , isPaymentFormed Boolean)
 AS
 $BODY$
 BEGIN
@@ -45,6 +46,7 @@ BEGIN
           , NULL::TVarChar                                      AS JuridicalName
           , inDateStart                                         AS DateStart
           , inDateEnd                                           AS DateEnd 
+          , False                                               AS isPaymentFormed
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete())   AS Object_Status;
     ELSE
         RETURN QUERY
@@ -60,6 +62,7 @@ BEGIN
           , Movement_Payment.JuridicalName
           , inDateStart AS DateStart
           , inDateEnd AS DateEnd
+          , Movement_Payment.isPaymentFormed
         FROM
             Movement_Payment_View AS Movement_Payment
         WHERE Movement_Payment.Id =  inMovementId;
@@ -73,6 +76,7 @@ ALTER FUNCTION gpGet_Movement_Payment (Integer, TDateTime, TDateTime, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 16.09.19                                                                                     *
  29.10.15                                                                        *
 */

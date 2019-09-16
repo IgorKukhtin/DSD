@@ -23,6 +23,7 @@ type
     TotalSumm: TcxGridDBColumn;
     Id: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    isPaymentFormed: TcxGridDBColumn;
   private
     { Private declarations }
   public
