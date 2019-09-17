@@ -74,8 +74,8 @@ BEGIN
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-    -- 
-    IF inOperDateBranch IS NOT NULL
+    --дата аптеки
+    IF COALESCE (inInvNumberBranch,'') <> ''
     THEN
         -- 
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);

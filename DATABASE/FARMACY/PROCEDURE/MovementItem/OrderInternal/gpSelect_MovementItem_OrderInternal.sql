@@ -14,7 +14,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbObjectId Integer;
+  DECLARE vbObjectId Integer; 
   DECLARE vbUnitId Integer;
   DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;

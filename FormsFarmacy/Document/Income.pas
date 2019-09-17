@@ -167,6 +167,8 @@ type
     cbDifferent: TcxCheckBox;
     cxLabel18: TcxLabel;
     edComment: TcxTextEdit;
+    spUpdate_BranchDate: TdsdStoredProc;
+    actUpdate_BranchDate: TdsdExecStoredProc;
   private
     { Private declarations }
   public
