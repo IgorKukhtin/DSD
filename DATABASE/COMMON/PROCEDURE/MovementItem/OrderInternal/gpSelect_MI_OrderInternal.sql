@@ -321,6 +321,18 @@ BEGIN
            , CAST (tmpMI.TermProduction * tmpMI.CountForecast      * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozTerm_calc      -- *Норма зап. на срок (по пр.)
            , CAST (tmpMI.TermProduction * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozOrderTerm_calc -- *Норма зап. на срок (по зв.)
 
+           , CAST ((tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountReserve_calc     -- Норма запаса пр-во+склад = AmountPrognozOrder_calc + AmountPrognozOrderTerm_calc
+
+           , CAST (( (tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff)
+                   - (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next) AS NUMERIC (16, 1)) :: TFloat AS AmountReserveOrderKg_calc     -- Прогноз Заказ кг = "Норма запаса пр-во+склад" - AmountRemainsTerm_calc
+
+           , CASE WHEN COALESCE (ObjectFloat_TaxExit.ValueData,0) <> 0
+                  THEN CAST ( (   ( (tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff)
+                                - (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next) )
+                                 / ObjectFloat_TaxExit.ValueData  AS NUMERIC (16, 1) )
+                  ELSE 0
+             END                                                   :: TFloat AS AmountReserveOrderCuter_calc     --Прогноз заказ (куттер) = "Прогноз Заказ кг" / zc_ObjectFloat_Receipt_TaxExit - 
+
            , CAST (tmpMI.AmountProduction_old  AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_old  -- Произв. сегодня
            , CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_next -- Произв. далее
            , CASE WHEN tmpMI.StartDate_old  = zc_DateEnd()                                                THEN NULL ELSE tmpMI.StartDate_old  END :: TDateTime AS StartDate_old  -- Партия-1 сегодня
@@ -483,6 +495,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code_basis
                                    ON ObjectString_Receipt_Code_basis.ObjectId = Object_Receipt_basis.Id
                                   AND ObjectString_Receipt_Code_basis.DescId = zc_ObjectString_Receipt_Code()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
+                                  ON ObjectFloat_TaxExit.ObjectId = tmpMI.ReceiptId_basis
+                                 AND ObjectFloat_TaxExit.DescId   = zc_ObjectFloat_Receipt_TaxExit()
 
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmpMI.GoodsId_basis
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)
