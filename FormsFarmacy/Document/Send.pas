@@ -136,6 +136,7 @@ type
     chColor_calc: TcxGridDBColumn;
     DateInsertChild: TcxGridDBColumn;
     chDateInsert: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

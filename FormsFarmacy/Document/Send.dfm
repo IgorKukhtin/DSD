@@ -466,6 +466,14 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object AccommodationName: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+            DataBinding.FieldName = 'AccommodationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
         end
       end
       object cxSplitter1: TcxSplitter
