@@ -202,42 +202,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object LineNum: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'LineNum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0.;-0.; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object StatusCode: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089
-            DataBinding.FieldName = 'StatusCode'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 11
-                Value = 1
-              end
-              item
-                Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 12
-                Value = 2
-              end
-              item
-                Description = #1059#1076#1072#1083#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end>
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1044#1086#1082
             DataBinding.FieldName = 'InvNumber'
@@ -249,6 +213,8 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -257,6 +223,8 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object OperDate_fact: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1074#1099#1093#1086#1076' '#1043#1055
             DataBinding.FieldName = 'OperDate_fact'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -347,14 +315,27 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 55
           end
+          object TermProduction_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1082#1086#1083'. '#1076#1085'. '#1079#1072#1082#1088'. '#1087#1072#1088#1090'. '
+            DataBinding.FieldName = 'TermProduction_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1083'-'#1074#1091' '#1076#1085#1077#1081' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1087#1072#1088#1090#1080#1080' '
+            Options.Editing = False
+            Width = 86
+          end
           object Percent_fact: TcxGridDBColumn
-            Caption = '% '#1074#1099#1093'. '#1074' '#1076#1077#1085#1100
+            Caption = #1057#1088'. % '#1074#1099#1093'. '#1074' '#1076#1077#1085#1100
             DataBinding.FieldName = 'Percent_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1080#1081' % '#1074#1099#1093#1086#1076#1072' '#1074' '#1076#1077#1085#1100
             Options.Editing = False
             Width = 55
           end
