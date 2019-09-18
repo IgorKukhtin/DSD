@@ -205,21 +205,20 @@ begin
   try
     sl.Add('{');
     sl.Add('  "Meta": {');
-    sl.Add('    "id": "' + qryUnit.FieldByName('UnitCode').AsString + '"');
-    sl.Add('    "head": "' + StrToJSON(qryUnit.FieldByName('Head').AsString) + '"');
-    sl.Add('    "name": "' + StrToJSON(qryUnit.FieldByName('UnitName').AsString) + '"');
-    sl.Add('    "addr": "' + StrToJSON(qryUnit.FieldByName('Address').AsString) + '"');
+    sl.Add('    "id": "' + qryUnit.FieldByName('UnitCode').AsString + '",');
+    sl.Add('    "head": "' + StrToJSON(qryUnit.FieldByName('Head').AsString) + '",');
+    sl.Add('    "name": "' + StrToJSON(qryUnit.FieldByName('UnitName').AsString) + '",');
+    sl.Add('    "addr": "' + StrToJSON(qryUnit.FieldByName('Address').AsString) + '",');
     sl.Add('    "code": "' + qryUnit.FieldByName('Code').AsString + '"');
-
     sl.Add('  },');
     sl.Add('  "Data": [');
     qryReport_Upload.First;
     while not qryReport_Upload.Eof do
     begin
       sl.Add('    {');
-      sl.Add('      "id": "' + qryReport_Upload.FieldByName('GoodsCode').AsString + '"');
-      sl.Add('      "name": "' + StrToJSON(qryReport_Upload.FieldByName('GoodsName').AsString) + '"');
-      sl.Add('      "quant": "' + CurrToJSON(qryReport_Upload.FieldByName('Quant').AsCurrency) + '"');
+      sl.Add('      "id": "' + qryReport_Upload.FieldByName('GoodsCode').AsString + '",');
+      sl.Add('      "name": "' + StrToJSON(qryReport_Upload.FieldByName('GoodsName').AsString) + '",');
+      sl.Add('      "quant": "' + CurrToJSON(qryReport_Upload.FieldByName('Quant').AsCurrency) + '",');
       sl.Add('      "price": "' + CurrToJSON(qryReport_Upload.FieldByName('Price').AsCurrency) + '"');
       qryReport_Upload.Next;
       if qryReport_Upload.Eof then sl.Add('    }') else sl.Add('    },');

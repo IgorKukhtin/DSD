@@ -45,6 +45,8 @@ BEGIN
             , ObjectLink_Goods_PayrollGroup.ChildObjectId                         AS PayrollGroupID
             , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, FALSE)::Boolean  AS isManagerPharmacy
             , ObjectLink_Personal_Unit.ChildObjectId                              AS UnitUserId
+            , CASE WHEN upper(substring(Object_Unit.ValueData, 1, 2)) = '¿œ'
+              THEN True ELSE False END                                            AS PharmacyItem
        FROM tmpOperDate
 
             LEFT JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -53,6 +55,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+            LEFT JOIN Object AS Object_Unit
+                             ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId   
 
             INNER JOIN MovementItem AS MI_SheetWorkTime
                                     ON MI_SheetWorkTime.MovementId = Movement.Id
@@ -360,7 +365,8 @@ BEGIN
                                                                inCountUserSAS     := CheckSum.CountUserS,
                                                                inSummCS           := CheckSum.SummCS,
                                                                inSummSCS          := CheckSum.SummSCS,
-                                                               inSummHS           := CheckSum.SummHS) AS Calculation
+                                                               inSummHS           := CheckSum.SummHS,
+                                                               inPharmacyItem     := tmpBoard.PharmacyItem) AS Calculation
                                                                                                       ON 1 = 1
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_Check()
      AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)
@@ -431,7 +437,8 @@ BEGIN
                                                                inCountUserSAS     := Null::Integer,
                                                                inSummCS           := Income.SaleSumm,
                                                                inSummSCS          := Null::TFloat,
-                                                               inSummHS           := Null::TFloat) AS Calculation
+                                                               inSummHS           := Null::TFloat,
+                                                               inPharmacyItem     := tmpBoard.PharmacyItem) AS Calculation
                                                                                               ON 1 = 1
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
      AND (tmpBoard.PersonalId = inUserID OR inUserID = 0)

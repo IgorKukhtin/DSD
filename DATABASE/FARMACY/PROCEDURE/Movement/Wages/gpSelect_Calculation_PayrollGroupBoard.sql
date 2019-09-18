@@ -1,6 +1,6 @@
 -- Function: gpSelect_Сalculation_PayrollGroupBoard()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroupBoard (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroupBoard (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroupBoard(
     IN inPayrollTypeID    Integer,
@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroupBoard(
 
     IN inSummCS           TFloat,
     IN inSummSCS          TFloat,
-    IN inSummHS           TFloat
+    IN inSummHS           TFloat,
+    IN inPharmacyItem     Boolean
 )
 RETURNS TABLE (Summa TFloat
              , SummaBase TFloat
@@ -29,7 +30,30 @@ $BODY$
    DECLARE vbFormula   TVarChar;
 BEGIN
 
-  IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS())
+  IF inPharmacyItem = True AND inPayrollTypeID in (zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS())
+  THEN
+    vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0)) > 0
+                        THEN (COALESCE (inSummCS, 0) + COALESCE (inSummSCS, 0)) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserAS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0))
+                        ELSE 0 END;
+    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
+
+    vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummCS, 0) + COALESCE (inSummSCS, 0), 'G999G999G999G999D99'))||' / ('||
+                    CAST(COALESCE (inCountUserCS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserAS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserSCS, 0) AS TVarChar)||' + '||
+                    CAST(COALESCE (inCountUserSAS, 0) AS TVarChar)||') = '||
+                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
+                    'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
+                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
+                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
+                    '; Начислено: '||TRIM(to_char(CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, 'G999G999G999G999D99'));
+
+    RETURN QUERY
+        SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
+
+  ELSEIF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS()) 
   THEN
     vbSummaBase := CASE WHEN (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0)) > 0
                         THEN COALESCE (inSummCS, 0) / (COALESCE (inCountUserCS, 0) + COALESCE (inCountUserSCS, 0) + COALESCE (inCountUserSAS, 0))
@@ -133,7 +157,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_PayrollGroupBoard (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_PayrollGroupBoard (Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean) OWNER TO postgres;
 
 
 /*

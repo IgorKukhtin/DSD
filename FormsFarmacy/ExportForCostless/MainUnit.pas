@@ -49,6 +49,7 @@ type
     Price: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
     Button2: TButton;
+    GoodsGroupName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
