@@ -30,6 +30,7 @@ type
     edToGroup: TcxButtonEdit;
     GuidesTo: TdsdGuides;
     cbMovement: TcxCheckBox;
+    cbMovement_fact: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -98,10 +98,17 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
   end
   object cbMovement: TcxCheckBox
     Left = 217
-    Top = 27
-    Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Top = 14
+    Caption = #1055#1086' '#1076#1086#1082'. '#1087#1088#1086#1080#1079#1074'.'
     TabOrder = 10
     Width = 102
+  end
+  object cbMovement_fact: TcxCheckBox
+    Left = 217
+    Top = 42
+    Caption = #1055#1086' '#1076#1086#1082'. '#1074#1099#1093#1086#1076#1072'. '
+    TabOrder = 11
+    Width = 108
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -181,6 +188,14 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
         Name = 'isMovement'
         Value = Null
         Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMovement_fact'
+        Value = Null
+        Component = cbMovement_fact
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -358,14 +358,15 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 55
           end
-          object Persent_avg_fact: TcxGridDBColumn
-            Caption = #1089#1088#1077#1076'. % '#1074#1099#1093'. '#1074' '#1076#1077#1085#1100
-            DataBinding.FieldName = 'Persent_avg_fact'
+          object Day_avg_fact: TcxGridDBColumn
+            Caption = #1057#1088'. '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074#1099#1093#1086#1076#1072
+            DataBinding.FieldName = 'Day_avg_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1077#1077' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074#1099#1093#1086#1076#1072
             Options.Editing = False
             Width = 55
           end
@@ -688,11 +689,22 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
       Width = 261
     end
     object cbMovement: TcxCheckBox
-      Left = 811
+      Left = 803
       Top = 24
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1088#1086#1080#1079#1074'. ('#1076#1072'/'#1085#1077#1090')'
       Action = actRefreshMov
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1088#1086#1080#1079#1074'.'
       TabOrder = 8
-      Width = 147
+      Width = 150
+    end
+    object cbMovement_fact: TcxCheckBox
+      Left = 959
+      Top = 24
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1074#1099#1093#1086#1076#1072'. ('#1076#1072'/'#1085#1077#1090')'
+      Action = actRefreshDays
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1074#1099#1093#1086#1076#1072'. '
+      TabOrder = 9
+      Width = 154
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -721,7 +733,21 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshMov: TdsdDataSetRefresh [0]
+    object actRefreshDays: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMov: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -966,6 +992,14 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement_fact'
+          Value = Null
+          Component = cbMovement_fact
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1071,6 +1105,14 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
         Name = 'inisMovement'
         Value = Null
         Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement_fact'
+        Value = Null
+        Component = cbMovement_fact
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
