@@ -85,6 +85,9 @@ type
     actPrintTotal: TdsdPrintAction;
     spSelectPrintTotal: TdsdStoredProc;
     bbPrintTotal: TdxBarButton;
+    actPrint_2: TdsdPrintAction;
+    mactPrint_Order2: TMultiAction;
+    bbPrint_Order2: TdxBarButton;
   private
     { Private declarations }
   public

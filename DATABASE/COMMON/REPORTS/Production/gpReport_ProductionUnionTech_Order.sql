@@ -551,14 +551,14 @@ BEGIN
                                , tmpFact_production.OperDate            ::TVarChar
                                , 0                     AS DocumentKindId
                                , tmpFact_production.GoodsId
-                               , 0                     AS Amount
-                               , 0                     AS CuterCount
-                               , 0                     AS Amount_Order
-                               , 0                     AS CuterCount_Order
-                               , 0                     AS GoodsKindId
+                               , 0                   AS Amount
+                               , 0                   AS CuterCount
+                               , 0                   AS Amount_Order
+                               , 0                   AS CuterCount_Order
+                               , 0                   AS GoodsKindId
                                , tmpFact_production.GoodsKindId AS GoodsKindId_Complete
                                , tmpFact_production.ReceiptId
-                               , tmpFact_production.TermProduction
+                               , 0                   AS TermProduction
                                , tmpFact_production.PartionGoodsDate
                                , NULL ::TDateTime    AS PartionGoodsDateClose
                                , FALSE               AS isOrderSecond
