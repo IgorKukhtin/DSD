@@ -55,6 +55,20 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       TabOrder = 3
       Width = 315
     end
+    object edFilter: TcxTextEdit
+      Left = 649
+      Top = 5
+      TabOrder = 4
+      DesignSize = (
+        373
+        21)
+      Width = 373
+    end
+    object cxLabel2: TcxLabel
+      Left = 601
+      Top = 6
+      Caption = #1060#1080#1083#1100#1090#1088
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -865,5 +879,12 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     AfterOpen = cdsListFieldsAfterOpen
     Left = 456
     Top = 328
+  end
+  object dsdFieldFilter1: TdsdFieldFilter
+    TextEdit = edFilter
+    DataSet = ClientDataSet
+    Column = colGoodsName
+    Left = 568
+    Top = 200
   end
 end

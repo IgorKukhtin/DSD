@@ -106,6 +106,9 @@ type
     cdsResultTotalExecutionLine: TCurrencyField;
     dxBarButton1: TdxBarButton;
     actConsider: TAction;
+    edFilter: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    dsdFieldFilter1: TdsdFieldFilter;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);

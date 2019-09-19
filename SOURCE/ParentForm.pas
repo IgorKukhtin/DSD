@@ -677,6 +677,7 @@ initialization
   RegisterClass (TdsdEnterManager);
   RegisterClass (TdsdFileToBase64);
   RegisterClass (TdsdShowPUSHMessage);
+  RegisterClass (TdsdFieldFilter);
 
 // дкъ реярю
 

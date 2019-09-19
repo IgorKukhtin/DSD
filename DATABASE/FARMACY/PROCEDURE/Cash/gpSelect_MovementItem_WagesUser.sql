@@ -26,12 +26,12 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 7579515;
+      vbUserId  := 8905248;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
     THEN
-      SELECT Movement.ID
+      SELECT MAX(Movement.ID)
       INTO vbMovementId  
       FROM Movement 
       WHERE Movement.OperDate = inOperDate 
