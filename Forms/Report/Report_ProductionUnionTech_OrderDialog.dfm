@@ -3,8 +3,8 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074' '#1080' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 242
-  ClientWidth = 333
+  ClientHeight = 276
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 34
-    Top = 193
+    Left = 43
+    Top = 233
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 193
+    Left = 217
+    Top = 233
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -110,6 +110,22 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
     TabOrder = 11
     Width = 108
   end
+  object cxLabel4: TcxLabel
+    Left = 11
+    Top = 171
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 11
+    Top = 190
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 308
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -129,8 +145,8 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 198
+    Left = 177
+    Top = 222
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -199,9 +215,26 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 186
+    Left = 121
+    Top = 226
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -264,5 +297,35 @@ object Report_ProductionUnionTech_OrderDialogForm: TReport_ProductionUnionTech_O
       end>
     Left = 150
     Top = 105
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 160
   end
 end
