@@ -1768,13 +1768,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderDialogForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
@@ -2010,13 +2010,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationDialogForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_UpdateObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectDialogForm'));
@@ -2148,10 +2148,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
    exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
 
