@@ -179,6 +179,11 @@ object PersonalRateForm: TPersonalRateForm
             item
               Format = ',0.###;-,0.###; ;'
               Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PersonalName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -274,15 +279,10 @@ object PersonalRateForm: TPersonalRateForm
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1092#1080#1079'.'#1083#1080#1094#1086')'
             DataBinding.FieldName = 'MemberName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 135
           end
           object INN: TcxGridDBColumn
@@ -364,6 +364,7 @@ object PersonalRateForm: TPersonalRateForm
       item
         Name = 'inShowAll'
         Value = False
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -426,13 +427,13 @@ object PersonalRateForm: TPersonalRateForm
           ItemName = 'bbShowErased'
         end
         item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert'
         end
         item
           Visible = True
@@ -524,6 +525,10 @@ object PersonalRateForm: TPersonalRateForm
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -929,6 +934,25 @@ object PersonalRateForm: TPersonalRateForm
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -997,19 +1021,17 @@ object PersonalRateForm: TPersonalRateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPositionId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PositionId'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1029,8 +1051,8 @@ object PersonalRateForm: TPersonalRateForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 328
-    Top = 312
+    Left = 360
+    Top = 304
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120
@@ -1099,10 +1121,14 @@ object PersonalRateForm: TPersonalRateForm
         Control = edOperDate
       end
       item
+        Control = ceComment
+      end
+      item
+        Control = edPersonalServiceList
       end>
     GetStoredProc = spGet
-    Left = 306
-    Top = 193
+    Left = 314
+    Top = 225
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalRate'
@@ -1162,13 +1188,24 @@ object PersonalRateForm: TPersonalRateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalId'
+        Name = 'PersonalServiceListId'
         Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalName'
+        Name = 'PersonalServiceListName'
         Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1177,13 +1214,13 @@ object PersonalRateForm: TPersonalRateForm
     Top = 32
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'PersonalAccountJournalForm'
+    FormName = 'PersonalRateJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 427
-    Top = 253
+    Left = 467
+    Top = 277
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1339,5 +1376,16 @@ object PersonalRateForm: TPersonalRateForm
       end>
     Left = 416
     Top = 13
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesPersonalServiceList
+      end>
+    Left = 488
+    Top = 184
   end
 end

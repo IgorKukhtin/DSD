@@ -31,13 +31,13 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalRate(), inInvNumber, inOperDate);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalRate(), inInvNumber, inOperDate, Null);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
 
      -- сохранили свойство <Примечание>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
      
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -53,4 +53,4 @@ $BODY$
 */
 
 -- тест
---
+--select * from gpInsertUpdate_Movement_PersonalRate(ioId := 0 , inInvNumber := '4'::TVarChar , inOperDate := ('30.09.2019')::TDateTime , inComment := ''::TVarChar , inPersonalServiceListId := 0 ,  inSession := '5'::TVarChar);

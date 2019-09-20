@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalRate()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalRate (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalRate (Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalRate(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,8 +9,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalRate(
     IN inPersonalId            Integer   , -- Сотрудники
     IN inAmount                TFloat    , -- 
     IN inComment               TVarChar  , -- 
-    IN inUnitId                Integer   , -- Подразделение
-    IN inPositionId            Integer   , -- Должность
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -25,8 +24,6 @@ BEGIN
                                                      , inPersonalId            := inPersonalId
                                                      , inAmount                := inAmount
                                                      , inComment               := inComment
-                                                     , inUnitId                := inUnitId
-                                                     , inPositionId            := inPositionId
                                                      , inUserId                := vbUserId
                                                       ) AS tmp;
 

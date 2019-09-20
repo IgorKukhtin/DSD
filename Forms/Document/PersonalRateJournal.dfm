@@ -27,7 +27,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 43770d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 43830d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

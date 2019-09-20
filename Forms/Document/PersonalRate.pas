@@ -95,6 +95,9 @@ type
     cxLabel3: TcxLabel;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

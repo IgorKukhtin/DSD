@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalRate()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalRate (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalRate (Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalRate(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,8 +9,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalRate(
     IN inPersonalId            Integer   , -- Сотрудники
     IN inAmount                TFloat    , -- 
     IN inComment               TVarChar  , -- 
-    IN inUnitId                Integer   , -- Подразделение
-    IN inPositionId            Integer   , -- Должность
     IN inUserId                Integer     -- пользователь
 )                               
 RETURNS Integer AS               
@@ -24,19 +23,9 @@ BEGIN
      -- проверка
      IF COALESCE (inPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)> для Сумма начислено = <%>.', zfConvert_FloatToString (inAmount);
      END IF;
-     -- проверка
-     IF COALESCE (inUnitId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Подразделение> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
-     END IF;
-     -- проверка
-     IF COALESCE (inPositionId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
-     END IF;
-
+    
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -46,10 +35,6 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
