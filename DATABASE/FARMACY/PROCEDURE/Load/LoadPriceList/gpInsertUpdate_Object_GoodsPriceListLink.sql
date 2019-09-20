@@ -107,8 +107,8 @@ BEGIN
     END IF;                   	 
 
     IF vbMarionCode > 0 THEN
-       -- Устанавливаем связь с кодом Мариона
 
+       -- Устанавливаем связь с кодом Мариона
        SELECT Id INTO vbMarionGoodsId
            FROM Object_Goods_View 
           WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = vbMarionCode;
