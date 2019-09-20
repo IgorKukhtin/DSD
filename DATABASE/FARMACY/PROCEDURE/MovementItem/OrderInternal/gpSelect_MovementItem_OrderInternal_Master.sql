@@ -1,26 +1,109 @@
--- Function: gpSelect_MovementItem_OrderInternal()
+-- Function: gpSelect_MovementItem_OrderInternal_Master()
 
---   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
---
---   Процедура разбита на две gpSelect_MovementItem_OrderInternal_Master и gpSelect_MovementItem_OrderInternal_Child
---
---   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal_Master (Integer, Boolean, Boolean, Boolean, TVarChar);
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, Boolean, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal_Master(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
     IN inIsLink      Boolean      , -- проверка привязки к поставщику
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS SETOF refcursor
+RETURNS TABLE (Id                    Integer
+             , GoodsId               Integer
+             , GoodsCode             Integer
+             , GoodsName             TVarChar
+             , RetailName            TVarChar
+             , isTOP                 Boolean
+             , isTOP_Price           Boolean
+
+             , GoodsGroupId          Integer
+             , NDSKindId             Integer
+             , NDSKindName           TVarChar  -- 10
+             , NDS                   TFloat
+             , isClose               Boolean
+             , isFirst               Boolean
+             , isSecond              Boolean
+             , isSP                  Boolean
+
+             , isMarketToday         Boolean
+             , LastPriceDate         TDateTime
+
+             , isTopColor            Integer
+             , Multiplicity          TFloat
+             , CalcAmount            TFloat  -- 20
+             , Amount                TFloat
+             , Summ                  TFloat
+             , isErased              Boolean
+             , Price                 TFloat
+             , MinimumLot            TFloat
+             , PartionGoodsDate      TDateTime
+             , Comment               TVarChar
+             , PartnerGoodsId        Integer
+             , PartnerGoodsCode      TVarChar
+             , PartnerGoodsName      TVarChar  -- 30
+             , JuridicalId           Integer
+             , JuridicalName         TVarChar
+             , ContractId            Integer
+             , ContractName          TVarChar
+             , MakerName             TVarChar
+             , SuperFinalPrice       TFloat
+             , SuperFinalPrice_Deferment TFloat
+             , PriceOptSP            TFloat
+             , isPriceDiff           Boolean
+             , isCalculated          Boolean  -- 40
+             , PartionGoodsDateColor Integer
+             , RemainsInUnit         TFloat
+             , Reserved              TFloat
+             , Remains_Diff          TFloat
+             , MCS                   TFloat
+             , MCS_GoodsCategory     TFloat
+             , MCSIsClose            Boolean
+             , MCSNotRecalc          Boolean
+             , Income_Amount         TFloat
+             , AmountSecond          TFloat  -- 50
+             , AmountAll             TFloat
+             , CalcAmountAll         TFloat
+             , SummAll               TFloat
+             , CheckAmount           TFloat
+             , SendAmount            TFloat
+
+             , AmountDeferred        TFloat
+             , ListDiffAmount        TFloat
+
+             , AmountReal            TFloat
+             , SendSUNAmount         TFloat
+             , SendDefSUNAmount      TFloat  -- 60
+             , RemainsSUN            TFloat
+
+             , CountPrice            TFloat
+
+             , isOneJuridical        Boolean
+
+             , isPromo               Boolean
+             , isPromoAll            Boolean
+             , OperDatePromo         TDateTime
+             , InvNumberPromo        TVarChar
+
+             , isZakazToday          Boolean
+             , isDostavkaToday       Boolean
+             , OperDate_Zakaz        TVarChar  -- 70
+             , OperDate_Dostavka     TVarChar
+
+             , ConditionsKeepName    TVarChar
+
+             , OrderShedule_Color    Integer
+
+             , AVGPrice              TFloat
+
+             , AVGPriceWarning       TFloat
+
+             , isDefault             Boolean
+             )
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbObjectId Integer; 
+  DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;
@@ -35,12 +118,11 @@ $BODY$
   DECLARE vbAreaId_find Integer;
 
   DECLARE vbAVGDateStart TDateTime; --Дата нач. расчета ср. цены
-  DECLARE vbAVGDateEnd TDateTime;   --Дата окон. расчета ср. цены 
+  DECLARE vbAVGDateEnd TDateTime;   --Дата окон. расчета ср. цены
 
   DECLARE vbCostCredit TFloat;
-  
+
   DECLARE Cursor1 refcursor;
-  DECLARE Cursor2 refcursor;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -88,7 +170,7 @@ BEGIN
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
     -- определим дату документа
-    SELECT date_trunc('day', Movement.OperDate)  
+    SELECT date_trunc('day', Movement.OperDate)
     INTO vbOperDate
     FROM Movement
     WHERE Movement.Id = inMovementId;
@@ -96,7 +178,7 @@ BEGIN
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
     --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
-    
+
 
     vbAVGDateStart := vbOperDate - INTERVAL '30 day';
     vbAVGDateEnd   := vbOperDate;
@@ -113,13 +195,13 @@ BEGIN
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
 
 
---  raise notice 'Value: %', -1;
-
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() /*AND inSession <> '3'*/ AND inMovementId <> 10804217 AND inMovementId <> 10795784 
-    AND (inShowAll = FALSE OR inSession <> '3')
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() /*AND inSession <> '3'*/ AND inMovementId <> 10804217 AND inMovementId <> 10795784
+      AND (inShowAll = FALSE OR inSession <> '3')
  -- AND inSession <> '3'
     THEN
+
+--     raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -132,10 +214,7 @@ BEGIN
      WHERE MovementLinkObject.MovementId = inMovementId
        AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
---raise notice 'Value: %', 0;
-
---     OPEN Cursor1 FOR
-     CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
+     RETURN QUERY
      WITH
         --Данные Справочника График заказа/доставки
         tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
@@ -279,7 +358,7 @@ BEGIN
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                        ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                         ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
                                                        AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
@@ -294,7 +373,7 @@ BEGIN
                                                   ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
                                                  AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                                 
+
                              WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
                                AND Object_GoodsCategory.isErased = FALSE
                              )
@@ -351,7 +430,7 @@ BEGIN
                        , Object_NDSKind.ValueData                         AS NDSKindName
                        , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
 
-                       , CEIL (tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1) ::TFloat  AS CalcAmount
+                       , CEIL (tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)  AS CalcAmount
                        , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                        , tmpGoodsMain.isSP
                        , tmpGoodsMain.PriceOptSP
@@ -604,14 +683,14 @@ BEGIN
            , tmpMI.GoodsCode                                        AS GoodsCode
            , tmpMI.GoodsName                                        AS GoodsName
            , Object_Retail.ValueData                                AS RetailName
-           , tmpMI.Multiplicity                                     AS Multiplicity
+           , tmpMI.isTOP                                            AS isTOP
+           , tmpMI.isUnitTOP                                        AS isTOP_Price
+
            , tmpMI.GoodsGroupId                                     AS GoodsGroupId
            , tmpMI.NDSKindId                                        AS NDSKindId
            , tmpMI.NDSKindName                                      AS NDSKindName
            , tmpMI.NDS                                              AS NDS
 
-           , tmpMI.isTOP                                            AS isTOP
-           , tmpMI.isUnitTOP                                        AS isTOP_Price
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
@@ -624,28 +703,27 @@ BEGIN
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE THEN 16440317         --12615935      ---16440317  - розовый как в приходе ELSE zc_Color_White()
                   ELSE zc_Color_White() --0
              END                                                    AS isTopColor
-           , tmpMI.CalcAmount
+           , tmpMI.Multiplicity                                     AS Multiplicity
+           , tmpMI.CalcAmount ::TFloat                              AS CalcAmount
            , tmpMI.Amount   ::TFloat                                AS Amount
            , COALESCE(MIFloat_Summ.ValueData, 0)  ::TFloat          AS Summ
            , COALESCE (tmpMI.isErased, FALSE)     ::Boolean         AS isErased
            , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price            -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
-           , COALESCE (MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS SuperFinalPrice
-           , COALESCE (MIFloat_DefermentPrice.ValueData,0) ::TFloat AS SuperFinalPrice_Deferment
-
-           , tmpMI.PriceOptSP
-           , CASE WHEN tmpMI.isSP = TRUE AND MIFloat_Price.ValueData > tmpMI.PriceOptSP THEN TRUE ELSE FALSE END isPriceDiff
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
-
            , Object_PartnerGoods.Id                                 AS PartnerGoodsId
-           , Object_PartnerGoods.ObjectCode                         AS PartnerGoodsCode
+           , Object_PartnerGoods.ObjectCode::TVarChar               AS PartnerGoodsCode
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
            , tmpMI.JuridicalId
            , tmpMI.JuridicalName -- ***
            , tmpMI.ContractId
            , tmpMI.ContractName
            , tmpMI.MakerName                                        AS MakerName
+           , COALESCE (MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS SuperFinalPrice
+           , COALESCE (MIFloat_DefermentPrice.ValueData,0) ::TFloat AS SuperFinalPrice_Deferment
+           , tmpMI.PriceOptSP
+           , CASE WHEN tmpMI.isSP = TRUE AND MIFloat_Price.ValueData > tmpMI.PriceOptSP THEN TRUE ELSE FALSE END isPriceDiff
 
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
            , CASE WHEN tmpMI.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
@@ -653,7 +731,7 @@ BEGIN
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor
-           , tmpMI.Remains                                          AS RemainsInUnit
+           , tmpMI.Remains ::TFloat                                 AS RemainsInUnit
            , tmpMI.Reserved
            , CASE WHEN (COALESCE (tmpMI.Remains,0) - COALESCE (tmpMI.Reserved,0)) < 0 THEN (COALESCE (tmpMI.Remains,0) - COALESCE (tmpMI.Reserved,0)) ELSE 0 END :: TFLoat AS Remains_Diff   --не хватает с учетом отлож. чеком
            , tmpMI.MCS
@@ -664,7 +742,7 @@ BEGIN
            , tmpMI.Income                                           AS Income_Amount
            , MIFloat_AmountSecond.ValueData                         AS AmountSecond
 
-           , tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
+           , (tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0)) ::TFloat  AS AmountAll
            , NULLIF (COALESCE (-- Количество, установленное вручную
                                MIFloat_AmountManual.ValueData
                                -- округлили ВВЕРХ AllLot
@@ -675,7 +753,7 @@ BEGIN
                                       -- кол-во отказов
                                     + COALESCE (tmpMI.ListDiffAmount, 0)
                                      ) / COALESCE (tmpMI.MinimumLot, 1)
-                                    ) * COALESCE (tmpMI.MinimumLot, 1)     
+                                    ) * COALESCE (tmpMI.MinimumLot, 1)
                               ), 0) :: TFloat AS CalcAmountAll
 
            , (COALESCE (MIFloat_Price.ValueData, 0)
@@ -689,7 +767,7 @@ BEGIN
                                          -- кол-во отказов
                                        + COALESCE (tmpMI.ListDiffAmount, 0)
                                         ) / COALESCE (tmpMI.MinimumLot, 1)
-                                       ) * COALESCE (tmpMI.MinimumLot, 1)     
+                                       ) * COALESCE (tmpMI.MinimumLot, 1)
                                  )
              )                                          ::TFloat    AS SummAll
 
@@ -703,7 +781,7 @@ BEGIN
            , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount
            , tmpMI.RemainsSUN                           ::TFloat    AS RemainsSUN
 
-           , tmpMI.CountPrice
+           , tmpMI.CountPrice                           ::TFloat    AS CountPrice
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0    THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
@@ -718,7 +796,7 @@ BEGIN
 
            , tmpMI.ConditionsKeepName
 
-           , CASE 
+           , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                    -- отклонение по цене  светло - салатовая- цена подешевела, светло-розовая - подорожала
@@ -737,7 +815,7 @@ BEGIN
                   WHEN (AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0) < -0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
                   ELSE 0
-             END AS AVGPriceWarning
+             END ::TFloat                AS AVGPriceWarning
 
            /*
            , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подрязд 2 дня заказ;
@@ -754,7 +832,7 @@ BEGIN
 
            -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
---           , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
+           , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean        AS isDefault
 
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
@@ -763,7 +841,7 @@ BEGIN
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId
 
-            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым 
+            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым
             LEFT JOIN (SELECT DISTINCT GoodsPromo.GoodsId FROM GoodsPromo) AS GoodsPromoAll ON GoodsPromoAll.GoodsId = tmpMI.GoodsId
 
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpMI.RetailId
@@ -792,258 +870,10 @@ BEGIN
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-            
+
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
            ;
-
-
---     RETURN NEXT Cursor1;
-
---     OPEN Cursor2 FOR
-     CREATE TEMP TABLE _tmpRes2 ON COMMIT DROP AS
-     WITH
-        PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
-      , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
-
-      , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
-
-        -- элементы установок юр.лиц (границы цен для бонуса)
-      , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
-                                          , tmp.Bonus
-                                          , tmp.PriceLimit_min
-                                          , tmp.PriceLimit
-                                     FROM JuridicalSettings
-                                          INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                     WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
-                                     )
-       -- Маркетинговый контракт
-      , GoodsPromo AS (SELECT tmp.JuridicalId
-                            , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
-                            , tmp.MovementId
-                            , tmp.ChangePercent
-                            , COALESCE(MovementPromo.OperDate, NULL)  :: TDateTime   AS OperDatePromo
-                            , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
-                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
-                                        INNER JOIN ObjectLink AS ObjectLink_Child
-                                                              ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                             AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                        INNER JOIN  ObjectLink AS ObjectLink_Main
-                                                               ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                        INNER JOIN ObjectLink AS ObjectLink_Main_retail
-                                                              ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                             AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                        INNER JOIN ObjectLink AS ObjectLink_Child_retail
-                                                              ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                             AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                        INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                              ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                             AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                             AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                        LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
-                      )
-
-      , tmpMI_Child AS (SELECT MI_Child.ParentId
-                             , MI_Child.Id
-                             , MI_Child.ObjectId
-                             , MI_Child.Amount
-                        FROM MovementItem AS MI_Child
-                        WHERE MI_Child.MovementId = inMovementId
-                          AND MI_Child.DescId     = zc_MI_Child()
-                          AND (MI_Child.IsErased = inIsErased OR inIsErased = TRUE)
-                        )
---
-      , tmpMIDate_PartionGoods AS (SELECT MIDate_PartionGoods.*
-                                   FROM MovementItemDate AS MIDate_PartionGoods
-                                   WHERE MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                     AND MIDate_PartionGoods.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                         )
-      , tmpMIF AS (SELECT MovementItemFloat.*
-                   FROM MovementItemFloat
-                   WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                     AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                    , zc_MIFloat_JuridicalPrice())
-                    )
-      , tmpMIFloat_Price AS (SELECT tmpMIF.*
-                             FROM tmpMIF
-                             WHERE tmpMIF.DescId = zc_MIFloat_Price()
-                         )
-      , tmpMIFloat_JuridicalPrice AS (SELECT tmpMIF.*
-                                      FROM tmpMIF
-                                      WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
-                                      )
-      , tmpMIFloat_DefermentPrice AS (SELECT MovementItemFloat.*
-                                      FROM MovementItemFloat
-                                      WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                                        AND MovementItemFloat.DescId = zc_MIFloat_DefermentPrice()
-                                      )
-      , tmpMIString_Maker AS (SELECT MIString_Maker.*
-                              FROM MovementItemString AS MIString_Maker
-                              WHERE MIString_Maker.DescId = zc_MIString_Maker()
-                                AND MIString_Maker.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                              )
-      , tmpJuridical AS (SELECT MILinkObject_Juridical.MovementItemId
-                              , Object_Juridical.Id                 AS JuridicalId
-                              , Object_Juridical.ValueData          AS JuridicalName
-                         FROM MovementItemLinkObject AS MILinkObject_Juridical
-                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
-                         WHERE MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()     ------and 1=0
-                           AND MILinkObject_Juridical.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                        )
-      --
-      , tmpContract_ AS (SELECT MILinkObject_Contract.MovementItemId
-                              , MILinkObject_Contract.ObjectId      AS ContractId
-                        FROM MovementItemLinkObject AS MILinkObject_Contract
-                        WHERE MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                          AND MILinkObject_Contract.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                        )
-      , tmpOF_Deferment AS (SELECT ObjectFloat_Deferment.*
-                            FROM ObjectFloat AS ObjectFloat_Deferment
-                            WHERE ObjectFloat_Deferment.ObjectId IN (SELECT DISTINCT tmpContract_.ContractId FROM tmpContract_)
-                              AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-                           )
-      , tmpContract AS (SELECT tmpContract_.MovementItemId
-                             , Object_Contract.Id                 AS ContractId
-                             , Object_Contract.ValueData          AS ContractName
-                             , ObjectFloat_Deferment.ValueData    AS Deferment
-                        FROM tmpContract_
-                             LEFT JOIN tmpOF_Deferment AS ObjectFloat_Deferment
-                                                       ON ObjectFloat_Deferment.ObjectId = tmpContract_.ContractId
-                                                      AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-                             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContract_.ContractId
-                        )
-        ---
-      , tmpOF_MinimumLot AS (SELECT ObjectFloat_Goods_MinimumLot.*
-                             FROM ObjectFloat AS ObjectFloat_Goods_MinimumLot
-                             WHERE ObjectFloat_Goods_MinimumLot.ObjectId IN (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child)
-                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                             )
-      , tmpOL_ConditionsKeep AS (SELECT ObjectLink.*
-                                 FROM ObjectLink
-                                 WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child)
-                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-                                 )
-      , tmpGoods AS (SELECT tmpMI_Child.ObjectId             AS GoodsId
-                          , Object_Goods.ObjectCode          AS GoodsCode
-                          , Object_Goods.ValueData           AS GoodsName
-                          , ObjectFloat_Goods_MinimumLot.ValueData    AS MinimumLot
-                          , Object_ConditionsKeep.ValueData           AS ConditionsKeepName
-                     FROM tmpMI_Child
-                          -- условия хранения
-                          LEFT JOIN tmpOL_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep
-                                                         ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmpMI_Child.ObjectId
-                                                        --AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-                          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-                          LEFT JOIN tmpOF_MinimumLot AS ObjectFloat_Goods_MinimumLot
-                                                     ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI_Child.ObjectId
-                                               --AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-
-                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Child.ObjectId
-                    )
-
-      -- данные по % кредитных средств из справочника
-      , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
-
-
-        SELECT tmpMI.MovementItemId                           AS MovementItemId
-             , MI_Child.Id
-             , tmpGoods.GoodsCode
-             , tmpGoods.GoodsName --_tmpMI.GoodsName
-             , COALESCE(JuridicalSettings.Bonus, 0)::TFloat   AS Bonus
-             , COALESCE (tmpContract.Deferment, 0)::Integer   AS Deferment
----
-/*             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0
-                         THEN 0
-                    WHEN tmpMI.isTOP = TRUE
-                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                    ELSE PriceSettings.Percent
-               END :: TFloat AS Percent
-*/
----
-             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND tmpMI.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND tmpMI.isTOP = FALSE
-                        THEN COALESCE (PriceSettings.Percent, 0)
-                   ELSE 0
-              END :: TFloat AS Percent
----
-              , tmpJuridical.JuridicalName
-              , MIString_Maker.ValueData                      AS MakerName
-              , tmpContract.ContractName
-              , COALESCE(MIDate_PartionGoods.ValueData, NULL) ::TDateTime AS PartionGoodsDate
-              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN zc_Color_Red() --zc_Color_Blue() --456
-                     ELSE 0
-                END                                           AS PartionGoodsDateColor
-              , tmpGoods.MinimumLot                 ::TFLoat  AS MinimumLot
-              , MI_Child.Amount                     ::TFLoat  AS Remains
-              
-              , MIFloat_Price.ValueData             ::TFLoat  AS Price
-              , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
-              , MIFloat_DefermentPrice.ValueData    ::TFloat  AS SuperFinalPrice_Deferment
-              , (tmpContract.Deferment * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) ::TFloat  AS Persent_Deferment
-
-              , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
-              
-              , COALESCE(GoodsPromo.OperDatePromo, NULL)   :: TDateTime  AS OperDatePromo
-              , COALESCE(GoodsPromo.InvNumberPromo, '')    :: TVarChar   AS InvNumberPromo -- ***
-              , COALESCE(GoodsPromo.ChangePercent, 0)      :: TFLoat     AS ChangePercentPromo
-              , COALESCE(tmpGoods.ConditionsKeepName, '')  :: TVarChar   AS ConditionsKeepName
-
-              , tmpJuridicalArea.AreaId                                   AS AreaId
-              , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar AS AreaName
-
-              , Object_Area.ValueData                         :: TVarChar AS AreaName_Goods
-
-              , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean  AS isDefault
-
-        FROM _tmpOrderInternal_MI AS tmpMI
-             INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.ParentId = tmpMI.MovementItemId
-             LEFT JOIN tmpGoods                 ON tmpGoods.GoodsId  = MI_Child.ObjectId
-
-             LEFT JOIN tmpMIDate_PartionGoods    AS MIDate_PartionGoods    ON MIDate_PartionGoods.MovementItemId    = MI_Child.Id
-             LEFT JOIN tmpMIFloat_Price          AS MIFloat_Price          ON MIFloat_Price.MovementItemId          = MI_Child.Id
-             LEFT JOIN tmpMIFloat_JuridicalPrice AS MIFloat_JuridicalPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
-          -- LEFT JOIN tmpMIFloat_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
-             LEFT JOIN MovementItemFloat AS MIFloat_DefermentPrice
-                                         ON MIFloat_DefermentPrice.MovementItemId = MI_Child.Id
-                                        AND MIFloat_DefermentPrice.DescId = zc_MIFloat_DefermentPrice()             
-             LEFT JOIN tmpMIString_Maker         AS MIString_Maker         ON MIString_Maker.MovementItemId         = MI_Child.Id
-             LEFT JOIN tmpJuridical                                        ON tmpJuridical.MovementItemId           = MI_Child.Id
-             LEFT JOIN tmpContract                                         ON tmpContract.MovementItemId            = MI_Child.Id
-
-             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = tmpJuridical.JuridicalId --MovementItemLastPriceList_View.JuridicalId
-                                        AND JuridicalSettings.ContractId  = tmpContract.ContractId     --MovementItemLastPriceList_View.ContractId
-             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                               AND MIFloat_Price.ValueData >= tmpJuridicalSettingsItem.PriceLimit_min
-                                               AND MIFloat_Price.ValueData <= tmpJuridicalSettingsItem.PriceLimit
-
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpJuridical.JuridicalId
-                                 AND GoodsPromo.GoodsId     = tmpMI.GoodsId            --             ----and 1=0
-
-             LEFT JOIN PriceSettings    ON MIFloat_Price.ValueData BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice  -- ----and 1=0
-             LEFT JOIN PriceSettingsTOP ON MIFloat_Price.ValueData BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice  -- ----and 1=0
-
-             --LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
-             LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical.JuridicalId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
-                                 ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
-                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-
-            LEFT JOIN tmpCostCredit ON MIFloat_Price.ValueData BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
-
-          ;
-
---     RETURN NEXT Cursor2;
-
-       OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
-       RETURN NEXT Cursor1;
-
-       OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
-       RETURN NEXT Cursor2;
 
 
     -- !!!Только для ДРУГИХ документов + inShowAll = FALSE - 2-ая ВЕТКА (ВСЕГО = 3)!!!
@@ -1051,7 +881,7 @@ BEGIN
     THEN
 
 
---raise notice 'Value: % % % %', inMovementId, vbObjectId, 0, vbUserId;
+--      raise notice 'Value: %', 2;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -1258,14 +1088,14 @@ BEGIN
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
-              
+
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
-              
+
             , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
@@ -1286,7 +1116,7 @@ BEGIN
                             -- И учитывается % бонуса из Маркетинговый контракт
                           * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                     END AS FinalPrice
-                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL 
+                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                               THEN 0
                          ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
                     END :: TFloat AS Bonus
@@ -1355,7 +1185,7 @@ BEGIN
                                         AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
 
 
-               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        -- 
+               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
        ) AS ddd
 
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
@@ -1366,10 +1196,7 @@ BEGIN
 -- lpCreateTempTable_OrderInternal Конец процедуры
 
    --RAISE EXCEPTION 'Ошибка.';
---raise notice 'Value: %', 2;
-     -- OPEN Cursor1 FOR
-     -- OPEN Cursor1 FOR
-     CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
+     RETURN QUERY
      WITH
      --Данные Справочника График заказа/доставки
         tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
@@ -1549,7 +1376,7 @@ BEGIN
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                        ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                         ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
                                                        AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
@@ -1564,7 +1391,7 @@ BEGIN
                                                        ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
                                                       AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                                 
+
                              WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
                                AND Object_GoodsCategory.isErased = FALSE
                              )
@@ -1760,7 +1587,7 @@ BEGIN
                              , DDD.SuperFinalPrice_Deferment
                              , DDD.Price
                              , DDD.MinId
-                        FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
+                        FROM (SELECT *, MIN(DDD.Id) OVER (PARTITION BY DDD.MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
                                          , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
@@ -1769,7 +1596,7 @@ BEGIN
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
                               WHERE DDD.Ord = 1
                              ) AS DDD
-                        WHERE Id = MinId
+                        WHERE DDD.Id = DDD.MinId
                        )
         -- чтоб не двоило данные , выбираем  группируем данных с макс датой отгрузки
       , tmpMI_PriceList AS (SELECT *
@@ -1825,34 +1652,34 @@ BEGIN
                             , MovementItem.isErased
                             , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
                        FROM tmpMI_Master AS MovementItem
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
                                                       ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Contract
                                                       ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Goods
                                                       ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-     
+
                             LEFT JOIN tmpMIBoolean_Calculated AS MIBoolean_Calculated ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMI_PriceList AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
                                                      AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
                                                      AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
                                                      AND PriceList.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMinPrice AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
-     
+
                             -- LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
                             --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
                                                  --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-     
+
                             LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
@@ -2251,7 +2078,7 @@ BEGIN
 
       , tmpObjectLink_Area AS (SELECT ObjectLink.*
                                FROM ObjectLink
-                                 INNER JOIN (SELECT DISTINCT PartnerGoodsId FROM tmpMI) AS tmp
+                                 INNER JOIN (SELECT DISTINCT tmpMI.PartnerGoodsId FROM tmpMI) AS tmp
                                                                                       ON tmp.PartnerGoodsId = ObjectLink.ObjectId
                                WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Area()
 --                                    AND ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.PartnerGoodsId FROM tmpData)
@@ -2259,7 +2086,7 @@ BEGIN
 
       , tmpObjectLink_Object AS (SELECT ObjectLink.*
                                  FROM ObjectLink
-                                   INNER JOIN (SELECT DISTINCT Id FROM tmpMI) AS tmp
+                                   INNER JOIN (SELECT DISTINCT tmpMI.Id FROM tmpMI) AS tmp
                                                                                    ON tmp.Id = ObjectLink.ObjectId
                                  WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Object()
 --                                      AND ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.Id FROM tmpData)
@@ -2361,16 +2188,16 @@ BEGIN
                   ELSE zc_Color_White() --0
              END                                            AS isTopColor
            , tmpMI.Multiplicity                             AS Multiplicity
-           , tmpMI.CalcAmount                               AS CalcAmount
-           , tmpMI.Amount                                   AS Amount
-           , tmpMI.Summ                                     AS Summ
+           , tmpMI.CalcAmount ::TFloat                      AS CalcAmount
+           , tmpMI.Amount ::TFloat                          AS Amount
+           , tmpMI.Summ   ::TFloat                          AS Summ
            , tmpMI.isErased                                 AS isErased
            , tmpMI.Price                                    AS Price
            , tmpMI.MinimumLot                               AS MinimumLot
            , tmpMI.PartionGoodsDate                         AS PartionGoodsDate
            , tmpMI.Comment                                  AS Comment
            , tmpMI.PartnerGoodsId                           AS PartnerGoodsId
-           , tmpMI.PartnerGoodsCode                         AS PartnerGoodsCode
+           , tmpMI.PartnerGoodsCode ::TVarChar              AS PartnerGoodsCode
            , tmpMI.PartnerGoodsName                         AS PartnerGoodsName
            , tmpMI.JuridicalId                              AS JuridicalId
            , tmpMI.JuridicalName                            AS JuridicalName      -- ***
@@ -2387,7 +2214,7 @@ BEGIN
                   WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor
-           , Remains.Amount                                                  AS RemainsInUnit
+           , Remains.Amount  ::TFloat                                        AS RemainsInUnit
            , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved           -- кол-во в отложенных чеках
            , CASE WHEN (COALESCE (Remains.Amount,0) - COALESCE (tmpReserve.Amount, 0)) < 0 THEN (COALESCE (Remains.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) ELSE 0 END :: TFLoat AS Remains_Diff  --не хватает с учетом отлож. чеком
            , Object_Price_View.MCSValue                                      AS MCS
@@ -2396,9 +2223,9 @@ BEGIN
            , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)                AS MCSNotRecalc
            , Income.Income_Amount                                            AS Income_Amount
            , tmpMI.AmountSecond                                              AS AmountSecond
-           , tmpMI.AmountAll
-           , tmpMI.CalcAmountAll
-           , tmpMI.SummAll
+           , tmpMI.AmountAll ::TFloat                                        AS AmountAll
+           , tmpMI.CalcAmountAll ::TFloat                                    AS CalcAmountAll
+           , tmpMI.SummAll ::TFloat                                          AS SummAll
            , tmpCheck.Amount                                    ::TFloat     AS CheckAmount
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
@@ -2426,7 +2253,7 @@ BEGIN
 
            , COALESCE(tmpGoodsConditionsKeep.ConditionsKeepName, '') ::TVarChar  AS ConditionsKeepName
 
-           , CASE 
+           , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
@@ -2434,14 +2261,14 @@ BEGIN
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
-             
+
            , AVGIncome.AVGIncomePrice    AS AVGPrice
 
            , CASE WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < -0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
                   ELSE 0
-             END AS AVGPriceWarning
+             END ::TFloat                AS AVGPriceWarning
 
            -- , tmpJuridicalArea.AreaId                                      AS AreaId
            -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
@@ -2464,7 +2291,7 @@ BEGIN
 
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId     = tmpMI.GoodsId
-            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым 
+            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым
             LEFT JOIN (SELECT DISTINCT GoodsPromo.GoodsId FROM GoodsPromo) AS GoodsPromoAll ON GoodsPromoAll.GoodsId = tmpMI.GoodsId
 
 
@@ -2481,7 +2308,7 @@ BEGIN
             --средняя цена
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
-            
+
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
@@ -2489,130 +2316,13 @@ BEGIN
 
            ;
 
-     -- OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
-     -- RETURN NEXT Cursor1;
-
-     -- Результат 2
-     -- OPEN Cursor2 FOR
-     CREATE TEMP TABLE _tmpRes2 ON COMMIT DROP AS
-     WITH
-     -- Маркетинговый контракт
-     GoodsPromo AS (SELECT tmp.JuridicalId
-                         , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
-                         , tmp.MovementId
-                         , tmp.ChangePercent
-                         , MovementPromo.OperDate                AS OperDatePromo
-                         , MovementPromo.InvNumber               AS InvNumberPromo -- ***
-                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
-                                     INNER JOIN ObjectLink AS ObjectLink_Child
-                                                           ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                     INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                     INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                    AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                     INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                     AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                     INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                     LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
-                   )
-   , tmpObjectLink AS (SELECT ObjectLink.*
-                       FROM ObjectLink
-                       WHERE ObjectLink.DescId IN ( zc_ObjectLink_Goods_Area(), zc_ObjectLink_Goods_ConditionsKeep())
-                         AND ObjectLink.ObjectId IN (SELECT DISTINCT _tmpMI.GoodsId FROM _tmpMI)
-                        )
-   , tmpObjectFloat AS (SELECT ObjectFloat.*
-                        FROM ObjectFloat
-                        WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                             AND ObjectFloat.ObjectId IN (SELECT DISTINCT _tmpMI.GoodsId FROM _tmpMI)
-                        )
-   , tmpMIFloat AS (SELECT MovementItemFloat.*
-                    FROM MovementItemFloat
-                    WHERE MovementItemFloat.DescId = zc_MIFloat_Remains()
-                      AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpMI.PriceListMovementItemId FROM _tmpMI)
-                    )
-   , tmpMovementItem AS (SELECT MovementItem.*
-                         FROM MovementItem
-                         WHERE MovementItem.Id IN (SELECT DISTINCT _tmpMI.MovementItemId FROM _tmpMI)
-                         )
-
-   -- данные по % кредитных средств из справочника
-   , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
-
-
-        ---
-        SELECT _tmpMI.*
-              , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Red() -- zc_Color_Blue() --456
-                     ELSE 0
-                END                                                          AS PartionGoodsDateColor
-              , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
-              , MIFloat_Remains.ValueData                                    AS Remains
-              
-              , (_tmpMI.Deferment * COALESCE (tmpCostCredit.Percent, vbCostCredit))             :: TFloat      AS Persent_Deferment
-
-              , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
-              , COALESCE(GoodsPromo.OperDatePromo, NULL)      :: TDateTime   AS OperDatePromo
-              , COALESCE(GoodsPromo.InvNumberPromo, '')       :: TVarChar    AS InvNumberPromo -- ***
-              , COALESCE(GoodsPromo.ChangePercent, 0)         :: TFLoat      AS ChangePercentPromo
-
-              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
-              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
-
-        FROM _tmpMI
-             LEFT JOIN tmpObjectFloat AS ObjectFloat_Goods_MinimumLot
-                                      ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId
-                            --      AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-             LEFT JOIN tmpMIFloat AS MIFloat_Remains
-                                  ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
-                                 AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-             LEFT JOIN tmpMovementItem AS MovementItem ON MovementItem.Id = _tmpMI.MovementItemId
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = _tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = MovementItem.ObjectId
-             -- условия хранения
-             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_ConditionsKeep
-                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = _tmpMI.GoodsId
-                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-             LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = _tmpMI.JuridicalId
-                                       AND tmpJuridicalArea.AreaId      = _tmpMI.AreaId
-
-             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_Area
-                                     ON ObjectLink_Goods_Area.ObjectId = _tmpMI.GoodsId
-                                    AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
-             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-             
-             LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
-;
-
-
-   OPEN Cursor1 FOR SELECT * FROM _tmpRes1
-                    /*WHERE inSession <> '7670317' OR _tmpRes1.Id > 0 OR _tmpRes1.Income_Amount <> 0 OR _tmpRes1.AmountSecond <> 0
-                       OR _tmpRes1.CheckAmount <> 0 OR _tmpRes1.SendAmount <> 0 OR _tmpRes1.AmountDeferred <> 0
-                   UNION ALL
-                    SELECT * FROM 
-                   (SELECT * FROM _tmpRes1
-                    WHERE inSession = '7670317' AND COALESCE (_tmpRes1.Id, 0) = 0 AND COALESCE (_tmpRes1.Income_Amount, 0) = 0 AND COALESCE (_tmpRes1.AmountSecond, 0) = 0
-                     AND COALESCE (_tmpRes1.CheckAmount, 0) = 0 AND COALESCE (_tmpRes1.SendAmount, 0) = 0 AND COALESCE (_tmpRes1.AmountDeferred, 0) = 0
-                    LIMIT 15000
-                   ) AS tmp*/
-                    ;
-  RETURN NEXT Cursor1;
-
-   OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
-   RETURN NEXT Cursor2;
-
-
 
     -- !!!Только для ДРУГИХ документов + inShowAll = TRUE - 3-ья ВЕТКА (ВСЕГО = 3)!!!
     ELSEIF inShowAll = TRUE
     THEN
 
 
---raise notice 'Value: % % % %', inMovementId, vbObjectId, 0, vbUserId;
+--    raise notice 'Value: %', 3;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -2819,14 +2529,14 @@ BEGIN
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
-              
+
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
-              
+
             , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
@@ -2847,7 +2557,7 @@ BEGIN
                             -- И учитывается % бонуса из Маркетинговый контракт
                           * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                     END AS FinalPrice
-                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL 
+                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                               THEN 0
                          ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
                     END :: TFloat AS Bonus
@@ -2916,7 +2626,7 @@ BEGIN
                                         AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
 
 
-               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        -- 
+               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
        ) AS ddd
 
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
@@ -2927,10 +2637,7 @@ BEGIN
 -- lpCreateTempTable_OrderInternal Конец процедуры
 
    --RAISE EXCEPTION 'Ошибка.';
---raise notice 'Value: %', 2;
-     -- OPEN Cursor1 FOR
-     -- OPEN Cursor1 FOR
-     CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
+     RETURN QUERY
      WITH
      --Данные Справочника График заказа/доставки
         tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
@@ -3110,7 +2817,7 @@ BEGIN
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                        ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                         ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
                                                        AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
@@ -3125,7 +2832,7 @@ BEGIN
                                                        ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
                                                       AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                                 
+
                              WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
                                AND Object_GoodsCategory.isErased = FALSE
                              )
@@ -3304,7 +3011,7 @@ BEGIN
                              , DDD.SuperFinalPrice_Deferment
                              , DDD.Price
                              , DDD.MinId
-                        FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
+                        FROM (SELECT *, MIN(DDD.Id) OVER (PARTITION BY DDD.MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
                                          , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
@@ -3313,7 +3020,7 @@ BEGIN
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
                               WHERE DDD.Ord = 1
                              ) AS DDD
-                        WHERE Id = MinId
+                        WHERE DDD.Id = DDD.MinId
                        )
         -- чтоб не двоило данные , выбираем  группируем данных с макс датой отгрузки
       , tmpMI_PriceList AS (SELECT *
@@ -3363,34 +3070,34 @@ BEGIN
                             , MovementItem.isErased
                             , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
                        FROM tmpMI_Master AS MovementItem
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
                                                       ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Contract
                                                       ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-     
+
                             LEFT JOIN tmpMILinkObject AS MILinkObject_Goods
                                                       ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-     
+
                             LEFT JOIN tmpMIBoolean_Calculated AS MIBoolean_Calculated ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMI_PriceList AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
                                                      AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
                                                      AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
                                                      AND PriceList.MovementItemId = MovementItem.Id
-     
+
                             LEFT JOIN tmpMinPrice AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
-     
+
                             -- LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
                             --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
                                                  --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-     
+
                             LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
@@ -3777,7 +3484,7 @@ BEGIN
 
       , tmpObjectLink_Area AS (SELECT ObjectLink.*
                                FROM ObjectLink
-                                 INNER JOIN (SELECT DISTINCT PartnerGoodsId FROM tmpMI) AS tmp
+                                 INNER JOIN (SELECT DISTINCT tmpMI.PartnerGoodsId FROM tmpMI) AS tmp
                                                                                       ON tmp.PartnerGoodsId = ObjectLink.ObjectId
                                WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Area()
 --                                    AND ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.PartnerGoodsId FROM tmpData)
@@ -3785,7 +3492,7 @@ BEGIN
 
       , tmpObjectLink_Object AS (SELECT ObjectLink.*
                                  FROM ObjectLink
-                                   INNER JOIN (SELECT DISTINCT Id FROM tmpMI) AS tmp
+                                   INNER JOIN (SELECT DISTINCT tmpMI.Id FROM tmpMI) AS tmp
                                                                                    ON tmp.Id = ObjectLink.ObjectId
                                  WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Object()
 --                                      AND ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.Id FROM tmpData)
@@ -3887,16 +3594,16 @@ BEGIN
                   ELSE zc_Color_White() --0
              END                                            AS isTopColor
            , tmpMI.Multiplicity                             AS Multiplicity
-           , tmpMI.CalcAmount                               AS CalcAmount
-           , tmpMI.Amount                                   AS Amount
-           , tmpMI.Summ                                     AS Summ
+           , tmpMI.CalcAmount  ::TFloat                     AS CalcAmount
+           , tmpMI.Amount  ::TFloat                         AS Amount
+           , tmpMI.Summ  ::TFloat                           AS Summ
            , tmpMI.isErased                                 AS isErased
            , tmpMI.Price                                    AS Price
            , tmpMI.MinimumLot                               AS MinimumLot
            , tmpMI.PartionGoodsDate                         AS PartionGoodsDate
            , tmpMI.Comment                                  AS Comment
            , tmpMI.PartnerGoodsId                           AS PartnerGoodsId
-           , tmpMI.PartnerGoodsCode                         AS PartnerGoodsCode
+           , tmpMI.PartnerGoodsCode  ::TVarChar             AS PartnerGoodsCode
            , tmpMI.PartnerGoodsName                         AS PartnerGoodsName
            , tmpMI.JuridicalId                              AS JuridicalId
            , tmpMI.JuridicalName                            AS JuridicalName      -- ***
@@ -3913,7 +3620,7 @@ BEGIN
                   WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor
-           , Remains.Amount                                                  AS RemainsInUnit
+           , Remains.Amount  ::TFloat                                        AS RemainsInUnit
              -- кол-во в отложенных чеках
            , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved
            , CASE WHEN (COALESCE (Remains.Amount,0) - COALESCE (tmpReserve.Amount, 0)) < 0 THEN (COALESCE (Remains.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) ELSE 0 END :: TFLoat AS Remains_Diff  --не хватает с учетом отлож. чеком
@@ -3923,18 +3630,19 @@ BEGIN
            , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)                AS MCSNotRecalc
            , Income.Income_Amount                                            AS Income_Amount
            , tmpMI.AmountSecond                                              AS AmountSecond
-           , tmpMI.AmountAll
-           , tmpMI.CalcAmountAll
-           , tmpMI.SummAll
+           , tmpMI.AmountAll ::TFloat                                        AS AmountAll
+           , tmpMI.CalcAmountAll  ::TFloat                                   AS CalcAmountAll
+           , tmpMI.SummAll ::TFloat                                          AS SummAll
            , tmpCheck.Amount                                    ::TFloat     AS CheckAmount
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
---           , 0                            ::TFloat    AS AmountReal
---           , 0                            ::TFloat    AS SendSUNAmount
---           , 0                            ::TFloat    AS RemainsSUN
+           , 0                                                  ::TFloat    AS AmountReal
+           , 0                                                  ::TFloat    AS SendSUNAmount
+           , 0                                                  ::TFloat    AS SendDefSUNAmount
+           , 0                                                  ::TFloat    AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 
@@ -3952,7 +3660,7 @@ BEGIN
 
            , COALESCE(tmpGoodsConditionsKeep.ConditionsKeepName, '') ::TVarChar  AS ConditionsKeepName
 
-           , CASE 
+           , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
@@ -3960,14 +3668,14 @@ BEGIN
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
-             
+
            , AVGIncome.AVGIncomePrice    AS AVGPrice
 
            , CASE WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < -0.10 THEN (-1)*((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 0.1--5000
                   ELSE 0
-             END AS AVGPriceWarning
+             END ::TFloat                                                 AS AVGPriceWarning
 
            -- , tmpJuridicalArea.AreaId                                      AS AreaId
            -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
@@ -3990,7 +3698,7 @@ BEGIN
 
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId     = tmpMI.GoodsId
-            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым 
+            -- показываем не зависимо от поставщ. явл. ли товар маркетинговым
             LEFT JOIN (SELECT DISTINCT GoodsPromo.GoodsId FROM GoodsPromo) AS GoodsPromoAll ON GoodsPromoAll.GoodsId = tmpMI.GoodsId
 
 
@@ -4007,7 +3715,7 @@ BEGIN
             --средняя цена
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
-            
+
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
@@ -4015,132 +3723,18 @@ BEGIN
 
            ;
 
-     -- OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
-     -- RETURN NEXT Cursor1;
-
-     -- Результат 2
-     -- OPEN Cursor2 FOR
-     CREATE TEMP TABLE _tmpRes2 ON COMMIT DROP AS
-     WITH
-     -- Маркетинговый контракт
-     GoodsPromo AS (SELECT tmp.JuridicalId
-                         , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
-                         , tmp.MovementId
-                         , tmp.ChangePercent
-                         , MovementPromo.OperDate                AS OperDatePromo
-                         , MovementPromo.InvNumber               AS InvNumberPromo -- ***
-                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
-                                     INNER JOIN ObjectLink AS ObjectLink_Child
-                                                           ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                     INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                     INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                    AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                     INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                     AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                     INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                     LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
-                   )
-   , tmpObjectLink AS (SELECT ObjectLink.*
-                       FROM ObjectLink
-                       WHERE ObjectLink.DescId IN ( zc_ObjectLink_Goods_Area(), zc_ObjectLink_Goods_ConditionsKeep())
-                         AND ObjectLink.ObjectId IN (SELECT DISTINCT _tmpMI.GoodsId FROM _tmpMI)
-                        )
-   , tmpObjectFloat AS (SELECT ObjectFloat.*
-                        FROM ObjectFloat
-                        WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                             AND ObjectFloat.ObjectId IN (SELECT DISTINCT _tmpMI.GoodsId FROM _tmpMI)
-                        )
-   , tmpMIFloat AS (SELECT MovementItemFloat.*
-                    FROM MovementItemFloat
-                    WHERE MovementItemFloat.DescId = zc_MIFloat_Remains()
-                      AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpMI.PriceListMovementItemId FROM _tmpMI)
-                    )
-   , tmpMovementItem AS (SELECT MovementItem.*
-                         FROM MovementItem
-                         WHERE MovementItem.Id IN (SELECT DISTINCT _tmpMI.MovementItemId FROM _tmpMI)
-                         )
-
-   -- данные по % кредитных средств из справочника
-   , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
-
-
-        ---
-        SELECT _tmpMI.*
-              , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Red() -- zc_Color_Blue() --456
-                     ELSE 0
-                END                                                          AS PartionGoodsDateColor
-              , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
-              , MIFloat_Remains.ValueData                                    AS Remains
-              
-              , (_tmpMI.Deferment * COALESCE (tmpCostCredit.Percent, vbCostCredit))             :: TFloat      AS Persent_Deferment
-
-              , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
-              , COALESCE(GoodsPromo.OperDatePromo, NULL)      :: TDateTime   AS OperDatePromo
-              , COALESCE(GoodsPromo.InvNumberPromo, '')       :: TVarChar    AS InvNumberPromo -- ***
-              , COALESCE(GoodsPromo.ChangePercent, 0)         :: TFLoat      AS ChangePercentPromo
-
-              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
-              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
-
-        FROM _tmpMI
-             LEFT JOIN tmpObjectFloat AS ObjectFloat_Goods_MinimumLot
-                                      ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId
-                            --      AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-             LEFT JOIN tmpMIFloat AS MIFloat_Remains
-                                  ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
-                                 AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-             LEFT JOIN tmpMovementItem AS MovementItem ON MovementItem.Id = _tmpMI.MovementItemId
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = _tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = MovementItem.ObjectId
-             -- условия хранения
-             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_ConditionsKeep
-                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = _tmpMI.GoodsId
-                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-             LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = _tmpMI.JuridicalId
-                                       AND tmpJuridicalArea.AreaId      = _tmpMI.AreaId
-
-             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_Area
-                                     ON ObjectLink_Goods_Area.ObjectId = _tmpMI.GoodsId
-                                    AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
-             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-             
-             LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
-;
-
-
-   OPEN Cursor1 FOR SELECT * FROM _tmpRes1
-                    /*WHERE inSession <> '7670317' OR _tmpRes1.Id > 0 OR _tmpRes1.Income_Amount <> 0 OR _tmpRes1.AmountSecond <> 0
-                       OR _tmpRes1.CheckAmount <> 0 OR _tmpRes1.SendAmount <> 0 OR _tmpRes1.AmountDeferred <> 0
-                   UNION ALL
-                    SELECT * FROM 
-                   (SELECT * FROM _tmpRes1
-                    WHERE inSession = '7670317' AND COALESCE (_tmpRes1.Id, 0) = 0 AND COALESCE (_tmpRes1.Income_Amount, 0) = 0 AND COALESCE (_tmpRes1.AmountSecond, 0) = 0
-                     AND COALESCE (_tmpRes1.CheckAmount, 0) = 0 AND COALESCE (_tmpRes1.SendAmount, 0) = 0 AND COALESCE (_tmpRes1.AmountDeferred, 0) = 0
-                    LIMIT 15000
-                   ) AS tmp*/
-                    ;
-  RETURN NEXT Cursor1;
-
-   OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
-   RETURN NEXT Cursor2;
 
   END IF;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_OrderInternal_Master (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 20.09.19                                                                    * Разбил на две процедуры
  24.04.19         *
  16.04.18                                                                    * оптимизация
  11.02.19         * признак Товары соц-проект берем и документа
@@ -4148,7 +3742,7 @@ $BODY$
  02.11.18         *
  19.10.18         * isPriceClose замена на isPriceCloseOrder
  10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
- 31.08.18         * add Reserved               
+ 31.08.18         * add Reserved
  09.04.18                                                                    * оптимизация
  02.10.17         * add area
  12.09.17         *
@@ -4202,14 +3796,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 , tmp2 as (select distinct from tmp1)
 */
 
--- тест
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= TRUE, inIsErased:= FALSE, inIsLink:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3954371, inShowAll:= TRUE, inIsErased:= FALSE, inIsLink:= FALSE, inSession:= '3');
---     FETCH ALL "<unnamed portal 143>";
-
---select * from gpSelect_MovementItem_OrderInternalOl(inMovementId := 8943040 , inShowAll := 'FALSE' , inIsErased := 'FALSE' , inIsLink := 'FALSE' ,  inSession := '3');
---select * from gpSelect_MovementItem_OrderInternal(inMovementId := 8963178 , inShowAll := 'TRUE' , inIsErased := 'FALSE' , inIsLink := 'FALSE' ,  inSession := '3');
-
---- последнее
--- select * from gpSelect_MovementItem_OrderInternal(inMovementId := 9495891 , inShowAll := 'FALSE' , inIsErased := 'FALSE' , inIsLink := 'FALSE' ,  inSession := '3')
-select * from gpSelect_MovementItem_OrderInternal(inMovementId := 15668431 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
+-- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 15668431 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');

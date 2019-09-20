@@ -141,6 +141,7 @@ type
     actReportSendDefSUN: TdsdOpenForm;
     bbReportSendSUN: TdxBarButton;
     bbReportSendDefSUN: TdxBarButton;
+    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public

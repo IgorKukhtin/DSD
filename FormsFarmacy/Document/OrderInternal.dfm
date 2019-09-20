@@ -4,7 +4,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientWidth = 1229
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1285,8 +1285,20 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
@@ -1379,6 +1391,9 @@ inherited OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1396,6 +1411,9 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
         end>
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1073#1077#1079' '#1057#1059#1053' '#1080' '#1086#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1073#1077#1079' '#1057#1059#1053' '#1080' '#1054#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093
@@ -1438,6 +1456,9 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
         end>
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
@@ -1705,15 +1726,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 376
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderInternal'
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end
-      item
-        DataSet = ChildCDS
-      end>
-    OutputType = otMultiDataSet
+    StoredProcName = 'gpSelect_MovementItem_OrderInternal_Master'
     Params = <
       item
         Name = 'inMovementId'
@@ -2937,5 +2950,48 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 976
     Top = 368
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderInternal_Child'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLink'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 248
   end
 end
