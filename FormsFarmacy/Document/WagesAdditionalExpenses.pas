@@ -50,6 +50,7 @@ type
     SummaTotal: TcxGridDBColumn;
     isIssuedBy: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    MIDateIssuedBy: TcxGridDBColumn;
   private
     { Private declarations }
   public

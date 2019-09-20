@@ -90,6 +90,7 @@ type
     HolidaysHospital: TcxGridDBBandedColumn;
     Director: TcxGridDBBandedColumn;
     isManagerPharmacy: TcxGridDBBandedColumn;
+    DateIssuedBy: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

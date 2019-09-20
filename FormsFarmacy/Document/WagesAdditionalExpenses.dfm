@@ -104,7 +104,15 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object Comment: TcxGridDBColumn [6]
+          object MIDateIssuedBy: TcxGridDBColumn [6]
+            Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
+            DataBinding.FieldName = 'MIDateIssuedBy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+          object Comment: TcxGridDBColumn [7]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

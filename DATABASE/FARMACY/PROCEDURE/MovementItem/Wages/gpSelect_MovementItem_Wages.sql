@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , isIssuedBy Boolean
+             , isIssuedBy Boolean, DateIssuedBy TDateTime
              , isErased Boolean
              , Color_Calc Integer
               )
@@ -45,27 +45,30 @@ BEGIN
                                           LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                                      WHERE Object_User.DescId = zc_Object_User()),
-                tmpPersonal AS (SELECT
-                                       Object_Personal.Id                 AS PersonalId
+                tmpMember AS (SELECT
+                                       Object_Member.Id                   AS MemberId
                                      , ObjectLink_User_Member.ObjectId    AS UserID
-                                     , Object_Personal.isErased           AS isErased
-                                FROM Object AS Object_Personal
+                                     , Object_Member.isErased             AS isErased
+                                FROM Object AS Object_Member
 
-                                     INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                          ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
-                                                         AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                     INNER JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                           ON ObjectLink_Member_Unit.ObjectId = Object_Member.Id
+                                                          AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+                                                          AND COALESCE(ObjectLink_Member_Unit.ChildObjectId, 0) <> 0
 
                                      INNER JOIN ObjectLink AS ObjectLink_User_Member
-                                                         ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                         ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
                                                          AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                                          AND ObjectLink_User_Member.ObjectId  NOT IN (SELECT MovementItem.ObjectId FROM  MovementItem  WHERE MovementItem.MovementId = inMovementId)
 
-                                WHERE Object_Personal.DescId = zc_Object_Personal()
-                                  AND Object_Personal.isErased = FALSE),
+                                WHERE Object_Member.DescId = zc_Object_Member()
+                                  AND Object_Member.isErased = FALSE),
                 tmpAdditionalExpenses AS (SELECT MovementItem.Id                                          AS ID
                                                , MovementItem.ObjectId                                    AS UnitID
                                                , MovementItem.Amount                                      AS SummaTotal
                                                , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                                               , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
+
                                                , MovementItem.isErased                                    AS isErased
                                           FROM  MovementItem
 
@@ -73,13 +76,17 @@ BEGIN
                                                                               ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
+                                                LEFT JOIN MovementItemDate AS MIDate_IssuedBy
+                                                                           ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
+                                                                          AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
+
                                           WHERE MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId = zc_MI_Sign()
                                             AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                             AND MovementItem.Amount <> 0)
 
             SELECT 0                                  AS Id
-                 , tmpPersonal.UserID                 AS UserID
+                 , tmpMember.UserID                   AS UserID
                  , NULL::TFloat                       AS Amount
 
                  , Null::TFloat                       AS HolidaysHospital
@@ -96,11 +103,12 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , False                              AS isIssuedBy
-                 , tmpPersonal.isErased               AS isErased
+                 , NULL::TDateTime                    AS DateIssuedBy
+                 , tmpMember.isErased                 AS isErased
                  , zc_Color_Black()                   AS Color_Calc
-            FROM  tmpPersonal
+            FROM  tmpMember
                   INNER JOIN ObjectLink AS ObjectLink_User_Member
-                                       ON ObjectLink_User_Member.ObjectId = tmpPersonal.UserID
+                                       ON ObjectLink_User_Member.ObjectId = tmpMember.UserID
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   INNER JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
@@ -139,6 +147,7 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                 , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
@@ -193,6 +202,10 @@ BEGIN
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
+                  LEFT JOIN MovementItemDate AS MIDate_IssuedBy
+                                             ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
+                                            AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
+
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
 
@@ -218,6 +231,7 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
+                 , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 
                  , tmpAdditionalExpenses.isErased     AS isErased
                  , zc_Color_Black()                   AS Color_Calc
@@ -247,12 +261,18 @@ BEGIN
                                                , MovementItem.ObjectId                                    AS UnitID
                                                , MovementItem.Amount                                      AS SummaTotal
                                                , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                                               , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
+
                                                , MovementItem.isErased                                    AS isErased
                                           FROM  MovementItem
 
                                                 LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                                               ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                                                LEFT JOIN MovementItemDate AS MIDate_IssuedBy
+                                                                           ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
+                                                                          AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
 
                                           WHERE MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId = zc_MI_Sign()
@@ -275,12 +295,13 @@ BEGIN
 
                  , Object_Member.ObjectCode           AS MemberCode
                  , Object_Member.ValueData            AS MemberName
-                 , Personal_View.PositionName         AS PositionName
+                 , Object_Position.ValueData          AS PositionName
                  , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                 , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
@@ -295,6 +316,15 @@ BEGIN
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
+                  LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                       ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                  LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                       ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
                   LEFT JOIN tmpPersonal_View AS Personal_View
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
                                             AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
@@ -304,7 +334,7 @@ BEGIN
                                           ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
                                          AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
-                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, Personal_View.UnitID)
+                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId, Personal_View.UnitID)
 
                   LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
                                               ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
@@ -325,6 +355,10 @@ BEGIN
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                  LEFT JOIN MovementItemDate AS MIDate_IssuedBy
+                                             ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
+                                            AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
 
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
@@ -351,6 +385,7 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
+                 , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 
                  , tmpAdditionalExpenses.isErased     AS isErased
                  , zc_Color_Black()                   AS Color_Calc
@@ -369,4 +404,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  21.08.19                                                        *
 */
--- select * from gpSelect_MovementItem_Wages(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Wages(inMovementId := 15639631  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
