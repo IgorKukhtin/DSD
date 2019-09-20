@@ -1047,6 +1047,8 @@ type
     miReport_ProductionUnionTech_Order: TMenuItem;
     actReport_ReceiptAnalyze: TdsdOpenForm;
     miReport_ReceiptAnalyze: TMenuItem;
+    actPersonalRate: TdsdOpenForm;
+    miPersonalRate: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

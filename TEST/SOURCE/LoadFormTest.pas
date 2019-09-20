@@ -115,8 +115,9 @@ type
     procedure LoadPaidKindFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
-    procedure LoadPersonalSendCashFormTest;
     procedure LoadPersonalFormTest;
+    procedure LoadPersonalSendCashFormTest;
+    procedure LoadPersonalRateFormTest;
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
     procedure LoadPartnerMapFormTest;
@@ -711,6 +712,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashJournalForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalRateFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalRateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalRateForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalRateJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalRateJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
