@@ -104,6 +104,8 @@ type
     PositionName_to: TcxGridDBColumn;
     actPrintComment: TdsdPrintAction;
     bbPrintComment: TdxBarButton;
+    actPrintArticleLossGroup: TdsdPrintAction;
+    bbPrintArticleLossGroup: TdxBarButton;
   private
     { Private declarations }
   public

@@ -159,7 +159,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 69
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -171,7 +171,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 68
             Position.BandIndex = 1
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -183,7 +183,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 69
             Position.BandIndex = 1
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -195,7 +195,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 69
             Position.BandIndex = 1
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -207,7 +207,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 68
             Position.BandIndex = 1
             Position.ColIndex = 4
             Position.RowIndex = 0
@@ -220,7 +220,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 69
             Position.BandIndex = 1
             Position.ColIndex = 5
             Position.RowIndex = 0
@@ -230,9 +230,20 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 69
             Position.BandIndex = 1
             Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object DateIssuedBy: TcxGridDBBandedColumn
+            Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
+            DataBinding.FieldName = 'DateIssuedBy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+            Position.BandIndex = 1
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn

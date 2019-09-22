@@ -1101,7 +1101,9 @@ uses
   Report_ProductionUnionTech_OrderDialog in '..\..\Forms\Report\Report_ProductionUnionTech_OrderDialog.pas' {Report_ProductionUnionTech_OrderDialogForm: TParentForm},
   Report_ProductionUnionTech_Order in '..\..\Forms\Report\Report_ProductionUnionTech_Order.pas' {Report_ProductionUnionTech_OrderForm: TParentForm},
   Report_ReceiptAnalyze in '..\..\Forms\Report\Report_ReceiptAnalyze.pas' {Report_ReceiptAnalyzeForm: TParentForm},
-  Report_ReceiptAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptAnalyzeDialog.pas' {Report_ReceiptAnalyzeDialogForm: TParentForm};
+  Report_ReceiptAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptAnalyzeDialog.pas' {Report_ReceiptAnalyzeDialogForm: TParentForm},
+  PersonalRate in '..\..\Forms\Document\PersonalRate.pas' {PersonalRateForm: TParentForm},
+  PersonalRateJournal in '..\..\Forms\Document\PersonalRateJournal.pas' {PersonalRateJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

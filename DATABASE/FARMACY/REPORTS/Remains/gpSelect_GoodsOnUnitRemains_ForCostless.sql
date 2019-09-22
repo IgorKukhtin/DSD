@@ -6,11 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains_ForCostless(
     IN inUnitId  Integer,   -- Подразделение
     IN inSession TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (GoodsID      Integer
-             , GoodsName    TVarChar
-             , BarCode      TVarChar
-             , Price        TFloat
-             , Remains      TFloat
+RETURNS TABLE (GoodsID        Integer
+             , GoodsName      TVarChar
+             , BarCode        TVarChar
+             , Price          TFloat
+             , Remains        TFloat
+             , GoodsGroupName TVarChar
 )
 AS
 $BODY$
@@ -154,6 +155,8 @@ BEGIN
            , COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar                      AS BarCode
            , Object_Price.Price                                                    AS Price
            , (Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0))::TFloat   AS Remains
+           , COALESCE (Object_GoodsGroup.ValueData, 
+             'Товары медицинского назначения')::TVarChar                           AS GoodsGroupName
 
       FROM Remains
            INNER JOIN T1 ON T1.ObjectId = Remains.ObjectId
@@ -179,6 +182,12 @@ BEGIN
                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
            -- штрих-код производителя
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Remains.ObjectId
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
       WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
         AND COALESCE (ObjectBoolean_Goods_TOP.ValueData, False) = True

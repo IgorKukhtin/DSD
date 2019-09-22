@@ -30,6 +30,10 @@ type
     edToGroup: TcxButtonEdit;
     GuidesTo: TdsdGuides;
     cbMovement: TcxCheckBox;
+    cbMovement_fact: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
   private
     { Private declarations }
   public

@@ -1,5 +1,11 @@
 -- Function: gpSelect_MovementItem_OrderInternal()
 
+--   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--
+--   Процедура разбита на две gpSelect_MovementItem_OrderInternal_Master и gpSelect_MovementItem_OrderInternal_Child
+--
+--   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, Boolean, TVarChar);
 
@@ -4206,3 +4212,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --- последнее
 -- select * from gpSelect_MovementItem_OrderInternal(inMovementId := 9495891 , inShowAll := 'FALSE' , inIsErased := 'FALSE' , inIsLink := 'FALSE' ,  inSession := '3')
+select * from gpSelect_MovementItem_OrderInternal(inMovementId := 15668431 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');

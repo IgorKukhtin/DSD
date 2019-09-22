@@ -62,8 +62,14 @@ BEGIN
        -- сохранили свойство <На карту>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
 
-       -- сохранили свойство <Выдано>
-      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), ioId, inisIssuedBy);
+       -- сохранили свойство <Дата выдачи>
+      IF inisIssuedBy <> COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE DescID = zc_MIBoolean_isIssuedBy() AND MovementItemID = ioId) , inisIssuedBy)
+      THEN
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_IssuedBy(), ioId, CURRENT_TIMESTAMP);
+      
+         -- сохранили свойство <Выдано>
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), ioId, inisIssuedBy);
+      END IF;
 
       -- сохранили протокол
       PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);

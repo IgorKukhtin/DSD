@@ -183,7 +183,19 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Branch_App7: TdsdOpenForm [10]
+    object actPersonalRate: TdsdOpenForm [10]
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1057#1090#1072#1074#1082#1080' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
+      Hint = #1057#1090#1072#1074#1082#1080' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
+      FormName = 'TPersonalRateJournalForm'
+      FormNameParam.Value = 'TPersonalRateJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Branch_App7: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       MoveParams = <>
       Caption = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7 ('#1089#1074#1086#1076#1085#1099#1081' '#1086#1090#1095#1077#1090')'
@@ -194,7 +206,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods_byMovementReal: TdsdOpenForm [11]
+    object actReport_Goods_byMovementReal: TdsdOpenForm [12]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -206,7 +218,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_HolidayCompensation: TdsdOpenForm [12]
+    object actReport_HolidayCompensation: TdsdOpenForm [13]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
@@ -217,7 +229,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actTransportRoute: TdsdOpenForm [13]
+    object actTransportRoute: TdsdOpenForm [14]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1089' '#1084#1072#1088#1096#1088#1091#1090#1086#1084')'
@@ -229,7 +241,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Branch_App7_New: TdsdOpenForm [14]
+    object actReport_Branch_App7_New: TdsdOpenForm [15]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       MoveParams = <>
       Caption = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7 ('#1089#1074#1086#1076#1085#1099#1081' '#1086#1090#1095#1077#1090') ('#1085#1086#1074#1099#1081')'
@@ -240,7 +252,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Branch_Cash: TdsdOpenForm [15]
+    object actReport_Branch_Cash: TdsdOpenForm [16]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072' ('#1092#1080#1083#1080#1072#1083#1099')'
@@ -251,7 +263,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPropertyValueVMS: TdsdOpenForm [16]
+    object actGoodsPropertyValueVMS: TdsdOpenForm [17]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' ('#1042#1052#1057')'
@@ -262,7 +274,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeCost: TdsdOpenForm [17]
+    object actIncomeCost: TdsdOpenForm [18]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' - '#1047#1072#1090#1088#1072#1090
@@ -274,7 +286,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderFinance: TdsdOpenForm [18]
+    object actOrderFinance: TdsdOpenForm [19]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
@@ -290,7 +302,7 @@
         end>
       isShowModal = False
     end
-    object actOrderFinanceMov: TdsdOpenForm [19]
+    object actOrderFinanceMov: TdsdOpenForm [20]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081
@@ -306,7 +318,7 @@
         end>
       isShowModal = False
     end
-    object actReport_ProductionSeparate_CheckPrice: TdsdOpenForm [20]
+    object actReport_ProductionSeparate_CheckPrice: TdsdOpenForm [21]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1074#1077#1082#1072' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1087#1088#1086#1080#1079#1074'. - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' )'
@@ -318,7 +330,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Branch_App1_Full: TdsdOpenForm [21]
+    object actReport_Branch_App1_Full: TdsdOpenForm [22]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       MoveParams = <>
       Caption = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 ('#1076#1074#1080#1078#1077#1085#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055') ('#1087#1086#1083#1085'.'#1089'/'#1089')'
@@ -329,7 +341,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Branch_App7_Full: TdsdOpenForm [22]
+    object actReport_Branch_App7_Full: TdsdOpenForm [23]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       MoveParams = <>
       Caption = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7 ('#1089#1074#1086#1076#1085#1099#1081' '#1086#1090#1095#1077#1090') ('#1087#1086#1083#1085'.'#1089'/'#1089')'
@@ -340,7 +352,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReplMovement: TdsdOpenForm [23]
+    object actReplMovement: TdsdOpenForm [24]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1056#1077#1087#1083#1080#1082#1072#1094#1080#1103
       MoveParams = <>
       Caption = #1056#1077#1087#1083#1080#1082#1072#1094#1080#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -351,7 +363,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMemberPersonalServiceList: TdsdOpenForm [24]
+    object actMemberPersonalServiceList: TdsdOpenForm [25]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1044#1086#1089#1090#1091#1087' '#1082' '#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -363,7 +375,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actServiceMarket: TdsdOpenForm [25]
+    object actServiceMarket: TdsdOpenForm [26]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')'
@@ -379,7 +391,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Income_Olap: TdsdOpenForm [26]
+    object actReport_Income_Olap: TdsdOpenForm [27]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1054#1051#1040#1055')'
@@ -390,7 +402,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSettingsService: TdsdOpenForm [27]
+    object actSettingsService: TdsdOpenForm [28]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1085#1072' '#1087#1088#1086#1089#1084#1086#1090#1088' '#1078#1091#1088#1085#1072#1083#1072' '#1091#1089#1083#1091#1075
@@ -402,7 +414,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsSeparate: TdsdOpenForm [28]
+    object actGoodsSeparate: TdsdOpenForm [29]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
@@ -414,7 +426,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMemberHoliday: TdsdOpenForm [29]
+    object actMemberHoliday: TdsdOpenForm [30]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1055#1088#1080#1082#1072#1079#1099' '#1087#1086' '#1086#1090#1087#1091#1089#1082#1072#1084
@@ -426,7 +438,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReplObject: TdsdOpenForm [30]
+    object actReplObject: TdsdOpenForm [31]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1056#1077#1087#1083#1080#1082#1072#1094#1080#1103
       MoveParams = <>
       Caption = #1056#1077#1087#1083#1080#1082#1072#1094#1080#1103' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
@@ -437,7 +449,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMovementGoodsBarCode: TdsdOpenForm [31]
+    object actMovementGoodsBarCode: TdsdOpenForm [32]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')'
@@ -454,7 +466,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Account: TdsdOpenForm [32]
+    object actReport_Account: TdsdOpenForm [33]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
@@ -466,7 +478,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind_wms: TdsdOpenForm [33]
+    object actGoodsByGoodsKind_wms: TdsdOpenForm [34]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1042#1052#1057') '#1090#1072#1073#1083#1080#1094#1072
@@ -478,7 +490,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_SaleReturnInNotOlap: TdsdOpenForm [34]
+    object actReport_GoodsMI_SaleReturnInNotOlap: TdsdOpenForm [35]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'  ('#1054#1085'-'#1083#1072#1081#1085')'
@@ -490,7 +502,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSticker_List: TdsdOpenForm [35]
+    object actSticker_List: TdsdOpenForm [36]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
       Caption = #1069#1090#1080#1082#1077#1090#1082#1072' ('#1089#1087#1080#1089#1086#1082')'
@@ -501,7 +513,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ProductionUnion_Olap: TdsdOpenForm [36]
+    object actReport_ProductionUnion_Olap: TdsdOpenForm [37]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1054#1051#1040#1055' - '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091
@@ -513,7 +525,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSticker: TdsdOpenForm [37]
+    object actSticker: TdsdOpenForm [38]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
       Caption = #1069#1090#1080#1082#1077#1090#1082#1072
@@ -524,7 +536,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementProtocol: TdsdOpenForm [38]
+    object actReport_MovementProtocol: TdsdOpenForm [39]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1080#1079#1084#1077#1085#1077#1085#1080#1081' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -536,7 +548,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_CheckTaxCorrective_NPP: TdsdOpenForm [39]
+    object actReport_CheckTaxCorrective_NPP: TdsdOpenForm [40]
       Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
@@ -570,7 +582,7 @@
         end>
       isShowModal = False
     end
-    object actStickerGroup: TdsdOpenForm [40]
+    object actStickerGroup: TdsdOpenForm [41]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
       Caption = #1042#1080#1076' '#1087#1088#1086#1076#1091#1082#1090#1072' ('#1043#1088#1091#1087#1087#1072')'
@@ -581,7 +593,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind_VMC: TdsdOpenForm [41]
+    object actGoodsByGoodsKind_VMC: TdsdOpenForm [42]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1042#1052#1057')'
@@ -593,7 +605,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actLossPersonal: TdsdOpenForm [42]
+    object actLossPersonal: TdsdOpenForm [43]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1047#1055')'
@@ -605,7 +617,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actStickerType: TdsdOpenForm [43]
+    object actStickerType: TdsdOpenForm [44]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
       Caption = #1057#1087#1086#1089#1086#1073' '#1080#1079#1075#1086#1090#1086#1074#1083#1077#1085#1080#1103
@@ -616,7 +628,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_SaleReturnIn_BUH: TdsdOpenForm [44]
+    object actReport_GoodsMI_SaleReturnIn_BUH: TdsdOpenForm [45]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1089' '#1053#1044#1057')'
@@ -628,7 +640,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMemberSheetWorkTime: TdsdOpenForm [45]
+    object actMemberSheetWorkTime: TdsdOpenForm [46]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1044#1086#1089#1090#1091#1087' '#1082' '#1058#1072#1073#1077#1083#1102' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
@@ -640,7 +652,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionGoodsWeek: TdsdOpenForm [46]
+    object actReport_MotionGoodsWeek: TdsdOpenForm [47]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
@@ -674,7 +686,7 @@
         end>
       isShowModal = False
     end
-    object actOrderExternalItem: TdsdOpenForm [47]
+    object actOrderExternalItem: TdsdOpenForm [48]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
@@ -685,7 +697,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_HolidayPersonal: TdsdOpenForm [48]
+    object actReport_HolidayPersonal: TdsdOpenForm [49]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1087#1091#1089#1082#1072#1084
@@ -696,7 +708,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsListIncome: TdsdOpenForm [49]
+    object actGoodsListIncome: TdsdOpenForm [50]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -707,7 +719,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind_Sticker: TdsdOpenForm [50]
+    object actGoodsByGoodsKind_Sticker: TdsdOpenForm [51]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1101#1090#1080#1082#1077#1090#1082#1080')'
@@ -719,7 +731,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileConst: TdsdOpenForm [51]
+    object actMobileConst: TdsdOpenForm [52]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1050#1086#1085#1089#1090#1072#1085#1090#1099
@@ -730,7 +742,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobilePriceListItems: TdsdOpenForm [52]
+    object actMobilePriceListItems: TdsdOpenForm [53]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -741,7 +753,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SupplyBalance: TdsdOpenForm [53]
+    object actReport_SupplyBalance: TdsdOpenForm [54]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103
@@ -775,7 +787,7 @@
         end>
       isShowModal = False
     end
-    object actReport_TransportFuel: TdsdOpenForm [54]
+    object actReport_TransportFuel: TdsdOpenForm [55]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1086#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
@@ -786,7 +798,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileGoodsByGoodsKind: TdsdOpenForm [55]
+    object actMobileGoodsByGoodsKind: TdsdOpenForm [56]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1042#1057#1045#1061
@@ -797,7 +809,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrReturnJournal: TdsdOpenForm [56]
+    object actReestrReturnJournal: TdsdOpenForm [57]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -814,7 +826,7 @@
         end>
       isShowModal = False
     end
-    object actGoodsPropertyBox: TdsdOpenForm [57]
+    object actGoodsPropertyBox: TdsdOpenForm [58]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
@@ -826,7 +838,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SaleOrderExtList_Mobile: TdsdOpenForm [58]
+    object actReport_SaleOrderExtList_Mobile: TdsdOpenForm [59]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078
@@ -849,7 +861,7 @@
         end>
       isShowModal = False
     end
-    object actReplServer: TdsdOpenForm [59]
+    object actReplServer: TdsdOpenForm [60]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1056#1077#1087#1083#1080#1082#1072#1094#1080#1103
       MoveParams = <>
       Caption = #1057#1077#1088#1074#1077#1088#1072' '#1076#1083#1103' '#1056#1077#1087#1083#1080#1082#1080' '#1041#1044
@@ -860,7 +872,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Check_OrderInternalBySend: TdsdOpenForm [60]
+    object actReport_Check_OrderInternalBySend: TdsdOpenForm [61]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072' '#1089' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077#1084
@@ -905,7 +917,7 @@
         end>
       isShowModal = False
     end
-    object actMobileContract: TdsdOpenForm [61]
+    object actMobileContract: TdsdOpenForm [62]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
@@ -916,7 +928,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileGoodsListSale: TdsdOpenForm [62]
+    object actMobileGoodsListSale: TdsdOpenForm [63]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1076#1083#1103' '#1058#1058
@@ -927,7 +939,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPhotoMobile: TdsdOpenForm [63]
+    object actPhotoMobile: TdsdOpenForm [64]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1060#1086#1090#1086#1075#1088#1072#1092#1080#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
@@ -938,7 +950,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRouteMemberJournal: TdsdOpenForm [64]
+    object actRouteMemberJournal: TdsdOpenForm [65]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1052#1072#1088#1096#1088#1091#1090' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1072#1075#1077#1085#1090#1072' (GPS-'#1086#1090#1095#1077#1090')'
@@ -949,7 +961,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actTask: TdsdOpenForm [65]
+    object actTask: TdsdOpenForm [66]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1047#1072#1076#1072#1085#1080#1103' '#1058#1086#1088#1075#1086#1074#1086#1084#1091' '#1072#1075#1077#1085#1090#1091
@@ -960,7 +972,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_AccountMotion: TdsdOpenForm [66]
+    object actReport_AccountMotion: TdsdOpenForm [67]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
@@ -972,7 +984,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderIncomeSnab: TdsdOpenForm [67]
+    object actOrderIncomeSnab: TdsdOpenForm [68]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080#1077
@@ -984,7 +996,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_PromoPlan: TdsdOpenForm [68]
+    object actReport_PromoPlan: TdsdOpenForm [69]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
       MoveParams = <>
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1040#1082#1094#1080#1103#1084
@@ -996,7 +1008,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actVisit: TdsdOpenForm [69]
+    object actVisit: TdsdOpenForm [70]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091' ('#1092#1086#1090#1086#1086#1090#1095#1077#1090')'
@@ -1007,7 +1019,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonal_Object: TdsdOpenForm [70]
+    object actPersonal_Object: TdsdOpenForm [71]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' ('#1087#1088#1086#1089#1084#1086#1090#1088')'
@@ -1030,7 +1042,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Sale_Olap: TdsdOpenForm [71]
+    object actReport_Sale_Olap: TdsdOpenForm [72]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
@@ -1041,7 +1053,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsTypeKind: TdsdOpenForm [72]
+    object actGoodsTypeKind: TdsdOpenForm [73]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
@@ -1053,7 +1065,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionSeparateStorageLine: TdsdOpenForm [73]
+    object actProductionSeparateStorageLine: TdsdOpenForm [74]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086' '#1083#1080#1085#1080#1103#1084' '#1087#1088'.)'
@@ -1065,7 +1077,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actEDI_Send: TdsdOpenForm [74]
+    object actEDI_Send: TdsdOpenForm [75]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' EDI'
@@ -1077,7 +1089,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobilePromo: TdsdOpenForm [75]
+    object actMobilePromo: TdsdOpenForm [76]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1040#1082#1094#1080#1080
@@ -1088,7 +1100,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Promo_Result: TdsdOpenForm [76]
+    object actReport_Promo_Result: TdsdOpenForm [77]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081
@@ -1100,7 +1112,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MIProtocol: TdsdOpenForm [77]
+    object actReport_MIProtocol: TdsdOpenForm [78]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1080#1079#1084#1077#1085#1077#1085#1080#1081
@@ -1112,7 +1124,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrReturnStart: TdsdOpenForm [78]
+    object actReestrReturnStart: TdsdOpenForm [79]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' ('#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
@@ -1128,7 +1140,7 @@
         end>
       isShowModal = False
     end
-    object actBarCodeBox: TdsdOpenForm [79]
+    object actBarCodeBox: TdsdOpenForm [80]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
@@ -1140,7 +1152,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSale_Transport: TdsdOpenForm [80]
+    object actSale_Transport: TdsdOpenForm [81]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1091#1090#1077#1074#1099#1077' '#1083#1080#1089#1090#1099')'
@@ -1157,7 +1169,7 @@
         end>
       isShowModal = False
     end
-    object actMobilePartner: TdsdOpenForm [81]
+    object actMobilePartner: TdsdOpenForm [82]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' + '#1044#1086#1075#1086#1074#1086#1088#1072
@@ -1168,7 +1180,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsReportSale: TdsdOpenForm [82]
+    object actGoodsReportSale: TdsdOpenForm [83]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
@@ -1180,7 +1192,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTechReceipt: TdsdOpenForm [83]
+    object actProductionUnionTechReceipt: TdsdOpenForm [84]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
@@ -1214,7 +1226,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechReceiptDelic: TdsdOpenForm [84]
+    object actProductionUnionTechReceiptDelic: TdsdOpenForm [85]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
@@ -1248,7 +1260,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechReceiptCK: TdsdOpenForm [85]
+    object actProductionUnionTechReceiptCK: TdsdOpenForm [86]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1089'/'#1082' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
@@ -1282,7 +1294,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechReceiptSiryo: TdsdOpenForm [86]
+    object actProductionUnionTechReceiptSiryo: TdsdOpenForm [87]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1064#1087#1088#1080#1094'. '#1084#1103#1089#1086' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099')'
@@ -1316,7 +1328,7 @@
         end>
       isShowModal = False
     end
-    object actSendMember: TdsdOpenForm [87]
+    object actSendMember: TdsdOpenForm [88]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1052#1054
@@ -1327,7 +1339,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrReturnRemakeBuh: TdsdOpenForm [88]
+    object actReestrReturnRemakeBuh: TdsdOpenForm [89]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -1349,7 +1361,7 @@
         end>
       isShowModal = False
     end
-    object actSale_Reestr: TdsdOpenForm [89]
+    object actSale_Reestr: TdsdOpenForm [90]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077')'
@@ -1366,7 +1378,7 @@
         end>
       isShowModal = False
     end
-    object actReestr: TdsdOpenForm [90]
+    object actReestr: TdsdOpenForm [91]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -1383,7 +1395,7 @@
         end>
       isShowModal = False
     end
-    object actMobileReturnIn: TdsdOpenForm [91]
+    object actMobileReturnIn: TdsdOpenForm [92]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -1394,7 +1406,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrReturnBuh: TdsdOpenForm [92]
+    object actReestrReturnBuh: TdsdOpenForm [93]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
@@ -1416,7 +1428,7 @@
         end>
       isShowModal = False
     end
-    object actReestrStart: TdsdOpenForm [93]
+    object actReestrStart: TdsdOpenForm [94]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
@@ -1432,7 +1444,7 @@
         end>
       isShowModal = False
     end
-    object actReestrPartnerIn: TdsdOpenForm [94]
+    object actReestrPartnerIn: TdsdOpenForm [95]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
@@ -1454,7 +1466,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Check_ReturnInToLink: TdsdOpenForm [95]
+    object actReport_Check_ReturnInToLink: TdsdOpenForm [96]
       Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072
@@ -1465,7 +1477,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actStorageLine: TdsdOpenForm [96]
+    object actStorageLine: TdsdOpenForm [97]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
@@ -1477,7 +1489,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReportCollation_UpdateObject: TdsdOpenForm [97]
+    object actReportCollation_UpdateObject: TdsdOpenForm [98]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1040#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1074#1080#1079#1072' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
@@ -1488,7 +1500,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrRemakeIn: TdsdOpenForm [98]
+    object actReestrRemakeIn: TdsdOpenForm [99]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
@@ -1510,7 +1522,7 @@
         end>
       isShowModal = False
     end
-    object actMember_ObjectTo: TdsdOpenForm [99]
+    object actMember_ObjectTo: TdsdOpenForm [100]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1082#1086#1084#1091' '#1087#1088#1077#1074#1099#1089#1090'.)'
@@ -1522,7 +1534,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReestrRemakeBuh: TdsdOpenForm [100]
+    object actReestrRemakeBuh: TdsdOpenForm [101]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -1544,7 +1556,7 @@
         end>
       isShowModal = False
     end
-    object actReestrRemake: TdsdOpenForm [101]
+    object actReestrRemake: TdsdOpenForm [102]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
@@ -1566,7 +1578,7 @@
         end>
       isShowModal = False
     end
-    object actReestrBuh: TdsdOpenForm [102]
+    object actReestrBuh: TdsdOpenForm [103]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
@@ -1588,7 +1600,7 @@
         end>
       isShowModal = False
     end
-    object actReestrTransferOut: TdsdOpenForm [103]
+    object actReestrTransferOut: TdsdOpenForm [104]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1058#1088#1072#1085#1079#1080#1090' '#1074#1086#1079#1074#1088#1072#1097#1077#1085
@@ -1610,7 +1622,7 @@
         end>
       isShowModal = False
     end
-    object actReestrTransferIn: TdsdOpenForm [104]
+    object actReestrTransferIn: TdsdOpenForm [105]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1058#1088#1072#1085#1079#1080#1090' '#1087#1086#1083#1091#1095#1077#1085
@@ -1632,7 +1644,7 @@
         end>
       isShowModal = False
     end
-    object actGoodsListSale: TdsdOpenForm [105]
+    object actGoodsListSale: TdsdOpenForm [106]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
@@ -1644,7 +1656,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPartnerContact: TdsdOpenForm [106]
+    object actPartnerContact: TdsdOpenForm [107]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1050#1086#1085#1090#1072#1082#1090#1086#1074')'
@@ -1656,7 +1668,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actEntryAsset: TdsdOpenForm [107]
+    object actEntryAsset: TdsdOpenForm [108]
       Category = #1054#1057
       MoveParams = <>
       Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
@@ -1667,7 +1679,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPartionGoods: TdsdOpenForm [108]
+    object actPartionGoods: TdsdOpenForm [109]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
@@ -1679,7 +1691,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSheetWorkTimeObject: TdsdOpenForm [109]
+    object actSheetWorkTimeObject: TdsdOpenForm [110]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080')'
@@ -1691,7 +1703,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPartionRemains: TdsdOpenForm [110]
+    object actPartionRemains: TdsdOpenForm [111]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1072#1088#1090#1080#1080' '#1052#1053#1052#1040
@@ -1703,7 +1715,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Check_ReturnInToSale: TdsdOpenForm [111]
+    object actReport_Check_ReturnInToSale: TdsdOpenForm [112]
       Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084
@@ -1732,7 +1744,7 @@
         end>
       isShowModal = False
     end
-    object actExportJuridical: TdsdOpenForm [112]
+    object actExportJuridical: TdsdOpenForm [113]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1101#1082#1089#1087#1086#1088#1090#1072' '#1089' '#1086#1090#1087#1088#1072#1074#1082#1086#1081' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -1744,7 +1756,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileOrderExternal: TdsdOpenForm [113]
+    object actMobileOrderExternal: TdsdOpenForm [114]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
@@ -1755,7 +1767,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReportCollation_Object: TdsdOpenForm [114]
+    object actReportCollation_Object: TdsdOpenForm [115]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1040#1082#1090#1099' '#1089#1074#1077#1088#1086#1082' ('#1089#1087#1080#1089#1086#1082')'
@@ -1766,7 +1778,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeAsset: TdsdOpenForm [115]
+    object actIncomeAsset: TdsdOpenForm [116]
       Category = #1054#1057
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -1777,7 +1789,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSignInternal: TdsdOpenForm [116]
+    object actSignInternal: TdsdOpenForm [117]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1052#1086#1076#1077#1083#1080' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
@@ -1789,7 +1801,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Invoice: TdsdOpenForm [117]
+    object actReport_Invoice: TdsdOpenForm [118]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
@@ -1800,7 +1812,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actAreaContract: TdsdOpenForm [118]
+    object actAreaContract: TdsdOpenForm [119]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1056#1077#1075#1080#1086#1085#1099' ('#1076#1086#1075#1086#1074#1086#1088#1072')'
@@ -1812,7 +1824,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actEmailKind: TdsdOpenForm [119]
+    object actEmailKind: TdsdOpenForm [120]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1042#1080#1076#1099' '#1087#1086#1095#1090#1099
@@ -1824,7 +1836,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderExternalPersonalTrade: TdsdOpenForm [120]
+    object actOrderExternalPersonalTrade: TdsdOpenForm [121]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
@@ -1835,7 +1847,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actJuridicalUKTZED: TdsdOpenForm [121]
+    object actJuridicalUKTZED: TdsdOpenForm [122]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' (UKTZED)'
@@ -1847,7 +1859,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actEmailSettings: TdsdOpenForm [122]
+    object actEmailSettings: TdsdOpenForm [123]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1087#1086#1095#1090#1099
@@ -1859,7 +1871,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_UserProtocol: TdsdOpenForm [123]
+    object actReport_UserProtocol: TdsdOpenForm [124]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103#1084
@@ -1871,7 +1883,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderIncome: TdsdOpenForm [124]
+    object actOrderIncome: TdsdOpenForm [125]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -1883,7 +1895,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPropertyValueDoc: TdsdOpenForm [125]
+    object actGoodsPropertyValueDoc: TdsdOpenForm [126]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' ('#1074#1083#1086#1078#1077#1085#1080#1077')'
@@ -1895,7 +1907,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileBills: TdsdOpenForm [126]
+    object actMobileBills: TdsdOpenForm [127]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100' (2)'
@@ -1906,7 +1918,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actUserSettings: TdsdOpenForm [127]
+    object actUserSettings: TdsdOpenForm [128]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
@@ -1918,7 +1930,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_HistoryCostView: TdsdOpenForm [128]
+    object actReport_HistoryCostView: TdsdOpenForm [129]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1094#1077#1085#1072#1084' '#1089'/'#1089
@@ -1929,7 +1941,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actEmailTools: TdsdOpenForm [129]
+    object actEmailTools: TdsdOpenForm [130]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099
@@ -1941,7 +1953,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionGoods_Asset: TdsdOpenForm [130]
+    object actReport_MotionGoods_Asset: TdsdOpenForm [131]
       Category = #1054#1057
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' OC'
@@ -1952,7 +1964,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actInvoice: TdsdOpenForm [131]
+    object actInvoice: TdsdOpenForm [132]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1057#1095#1077#1090
@@ -1964,7 +1976,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_SendonPrice: TdsdOpenForm [132]
+    object actReport_GoodsMI_SendonPrice: TdsdOpenForm [133]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
@@ -1988,7 +2000,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalBankAccount: TdsdOpenForm [133]
+    object actPersonalBankAccount: TdsdOpenForm [134]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1042#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' ('#1073#1072#1085#1082')'
@@ -2023,7 +2035,7 @@
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_Package: TdsdOpenForm [134]
+    object actReport_GoodsMI_Package: TdsdOpenForm [135]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077' '#1080#1083#1080' '#1094#1077#1093' '#1082#1086#1087#1095#1077#1085#1080#1103' '#1087#1077#1095#1072#1090#1100
@@ -2043,7 +2055,7 @@
         end>
       isShowModal = False
     end
-    object actReport_CheckAmount_ReturnInToSale: TdsdOpenForm [135]
+    object actReport_CheckAmount_ReturnInToSale: TdsdOpenForm [136]
       Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084
@@ -2073,7 +2085,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Weighing: TdsdOpenForm [136]
+    object actReport_Weighing: TdsdOpenForm [137]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = 'C'#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1074#1089#1077#1093' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081
@@ -2085,7 +2097,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReceiptComponents: TdsdOpenForm [137]
+    object actReceiptComponents: TdsdOpenForm [138]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088
@@ -2097,7 +2109,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actBranchJuridical: TdsdOpenForm [138]
+    object actBranchJuridical: TdsdOpenForm [139]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1092#1080#1083#1080#1072#1083#1072#1084' ('#1087#1088#1086#1089#1084#1086#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093')'
@@ -2109,7 +2121,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actSale: TdsdOpenForm [139]
+    object actSale: TdsdOpenForm [140]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -2126,7 +2138,7 @@
         end>
       isShowModal = False
     end
-    object actGoodsExternal: TdsdOpenForm [140]
+    object actGoodsExternal: TdsdOpenForm [141]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1052#1077#1076#1082#1072
@@ -2138,7 +2150,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind_ScaleCeh: TdsdOpenForm [141]
+    object actGoodsByGoodsKind_ScaleCeh: TdsdOpenForm [142]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' (ScaleCeh)'
@@ -2150,7 +2162,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCarExternal: TdsdOpenForm [142]
+    object actCarExternal: TdsdOpenForm [143]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080' ('#1089#1090#1086#1088#1086#1085#1085#1080#1077')'
@@ -2162,7 +2174,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind_Order: TdsdOpenForm [143]
+    object actGoodsByGoodsKind_Order: TdsdOpenForm [144]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1079#1072#1103#1074#1082#1080')'
@@ -2174,7 +2186,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMember_Trasport: TdsdOpenForm [144]
+    object actMember_Trasport: TdsdOpenForm [145]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1090#1088#1072#1085#1089#1087#1086#1088#1090')'
@@ -2186,7 +2198,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actQualityNumber: TdsdOpenForm [145]
+    object actQualityNumber: TdsdOpenForm [146]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1046#1091#1088#1085#1072#1083' '#1085#1086#1084#1077#1088#1086#1074' '#1050'.'#1059'.'
@@ -2198,7 +2210,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRouteMember: TdsdOpenForm [146]
+    object actRouteMember: TdsdOpenForm [147]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1052#1072#1088#1096#1088#1091#1090#1099' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
@@ -2210,7 +2222,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnOut: TdsdOpenForm [147]
+    object actReturnOut: TdsdOpenForm [148]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -2221,7 +2233,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Send: TdsdOpenForm [148]
+    object actReport_GoodsMI_Send: TdsdOpenForm [149]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -2245,7 +2257,7 @@
         end>
       isShowModal = False
     end
-    object actReturnOut_Partner: TdsdOpenForm [149]
+    object actReturnOut_Partner: TdsdOpenForm [150]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -2257,7 +2269,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsUKTZED: TdsdOpenForm [150]
+    object actGoodsUKTZED: TdsdOpenForm [151]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1086#1076#1072' '#1059#1050#1058' '#1047#1045#1044')'
@@ -2269,7 +2281,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actNameBefore: TdsdOpenForm [151]
+    object actNameBefore: TdsdOpenForm [152]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088'/'#1054#1057'/'#1088#1072#1073#1086#1090#1099' ('#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
@@ -2281,7 +2293,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SaleOrderExternalList: TdsdOpenForm [152]
+    object actReport_SaleOrderExternalList: TdsdOpenForm [153]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078
@@ -2293,7 +2305,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomePartionGoods: TdsdOpenForm [153]
+    object actIncomePartionGoods: TdsdOpenForm [154]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
@@ -2305,7 +2317,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_PersonalComplete: TdsdOpenForm [154]
+    object actReport_PersonalComplete: TdsdOpenForm [155]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'/'#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084
@@ -2318,7 +2330,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionGoods_Ceh: TdsdOpenForm [155]
+    object actReport_MotionGoods_Ceh: TdsdOpenForm [156]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'('#1062#1077#1093')'
@@ -2330,7 +2342,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actDocumentKind: TdsdOpenForm [156]
+    object actDocumentKind: TdsdOpenForm [157]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1080#1087#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -2342,7 +2354,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTech: TdsdOpenForm [157]
+    object actProductionUnionTech: TdsdOpenForm [158]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081
@@ -2376,7 +2388,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechDelic: TdsdOpenForm [158]
+    object actProductionUnionTechDelic: TdsdOpenForm [159]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
@@ -2410,7 +2422,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechCK: TdsdOpenForm [159]
+    object actProductionUnionTechCK: TdsdOpenForm [160]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1089'/'#1082
@@ -2444,7 +2456,7 @@
         end>
       isShowModal = False
     end
-    object actProductionUnionTechSiryo: TdsdOpenForm [160]
+    object actProductionUnionTechSiryo: TdsdOpenForm [161]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1064#1087#1088#1080#1094'. '#1084#1103#1089#1086
@@ -2478,7 +2490,7 @@
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionUnionMD: TdsdOpenForm [161]
+    object actReport_GoodsMI_ProductionUnionMD: TdsdOpenForm [162]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077', '#1076#1077#1090#1072#1083#1100#1085#1086')'
@@ -2497,7 +2509,7 @@
         end>
       isShowModal = False
     end
-    object actReport_GoodsBalance: TdsdOpenForm [162]
+    object actReport_GoodsBalance: TdsdOpenForm [163]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1072
@@ -2508,7 +2520,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsBalance_Server: TdsdOpenForm [163]
+    object actReport_GoodsBalance_Server: TdsdOpenForm [164]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1072' ('#1057#1077#1088#1074#1077#1088')'
@@ -2519,7 +2531,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm [164]
+    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm [165]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
@@ -2538,7 +2550,7 @@
         end>
       isShowModal = False
     end
-    object actExportKind: TdsdOpenForm [165]
+    object actExportKind: TdsdOpenForm [166]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1080#1087#1099' '#1101#1082#1089#1087#1086#1088#1090#1072
@@ -2550,7 +2562,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionGoods_Upak: TdsdOpenForm [166]
+    object actReport_MotionGoods_Upak: TdsdOpenForm [167]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
@@ -2562,7 +2574,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRouteGroup: TdsdOpenForm [167]
+    object actRouteGroup: TdsdOpenForm [168]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1043#1088#1091#1087#1087#1099' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
@@ -2574,7 +2586,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Transport_ProfitLoss: TdsdOpenForm [168]
+    object actReport_Transport_ProfitLoss: TdsdOpenForm [169]
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
@@ -2586,7 +2598,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Internal: TdsdOpenForm [169]
+    object actReport_GoodsMI_Internal: TdsdOpenForm [170]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
@@ -2609,7 +2621,7 @@
         end>
       isShowModal = False
     end
-    object actContractGoods: TdsdOpenForm [170]
+    object actContractGoods: TdsdOpenForm [171]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093
@@ -2621,7 +2633,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Defroster: TdsdOpenForm [171]
+    object actReport_GoodsMI_Defroster: TdsdOpenForm [172]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1044#1077#1092#1088#1086#1089#1090#1077#1088
@@ -2641,7 +2653,7 @@
         end>
       isShowModal = False
     end
-    object actJuridical_PrintKindItem: TdsdOpenForm [172]
+    object actJuridical_PrintKindItem: TdsdOpenForm [173]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1101#1083#1077#1084#1077#1085#1090#1099' '#1087#1077#1095#1072#1090#1080')'
@@ -2653,7 +2665,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperationDneprOfficial: TdsdOpenForm [173]
+    object actCashOperationDneprOfficial: TdsdOpenForm [174]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1044#1085#1077#1087#1088' '#1041#1053')'
@@ -2686,7 +2698,7 @@
         end>
       isShowModal = False
     end
-    object actOrderType: TdsdOpenForm [174]
+    object actOrderType: TdsdOpenForm [175]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -2698,7 +2710,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionUnion: TdsdOpenForm [175]
+    object actReport_GoodsMI_ProductionUnion: TdsdOpenForm [176]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077')'
@@ -2717,7 +2729,7 @@
         end>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [176]
+    object actForms: TdsdOpenForm [177]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -2729,7 +2741,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsGroupAnalyst: TdsdOpenForm [177]
+    object actGoodsGroupAnalyst: TdsdOpenForm [178]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1072#1085#1072#1083#1080#1090#1080#1082#1072')'
@@ -2741,7 +2753,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperationKiev: TdsdOpenForm [178]
+    object actCashOperationKiev: TdsdOpenForm [179]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1050#1080#1077#1074')'
@@ -2774,7 +2786,7 @@
         end>
       isShowModal = False
     end
-    object actMobileTariff: TdsdOpenForm [179]
+    object actMobileTariff: TdsdOpenForm [180]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
@@ -2785,7 +2797,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_OrderExternal_Sale: TdsdOpenForm [180]
+    object actReport_OrderExternal_Sale: TdsdOpenForm [181]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' / '#1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -2808,7 +2820,7 @@
         end>
       isShowModal = False
     end
-    object actPartnerTag: TdsdOpenForm [181]
+    object actPartnerTag: TdsdOpenForm [182]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
@@ -2820,7 +2832,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Tara: TdsdOpenForm [182]
+    object actReport_Tara: TdsdOpenForm [183]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1088#1077
@@ -2832,7 +2844,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Promo: TdsdOpenForm [183]
+    object actReport_Promo: TdsdOpenForm [184]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
@@ -2844,7 +2856,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReceiptCost: TdsdOpenForm [184]
+    object actReceiptCost: TdsdOpenForm [185]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093
@@ -2856,7 +2868,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actQuality: TdsdOpenForm [185]
+    object actQuality: TdsdOpenForm [186]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1042#1080#1076#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
@@ -2868,7 +2880,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPlatform: TdsdOpenForm [186]
+    object actGoodsPlatform: TdsdOpenForm [187]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
@@ -2880,7 +2892,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_SaleReturnInUnitNew: TdsdOpenForm [187]
+    object actReport_GoodsMI_SaleReturnInUnitNew: TdsdOpenForm [188]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1076#1072#1090#1077' '#1089#1082#1083#1072#1076
@@ -2892,7 +2904,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileEmployee: TdsdOpenForm [188]
+    object actMobileEmployee: TdsdOpenForm [189]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
@@ -2903,7 +2915,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actContractPartner: TdsdOpenForm [189]
+    object actContractPartner: TdsdOpenForm [190]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093
@@ -2915,7 +2927,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actContractTag: TdsdOpenForm [190]
+    object actContractTag: TdsdOpenForm [191]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -2927,7 +2939,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actIncome: TdsdOpenForm [191]
+    object actIncome: TdsdOpenForm [192]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -2938,7 +2950,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomePartner: TdsdOpenForm [192]
+    object actIncomePartner: TdsdOpenForm [193]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -2950,7 +2962,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRetail_PrintKindItem: TdsdOpenForm [193]
+    object actRetail_PrintKindItem: TdsdOpenForm [194]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1101#1083#1077#1084#1077#1085#1090#1099' '#1087#1077#1095#1072#1090#1080')'
@@ -2962,7 +2974,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Personal: TdsdOpenForm [194]
+    object actReport_Personal: TdsdOpenForm [195]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079#1087
@@ -2973,7 +2985,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRoleUnion: TdsdOpenForm [195]
+    object actRoleUnion: TdsdOpenForm [196]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' ('#1087#1086#1076#1088#1086#1073#1085#1086')'
@@ -2984,7 +2996,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsQuality: TdsdOpenForm [196]
+    object actGoodsQuality: TdsdOpenForm [197]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088#1072' '#1076#1083#1103' '#1050'.'#1059'.'
@@ -2996,7 +3008,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actAdvertising: TdsdOpenForm [197]
+    object actAdvertising: TdsdOpenForm [198]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
       MoveParams = <>
       Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
@@ -3008,7 +3020,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperationKrRog: TdsdOpenForm [198]
+    object actCashOperationKrRog: TdsdOpenForm [199]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1050#1088#1080#1074#1086#1081' '#1056#1086#1075')'
@@ -3041,7 +3053,7 @@
         end>
       isShowModal = False
     end
-    object actCashOperationNikolaev: TdsdOpenForm [199]
+    object actCashOperationNikolaev: TdsdOpenForm [200]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1053#1080#1082#1086#1083#1072#1077#1074')'
@@ -3075,7 +3087,7 @@
         end>
       isShowModal = False
     end
-    object actCashOperationKharkov: TdsdOpenForm [200]
+    object actCashOperationKharkov: TdsdOpenForm [201]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1061#1072#1088#1100#1082#1086#1074')'
@@ -3108,7 +3120,7 @@
         end>
       isShowModal = False
     end
-    object actReport_MobileKS: TdsdOpenForm [201]
+    object actReport_MobileKS: TdsdOpenForm [202]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -3119,7 +3131,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsByGoodsKind: TdsdOpenForm [202]
+    object actGoodsByGoodsKind: TdsdOpenForm [203]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088' '#1080' '#1074#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -3131,7 +3143,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalService: TdsdOpenForm [203]
+    object actPersonalService: TdsdOpenForm [204]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
@@ -3143,7 +3155,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperationZaporozhye: TdsdOpenForm [204]
+    object actCashOperationZaporozhye: TdsdOpenForm [205]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1047#1072#1087#1086#1088#1086#1078#1100#1077')'
@@ -3176,7 +3188,7 @@
         end>
       isShowModal = False
     end
-    object actCashOperationOdessa: TdsdOpenForm [205]
+    object actCashOperationOdessa: TdsdOpenForm [206]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1054#1076#1077#1089#1089#1072')'
@@ -3209,7 +3221,7 @@
         end>
       isShowModal = False
     end
-    object actCashOperationOld: TdsdOpenForm [206]
+    object actCashOperationOld: TdsdOpenForm [207]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' (Integer)'
@@ -3242,7 +3254,7 @@
         end>
       isShowModal = False
     end
-    object actCashOperationPav: TdsdOpenForm [207]
+    object actCashOperationPav: TdsdOpenForm [208]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1041#1053')'
@@ -3275,7 +3287,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalReport: TdsdOpenForm [208]
+    object actPersonalReport: TdsdOpenForm [209]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1040#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090
@@ -3286,7 +3298,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceList: TdsdOpenForm [209]
+    object actPersonalServiceList: TdsdOpenForm [210]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -3298,7 +3310,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actArticleLoss: TdsdOpenForm [210]
+    object actArticleLoss: TdsdOpenForm [211]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -3310,7 +3322,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Founders: TdsdOpenForm [211]
+    object actReport_Founders: TdsdOpenForm [212]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
@@ -3321,7 +3333,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actFounder: TdsdOpenForm [212]
+    object actFounder: TdsdOpenForm [213]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
@@ -3333,7 +3345,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCorrAccount: TdsdOpenForm [213]
+    object actCorrAccount: TdsdOpenForm [214]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
@@ -3345,7 +3357,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRetailReport: TdsdOpenForm [214]
+    object actRetailReport: TdsdOpenForm [215]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
@@ -3357,7 +3369,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReceipt: TdsdOpenForm [215]
+    object actReceipt: TdsdOpenForm [216]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099
@@ -3369,7 +3381,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_BankAccount: TdsdOpenForm [216]
+    object actReport_BankAccount: TdsdOpenForm [217]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
@@ -3380,7 +3392,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Cash: TdsdOpenForm [217]
+    object actReport_Cash: TdsdOpenForm [218]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -3391,7 +3403,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Member: TdsdOpenForm [218]
+    object actReport_Member: TdsdOpenForm [219]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
@@ -3402,7 +3414,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ProductionOrder: TdsdOpenForm [219]
+    object actReport_ProductionOrder: TdsdOpenForm [220]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -3414,7 +3426,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actJuridicalGLN: TdsdOpenForm [220]
+    object actJuridicalGLN: TdsdOpenForm [221]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
@@ -3426,7 +3438,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperation: TdsdOpenForm [221]
+    object actCashOperation: TdsdOpenForm [222]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1044#1085#1077#1087#1088')'
@@ -3459,7 +3471,7 @@
         end>
       isShowModal = False
     end
-    object actContractTagGroup: TdsdOpenForm [222]
+    object actContractTagGroup: TdsdOpenForm [223]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
@@ -3471,7 +3483,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPartnerGLN: TdsdOpenForm [223]
+    object actPartnerGLN: TdsdOpenForm [224]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
@@ -3483,7 +3495,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperationCherkassi: TdsdOpenForm [224]
+    object actCashOperationCherkassi: TdsdOpenForm [225]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1063#1077#1088#1082#1072#1089#1089#1099')'
@@ -3516,7 +3528,7 @@
         end>
       isShowModal = False
     end
-    object actReport_LoginProtocol: TdsdOpenForm [244]
+    object actReport_LoginProtocol: TdsdOpenForm [245]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
@@ -7352,6 +7364,9 @@
       end
       object miLossPersonal: TMenuItem
         Action = actLossPersonal
+      end
+      object miPersonalRate: TMenuItem
+        Action = actPersonalRate
       end
       object N57: TMenuItem
         Caption = '-'

@@ -112,6 +112,9 @@ type
     spUpdateMovement_OperDatePartner: TdsdStoredProc;
     actRefreshGet: TdsdDataSetRefresh;
     bbUpdateOperDatePartner: TdxBarButton;
+    actPrint_2: TdsdPrintAction;
+    bbPrintOrder: TdxBarButton;
+    mactPrint_Order2: TMultiAction;
   private
     { Private declarations }
   public

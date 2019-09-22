@@ -48,6 +48,11 @@ type
     bbOpenDocument: TdxBarButton;
     cbMovement: TcxCheckBox;
     actRefreshMov: TdsdDataSetRefresh;
+    cbMovement_fact: TcxCheckBox;
+    actRefreshDays: TdsdDataSetRefresh;
+    cxLabel4: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
   private
     { Private declarations }
   public

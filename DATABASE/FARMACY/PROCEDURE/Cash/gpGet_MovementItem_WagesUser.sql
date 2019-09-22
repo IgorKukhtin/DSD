@@ -14,8 +14,9 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
               )
 AS
 $BODY$
-    DECLARE vbUserId     Integer;
-    DECLARE vbMovementId Integer;
+    DECLARE vbUserId        Integer;
+    DECLARE vbMovementId    Integer;
+    DECLARE vbMovementMaxId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -24,13 +25,13 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 7579515;
+      vbUserId  := 8905248;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
     THEN
-      SELECT Movement.ID
-      INTO vbMovementId  
+      SELECT MIN(Movement.ID), MAX(Movement.ID)
+      INTO vbMovementId, vbMovementMaxId  
       FROM Movement 
       WHERE Movement.OperDate = inOperDate 
         AND Movement.DescId = zc_Movement_Wages();
@@ -63,13 +64,13 @@ BEGIN
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
-                 , MovementItem.Amount                AS AmountAccrued
+                 , MIAmount.Amount                    AS AmountAccrued
                  
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIFloat_Director.ValueData         AS Director
                  , MIF_AmountCard.ValueData           AS AmountCard
-                 , (MovementItem.Amount +
+                 , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
                     COALESCE (MIFloat_Marketing.ValueData, 0) +
                     COALESCE (MIFloat_Director.ValueData, 0) -
@@ -84,6 +85,12 @@ BEGIN
                  , Object_Unit.ValueData              AS UnitName
                  , inOperDate::TDateTime              AS OperDate
             FROM  MovementItem
+            
+                  LEFT JOIN MovementItem AS MIAmount
+                                         ON MIAmount.MovementId = vbMovementMaxId
+                                        AND MIAmount.ObjectId = vbUserId
+                                        AND MIAmount.DescId = zc_MI_Master()
+                                        AND MIAmount.isErased = FALSE
 
                   LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                        ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId

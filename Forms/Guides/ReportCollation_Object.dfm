@@ -28,6 +28,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 99
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -684,6 +685,14 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -757,6 +766,10 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     end
     object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
@@ -1311,6 +1324,110 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
+    end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      ImageIndex = 25
+      FormName = 'TReport_JuridicalCollationForm'
+      FormNameParam.Value = 'TReport_JuridicalCollationForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 43101d
+          Component = ClientDataSet
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = ClientDataSet
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyId'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyName'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

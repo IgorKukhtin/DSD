@@ -45,7 +45,7 @@ object MainForm: TMainForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
         Options.Editing = False
-        Width = 426
+        Width = 388
       end
       object BarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093#1082#1086#1076
@@ -64,6 +64,11 @@ object MainForm: TMainForm
         DataBinding.FieldName = 'Remains'
         Options.Editing = False
         Width = 94
+      end
+      object GoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        Width = 119
       end
     end
     object grReportUnitLevel1: TcxGridLevel

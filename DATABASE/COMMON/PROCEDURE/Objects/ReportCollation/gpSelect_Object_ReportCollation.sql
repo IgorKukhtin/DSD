@@ -20,14 +20,19 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
 RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , StartDate  TDateTime
              , EndDate    TDateTime
+             , JuridicalId   Integer
              , JuridicalName TVarChar
-             , OKPO TVarChar
-             , PersonalName TVarChar
-             , UnitName     TVarChar
-             , PositionName TVarChar
-             , PartnerName TVarChar
-             , ContractName TVarChar
-             , PaidKindName TVarChar
+             , OKPO          TVarChar
+             , PersonalName  TVarChar
+             , UnitName      TVarChar
+             , PositionName  TVarChar
+             , PartnerId     Integer
+             , PartnerName   TVarChar
+             , ContractId    Integer
+             , ContractName  TVarChar
+             , PaidKindId    Integer
+             , PaidKindName  TVarChar
+             , InfoMoneyId   Integer
              , InfoMoneyName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -187,14 +192,19 @@ BEGIN
            , tmpData.idBarCode
            , tmpData.StartDate
            , tmpData.EndDate
+           , tmpData.JuridicalId
            , tmpData.JuridicalName
            , tmpJuridicalDetails.OKPO    AS OKPO
            , Object_Personal.ValueData   AS PersonalName  -- ответственный за договор
            , Object_Unit.ValueData       AS UnitName      -- подразделение ответственный за договор
            , Object_Position.ValueData   AS PositionName  -- должность ответственный за договор
+           , tmpData.PartnerId
            , tmpData.PartnerName
+           , tmpData.ContractId
            , tmpData.ContractName
+           , tmpData.PaidKindId
            , tmpData.PaidKindName
+           , tmpData.InfoMoneyId
            , tmpData.InfoMoneyName
 
            , tmpData.InsertName

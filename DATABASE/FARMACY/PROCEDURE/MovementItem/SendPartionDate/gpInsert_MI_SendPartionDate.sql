@@ -104,19 +104,26 @@ BEGIN
                                          AND Container.WhereObjectId = inUnitId
                                          AND Container.Amount <> 0
                                       )
+          -- Текущий остаток
+        , tmpContainer_tek AS (SELECT Container.Id               
+                                    , Container.ObjectId         
+                                    , Container.Amount 
+                               FROM Container
+                               WHERE Container.DescId        = zc_Container_Count()
+                                 AND Container.WhereObjectId = inUnitId
+                                 AND Container.Amount <> 0
+                              )
           -- остатки на начало
         , tmpContainer_all AS (SELECT Container.Id                                             AS ContainerId
                                     , Container.ObjectId                                       AS GoodsId
                                     , Container.Amount - SUM (COALESCE (MIContainer.Amount,0)) AS Amount
-                               FROM Container
+                               FROM tmpContainer_tek as Container
                                     LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                                           ON MIContainer.ContainerId = Container.Id
                                                                          AND MIContainer.Operdate >= vbOperDate
-                               WHERE Container.DescId        = zc_Container_Count()
-                                 AND Container.WhereObjectId = inUnitId
-                                 AND Container.Amount <> 0
                                GROUP BY Container.Id
                                       , Container.ObjectId
+                                      , Container.Amount
                                HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount,0))) <> 0
                               )
           -- остатки - нашли Срок годности
@@ -382,6 +389,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 18.09.19                                                      * 
  15.07.19                                                      * 
  07.07.19                                                      *
  21.06.19                                                      *

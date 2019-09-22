@@ -26,6 +26,8 @@ object PayrollTypeForm: TPayrollTypeForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 51
+    ExplicitHeight = 293
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -60,7 +62,7 @@ object PayrollTypeForm: TPayrollTypeForm
         Options.Editing = False
         Width = 258
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object ShortName: TcxGridDBColumn
         Caption = ' '#1050#1086#1088'. '#1085#1072#1080#1084#1077#1085#1102
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter

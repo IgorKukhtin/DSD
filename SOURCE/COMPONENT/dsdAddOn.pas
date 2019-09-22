@@ -5,7 +5,7 @@ unit dsdAddOn;
 interface
 
 uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView, Dialogs,
+     cxTextEdit, DB, dsdAction, cxGridTableView, Dialogs, ComCtrls,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
@@ -796,6 +796,37 @@ type
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
   end;
 
+  // Установка фильтра на поле
+  TdsdFieldFilter = class(TComponent)
+  private
+    FTextEdit: TcxTextEdit;
+    FDataSet: TDataSet;
+    FColumn: TcxGridColumn;
+
+    FTimer: TTimer;
+    FProgressBar: TProgressBar;
+    FOnEditChange: TNotifyEvent;
+    FOnEditExit: TNotifyEvent;
+
+    FOldStr : string;
+
+    procedure OnEditChange(Sender: TObject);
+    procedure OnEditExit(Sender: TObject);
+    procedure SetTextEdit(const Value: TcxTextEdit);
+    procedure SetColumn(const Value: TcxGridColumn);
+    procedure TimerTimer(Sender: TObject);
+  protected
+    procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Edit - для ввода текста фильтра
+    property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
+    property DataSet: TDataSet read FDataSet write FDataSet;
+    property Column: TcxGridColumn read FColumn write SetColumn;
+  end;
 
 
   procedure Register;
@@ -829,7 +860,8 @@ begin
     TdsdGMMap,
     TdsdWebBrowser,
     TdsdEnterManager,
-    TdsdFileToBase64
+    TdsdFileToBase64,
+    TdsdFieldFilter
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -4100,6 +4132,143 @@ begin
   end;
 end;
 
+  { TdsdFieldFilter }
+
+constructor TdsdFieldFilter.Create(AOwner: TComponent);
+begin
+  inherited;
+  FTimer := TTimer.Create(Self);
+  FTimer.Enabled:=False;
+  FTimer.OnTimer := TimerTimer;
+  FProgressBar := TProgressBar.Create(Self);
+  FProgressBar.Visible:=False;
+  FProgressBar.Height := 9;
+  FProgressBar.Width := 57;
+  FProgressBar.Anchors := [akTop, akRight];
+  FOldStr := '';
+  FOnEditChange := Nil;
+  FOnEditExit := Nil;
+end;
+
+destructor TdsdFieldFilter.Destroy;
+begin
+  FreeAndNil(FTimer);
+  inherited;
+end;
+
+procedure TdsdFieldFilter.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then begin
+      if (AComponent = FTextEdit) then
+         FTextEdit := nil;
+      if (AComponent = FDataSet) then
+         FDataSet := nil;
+  end;
+end;
+
+procedure TdsdFieldFilter.SetTextEdit(const Value: TcxTextEdit);
+begin
+  if Assigned(FTextEdit) then
+  begin
+    FTextEdit.Properties.OnChange := FOnEditChange;
+    FTextEdit.OnExit := FOnEditExit;
+    FOnEditChange := Nil;
+    FOnEditExit := Nil;
+    FProgressBar.Parent := Nil;
+  end;
+  FTextEdit := Value;
+  if Assigned(FTextEdit) then
+  begin
+    FOnEditChange := FTextEdit.Properties.OnChange;
+    FOnEditExit := FTextEdit.OnExit;
+    FTextEdit.Properties.OnChange := OnEditChange;
+    FTextEdit.OnExit := OnEditExit;
+    FProgressBar.Parent := FTextEdit;
+    FProgressBar.Top := FTextEdit.Height - FProgressBar.Height - 4;
+    FProgressBar.Left := FTextEdit.Width - FProgressBar.Width - 4;
+  end;
+end;
+
+procedure TdsdFieldFilter.SetColumn(const Value: TcxGridColumn);
+begin
+  if (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
+    FColumn := Value
+  else raise Exception.Create(Value.ClassName + ' не поддерживаеться');
+end;
+
+procedure TdsdFieldFilter.OnEditChange(Sender: TObject);
+begin
+  if not Assigned(FDataSet) then Exit;
+  if not Assigned(FColumn) then Exit;
+  if Sender is TcxTextEdit then
+  begin
+    if Trim(TcxTextEdit(Sender).Text)=FOldStr then exit;
+    FOldStr:=Trim(TcxTextEdit(Sender).Text);
+    FTimer.Enabled:=False;
+    FTimer.Interval:=100;
+    FTimer.Enabled:=True;
+    FProgressBar.Position:=0;
+    FProgressBar.Visible:=True;
+  end;
+end;
+
+procedure TdsdFieldFilter.OnEditExit(Sender: TObject);
+begin
+  FTimer.Enabled:=False;
+  FProgressBar.Position:=0;
+  FProgressBar.Visible:=False;
+  if not Assigned(FDataSet) then Exit;
+  if not FDataSet.Active then Exit;
+  if not Assigned(FColumn) then Exit;
+  FDataSet.DisableControls;
+  try
+    FDataSet.Filtered:=False;
+    FDataSet.OnFilterRecord:=Nil;
+    if FOldStr <> '' then
+    begin
+      FDataSet.OnFilterRecord:=FilterRecord;
+      FDataSet.Filtered:=True;
+    end;
+    FDataSet.First;
+  finally
+    FDataSet.EnableControls
+  end;
+end;
+
+procedure TdsdFieldFilter.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
+  Var S,S1,Name:String; k:integer; F:Boolean;
+begin
+  S1 := Trim(FOldStr);
+
+  if not FDataSet.Active then Exit;
+  if FColumn is TcxGridDBBandedColumn then Name:= TcxGridDBBandedColumn(FColumn).DataBinding.FieldName
+  else if FColumn is TcxGridDBColumn then Name:= TcxGridDBColumn(FColumn).DataBinding.FieldName
+  else Name := '';
+
+  if (S1 = '') or (Name = '') then exit;
+  Accept:=true;
+
+  repeat
+    k:=pos(' ',S1);
+    if K = 0 then k:=length(S1)+1;
+    s := Trim(copy(S1,1,k-1));
+    S1 := Trim(copy(S1,k,Length(S1)));
+
+    F := Pos(AnsiUpperCase(s), AnsiUpperCase(DataSet.FieldByName(Name).AsString)) > 0;
+
+    Accept:=Accept AND F;
+  until (S1='') or (Accept = False);
+end;
+
+procedure TdsdFieldFilter.TimerTimer(Sender: TObject);
+begin
+  FProgressBar.Position := FProgressBar.Position + 10;
+  if FProgressBar.Position = 100 then OnEditExit(Sender);
+end;
 
 
 end.
