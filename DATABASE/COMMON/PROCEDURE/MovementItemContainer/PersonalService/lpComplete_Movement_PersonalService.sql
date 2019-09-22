@@ -1326,7 +1326,8 @@ BEGIN
                                                  AND tmpMI.UnitId                = tmpListContainer.UnitId
                                                  AND tmpMI.PositionId            = tmpListContainer.PositionId
                                                  AND tmpMI.InfoMoneyId           = tmpListContainer.InfoMoneyId
-                 WHERE tmpMI.ObjectId IS NULL
+                 WHERE tmpListContainer.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
+                   AND tmpMI.ObjectId IS NULL
                  GROUP BY tmpListContainer.PersonalServiceListId
                         , tmpListContainer.UnitId
                         , tmpListContainer.PersonalId

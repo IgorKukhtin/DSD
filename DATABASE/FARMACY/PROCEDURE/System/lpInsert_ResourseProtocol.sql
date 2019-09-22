@@ -33,9 +33,9 @@ BEGIN
                 -- Value2 - сколько всего процессов
               , (SELECT COUNT (*) FROM _tmp_pg_stat_activity)
                 -- Value3 - сколько процессов группы1 - без сайта
-              , (SELECT COUNT (*) FROM _tmp_pg_stat_activity WHERE state = 'active' AND client_addr <> '172.17.2.6')
+              , (SELECT COUNT (*) FROM _tmp_pg_stat_activity WHERE state = 'active' AND client_addr ilike '%172.17.2.6%')
                 -- Value4 - сколько процессов группы2 - сайт
-              , (SELECT COUNT (*) FROM _tmp_pg_stat_activity WHERE state = 'active' AND client_addr  = '172.17.2.6')
+              , (SELECT COUNT (*) FROM _tmp_pg_stat_activity WHERE state = 'active' AND client_addr ilike '%172.17.2.6%')
                 -- сколько процессов группы3
               , NULL
                 -- сколько всего выполнялась проц

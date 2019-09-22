@@ -658,6 +658,7 @@ BEGIN
      UPDATE _tmpItem SET
                 ContainerId_Currency = CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
                                               OR _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                              OR _tmpItem.MovementDescId = zc_Movement_Currency()
                                                  THEN 0
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110302()) -- Транзит + расчетный счет + валютный
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()

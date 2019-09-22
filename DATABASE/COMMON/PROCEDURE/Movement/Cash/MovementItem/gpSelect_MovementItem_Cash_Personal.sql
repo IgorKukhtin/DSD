@@ -84,9 +84,10 @@ BEGIN
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                      )
-                , tmpSummNalog AS (SELECT CLO_Unit.ObjectId     AS UnitId
-                                        , CLO_Position.ObjectId AS PositionId
-                                        , CLO_Personal.ObjectId AS PersonalId
+                , tmpSummNalog AS (SELECT CLO_Unit.ObjectId       AS UnitId
+                                        , CLO_Position.ObjectId   AS PositionId
+                                        , CLO_Personal.ObjectId   AS PersonalId
+                                        , CLO_InfoMoney.ObjectId  AS InfoMoneyId
                                         , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
                                    FROM MovementItemContainer AS MIContainer
                                         LEFT JOIN ContainerLinkObject AS CLO_Unit
@@ -98,12 +99,16 @@ BEGIN
                                         LEFT JOIN ContainerLinkObject AS CLO_Personal
                                                                       ON CLO_Personal.ContainerId = MIContainer.ContainerId
                                                                      AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                        LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                                      ON CLO_InfoMoney.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                    WHERE MIContainer.MovementId = inParentId
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
                                      AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
                                    GROUP BY CLO_Unit.ObjectId
                                           , CLO_Position.ObjectId
                                           , CLO_Personal.ObjectId
+                                          , CLO_InfoMoney.ObjectId
                                   )
           , tmpParent_all AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
@@ -290,9 +295,10 @@ BEGIN
                                    , tmpParent_all.PersonalServiceListId
                                  --, tmpParent_all.PersonalServiceListId_calc
                               FROM tmpParent_all
-                                   LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId = tmpParent_all.PersonalId
-                                                         AND tmpSummNalog.UnitId     = tmpParent_all.UnitId
-                                                         AND tmpSummNalog.PositionId = tmpParent_all.PositionId
+                                   LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId  = tmpParent_all.PersonalId
+                                                         AND tmpSummNalog.UnitId      = tmpParent_all.UnitId
+                                                         AND tmpSummNalog.PositionId  = tmpParent_all.PositionId
+                                                         AND tmpSummNalog.InfoMoneyId = tmpParent_all.InfoMoneyId
                              UNION
                               SELECT DISTINCT
                                      0 AS SummService

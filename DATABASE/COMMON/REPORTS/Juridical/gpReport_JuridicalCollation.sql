@@ -240,7 +240,7 @@ BEGIN
                                tmpContainer.OperDate,
                                tmpContainer.MovementItemId,
 
-                               SUM (tmpContainer.MovementSumm) AS MovementSumm,
+                               SUM (tmpContainer.MovementSumm)          AS MovementSumm,
                                SUM (tmpContainer.MovementSumm_Currency) AS MovementSumm_Currency,
                                0 AS StartSumm,
                                0 AS EndSumm,
@@ -272,7 +272,7 @@ BEGIN
                                NULL :: TDateTime AS OperDate,
                                0 AS MovementItemId,
                                0 AS MovementSumm,
-                               0 MovementSumm_Currency,
+                               0 AS MovementSumm_Currency,
                                SUM (tmpRemains.StartSumm) AS StartSumm,
                                SUM (tmpRemains.EndSumm) AS EndSumm,
                                SUM (tmpRemains.StartSumm_Currency) AS StartSumm_Currency,

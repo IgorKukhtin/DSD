@@ -212,7 +212,8 @@ BEGIN
          PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= inIsUpdate);
 
          -- Результат
-         outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId) || '0');
+       --outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId) || '0');
+         outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId) || '');
 
    END IF;
 

@@ -40,7 +40,16 @@ BEGIN
                                                          , inMoneyPlaceId:= MovementLinkObject_PersonalServiceList.ObjectId
                                                          , inPositionId  := NULL
                                                          , inContractId  := NULL
-                                                         , inInfoMoneyId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney() WHERE MovementItem.MovementId = inParentId AND MovementItem.isErased = FALSE AND MovementItem.DescId = zc_MI_Master() GROUP BY MovementItemLinkObject.ObjectId)
+                                                         , inInfoMoneyId := zc_Enum_InfoMoney_60101() -- Заработная плата
+                                                                         /*(SELECT DISTINCT MovementItemLinkObject.ObjectId
+                                                                             FROM MovementItem
+                                                                                  INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                                                                   AND MovementItemLinkObject.DescId         = zc_MILinkObject_InfoMoney()
+                                                                             WHERE MovementItem.MovementId         = inParentId
+                                                                               AND MovementItem.isErased           = FALSE
+                                                                               AND MovementItem.DescId             = zc_MI_Master()
+                                                                               AND MovementItemLinkObject.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата
+                                                                            )*/
                                                          , inMemberId    := inMemberId
                                                          , inUnitId      := NULL
                                                          , inCurrencyId          := zc_Enum_Currency_Basis()

@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dxSkinsdxBarPainter,
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
+  cxCurrencyEdit;
 
 type
   TGoodsForm = class(TParentForm)
@@ -94,6 +95,8 @@ type
     spUpdateAsset: TdsdStoredProc;
     actChoiceAsset: TOpenChoiceForm;
     AssetName: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

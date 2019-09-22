@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , FuelName TVarChar
              , InDate TDateTime
              , PartnerInName TVarChar
+             , AmountIn TFloat, PriceIn TFloat
              , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean
              , isCheck_basis Boolean, isCheck_main Boolean
              , isErased Boolean
@@ -83,6 +84,8 @@ BEGIN
 
             , ObjectDate_In.ValueData       :: TDateTime AS InDate
             , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+            , ObjectFloat_Goods_AmountIn.ValueData       AS AmountIn
+            , ObjectFloat_Goods_PriceIn.ValueData        AS PriceIn
 
             , ObjectFloat_Weight.ValueData AS Weight
             , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)   :: Boolean AS isPartionCount
@@ -175,6 +178,12 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_In
                                   ON ObjectDate_In.ObjectId = Object_Goods.Id
                                  AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_AmountIn
+                                   ON ObjectFloat_Goods_AmountIn.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Goods_AmountIn.DescId   = zc_ObjectFloat_Goods_AmountIn()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceIn
+                                   ON ObjectFloat_Goods_PriceIn.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Goods_PriceIn.DescId   = zc_ObjectFloat_Goods_PriceIn()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
                                   ON ObjectLink_Goods_PartnerIn.ObjectId = Object_Goods.Id
@@ -242,6 +251,8 @@ BEGIN
 
             , NULL                ::TDateTime AS InDate
             , ''                  :: TVarChar AS PartnerInName
+            , 0                   :: TFloat   AS AmountIn
+            , 0                   :: TFloat   AS PriceIn
 
             , 0                   :: TFloat   AS Weight
             , FALSE                           AS isPartionCount
