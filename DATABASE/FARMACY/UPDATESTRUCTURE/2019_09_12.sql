@@ -2,8 +2,10 @@ DO $$
 BEGIN
 
 /*
-INSERT INT ResourseProtocol_arc     SELECT * FROM ResourseProtocol;
-INSERT INT ResourseItemProtocol_arc SELECT * FROM ResourseItemProtocol;
+-- select count(*) from ResourseProtocol
+-- select count(*) from ResourseItemProtocol_arc
+INSERT INTO ResourseProtocol_arc     SELECT * FROM ResourseProtocol;
+INSERT INTO ResourseItemProtocol_arc SELECT * FROM ResourseItemProtocol;
 TRUNCATE TABLE ResourseProtocol;
 TRUNCATE TABLE ResourseItemProtocol;
 */

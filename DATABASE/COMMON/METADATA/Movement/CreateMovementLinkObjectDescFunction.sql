@@ -424,6 +424,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_OrderFinance() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_OrderFinance', 'Виды Планирования платежей' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_OrderFinance');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Driver() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Driver'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Driver', 'Водитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Driver');
 
 
 /*-------------------------------------------------------------------------------
