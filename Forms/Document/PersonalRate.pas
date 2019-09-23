@@ -97,7 +97,7 @@ type
     GuidesPersonalServiceList: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    RefreshDispatcher: TRefreshDispatcher;
+    Date_Last: TcxGridDBColumn;
   private
   public
   end;
