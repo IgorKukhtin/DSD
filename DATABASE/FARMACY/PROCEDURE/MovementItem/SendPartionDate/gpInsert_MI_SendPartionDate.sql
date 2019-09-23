@@ -121,6 +121,10 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                                           ON MIContainer.ContainerId = Container.Id
                                                                          AND MIContainer.Operdate >= vbOperDate
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                                            ON ObjectBoolean_Goods_NotTransferTime.ObjectId =  Container.ObjectId 
+                                                           AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
+                               WHERE COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False) = False
                                GROUP BY Container.Id
                                       , Container.ObjectId
                                       , Container.Amount

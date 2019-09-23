@@ -950,6 +950,13 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 81
         end
+        object MainNotTransferTime: TcxGridDBColumn
+          Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
+          DataBinding.FieldName = 'NotTransferTime'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 93
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -3274,6 +3281,12 @@ inherited MainCashForm2: TMainCashForm2
       Caption = 'actBanCash'
       OnExecute = actBanCashExecute
     end
+    object actNotTransferTime: TAction
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080'"'
+      Visible = False
+      OnExecute = actNotTransferTimeExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3579,6 +3592,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N24: TMenuItem
       Action = actGoodsAnalogChoose
+    end
+    object N35: TMenuItem
+      Action = actNotTransferTime
     end
   end
   object FormParams: TdsdFormParams

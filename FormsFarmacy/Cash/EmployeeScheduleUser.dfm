@@ -465,6 +465,16 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       TabOrder = 11
       Width = 54
     end
+    object cbServiceExit: TcxCheckBox
+      Left = 26
+      Top = 38
+      Hint = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1074#1099#1093#1086#1076' ('#1074#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072' '#1085#1077' '#1079#1072#1087#1086#1083#1085#1103#1090#1100')'
+      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1074#1099#1093#1086#1076
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 12
+      Width = 143
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 243
@@ -652,6 +662,13 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Value = Null
         Component = cbEndMin
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceExit'
+        Value = Null
+        Component = cbServiceExit
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 360
@@ -699,6 +716,14 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Value = Null
         Component = cbEndMin
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceExit'
+        Value = Null
+        Component = cbServiceExit
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

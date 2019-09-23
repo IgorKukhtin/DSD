@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 902
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -374,6 +374,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object NotTransferTime: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
+            DataBinding.FieldName = 'NotTransferTime'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end

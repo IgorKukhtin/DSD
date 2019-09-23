@@ -181,7 +181,8 @@ BEGIN
                                   INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
                                                      AND Movement.DescId = zc_Movement_Check()
                                                      AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                  AND MovementBoolean_Deferred.ValueData = TRUE
+                             WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                               AND MovementBoolean_Deferred.ValueData = TRUE
                              UNION ALL
                              SELECT Movement.Id
                              FROM MovementString AS MovementString_CommentError

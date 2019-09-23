@@ -14,7 +14,7 @@ uses
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul, Vcl.StdCtrls,
-  cxButtons;
+  cxButtons, cxCheckBox;
 
 type
   TEmployeeScheduleUserForm = class(TAncestorDBGridForm)
@@ -70,6 +70,7 @@ type
     NoteNext: TcxGridDBBandedColumn;
     CrossDBViewNextAddOn: TCrossDBViewAddOn;
     CrossDBViewEndAddOn: TCrossDBViewAddOn;
+    cbServiceExit: TcxCheckBox;
   private
     { Private declarations }
   public
