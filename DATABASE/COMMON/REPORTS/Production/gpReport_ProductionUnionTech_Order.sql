@@ -57,7 +57,7 @@ RETURNS TABLE (MovementId          Integer
              , Amount_fact         TFloat
              , Percent_fact        TFloat
              , Day_avg_fact        TFloat
-             , TermProduction_fact TFloat
+--             , TermProduction_fact TFloat
              , TermProduction_diff TFloat
   )
 AS
@@ -354,8 +354,8 @@ BEGIN
                                         , tmp.Amount
                                         , tmp.TotalAmount
                                         , CASE WHEN COALESCE (tmp.TotalAmount,0) <> 0 THEN tmp.Amount_speed / tmp.TotalAmount ELSE 0 END AS Day_avg -- среднее кол-во дней выхода
-                                        , CASE WHEN COALESCE (tmp.TotAmount,0) <> 0 THEN tmp.Amount*100 / tmp.TotAmount / (CASE WHEN COALESCE (tmp.TermProduction,0)<> 0 THEN tmp.TermProduction ELSE 1 END) ELSE 0 END AS Persent     -- % выхода относительно всей партии
-                                        , tmp.TermProduction
+                                        , CASE WHEN COALESCE (tmp.TotAmount,0) <> 0 THEN tmp.Amount*100 / tmp.TotAmount ELSE 0 END AS Persent     -- % выхода относительно всей партии
+                                        --, tmp.TermProduction
                                         , tmp.MovementId
                                         , tmp.InvNumber
                                         , CASE WHEN COALESCE (tmp.TotalAmount,0) <> 0 THEN tmp.Amount_speed / tmp.TotalAmount ELSE 0 END AS Amount_speed   -- дней выхода * выход кг / итого выход кг (если по док. то итого выход кг = выход документа)
@@ -443,7 +443,7 @@ BEGIN
                                        , tmp.ReceiptId
                                        , tmp.PartionGoodsDate
                                        , tmp.Day_avg
-                                       , tmp.TermProduction
+                                       --, tmp.TermProduction
                                        , tmp.Amount
                                        , tmp.Persent
                                        , tmp.MovementId
@@ -459,7 +459,7 @@ BEGIN
                                        , tmp.ReceiptId
                                        , tmp.PartionGoodsDate
                                        , SUM (tmp.Day_avg) AS Day_avg
-                                       , MAX (tmp.TermProduction) AS TermProduction
+                                       --, MAX (tmp.TermProduction) AS TermProduction
                                        , SUM (tmp.Amount)         AS Amount
                                        , SUM (tmp.Persent)        AS Persent
                                        , 0 AS MovementId
@@ -503,8 +503,8 @@ BEGIN
                                , tmpFact_production.OperDate_str ::TVarChar AS OperDate_fact
                                , COALESCE (tmpFact_production.Amount,0)        ::TFloat  AS Amount_fact
                                , COALESCE (tmpFact_production.Persent,0)       ::TFloat  AS Percent_fact
-                               , COALESCE (tmpFact_production.Day_avg,0)       ::TFloat  AS Day_avg_fact
-                               , COALESCE (tmpFact_production.TermProduction,0)::TFloat  AS TermProduction_fact
+                               , tmpFact_production.Day_avg                    ::TFloat  AS Day_avg_fact
+                               --, COALESCE (tmpFact_production.TermProduction,0)::TFloat  AS TermProduction_fact
                           FROM _tmpListMaster
                                LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
                                                              ON MIBoolean_OrderSecond.MovementItemId = _tmpListMaster.MovementItemId
@@ -564,8 +564,8 @@ BEGIN
                                , tmpFact_production.OperDate_str  AS OperDate_fact
                                , COALESCE (tmpFact_production.Amount,0)        ::TFloat  AS Amount_fact
                                , COALESCE (tmpFact_production.Persent,0)       ::TFloat  AS Percent_fact
-                               , COALESCE (tmpFact_production.Day_avg,0)       ::TFloat  AS Day_avg_fact
-                               , COALESCE (tmpFact_production.TermProduction,0)::TFloat  AS TermProduction_fact
+                               , tmpFact_production.Day_avg                    ::TFloat  AS Day_avg_fact
+                               --, COALESCE (tmpFact_production.TermProduction,0)::TFloat  AS TermProduction_fact
                           FROM _tmpListMaster
                                LEFT JOIN tmpFact_production ON tmpFact_production.GoodsId              = _tmpListMaster.GoodsId
                                                            AND tmpFact_production.GoodsKindId          = COALESCE (_tmpListMaster.GoodsKindId_Complete,0) --_tmpListMaster.GoodsKindId
@@ -631,7 +631,7 @@ BEGIN
             , SUM (tmp.Amount_fact)          ::TFloat    AS Amount_fact
             , SUM (tmp.Percent_fact)         ::TFloat    AS Percent_fact
             , MAX (tmp.Day_avg_fact)         ::TFloat    AS Day_avg_fact
-            , MAX (tmp.TermProduction_fact)  ::TFloat    AS TermProduction_fact
+            --, MAX (tmp.TermProduction_fact)  ::TFloat    AS TermProduction_fact
             
        FROM (SELECT _tmpListMaster.MovementId
                   , _tmpListMaster.MovementItemId
@@ -671,10 +671,10 @@ BEGIN
                   , _tmpListMaster.isOrderSecond
 
                   , _tmpListMaster.OperDate_fact                 ::TVarChar AS OperDate_fact
-                  , COALESCE (_tmpListMaster.Amount_fact,0)      ::TFloat    AS Amount_fact
-                  , COALESCE (_tmpListMaster.Percent_fact,0)       ::TFloat  AS Percent_fact
-                  , COALESCE (_tmpListMaster.Day_avg_fact,0)   ::TFloat  AS Day_avg_fact
-                  , COALESCE (_tmpListMaster.TermProduction_fact,0)::TFloat  AS TermProduction_fact
+                  , COALESCE (_tmpListMaster.Amount_fact,0)      ::TFloat   AS Amount_fact
+                  , COALESCE (_tmpListMaster.Percent_fact,0)     ::TFloat   AS Percent_fact
+                  , _tmpListMaster.Day_avg_fact                  ::TFloat   AS Day_avg_fact
+                  --, COALESCE (_tmpListMaster.TermProduction_fact,0)::TFloat  AS TermProduction_fact
 
              FROM tmpDataAll AS _tmpListMaster
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpListMaster.GoodsId
@@ -805,10 +805,8 @@ BEGIN
 
             , CAST (tmpData.Percent_fact AS NUMERIC (16,1))  ::TFloat AS Percent_fact
             , CAST (tmpData.Day_avg_fact AS NUMERIC (16,2))  ::TFloat AS Day_avg_fact   --среднее кол-во дней 
-            , tmpData.TermProduction_fact  ::TFloat
 
-            --, CASE WHEN inisMovement = FALSE AND inisMovement_fact = FALSE THEN COALESCE (tmpData.TermProduction,0) - COALESCE (tmpData.TermProduction_fact,0) ELSE 0 END :: TFloat AS TermProduction_diff
-            , (COALESCE (tmpData.TermProduction,0) - COALESCE (tmpData.TermProduction_fact,0)) :: TFloat AS TermProduction_diff
+            , CAST (COALESCE (tmpData.TermProduction,0) -  tmpData.Day_avg_fact AS NUMERIC (16,2)) :: TFloat AS TermProduction_diff
 
     FROM _tmpRes_cur1 AS tmpData;
 
