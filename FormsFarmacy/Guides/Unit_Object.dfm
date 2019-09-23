@@ -111,6 +111,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 87
           end
+          object DriverName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'DriverName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
+            Width = 103
+          end
           object TaxService: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
             DataBinding.FieldName = 'TaxService'
@@ -952,6 +961,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
       ImageIndex = 26
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macUpdateKoeffSUN: TMultiAction

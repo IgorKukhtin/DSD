@@ -137,6 +137,9 @@ type
     DateInsertChild: TcxGridDBColumn;
     chDateInsert: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edDriver: TcxButtonEdit;
+    GuidesDriver: TdsdGuides;
   private
     { Private declarations }
   public
