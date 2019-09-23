@@ -3,10 +3,8 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -187
-  ExplicitTop = -251
   ExplicitWidth = 976
-  ExplicitHeight = 708
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -433,6 +431,15 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object DriverName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'DriverName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
+            Width = 111
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -2006,7 +2013,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       Height = 171
       HotZoneClassName = 'TcxMediaPlayer8Style'
       Control = cxGrid3
-      ExplicitLeft = 601
     end
     object cxGrid4: TcxGrid
       Left = 489
@@ -2016,8 +2022,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 2
-      ExplicitLeft = 609
-      ExplicitWidth = 350
       object cxGridDBTableViewBalance: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = BalanceDS

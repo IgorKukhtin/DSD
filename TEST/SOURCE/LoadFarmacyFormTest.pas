@@ -765,11 +765,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNDialogForm');
-    {exit;
+    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutDialogForm'));
@@ -788,13 +789,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
     exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate5Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5DialogForm'));
@@ -1922,10 +1923,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
 
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-    }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
      {

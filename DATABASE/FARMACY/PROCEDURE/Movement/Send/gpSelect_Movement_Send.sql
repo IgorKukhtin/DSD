@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDateDiff TFloat
              , UpdateDateDiff TFloat
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
+             , DriverId Integer, DriverName TVarChar
               )
 
 AS
@@ -128,6 +129,9 @@ BEGIN
            , Movement_ReportUnLiquid.Id                    AS MovementId_Report
            , Movement_ReportUnLiquid.InvNumber             AS InvNumber_Report
            , ('№ ' || Movement_ReportUnLiquid.InvNumber ||' от '||TO_CHAR(Movement_ReportUnLiquid.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS ReportInvNumber_full
+           
+           , Object_Driver.Id                     AS DriverId
+           , Object_Driver.ValueData  :: TVarChar AS DriverName
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -240,6 +244,11 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Driver
+                                         ON MovementLinkObject_Driver.MovementId = Movement.Id
+                                        AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
+            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
+
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND  (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
         
@@ -254,6 +263,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.09.19         * zc_MovementLinkObject_Driver
  06.08.19                                                                                      * zc_MovementBoolean_Received
  24.07.19         * zc_MovementBoolean_DefSUN
  11.07.19         * zc_MovementBoolean_SUN

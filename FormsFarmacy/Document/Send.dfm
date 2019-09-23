@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1003
   ExplicitWidth = 1019
-  ExplicitHeight = 656
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -775,16 +775,16 @@ inherited SendForm: TSendForm
     end
   end
   object cxLabel7: TcxLabel [2]
-    Left = 8
-    Top = 86
+    Left = 195
+    Top = 87
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [3]
-    Left = 8
+    Left = 195
     Top = 103
     Properties.ReadOnly = False
     TabOrder = 7
-    Width = 457
+    Width = 270
   end
   object edIsAuto: TcxCheckBox [4]
     Left = 477
@@ -833,6 +833,24 @@ inherited SendForm: TSendForm
     TabOrder = 13
     Visible = False
     Width = 214
+  end
+  object cxLabel8: TcxLabel [10]
+    Left = 8
+    Top = 87
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
+  end
+  object edDriver: TcxButtonEdit [11]
+    Left = 8
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 181
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 259
@@ -1595,8 +1613,8 @@ inherited SendForm: TSendForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
-    Left = 192
-    Top = 56
+    Left = 264
+    Top = 40
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Send'
@@ -1767,6 +1785,21 @@ inherited SendForm: TSendForm
         Value = 'False'
         Component = cbReceived
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverId'
+        Value = Null
+        Component = GuidesDriver
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverName'
+        Value = Null
+        Component = GuidesDriver
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2917,5 +2950,34 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 160
     Top = 408
+  end
+  object GuidesDriver: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDriver
+    FormNameParam.Value = 'TDriverForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDriverForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDriver
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDriver
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 104
+    Top = 96
   end
 end
