@@ -1903,8 +1903,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 136
+    Left = 632
+    Top = 208
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
