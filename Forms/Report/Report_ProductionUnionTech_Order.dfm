@@ -6,7 +6,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1192
-  ExplicitHeight = 483
+  ExplicitHeight = 480
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,22 +32,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = CuterCount
             end
             item
@@ -59,11 +43,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_calc
             end
             item
               Format = ',0.####'
@@ -107,35 +86,11 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Format = ',0.####'
               Kind = skSum
               Column = Amount_fact
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = '0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = CuterCount
             end
             item
@@ -147,11 +102,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_calc
             end
             item
               Format = ',0.####'
@@ -187,10 +137,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
               Format = ',0.####'
               Kind = skSum
               Column = Amount_fact
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -205,8 +151,10 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1044#1086#1082
             DataBinding.FieldName = 'InvNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 70
           end
@@ -217,16 +165,18 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 60
           end
           object OperDate_fact: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1074#1099#1093#1086#1076' '#1043#1055
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1043#1055
             DataBinding.FieldName = 'OperDate_fact'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074#1099#1093#1086#1076' '#1043#1055
             Options.Editing = False
             Width = 60
           end
@@ -240,6 +190,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 300
@@ -260,14 +211,6 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
-          end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -291,69 +234,105 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 70
           end
-          object isOrderSecond: TcxGridDBColumn
-            Caption = #1044#1086#1079#1072#1103#1074#1082#1072
-            DataBinding.FieldName = 'isOrderSecond'
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 45
           end
-          object TermProduction: TcxGridDBColumn
-            Caption = #1050'. '#1076#1085'. '#1079#1072#1082#1088'. '#1087#1072#1088#1090'.'
-            DataBinding.FieldName = 'TermProduction'
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1060'-'#1043#1055
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1060'-'#1043#1055
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
-          object TermProduction_fact: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1082#1086#1083'. '#1076#1085'. '#1079#1072#1082#1088'. '#1087#1072#1088#1090'. '
-            DataBinding.FieldName = 'TermProduction_fact'
+          object Amount_fact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1043#1055
+            DataBinding.FieldName = 'Amount_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1074#1099#1093#1086#1076' '#1043#1055
             Options.Editing = False
-            Width = 55
-          end
-          object TermProduction_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1082#1086#1083'. '#1076#1085'. '#1079#1072#1082#1088'. '#1087#1072#1088#1090'. '
-            DataBinding.FieldName = 'TermProduction_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1083'-'#1074#1091' '#1076#1085#1077#1081' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1087#1072#1088#1090#1080#1080' '
-            Options.Editing = False
-            Width = 86
-          end
-          object Percent_fact: TcxGridDBColumn
-            Caption = #1057#1088'. % '#1074#1099#1093'. '#1074' '#1076#1077#1085#1100
-            DataBinding.FieldName = 'Percent_fact'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1088#1077#1076#1085#1080#1081' % '#1074#1099#1093#1086#1076#1072' '#1074' '#1076#1077#1085#1100
-            Options.Editing = False
-            Width = 55
+            Width = 70
           end
           object Day_avg_fact: TcxGridDBColumn
-            Caption = #1057#1088'. '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074#1099#1093#1086#1076#1072
+            Caption = #1057#1088#1077#1076#1085#1077#1077' '#1082#1086#1083'. '#1076#1085'.'
             DataBinding.FieldName = 'Day_avg_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1088#1077#1076#1085#1077#1077' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074#1099#1093#1086#1076#1072
+            HeaderHint = #1057#1088#1077#1076#1085#1077#1077' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' ('#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1072#1088#1090#1080#1080')'
+            Options.Editing = False
+            Width = 70
+          end
+          object TermProduction: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1082#1086#1083'. '#1076#1085'.'
+            DataBinding.FieldName = 'TermProduction'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' ('#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1072#1088#1090#1080#1080')'
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionGoodsDateClose: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1076#1072#1090#1072' '#1043#1055
+            DataBinding.FieldName = 'PartionGoodsDateClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1093#1086#1076#1072' '#1043#1055' ('#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1072#1088#1090#1080#1080')'
+            Options.Editing = False
+            Width = 70
+          end
+          object TermProduction_fact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'. '#1076#1085'.'
+            DataBinding.FieldName = 'TermProduction_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' ('#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1072#1088#1090#1080#1080')'
+            Options.Editing = False
+            Width = 55
+          end
+          object TermProduction_diff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085'. '#1082#1086#1083'. '#1076#1085
+            DataBinding.FieldName = 'TermProduction_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1087#1083#1072#1085'/'#1092#1072#1082#1090' '#1082#1086#1083'-'#1074#1072' '#1076#1085#1077#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' ('#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1072#1088#1090#1080#1080')'
+            Options.Editing = False
+            Width = 70
+          end
+          object Percent_fact: TcxGridDBColumn
+            Caption = '% '#1043#1055
+            DataBinding.FieldName = 'Percent_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1076#1072#1085#1085#1086#1081' '#1043#1055
             Options.Editing = False
             Width = 55
           end
@@ -366,19 +345,13 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Options.Editing = False
             Width = 70
           end
-          object PartionGoodsDateClose: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1074#1099#1093#1086#1076' '#1043#1055
-            DataBinding.FieldName = 'PartionGoodsDateClose'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object IsPartionClose: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1088#1099#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPartionClose'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 60
           end
@@ -388,41 +361,10 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object Amount_fact: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1043#1055
-            DataBinding.FieldName = 'Amount_fact'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object Amount_calc: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1060'-'#1043#1055
             Options.Editing = False
             Width = 60
           end
@@ -432,32 +374,12 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 60
-          end
-          object RealWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'RealWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object Count: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
-            DataBinding.FieldName = 'Count'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object Amount_order: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
@@ -467,6 +389,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
             Options.Editing = False
             Width = 50
           end
@@ -476,37 +399,77 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1082#1091#1090#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
             Options.Editing = False
             Width = 60
           end
+          object isOrderSecond: TcxGridDBColumn
+            Caption = #1044#1086#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'isOrderSecond'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object Amount_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            Caption = #1056#1072#1079#1085'. '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090' '#1076#1083#1103' '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 86
           end
           object CuterCount_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1082#1091#1090#1077#1088
+            Caption = #1056#1072#1079#1085'. '#1082#1091#1090#1090'. '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090
             DataBinding.FieldName = 'CuterCount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090' '#1076#1083#1103' '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 79
+          end
+          object RealWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'RealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
+            Options.Editing = False
+            Width = 60
+          end
+          object Count: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object IsMain: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085'.'
             DataBinding.FieldName = 'isMain'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -522,6 +485,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -536,6 +500,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -543,6 +508,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object Comment_receipt: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1088#1077#1094#1077#1087#1090#1091#1088#1072')'
             DataBinding.FieldName = 'Comment_receipt'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -551,6 +517,7 @@ inherited Report_ProductionUnionTech_OrderForm: TReport_ProductionUnionTech_Orde
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'Comment'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
