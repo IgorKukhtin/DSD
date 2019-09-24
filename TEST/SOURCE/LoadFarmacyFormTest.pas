@@ -1373,6 +1373,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');

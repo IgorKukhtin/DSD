@@ -1,22 +1,22 @@
 inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1085#1072' '#1088#1072#1073#1086#1090#1091' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
-  ClientHeight = 467
+  ClientHeight = 479
   ClientWidth = 800
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 816
-  ExplicitHeight = 506
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 95
     Width = 800
-    Height = 372
+    Height = 384
     TabOrder = 5
     ExplicitTop = 95
     ExplicitWidth = 800
     ExplicitHeight = 372
-    ClientRectBottom = 372
+    ClientRectBottom = 384
     ClientRectRight = 800
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 800
@@ -125,6 +125,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 45
             Options.Editing = False
+            Styles.Content = dmMain.cxFooterStyle
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -198,10 +199,11 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Left = 0
         Top = 217
         Width = 800
-        Height = 155
+        Height = 167
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitHeight = 155
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -269,7 +271,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Options.Editing = False
             Width = 66
             Position.BandIndex = 0
-            Position.ColIndex = 0
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object Substitution_UnitName: TcxGridDBBandedColumn
@@ -280,8 +282,29 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Options.Editing = False
             Width = 193
             Position.BandIndex = 0
-            Position.ColIndex = 2
+            Position.ColIndex = 1
             Position.RowIndex = 0
+          end
+          object Substitution_NoteStart: TcxGridDBBandedColumn
+            Caption = ' '
+            DataBinding.FieldName = 'NoteStart'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object Substitution_NoteEnd: TcxGridDBBandedColumn
+            Caption = ' '
+            DataBinding.FieldName = 'NoteEnd'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 2
+          end
+          object Substitution_NoteNext: TcxGridDBBandedColumn
+            Caption = ' '
+            DataBinding.FieldName = 'NoteNext'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 3
           end
           object Substitution_Value: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Value'
@@ -290,28 +313,50 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 45
             Options.Editing = False
+            Styles.Content = dmMain.cxFooterStyle
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object Substitution_ValueEnd: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueEnd'
+            Visible = False
+            Options.Editing = False
+            Options.ShowCaption = False
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 2
+          end
+          object Substitution_ValueStart: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueStart'
+            Visible = False
+            Options.Editing = False
+            Options.ShowCaption = False
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
           object Substitution_ValueNext: TcxGridDBBandedColumn
-            Caption = ' '
+            DataBinding.FieldName = 'ValueNext'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Styles.Header = dmMain.cxHeaderL4Style
+            Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
-            Position.RowIndex = 1
+            Position.RowIndex = 3
           end
           object Substitution_Color_CalcFont: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcFont'
             Visible = False
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 1
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
         end
@@ -806,8 +851,8 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 360
-    Top = 304
+    Left = 368
+    Top = 320
   end
   object CrossDBViewAddOnSubstitutionNext: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -887,5 +932,49 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     TemplateColumn = ValueEnd
     Left = 464
     Top = 200
+  end
+  object CrossDBViewAddOnSubstitutionValueStart: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableViewSubstitution
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = Substitution_Value
+        ValueColumn = Substitution_Color_CalcFont
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Substitution_ValueStart
+    Left = 488
+    Top = 352
+  end
+  object CrossDBViewAddOnSubstitutionValueEnd: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableViewSubstitution
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = Substitution_Value
+        ValueColumn = Substitution_Color_CalcFont
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Substitution_ValueEnd
+    Left = 656
+    Top = 352
   end
 end

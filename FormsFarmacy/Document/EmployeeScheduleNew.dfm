@@ -435,9 +435,6 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         item
         end>
     end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      AfterAction = actRefresh
-    end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
         item

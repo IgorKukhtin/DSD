@@ -71,6 +71,13 @@ type
     CrossDBViewNextAddOn: TCrossDBViewAddOn;
     CrossDBViewEndAddOn: TCrossDBViewAddOn;
     cbServiceExit: TcxCheckBox;
+    Substitution_ValueEnd: TcxGridDBBandedColumn;
+    Substitution_ValueStart: TcxGridDBBandedColumn;
+    CrossDBViewAddOnSubstitutionValueStart: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitutionValueEnd: TCrossDBViewAddOn;
+    Substitution_NoteStart: TcxGridDBBandedColumn;
+    Substitution_NoteEnd: TcxGridDBBandedColumn;
+    Substitution_NoteNext: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

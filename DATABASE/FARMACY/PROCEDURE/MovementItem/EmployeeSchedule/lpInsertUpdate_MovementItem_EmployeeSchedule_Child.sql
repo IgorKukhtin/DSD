@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_EmployeeSchedule_Child(
     IN inPayrollTypeID       Integer   , -- Тип начисления
     IN inDateStart           TDateTime , -- Дата время начала смены
     IN inDateEnd             TDateTime , -- Дата время конца счены
+    IN inServiceExit         Boolean   , -- Служебный выход
     IN inUserId              Integer   -- пользователь
  )
 RETURNS Integer AS
@@ -41,6 +42,9 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_End(), ioId, inDateEnd);
     END IF;
 
+     -- сохранили свойство <Служебный выход>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ServiceExit(), ioId, inServiceExit);
+
     -- сохранили протокол
     --PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
     --RETURN inId;
@@ -53,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.09.19                                                        *
  03.09.19                                                        *
  31.08.19                                                        *
 */

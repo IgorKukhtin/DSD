@@ -749,7 +749,8 @@ uses
   Report_CheckSUN in '..\..\FormsFarmacy\Report\Report_CheckSUN.pas' {Report_CheckSUNForm: TParentForm},
   EmployeeScheduleEditUser in '..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas' {EmployeeScheduleEditUserForm: TParentForm},
   BankAccount in '..\..\FormsFarmacy\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  BankAccountEdit in '..\..\FormsFarmacy\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
+  BankAccountEdit in '..\..\FormsFarmacy\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  PayrollTypeDialog in '..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas' {PayrollTypeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

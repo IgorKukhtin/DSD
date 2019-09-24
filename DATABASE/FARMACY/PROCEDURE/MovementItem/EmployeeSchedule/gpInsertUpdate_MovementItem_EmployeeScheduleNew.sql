@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbDateStart TDateTime;
    DECLARE vbDateEnd TDateTime;
    DECLARE vbPayrollType Integer;
+   DECLARE vbServiceExit Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -78,7 +79,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. У физ. лица не заполнено подразделение.';
     END IF;    
 
-    IF ioValueStart <> ''
+    IF upper(ioValue) <> 'СВ' AND ioValueStart <> ''
     THEN
        vbDateStart := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueStart::Time;
 
@@ -86,9 +87,11 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
       END IF;
+    ELSE
+      vbDateStart := Null;
     END IF;
 
-    IF ioValueEnd <> ''
+    IF upper(ioValue) <> 'СВ' AND ioValueEnd <> ''
     THEN
        vbDateEnd := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueEnd::Time;
 
@@ -96,9 +99,11 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
       END IF;
+    ELSE
+      vbDateEnd := Null;
     END IF;
       
-    IF ioValueStart <> '' and ioValueEnd <> '' and vbDateStart > vbDateEnd
+    IF upper(ioValue) <> 'СВ' AND ioValueStart <> '' and ioValueEnd <> '' and vbDateStart > vbDateEnd
     THEN
       vbDateEnd := vbDateEnd + interval '1 day';
     END IF;
@@ -146,7 +151,12 @@ BEGIN
        FROM MovementItem WHERE ID = vbParentId;
     END IF;    
     
-    IF ioValue <> '' AND 
+    vbServiceExit := False;
+    IF upper(ioValue) = 'СВ' 
+    THEN
+      vbServiceExit := True;
+      vbPayrollType := 0;
+    ELSEIF ioValue <> '' AND 
        EXISTS(SELECT ValueData FROM ObjectString AS PayrollType_ShortName
               WHERE PayrollType_ShortName.ValueData = ioValue
                 AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName())
@@ -171,15 +181,19 @@ BEGIN
                                                                     , inPayrollTypeID       := vbPayrollType         -- Тип дня
                                                                     , inDateStart           := vbDateStart           -- Приходы на работу по дням
                                                                     , inDateEnd             := vbDateEnd             -- Приходы на работу по дням
+                                                                    , inServiceExit         := vbServiceExit         -- Служебный выход
                                                                     , inUserId              := vbUserId              -- пользователь
                                                                      );
 
     --
     IF ioTypeId > 0
     THEN
-       SELECT PayrollType_ShortName.ValueData                                              AS PThortName
-            , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')                                   AS TimeStart
-            , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')                                     AS TimeEnd
+       SELECT CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+              THEN PayrollType_ShortName.ValueData  ELSE 'СВ' END                          AS PThortName
+            , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+              THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+            , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+              THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
        INTO ioValue, ioValueStart, ioValueEnd 
 
        FROM  MovementItem AS MIChild
@@ -199,6 +213,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_End
                                        ON MIDate_End.MovementItemId = MIChild.Id
                                       AND MIDate_End.DescId = zc_MIDate_End()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                          ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                         AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
        WHERE MIChild.ID = vbParentId;
     END IF;

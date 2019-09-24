@@ -66,6 +66,12 @@ type
     actDelUserDay: TdsdExecStoredProc;
     dxBarButton7: TdxBarButton;
     spDelUserDay: TdsdStoredProc;
+    actSetPayrollType: TMultiAction;
+    actDialogPayrollType: TExecuteDialog;
+    actExecViewPayrollType: TMultiAction;
+    actExecPayrollType: TdsdExecStoredProc;
+    spExecPayrollType: TdsdStoredProc;
+    dxBarButton8: TdxBarButton;
   private
     { Private declarations }
   public

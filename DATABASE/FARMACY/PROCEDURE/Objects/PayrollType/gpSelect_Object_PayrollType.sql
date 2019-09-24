@@ -29,7 +29,9 @@ $BODY$BEGIN
                                ON ObjectString_ShortName.ObjectId = Object_PayrollType.Id 
                               AND ObjectString_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
 
-   WHERE Object_PayrollType.DescId = zc_Object_PayrollType();
+   WHERE Object_PayrollType.DescId = zc_Object_PayrollType()
+   UNION ALL
+   SELECT -1, 0, 'Служебный выход'::TVarChar, 'СВ'::TVarChar, False;
 
 END;$BODY$
 

@@ -32,9 +32,13 @@ BEGIN
           , MIChild.ObjectId                                                             AS UnitID
           , MIChild.Amount                                                               AS Day
           , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
-          , PayrollType_ShortName.ValueData                                              AS PThortName
-          , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')                                   AS TimeStart
-          , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')                                     AS TimeEnd
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData  ELSE 'ัย' END                          AS PThortName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+          , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
           , NULL::TVarChar                                                               AS PThortNamePrev
      FROM Movement
 
@@ -74,6 +78,10 @@ BEGIN
           LEFT JOIN MovementItemDate AS MIDate_End
                                      ON MIDate_End.MovementItemId = MIChild.Id
                                     AND MIDate_End.DescId = zc_MIDate_End()
+
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
      WHERE Movement.ID = inMovementId;
 

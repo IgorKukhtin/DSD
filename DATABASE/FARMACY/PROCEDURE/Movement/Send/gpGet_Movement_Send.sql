@@ -42,16 +42,15 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     				AS FromId
-             , CAST ('' AS TVarChar) 				AS FromName
-             , 0                     		                AS ToId
-             , CAST ('' AS TVarChar) 			        AS ToName
+             , 0                     		             		AS FromId
+             , CAST ('' AS TVarChar) 		            		AS FromName
+             , 0                     		                    AS ToId
+             , CAST ('' AS TVarChar) 			                AS ToName
              , 0                                                AS PartionDateKindId
-             , CAST ('' AS TVarChar) 			        AS PartionDateKindName
-             , 0                     		                AS DriverId
-             , 0                     		                AS DriverName
-             , CAST ('' AS TVarChar) 			        AS ToName
-             , CAST ('' AS TVarChar) 		                AS Comment
+             , CAST ('' AS TVarChar) 			                AS PartionDateKindName
+             , 0                     		                    AS DriverId
+             , CAST ('' AS TVarChar)   		                    AS DriverName
+             , CAST ('' AS TVarChar) 		                    AS Comment
              , FALSE                                            AS isAuto
              , CAST (0 AS TFloat)                               AS MCSPeriod
              , CAST (0 AS TFloat)                               AS MCSDay

@@ -43,7 +43,8 @@ BEGIN
                            , ValueParams TVarChar) ON COMMIT DROP;
 
      -- Отметка посещаемости
-    IF EXISTS(SELECT COALESCE (ObjectBoolean_NotSchedule.ValueData, False)
+    IF vbRetailId = 4 AND
+       EXISTS(SELECT COALESCE (ObjectBoolean_NotSchedule.ValueData, False)
               FROM Object AS Object_User
                    LEFT JOIN ObjectLink AS ObjectLink_User_Member
                           ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -72,21 +73,28 @@ BEGIN
                                                 AND MIChild.DescId = zc_MI_Child()
                                                 AND MIChild.ParentId = MIMaster.ID
                                                 AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
-                         INNER JOIN MovementItemDate AS MIDate_Start
+                         LEFT JOIN MovementItemDate AS MIDate_Start
                                                      ON MIDate_Start.MovementItemId = MIChild.Id
                                                     AND MIDate_Start.DescId = zc_MIDate_Start()
-                         INNER JOIN MovementItemDate AS MIDate_End
-                                                     ON MIDate_End.MovementItemId = MIChild.Id
-                                                    AND MIDate_End.DescId = zc_MIDate_End()
+
+                         LEFT JOIN MovementItemDate AS MIDate_End
+                                                    ON MIDate_End.MovementItemId = MIChild.Id
+                                                   AND MIDate_End.DescId = zc_MIDate_End()
+
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                                       ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                                      AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
                   WHERE MIMaster.MovementId = vbMovementID
                     AND MIMaster.DescId = zc_MI_Master()
-                    AND MIMaster.ObjectId = vbUserId)
+                    AND MIMaster.ObjectId = vbUserId
+                    AND (COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE
+                     OR MIBoolean_ServiceExit.ValueData IS NOT NULL AND MIDate_End.ValueData IS NOT NULL))
         THEN
           vbEmployeeShow := False;
         END IF;
       END IF;
 
-     IF vbEmployeeShow = True AND  vbRetailId = 4
+     IF vbEmployeeShow = True AND vbRetailId = 4
      THEN
         INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметки времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
      END IF;
@@ -442,6 +450,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.09.19                                                       *
  05.08.19                                                       *
  25.07.19                                                       *
  11.05.19                                                       *

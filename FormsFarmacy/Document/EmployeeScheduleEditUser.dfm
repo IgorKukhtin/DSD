@@ -1,4 +1,5 @@
 inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
+  ActiveControl = cxGrid
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 500
   ClientWidth = 771
@@ -514,6 +515,63 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       ImageIndex = 52
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1079#1072' '#1076#1077#1085#1100'?'
     end
+    object actSetPayrollType: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialogPayrollType
+        end
+        item
+          Action = actExecViewPayrollType
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1090#1080#1087' '#1076#1085#1103' '#1087#1086' '#1086#1090#1092#1080#1083#1100#1090#1088#1086#1074#1072#1085#1085#1099#1084' '#1087#1086#1079#1080#1094#1080#1103#1084
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1090#1080#1087' '#1076#1085#1103' '#1087#1086' '#1086#1090#1092#1080#1083#1100#1090#1088#1086#1074#1072#1085#1085#1099#1084' '#1087#1086#1079#1080#1094#1080#1103#1084
+      ImageIndex = 43
+    end
+    object actDialogPayrollType: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDialogPayrollType'
+      FormName = 'TPayrollTypeDialogForm'
+      FormNameParam.Value = 'TPayrollTypeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PayrollTypeID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecViewPayrollType: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPayrollType
+        end>
+      View = cxGridDBTableView
+      Caption = 'actExecViewPayrollType'
+    end
+    object actExecPayrollType: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExecPayrollType
+      StoredProcList = <
+        item
+          StoredProc = spExecPayrollType
+        end>
+      Caption = 'actExecPayrollType'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -625,6 +683,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -706,6 +768,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       Action = actDelUserDay
       Category = 0
     end
+    object dxBarButton8: TdxBarButton
+      Action = actSetPayrollType
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -760,6 +826,11 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       end
       item
         Name = 'UnitID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PayrollTypeID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1071,5 +1142,40 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     PackSize = 1
     Left = 672
     Top = 353
+  end
+  object spExecPayrollType: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_PayrollType'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Day'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPayrollTypeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PayrollTypeID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 184
+    Top = 336
   end
 end
