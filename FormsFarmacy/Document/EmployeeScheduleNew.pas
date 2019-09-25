@@ -89,6 +89,8 @@ type
     spDelUser: TdsdStoredProc;
     actDeleteUser: TdsdExecStoredProc;
     dxBarButton8: TdxBarButton;
+    actEmployeeScheduleFilling: TdsdOpenForm;
+    dxBarButton9: TdxBarButton;
   private
     { Private declarations }
   public

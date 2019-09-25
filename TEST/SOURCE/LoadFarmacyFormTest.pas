@@ -2014,6 +2014,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleFillingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleFillingForm');
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

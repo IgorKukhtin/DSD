@@ -559,7 +559,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
           Action = actExecPayrollType
         end>
       View = cxGridDBTableView
-      Caption = 'actExecViewPayrollType'
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1090#1080#1087#1072' '#1076#1085#1103
     end
     object actExecPayrollType: TdsdExecStoredProc
       Category = 'DSDLib'

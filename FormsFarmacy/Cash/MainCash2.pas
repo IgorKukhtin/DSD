@@ -6801,7 +6801,10 @@ begin
   try
     LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
     if UnitConfigCDS.Active and Assigned(UnitConfigCDS.FindField('isSpotter')) then
+    begin
+      actNotTransferTime.Enabled := UnitConfigCDS.FindField('isSpotter').AsBoolean;
       actNotTransferTime.Visible := UnitConfigCDS.FindField('isSpotter').AsBoolean;
+    end;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

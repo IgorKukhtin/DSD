@@ -761,6 +761,34 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       ImageIndex = 52
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
     end
+    object actEmployeeScheduleFilling: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      ImageIndex = 42
+      FormName = 'TEmployeeScheduleFillingForm'
+      FormNameParam.Value = 'TEmployeeScheduleFillingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -904,11 +932,15 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton8'
+          ItemName = 'dxBarButton9'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end
         item
           BeginGroup = True
@@ -984,6 +1016,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
     object dxBarButton8: TdxBarButton
       Action = actDeleteUser
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actEmployeeScheduleFilling
       Category = 0
     end
   end

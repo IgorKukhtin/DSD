@@ -7,7 +7,8 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator
+  {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 
@@ -174,6 +175,7 @@ type
     fExecPack:Boolean;//12.07.2016 - Передали параметр в StoredProc, нужен для otMultiExecute
     FActionList: TOwnedCollection;
     FDataSource: TDataSource;
+    FDateNavigator: TcxDateNavigator;
     FQuestionBeforeExecuteList: TStringList;
     FInfoAfterExecuteList: TStringList;
     FView: TcxGridTableView;
@@ -186,6 +188,7 @@ type
     procedure RestoreInfoAfterExecute;
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
+    procedure SetDateNavigator(const Value: TcxDateNavigator);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
@@ -199,6 +202,8 @@ type
     property View: TcxGridTableView read FView write SetView;
     // Ссылка на список данных. Может быть установлен только один источник данных
     property DataSource: TDataSource read FDataSource write SetDataSource;
+    // Ссылка на DateNavigator выполняеться для каждой отмеченной даты
+    property DateNavigator: TcxDateNavigator read FDateNavigator write SetDateNavigator;
     property QuestionBeforeExecute;
     property InfoAfterExecute;
     property Caption;
@@ -487,11 +492,14 @@ type
   end;
 
   TdsdFormClose = class(TdsdCustomAction)
+  private
+    FModalResult: TModalResult;
   protected
     function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property ModalResult: TModalResult read FModalResult write FModalResult default mrCancel;
     property Caption;
     property Hint;
     property ShortCut;
@@ -1227,6 +1235,7 @@ constructor TdsdFormClose.Create(AOwner: TComponent);
 begin
   inherited;
   FPostDataSetBeforeExecute := false;
+  FModalResult := mrCancel;
 end;
 
 function TdsdFormClose.LocalExecute: Boolean;
@@ -1242,7 +1251,12 @@ begin
         TDataSet(Owner.Components[i]).Cancel;
 
   if Owner is TForm then
-    (Owner as TForm).Close;
+  begin
+    if fsModal in TForm(Owner).FormState then
+      TForm(Owner).ModalResult := FModalResult
+    else
+      TForm(Owner).Close;
+  end;
 end;
 
 { TdsdInsertUpdateAction }
@@ -2410,6 +2424,7 @@ end;
 procedure TMultiAction.DataSourceExecute;
 var
   i: Integer;
+  aDate : array of TDateTime;
 begin
   if Assigned(View) then
   begin
@@ -2432,7 +2447,7 @@ begin
       end;
     end;
   end
-  else
+  else if Assigned(DataSource) then
   begin
     if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and
       (DataSource.DataSet.RecordCount > 0) then
@@ -2463,6 +2478,28 @@ begin
       finally
         Application.ProcessMessages;
         // DataSource.DataSet.EnableControls;
+      end;
+    end;
+  end else
+  begin
+    with TGaugeFactory.GetGauge(Caption, 0,
+      DateNavigator.SelectedDays.Count) do
+    begin
+      Start;
+      SetLength(aDate, DateNavigator.SelectedDays.Count);
+      try
+        for i := 0 to DateNavigator.SelectedDays.Count - 1 do
+          aDate[i] := DateNavigator.SelectedDays.Items[I];
+        for i := 0 to High(aDate) do
+        begin
+          DateNavigator.Date := aDate[i];
+          fExecPack:= (i = High(aDate) - 1);
+          ListExecute;
+          IncProgress(1);
+          Application.ProcessMessages;
+        end;
+      finally
+        Finish;
       end;
     end;
   end;
@@ -2504,7 +2541,7 @@ begin
   if InfoAfterExecute <> '' then
     SaveInfoAfterExecute;
   try
-    if Assigned(DataSource) or Assigned(View) then
+    if Assigned(DataSource) or Assigned(View) or Assigned(DateNavigator) then
       DataSourceExecute
     else
       ListExecute;
@@ -2601,9 +2638,9 @@ end;
 
 procedure TMultiAction.SetDataSource(const Value: TDataSource);
 begin
-  if Assigned(View) and Assigned(Value) then
+  if (Assigned(View) or Assigned(DateNavigator)) and Assigned(Value) then
   begin
-    ShowMessage('Установлен View. Нельзя установить DataSource');
+    ShowMessage('Установлен View или DateNavigator. Нельзя установить DataSource');
     exit;
   end;
   FDataSource := Value;
@@ -2611,12 +2648,22 @@ end;
 
 procedure TMultiAction.SetView(const Value: TcxGridTableView);
 begin
-  if Assigned(DataSource) and Assigned(Value) then
+  if (Assigned(DataSource) or Assigned(DateNavigator)) and Assigned(Value) then
   begin
-    ShowMessage('Установлен DataSource. Нельзя установить View');
+    ShowMessage('Установлен DataSource или DateNavigator. Нельзя установить View');
     exit;
   end;
   FView := Value;
+end;
+
+procedure TMultiAction.SetDateNavigator(const Value: TcxDateNavigator);
+begin
+  if (Assigned(DataSource) or Assigned(View)) and Assigned(Value) then
+  begin
+    ShowMessage('Установлен DataSource или View. Нельзя установить DateNavigator');
+    exit;
+  end;
+  FDateNavigator := Value;
 end;
 
 { TExecServerStoredProc }

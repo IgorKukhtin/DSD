@@ -150,6 +150,10 @@ BEGIN
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
+         'Пр. месяц'::TVarChar                                   AS Name0,
+         'Тип дня'::TVarChar                                     AS Name1,
+         'Приход'::TVarChar                                      AS Name2,
+         'Уход'::TVarChar                                        AS Name3,
 
          NULL::TVarChar                        AS Value1,
          NULL::TVarChar                        AS Value2,
