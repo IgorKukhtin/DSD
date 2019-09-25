@@ -14,6 +14,8 @@ $BODY$
    DECLARE vbOperDate TDateTime;
 
    DECLARE vbAreaId_find Integer;
+   DECLARE vbisMorionCode Boolean;
+   DECLARE vbisBarCode Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
@@ -39,17 +41,28 @@ BEGIN
       SELECT LoadPriceList.OperDate	 
            , LoadPriceList.JuridicalId
            , COALESCE (tmpArea.AreaId, 0)
-             INTO vbOperDate, vbJuridicalId, vbAreaId_find
+           , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)  :: Boolean   AS isMorionCode
+           , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
+             INTO vbOperDate, vbJuridicalId, vbAreaId_find, vbisMorionCode, vbisBarCode
       FROM LoadPriceList
            LEFT JOIN tmpArea ON tmpArea.JuridicalId = LoadPriceList.JuridicalId
                             AND tmpArea.AreaId      = LoadPriceList.AreaId
+           -- признак Импорт кодов Мориона из прайса (выполнять или нет связь с гл.товаром)
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_MorionCode
+                                   ON ObjectBoolean_MorionCode.ObjectId = LoadPriceList.ContractId
+                                  AND ObjectBoolean_MorionCode.DescId = zc_ObjectBoolean_Contract_MorionCode()
+           -- признак Импорт штрих-кодов из прайса (выполнять или нет связь с гл.товаром)
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCode
+                                   ON ObjectBoolean_BarCode.ObjectId = LoadPriceList.ContractId
+                                  AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
       WHERE LoadPriceList.Id = inId;
       
      -- Создаем общие коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, LoadPriceListItem.GoodsName), zc_Enum_GlobalConst_Marion())
-            FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
-             AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
-             AND CommonCode > 0;
+            FROM LoadPriceListItem 
+            WHERE LoadPriceListItem.LoadPriceListId = inId
+              AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
+              AND CommonCode > 0;
 
      -- Создаем штрих коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), 0, BarCode), zc_Enum_GlobalConst_BarCode())
@@ -114,46 +127,74 @@ BEGIN
         GROUP BY LoadPriceListItem.GoodsId , 
                  Object_Goods.Id ;
    
-      -- Выбираем коды Мориона, у которых нет стыковки с главным 
+   IF vbisMorionCode = TRUE
+   THEN
+       -- Выбираем коды Мориона, у которых нет стыковки с главным товаром
+       PERFORM gpInsertUpdate_Object_LinkGoods(0 
+                                             , MainGoodsId  -- Главный товар
+                                             , GoodsId      -- Товар для замены
+                                             , inSession    -- сессия пользователя
+                                             )  
+       FROM (
+             SELECT DISTINCT 
+                    LoadPriceListItem.GoodsId AS MainGoodsId   --Главный товар
+                  , Object_Goods_View.Id      AS GoodsId       -- Товар для замены (Мариона)
+             FROM Object_Goods_View 
+               JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
+                                     AND LoadPriceListItem.LoadPriceListId = inId
 
-   /*   PERFORM gpInsertUpdate_Object_LinkGoods(
-              0 
-            , MainGoodsId -- Главный товар
-            , GoodsId      -- Товар для замены
-            , inSession                 -- сессия пользователя
-            )  
-        FROM(
-        SELECT DISTINCT 
-            LoadPriceListItem.GoodsId AS MainGoodsId 
-          , Object_Goods_View.Id AS GoodsId 
-        FROM Object_Goods_View 
-          JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.goodscodeInt
-                                AND LoadPriceListItem.LoadPriceListId = inId
+             WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND LoadPriceListItem.GoodsId <> 0
+               AND Object_Goods_View.id NOT IN (SELECT GoodsId FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
+            ) AS DDD;
+
+     --Обновляем Наименование для товара Код Мариона
+     /*UPDATE Object
+      SET ValueData = LoadPriceListItem.GoodsName
+      FROM Object_Goods_View
+           JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
+                                 AND LoadPriceListItem.GoodsId <> 0
+                                 AND LoadPriceListItem.LoadPriceListId = inId
+      WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() 
+        AND Object_Goods_View.Id = Object.Id
+        AND Object.DescId = zc_Object_Goods()
+        ;
+        */
+     
+      PERFORM 
+            --Обновляем Наименование для товара Код Мариона
+            lpInsertUpdate_Object (Object_Goods_View.Id, zc_Object_Goods(), LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName)
+            -- Обновляем производителя для товара Код Мариона
+          , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), Object_Goods_View.Id, LoadPriceListItem.ProducerName)
+
+      FROM Object_Goods_View
+           JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
+                                 AND LoadPriceListItem.LoadPriceListId = inId
+      WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() 
+        AND LoadPriceListItem.GoodsId <> 0
+      ;
+   END IF;
+
+   IF vbisBarCode = TRUE
+   THEN
+       -- Выбираем Штрих-кода, у которых нет стыковки с главным 
+       PERFORM gpInsertUpdate_Object_LinkGoods(0 
+                                             , MainGoodsId  -- Главный товар
+                                             , GoodsId      -- Товар для замены
+                                             , inSession    -- сессия пользователя
+                                             )  
+       FROM (
+             SELECT DISTINCT 
+                    LoadPriceListItem.GoodsId AS MainGoodsId    -- Главный товар
+                  , Object_Goods_View.Id      AS GoodsId        -- Товар для замены (штрихкод)
+             FROM Object_Goods_View 
+               JOIN LoadPriceListItem ON LoadPriceListItem.BarCode = Object_Goods_View.GoodsName
+                                     AND LoadPriceListItem.LoadPriceListId = inId
       
-      WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND LoadPriceListItem.GoodsId <> 0
-                     
-      AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())) AS DDD;
+             WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
+              AND Object_Goods_View.Id NOT IN (SELECT GoodsId FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
+            ) AS DDD;
+   END IF;
 
-      -- Выбираем Штрих-кода, у которых нет стыковки с главным 
-
-      PERFORM gpInsertUpdate_Object_LinkGoods(
-              0 
-            , MainGoodsId -- Главный товар
-            , GoodsId      -- Товар для замены
-            , inSession                 -- сессия пользователя
-            )  
-        FROM(
-        SELECT DISTINCT 
-            LoadPriceListItem.GoodsId AS MainGoodsId 
-          , Object_Goods_View.Id AS GoodsId 
-        FROM Object_Goods_View 
-          JOIN LoadPriceListItem ON LoadPriceListItem.BarCode = Object_Goods_View.GoodsName
-                                AND LoadPriceListItem.LoadPriceListId = inId
-      
-      WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
-                     
-      AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())) AS DDD;
-     */
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -165,6 +206,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
+ 25.09.19         *
  19.06.18                                                                   * Групировка по товару
  при переносе
  22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом и добавили производителя
@@ -184,4 +226,16 @@ WHERE ObjectId = zc_Enum_GlobalConst_Marion()) AS DDD
 
 WHERE Id <> MinId
 
+*/
+
+
+/*
+SELECT *
+FROM Object
+left JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
+                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+                    AND ObjectLink.ChildObjectId =  zc_Enum_GlobalConst_Marion()
+left join Object AS ObjectEn ON ObjectEn.Id = ObjectLink.ChildObjectId
+WHERE Object.ObjectCode = 454112   --76689 --"ДЕТРАЛЕКС 1000 мг № 30"
 */
