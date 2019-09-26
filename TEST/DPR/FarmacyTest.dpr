@@ -750,8 +750,7 @@ uses
   EmployeeScheduleEditUser in '..\..\FormsFarmacy\Document\EmployeeScheduleEditUser.pas' {EmployeeScheduleEditUserForm: TParentForm},
   BankAccount in '..\..\FormsFarmacy\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankAccountEdit in '..\..\FormsFarmacy\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
-  PayrollTypeDialog in '..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas' {PayrollTypeDialogForm: TParentForm},
-  EmployeeScheduleFilling in '..\..\FormsFarmacy\Document\EmployeeScheduleFilling.pas' {EmployeeScheduleFillingForm: TParentForm};
+  PayrollTypeDialog in '..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas' {PayrollTypeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -4,7 +4,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
   ClientWidth = 844
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 860
-  ExplicitHeight = 458
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -166,7 +166,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       MoveParams = <>
       ActionList = <
         item
-          Action = dsdExecStoredProc1
+          Action = actDeleteLinkGoods
         end>
       DataSource = GoodsLinkDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1079#1080'? '
@@ -245,7 +245,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       MoveParams = <>
       ActionList = <
         item
-          Action = dsdExecStoredProc1
+          Action = actDeleteLinkGoods
         end
         item
           Action = DataSetDelete
@@ -256,7 +256,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       ImageIndex = 2
       ShortCut = 46
     end
-    object dsdExecStoredProc1: TdsdExecStoredProc
+    object actDeleteLinkGoods: TdsdExecStoredProc
       Category = 'Delete'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -265,7 +265,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         item
           StoredProc = spDeleteLinkGoods
         end>
-      Caption = 'dsdExecStoredProc1'
+      Caption = 'actDeleteLinkGoods'
     end
   end
   inherited MasterDS: TDataSource
