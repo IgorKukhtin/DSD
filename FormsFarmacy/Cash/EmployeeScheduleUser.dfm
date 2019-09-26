@@ -15,12 +15,12 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     TabOrder = 5
     ExplicitTop = 95
     ExplicitWidth = 800
-    ExplicitHeight = 372
+    ExplicitHeight = 384
     ClientRectBottom = 384
     ClientRectRight = 800
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 800
-      ExplicitHeight = 372
+      ExplicitHeight = 384
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 217
@@ -203,7 +203,6 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitHeight = 155
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -269,7 +268,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
+            Width = 98
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -280,7 +279,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 193
+            Width = 161
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -288,22 +287,25 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Substitution_NoteStart: TcxGridDBBandedColumn
             Caption = ' '
             DataBinding.FieldName = 'NoteStart'
+            Width = 98
             Position.BandIndex = 0
-            Position.ColIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 1
           end
           object Substitution_NoteEnd: TcxGridDBBandedColumn
             Caption = ' '
             DataBinding.FieldName = 'NoteEnd'
+            Width = 98
             Position.BandIndex = 0
-            Position.ColIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 2
           end
           object Substitution_NoteNext: TcxGridDBBandedColumn
             Caption = ' '
             DataBinding.FieldName = 'NoteNext'
+            Width = 98
             Position.BandIndex = 0
-            Position.ColIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 3
           end
           object Substitution_Value: TcxGridDBBandedColumn
@@ -358,6 +360,24 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
+          end
+          object Substitution_Nil1: TcxGridDBBandedColumn
+            Width = 161
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object Substitution_Nil2: TcxGridDBBandedColumn
+            Width = 161
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 2
+          end
+          object Substitution_Nil3: TcxGridDBBandedColumn
+            Width = 161
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 3
           end
         end
         object cxGridLevelSubstitution: TcxGridLevel

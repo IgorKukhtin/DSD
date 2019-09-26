@@ -93,7 +93,7 @@ BEGIN
                                      Container.ObjectId, 
                                      Container.Amount
                              FROM Container
-                             WHERE Container.DescId in (zc_Container_Count(), zc_ContainerLinkObject_PartionGoods())
+                             WHERE Container.DescId in (zc_Container_Count(), zc_Container_CountPartionDate())
                                AND Container.WhereObjectId = vbUnitId
                                AND Container.Amount <> 0
                             )

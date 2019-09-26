@@ -25,6 +25,7 @@ $BODY$
   DECLARE vbContractId Integer;
   DECLARE vbContractName TVarChar;
   DECLARE vbZakazName TVarChar;
+  DECLARE vbFromId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -32,8 +33,8 @@ BEGIN
 
 
    -- еще
-   SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName, tmp.ContractId
-          INTO vbMail, vbJuridicalId_unit, vbJuridicalName, vbContractId
+   SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName, tmp.ContractId, tmp.FromId
+          INTO vbMail, vbJuridicalId_unit, vbJuridicalName, vbContractId, vbFromId
    FROM (WITH -- Документ Заявка Внешняя (т.е. Поставщику)
               tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, MLO_To.ObjectId AS ToId, MLO_Contract.ObjectId AS ContractId
                                    , ObjectLink_Juridical_Retail.ChildObjectId    AS RetailId
@@ -62,6 +63,7 @@ BEGIN
             , tmpContactPerson AS (SELECT * FROM Object_ContactPerson_View)
          -- Результат
          SELECT tmpMovement.JuridicalId_unit
+              , tmpMovement.FromId
               , COALESCE (View_ContactPerson_Contract_0.Mail, View_ContactPerson_Contract_1.Mail, View_ContactPerson_Contract_2.Mail, View_ContactPerson_Contract_3.Mail
                         , View_ContactPerson_0.Mail,          View_ContactPerson_1.Mail,          View_ContactPerson_2.Mail,          View_ContactPerson_3.Mail
                          ) AS Mail
@@ -167,6 +169,10 @@ BEGIN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
     END IF;
 
+    IF vbUnitId in (4135547, 5120968, 3457773, 6741875, 377610, 377613, 494882, 6128298) AND vbFromId = 59610 --AND inSession = '3'
+    THEN
+      vbMail := 'orders_processing@badm.biz';
+    END IF;
 
     -- еще
     SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData

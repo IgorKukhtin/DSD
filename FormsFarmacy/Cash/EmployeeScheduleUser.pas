@@ -78,6 +78,9 @@ type
     Substitution_NoteStart: TcxGridDBBandedColumn;
     Substitution_NoteEnd: TcxGridDBBandedColumn;
     Substitution_NoteNext: TcxGridDBBandedColumn;
+    Substitution_Nil1: TcxGridDBBandedColumn;
+    Substitution_Nil2: TcxGridDBBandedColumn;
+    Substitution_Nil3: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

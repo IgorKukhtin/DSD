@@ -68,6 +68,7 @@ object EmployeeScheduleFillingForm: TEmployeeScheduleFillingForm
     Font.Style = []
     ShowWeekNumbers = False
     TabOrder = 0
+    UnlimitedSelection = True
   end
   object ceUser: TcxButtonEdit
     Left = 176
