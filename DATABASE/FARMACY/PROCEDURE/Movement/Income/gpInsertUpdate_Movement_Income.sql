@@ -74,12 +74,13 @@ BEGIN
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-    --дата аптеки
-    IF COALESCE (inInvNumberBranch,'') <> ''
+    --дата аптеки сохранять только после нажатия кнопки рассчитать расходную цену , поэтому здесь не сохраняем
+    /*IF COALESCE (inInvNumberBranch,'') <> ''
     THEN
         -- 
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
     END IF;
+    */
 
 END;
 $BODY$
