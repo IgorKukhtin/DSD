@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1003
   ExplicitWidth = 1019
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -890,7 +890,7 @@ inherited SendForm: TSendForm
         end>
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
+      ImageIndex = 52
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -1251,7 +1251,7 @@ inherited SendForm: TSendForm
         end>
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
-      ImageIndex = 52
+      ImageIndex = 79
     end
     object spWriteRestFromPoint: TdsdExecStoredProc
       Category = 'DSDLib'

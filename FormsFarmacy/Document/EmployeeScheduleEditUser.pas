@@ -72,6 +72,7 @@ type
     actExecPayrollType: TdsdExecStoredProc;
     spExecPayrollType: TdsdStoredProc;
     dxBarButton8: TdxBarButton;
+    edUserCode: TcxTextEdit;
   private
     { Private declarations }
   public

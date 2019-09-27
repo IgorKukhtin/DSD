@@ -4,7 +4,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -639,7 +639,7 @@ inherited SendJournalForm: TSendJournalForm
       QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085' '#1044#1072' '#1042#1057#1045#1052' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'?'
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
-      ImageIndex = 52
+      ImageIndex = 79
     end
     object macUpdate_OperDate: TMultiAction
       Category = 'DSDLib'
@@ -971,6 +971,7 @@ inherited SendJournalForm: TSendJournalForm
     object bbDeferredNo: TdxBarButton
       Action = macUpdateisDeferredNo
       Category = 0
+      ImageIndex = 52
     end
     object dxBarButton2: TdxBarButton
       Action = actSetReceived

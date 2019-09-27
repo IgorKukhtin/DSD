@@ -2362,7 +2362,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCash.pas">
 				<Form>Report_GoodsRemainsCashForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCashDialog.pas">
@@ -2395,17 +2394,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SendMenegerJournal.pas">
 				<Form>SendMenegerJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SendMeneger.pas">
 				<Form>SendMenegerForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SendCashJournal.pas">
 				<Form>SendCashJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SendPartionDate_UpdatePercentDialog.pas">
@@ -2414,7 +2410,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\PartionGoodsList.pas">
 				<Form>PartionGoodsListForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Overdue_UpdateRangeCat5Dialog.pas">
@@ -2591,6 +2586,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas">
 				<Form>PayrollTypeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\EmployeeScheduleFilling.pas">
+				<Form>EmployeeScheduleFillingForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

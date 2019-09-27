@@ -226,6 +226,15 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       Top = 4
       Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object edUserCode: TcxTextEdit
+      Left = 290
+      Top = 3
+      ParentColor = True
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 10
+      Width = 71
+    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -890,6 +899,12 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserCode'
+        Value = Null
+        Component = edUserCode
         MultiSelectSeparator = ','
       end
       item

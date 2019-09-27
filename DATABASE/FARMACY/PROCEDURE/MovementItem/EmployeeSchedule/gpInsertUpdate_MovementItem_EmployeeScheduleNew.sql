@@ -50,6 +50,15 @@ BEGIN
       WHERE Movement.Id = inMovementId;
     END IF;
     
+    IF COALESCE (ioId, 0) = 0 
+       AND EXISTS(SELECT ID FROM MovementItem
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.ObjectId = inUserId
+                    AND MovementItem.DescId = zc_MI_Master())
+    THEN
+      RAISE EXCEPTION 'Повторное создание графика по сотруднику запрещено.';    
+    END IF;
+    
     IF EXISTS(SELECT COALESCE (ObjectLink_Member_Unit.ChildObjectId, 0)
               FROM ObjectLink AS ObjectLink_User_Member
 

@@ -50,239 +50,140 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
        AND Movement.OperDate = vbDate;
 
+     SELECT Movement.ID
+     INTO vbMovementNextId
+     FROM Movement
+     WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+       AND Movement.OperDate = vbDateNext;
 
-     IF EXISTS(SELECT 1 FROM Movement
-                   WHERE Movement.OperDate = vbDateNext
-                     AND Movement.DescId = zc_Movement_EmployeeSchedule())
-     THEN
-       SELECT Movement.ID
-       INTO vbMovementNextId
-       FROM Movement
-       WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
-         AND Movement.OperDate = vbDateNext;
-     ELSE
-       vbMovementNextId := 0;
-     END IF;
+     CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
+     SELECT MIMaster.ID                                                                  AS ID
+          , MIMaster.ObjectId                                                            AS UserID
+          , COALESCE (MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)  AS MainUnitID
+          , MIChild.ObjectId                                                             AS UnitID
+          , MIChild.Amount                                                               AS Day
+          , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData  ELSE 'СВ' END                          AS PThortName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+          , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
+          , Null::TVarChar                                                               AS PThortNameNext
+     FROM Movement
 
+          INNER JOIN MovementItem AS MIMaster
+                                  ON MIMaster.MovementId = Movement.id
+                                 AND MIMaster.DescId = zc_MI_Master()
 
-     -- Получение главных аптек
-     CREATE TEMP TABLE tmpMainUnit (UserId Integer, MovementItemID integer, MovementItemNextID integer, Value TVarChar, ValueUser TVarChar, ValueNext TVarChar) ON COMMIT DROP;
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                           ON MILinkObject_Unit.MovementItemId = MIMaster.Id
+                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-     WITH tmMov AS (SELECT DISTINCT
-                           MovementItem.ObjectId AS UserID
-                    FROM Movement
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = MIMaster.ObjectId
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
-                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                AND MovementItem.DescId = zc_MI_Master()
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                               ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
-                         INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                           AND MILinkObject_Unit.ObjectId = vbUnitId
+          LEFT JOIN MovementItem AS MIChild
+                                 ON MIChild.MovementId = Movement.id
+                                AND MIChild.ParentId = MIMaster.ID
+                                AND MIChild.DescId = zc_MI_Child()
 
-                    WHERE Movement.ID in (vbMovementId, vbMovementNextId)),
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                           ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                          AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
 
-          tmLogAll AS (SELECT count(*) as CountLog
-                            , EmployeeWorkLog.UserId
-                            , EmployeeWorkLog.UnitId
-                       FROM EmployeeWorkLog
-                       WHERE EmployeeWorkLog.DateLogIn >= CURRENT_DATE - INTERVAL '1 MONTH' AND EmployeeWorkLog.DateLogIn < CURRENT_DATE
-                       GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
+          LEFT JOIN ObjectString AS PayrollType_ShortName
+                                 ON PayrollType_ShortName.ObjectId = MILinkObject_PayrollType.ObjectId
+                                AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
 
-          tmLog AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAll.UserId ORDER BY tmLogAll.CountLog DESC) AS Ord
-                         , tmLogAll.UserId
-                         , tmLogAll.UnitId
-                    FROM tmLogAll),
+          LEFT JOIN MovementItemDate AS MIDate_Start
+                                     ON MIDate_Start.MovementItemId = MIChild.Id
+                                    AND MIDate_Start.DescId = zc_MIDate_Start()
 
-          tmAll AS (SELECT tmMov.UserID FROM tmMov
-                    UNION ALL
-                    SELECT tmLog.UserID FROM tmLog
-                    WHERE tmLog.Ord = 1
-                      AND tmLog.UnitId = vbUnitId)
+          LEFT JOIN MovementItemDate AS MIDate_End
+                                     ON MIDate_End.MovementItemId = MIChild.Id
+                                    AND MIDate_End.DescId = zc_MIDate_End()
 
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
-     INSERT INTO tmpMainUnit (UserId)
-     SELECT DISTINCT tmAll.UserID FROM tmAll;
+     WHERE Movement.ID = vbMovementId;
+     ANALYSE tmpUserData;
 
-     UPDATE tmpMainUnit SET MovementItemID = T1.ID
-                          , Value = T1.Value
-                          , ValueUser = T1.ValueUser
-     FROM (SELECT MovementItem.ObjectId                       AS UserID
-                , MovementItem.Id                             AS ID
-                , MIString_ComingValueDay.ValueData           AS Value
-                , MIString_ComingValueDayUser.ValueData       AS ValueUser
-           FROM Movement
+     CREATE TEMP TABLE tmpUserDataNext ON COMMIT DROP AS
+     SELECT MIMaster.ID                                                                  AS ID
+          , MIMaster.ObjectId                                                            AS UserID
+          , COALESCE (MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)  AS MainUnitID
+          , MIChild.ObjectId                                                             AS UnitID
+          , MIChild.Amount                                                               AS Day
+          , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData  ELSE 'СВ' END                          AS PThortName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+          , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
+          , Null::TVarChar                                                               AS PThortNameNext
+     FROM Movement
 
-                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                       AND MovementItem.DescId = zc_MI_Master()
+          INNER JOIN MovementItem AS MIMaster
+                                  ON MIMaster.MovementId = Movement.id
+                                 AND MIMaster.DescId = zc_MI_Master()
 
-                INNER JOIN MovementItemString AS MIString_ComingValueDay
-                                              ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                             AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                           ON MILinkObject_Unit.MovementItemId = MIMaster.Id
+                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-                LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
-                                             ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
-                                            AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = MIMaster.ObjectId
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
-           WHERE Movement.ID = vbMovementId) AS T1
-     WHERE tmpMainUnit.UserID = T1.UserID;
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                               ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
-     UPDATE tmpMainUnit SET MovementItemNextID = T1.ID
-                          , ValueNext = T1.ValueNext
-     FROM (SELECT MovementItem.ObjectId                       AS UserID
-                , MovementItem.Id                             AS ID
-                , MIString_ComingValueDay.ValueData           AS ValueNext
-           FROM Movement
+          LEFT JOIN MovementItem AS MIChild
+                                 ON MIChild.MovementId = Movement.id
+                                AND MIChild.ParentId = MIMaster.ID
+                                AND MIChild.DescId = zc_MI_Child()
 
-                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                       AND MovementItem.DescId = zc_MI_Master()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                           ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                          AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
 
-                INNER JOIN MovementItemString AS MIString_ComingValueDay
-                                              ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                             AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
+          LEFT JOIN ObjectString AS PayrollType_ShortName
+                                 ON PayrollType_ShortName.ObjectId = MILinkObject_PayrollType.ObjectId
+                                AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
 
-           WHERE Movement.ID = vbMovementNextId) AS T1
-     WHERE tmpMainUnit.UserID = T1.UserID;
+          LEFT JOIN MovementItemDate AS MIDate_Start
+                                     ON MIDate_Start.MovementItemId = MIChild.Id
+                                    AND MIDate_Start.DescId = zc_MIDate_Start()
 
-     DELETE FROM tmpMainUnit WHERE MovementItemID IS Null and MovementItemNextID IS NULL;
+          LEFT JOIN MovementItemDate AS MIDate_End
+                                     ON MIDate_End.MovementItemId = MIChild.Id
+                                    AND MIDate_End.DescId = zc_MIDate_End()
 
-     -- Получение главных аптек для отображения подмен
-     CREATE TEMP TABLE tmpMainUnitSubstitution (UserId Integer,
-               Value1 TVarChar, Value2 TVarChar, Value3 TVarChar, Value4 TVarChar, Value5 TVarChar,
-               Value6 TVarChar, Value7 TVarChar, Value8 TVarChar, Value9 TVarChar, Value10 TVarChar,
-               Value11 TVarChar, Value12 TVarChar, Value13 TVarChar, Value14 TVarChar, Value15 TVarChar,
-               Value16 TVarChar, Value17 TVarChar, Value18 TVarChar, Value19 TVarChar, Value20 TVarChar,
-               Value21 TVarChar, Value22 TVarChar, Value23 TVarChar, Value24 TVarChar, Value25 TVarChar,
-               Value26 TVarChar, Value27 TVarChar, Value28 TVarChar, Value29 TVarChar, Value30 TVarChar,
-               Value31 TVarChar,
-               ValueNext1 TVarChar, ValueNext2 TVarChar, ValueNext3 TVarChar, ValueNext4 TVarChar, ValueNext5 TVarChar,
-               ValueNext6 TVarChar, ValueNext7 TVarChar, ValueNext8 TVarChar, ValueNext9 TVarChar, ValueNext10 TVarChar,
-               ValueNext11 TVarChar, ValueNext12 TVarChar, ValueNext13 TVarChar, ValueNext14 TVarChar, ValueNext15 TVarChar,
-               ValueNext16 TVarChar, ValueNext17 TVarChar, ValueNext18 TVarChar, ValueNext19 TVarChar, ValueNext20 TVarChar,
-               ValueNext21 TVarChar, ValueNext22 TVarChar, ValueNext23 TVarChar, ValueNext24 TVarChar, ValueNext25 TVarChar,
-               ValueNext26 TVarChar, ValueNext27 TVarChar, ValueNext28 TVarChar, ValueNext29 TVarChar, ValueNext30 TVarChar,
-               ValueNext31 TVarChar) ON COMMIT DROP;
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
-     -- Все подмены на аптеку
-     WITH tmpUnitChild AS (SELECT DISTINCT
-                                  MovementItemMain.ObjectId                                                                  AS UserId
-                             FROM MovementItem AS MovementItemChild
-
-                                  INNER JOIN MovementItem AS MovementItemMain
-                                                          ON MovementItemMain.ID = MovementItemChild.ParentId
-
-                             WHERE MovementItemChild.MovementId in (vbMovementId, vbMovementNextId)
-                               AND MovementItemChild.DescId = zc_MI_Child()
-                               AND MovementItemChild.ObjectId = vbUnitId)
-
-     INSERT INTO tmpMainUnitSubstitution (UserId)
-     SELECT tmpUnitChild.UserId
-     FROM tmpUnitChild
-     WHERE tmpUnitChild.UserId NOT IN (SELECT tmpMainUnit.UserId FROM tmpMainUnit);
-
-     I := 1;
-     WHILE I <= date_part('DAY', vbDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-     LOOP
-
-       vbQueryText := 'UPDATE tmpMainUnitSubstitution SET Value'||I::Text||' = MI_Child.Value
-                       FROM (SELECT
-                                    MovementItem.ObjectId                                               AS UserId
-                                  , lpDecodeValueDay('||I::Text||', MIString_ComingValueDay.ValueData)  AS Value
-                             FROM MovementItem
-
-                                  INNER JOIN MovementItem AS MovementItemChild
-                                                          ON MovementItemChild.MovementId = '||vbMovementId::Text||'
-                                                         AND MovementItemChild.Amount = '||I::Text||'
-                                                         AND MovementItemChild.DescId = zc_MI_Child()
-                                                         AND MovementItemChild.ObjectId = '||vbUnitID::Text||'
-                                                         AND MovementItemChild.ParentId = MovementItem.ID
-
-                                  INNER JOIN MovementItemString AS MIString_ComingValueDay
-                                                                ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                                               AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
-
-                             WHERE MovementItem.MovementId = '||vbMovementId::Text||'
-                               AND MovementItem.DescId = zc_MI_Master()) AS MI_Child
-                       WHERE tmpMainUnitSubstitution.UserId = MI_Child.UserId';
-
-       EXECUTE vbQueryText;
-
-       vbQueryText := 'UPDATE tmpMainUnit SET Value = SUBSTRING(Value, 1, '||I::Text||' - 1) ||''0''|| SUBSTRING(Value, '||I::Text||' + 1, 31),
-                                              ValueUser = SUBSTRING(ValueUser, 1, '||I::Text||' - 1) ||''0''|| SUBSTRING(ValueUser, '||I::Text||' + 1, 31)
-                       FROM (SELECT
-                                    MovementItem.ObjectId                                               AS UserId
-                             FROM MovementItem
-
-                                  INNER JOIN MovementItem AS MovementItemChild
-                                                          ON MovementItemChild.MovementId = '||vbMovementId::Text||'
-                                                         AND MovementItemChild.Amount = '||I::Text||'
-                                                         AND MovementItemChild.DescId = zc_MI_Child()
-                                                         AND MovementItemChild.ObjectId <> '||vbUnitID::Text||'
-                                                         AND MovementItemChild.ParentId = MovementItem.ID
-
-                             WHERE MovementItem.MovementId = '||vbMovementId::Text||'
-                               AND MovementItem.DescId = zc_MI_Master()) AS MI_Child
-                       WHERE tmpMainUnit.UserId = MI_Child.UserId';
-
-       EXECUTE vbQueryText;
-       I := I + 1;
-     END LOOP;
-
-     I := 1;
-     WHILE I <= date_part('DAY', vbDateNext + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-     LOOP
-
-       vbQueryText := 'UPDATE tmpMainUnitSubstitution SET ValueNext'||I::Text||' = MI_Child.Value
-                       FROM (SELECT
-                                    MovementItem.ObjectId                                               AS UserId
-                                  , lpDecodeValueDay('||I::Text||', MIString_ComingValueDay.ValueData)  AS Value
-                             FROM MovementItem
-
-                                  INNER JOIN MovementItem AS MovementItemChild
-                                                          ON MovementItemChild.MovementId = '||vbMovementNextId::Text||'
-                                                         AND MovementItemChild.Amount = '||I::Text||'
-                                                         AND MovementItemChild.DescId = zc_MI_Child()
-                                                         AND MovementItemChild.ObjectId = '||vbUnitID::Text||'
-                                                         AND MovementItemChild.ParentId = MovementItem.ID
-
-                                  INNER JOIN MovementItemString AS MIString_ComingValueDay
-                                                                ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                                               AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
-
-                             WHERE MovementItem.MovementId = '||vbMovementNextId::Text||'
-                               AND MovementItem.DescId = zc_MI_Master()) AS MI_Child
-                       WHERE tmpMainUnitSubstitution.UserId = MI_Child.UserId';
-
-       EXECUTE vbQueryText;
-
-       vbQueryText := 'UPDATE tmpMainUnit SET ValueNext = SUBSTRING(ValueNext, 1, '||I::Text||' - 1) ||''0''|| SUBSTRING(ValueNext, '||I::Text||' + 1, 31)
-                       FROM (SELECT
-                                    MovementItem.ObjectId                                               AS UserId
-                             FROM MovementItem
-
-                                  INNER JOIN MovementItem AS MovementItemChild
-                                                          ON MovementItemChild.MovementId = '||vbMovementNextId::Text||'
-                                                         AND MovementItemChild.Amount = '||I::Text||'
-                                                         AND MovementItemChild.DescId = zc_MI_Child()
-                                                         AND MovementItemChild.ObjectId <> '||vbUnitID::Text||'
-                                                         AND MovementItemChild.ParentId = MovementItem.ID
-
-                             WHERE MovementItem.MovementId = '||vbMovementNextId::Text||'
-                               AND MovementItem.DescId = zc_MI_Master()) AS MI_Child
-                       WHERE tmpMainUnit.UserId = MI_Child.UserId';
-
-       EXECUTE vbQueryText;
-       I := I + 1;
-     END LOOP;
+     WHERE Movement.ID = vbMovementNextId;
+     ANALYSE tmpUserDataNext;
 
      --
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', vbDate), DATE_TRUNC ('MONTH', vbDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
-     vbDate := DATE_TRUNC ('MONTH', vbDate) + INTERVAL '1 MONTH';
-
      CREATE TEMP TABLE tmpOperDateNext ON COMMIT DROP AS
-        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', vbDate), DATE_TRUNC ('MONTH', vbDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', vbDateNext), DATE_TRUNC ('MONTH', vbDateNext) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
      IF (SELECT count(*) FROM tmpOperDateNext) <> (SELECT count(*) FROM tmpOperDate)
      THEN
@@ -323,102 +224,140 @@ BEGIN
        Object_Member.Id                                        AS ID,
        Object_Member.ObjectCode                                AS PersonalCode,
        Object_Member.ValueData                                 AS PersonalName,
-       'Регламент '||zfCalc_MonthName(CURRENT_DATE)            AS Note,
-       'Факт '||zfCalc_MonthName(CURRENT_DATE)                 AS NoteUser,
-       'Регламент '||zfCalc_MonthName(vbDate)                  AS NoteNext,
-       lpDecodeValueDay(1, tmpMainUnit.Value)  AS Value1,
-       lpDecodeValueDay(2, tmpMainUnit.Value)  AS Value2,
-       lpDecodeValueDay(3, tmpMainUnit.Value)  AS Value3,
-       lpDecodeValueDay(4, tmpMainUnit.Value)  AS Value4,
-       lpDecodeValueDay(5, tmpMainUnit.Value)  AS Value5,
-       lpDecodeValueDay(6, tmpMainUnit.Value)  AS Value6,
-       lpDecodeValueDay(7, tmpMainUnit.Value)  AS Value7,
-       lpDecodeValueDay(8, tmpMainUnit.Value)  AS Value8,
-       lpDecodeValueDay(9, tmpMainUnit.Value)  AS Value9,
-       lpDecodeValueDay(10, tmpMainUnit.Value) AS Value10,
-       lpDecodeValueDay(11, tmpMainUnit.Value) AS Value11,
-       lpDecodeValueDay(12, tmpMainUnit.Value) AS Value12,
-       lpDecodeValueDay(13, tmpMainUnit.Value) AS Value13,
-       lpDecodeValueDay(14, tmpMainUnit.Value) AS Value14,
-       lpDecodeValueDay(15, tmpMainUnit.Value) AS Value15,
-       lpDecodeValueDay(16, tmpMainUnit.Value) AS Value16,
-       lpDecodeValueDay(17, tmpMainUnit.Value) AS Value17,
-       lpDecodeValueDay(18, tmpMainUnit.Value) AS Value18,
-       lpDecodeValueDay(19, tmpMainUnit.Value) AS Value19,
-       lpDecodeValueDay(20, tmpMainUnit.Value) AS Value20,
-       lpDecodeValueDay(21, tmpMainUnit.Value) AS Value21,
-       lpDecodeValueDay(22, tmpMainUnit.Value) AS Value22,
-       lpDecodeValueDay(23, tmpMainUnit.Value) AS Value23,
-       lpDecodeValueDay(24, tmpMainUnit.Value) AS Value24,
-       lpDecodeValueDay(25, tmpMainUnit.Value) AS Value25,
-       lpDecodeValueDay(26, tmpMainUnit.Value) AS Value26,
-       lpDecodeValueDay(27, tmpMainUnit.Value) AS Value27,
-       lpDecodeValueDay(28, tmpMainUnit.Value) AS Value28,
-       lpDecodeValueDay(29, tmpMainUnit.Value) AS Value29,
-       lpDecodeValueDay(30, tmpMainUnit.Value) AS Value30,
-       lpDecodeValueDay(31, tmpMainUnit.Value) AS Value31,
-       lpDecodeValueDay(1, tmpMainUnit.ValueUser)  AS ValueUser1,
-       lpDecodeValueDay(2, tmpMainUnit.ValueUser)  AS ValueUser2,
-       lpDecodeValueDay(3, tmpMainUnit.ValueUser)  AS ValueUser3,
-       lpDecodeValueDay(4, tmpMainUnit.ValueUser)  AS ValueUser4,
-       lpDecodeValueDay(5, tmpMainUnit.ValueUser)  AS ValueUser5,
-       lpDecodeValueDay(6, tmpMainUnit.ValueUser)  AS ValueUser6,
-       lpDecodeValueDay(7, tmpMainUnit.ValueUser)  AS ValueUser7,
-       lpDecodeValueDay(8, tmpMainUnit.ValueUser)  AS ValueUser8,
-       lpDecodeValueDay(9, tmpMainUnit.ValueUser)  AS ValueUser9,
-       lpDecodeValueDay(10, tmpMainUnit.ValueUser) AS ValueUser10,
-       lpDecodeValueDay(11, tmpMainUnit.ValueUser) AS ValueUser11,
-       lpDecodeValueDay(12, tmpMainUnit.ValueUser) AS ValueUser12,
-       lpDecodeValueDay(13, tmpMainUnit.ValueUser) AS ValueUser13,
-       lpDecodeValueDay(14, tmpMainUnit.ValueUser) AS ValueUser14,
-       lpDecodeValueDay(15, tmpMainUnit.ValueUser) AS ValueUser15,
-       lpDecodeValueDay(16, tmpMainUnit.ValueUser) AS ValueUser16,
-       lpDecodeValueDay(17, tmpMainUnit.ValueUser) AS ValueUser17,
-       lpDecodeValueDay(18, tmpMainUnit.ValueUser) AS ValueUser18,
-       lpDecodeValueDay(19, tmpMainUnit.ValueUser) AS ValueUser19,
-       lpDecodeValueDay(20, tmpMainUnit.ValueUser) AS ValueUser20,
-       lpDecodeValueDay(21, tmpMainUnit.ValueUser) AS ValueUser21,
-       lpDecodeValueDay(22, tmpMainUnit.ValueUser) AS ValueUser22,
-       lpDecodeValueDay(23, tmpMainUnit.ValueUser) AS ValueUser23,
-       lpDecodeValueDay(24, tmpMainUnit.ValueUser) AS ValueUser24,
-       lpDecodeValueDay(25, tmpMainUnit.ValueUser) AS ValueUser25,
-       lpDecodeValueDay(26, tmpMainUnit.ValueUser) AS ValueUser26,
-       lpDecodeValueDay(27, tmpMainUnit.ValueUser) AS ValueUser27,
-       lpDecodeValueDay(28, tmpMainUnit.ValueUser) AS ValueUser28,
-       lpDecodeValueDay(29, tmpMainUnit.ValueUser) AS ValueUser29,
-       lpDecodeValueDay(30, tmpMainUnit.ValueUser) AS ValueUser30,
-       lpDecodeValueDay(31, tmpMainUnit.ValueUser) AS ValueUser31,
-       lpDecodeValueDay(1, tmpMainUnit.ValueNext)  AS ValueNext1,
-       lpDecodeValueDay(2, tmpMainUnit.ValueNext)  AS ValueNext2,
-       lpDecodeValueDay(3, tmpMainUnit.ValueNext)  AS ValueNext3,
-       lpDecodeValueDay(4, tmpMainUnit.ValueNext)  AS ValueNext4,
-       lpDecodeValueDay(5, tmpMainUnit.ValueNext)  AS ValueNext5,
-       lpDecodeValueDay(6, tmpMainUnit.ValueNext)  AS ValueNext6,
-       lpDecodeValueDay(7, tmpMainUnit.ValueNext)  AS ValueNext7,
-       lpDecodeValueDay(8, tmpMainUnit.ValueNext)  AS ValueNext8,
-       lpDecodeValueDay(9, tmpMainUnit.ValueNext)  AS ValueNext9,
-       lpDecodeValueDay(10, tmpMainUnit.ValueNext) AS ValueNext10,
-       lpDecodeValueDay(11, tmpMainUnit.ValueNext) AS ValueNext11,
-       lpDecodeValueDay(12, tmpMainUnit.ValueNext) AS ValueNext12,
-       lpDecodeValueDay(13, tmpMainUnit.ValueNext) AS ValueNext13,
-       lpDecodeValueDay(14, tmpMainUnit.ValueNext) AS ValueNext14,
-       lpDecodeValueDay(15, tmpMainUnit.ValueNext) AS ValueNext15,
-       lpDecodeValueDay(16, tmpMainUnit.ValueNext) AS ValueNext16,
-       lpDecodeValueDay(17, tmpMainUnit.ValueNext) AS ValueNext17,
-       lpDecodeValueDay(18, tmpMainUnit.ValueNext) AS ValueNext18,
-       lpDecodeValueDay(19, tmpMainUnit.ValueNext) AS ValueNext19,
-       lpDecodeValueDay(20, tmpMainUnit.ValueNext) AS ValueNext20,
-       lpDecodeValueDay(21, tmpMainUnit.ValueNext) AS ValueNext21,
-       lpDecodeValueDay(22, tmpMainUnit.ValueNext) AS ValueNext22,
-       lpDecodeValueDay(23, tmpMainUnit.ValueNext) AS ValueNext23,
-       lpDecodeValueDay(24, tmpMainUnit.ValueNext) AS ValueNext24,
-       lpDecodeValueDay(25, tmpMainUnit.ValueNext) AS ValueNext25,
-       lpDecodeValueDay(26, tmpMainUnit.ValueNext) AS ValueNext26,
-       lpDecodeValueDay(27, tmpMainUnit.ValueNext) AS ValueNext27,
-       lpDecodeValueDay(28, tmpMainUnit.ValueNext) AS ValueNext28,
-       lpDecodeValueDay(29, tmpMainUnit.ValueNext) AS ValueNext29,
-       lpDecodeValueDay(30, tmpMainUnit.ValueNext) AS ValueNext30,
-       lpDecodeValueDay(31, tmpMainUnit.ValueNext) AS ValueNext31,
+
+       'Тип дня '||zfCalc_MonthName(vbDate)              AS Note,
+       'Приход '||zfCalc_MonthName(vbDate)               AS NoteStart,
+       'Уход '||zfCalc_MonthName(vbDate)                 AS NoteEnd,
+       'Тип дня '||zfCalc_MonthName(vbDateNext)          AS NoteNext,
+
+       UserData_01.PThortName                        AS Value1,
+       UserData_02.PThortName                        AS Value2,
+       UserData_03.PThortName                        AS Value3,
+       UserData_04.PThortName                        AS Value4,
+       UserData_05.PThortName                        AS Value5,
+       UserData_06.PThortName                        AS Value6,
+       UserData_07.PThortName                        AS Value7,
+       UserData_08.PThortName                        AS Value8,
+       UserData_09.PThortName                        AS Value9,
+       UserData_10.PThortName                        AS Value10,
+       UserData_11.PThortName                        AS Value11,
+       UserData_12.PThortName                        AS Value12,
+       UserData_13.PThortName                        AS Value13,
+       UserData_14.PThortName                        AS Value14,
+       UserData_15.PThortName                        AS Value15,
+       UserData_16.PThortName                        AS Value16,
+       UserData_17.PThortName                        AS Value17,
+       UserData_18.PThortName                        AS Value18,
+       UserData_19.PThortName                        AS Value19,
+       UserData_20.PThortName                        AS Value20,
+       UserData_21.PThortName                        AS Value21,
+       UserData_22.PThortName                        AS Value22,
+       UserData_23.PThortName                        AS Value23,
+       UserData_24.PThortName                        AS Value24,
+       UserData_25.PThortName                        AS Value25,
+       UserData_26.PThortName                        AS Value26,
+       UserData_27.PThortName                        AS Value27,
+       UserData_28.PThortName                        AS Value28,
+       UserData_29.PThortName                        AS Value29,
+       UserData_30.PThortName                        AS Value30,
+       UserData_31.PThortName                        AS Value31,
+
+       UserData_01.TimeStart                                   AS ValueStart1,
+       UserData_02.TimeStart                                   AS ValueStart2,
+       UserData_03.TimeStart                                   AS ValueStart3,
+       UserData_04.TimeStart                                   AS ValueStart4,
+       UserData_05.TimeStart                                   AS ValueStart5,
+       UserData_06.TimeStart                                   AS ValueStart6,
+       UserData_07.TimeStart                                   AS ValueStart7,
+       UserData_08.TimeStart                                   AS ValueStart8,
+       UserData_09.TimeStart                                   AS ValueStart9,
+       UserData_10.TimeStart                                   AS ValueStart10,
+       UserData_11.TimeStart                                   AS ValueStart11,
+       UserData_12.TimeStart                                   AS ValueStart12,
+       UserData_13.TimeStart                                   AS ValueStart13,
+       UserData_14.TimeStart                                   AS ValueStart14,
+       UserData_15.TimeStart                                   AS ValueStart15,
+       UserData_16.TimeStart                                   AS ValueStart16,
+       UserData_17.TimeStart                                   AS ValueStart17,
+       UserData_18.TimeStart                                   AS ValueStart18,
+       UserData_19.TimeStart                                   AS ValueStart19,
+       UserData_20.TimeStart                                   AS ValueStart20,
+       UserData_21.TimeStart                                   AS ValueStart21,
+       UserData_22.TimeStart                                   AS ValueStart22,
+       UserData_23.TimeStart                                   AS ValueStart23,
+       UserData_24.TimeStart                                   AS ValueStart24,
+       UserData_25.TimeStart                                   AS ValueStart25,
+       UserData_26.TimeStart                                   AS ValueStart26,
+       UserData_27.TimeStart                                   AS ValueStart27,
+       UserData_28.TimeStart                                   AS ValueStart28,
+       UserData_29.TimeStart                                   AS ValueStart29,
+       UserData_30.TimeStart                                   AS ValueStart30,
+       UserData_31.TimeStart                                   AS ValueStart31,
+
+       UserData_01.TimeEnd                                     AS ValueEnd1,
+       UserData_02.TimeEnd                                     AS ValueEnd2,
+       UserData_03.TimeEnd                                     AS ValueEnd3,
+       UserData_04.TimeEnd                                     AS ValueEnd4,
+       UserData_05.TimeEnd                                     AS ValueEnd5,
+       UserData_06.TimeEnd                                     AS ValueEnd6,
+       UserData_07.TimeEnd                                     AS ValueEnd7,
+       UserData_08.TimeEnd                                     AS ValueEnd8,
+       UserData_09.TimeEnd                                     AS ValueEnd9,
+       UserData_10.TimeEnd                                     AS ValueEnd10,
+       UserData_11.TimeEnd                                     AS ValueEnd11,
+       UserData_12.TimeEnd                                     AS ValueEnd12,
+       UserData_13.TimeEnd                                     AS ValueEnd13,
+       UserData_14.TimeEnd                                     AS ValueEnd14,
+       UserData_15.TimeEnd                                     AS ValueEnd15,
+       UserData_16.TimeEnd                                     AS ValueEnd16,
+       UserData_17.TimeEnd                                     AS ValueEnd17,
+       UserData_18.TimeEnd                                     AS ValueEnd18,
+       UserData_19.TimeEnd                                     AS ValueEnd19,
+       UserData_20.TimeEnd                                     AS ValueEnd20,
+       UserData_21.TimeEnd                                     AS ValueEnd21,
+       UserData_22.TimeEnd                                     AS ValueEnd22,
+       UserData_23.TimeEnd                                     AS ValueEnd23,
+       UserData_24.TimeEnd                                     AS ValueEnd24,
+       UserData_25.TimeEnd                                     AS ValueEnd25,
+       UserData_26.TimeEnd                                     AS ValueEnd26,
+       UserData_27.TimeEnd                                     AS ValueEnd27,
+       UserData_28.TimeEnd                                     AS ValueEnd28,
+       UserData_29.TimeEnd                                     AS ValueEnd29,
+       UserData_30.TimeEnd                                     AS ValueEnd30,
+       UserData_31.TimeEnd                                     AS ValueEnd31,
+
+       UserDataNext_01.PThortName                        AS ValueNext1,
+       UserDataNext_02.PThortName                        AS ValueNext2,
+       UserDataNext_03.PThortName                        AS ValueNext3,
+       UserDataNext_04.PThortName                        AS ValueNext4,
+       UserDataNext_05.PThortName                        AS ValueNext5,
+       UserDataNext_06.PThortName                        AS ValueNext6,
+       UserDataNext_07.PThortName                        AS ValueNext7,
+       UserDataNext_08.PThortName                        AS ValueNext8,
+       UserDataNext_09.PThortName                        AS ValueNext9,
+       UserDataNext_10.PThortName                        AS ValueNext10,
+       UserDataNext_11.PThortName                        AS ValueNext11,
+       UserDataNext_12.PThortName                        AS ValueNext12,
+       UserDataNext_13.PThortName                        AS ValueNext13,
+       UserDataNext_14.PThortName                        AS ValueNext14,
+       UserDataNext_15.PThortName                        AS ValueNext15,
+       UserDataNext_16.PThortName                        AS ValueNext16,
+       UserDataNext_17.PThortName                        AS ValueNext17,
+       UserDataNext_18.PThortName                        AS ValueNext18,
+       UserDataNext_19.PThortName                        AS ValueNext19,
+       UserDataNext_20.PThortName                        AS ValueNext20,
+       UserDataNext_21.PThortName                        AS ValueNext21,
+       UserDataNext_22.PThortName                        AS ValueNext22,
+       UserDataNext_23.PThortName                        AS ValueNext23,
+       UserDataNext_24.PThortName                        AS ValueNext24,
+       UserDataNext_25.PThortName                        AS ValueNext25,
+       UserDataNext_26.PThortName                        AS ValueNext26,
+       UserDataNext_27.PThortName                        AS ValueNext27,
+       UserDataNext_28.PThortName                        AS ValueNext28,
+       UserDataNext_29.PThortName                        AS ValueNext29,
+       UserDataNext_30.PThortName                        AS ValueNext30,
+       UserDataNext_31.PThortName                        AS ValueNext31,
+
        1                                                       AS TypeId1,
        2                                                       AS TypeId2,
        3                                                       AS TypeId3,
@@ -450,13 +389,330 @@ BEGIN
        29                                                      AS TypeId29,
        30                                                      AS TypeId30,
        31                                                      AS TypeId31
-     FROM tmpMainUnit
+     FROM  Movement
+
+          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                 AND MovementItem.DescId = zc_MI_Master()
+                                 AND MovementItem.ObjectId IN (SELECT DISTINCT UserID FROM tmpUserData WHERE MainUnitID = vbUnitId
+                                                               UNION ALL
+                                                               SELECT DISTINCT UserID FROM tmpUserDataNext WHERE MainUnitID = vbUnitId)
 
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ObjectId = tmpMainUnit.UserId
+                               ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
           LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
+          LEFT JOIN tmpUserData AS UserData_01
+                                ON UserData_01.Day = 1
+                               AND UserData_01.ID = MovementItem.Id
+                               AND UserData_01.MainUnitID = UserData_01.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_02
+                                ON UserData_02.Day = 2
+                               AND UserData_02.ID = MovementItem.Id
+                               AND UserData_02.MainUnitID = UserData_02.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_03
+                                ON UserData_03.Day = 3
+                               AND UserData_03.ID = MovementItem.Id
+                               AND UserData_03.MainUnitID = UserData_03.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_04
+                                ON UserData_04.Day = 4
+                               AND UserData_04.ID = MovementItem.Id
+                               AND UserData_04.MainUnitID = UserData_04.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_05
+                                ON UserData_05.Day = 5
+                               AND UserData_05.ID = MovementItem.Id
+                               AND UserData_05.MainUnitID = UserData_05.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_06
+                                ON UserData_06.Day = 6
+                               AND UserData_06.ID = MovementItem.Id
+                               AND UserData_06.MainUnitID = UserData_06.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_07
+                                ON UserData_07.Day = 7
+                               AND UserData_07.ID = MovementItem.Id
+                               AND UserData_07.MainUnitID = UserData_07.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_08
+                                ON UserData_08.Day = 8
+                               AND UserData_08.ID = MovementItem.Id
+                               AND UserData_08.MainUnitID = UserData_08.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_09
+                                ON UserData_09.Day = 9
+                               AND UserData_09.ID = MovementItem.Id
+                               AND UserData_09.MainUnitID = UserData_09.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_10
+                                ON UserData_10.Day = 10
+                               AND UserData_10.ID = MovementItem.Id
+                               AND UserData_10.MainUnitID = UserData_10.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_11
+                                ON UserData_11.Day = 11
+                               AND UserData_11.ID = MovementItem.Id
+                               AND UserData_11.MainUnitID = UserData_11.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_12
+                                ON UserData_12.Day = 12
+                               AND UserData_12.ID = MovementItem.Id
+                               AND UserData_12.MainUnitID = UserData_12.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_13
+                                ON UserData_13.Day = 13
+                               AND UserData_13.ID = MovementItem.Id
+                               AND UserData_13.MainUnitID = UserData_13.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_14
+                                ON UserData_14.Day = 14
+                               AND UserData_14.ID = MovementItem.Id
+                               AND UserData_14.MainUnitID = UserData_14.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_15
+                                ON UserData_15.Day = 15
+                               AND UserData_15.ID = MovementItem.Id
+                               AND UserData_15.MainUnitID = UserData_15.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_16
+                                ON UserData_16.Day = 16
+                               AND UserData_16.ID = MovementItem.Id
+                               AND UserData_16.MainUnitID = UserData_16.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_17
+                                ON UserData_17.Day = 17
+                               AND UserData_17.ID = MovementItem.Id
+                               AND UserData_17.MainUnitID = UserData_17.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_18
+                                ON UserData_18.Day = 18
+                               AND UserData_18.ID = MovementItem.Id
+                               AND UserData_18.MainUnitID = UserData_18.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_19
+                                ON UserData_19.Day = 19
+                               AND UserData_19.ID = MovementItem.Id
+                               AND UserData_19.MainUnitID = UserData_19.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_20
+                                ON UserData_20.Day = 20
+                               AND UserData_20.ID = MovementItem.Id
+                               AND UserData_20.MainUnitID = UserData_20.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_21
+                                ON UserData_21.Day = 21
+                               AND UserData_21.ID = MovementItem.Id
+                               AND UserData_21.MainUnitID = UserData_21.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_22
+                                ON UserData_22.Day = 22
+                               AND UserData_22.ID = MovementItem.Id
+                               AND UserData_22.MainUnitID = UserData_22.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_23
+                                ON UserData_23.Day = 23
+                               AND UserData_23.ID = MovementItem.Id
+                               AND UserData_23.MainUnitID = UserData_23.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_24
+                                ON UserData_24.Day = 24
+                               AND UserData_24.ID = MovementItem.Id
+                               AND UserData_24.MainUnitID = UserData_24.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_25
+                                ON UserData_25.Day = 25
+                               AND UserData_25.ID = MovementItem.Id
+                               AND UserData_25.MainUnitID = UserData_25.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_26
+                                ON UserData_26.Day = 26
+                               AND UserData_26.ID = MovementItem.Id
+                               AND UserData_26.MainUnitID = UserData_26.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_27
+                                ON UserData_27.Day = 27
+                               AND UserData_27.ID = MovementItem.Id
+                               AND UserData_27.MainUnitID = UserData_27.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_28
+                                ON UserData_28.Day = 28
+                               AND UserData_28.ID = MovementItem.Id
+                               AND UserData_28.MainUnitID = UserData_28.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_29
+                                ON UserData_29.Day = 29
+                               AND UserData_29.ID = MovementItem.Id
+                               AND UserData_29.MainUnitID = UserData_29.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_30
+                                ON UserData_30.Day = 30
+                               AND UserData_30.ID = MovementItem.Id
+                               AND UserData_30.MainUnitID = UserData_30.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_31
+                                ON UserData_31.Day = 31
+                               AND UserData_31.ID = MovementItem.Id
+                               AND UserData_31.MainUnitID = UserData_31.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_01
+                                    ON UserDataNext_01.Day = 1
+                                   AND UserDataNext_01.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_01.MainUnitID = UserDataNext_01.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_02
+                                    ON UserDataNext_02.Day = 2
+                                   AND UserDataNext_02.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_02.MainUnitID = UserDataNext_02.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_03
+                                    ON UserDataNext_03.Day = 3
+                                   AND UserDataNext_03.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_03.MainUnitID = UserDataNext_03.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_04
+                                    ON UserDataNext_04.Day = 4
+                                   AND UserDataNext_04.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_04.MainUnitID = UserDataNext_04.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_05
+                                    ON UserDataNext_05.Day = 5
+                                   AND UserDataNext_05.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_05.MainUnitID = UserDataNext_05.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_06
+                                    ON UserDataNext_06.Day = 6
+                                   AND UserDataNext_06.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_06.MainUnitID = UserDataNext_06.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_07
+                                    ON UserDataNext_07.Day = 7
+                                   AND UserDataNext_07.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_07.MainUnitID = UserDataNext_07.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_08
+                                    ON UserDataNext_08.Day = 8
+                                   AND UserDataNext_08.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_08.MainUnitID = UserDataNext_08.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_09
+                                    ON UserDataNext_09.Day = 9
+                                   AND UserDataNext_09.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_09.MainUnitID = UserDataNext_09.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_10
+                                    ON UserDataNext_10.Day = 10
+                                   AND UserDataNext_10.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_10.MainUnitID = UserDataNext_10.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_11
+                                    ON UserDataNext_11.Day = 11
+                                   AND UserDataNext_11.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_11.MainUnitID = UserDataNext_11.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_12
+                                    ON UserDataNext_12.Day = 12
+                                   AND UserDataNext_12.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_12.MainUnitID = UserDataNext_12.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_13
+                                    ON UserDataNext_13.Day = 13
+                                   AND UserDataNext_13.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_13.MainUnitID = UserDataNext_13.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_14
+                                    ON UserDataNext_14.Day = 14
+                                   AND UserDataNext_14.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_14.MainUnitID = UserDataNext_14.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_15
+                                    ON UserDataNext_15.Day = 15
+                                   AND UserDataNext_15.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_15.MainUnitID = UserDataNext_15.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_16
+                                    ON UserDataNext_16.Day = 16
+                                   AND UserDataNext_16.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_16.MainUnitID = UserDataNext_16.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_17
+                                    ON UserDataNext_17.Day = 17
+                                   AND UserDataNext_17.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_17.MainUnitID = UserDataNext_17.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_18
+                                    ON UserDataNext_18.Day = 18
+                                   AND UserDataNext_18.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_18.MainUnitID = UserDataNext_18.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_19
+                                    ON UserDataNext_19.Day = 19
+                                   AND UserDataNext_19.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_19.MainUnitID = UserDataNext_19.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_20
+                                    ON UserDataNext_20.Day = 20
+                                   AND UserDataNext_20.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_20.MainUnitID = UserDataNext_20.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_21
+                                    ON UserDataNext_21.Day = 21
+                                   AND UserDataNext_21.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_21.MainUnitID = UserDataNext_21.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_22
+                                    ON UserDataNext_22.Day = 22
+                                   AND UserDataNext_22.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_22.MainUnitID = UserDataNext_22.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_23
+                                    ON UserDataNext_23.Day = 23
+                                   AND UserDataNext_23.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_23.MainUnitID = UserDataNext_23.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_24
+                                    ON UserDataNext_24.Day = 24
+                                   AND UserDataNext_24.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_24.MainUnitID = UserDataNext_24.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_25
+                                    ON UserDataNext_25.Day = 25
+                                   AND UserDataNext_25.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_25.MainUnitID = UserDataNext_25.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_26
+                                    ON UserDataNext_26.Day = 26
+                                   AND UserDataNext_26.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_26.MainUnitID = UserDataNext_26.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_27
+                                    ON UserDataNext_27.Day = 27
+                                   AND UserDataNext_27.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_27.MainUnitID = UserDataNext_27.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_28
+                                    ON UserDataNext_28.Day = 28
+                                   AND UserDataNext_28.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_28.MainUnitID = UserDataNext_28.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_29
+                                    ON UserDataNext_29.Day = 29
+                                   AND UserDataNext_29.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_29.MainUnitID = UserDataNext_29.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_30
+                                    ON UserDataNext_30.Day = 30
+                                   AND UserDataNext_30.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_30.MainUnitID = UserDataNext_30.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_31
+                                    ON UserDataNext_31.Day = 31
+                                   AND UserDataNext_31.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_31.MainUnitID = UserDataNext_31.UnitID
+
+     WHERE Movement.ID = vbMovementId
      ORDER BY ID;
 
      RETURN NEXT cur3;
@@ -467,71 +723,139 @@ BEGIN
        Object_Member.ObjectCode                                AS PersonalCode,
        Object_Member.ValueData                                 AS PersonalName,
 
-       zfCalc_MonthName(CURRENT_DATE)                          AS Note,
-       zfCalc_MonthName(vbDate)                                AS NoteNext,
+       'Тип дня '||zfCalc_MonthName(vbDate)              AS Note,
+       'Приход '||zfCalc_MonthName(vbDate)               AS NoteStart,
+       'Уход '||zfCalc_MonthName(vbDate)                 AS NoteEnd,
+       'Тип дня '||zfCalc_MonthName(vbDateNext)          AS NoteNext,
 
-       Value1,
-       Value2,
-       Value3,
-       Value4,
-       Value5,
-       Value6,
-       Value7,
-       Value8,
-       Value9,
-       Value10,
-       Value11,
-       Value12,
-       Value13,
-       Value14,
-       Value15,
-       Value16,
-       Value17,
-       Value18,
-       Value19,
-       Value20,
-       Value21,
-       Value22,
-       Value23,
-       Value24,
-       Value25,
-       Value26,
-       Value27,
-       Value28,
-       Value29,
-       Value30,
-       Value31,
-       ValueNext1,
-       ValueNext2,
-       ValueNext3,
-       ValueNext4,
-       ValueNext5,
-       ValueNext6,
-       ValueNext7,
-       ValueNext8,
-       ValueNext9,
-       ValueNext10,
-       ValueNext11,
-       ValueNext12,
-       ValueNext13,
-       ValueNext14,
-       ValueNext15,
-       ValueNext16,
-       ValueNext17,
-       ValueNext18,
-       ValueNext19,
-       ValueNext20,
-       ValueNext21,
-       ValueNext22,
-       ValueNext23,
-       ValueNext24,
-       ValueNext25,
-       ValueNext26,
-       ValueNext27,
-       ValueNext28,
-       ValueNext29,
-       ValueNext30,
-       ValueNext31,
+       UserData_01.PThortName                        AS Value1,
+       UserData_02.PThortName                        AS Value2,
+       UserData_03.PThortName                        AS Value3,
+       UserData_04.PThortName                        AS Value4,
+       UserData_05.PThortName                        AS Value5,
+       UserData_06.PThortName                        AS Value6,
+       UserData_07.PThortName                        AS Value7,
+       UserData_08.PThortName                        AS Value8,
+       UserData_09.PThortName                        AS Value9,
+       UserData_10.PThortName                        AS Value10,
+       UserData_11.PThortName                        AS Value11,
+       UserData_12.PThortName                        AS Value12,
+       UserData_13.PThortName                        AS Value13,
+       UserData_14.PThortName                        AS Value14,
+       UserData_15.PThortName                        AS Value15,
+       UserData_16.PThortName                        AS Value16,
+       UserData_17.PThortName                        AS Value17,
+       UserData_18.PThortName                        AS Value18,
+       UserData_19.PThortName                        AS Value19,
+       UserData_20.PThortName                        AS Value20,
+       UserData_21.PThortName                        AS Value21,
+       UserData_22.PThortName                        AS Value22,
+       UserData_23.PThortName                        AS Value23,
+       UserData_24.PThortName                        AS Value24,
+       UserData_25.PThortName                        AS Value25,
+       UserData_26.PThortName                        AS Value26,
+       UserData_27.PThortName                        AS Value27,
+       UserData_28.PThortName                        AS Value28,
+       UserData_29.PThortName                        AS Value29,
+       UserData_30.PThortName                        AS Value30,
+       UserData_31.PThortName                        AS Value31,
+
+       UserData_01.TimeStart                                   AS ValueStart1,
+       UserData_02.TimeStart                                   AS ValueStart2,
+       UserData_03.TimeStart                                   AS ValueStart3,
+       UserData_04.TimeStart                                   AS ValueStart4,
+       UserData_05.TimeStart                                   AS ValueStart5,
+       UserData_06.TimeStart                                   AS ValueStart6,
+       UserData_07.TimeStart                                   AS ValueStart7,
+       UserData_08.TimeStart                                   AS ValueStart8,
+       UserData_09.TimeStart                                   AS ValueStart9,
+       UserData_10.TimeStart                                   AS ValueStart10,
+       UserData_11.TimeStart                                   AS ValueStart11,
+       UserData_12.TimeStart                                   AS ValueStart12,
+       UserData_13.TimeStart                                   AS ValueStart13,
+       UserData_14.TimeStart                                   AS ValueStart14,
+       UserData_15.TimeStart                                   AS ValueStart15,
+       UserData_16.TimeStart                                   AS ValueStart16,
+       UserData_17.TimeStart                                   AS ValueStart17,
+       UserData_18.TimeStart                                   AS ValueStart18,
+       UserData_19.TimeStart                                   AS ValueStart19,
+       UserData_20.TimeStart                                   AS ValueStart20,
+       UserData_21.TimeStart                                   AS ValueStart21,
+       UserData_22.TimeStart                                   AS ValueStart22,
+       UserData_23.TimeStart                                   AS ValueStart23,
+       UserData_24.TimeStart                                   AS ValueStart24,
+       UserData_25.TimeStart                                   AS ValueStart25,
+       UserData_26.TimeStart                                   AS ValueStart26,
+       UserData_27.TimeStart                                   AS ValueStart27,
+       UserData_28.TimeStart                                   AS ValueStart28,
+       UserData_29.TimeStart                                   AS ValueStart29,
+       UserData_30.TimeStart                                   AS ValueStart30,
+       UserData_31.TimeStart                                   AS ValueStart31,
+
+       UserData_01.TimeEnd                                     AS ValueEnd1,
+       UserData_02.TimeEnd                                     AS ValueEnd2,
+       UserData_03.TimeEnd                                     AS ValueEnd3,
+       UserData_04.TimeEnd                                     AS ValueEnd4,
+       UserData_05.TimeEnd                                     AS ValueEnd5,
+       UserData_06.TimeEnd                                     AS ValueEnd6,
+       UserData_07.TimeEnd                                     AS ValueEnd7,
+       UserData_08.TimeEnd                                     AS ValueEnd8,
+       UserData_09.TimeEnd                                     AS ValueEnd9,
+       UserData_10.TimeEnd                                     AS ValueEnd10,
+       UserData_11.TimeEnd                                     AS ValueEnd11,
+       UserData_12.TimeEnd                                     AS ValueEnd12,
+       UserData_13.TimeEnd                                     AS ValueEnd13,
+       UserData_14.TimeEnd                                     AS ValueEnd14,
+       UserData_15.TimeEnd                                     AS ValueEnd15,
+       UserData_16.TimeEnd                                     AS ValueEnd16,
+       UserData_17.TimeEnd                                     AS ValueEnd17,
+       UserData_18.TimeEnd                                     AS ValueEnd18,
+       UserData_19.TimeEnd                                     AS ValueEnd19,
+       UserData_20.TimeEnd                                     AS ValueEnd20,
+       UserData_21.TimeEnd                                     AS ValueEnd21,
+       UserData_22.TimeEnd                                     AS ValueEnd22,
+       UserData_23.TimeEnd                                     AS ValueEnd23,
+       UserData_24.TimeEnd                                     AS ValueEnd24,
+       UserData_25.TimeEnd                                     AS ValueEnd25,
+       UserData_26.TimeEnd                                     AS ValueEnd26,
+       UserData_27.TimeEnd                                     AS ValueEnd27,
+       UserData_28.TimeEnd                                     AS ValueEnd28,
+       UserData_29.TimeEnd                                     AS ValueEnd29,
+       UserData_30.TimeEnd                                     AS ValueEnd30,
+       UserData_31.TimeEnd                                     AS ValueEnd31,
+
+       UserDataNext_01.PThortName                        AS ValueNext1,
+       UserDataNext_02.PThortName                        AS ValueNext2,
+       UserDataNext_03.PThortName                        AS ValueNext3,
+       UserDataNext_04.PThortName                        AS ValueNext4,
+       UserDataNext_05.PThortName                        AS ValueNext5,
+       UserDataNext_06.PThortName                        AS ValueNext6,
+       UserDataNext_07.PThortName                        AS ValueNext7,
+       UserDataNext_08.PThortName                        AS ValueNext8,
+       UserDataNext_09.PThortName                        AS ValueNext9,
+       UserDataNext_10.PThortName                        AS ValueNext10,
+       UserDataNext_11.PThortName                        AS ValueNext11,
+       UserDataNext_12.PThortName                        AS ValueNext12,
+       UserDataNext_13.PThortName                        AS ValueNext13,
+       UserDataNext_14.PThortName                        AS ValueNext14,
+       UserDataNext_15.PThortName                        AS ValueNext15,
+       UserDataNext_16.PThortName                        AS ValueNext16,
+       UserDataNext_17.PThortName                        AS ValueNext17,
+       UserDataNext_18.PThortName                        AS ValueNext18,
+       UserDataNext_19.PThortName                        AS ValueNext19,
+       UserDataNext_20.PThortName                        AS ValueNext20,
+       UserDataNext_21.PThortName                        AS ValueNext21,
+       UserDataNext_22.PThortName                        AS ValueNext22,
+       UserDataNext_23.PThortName                        AS ValueNext23,
+       UserDataNext_24.PThortName                        AS ValueNext24,
+       UserDataNext_25.PThortName                        AS ValueNext25,
+       UserDataNext_26.PThortName                        AS ValueNext26,
+       UserDataNext_27.PThortName                        AS ValueNext27,
+       UserDataNext_28.PThortName                        AS ValueNext28,
+       UserDataNext_29.PThortName                        AS ValueNext29,
+       UserDataNext_30.PThortName                        AS ValueNext30,
+       UserDataNext_31.PThortName                        AS ValueNext31,
+
        1                                                       AS TypeId1,
        2                                                       AS TypeId2,
        3                                                       AS TypeId3,
@@ -563,12 +887,331 @@ BEGIN
        29                                                      AS TypeId29,
        30                                                      AS TypeId30,
        31                                                      AS TypeId31
-     FROM tmpMainUnitSubstitution
+     FROM  Movement
+
+          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                 AND MovementItem.DescId = zc_MI_Master()
+                                 AND MovementItem.ObjectId IN (SELECT DISTINCT UserID FROM tmpUserData WHERE MainUnitID <> vbUnitId AND UnitID = vbUnitId
+                                                               UNION ALL
+                                                               SELECT DISTINCT UserID FROM tmpUserDataNext WHERE MainUnitID <> vbUnitId AND UnitID = vbUnitId)
 
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ObjectId = tmpMainUnitSubstitution.UserId
+                               ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId;
+          LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+
+          LEFT JOIN tmpUserData AS UserData_01
+                                ON UserData_01.Day = 1
+                               AND UserData_01.ID = MovementItem.Id
+                               AND vbUnitId = UserData_01.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_02
+                                ON UserData_02.Day = 2
+                               AND UserData_02.ID = MovementItem.Id
+                               AND vbUnitId = UserData_02.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_03
+                                ON UserData_03.Day = 3
+                               AND UserData_03.ID = MovementItem.Id
+                               AND vbUnitId = UserData_03.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_04
+                                ON UserData_04.Day = 4
+                               AND UserData_04.ID = MovementItem.Id
+                               AND vbUnitId = UserData_04.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_05
+                                ON UserData_05.Day = 5
+                               AND UserData_05.ID = MovementItem.Id
+                               AND vbUnitId = UserData_05.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_06
+                                ON UserData_06.Day = 6
+                               AND UserData_06.ID = MovementItem.Id
+                               AND vbUnitId = UserData_06.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_07
+                                ON UserData_07.Day = 7
+                               AND UserData_07.ID = MovementItem.Id
+                               AND vbUnitId = UserData_07.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_08
+                                ON UserData_08.Day = 8
+                               AND UserData_08.ID = MovementItem.Id
+                               AND vbUnitId = UserData_08.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_09
+                                ON UserData_09.Day = 9
+                               AND UserData_09.ID = MovementItem.Id
+                               AND vbUnitId = UserData_09.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_10
+                                ON UserData_10.Day = 10
+                               AND UserData_10.ID = MovementItem.Id
+                               AND vbUnitId = UserData_10.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_11
+                                ON UserData_11.Day = 11
+                               AND UserData_11.ID = MovementItem.Id
+                               AND vbUnitId = UserData_11.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_12
+                                ON UserData_12.Day = 12
+                               AND UserData_12.ID = MovementItem.Id
+                               AND vbUnitId = UserData_12.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_13
+                                ON UserData_13.Day = 13
+                               AND UserData_13.ID = MovementItem.Id
+                               AND vbUnitId = UserData_13.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_14
+                                ON UserData_14.Day = 14
+                               AND UserData_14.ID = MovementItem.Id
+                               AND vbUnitId = UserData_14.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_15
+                                ON UserData_15.Day = 15
+                               AND UserData_15.ID = MovementItem.Id
+                               AND vbUnitId = UserData_15.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_16
+                                ON UserData_16.Day = 16
+                               AND UserData_16.ID = MovementItem.Id
+                               AND vbUnitId = UserData_16.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_17
+                                ON UserData_17.Day = 17
+                               AND UserData_17.ID = MovementItem.Id
+                               AND vbUnitId = UserData_17.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_18
+                                ON UserData_18.Day = 18
+                               AND UserData_18.ID = MovementItem.Id
+                               AND vbUnitId = UserData_18.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_19
+                                ON UserData_19.Day = 19
+                               AND UserData_19.ID = MovementItem.Id
+                               AND vbUnitId = UserData_19.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_20
+                                ON UserData_20.Day = 20
+                               AND UserData_20.ID = MovementItem.Id
+                               AND vbUnitId = UserData_20.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_21
+                                ON UserData_21.Day = 21
+                               AND UserData_21.ID = MovementItem.Id
+                               AND vbUnitId = UserData_21.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_22
+                                ON UserData_22.Day = 22
+                               AND UserData_22.ID = MovementItem.Id
+                               AND vbUnitId = UserData_22.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_23
+                                ON UserData_23.Day = 23
+                               AND UserData_23.ID = MovementItem.Id
+                               AND vbUnitId = UserData_23.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_24
+                                ON UserData_24.Day = 24
+                               AND UserData_24.ID = MovementItem.Id
+                               AND UserData_24.MainUnitID = UserData_24.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_25
+                                ON UserData_25.Day = 25
+                               AND UserData_25.ID = MovementItem.Id
+                               AND vbUnitId = UserData_25.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_26
+                                ON UserData_26.Day = 26
+                               AND UserData_26.ID = MovementItem.Id
+                               AND vbUnitId = UserData_26.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_27
+                                ON UserData_27.Day = 27
+                               AND UserData_27.ID = MovementItem.Id
+                               AND vbUnitId = UserData_27.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_28
+                                ON UserData_28.Day = 28
+                               AND UserData_28.ID = MovementItem.Id
+                               AND vbUnitId = UserData_28.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_29
+                                ON UserData_29.Day = 29
+                               AND UserData_29.ID = MovementItem.Id
+                               AND vbUnitId = UserData_29.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_30
+                                ON UserData_30.Day = 30
+                               AND UserData_30.ID = MovementItem.Id
+                               AND vbUnitId = UserData_30.UnitID
+
+          LEFT JOIN tmpUserData AS UserData_31
+                                ON UserData_31.Day = 31
+                               AND UserData_31.ID = MovementItem.Id
+                               AND vbUnitId = UserData_31.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_01
+                                    ON UserDataNext_01.Day = 1
+                                   AND UserDataNext_01.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_01.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_02
+                                    ON UserDataNext_02.Day = 2
+                                   AND UserDataNext_02.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_02.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_03
+                                    ON UserDataNext_03.Day = 3
+                                   AND UserDataNext_03.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_03.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_04
+                                    ON UserDataNext_04.Day = 4
+                                   AND UserDataNext_04.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_04.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_05
+                                    ON UserDataNext_05.Day = 5
+                                   AND UserDataNext_05.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_05.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_06
+                                    ON UserDataNext_06.Day = 6
+                                   AND UserDataNext_06.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_06.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_07
+                                    ON UserDataNext_07.Day = 7
+                                   AND UserDataNext_07.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_07.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_08
+                                    ON UserDataNext_08.Day = 8
+                                   AND UserDataNext_08.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_08.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_09
+                                    ON UserDataNext_09.Day = 9
+                                   AND UserDataNext_09.UserID = MovementItem.ObjectId
+                                   AND UserDataNext_09.MainUnitID = UserDataNext_09.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_10
+                                    ON UserDataNext_10.Day = 10
+                                   AND UserDataNext_10.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_10.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_11
+                                    ON UserDataNext_11.Day = 11
+                                   AND UserDataNext_11.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_11.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_12
+                                    ON UserDataNext_12.Day = 12
+                                   AND UserDataNext_12.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_12.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_13
+                                    ON UserDataNext_13.Day = 13
+                                   AND UserDataNext_13.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_13.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_14
+                                    ON UserDataNext_14.Day = 14
+                                   AND UserDataNext_14.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_14.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_15
+                                    ON UserDataNext_15.Day = 15
+                                   AND UserDataNext_15.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_15.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_16
+                                    ON UserDataNext_16.Day = 16
+                                   AND UserDataNext_16.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_16.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_17
+                                    ON UserDataNext_17.Day = 17
+                                   AND UserDataNext_17.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_17.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_18
+                                    ON UserDataNext_18.Day = 18
+                                   AND UserDataNext_18.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_18.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_19
+                                    ON UserDataNext_19.Day = 19
+                                   AND UserDataNext_19.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_19.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_20
+                                    ON UserDataNext_20.Day = 20
+                                   AND UserDataNext_20.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_20.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_21
+                                    ON UserDataNext_21.Day = 21
+                                   AND UserDataNext_21.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_21.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_22
+                                    ON UserDataNext_22.Day = 22
+                                   AND UserDataNext_22.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_22.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_23
+                                    ON UserDataNext_23.Day = 23
+                                   AND UserDataNext_23.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_23.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_24
+                                    ON UserDataNext_24.Day = 24
+                                   AND UserDataNext_24.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_24.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_25
+                                    ON UserDataNext_25.Day = 25
+                                   AND UserDataNext_25.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_25.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_26
+                                    ON UserDataNext_26.Day = 26
+                                   AND UserDataNext_26.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_26.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_27
+                                    ON UserDataNext_27.Day = 27
+                                   AND UserDataNext_27.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_27.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_28
+                                    ON UserDataNext_28.Day = 28
+                                   AND UserDataNext_28.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_28.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_29
+                                    ON UserDataNext_29.Day = 29
+                                   AND UserDataNext_29.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_29.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_30
+                                    ON UserDataNext_30.Day = 30
+                                   AND UserDataNext_30.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_30.UnitID
+
+          LEFT JOIN tmpUserDataNext AS UserDataNext_31
+                                    ON UserDataNext_31.Day = 31
+                                   AND UserDataNext_31.UserID = MovementItem.ObjectId
+                                   AND vbUnitId = UserDataNext_31.UnitID
+
+     WHERE Movement.ID = vbMovementId
+     ORDER BY ID;
 
      RETURN NEXT cur4;
 

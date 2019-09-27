@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , StatusCode Integer
              , StatusName TVarChar
+             , UserCode Integer
              , UserName TVarChar
              , UnitName TVarChar
              )
@@ -34,6 +35,7 @@ BEGIN
       , Movement.OperDate
       , Object_Status.ObjectCode                 AS StatusCode
       , Object_Status.ValueData                  AS StatusName
+      , Object_User.ObjectCode                   AS UserCode    
       , Object_Member.ValueData                  AS UserName
       , Object_Unit.ValueData                    AS UnitName
 

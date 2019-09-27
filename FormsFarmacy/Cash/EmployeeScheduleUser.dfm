@@ -1,28 +1,28 @@
 inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1085#1072' '#1088#1072#1073#1086#1090#1091' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
-  ClientHeight = 479
-  ClientWidth = 800
+  ClientHeight = 518
+  ClientWidth = 849
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 816
-  ExplicitHeight = 518
+  ExplicitWidth = 865
+  ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 95
-    Width = 800
-    Height = 384
+    Width = 849
+    Height = 423
     TabOrder = 5
     ExplicitTop = 95
     ExplicitWidth = 800
     ExplicitHeight = 384
-    ClientRectBottom = 384
-    ClientRectRight = 800
+    ClientRectBottom = 423
+    ClientRectRight = 849
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 800
       ExplicitHeight = 384
       inherited cxGrid: TcxGrid
-        Width = 800
+        Width = 849
         Height = 217
         Align = alTop
         ExplicitWidth = 800
@@ -198,11 +198,13 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       object cxGridSubstitution: TcxGrid
         Left = 0
         Top = 217
-        Width = 800
-        Height = 167
+        Width = 849
+        Height = 206
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 800
+        ExplicitHeight = 167
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -389,11 +391,12 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 800
+    Width = 849
     Height = 69
     Align = alTop
     ShowCaption = False
     TabOrder = 0
+    ExplicitWidth = 800
     object edOperDate: TcxDateEdit
       Left = 79
       Top = 18
