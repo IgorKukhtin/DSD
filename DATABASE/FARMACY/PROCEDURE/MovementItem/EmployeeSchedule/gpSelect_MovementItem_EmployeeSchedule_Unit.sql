@@ -1098,7 +1098,7 @@ BEGIN
           LEFT JOIN tmpUserDataNext AS UserDataNext_09
                                     ON UserDataNext_09.Day = 9
                                    AND UserDataNext_09.UserID = MovementItem.ObjectId
-                                   AND UserDataNext_09.MainUnitID = UserDataNext_09.UnitID
+                                   AND vbUnitId = UserDataNext_09.UnitID
 
           LEFT JOIN tmpUserDataNext AS UserDataNext_10
                                     ON UserDataNext_10.Day = 10

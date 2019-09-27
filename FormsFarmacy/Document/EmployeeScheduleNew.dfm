@@ -1042,7 +1042,6 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
-    SearchAsFilter = False
     Left = 334
     Top = 241
   end
@@ -1427,7 +1426,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Top = 112
   end
   object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleNew_User'
+    StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_User'
     DataSets = <>
     OutputType = otResult
     Params = <

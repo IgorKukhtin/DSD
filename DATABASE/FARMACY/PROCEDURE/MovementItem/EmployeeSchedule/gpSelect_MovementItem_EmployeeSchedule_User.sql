@@ -34,7 +34,8 @@ BEGIN
 
      IF vbUserId = 3
      THEN
-       vbUserId:= 11698275;
+       vbUserId:= 11278106;
+--       vbUserId:= 11698275;
 --       vbUserId:= 11973669;
      END IF;
 
@@ -1017,7 +1018,7 @@ BEGIN
 
           LEFT JOIN tmpUserData AS UserData_23
                                 ON UserData_23.Day = 23
-                               AND UserData_23.MainUnitID = UserData_23.UnitID
+                               AND UserData.UnitID = UserData_23.UnitID
 
           LEFT JOIN tmpUserData AS UserData_24
                                 ON UserData_24.Day = 24
@@ -1029,7 +1030,7 @@ BEGIN
 
           LEFT JOIN tmpUserData AS UserData_26
                                 ON UserData_26.Day = 26
-                               AND UserData_26.MainUnitID = UserData_26.UnitID
+                               AND UserData.UnitID = UserData_26.UnitID
 
           LEFT JOIN tmpUserData AS UserData_27
                                 ON UserData_27.Day = 27
