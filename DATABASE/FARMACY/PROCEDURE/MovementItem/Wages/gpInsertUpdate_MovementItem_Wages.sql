@@ -14,10 +14,19 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+
+    -- определяем <Статус>
+    vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
 
     IF COALESCE (ioId, 0) = 0
     THEN

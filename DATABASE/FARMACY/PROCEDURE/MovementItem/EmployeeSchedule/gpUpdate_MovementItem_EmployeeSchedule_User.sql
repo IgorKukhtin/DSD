@@ -45,13 +45,13 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. График работы сотрудеиков не найден. Обратитесь к Романовой Т.В.';
     END IF;
 
-    IF inServiceExit = FALSE 
+    IF inServiceExit = FALSE
     THEN
       IF inStartHour  = '' OR inStartMin = '' OR inEndHour = '' OR inEndMin = ''
       THEN
         RAISE EXCEPTION 'Ошибка. Должно быть заполнено время прихода и ухода.';
       END IF;
-    ELSE 
+    ELSE
       IF inStartHour <> '' OR inEndHour <> ''
       THEN
         RAISE EXCEPTION 'Ошибка. Часы прихода и ухода для служебного выхода заполнять ненадо.';
@@ -80,33 +80,34 @@ BEGIN
       vbMovementItemID := lpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := 0                 -- Ключ объекта <Элемент документа>
                                                                       , inMovementId          := vbMovementID      -- ключ Документа
                                                                       , inPersonId            := vbUserId          -- сотрудник
-                                                                      , inComingValueDay      := '0000000000000000000000000000000'::TVarChar      -- Приходы на работу по дням
-                                                                      , inComingValueDayUser  := '0000000000000000000000000000000'::TVarChar      -- Приходы на работу по дням
+                                                                      , inComingValueDay      := ''::TVarChar      -- Приходы на работу по дням
+                                                                      , inComingValueDayUser  := ''::TVarChar      -- Приходы на работу по дням
                                                                       , inUserId              := vbUserId          -- пользователь
                                                                        );
 
     END IF;
-    
-    IF inServiceExit = FALSE 
+
+    IF inServiceExit = FALSE
     THEN
 
       vbDateStart := date_trunc('DAY', inOperDate) + (inStartHour||':'||inStartMin)::Time;
       vbDateEnd := date_trunc('DAY', inOperDate) + (inEndHour||':'||inEndMin)::Time;
-      
+
       IF vbDateStart > vbDateEnd
       THEN
         vbDateEnd := vbDateEnd + interval '1 day';
       END IF;
-      
+
       IF date_part('minute',  vbDateStart) not in (0, 30) OR date_part('minute',  vbDateEnd) not in (0, 30)
       THEN
         RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
       END IF;
+
     ELSE
       vbDateStart := Null;
-      vbDateEnd := Null;    
+      vbDateEnd := Null;
     END IF;
-    
+
       -- Наличие записи по дню
     IF EXISTS(SELECT 1 FROM MovementItem
               WHERE MovementItem.MovementId = vbMovementID
@@ -116,7 +117,7 @@ BEGIN
     THEN
       SELECT MIDate_Start.ValueData
            , MIDate_End.ValueData
-           , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)     
+           , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)
       INTO vbDateStartOld, vbDateEndOld, vbServiceExitOld
       FROM MovementItem
 
@@ -139,10 +140,54 @@ BEGIN
 
       IF vbServiceExitOld = TRUE
       THEN
-        RAISE EXCEPTION 'Ошибка. День отмечен как служебный выход. Изменения запрещено.';      
+        RAISE EXCEPTION 'Ошибка. День отмечен как служебный выход. Изменения запрещено.';
       ELSEIF vbDateStart <> vbDateStartOld
       THEN
         RAISE EXCEPTION 'Ошибка. Шзменение времени прихода запрещено.';
+      END IF;
+
+      IF inServiceExit = FALSE
+      THEN
+
+        IF vbDateStartOld IS NULL
+        THEN
+
+          IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время прихода не должно быть менее 30 мснут от текущего времени .';
+          END IF;
+
+          IF date_part('HOUR', CURRENT_TIME)::Integer < 20
+          THEN
+            IF vbDateStart::Time < '7:00'::Time OR vbDateStart::Time >= '21:00'::Time
+            THEN
+              RAISE EXCEPTION 'Ошибка. Время прихода должно быть в диапазон с 7:00 до 21:00.';
+            END IF;
+          ELSE
+            IF vbDateStart::Time < '21:00'::Time
+            THEN
+              RAISE EXCEPTION 'Ошибка. Время прихода должно быть в диапазон с 21:00 по 24:00.';
+            END IF;
+          END IF;
+        END IF;
+
+        IF date_part('HOUR', vbDateStart)::Integer < 21
+        THEN
+          IF vbDateStart::Time >= vbDateEnd::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть больше времени прихода.';
+          END IF;
+
+          IF vbDateEnd::Time > '21:30'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть в диапазон с % до 21:30.', to_char(vbDateStart::Time, 'HH24:MI');
+          END IF;
+        ELSE
+          IF vbDateEnd::Time > '8:00'::Time AND vbDateEnd::Time < '21:00'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть в диапазон с  % по 8:00.', to_char(vbDateStart::Time, 'HH24:MI');
+          END IF;
+        END IF;
       END IF;
 
       PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := MovementItem.ID, -- Ключ объекта <Элемент документа>
@@ -161,6 +206,47 @@ BEGIN
         AND MovementItem.ParentId = vbMovementItemID
         AND MovementItem.Amount = date_part('DAY',  inOperDate)::Integer;
     ELSE
+
+      IF inServiceExit = FALSE 
+      THEN
+
+        IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
+        THEN
+          RAISE EXCEPTION 'Ошибка. Время прихода не должно быть менее 30 мснут от текущего времени .';
+        END IF;
+
+        IF date_part('HOUR', CURRENT_TIME)::Integer < 20
+        THEN
+          IF vbDateStart::Time < '7:00'::Time OR vbDateStart::Time >= '21:00'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время прихода должно быть в диапазон с 7:00 до 21:00.';
+          END IF;
+        ELSE
+          IF vbDateStart::Time < '21:00'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время прихода должно быть в диапазон с 21:00 по 24:00.';
+          END IF;
+        END IF;
+
+        IF date_part('HOUR', vbDateStart)::Integer < 21
+        THEN
+          IF vbDateStart::Time >= vbDateEnd::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть больше времени прихода.';
+          END IF;
+
+          IF vbDateEnd::Time > '21:30'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть в диапазон с % до 21:30.', to_char(vbDateStart::Time, 'HH24:MI');
+          END IF;
+        ELSE
+          IF vbDateEnd::Time > '8:00'::Time AND vbDateEnd::Time < '21:00'::Time
+          THEN
+            RAISE EXCEPTION 'Ошибка. Время ухода должно быть в диапазон с  % по 8:00.', to_char(vbDateStart::Time, 'HH24:MI');
+          END IF;
+        END IF;
+      END IF;
+
       PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := 0, -- Ключ объекта <Элемент документа>
                                                                  inMovementId     := vbMovementID, -- ключ Документа
                                                                  inParentId       := vbMovementItemID, -- элемент мастер

@@ -47,12 +47,28 @@ BEGIN
       INSERT INTO tmpCalculation (UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
       SELECT UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
       FROM gpSelect_Calculation_WagesBoard (vbOperDate, 0, '3') AS Calculation
-      WHERE COALESCE (Calculation.UserId, 0) <> 0;
+      WHERE COALESCE (Calculation.UserId, 0) <> 0
+        AND Calculation.UserId not in (SELECT MovementItem.ObjectID
+                                       FROM  MovementItem
+                                             LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
+                                                                           ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
+                                                                          AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                                       WHERE MovementItem.MovementId = inMovementId 
+                                         AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = FALSE);    
     ELSE
       INSERT INTO tmpCalculation (UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc)
       SELECT UnitId, UnitUserId, OperDate, UserId, PayrollTypeID, SummaBase, SummaCalc, FormulaCalc
       FROM gpSelect_Calculation_Wages (vbOperDate, 0, '3') AS Calculation
-      WHERE COALESCE (Calculation.UserId, 0) <> 0;    
+      WHERE COALESCE (Calculation.UserId, 0) <> 0 
+        AND Calculation.UserId not in (SELECT MovementItem.ObjectID
+                                       FROM  MovementItem
+                                             LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
+                                                                           ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
+                                                                          AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+
+                                       WHERE MovementItem.MovementId = inMovementId 
+                                         AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = FALSE);    
     END IF;
 
       -- Востанавливаем удаленные
