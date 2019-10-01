@@ -121,6 +121,11 @@ type
     PersonalCode1_Stick: TcxGridDBColumn;
     PersonalName1_Stick: TcxGridDBColumn;
     PositionName1_Stick: TcxGridDBColumn;
+    ExecuteDialogPersonalComlete: TExecuteDialog;
+    actUpdatePersonalComlete: TdsdDataSetRefresh;
+    macUpdatePersonalComlete: TMultiAction;
+    spUpdate_PersonalComlete: TdsdStoredProc;
+    bbUpdatePersonalComlete: TdxBarButton;
   private
   public
   end;

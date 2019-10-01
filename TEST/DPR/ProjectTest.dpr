@@ -1103,7 +1103,8 @@ uses
   Report_ReceiptAnalyze in '..\..\Forms\Report\Report_ReceiptAnalyze.pas' {Report_ReceiptAnalyzeForm: TParentForm},
   Report_ReceiptAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptAnalyzeDialog.pas' {Report_ReceiptAnalyzeDialogForm: TParentForm},
   PersonalRate in '..\..\Forms\Document\PersonalRate.pas' {PersonalRateForm: TParentForm},
-  PersonalRateJournal in '..\..\Forms\Document\PersonalRateJournal.pas' {PersonalRateJournalForm: TParentForm};
+  PersonalRateJournal in '..\..\Forms\Document\PersonalRateJournal.pas' {PersonalRateJournalForm: TParentForm},
+  WeighingPartnerDialog in '..\..\Forms\Document\WeighingPartnerDialog.pas' {WeighingPartnerDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

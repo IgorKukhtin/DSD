@@ -24,6 +24,19 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UserId Integer, UserName TVarChar
              , MemberId Integer, MemberName TVarChar
              , isPromo Boolean
+
+             , PersonalId1 Integer, PersonalName1 TVarChar
+             , PersonalId2 Integer, PersonalName2 TVarChar
+             , PersonalId3 Integer, PersonalName3 TVarChar
+             , PersonalId4 Integer, PersonalName4 TVarChar
+             , PersonalId5 Integer, PersonalName5 TVarChar
+             , PositionId1 Integer, PositionName1 TVarChar
+             , PositionId2 Integer, PositionName2 TVarChar
+             , PositionId3 Integer, PositionName3 TVarChar
+             , PositionId4 Integer, PositionName4 TVarChar
+             , PositionId5 Integer, PositionName5 TVarChar
+             , PersonalId1_Stick Integer, PersonalName1_Stick TVarChar
+             , PositionId1_Stick Integer, PositionName1_Stick TVarChar
               )
 AS
 $BODY$
@@ -107,6 +120,21 @@ BEGIN
              , Object_Member.ValueData            AS MemberName
 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+
+             , Object_Personal1.Id AS PersonalId1, Object_Personal1.ValueData AS PersonalName1
+             , Object_Personal2.Id AS PersonalId2, Object_Personal2.ValueData AS PersonalName2
+             , Object_Personal3.Id AS PersonalId3, Object_Personal3.ValueData AS PersonalName3
+             , Object_Personal4.Id AS PersonalId4, Object_Personal4.ValueData AS PersonalName4
+             , Object_Personal5.Id AS PersonalId5, Object_Personal5.ValueData AS PersonalName5
+
+             , Object_Position1.Id AS PositionId1, Object_Position1.ValueData AS PositionName1
+             , Object_Position2.Id AS PositionId2, Object_Position2.ValueData AS PositionName2
+             , Object_Position3.Id AS PositionId3, Object_Position3.ValueData AS PositionName3
+             , Object_Position4.Id AS PositionId4, Object_Position4.ValueData AS PositionName4
+             , Object_Position5.Id AS PositionId5, Object_Position5.ValueData AS PositionName5
+
+             , Object_Personal1_Stick.Id AS PersonalId1_Stick, Object_Personal1_Stick.ValueData AS PersonalName1_Stick
+             , Object_Position1_Stick.Id AS PositionId1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -204,7 +232,57 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            ---
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1_Stick
+                                         ON MovementLinkObject_Personal1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1_Stick.DescId = zc_MovementLinkObject_PersonalStick1()
+            LEFT JOIN Object AS Object_Personal1_Stick ON Object_Personal1_Stick.Id = MovementLinkObject_Personal1_Stick.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1_Stick
+                                         ON MovementLinkObject_Position1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1_Stick.DescId = zc_MovementLinkObject_PositionStick1()
+            LEFT JOIN Object AS Object_Position1_Stick ON Object_Position1_Stick.Id = MovementLinkObject_Position1_Stick.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
+                                         ON MovementLinkObject_Personal1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1.DescId = zc_MovementLinkObject_PersonalComplete1()
+            LEFT JOIN Object AS Object_Personal1 ON Object_Personal1.Id = MovementLinkObject_Personal1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal2
+                                         ON MovementLinkObject_Personal2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal2.DescId = zc_MovementLinkObject_PersonalComplete2()
+            LEFT JOIN Object AS Object_Personal2 ON Object_Personal2.Id = MovementLinkObject_Personal2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal3
+                                         ON MovementLinkObject_Personal3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal3.DescId = zc_MovementLinkObject_PersonalComplete3()
+            LEFT JOIN Object AS Object_Personal3 ON Object_Personal3.Id = MovementLinkObject_Personal3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal4
+                                         ON MovementLinkObject_Personal4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
+            LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal5
+                                         ON MovementLinkObject_Personal5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal5.DescId = zc_MovementLinkObject_PersonalComplete5()
+            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
+                                         ON MovementLinkObject_Position1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1.DescId = zc_MovementLinkObject_PositionComplete1()
+            LEFT JOIN Object AS Object_Position1 ON Object_Position1.Id = MovementLinkObject_Position1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position2
+                                         ON MovementLinkObject_Position2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position2.DescId = zc_MovementLinkObject_PositionComplete2()
+            LEFT JOIN Object AS Object_Position2 ON Object_Position2.Id = MovementLinkObject_Position2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position3
+                                         ON MovementLinkObject_Position3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position3.DescId = zc_MovementLinkObject_PositionComplete3()
+            LEFT JOIN Object AS Object_Position3 ON Object_Position3.Id = MovementLinkObject_Position3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position4
+                                         ON MovementLinkObject_Position4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
+            LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position5
+                                         ON MovementLinkObject_Position5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position5.DescId = zc_MovementLinkObject_PositionComplete5()
+            LEFT JOIN Object AS Object_Position5 ON Object_Position5.Id = MovementLinkObject_Position5.ObjectId
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingPartner();
      END IF;

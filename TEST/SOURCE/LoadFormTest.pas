@@ -3222,6 +3222,10 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerDialogForm');
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerEditForm');
