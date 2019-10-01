@@ -1763,7 +1763,7 @@ BEGIN
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY (CASE WHEN _tmpMI.PartionGoodsDate < vbDate180 THEN _tmpMI.SuperFinalPrice_Deferment + 100 ELSE _tmpMI.SuperFinalPrice_Deferment END) ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
@@ -3307,7 +3307,10 @@ BEGIN
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         --, ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         
+                                         -- если есть товары с хорошим сроком то брать их , товары со сроком менее года только если другихх нет
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY (CASE WHEN _tmpMI.PartionGoodsDate < vbDate180 THEN _tmpMI.SuperFinalPrice_Deferment + 100 ELSE _tmpMI.SuperFinalPrice_Deferment END) ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice

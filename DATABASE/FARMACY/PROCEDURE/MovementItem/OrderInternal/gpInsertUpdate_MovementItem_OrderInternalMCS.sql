@@ -16,9 +16,14 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbOperDate TDateTime;
+
+   DECLARE vbDate180 TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderInternal());
+    
+    vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
+        
     IF inNeedCreate = True  --Если в интерфейсе поставили галку на подразделении
     THEN -- то перезаливаем заявку на разницу между остатком и НТЗ
         vbUserId := inSession;
@@ -364,11 +369,10 @@ BEGIN
        ) AS tmp;
 
 
--- RAISE EXCEPTION 'ok' ;
+       -- RAISE EXCEPTION 'ok' ;
 
-
-        -- Пересчитываем ручное количество для строк с авторасчетом - Количество, установленное вручную
-        PERFORM
+       -- Пересчитываем ручное количество для строк с авторасчетом - Количество, установленное вручную
+       PERFORM
             lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
                                             ,inMovementItemId := MovementItemSaved.Id
                                             ,inValueData      := -- округлили ВВЕРХ AllLot
@@ -396,7 +400,6 @@ BEGIN
 
     END IF;
 
-
     -- пересчет для схемы SUN
     IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
     THEN
@@ -405,6 +408,25 @@ BEGIN
                                                                , inSession   := inSession
                                                                 );
     END IF;
+
+       /*30.09 -
+         в колонке Всего с округл., для позиций  у которых срок годности менее 1 года
+        (они у нас  выделены красным шрифирм) - автоматически обнулять  кол-во для заказа.
+        Но эти позиции не убирать из заказа, чтобы было видно что просится в заказ, но у него срок и мы его не заказываем. **Люба
+        Для этого нужно получить сроки годности
+       */
+
+       -- получим "текущие" данные, МАстера
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, PartionGoodsDate)
+       SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.PartionGoodsDate
+       FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
+       WHERE tmp.PartionGoodsDate < vbDate180;
+       
+       -- обнуляем AmountManual для товаров со сроком годности менее года
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
+       FROM _tmpMI_OrderInternal_Master AS tmp;
+
 
     --
     IF EXISTS(  SELECT Movement.Id
