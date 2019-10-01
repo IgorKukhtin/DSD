@@ -84,7 +84,6 @@ begin
         for I := 0 to sl.Count - 1 do
           if (Pos('<Offers', Trim(sl.Strings[I])) = 1) or (Pos('</Offers', Trim(sl.Strings[I])) = 1) or (Pos('<Offer', Trim(sl.Strings[I])) = 1) then so.Add(Trim(sl.Strings[I]));
 
-        qrygpInsertUpdateLoadTestingXML.Params.ParamByName('OperDate').Value := Date;
         qrygpInsertUpdateLoadTestingXML.Params.ParamByName('XMLS').Value := StringReplace(so.Text, ',', '.', [rfReplaceAll]);
         qrygpInsertUpdateLoadTestingXML.ExecSQL;
       end else Add_Log('Файл ' + FilePath + 'Results.xml не найден.');

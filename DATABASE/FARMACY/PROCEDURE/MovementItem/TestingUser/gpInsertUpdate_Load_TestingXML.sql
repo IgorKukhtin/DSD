@@ -1,28 +1,20 @@
 -- Function: gpInsertUpdate_Load_TestingXML (TBlob, TVarChar)
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Load_TestingXML (TBlob, TBlob, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Load_TestingXML (TDateTime, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Load_TestingXML (TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Load_TestingXML (
-    IN inOperDate            TDateTime  ,  -- Месяц тестирования
     IN inXmlOffers           TBlob      ,  -- файл xml
     IN inSession             TVarChar      -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbMovement Integer;
 BEGIN
 
-  -- приводим дату к первому числу месяца
-  inOperDate := date_trunc('month', inOperDate);
 
-  vbMovement := lpInsertUpdate_Movement_TestingUser(ioId          := 0,
-                                                    inOperDate    := inOperDate, -- Дата документа
-                                                    inVersion     := 0,          -- Версия опроса
-                                                    inQuestion    := 0,          -- Количество вопросов
-                                                    inMaxAttempts := 0,          -- Количество попыток
-                                                    inSession     := inSession); -- сессия пользователя
-  IF EXISTS(SELECT * FROM MovementItem
+/*  IF EXISTS(SELECT * FROM MovementItem
             WHERE MovementItem.MovementId = vbMovement
               AND MovementItem.DescId = zc_MI_Master())
   THEN
@@ -36,13 +28,14 @@ BEGIN
                                                WHERE MovementItem.MovementId = vbMovement
                                                  AND MovementItem.DescId = zc_MI_Master());
   END IF;
+*/
 
   CREATE EXTENSION IF NOT EXISTS xml2;
   CREATE TEMP TABLE _XML(id int PRIMARY KEY, xml text) ON COMMIT DROP;
 
   INSERT INTO _XML VALUES (1, inXmlOffers::text);
 
-  PERFORM lpInsertUpdate_MovementItem_TestingUser(0, vbMovement, Object_User.id,
+  PERFORM lpInsertUpdate_MovementItem_TestingUser(0, Object_User.id,
                      (tmpResult.Theme1 + tmpResult.Theme2 + tmpResult.Theme3 + tmpResult.Theme4) * 100 / 4, tmpResult.DateTimeTest, inSession)
   FROM (SELECT Code, Theme1::TFloat, Theme2::TFloat, Theme3::TFloat, Theme4::TFloat, DateTimeTest::TDateTime FROM
                       xpath_table('id','xml','_XML',

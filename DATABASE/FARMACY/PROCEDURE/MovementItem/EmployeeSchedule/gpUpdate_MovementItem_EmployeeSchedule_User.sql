@@ -154,7 +154,7 @@ BEGIN
 
           IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
           THEN
-            RAISE EXCEPTION 'Ошибка. Время прихода не должно быть менее 30 мснут от текущего времени .';
+            RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода не должно быть менее 30 мин от текущего времени!';
           END IF;
 
           IF date_part('HOUR', CURRENT_TIME)::Integer < 20
@@ -212,7 +212,7 @@ BEGIN
 
         IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
         THEN
-          RAISE EXCEPTION 'Ошибка. Время прихода не должно быть менее 30 мснут от текущего времени .';
+          RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода не должно быть менее 30 мин от текущего времени!';
         END IF;
 
         IF date_part('HOUR', CURRENT_TIME)::Integer < 20
