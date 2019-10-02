@@ -196,6 +196,17 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object Amount_out_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1099#1093'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Amount_out_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object Price1: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089'1'
             DataBinding.FieldName = 'Price1'
@@ -1561,7 +1572,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1569,19 +1580,19 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitFromId'
         Value = Null
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitToId'
         Value = Null
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item

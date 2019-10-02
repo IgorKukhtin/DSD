@@ -80,13 +80,13 @@ BEGIN
           FROM lpSelect_Object_ReceiptChildDetail (TRUE) AS lpSelect
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
                                                                        AND PriceList1.GoodsId = lpSelect.GoodsId_out
-                                                                       AND inEndDate >= PriceList1.StartDate AND inEndDate < PriceList1.EndDate
+                                                                       AND CURRENT_DATE >= PriceList1.StartDate AND CURRENT_DATE < PriceList1.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = inPriceListId_2
                                                                        AND PriceList2.GoodsId = lpSelect.GoodsId_out
-                                                                       AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
+                                                                       AND CURRENT_DATE >= PriceList2.StartDate AND CURRENT_DATE < PriceList2.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = inPriceListId_3
                                                                        AND PriceList3.GoodsId = lpSelect.GoodsId_out
-                                                                       AND inEndDate >= PriceList3.StartDate AND inEndDate < PriceList3.EndDate
+                                                                       AND CURRENT_DATE >= PriceList3.StartDate AND CURRENT_DATE < PriceList3.EndDate
           GROUP BY lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.Amount_in
                  , lpSelect.GoodsId_out, lpSelect.GoodsKindId_out
                  -- , lpSelect.isStart
@@ -107,9 +107,9 @@ BEGIN
                              THEN zc_GoodsKind_Basis()
                         ELSE COALESCE (ObjectLink_Receipt_GoodsKind_complete.ChildObjectId, 0)
                    END AS GoodsKindId_complete
-                 , SUM (tmp.Summ1) AS Summ1
-                 , SUM (tmp.Summ2) AS Summ2
-                 , SUM (tmp.Summ3) AS Summ3
+                 , SUM (tmp.Summ1)      AS Summ1
+                 , SUM (tmp.Summ2)      AS Summ2
+                 , SUM (tmp.Summ3)      AS Summ3
                  , SUM (tmp.Summ1_cost) AS Summ1_cost
                  , SUM (tmp.Summ2_cost) AS Summ2_cost
                  , SUM (tmp.Summ3_cost) AS Summ3_cost
@@ -145,7 +145,7 @@ BEGIN
                                THEN zc_GoodsKind_Basis()
                           ELSE COALESCE (ObjectLink_Receipt_GoodsKind_complete.ChildObjectId, 0)
                      END
-           )
+            )
 
         , tmpResult AS 
            (SELECT tmpAll.ReceiptId_parent
@@ -200,6 +200,7 @@ BEGIN
            , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
            , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
+           , (tmpChild.Amount_out * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_out_Weight
            , CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1
            , CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2
            , CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3
@@ -213,7 +214,7 @@ BEGIN
        FROM tmpResult
             LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale ON PriceListSale.PriceListId = inPriceListId_sale
                                                                        AND PriceListSale.GoodsId = tmpResult.GoodsId
-                                                                       AND inEndDate >= PriceListSale.StartDate AND inEndDate < PriceListSale.EndDate
+                                                                       AND CURRENT_DATE >= PriceListSale.StartDate AND CURRENT_DATE < PriceListSale.EndDate
             LEFT JOIN Object AS Object_Receipt   ON Object_Receipt.Id   = tmpResult.ReceiptId
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
@@ -291,7 +292,19 @@ BEGIN
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
-                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main();
+                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+                                 
+          LEFT JOIN (SELECT tmpChildReceiptTable.ReceiptId_parent
+                          , tmpChildReceiptTable.ReceiptId
+                          , SUM (tmpChildReceiptTable.Amount_out ) AS Amount_out
+                     FROM tmpChildReceiptTable
+                     WHERE tmpChildReceiptTable.ReceiptId_from <> 0
+                     GROUP BY tmpChildReceiptTable.ReceiptId_parent
+                            , tmpChildReceiptTable.ReceiptId
+                    ) AS tmpChild
+                      ON tmpChild.ReceiptId_parent = Object_Receipt_Parent.Id
+                     AND tmpChild.ReceiptId = tmpResult.ReceiptId
+          ;
       -- Результат
       RETURN NEXT Cursor1;
 
