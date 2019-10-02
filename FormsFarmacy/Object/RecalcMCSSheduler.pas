@@ -49,6 +49,9 @@ type
     AllRetail: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     DateRun: TcxGridDBColumn;
+    actRecalcMCSSheduler: TdsdExecStoredProc;
+    spRecalcMCSSheduler: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

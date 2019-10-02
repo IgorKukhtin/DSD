@@ -30,6 +30,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendPartionDate());
     vbUserId := inSession;
+--    raise notice 'Unit ID: %', inUnitId;
 
     -- дата документа
     vbOperDate := (SELECT Movement.Operdate FROM Movement WHERE Movement.Id = inMovementId);
@@ -109,9 +110,15 @@ BEGIN
                                     , Container.ObjectId         
                                     , Container.Amount 
                                FROM Container
+
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                                            ON ObjectBoolean_Goods_NotTransferTime.ObjectId =  Container.ObjectId 
+                                                           AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
+
                                WHERE Container.DescId        = zc_Container_Count()
                                  AND Container.WhereObjectId = inUnitId
                                  AND Container.Amount <> 0
+                                 AND COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False) = False
                               )
           -- остатки на начало
         , tmpContainer_all AS (SELECT Container.Id                                             AS ContainerId
@@ -121,10 +128,6 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                                           ON MIContainer.ContainerId = Container.Id
                                                                          AND MIContainer.Operdate >= vbOperDate
-                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
-                                                            ON ObjectBoolean_Goods_NotTransferTime.ObjectId =  Container.ObjectId 
-                                                           AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
-                               WHERE COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False) = False
                                GROUP BY Container.Id
                                       , Container.ObjectId
                                       , Container.Amount

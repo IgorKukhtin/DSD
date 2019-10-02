@@ -87,7 +87,16 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 72
           end
-          object SummaTotal: TcxGridDBColumn [4]
+          object SummaValidationResults: TcxGridDBColumn [4]
+            Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
+            DataBinding.FieldName = 'SummaValidationResults'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object SummaTotal: TcxGridDBColumn [5]
             Caption = #1048#1090#1086#1075#1086
             DataBinding.FieldName = 'SummaTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -97,22 +106,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 73
           end
-          object isIssuedBy: TcxGridDBColumn [5]
+          object isIssuedBy: TcxGridDBColumn [6]
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object MIDateIssuedBy: TcxGridDBColumn [6]
+          object MIDateIssuedBy: TcxGridDBColumn [7]
             Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'MIDateIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 116
+            Width = 106
           end
-          object Comment: TcxGridDBColumn [7]
+          object Comment: TcxGridDBColumn [8]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -231,6 +240,24 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
     end
+    object actCopySumm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spCopySumm
+      StoredProcList = <
+        item
+          StoredProc = spCopySumm
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1093' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1093' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      ImageIndex = 30
+      QuestionBeforeExecute = 
+        #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1093' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103 +
+        #1094#1072' ('#1090#1086#1083#1100#1082#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1102#1097#1080#1093' '#1076#1072#1085#1085#1099#1093') ?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -313,6 +340,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -411,6 +442,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1074#1099#1076#1072#1085#1086
       Visible = ivAlways
       ImageIndex = 66
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actCopySumm
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -716,6 +751,15 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummaValidationResults'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaValidationResults'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisIssuedBy'
         Value = Null
         Component = MasterCDS
@@ -755,33 +799,8 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Left = 188
     Top = 364
   end
-  object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_WagesAdditionalExpenses_User'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserID'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UserID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 488
-    Top = 352
-  end
-  object spCalculationAll: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_WagesAdditionalExpenses_CalculationAll'
+  object spCopySumm: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_WagesAdditionalExpenses_Copy'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -795,7 +814,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       end>
     PackSize = 1
     NeedResetData = True
-    Left = 600
-    Top = 360
+    Left = 704
+    Top = 368
   end
 end

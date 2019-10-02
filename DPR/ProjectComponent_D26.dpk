@@ -69,7 +69,8 @@ requires
   frxDB26,
   ZLibExD26,
   GMLib_D26,
-  GMLib_D26_VCL;
+  GMLib_D26_VCL,
+  cxSchedulerRS26;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
