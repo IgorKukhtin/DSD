@@ -3,7 +3,7 @@ BEGIN
 
 /*
 -- select count(*) from ResourseProtocol
--- select count(*) from ResourseItemProtocol_arc
+-- select count(*) from ResourseItemProtocol
 INSERT INTO ResourseProtocol_arc     SELECT * FROM ResourseProtocol;
 INSERT INTO ResourseItemProtocol_arc SELECT * FROM ResourseItemProtocol;
 TRUNCATE TABLE ResourseProtocol;

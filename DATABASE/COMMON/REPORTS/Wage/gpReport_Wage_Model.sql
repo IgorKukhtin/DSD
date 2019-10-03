@@ -462,10 +462,11 @@ AS  (SELECT
                                                                    AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
              LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
                                                                        AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
-             INNER JOIN MovementBoolean AS MovementBoolean_Peresort
-                                        ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
-                                       AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
-                                       AND MovementBoolean_Peresort.ValueData  = FALSE
+             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                       ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
+                                      AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                      AND MovementBoolean_Peresort.ValueData  = TRUE
+        WHERE MovementBoolean_Peresort.MovementId IS NULL
         GROUP BY
             MovementItemContainer.OperDate
            ,MovementItemContainer.MovementId
@@ -612,10 +613,11 @@ AS  (SELECT
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
              LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
-             INNER JOIN MovementBoolean AS MovementBoolean_Peresort
-                                        ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
-                                       AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
-                                       AND MovementBoolean_Peresort.ValueData  = FALSE
+             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                       ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
+                                      AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                      AND MovementBoolean_Peresort.ValueData  = TRUE
+        WHERE MovementBoolean_Peresort.MovementId IS NULL
        ) AS tmpMI
              /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
                                     AND MovementItem.isErased = FALSE

@@ -369,8 +369,12 @@ BEGIN
                               || ObjectBlob_Info.ValueData
                               -- || 'ÓÌÎÂÈ ÒÀ ÒÅÐÌ²Í ÇÁÅÐ²ÃÀÍÍß:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
                               || tmpLanguageParam.Value2 ||': ' || COALESCE (Object_StickerPack.ValueData, '') || ': '
-                              || tmpLanguageParam.Value3 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
+                              || CASE WHEN ObjectFloat_Value1.ValueData > 0 THEN
+                                 tmpLanguageParam.Value3 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
                               || tmpLanguageParam.Value4 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
+                                 ELSE
+                                'çà â³äíîñíî¿ âîëîãîñò³ ïîâ³òðÿ íå á³ëüø í³æ ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
+                                 END
                               || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°Ñ '
                               || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°Ñ '
                               || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '

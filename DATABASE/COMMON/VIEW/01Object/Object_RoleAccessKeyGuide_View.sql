@@ -219,7 +219,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                         )
 
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKiev()
-                                                                     AND BranchId = 8379 -- филиал  иев
+                                                                     AND BranchId IN (8379    -- филиал  иев
+                                                                                    , 3080683 -- филиал Ћьвов
+                                                                                     )
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceLviv()
                                                                      AND BranchId = 3080683 -- филиал Ћьвов

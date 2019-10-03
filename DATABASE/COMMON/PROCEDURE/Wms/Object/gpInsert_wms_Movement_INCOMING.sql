@@ -41,7 +41,7 @@ BEGIN
 
 
      -- сформировали новые данные - если надо - wms_MI_Incoming
-     PERFORM lpInsertUpdate_wms_MI_Incoming (inOperDate:= CURRENT_DATE, inUserId:= vbUserId);
+     PERFORM lpInsertUpdate_wms_MI_Incoming (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inUserId:= vbUserId);
 
 
      -- Результат
@@ -58,7 +58,7 @@ BEGIN
                               -- ObjectId
                             , wms_MI_Incoming.Id
                        FROM wms_MI_Incoming
-                       WHERE wms_MI_Incoming.OperDate     = CURRENT_DATE
+                       WHERE wms_MI_Incoming.OperDate     = CURRENT_DATE - INTERVAL '0 DAY'
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
                       -- AND wms_MI_Incoming.StatusId_wms IS NULL

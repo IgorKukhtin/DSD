@@ -40,7 +40,7 @@ BEGIN
      -- сохранили
      inId:= gpInsertUpdate_wms_Movement_WeighingProduction (ioId                  := inId
                                                        -- , inInvNumber           := inInvNumber
-                                                          , inOperDate            := inOperDate
+                                                          , inOperDate            := inOperDate - INTERVAL '0 DAY'
                                                        -- , inStartWeighing       := inStartWeighing
                                                        -- , inEndWeighing         := inEndWeighing
                                                           , inMovementDescId      := inMovementDescId

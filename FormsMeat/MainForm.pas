@@ -1049,6 +1049,8 @@ type
     miReport_ReceiptAnalyze: TMenuItem;
     actPersonalRate: TdsdOpenForm;
     miPersonalRate: TMenuItem;
+    actPersonalCashLviv: TdsdOpenForm;
+    miPersonalCashLviv: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

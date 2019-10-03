@@ -71,7 +71,9 @@ BEGIN
                                                                       -- только те по которым ящик закрыт
                                                                       AND MI.ParentId   > 0 
                                                                       -- только те которые еще не передавали
-                                                                      AND MI.StatusId_wms IS NULL
+                                                                      AND (MI.StatusId_wms IS NULL
+                                                                     --OR Movement.OperDate = CURRENT_DATE - INTERVAL '0 DAY'
+                                                                          )
                             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
                             LEFT JOIN ObjectLink AS OL_Goods_Measure
                                                  ON OL_Goods_Measure.ObjectId = Movement.GoodsId
@@ -85,11 +87,11 @@ BEGIN
                                                      AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
                                                      AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
 
-                       WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '0 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
-                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                       WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                         AND Movement.StatusId IN (/*zc_Enum_Status_UnComplete(), */zc_Enum_Status_Complete())
                        GROUP BY -- ШК груза (EAN-128)
-                                -- Object_BarCodeBox.ValueData
-                                COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar
+                                Object_BarCodeBox.ValueData
+                              --COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar
                                 -- ID товара 
                               , MI.sku_id
                                 -- Дата производства
