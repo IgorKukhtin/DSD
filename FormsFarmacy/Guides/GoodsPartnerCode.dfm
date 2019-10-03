@@ -5,7 +5,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
-  ExplicitHeight = 564
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -436,6 +436,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -443,6 +444,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsMainName'
           DataType = ftString
@@ -821,7 +823,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    Top = 48
+    Top = 88
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Juridical'

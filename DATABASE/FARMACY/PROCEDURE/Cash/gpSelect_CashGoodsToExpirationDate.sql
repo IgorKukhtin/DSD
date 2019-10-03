@@ -87,13 +87,21 @@ BEGIN
 
 
      RETURN QUERY
-     WITH tmpContainer AS (SELECT Container.Id, 
+     WITH tmpContainerAll AS (SELECT Container.Id, 
+                                     Container.ParentID,  
+                                     Container.DescId,     
+                                     Container.ObjectId, 
+                                     Container.Amount
+                             FROM Container
+                             WHERE Container.DescId in (zc_Container_Count(), zc_Container_CountPartionDate())
+                               AND Container.WhereObjectId = vbUnitId
+                               AND Container.Amount <> 0
+                            )
+       , tmpContainer AS (SELECT Container.Id, 
                                   Container.ObjectId AS GoodsId, 
                                   Container.Amount
-                          FROM Container
+                          FROM tmpContainerAll AS Container
                           WHERE Container.DescId = zc_Container_Count()
-                            AND Container.WhereObjectId = vbUnitId
-                            AND Container.Amount <> 0
                          )
        , tmpExpirationDate AS (SELECT tmp.Id
                                     , tmp.GoodsId
@@ -122,14 +130,12 @@ BEGIN
                                       Container.ParentID,
                                       Container.Amount,
                                       ContainerLinkObject.ObjectId                       AS PartionGoodsId
-                              FROM Container
+                              FROM tmpContainerAll AS Container
 
                                    LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
 
                             WHERE Container.DescId = zc_Container_CountPartionDate()
-                              AND Container.WhereObjectId = vbUnitId
-                              AND Container.Amount <> 0
                            -- !!!
                            -- AND 1=0
                               )
@@ -206,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 21.09.19                                                                                     * 
  15.07.19                                                                                     * 
  28.03.19                                                                                     *
 */

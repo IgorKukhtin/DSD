@@ -165,6 +165,11 @@ type
     cxLabel21: TcxLabel;
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
+    spUpdate_PersonalComlete: TdsdStoredProc;
+    ExecuteDialogPersonalComlete: TExecuteDialog;
+    actUpdatePersonalComlete: TdsdDataSetRefresh;
+    macUpdatePersonalComlete: TMultiAction;
+    bbUpdatePersonalComlete: TdxBarButton;
   private
   public
   end;

@@ -40,7 +40,7 @@ type
     mactDelete: TMultiAction;
     DataSetDelete: TDataSetDelete;
     spDeleteLinkGoods: TdsdStoredProc;
-    dsdExecStoredProc1: TdsdExecStoredProc;
+    actDeleteLinkGoods: TdsdExecStoredProc;
     clMakerName: TcxGridDBColumn;
     mactListDelete: TMultiAction;
     N8: TMenuItem;

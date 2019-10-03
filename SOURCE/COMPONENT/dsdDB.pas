@@ -161,7 +161,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage,
+     cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
      cxMemo, cxImage, cxDropDownEdit, dsdInternetAction, ParentForm, Vcl.ActnList,
      System.Rtti;
 
@@ -830,6 +830,8 @@ begin
         Result := GetFromDataSet(TDataSet(Component), ComponentItem);
      if Component is TcxComboBox then
         Result := (Component as TcxComboBox).Text;
+     if Component is TcxDateNavigator then
+        Result := (Component as TcxDateNavigator).Date;
      if (Component is TdsdFormParams) then
         if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
            Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
@@ -976,6 +978,8 @@ begin
         (Component as TcxMemo).Text := FValue;
      if Component is TcxComboBox then
         (Component as TcxComboBox).Text := FValue;
+     if Component is TcxDateNavigator then
+        (Component as TcxDateNavigator).Date := FValue;
      if Component is TcxImage then
      begin
         CreateGUID(PhotoGUID);

@@ -93,8 +93,8 @@ BEGIN
                         WHERE  ObjectLink_Child_R.ChildObjectId<>0
                       ) 
    , tmpListGodsMarket AS (SELECT DISTINCT tmpGoodsPromo.GoodsId
-                                , tmpGoodsPromo.StartDate_Promo 
-                                , tmpGoodsPromo.EndDate_Promo
+/*                                , tmpGoodsPromo.StartDate_Promo 
+                                , tmpGoodsPromo.EndDate_Promo*/
                            FROM tmpGoodsPromo
                            WHERE tmpGoodsPromo.StartDate_Promo <= inEndDate
                              AND tmpGoodsPromo.EndDate_Promo >= inStartDate
@@ -238,9 +238,6 @@ BEGIN
                                      , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
                                      , COALESCE (MIContainer.ObjectIntId_analyzer,0)   AS ObjectIntId_analyzer
                                 FROM MovementItemContainer AS MIContainer
-                                     LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.ObjectId_Analyzer
-                                                                AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
-                                                                AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
                                 WHERE MIContainer.DescId = zc_MIContainer_Count()
                                   AND MIContainer.MovementDescId = zc_Movement_Check()
                                   AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -267,8 +264,8 @@ BEGIN
                                                END )                                   AS SummaPromo
                                    FROM tmpData_Container_All AS MIContainer
                                         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.GoodsId
-                                                                   AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
-                                                                   AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
+/*                                                                   AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
+                                                                   AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate*/
                                    GROUP BY MIContainer.MI_Id
                                           , MIContainer.MovementItemId
                                           , MIContainer.MovementId

@@ -49,10 +49,14 @@
                                       , Container.ObjectId                                       AS GoodsId
                                  FROM Container
                                       LEFT JOIN tmpContainer_PartionDate ON tmpContainer_PartionDate.ContainerId = Container.Id
+                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                                              ON ObjectBoolean_Goods_NotTransferTime.ObjectId =  Container.ObjectId 
+                                                             AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
                                  WHERE Container.DescId        = zc_Container_Count()
                                    AND Container.WhereObjectId = inUnitId 
                                    AND Container.Amount > 0
                                    AND COALESCE (tmpContainer_PartionDate.ContainerId, 0) = 0
+                                   AND COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False) = False
                                 )
             -- остатки - нашли Срок годности
           , tmpContainer_term AS (SELECT tmp.ContainerId

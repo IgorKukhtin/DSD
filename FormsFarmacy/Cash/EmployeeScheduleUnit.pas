@@ -26,9 +26,9 @@ type
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     NoteNext: TcxGridDBBandedColumn;
-    ValueUser: TcxGridDBBandedColumn;
+    ValueEnd: TcxGridDBBandedColumn;
     HeaderUserCDS: TClientDataSet;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    CrossDBViewEndAddOn: TCrossDBViewAddOn;
     cxGridSubstitution: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridDBBandedTableViewSubstitution: TcxGridDBBandedTableView;
@@ -45,11 +45,23 @@ type
     cxSplitter1: TcxSplitter;
     PersonNull: TcxGridDBBandedColumn;
     ValueNext: TcxGridDBBandedColumn;
-    NoteUser: TcxGridDBBandedColumn;
+    NoteEnd: TcxGridDBBandedColumn;
     PersonNull1: TcxGridDBBandedColumn;
     CrossDBViewAddOnNext: TCrossDBViewAddOn;
     Substitution_PersonNull: TcxGridDBBandedColumn;
     Substitution_NoteNext: TcxGridDBBandedColumn;
+    Substitution_NoteStart: TcxGridDBBandedColumn;
+    Substitution_NoteEnd: TcxGridDBBandedColumn;
+    NoteStart: TcxGridDBBandedColumn;
+    ValueStart: TcxGridDBBandedColumn;
+    PersonNull2: TcxGridDBBandedColumn;
+    CrossDBViewStartAddOn: TCrossDBViewAddOn;
+    Substitution_PersonNull1: TcxGridDBBandedColumn;
+    Substitution_PersonNull2: TcxGridDBBandedColumn;
+    Substitution_ValueEnd: TcxGridDBBandedColumn;
+    Substitution_ValueStart: TcxGridDBBandedColumn;
+    CrossDBViewAddOnSubstitutionValueStart: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitutionValueEnd: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

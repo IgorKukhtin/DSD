@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar
+             , NotTransferTime boolean
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -301,6 +302,7 @@ BEGIN
            , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false)  AS DoesNotShare
            , COALESCE(ObjectBoolean_AllowDivision.ValueData, false) AS AllowDivision
            , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
+          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -375,6 +377,11 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Goods_Analog
                                   ON ObjectString_Goods_Analog.ObjectId = ObjectLink_Main.ChildObjectId
                                  AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
+                                 
+           -- Не перевдить в сроки
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                   ON ObjectBoolean_Goods_NotTransferTime.ObjectId = Object_Goods_View.Id 
+                                  AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
            
 
       WHERE Object_Goods_View.ObjectId = vbObjectId

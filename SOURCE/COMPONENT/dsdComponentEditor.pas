@@ -44,7 +44,7 @@ implementation
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
      cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc, Vcl.ActnList,
-     cxGridTableView, cxGridDBTableView, cxDropDownEdit;
+     cxGridTableView, cxGridDBTableView, cxDropDownEdit, cxDateNavigator;
 
 procedure Register;
 begin
@@ -91,6 +91,8 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCustomAction)), Proc);
   // для мультиселекта
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGridDBTableView)), Proc);
+  // для мульти заполнения по
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateNavigator)), Proc);
 end;
 
 { TComponentItemTextProperty }

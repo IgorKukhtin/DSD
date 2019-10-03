@@ -132,6 +132,7 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isManagerPharmacy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 37
             Position.BandIndex = 0
             Position.ColIndex = 6
@@ -876,6 +877,55 @@ inherited WagesForm: TWagesForm
         end>
       isShowModal = False
     end
+    object actUpdateUnit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUnitChoice
+        end
+        item
+          Action = actExecStoredProcUpdateUnit
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 66
+    end
+    object actUnitChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitTreeForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecStoredProcUpdateUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateUnit
+        end>
+      Caption = 'actExecStoredUpdateUnit'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -989,6 +1039,10 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1069,6 +1123,10 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton11: TdxBarButton
       Action = actWagesAdditionalExpenses
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actUpdateUnit
       Category = 0
     end
   end
@@ -1616,5 +1674,30 @@ inherited WagesForm: TWagesForm
     PackSize = 1
     Left = 600
     Top = 488
+  end
+  object spUpdateUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Wages_Unit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 722
+    Top = 480
   end
 end

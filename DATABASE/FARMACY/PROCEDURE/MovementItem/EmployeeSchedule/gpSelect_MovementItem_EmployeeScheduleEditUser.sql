@@ -61,11 +61,16 @@ BEGIN
 
           , Object_PayrollType.ID                       AS PayrollTypeID
           , Object_PayrollType.ObjectCode               AS PayrollTypeCode
-          , Object_PayrollType.ValueData                AS PayrollTypeName
-          , PayrollType_ShortName.ValueData             AS ShortName
 
-          , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')::TVarChar  AS TimeStart
-          , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')::TVarChar    AS TimeEnd
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN Object_PayrollType.ValueData ELSE 'Служебный выход' END::TVarChar                 AS PayrollTypeName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData ELSE 'СВ' END::TVarChar                           AS ShortName
+
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END::TVarChar                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END::TVarChar                   AS TimeEnd
 
           , MIDate_Start.ValueData                                AS DataStart
           , MIDate_End.ValueData                                  AS DataEnd
@@ -91,6 +96,11 @@ BEGIN
           LEFT JOIN MovementItemDate AS MIDate_End
                                      ON MIDate_End.MovementItemId = MovementItem.Id
                                     AND MIDate_End.DescId = zc_MIDate_End()
+
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
+
      WHERE MovementItem.ParentId = inID
        AND MovementItem.MovementId = inMovementId
        AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)
@@ -110,5 +120,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleEditUser (Integer, Integer,
 */
 
 -- тест
---
-select * from gpSelect_MovementItem_EmployeeScheduleEditUser(inId := 275217437, inMovementId := 15463866 ,  inShowAll := FALSE, inIsErased := False, inSession := '4183126');
+-- select * from gpSelect_MovementItem_EmployeeScheduleEditUser(inId := 275217437, inMovementId := 15463866 ,  inShowAll := FALSE, inIsErased := False, inSession := '4183126');

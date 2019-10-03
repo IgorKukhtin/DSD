@@ -104,7 +104,18 @@ BEGIN
                           )
           , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
-           , tmpMovSendPartion AS (SELECT
+          , tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                          )
+          , tmpGoods_NDS AS (SELECT ObjectLink_Goods_NDSKind.ObjectId
+                                  , ObjectFloat_NDSKind_NDS.ValueData   AS NDS
+                             FROM ObjectLink AS ObjectLink_Goods_NDSKind
+                                  LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
+                                                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                             WHERE ObjectLink_Goods_NDSKind.ObjectId in (SELECT DISTINCT tmpMI_all.ObjectId FROM tmpMI_all)
+                               AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                          ) 
+          , tmpMovSendPartion AS (SELECT
                                           Movement.Id                               AS Id
                                         , MovementFloat_ChangePercent.ValueData     AS ChangePercent
                                         , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
@@ -182,7 +193,7 @@ BEGIN
                 ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
                 THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
                 ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS AmountSumm
-           , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+           , Goods_NDS.NDS                       AS NDS
            , MIFloat_PriceSale.ValueData         AS PriceSale
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
            , MIFloat_SummChangePercent.ValueData AS SummChangePercent
@@ -231,13 +242,9 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                               ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+          LEFT JOIN tmpGoods_NDS AS Goods_NDS
+                                 ON Goods_NDS.ObjectId = Object_Goods.Id
 
-          LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
           LEFT JOIN tmpMIString AS MIString_UID
                                        ON MIString_UID.MovementItemId = MovementItem.Id
                                       AND MIString_UID.DescId = zc_MIString_UID()
@@ -270,5 +277,6 @@ ALTER FUNCTION gpSelect_MovementItem_CheckVIP (Boolean, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_CheckVIP (False, '3')
+-- 
+SELECT * FROM gpSelect_MovementItem_CheckVIP (False, '3')
 

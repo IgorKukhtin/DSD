@@ -132,7 +132,6 @@ object PersonalRateForm: TPersonalRateForm
         Height = 257
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 56
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -320,6 +319,14 @@ object PersonalRateForm: TPersonalRateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
+          end
+          object Date_Last: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090'. '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'Date_Last'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1089#1090#1072#1074#1082#1072
+            Width = 94
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1376,16 +1383,5 @@ object PersonalRateForm: TPersonalRateForm
       end>
     Left = 416
     Top = 13
-  end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesPersonalServiceList
-      end>
-    Left = 488
-    Top = 184
   end
 end

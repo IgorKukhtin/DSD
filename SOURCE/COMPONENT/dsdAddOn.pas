@@ -5,7 +5,7 @@ unit dsdAddOn;
 interface
 
 uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView, Dialogs, ComCtrls,
+     cxTextEdit, DB, dsdAction, cxGridTableView, Dialogs, ComCtrls, cxDateNavigator,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
@@ -1917,6 +1917,8 @@ begin
      FEnterValue.Values[TComponent(Sender).Name] := BoolToStr((Sender as TcxCheckBox).Checked);
   if Sender is TcxComboBox then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxComboBox).Text;
+  if Sender is TcxDateNavigator then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxDateNavigator).ToString;
 end;
 
 procedure THeaderSaver.OnExit(Sender: TObject);
@@ -1943,8 +1945,8 @@ begin
   end;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
-  if Sender is TcxComboBox then
-     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxComboBox).Text;
+  if Sender is TcxDateNavigator then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateNavigator).ToString;
 
   try
     if isChanged then
@@ -2068,6 +2070,10 @@ begin
           if FControl is TcxComboBox then begin
              (FControl as TcxComboBox).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
              (FControl as TcxComboBox).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxDateNavigator then begin
+             (FControl as TcxDateNavigator).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxDateNavigator).OnExit := THeaderSaver(Collection.Owner).OnExit;
           end;
        end;
     end;
@@ -3828,7 +3834,8 @@ begin
       (Sender is TcxCurrencyEdit) or
       (Sender is TcxDateEdit) or
       (Sender is TcxCheckBox) or
-      (Sender is TcxComboBox) then
+      (Sender is TcxComboBox) or
+      (Sender is TcxDateNavigator) then
       Action.Execute;
 end;
 

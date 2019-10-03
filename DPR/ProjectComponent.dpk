@@ -69,7 +69,8 @@ requires
   vclie,
   GMLib_DXE2,
   GMLib_DXE2_VCL,
-  DbxCommonDriver;
+  DbxCommonDriver,
+  cxSchedulerRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

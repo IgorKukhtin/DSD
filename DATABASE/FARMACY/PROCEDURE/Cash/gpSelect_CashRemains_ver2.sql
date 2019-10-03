@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
              , Price_check               TFloat
              , PriceWithVAT_check        TFloat
              , PartionDateDiscount_check TFloat
+             , NotTransferTime boolean
               )
 AS
 $BODY$
@@ -777,6 +778,8 @@ BEGIN
           , CashSessionSnapShot.Price               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
+          
+          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
 
          FROM
             CashSessionSnapShot
@@ -848,6 +851,12 @@ BEGIN
            -- Остаток товара по СУН
            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId
                                   AND tmpRenainsSUN.PartionDateKindId = CashSessionSnapShot.PartionDateKindId
+                                  
+           -- Не перевдить в сроки
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                   ON ObjectBoolean_Goods_NotTransferTime.ObjectId = CashSessionSnapShot.ObjectId
+                                  AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
+                                  
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -876,6 +885,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 23.09.19                                                                                                    * NotTransferTime
  15.07.19                                                                                                    *
  28.05.19                                                                                                    * PartionDateKindId
  13.05.19                                                                                                    *

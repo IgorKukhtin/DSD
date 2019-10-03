@@ -928,7 +928,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 1261
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 98
   end
   object cxLabel21: TcxLabel
@@ -1096,6 +1096,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePersonalComlete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1163,6 +1171,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
     object bbOpenDocument: TdxBarButton
       Action = actUpdateDocument
+      Category = 0
+    end
+    object bbUpdatePersonalComlete: TdxBarButton
+      Action = macUpdatePersonalComlete
       Category = 0
     end
   end
@@ -1467,6 +1479,253 @@ object WeighingPartnerForm: TWeighingPartnerForm
       ActionType = acUpdate
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object ExecuteDialogPersonalComlete: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084' / '#1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084' / '#1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082#1072#1084
+      ImageIndex = 55
+      FormName = 'TWeighingPartnerDialogForm'
+      FormNameParam.Value = 'TWeighingPartnerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPersonalId1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName1'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName2'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId3'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId3'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName3'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName3'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId4'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName4'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId5'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName5'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName1'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName2'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId3'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId3'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName3'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName3'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId4'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName4'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId5'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName5'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId1_Stick'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId1_Stick'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName1_Stick'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName1_Stick'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId1_Stick'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId1_Stick'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName1_Stick'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName1_Stick'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdatePersonalComlete: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_PersonalComlete
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PersonalComlete
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 55
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdatePersonalComlete: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPersonalComlete
+        end
+        item
+          Action = actUpdatePersonalComlete
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084' / '#1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084' / '#1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082#1072#1084
+      ImageIndex = 55
     end
   end
   object MasterDS: TDataSource
@@ -1839,6 +2098,186 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = GuidesMember
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId1'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName1'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId1'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName1'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId2'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName2'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId2'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName2'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId3'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName3'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId3'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName31'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId4'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName4'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId4'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName4'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId55'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId5'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName5'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId5'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName5'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId1_Stick'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName1_Stick'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId1_Stick'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName1_Stick'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2297,5 +2736,118 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 913
     Top = 3
+  end
+  object spUpdate_PersonalComlete: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Scale_Movement_PersonalComlete'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId1_Stick'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId1_Stick'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId1_Stick'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1018
+    Top = 240
   end
 end

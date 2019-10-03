@@ -1129,9 +1129,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaOther() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaOther', 'Прочее звтраты'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOther');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_ValidationResults() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValidationResults'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_ValidationResults', 'Результаты проверки'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValidationResults');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 02.10.19                                                                                                     * zc_MIFloat_ValidationResults
  05.09.19                                                                                                     * zc_MIFloat_HolidaysHospital, zc_MIFloat_Director
  01.09.19                                                                                                     * zc_MIFloat_SummaCleaning, zc_MIFloat_SummaSP, zc_MIFloat_SummaOther
  29.08.19                                                                                                     * zc_MIFloat_Marketing

@@ -189,80 +189,71 @@ BEGIN
           , Goods.GoodsCodeInt                 AS GoodsCode
           , Goods.GoodsName                    AS GoodsName
             -- просто цена поставщика
-          , PriceList.Amount                   AS Price
+          , LoadPriceListItem.Price            AS Price
             -- минимальная цена поставщика - для товара "сети"
-          , MIN (PriceList.Amount) OVER (PARTITION BY _tmpMinPrice_RemainsList.ObjectId) AS MinPrice
-          , PriceList.Id                       AS PriceListMovementItemId
-          , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+          , MIN (LoadPriceListItem.Price) OVER (PARTITION BY _tmpMinPrice_RemainsList.ObjectId) AS MinPrice
+          , LoadPriceListItem.ID               AS PriceListMovementItemId
+          , LoadPriceListItem.ExpirationDate   AS PartionGoodsDate
           , CASE -- если Цена поставщика не попадает в ценовые промежутки
                  WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
-                  THEN PriceList.Amount
+                  THEN LoadPriceListItem.Price
                        -- учитывается % бонуса из Маркетинговый контракт
                      * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                   ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                    (PriceList.Amount * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
+                    (LoadPriceListItem.Price  * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
                      -- И учитывается % бонуса из Маркетинговый контракт
                   * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
 
-          , MILinkObject_Goods.ObjectId        AS Partner_GoodsId
+          , Object_JuridicalGoods.Id           AS Partner_GoodsId
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
           , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
           , Object_JuridicalGoods.MakerName    AS MakerName
-          , LastPriceList_View.ContractId      AS ContractId
+          , LoadPriceList.ContractId           AS ContractId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , JuridicalSettings.isPriceClose     AS JuridicalIsPriceClose
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
           , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
 
-          , LastPriceList_View.AreaId            AS AreaId
+          , LoadPriceList.AreaId               AS AreaId
 
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList
-             -- товары в прайс-листе (поставщика)
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                              ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                             AND MILinkObject_Goods.ObjectId = _tmpMinPrice_RemainsList.GoodsId  -- товар "поставщика"
-             -- Прайс-лист (поставщика) - MovementItem
-            JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-             -- Прайс-лист (поставщика) - Movement
-            JOIN LastPriceList_View ON LastPriceList_View.MovementId = PriceList.MovementId
 
-             -- Срок партии товара (или Срок годности?) в Прайс-лист (поставщика)
-            JOIN MovementItemDate AS MIDate_PartionGoods
-                                  ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
-                                 AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+              -- товары в прайс-листе (поставщика)
+             INNER JOIN LoadPriceListItem ON LoadPriceListItem.GoodsId = _tmpMinPrice_RemainsList.GoodsMainId
+              -- Прайс-лист (поставщика) - MovementItem
+             INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
 
              -- Установки для юр. лиц (для поставщика определяется договор и т.п)
-            INNER JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId
-                                     --  AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
-                                       AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId
-            LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                              AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
-                                              AND PriceList.Amount <= tmpJuridicalSettingsItem.PriceLimit
+             INNER JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LoadPriceList.JuridicalId
+                                         AND JuridicalSettings.ContractId      = LoadPriceList.ContractId
+             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                               AND LoadPriceListItem.Price >= tmpJuridicalSettingsItem.PriceLimit_min
+                                               AND LoadPriceListItem.Price <= tmpJuridicalSettingsItem.PriceLimit
 
-            -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
-            LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-            -- товар "сети"
-            LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId
+             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
+             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = _tmpMinPrice_RemainsList.GoodsId
+             -- товар "сети"
+             LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                    ON ObjectBoolean_Goods_TOP.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
-                                   AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                     ON ObjectBoolean_Goods_TOP.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                    AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
 
-            -- Поставщик
-            INNER JOIN Object AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
+             -- Поставщик
+             INNER JOIN Object AS Juridical ON Juridical.Id = LoadPriceList.JuridicalId
 
-            -- Дней отсрочки по договору
-            LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
-                                  ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
-                                 AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+             -- Дней отсрочки по договору
+             LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
+                                   ON ObjectFloat_Deferment.ObjectId = LoadPriceList.ContractId
+                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
 
-            -- % бонуса из Маркетинговый контракт
-            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
-                                AND GoodsPromo.JuridicalId = LastPriceList_View.JuridicalId
+             -- % бонуса из Маркетинговый контракт
+             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
+                                 AND GoodsPromo.JuridicalId = LoadPriceList.JuridicalId
         WHERE (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
             OR Object_JuridicalGoods.IsPromo                  = FALSE
               )

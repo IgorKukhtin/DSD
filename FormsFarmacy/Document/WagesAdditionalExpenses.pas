@@ -34,13 +34,11 @@ type
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
-    spInsertUser: TdsdStoredProc;
     dxBarButton4: TdxBarButton;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
     dxBarButton8: TdxBarButton;
-    spCalculationAll: TdsdStoredProc;
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
     UnitName: TcxGridDBColumn;
@@ -51,6 +49,10 @@ type
     isIssuedBy: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     MIDateIssuedBy: TcxGridDBColumn;
+    actCopySumm: TdsdExecStoredProc;
+    spCopySumm: TdsdStoredProc;
+    dxBarButton11: TdxBarButton;
+    SummaValidationResults: TcxGridDBColumn;
   private
     { Private declarations }
   public

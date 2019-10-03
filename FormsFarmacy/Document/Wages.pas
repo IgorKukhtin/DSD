@@ -91,6 +91,11 @@ type
     Director: TcxGridDBBandedColumn;
     isManagerPharmacy: TcxGridDBBandedColumn;
     DateIssuedBy: TcxGridDBBandedColumn;
+    actUpdateUnit: TMultiAction;
+    actUnitChoice: TOpenChoiceForm;
+    actExecStoredProcUpdateUnit: TdsdExecStoredProc;
+    spUpdateUnit: TdsdStoredProc;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public

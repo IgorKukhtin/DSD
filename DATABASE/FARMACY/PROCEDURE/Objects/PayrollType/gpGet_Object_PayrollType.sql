@@ -15,6 +15,11 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PayrollType());
+   
+   IF inId < 0
+   THEN
+     RAISE EXCEPTION 'Ошибка. Изменение служебных записей  запрещено.';
+   END IF;
 
    IF COALESCE (inId, 0) = 0
    THEN

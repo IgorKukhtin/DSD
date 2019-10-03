@@ -91,6 +91,7 @@ type
     AllowDivision: TcxGridDBColumn;
     spUpdate_Goods_AllowDivision: TdsdStoredProc;
     spUpdate_Goods_Analog: TdsdStoredProc;
+    NotTransferTime: TcxGridDBColumn;
   private
     { Private declarations }
   public

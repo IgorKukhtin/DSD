@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isFirst boolean, isSecond boolean, 
                MorionCode Integer, BarCode TVarChar,
                NameUkr TVarChar, CodeUKTZED TVarChar, ExchangeId Integer, ExchangeName TVarChar,
+               NotTransferTime boolean,
                isErased boolean
                ) AS
 $BODY$
@@ -60,6 +61,7 @@ BEGIN
                   , ''::TVarChar  AS CodeUKTZED
                   , 0::Integer    AS ExchangeId
                   , ''::TVarChar  AS ExchangeName
+                  , CAST (NULL AS Boolean) AS NotTransferTime
 
                   , CAST (NULL AS Boolean) AS isErased
 
@@ -148,8 +150,10 @@ BEGIN
 
                   , Object_Exchange.Id               AS ExchangeId
                   , Object_Exchange.ValueData        AS ExchangeName
+                  , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
                   
                   , Object_Goods_View.isErased       AS isErased
+                  
                   
              FROM Object_Goods_View
                   LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferCode
@@ -178,6 +182,11 @@ BEGIN
                                       AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
                   LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
                   
+                  -- Не перевдить в сроки
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
+                                          ON ObjectBoolean_Goods_NotTransferTime.ObjectId = Object_Goods_View.Id 
+                                         AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
+
              WHERE Object_Goods_View.Id = inId;
 
      END IF;

@@ -343,6 +343,22 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object actRecalcMCSSheduler: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spRecalcMCSSheduler
+      StoredProcList = <
+        item
+          StoredProc = spRecalcMCSSheduler
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      ImageIndex = 38
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -397,11 +413,15 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
@@ -477,6 +497,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = spInsertUpdateMovement
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actRecalcMCSSheduler
       Category = 0
     end
   end
@@ -580,5 +604,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     GetStoredProc = spGetHolidays
     Left = 448
     Top = 105
+  end
+  object spRecalcMCSSheduler: TdsdStoredProc
+    StoredProcName = 'gpRun_Object_RecalcMCSSheduler'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 496
+    Top = 168
   end
 end

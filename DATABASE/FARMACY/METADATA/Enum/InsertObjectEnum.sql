@@ -72,7 +72,7 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TimingControl(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TimingControl'), inName:= 'Контроль сроки', inEnumName:= 'zc_Enum_Role_TimingControl');
    END IF;
 
-   -- zc_Enum_Role_TimingControl
+   -- zc_Enum_Role_DirectorPartner
    IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Директор Партнёр')
    THEN
        PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Директор Партнёр')
@@ -80,6 +80,16 @@ BEGIN
                                           , inEnumName:= 'zc_Enum_Role_DirectorPartner');
    ELSE
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_DirectorPartner(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_DirectorPartner'), inName:= 'Директор Партнёр', inEnumName:= 'zc_Enum_Role_DirectorPartner');
+   END IF;
+
+   -- zc_Enum_Role_Spotter
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Корректировщик')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Корректировщик')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_Spotter');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Spotter(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Spotter'), inName:= 'Корректировщик', inEnumName:= 'zc_Enum_Role_Spotter');
    END IF;
 
 END $$;

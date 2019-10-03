@@ -14,7 +14,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
                FtpDir TVarChar, DividePartionDate Boolean,
                Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
-               Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar
+               Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
+               isSpotter boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -100,6 +101,9 @@ BEGIN
        , Object_Helsi_ClientId.ValueData                     AS Helsi_ClientId
        , Object_Helsi_ClientSecret.ValueData                 AS Helsi_ClientSecret
        , Object_Helsi_IntegrationClient.ValueData            AS Helsi_IntegrationClient
+
+       , CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  
+         WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin())) THEN TRUE ELSE FALSE END AS isSpotter
 
    FROM Object AS Object_Unit
 

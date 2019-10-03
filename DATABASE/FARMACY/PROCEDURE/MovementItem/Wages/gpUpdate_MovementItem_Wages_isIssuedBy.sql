@@ -4,13 +4,14 @@ DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Wages_isIssuedBy(INTEGER, Boolean,
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Wages_isIssuedBy(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inisIssuedBy          Boolean   , -- 
+    IN inisIssuedBy          Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -21,9 +22,17 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
 
+    -- определяем <Статус>
+    vbStatusId := (SELECT StatusId FROM Movement WHERE Id = (SELECT MovementItem.MovementID FROM MovementItem WHERE MovementItem.ID = inId));
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+
      -- сохранили свойство <Выдано>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isIssuedBy(), inId, NOT inisIssuedBy);
-    
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
 

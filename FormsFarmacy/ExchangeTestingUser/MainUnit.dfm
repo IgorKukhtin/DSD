@@ -107,32 +107,20 @@ object Form1: TForm1
   object qrygpInsertUpdateLoadTestingXML: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      
-        'SELECT * FROM gpInsertUpdate_Load_TestingXML(:OperDate, :XMLS, '#39 +
-        '3'#39')')
+      'SELECT * FROM gpInsertUpdate_Load_TestingXML(:XMLS, '#39'3'#39')')
     Params = <
       item
         DataType = ftUnknown
-        Name = 'OperDate'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
         Name = 'XMLS'
-        ParamType = ptUnknown
+        ParamType = ptInput
       end>
     Left = 328
     Top = 416
     ParamData = <
       item
         DataType = ftUnknown
-        Name = 'OperDate'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
         Name = 'XMLS'
-        ParamType = ptUnknown
+        ParamType = ptInput
       end>
   end
 end

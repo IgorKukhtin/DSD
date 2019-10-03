@@ -403,6 +403,9 @@ type
     N34: TMenuItem;
     spGet_BanCash: TdsdStoredProc;
     actBanCash: TAction;
+    MainNotTransferTime: TcxGridDBColumn;
+    actNotTransferTime: TAction;
+    N35: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -522,6 +525,7 @@ type
       Sender: TcxCustomGridTableView);
     procedure MainGridDBTableViewCanFocusRecord(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
+    procedure actNotTransferTimeExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -1858,6 +1862,59 @@ begin
   CalcTotalSumm;
 end;
 
+procedure TMainCashForm2.actNotTransferTimeExecute(Sender: TObject);
+  var dsdSave : TdsdStoredProc; NotTransferTime : Boolean;
+begin
+  if not UnitConfigCDS.Active or not Assigned(UnitConfigCDS.FindField('isSpotter')) then Exit;
+  if not UnitConfigCDS.FindField('isSpotter').AsBoolean then
+  begin
+    ShowMessage('У вас нет прав изменять признак "Не переводить в сроки"');
+    Exit;
+  end;
+
+  if gc_User.Local then
+  Begin
+    ShowMessage('В отложенном режиме неработает...');
+    Exit;
+  End;
+
+    dsdSave := TdsdStoredProc.Create(nil);
+    try
+       //Проверить в каком состоянии документ.
+       dsdSave.StoredProcName := 'gpGet_Object_Goods';
+       dsdSave.OutputType := otResult;
+       dsdSave.Params.Clear;
+       dsdSave.Params.AddParam('inId',ftInteger,ptInput, RemainsCDS.FieldByName('Id').Value);
+       dsdSave.Params.AddParam('NotTransferTime',ftBoolean,ptOutput,Null);
+       dsdSave.Execute(False,False);
+       if dsdSave.Params.ParamByName('NotTransferTime').Value = Null then Exit;
+
+       NotTransferTime := dsdSave.Params.ParamByName('NotTransferTime').Value;
+       if NotTransferTime then
+       begin
+         if MessageDlg('Убрать признак "Не переводить в сроки"?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+       end else if MessageDlg('Установить признак "Не переводить в сроки"?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+
+       dsdSave.StoredProcName := 'gpUpdate_Goods_NotTransferTime';
+       dsdSave.OutputType := otResult;
+       dsdSave.Params.Clear;
+       dsdSave.Params.AddParam('inId',ftInteger,ptInput, RemainsCDS.FieldByName('Id').Value);
+       dsdSave.Params.AddParam('ioNotTransferTime',ftBoolean,ptInputOutput,not NotTransferTime);
+       dsdSave.Execute(False,False);
+
+       try
+         RemainsCDS.DisableControls;
+         RemainsCDS.Edit;
+         RemainsCDS.FieldByName('NotTransferTime').AsBoolean := dsdSave.Params.ParamByName('ioNotTransferTime').Value;
+         RemainsCDS.Post;
+       finally
+         RemainsCDS.EnableControls;
+        end;
+    finally
+       freeAndNil(dsdSave);
+    end;
+end;
+
 //проверили что есть остаток
 function TMainCashForm2.fCheck_RemainsError : Boolean;
 var GoodsId_list, Amount_list : String;
@@ -1979,7 +2036,7 @@ begin
       end;
 
       if (FieldByName('PartionDateKindId').AsInteger <> 0) and (FieldByName('AmountMonth').AsInteger = 0) and
-        not (actSpecCorr.Checked or actSpec.Checked) then
+        not (actSpecCorr.Checked or actSpec.Checked) and (FieldByName('Amount').AsInteger <> 0) then
       begin
         ShowMessage('Ошибка.В чеке использован прсроченный товар '#13#10 + FieldByName('GoodsName').AsString);
         Exit;
@@ -6743,6 +6800,11 @@ begin
   WaitForSingleObject(MutexUnitConfig, INFINITE);
   try
     LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+    if UnitConfigCDS.Active and Assigned(UnitConfigCDS.FindField('isSpotter')) then
+    begin
+      actNotTransferTime.Enabled := UnitConfigCDS.FindField('isSpotter').AsBoolean;
+      actNotTransferTime.Visible := UnitConfigCDS.FindField('isSpotter').AsBoolean;
+    end;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

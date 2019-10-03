@@ -17,16 +17,21 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , MemberId Integer, MemberName TVarChar
              , Amount TFloat
              , Comment TVarChar
+             , Date_Last TDateTime
              , isErased Boolean
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalRate());
      vbUserId:= inSession;
+
+     --Дата тек.документа
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- Ведомость из шапки
      vbPersonalServiceListId := (SELECT MovementLinkObject_PersonalServiceList.ObjectId
@@ -67,7 +72,27 @@ BEGIN
                       UNION ALL
                        SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.isErased FROM tmpPersonal
                       )
-              
+
+          --нужно добавить в грид еще дату до которой действует ставка - найти следующий (по дате) документ по этому физ лицу где была введена новая ставка
+          -- находим следующие документы для МИ
+          , tmpMovementLast AS (SELECT MIN (Movement.OperDate) AS OperDate
+                                     , MovementItem.ObjectId   AS PersonalId
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                                   ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                                  AND MovementLinkObject_PersonalServiceList.ObjectId = vbPersonalServiceListId
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.isErased = FALSE
+                                     INNER JOIN tmpMI ON tmpMI.PersonalId = MovementItem.ObjectId
+                                WHERE Movement.DescId   = zc_Movement_PersonalRate()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  AND Movement.OperDate >= vbOperDate
+                                  AND Movement.Id <> inMovementId
+                                GROUP BY MovementItem.ObjectId
+                               )
               
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
@@ -95,6 +120,7 @@ BEGIN
             , tmpAll.Amount :: TFloat           AS Amount
 
             , MIString_Comment.ValueData       AS Comment
+            , COALESCE (tmpMovementLast.OperDate, NULL) ::TDateTime AS Date_Last -- до какой даты действует ставка  -- zc_DateEnd()
             , tmpAll.isErased
 
        FROM tmpAll
@@ -122,6 +148,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member_CardIBANSecond
                                    ON ObjectString_Member_CardIBANSecond.ObjectId = View_Personal.MemberId
                                   AND ObjectString_Member_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
+
+            LEFT JOIN tmpMovementLast ON tmpMovementLast.PersonalId = tmpAll.PersonalId
       ;
 
 END;
@@ -135,5 +163,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementItem_PersonalRate (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
---SELECT * FROM gpSelect_MovementItem_PersonalRate (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+--SELECT * FROM gpSelect_MovementItem_PersonalRate (inMovementId:= 14521952, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+--SELECT * FROM gpSelect_MovementItem_PersonalRate (inMovementId:= 14521952, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

@@ -38,8 +38,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили свойство <Дата выдачи>
-    IF NOT vbIsInsert AND inisIssuedBy <> COALESCE (
-      (SELECT ValueData FROM MovementItemBoolean WHERE DescID = zc_MIBoolean_isIssuedBy() AND MovementItemID = ioId) , inisIssuedBy)
+    IF vbIsInsert AND inisIssuedBy OR 
+      NOT vbIsInsert AND inisIssuedBy <> COALESCE (
+      (SELECT ValueData FROM MovementItemBoolean WHERE DescID = zc_MIBoolean_isIssuedBy() AND MovementItemID = ioId) , FALSE)
     THEN
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_IssuedBy(), ioId, CURRENT_TIMESTAMP);
     END IF;

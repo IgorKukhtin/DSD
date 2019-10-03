@@ -20,9 +20,26 @@ $BODY$
   DECLARE vbDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
+--     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
+      vbUserId:= lpGetUserBySession (inSession);
      
      inDate := DATE_TRUNC ('MONTH', inDate);
+     
+     IF EXISTS(SELECT 1 FROM Movement
+                   WHERE Movement.OperDate = inDate - INTERVAL '1 MONTH'
+                     AND Movement.OperDate >= '01.09.2019'
+                     AND Movement.DescId = zc_Movement_EmployeeSchedule())
+     THEN
+       SELECT Movement.ID
+       INTO vbMovementId
+       FROM Movement
+       WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+         AND Movement.OperDate >= '01.09.2019'
+         AND Movement.OperDate = inDate - INTERVAL '1 MONTH';
+     ELSE
+       vbMovementId := 0;
+     END IF;
+     
 
      CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
      SELECT MIMaster.ID                                                                  AS ID
@@ -32,10 +49,13 @@ BEGIN
           , MIChild.ObjectId                                                             AS UnitID
           , MIChild.Amount                                                               AS Day
           , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
-          , PayrollType_ShortName.ValueData                                              AS PThortName
-          , TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')                                   AS TimeStart
-          , TO_CHAR(MIDate_End.ValueData, 'HH24:mi')                                     AS TimeEnd
-          , NULL::TVarChar                                                               AS PThortNamePrev
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData  ELSE 'СВ' END                          AS PThortName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+          , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
      FROM Movement
 
           INNER JOIN MovementItem AS MIMaster
@@ -75,9 +95,88 @@ BEGIN
                                      ON MIDate_End.MovementItemId = MIChild.Id
                                     AND MIDate_End.DescId = zc_MIDate_End()
 
-     WHERE Movement.ID = inMovementId;
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
+     WHERE Movement.ID = inMovementId;
      ANALYSE tmpUserData;
+
+     CREATE TEMP TABLE tmpUserDataPrev ON COMMIT DROP AS
+     SELECT MIMaster.ID                                                                  AS ID
+          , MIMaster.ObjectId                                                            AS UserID
+          , (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
+            COALESCE(MIChild.ObjectId, ObjectLink_Member_Unit.ChildObjectId))::Boolean   AS MainUnit
+          , MIChild.ObjectId                                                             AS UnitID
+          , MIChild.Amount                                                               AS Day
+          , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN PayrollType_ShortName.ValueData  ELSE 'СВ' END                          AS PThortName
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+          , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+          , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
+     FROM Movement
+
+          INNER JOIN MovementItem AS MIMaster
+                                  ON MIMaster.MovementId = Movement.id
+                                 AND MIMaster.DescId = zc_MI_Master()
+
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = MIMaster.ObjectId
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                               ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                           ON MILinkObject_Unit.MovementItemId = MIMaster.Id
+                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+          LEFT JOIN MovementItem AS MIChild
+                                 ON MIChild.MovementId = Movement.id
+                                AND MIChild.ParentId = MIMaster.ID
+                                AND MIChild.DescId = zc_MI_Child()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                           ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                          AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+
+          LEFT JOIN ObjectString AS PayrollType_ShortName
+                                 ON PayrollType_ShortName.ObjectId = MILinkObject_PayrollType.ObjectId
+                                AND PayrollType_ShortName.DescId = zc_ObjectString_PayrollType_ShortName()
+
+          LEFT JOIN MovementItemDate AS MIDate_Start
+                                     ON MIDate_Start.MovementItemId = MIChild.Id
+                                    AND MIDate_Start.DescId = zc_MIDate_Start()
+
+          LEFT JOIN MovementItemDate AS MIDate_End
+                                     ON MIDate_End.MovementItemId = MIChild.Id
+                                    AND MIDate_End.DescId = zc_MIDate_End()
+
+          LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                        ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                       AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
+
+          INNER JOIN MovementItem AS MIMasterPrev
+                                  ON MIMasterPrev.MovementId = vbMovementId
+                                 AND MIMasterPrev.DescId = zc_MI_Master()
+                                 AND MIMasterPrev.ObjectId = MIMaster.ObjectId
+
+          LEFT JOIN MovementItem AS MIChildPrev
+                                 ON MIChildPrev.MovementId = vbMovementId
+                                AND MIChildPrev.ParentId = MIMasterPrev.ID
+                                AND MIChildPrev.DescId = zc_MI_Child()
+                                AND MIChildPrev.Amount = MIChild.Amount
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollTypePrev
+                                           ON MILinkObject_PayrollTypePrev.MovementItemId = MIChildPrev.Id
+                                          AND MILinkObject_PayrollTypePrev.DescId = zc_MILinkObject_PayrollType()
+
+     WHERE Movement.ID = vbMovementId;
+     ANALYSE tmpUserDataPrev;
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDate), DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
@@ -142,6 +241,10 @@ BEGIN
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
+         'Пр. месяц'::TVarChar                                   AS Name0,
+         'Тип дня'::TVarChar                                     AS Name1,
+         'Приход'::TVarChar                                      AS Name2,
+         'Уход'::TVarChar                                        AS Name3,
 
          NULL::TVarChar                        AS Value1,
          NULL::TVarChar                        AS Value2,
@@ -239,37 +342,37 @@ BEGIN
          NULL::TVarChar                                     AS ValueEnd30,
          NULL::TVarChar                                     AS ValueEnd31,
 
-         UserData_01.PThortNamePrev                        AS ValuePrev1,
-         UserData_02.PThortNamePrev                        AS ValuePrev2,
-         UserData_03.PThortNamePrev                        AS ValuePrev3,
-         UserData_04.PThortNamePrev                        AS ValuePrev4,
-         UserData_05.PThortNamePrev                        AS ValuePrev5,
-         UserData_06.PThortNamePrev                        AS ValuePrev6,
-         UserData_07.PThortNamePrev                        AS ValuePrev7,
-         UserData_08.PThortNamePrev                        AS ValuePrev8,
-         UserData_09.PThortNamePrev                        AS ValuePrev9,
-         UserData_10.PThortNamePrev                        AS ValuePrev10,
-         UserData_11.PThortNamePrev                        AS ValuePrev11,
-         UserData_12.PThortNamePrev                        AS ValuePrev12,
-         UserData_13.PThortNamePrev                        AS ValuePrev13,
-         UserData_14.PThortNamePrev                        AS ValuePrev14,
-         UserData_15.PThortNamePrev                        AS ValuePrev15,
-         UserData_16.PThortNamePrev                        AS ValuePrev16,
-         UserData_17.PThortNamePrev                        AS ValuePrev17,
-         UserData_18.PThortNamePrev                        AS ValuePrev18,
-         UserData_19.PThortNamePrev                        AS ValuePrev19,
-         UserData_20.PThortNamePrev                        AS ValuePrev20,
-         UserData_21.PThortNamePrev                        AS ValuePrev21,
-         UserData_22.PThortNamePrev                        AS ValuePrev22,
-         UserData_23.PThortNamePrev                        AS ValuePrev23,
-         UserData_24.PThortNamePrev                        AS ValuePrev24,
-         UserData_25.PThortNamePrev                        AS ValuePrev25,
-         UserData_26.PThortNamePrev                        AS ValuePrev26,
-         UserData_27.PThortNamePrev                        AS ValuePrev27,
-         UserData_28.PThortNamePrev                        AS ValuePrev28,
-         UserData_29.PThortNamePrev                        AS ValuePrev29,
-         UserData_30.PThortNamePrev                        AS ValuePrev30,
-         UserData_31.PThortNamePrev                        AS ValuePrev31,
+         UserDataPrev_01.PThortName                            AS ValuePrev1,
+         UserDataPrev_02.PThortName                            AS ValuePrev2,
+         UserDataPrev_03.PThortName                            AS ValuePrev3,
+         UserDataPrev_04.PThortName                            AS ValuePrev4,
+         UserDataPrev_05.PThortName                            AS ValuePrev5,
+         UserDataPrev_06.PThortName                            AS ValuePrev6,
+         UserDataPrev_07.PThortName                            AS ValuePrev7,
+         UserDataPrev_08.PThortName                            AS ValuePrev8,
+         UserDataPrev_09.PThortName                            AS ValuePrev9,
+         UserDataPrev_10.PThortName                            AS ValuePrev10,
+         UserDataPrev_11.PThortName                            AS ValuePrev11,
+         UserDataPrev_12.PThortName                            AS ValuePrev12,
+         UserDataPrev_13.PThortName                            AS ValuePrev13,
+         UserDataPrev_14.PThortName                            AS ValuePrev14,
+         UserDataPrev_15.PThortName                            AS ValuePrev15,
+         UserDataPrev_16.PThortName                            AS ValuePrev16,
+         UserDataPrev_17.PThortName                            AS ValuePrev17,
+         UserDataPrev_18.PThortName                            AS ValuePrev18,
+         UserDataPrev_19.PThortName                            AS ValuePrev19,
+         UserDataPrev_20.PThortName                            AS ValuePrev20,
+         UserDataPrev_21.PThortName                            AS ValuePrev21,
+         UserDataPrev_22.PThortName                            AS ValuePrev22,
+         UserDataPrev_23.PThortName                            AS ValuePrev23,
+         UserDataPrev_24.PThortName                            AS ValuePrev24,
+         UserDataPrev_25.PThortName                            AS ValuePrev25,
+         UserDataPrev_26.PThortName                            AS ValuePrev26,
+         UserDataPrev_27.PThortName                            AS ValuePrev27,
+         UserDataPrev_28.PThortName                            AS ValuePrev28,
+         UserDataPrev_29.PThortName                            AS ValuePrev29,
+         UserDataPrev_30.PThortName                            AS ValuePrev30,
+         UserDataPrev_31.PThortName                            AS ValuePrev31,
 
          1                                    AS TypeId1,
          2                                    AS TypeId2,
@@ -384,129 +487,129 @@ BEGIN
                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
             INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
 
-            LEFT JOIN tmpUserData AS UserData_01
-                                  ON UserData_01.Day = 1
-                                  AND UserData_01.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
+                                  ON UserDataPrev_01.Day = 1
+                                  AND UserDataPrev_01.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_02
-                                   ON UserData_02.Day = 2
-                                  AND UserData_02.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
+                                   ON UserDataPrev_02.Day = 2
+                                  AND UserDataPrev_02.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_03
-                                   ON UserData_03.Day = 3
-                                  AND UserData_03.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
+                                   ON UserDataPrev_03.Day = 3
+                                  AND UserDataPrev_03.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_04
-                                   ON UserData_04.Day = 4
-                                  AND UserData_04.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
+                                   ON UserDataPrev_04.Day = 4
+                                  AND UserDataPrev_04.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_05
-                                   ON UserData_05.Day = 5
-                                  AND UserData_05.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
+                                   ON UserDataPrev_05.Day = 5
+                                  AND UserDataPrev_05.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_06
-                                   ON UserData_06.Day = 6
-                                  AND UserData_06.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
+                                   ON UserDataPrev_06.Day = 6
+                                  AND UserDataPrev_06.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_07
-                                   ON UserData_07.Day = 7
-                                  AND UserData_07.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
+                                   ON UserDataPrev_07.Day = 7
+                                  AND UserDataPrev_07.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_08
-                                   ON UserData_08.Day = 8
-                                  AND UserData_08.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
+                                   ON UserDataPrev_08.Day = 8
+                                  AND UserDataPrev_08.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_09
-                                   ON UserData_09.Day = 9
-                                  AND UserData_09.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
+                                   ON UserDataPrev_09.Day = 9
+                                  AND UserDataPrev_09.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_10
-                                   ON UserData_10.Day = 10
-                                  AND UserData_10.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
+                                   ON UserDataPrev_10.Day = 10
+                                  AND UserDataPrev_10.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_11
-                                   ON UserData_11.Day = 11
-                                  AND UserData_11.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
+                                   ON UserDataPrev_11.Day = 11
+                                  AND UserDataPrev_11.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_12
-                                   ON UserData_12.Day = 12
-                                  AND UserData_12.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
+                                   ON UserDataPrev_12.Day = 12
+                                  AND UserDataPrev_12.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_13
-                                   ON UserData_13.Day = 13
-                                  AND UserData_13.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
+                                   ON UserDataPrev_13.Day = 13
+                                  AND UserDataPrev_13.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_14
-                                   ON UserData_14.Day = 14
-                                  AND UserData_14.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
+                                   ON UserDataPrev_14.Day = 14
+                                  AND UserDataPrev_14.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_15
-                                   ON UserData_15.Day = 15
-                                  AND UserData_15.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
+                                   ON UserDataPrev_15.Day = 15
+                                  AND UserDataPrev_15.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_16
-                                   ON UserData_16.Day = 16
-                                  AND UserData_16.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
+                                   ON UserDataPrev_16.Day = 16
+                                  AND UserDataPrev_16.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_17
-                                   ON UserData_17.Day = 17
-                                  AND UserData_17.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
+                                   ON UserDataPrev_17.Day = 17
+                                  AND UserDataPrev_17.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_18
-                                   ON UserData_18.Day = 18
-                                  AND UserData_18.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
+                                   ON UserDataPrev_18.Day = 18
+                                  AND UserDataPrev_18.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_19
-                                   ON UserData_19.Day = 19
-                                  AND UserData_19.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
+                                   ON UserDataPrev_19.Day = 19
+                                  AND UserDataPrev_19.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_20
-                                   ON UserData_20.Day = 20
-                                  AND UserData_20.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
+                                   ON UserDataPrev_20.Day = 20
+                                  AND UserDataPrev_20.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_21
-                                   ON UserData_21.Day = 21
-                                  AND UserData_21.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
+                                   ON UserDataPrev_21.Day = 21
+                                  AND UserDataPrev_21.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_22
-                                   ON UserData_22.Day = 22
-                                  AND UserData_22.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
+                                   ON UserDataPrev_22.Day = 22
+                                  AND UserDataPrev_22.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_23
-                                   ON UserData_23.Day = 23
-                                  AND UserData_23.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
+                                   ON UserDataPrev_23.Day = 23
+                                  AND UserDataPrev_23.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_24
-                                   ON UserData_24.Day = 24
-                                  AND UserData_24.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
+                                   ON UserDataPrev_24.Day = 24
+                                  AND UserDataPrev_24.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_25
-                                   ON UserData_25.Day = 25
-                                  AND UserData_25.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
+                                   ON UserDataPrev_25.Day = 25
+                                  AND UserDataPrev_25.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_26
-                                   ON UserData_26.Day = 26
-                                  AND UserData_26.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
+                                   ON UserDataPrev_26.Day = 26
+                                  AND UserDataPrev_26.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_27
-                                   ON UserData_27.Day = 27
-                                  AND UserData_27.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
+                                   ON UserDataPrev_27.Day = 27
+                                  AND UserDataPrev_27.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_28
-                                   ON UserData_28.Day = 28
-                                  AND UserData_28.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
+                                   ON UserDataPrev_28.Day = 28
+                                  AND UserDataPrev_28.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_29
-                                   ON UserData_29.Day = 29
-                                  AND UserData_29.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
+                                   ON UserDataPrev_29.Day = 29
+                                  AND UserDataPrev_29.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_30
-                                   ON UserData_30.Day = 30
-                                  AND UserData_30.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
+                                   ON UserDataPrev_30.Day = 30
+                                  AND UserDataPrev_30.UserID = Object_User.Id
 
-            LEFT JOIN tmpUserData AS UserData_31
-                                   ON UserData_31.Day = 31
-                                  AND UserData_31.UserID = Object_User.Id
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
+                                   ON UserDataPrev_31.Day = 31
+                                  AND UserDataPrev_31.UserID = Object_User.Id
 
        WHERE Object_User.ID NOT IN (SELECT MovementItem.ObjectId
                                     FROM MovementItem
@@ -628,37 +731,37 @@ BEGIN
          UserData_30.TimeEnd                                     AS ValueEnd30,
          UserData_31.TimeEnd                                     AS ValueEnd31,
 
-         UserData_01.PThortNamePrev                        AS ValuePrev1,
-         UserData_02.PThortNamePrev                        AS ValuePrev2,
-         UserData_03.PThortNamePrev                        AS ValuePrev3,
-         UserData_04.PThortNamePrev                        AS ValuePrev4,
-         UserData_05.PThortNamePrev                        AS ValuePrev5,
-         UserData_06.PThortNamePrev                        AS ValuePrev6,
-         UserData_07.PThortNamePrev                        AS ValuePrev7,
-         UserData_08.PThortNamePrev                        AS ValuePrev8,
-         UserData_09.PThortNamePrev                        AS ValuePrev9,
-         UserData_10.PThortNamePrev                        AS ValuePrev10,
-         UserData_11.PThortNamePrev                        AS ValuePrev11,
-         UserData_12.PThortNamePrev                        AS ValuePrev12,
-         UserData_13.PThortNamePrev                        AS ValuePrev13,
-         UserData_14.PThortNamePrev                        AS ValuePrev14,
-         UserData_15.PThortNamePrev                        AS ValuePrev15,
-         UserData_16.PThortNamePrev                        AS ValuePrev16,
-         UserData_17.PThortNamePrev                        AS ValuePrev17,
-         UserData_18.PThortNamePrev                        AS ValuePrev18,
-         UserData_19.PThortNamePrev                        AS ValuePrev19,
-         UserData_20.PThortNamePrev                        AS ValuePrev20,
-         UserData_21.PThortNamePrev                        AS ValuePrev21,
-         UserData_22.PThortNamePrev                        AS ValuePrev22,
-         UserData_23.PThortNamePrev                        AS ValuePrev23,
-         UserData_24.PThortNamePrev                        AS ValuePrev24,
-         UserData_25.PThortNamePrev                        AS ValuePrev25,
-         UserData_26.PThortNamePrev                        AS ValuePrev26,
-         UserData_27.PThortNamePrev                        AS ValuePrev27,
-         UserData_28.PThortNamePrev                        AS ValuePrev28,
-         UserData_29.PThortNamePrev                        AS ValuePrev29,
-         UserData_30.PThortNamePrev                        AS ValuePrev30,
-         UserData_31.PThortNamePrev                        AS ValuePrev31,
+         UserDataPrev_01.PThortName                            AS ValuePrev1,
+         UserDataPrev_02.PThortName                            AS ValuePrev2,
+         UserDataPrev_03.PThortName                            AS ValuePrev3,
+         UserDataPrev_04.PThortName                            AS ValuePrev4,
+         UserDataPrev_05.PThortName                            AS ValuePrev5,
+         UserDataPrev_06.PThortName                            AS ValuePrev6,
+         UserDataPrev_07.PThortName                            AS ValuePrev7,
+         UserDataPrev_08.PThortName                            AS ValuePrev8,
+         UserDataPrev_09.PThortName                            AS ValuePrev9,
+         UserDataPrev_10.PThortName                            AS ValuePrev10,
+         UserDataPrev_11.PThortName                            AS ValuePrev11,
+         UserDataPrev_12.PThortName                            AS ValuePrev12,
+         UserDataPrev_13.PThortName                            AS ValuePrev13,
+         UserDataPrev_14.PThortName                            AS ValuePrev14,
+         UserDataPrev_15.PThortName                            AS ValuePrev15,
+         UserDataPrev_16.PThortName                            AS ValuePrev16,
+         UserDataPrev_17.PThortName                            AS ValuePrev17,
+         UserDataPrev_18.PThortName                            AS ValuePrev18,
+         UserDataPrev_19.PThortName                            AS ValuePrev19,
+         UserDataPrev_20.PThortName                            AS ValuePrev20,
+         UserDataPrev_21.PThortName                            AS ValuePrev21,
+         UserDataPrev_22.PThortName                            AS ValuePrev22,
+         UserDataPrev_23.PThortName                            AS ValuePrev23,
+         UserDataPrev_24.PThortName                            AS ValuePrev24,
+         UserDataPrev_25.PThortName                            AS ValuePrev25,
+         UserDataPrev_26.PThortName                            AS ValuePrev26,
+         UserDataPrev_27.PThortName                            AS ValuePrev27,
+         UserDataPrev_28.PThortName                            AS ValuePrev28,
+         UserDataPrev_29.PThortName                            AS ValuePrev29,
+         UserDataPrev_30.PThortName                            AS ValuePrev30,
+         UserDataPrev_31.PThortName                            AS ValuePrev31,
 
          1                                                       AS TypeId1,
          2                                                       AS TypeId2,
@@ -969,6 +1072,130 @@ BEGIN
             LEFT JOIN tmpUserData AS UserData_31
                                    ON UserData_31.Day = 31
                                   AND UserData_31.ID = MovementItem.Id
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
+                                  ON UserDataPrev_01.Day = 1
+                                  AND UserDataPrev_01.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
+                                   ON UserDataPrev_02.Day = 2
+                                  AND UserDataPrev_02.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
+                                   ON UserDataPrev_03.Day = 3
+                                  AND UserDataPrev_03.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
+                                   ON UserDataPrev_04.Day = 4
+                                  AND UserDataPrev_04.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
+                                   ON UserDataPrev_05.Day = 5
+                                  AND UserDataPrev_05.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
+                                   ON UserDataPrev_06.Day = 6
+                                  AND UserDataPrev_06.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
+                                   ON UserDataPrev_07.Day = 7
+                                  AND UserDataPrev_07.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
+                                   ON UserDataPrev_08.Day = 8
+                                  AND UserDataPrev_08.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
+                                   ON UserDataPrev_09.Day = 9
+                                  AND UserDataPrev_09.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
+                                   ON UserDataPrev_10.Day = 10
+                                  AND UserDataPrev_10.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
+                                   ON UserDataPrev_11.Day = 11
+                                  AND UserDataPrev_11.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
+                                   ON UserDataPrev_12.Day = 12
+                                  AND UserDataPrev_12.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
+                                   ON UserDataPrev_13.Day = 13
+                                  AND UserDataPrev_13.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
+                                   ON UserDataPrev_14.Day = 14
+                                  AND UserDataPrev_14.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
+                                   ON UserDataPrev_15.Day = 15
+                                  AND UserDataPrev_15.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
+                                   ON UserDataPrev_16.Day = 16
+                                  AND UserDataPrev_16.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
+                                   ON UserDataPrev_17.Day = 17
+                                  AND UserDataPrev_17.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
+                                   ON UserDataPrev_18.Day = 18
+                                  AND UserDataPrev_18.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
+                                   ON UserDataPrev_19.Day = 19
+                                  AND UserDataPrev_19.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
+                                   ON UserDataPrev_20.Day = 20
+                                  AND UserDataPrev_20.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
+                                   ON UserDataPrev_21.Day = 21
+                                  AND UserDataPrev_21.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
+                                   ON UserDataPrev_22.Day = 22
+                                  AND UserDataPrev_22.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
+                                   ON UserDataPrev_23.Day = 23
+                                  AND UserDataPrev_23.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
+                                   ON UserDataPrev_24.Day = 24
+                                  AND UserDataPrev_24.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
+                                   ON UserDataPrev_25.Day = 25
+                                  AND UserDataPrev_25.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
+                                   ON UserDataPrev_26.Day = 26
+                                  AND UserDataPrev_26.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
+                                   ON UserDataPrev_27.Day = 27
+                                  AND UserDataPrev_27.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
+                                   ON UserDataPrev_28.Day = 28
+                                  AND UserDataPrev_28.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
+                                   ON UserDataPrev_29.Day = 29
+                                  AND UserDataPrev_29.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
+                                   ON UserDataPrev_30.Day = 30
+                                  AND UserDataPrev_30.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
+                                   ON UserDataPrev_31.Day = 31
+                                  AND UserDataPrev_31.UserID = MovementItem.ObjectId
 
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
@@ -1085,37 +1312,37 @@ BEGIN
          UserData_30.TimeEnd                                     AS ValueEnd30,
          UserData_31.TimeEnd                                     AS ValueEnd31,
 
-         UserData_01.PThortNamePrev                        AS ValuePrev1,
-         UserData_02.PThortNamePrev                        AS ValuePrev2,
-         UserData_03.PThortNamePrev                        AS ValuePrev3,
-         UserData_04.PThortNamePrev                        AS ValuePrev4,
-         UserData_05.PThortNamePrev                        AS ValuePrev5,
-         UserData_06.PThortNamePrev                        AS ValuePrev6,
-         UserData_07.PThortNamePrev                        AS ValuePrev7,
-         UserData_08.PThortNamePrev                        AS ValuePrev8,
-         UserData_09.PThortNamePrev                        AS ValuePrev9,
-         UserData_10.PThortNamePrev                        AS ValuePrev10,
-         UserData_11.PThortNamePrev                        AS ValuePrev11,
-         UserData_12.PThortNamePrev                        AS ValuePrev12,
-         UserData_13.PThortNamePrev                        AS ValuePrev13,
-         UserData_14.PThortNamePrev                        AS ValuePrev14,
-         UserData_15.PThortNamePrev                        AS ValuePrev15,
-         UserData_16.PThortNamePrev                        AS ValuePrev16,
-         UserData_17.PThortNamePrev                        AS ValuePrev17,
-         UserData_18.PThortNamePrev                        AS ValuePrev18,
-         UserData_19.PThortNamePrev                        AS ValuePrev19,
-         UserData_20.PThortNamePrev                        AS ValuePrev20,
-         UserData_21.PThortNamePrev                        AS ValuePrev21,
-         UserData_22.PThortNamePrev                        AS ValuePrev22,
-         UserData_23.PThortNamePrev                        AS ValuePrev23,
-         UserData_24.PThortNamePrev                        AS ValuePrev24,
-         UserData_25.PThortNamePrev                        AS ValuePrev25,
-         UserData_26.PThortNamePrev                        AS ValuePrev26,
-         UserData_27.PThortNamePrev                        AS ValuePrev27,
-         UserData_28.PThortNamePrev                        AS ValuePrev28,
-         UserData_29.PThortNamePrev                        AS ValuePrev29,
-         UserData_30.PThortNamePrev                        AS ValuePrev30,
-         UserData_31.PThortNamePrev                        AS ValuePrev31,
+         UserDataPrev_01.PThortName                            AS ValuePrev1,
+         UserDataPrev_02.PThortName                            AS ValuePrev2,
+         UserDataPrev_03.PThortName                            AS ValuePrev3,
+         UserDataPrev_04.PThortName                            AS ValuePrev4,
+         UserDataPrev_05.PThortName                            AS ValuePrev5,
+         UserDataPrev_06.PThortName                            AS ValuePrev6,
+         UserDataPrev_07.PThortName                            AS ValuePrev7,
+         UserDataPrev_08.PThortName                            AS ValuePrev8,
+         UserDataPrev_09.PThortName                            AS ValuePrev9,
+         UserDataPrev_10.PThortName                            AS ValuePrev10,
+         UserDataPrev_11.PThortName                            AS ValuePrev11,
+         UserDataPrev_12.PThortName                            AS ValuePrev12,
+         UserDataPrev_13.PThortName                            AS ValuePrev13,
+         UserDataPrev_14.PThortName                            AS ValuePrev14,
+         UserDataPrev_15.PThortName                            AS ValuePrev15,
+         UserDataPrev_16.PThortName                            AS ValuePrev16,
+         UserDataPrev_17.PThortName                            AS ValuePrev17,
+         UserDataPrev_18.PThortName                            AS ValuePrev18,
+         UserDataPrev_19.PThortName                            AS ValuePrev19,
+         UserDataPrev_20.PThortName                            AS ValuePrev20,
+         UserDataPrev_21.PThortName                            AS ValuePrev21,
+         UserDataPrev_22.PThortName                            AS ValuePrev22,
+         UserDataPrev_23.PThortName                            AS ValuePrev23,
+         UserDataPrev_24.PThortName                            AS ValuePrev24,
+         UserDataPrev_25.PThortName                            AS ValuePrev25,
+         UserDataPrev_26.PThortName                            AS ValuePrev26,
+         UserDataPrev_27.PThortName                            AS ValuePrev27,
+         UserDataPrev_28.PThortName                            AS ValuePrev28,
+         UserDataPrev_29.PThortName                            AS ValuePrev29,
+         UserDataPrev_30.PThortName                            AS ValuePrev30,
+         UserDataPrev_31.PThortName                            AS ValuePrev31,
 
          1                                                       AS TypeId1,
          2                                                       AS TypeId2,
@@ -1427,6 +1654,130 @@ BEGIN
                                    ON UserData_31.Day = 31
                                   AND UserData_31.ID = MovementItem.Id
 
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
+                                  ON UserDataPrev_01.Day = 1
+                                  AND UserDataPrev_01.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
+                                   ON UserDataPrev_02.Day = 2
+                                  AND UserDataPrev_02.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
+                                   ON UserDataPrev_03.Day = 3
+                                  AND UserDataPrev_03.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
+                                   ON UserDataPrev_04.Day = 4
+                                  AND UserDataPrev_04.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
+                                   ON UserDataPrev_05.Day = 5
+                                  AND UserDataPrev_05.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
+                                   ON UserDataPrev_06.Day = 6
+                                  AND UserDataPrev_06.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
+                                   ON UserDataPrev_07.Day = 7
+                                  AND UserDataPrev_07.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
+                                   ON UserDataPrev_08.Day = 8
+                                  AND UserDataPrev_08.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
+                                   ON UserDataPrev_09.Day = 9
+                                  AND UserDataPrev_09.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
+                                   ON UserDataPrev_10.Day = 10
+                                  AND UserDataPrev_10.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
+                                   ON UserDataPrev_11.Day = 11
+                                  AND UserDataPrev_11.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
+                                   ON UserDataPrev_12.Day = 12
+                                  AND UserDataPrev_12.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
+                                   ON UserDataPrev_13.Day = 13
+                                  AND UserDataPrev_13.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
+                                   ON UserDataPrev_14.Day = 14
+                                  AND UserDataPrev_14.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
+                                   ON UserDataPrev_15.Day = 15
+                                  AND UserDataPrev_15.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
+                                   ON UserDataPrev_16.Day = 16
+                                  AND UserDataPrev_16.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
+                                   ON UserDataPrev_17.Day = 17
+                                  AND UserDataPrev_17.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
+                                   ON UserDataPrev_18.Day = 18
+                                  AND UserDataPrev_18.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
+                                   ON UserDataPrev_19.Day = 19
+                                  AND UserDataPrev_19.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
+                                   ON UserDataPrev_20.Day = 20
+                                  AND UserDataPrev_20.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
+                                   ON UserDataPrev_21.Day = 21
+                                  AND UserDataPrev_21.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
+                                   ON UserDataPrev_22.Day = 22
+                                  AND UserDataPrev_22.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
+                                   ON UserDataPrev_23.Day = 23
+                                  AND UserDataPrev_23.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
+                                   ON UserDataPrev_24.Day = 24
+                                  AND UserDataPrev_24.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
+                                   ON UserDataPrev_25.Day = 25
+                                  AND UserDataPrev_25.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
+                                   ON UserDataPrev_26.Day = 26
+                                  AND UserDataPrev_26.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
+                                   ON UserDataPrev_27.Day = 27
+                                  AND UserDataPrev_27.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
+                                   ON UserDataPrev_28.Day = 28
+                                  AND UserDataPrev_28.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
+                                   ON UserDataPrev_29.Day = 29
+                                  AND UserDataPrev_29.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
+                                   ON UserDataPrev_30.Day = 30
+                                  AND UserDataPrev_30.UserID = MovementItem.ObjectId
+
+            LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
+                                   ON UserDataPrev_31.Day = 31
+                                  AND UserDataPrev_31.UserID = MovementItem.ObjectId
+                                  
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      END IF;
@@ -1447,4 +1798,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleNew (Integer, TDateTime, Bo
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15463866 , inDate := ('01.09.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15869657 , inDate := ('01.10.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

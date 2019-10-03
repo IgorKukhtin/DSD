@@ -1373,6 +1373,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
@@ -1929,7 +1931,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-     {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
@@ -1938,7 +1940,7 @@ begin
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');  }
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');       {
   // диалог изменения цены получателя
@@ -2012,6 +2014,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUnitForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleFillingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleFillingForm');
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

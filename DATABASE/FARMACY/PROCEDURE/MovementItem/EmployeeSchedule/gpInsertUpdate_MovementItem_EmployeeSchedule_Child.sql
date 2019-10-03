@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_EmployeeSchedule_Child(
     IN inPayrollTypeID       Integer   , -- Тип начисления
     IN inDateStart           TDateTime , -- Дата время начала смены
     IN inDateEnd             TDateTime , -- Дата время конца счены
+    IN inServiceExit         Boolean,    -- Служебный выход
     IN inSession             TVarChar   -- пользователь
  )
 RETURNS Integer AS
@@ -50,6 +51,7 @@ BEGIN
                                                               , inPayrollTypeID       := inPayrollTypeID
                                                               , inDateStart           := inDateStart
                                                               , inDateEnd             := inDateEnd
+                                                              , inServiceExit         := inServiceExit
                                                               , inUserId              := vbUserId              -- пользователь
                                                                );
 
@@ -61,6 +63,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.09.19                                                        *
  31.09.19                                                        *
 */
 

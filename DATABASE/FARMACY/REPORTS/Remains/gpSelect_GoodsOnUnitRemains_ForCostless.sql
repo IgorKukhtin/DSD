@@ -189,9 +189,7 @@ BEGIN
 
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
-        AND COALESCE (ObjectBoolean_Goods_TOP.ValueData, False) = True
-        AND COALESCE (ObjectBoolean_First.ValueData, False) = True;
+      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0;
 
 END;
 $BODY$
@@ -201,6 +199,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForCostless (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 01.10.19                                                                                      *
  10.09.19                                                                                      *
 */
 

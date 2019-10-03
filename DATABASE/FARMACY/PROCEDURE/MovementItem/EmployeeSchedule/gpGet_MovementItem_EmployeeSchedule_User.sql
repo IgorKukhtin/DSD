@@ -9,7 +9,8 @@ RETURNS TABLE (OperDate  TDateTime,
                StartHour TVarChar,
                StartMin TVarChar,
                EndHour TVarChar, 
-               EndMin TVarChar 
+               EndMin TVarChar , 
+               ServiceExit Boolean
               )
 AS
 $BODY$
@@ -21,6 +22,7 @@ $BODY$
    DECLARE vbStartMin TVarChar; 
    DECLARE vbEndHour TVarChar;
    DECLARE vbEndMin TVarChar; 
+   DECLARE vbServiceExit Boolean;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -31,6 +33,7 @@ BEGIN
    vbStartMin := '00'; 
    vbEndHour := '';
    vbEndMin := '00'; 
+   vbServiceExit := False;
 
     -- проверка наличия графика
     IF EXISTS(SELECT 1 FROM Movement
@@ -69,16 +72,21 @@ BEGIN
                , CASE WHEN MIDate_Start.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_Start.ValueData)::TVarChar  END
                , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('HOUR',  MIDate_End.ValueData)::TVarChar  END
                , CASE WHEN MIDate_End.ValueData IS NULL THEN '' ELSE date_part('minute',  MIDate_End.ValueData)::TVarChar  END
-          INTO vbStartHour, vbStartMin, vbEndHour, vbEndMin 
+               , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)        
+          INTO vbStartHour, vbStartMin, vbEndHour, vbEndMin, vbServiceExit 
           FROM MovementItem
 
-               INNER JOIN MovementItemDate AS MIDate_Start
-                                           ON MIDate_Start.MovementItemId = MovementItem.Id
-                                          AND MIDate_Start.DescId = zc_MIDate_Start()
+               LEFT JOIN MovementItemDate AS MIDate_Start
+                                          ON MIDate_Start.MovementItemId = MovementItem.Id
+                                         AND MIDate_Start.DescId = zc_MIDate_Start()
 
-               INNER JOIN MovementItemDate AS MIDate_End
-                                           ON MIDate_End.MovementItemId = MovementItem.Id
-                                          AND MIDate_End.DescId = zc_MIDate_End()
+               LEFT JOIN MovementItemDate AS MIDate_End
+                                          ON MIDate_End.MovementItemId = MovementItem.Id
+                                         AND MIDate_End.DescId = zc_MIDate_End()
+
+               LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                             ON MIBoolean_ServiceExit.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
 
           WHERE MovementItem.MovementId = vbMovementID
             AND MovementItem.DescId = zc_MI_Child()
@@ -101,10 +109,11 @@ BEGIN
 
     RETURN QUERY
     SELECT CURRENT_DATE::TDateTime                        AS OperDate
-         , vbStartHour 
-         , vbStartMin 
-         , vbEndHour 
-         , vbEndMin 
+         , CASE WHEN vbServiceExit = TRUE THEN '' ELSE vbStartHour END::TVarChar
+         , CASE WHEN vbServiceExit = TRUE THEN '' ELSE vbStartMin END::TVarChar
+         , CASE WHEN vbServiceExit = TRUE THEN '' ELSE vbEndHour END::TVarChar
+         , CASE WHEN vbServiceExit = TRUE THEN '' ELSE vbEndMin END::TVarChar
+         , vbServiceExit
     ;
 
 END;
@@ -116,6 +125,7 @@ ALTER FUNCTION gpGet_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.09.19                                                       *
  23.02.19                                                       *
 */
 

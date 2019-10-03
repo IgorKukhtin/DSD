@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbDate TDateTime;
    DECLARE vbDateStart TDateTime;
    DECLARE vbDateEnd TDateTime;
+   DECLARE vbServiceExit Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -42,7 +43,7 @@ BEGIN
       WHERE Movement.Id = inMovementId;
     END IF;
     
-    IF inTimeStart <> ''
+    IF inPayrollTypeID >= 0 AND inTimeStart <> ''
     THEN
        vbDateStart := date_trunc('DAY', vbDate) + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeStart::Time;
 
@@ -50,9 +51,11 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
       END IF;
+    ELSE
+      vbDateStart := Null;
     END IF;
 
-    IF inTimeEnd <> ''
+    IF inPayrollTypeID >= 0 AND inTimeEnd <> ''
     THEN
        vbDateEnd := date_trunc('DAY', vbDate) + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeEnd::Time;
 
@@ -60,11 +63,21 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Даты прихода и ухода должны быть кратны 30 мин.';
       END IF;
+    ELSE
+      vbDateEnd := Null;
     END IF;
       
-    IF inTimeStart <> '' and inTimeEnd <> '' and vbDateStart > vbDateEnd
+    IF inPayrollTypeID >= 0 AND inTimeStart <> '' and inTimeEnd <> '' and vbDateStart > vbDateEnd
     THEN
       vbDateEnd := vbDateEnd + interval '1 day';
+    END IF;
+    
+    IF inPayrollTypeID < 0
+    THEN
+      vbServiceExit := True;
+      inPayrollTypeID := 0;
+    ELSE
+      vbServiceExit := False;    
     END IF;
     
     -- сохранили
@@ -72,10 +85,11 @@ BEGIN
                                                               , inMovementId          := inMovementId          -- ключ Документа
                                                               , inParentId            := inParentID            -- элемент мастер
                                                               , inUnitID              := inUnitID              -- Подразделение
-                                                              , inAmount              := ioDay                 -- День
-                                                              , inPayrollTypeID       := inPayrollType         -- Тип дня
+                                                              , inAmount              := inDay                 -- День
+                                                              , inPayrollTypeID       := inPayrollTypeID       -- Тип дня
                                                               , inDateStart           := vbDateStart           -- Приходы на работу по дням
                                                               , inDateEnd             := vbDateEnd             -- Приходы на работу по дням
+                                                              , inServiceExit         := vbServiceExit         -- Служебный выход
                                                               , inUserId              := vbUserId              -- пользователь
                                                                 );
 
