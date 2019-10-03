@@ -340,31 +340,31 @@ begin
                 else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
-                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName1;if ActiveControl=EditPersonalName1 then bbOkClick(self);end
 
          else if (TcxCurrencyEdit(Sender).Tag = 2) then if Value = 0 then ActiveControl:=EditPersonalName2
               else   // 3...
                      if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
-                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName2;if ActiveControl=EditPersonalName2 then bbOkClick(self);end
 
               else if (TcxCurrencyEdit(Sender).Tag = 3) then if Value = 0 then ActiveControl:=EditPersonalName3
                    else   // 4...
                           if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
-                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName3;if ActiveControl=EditPersonalName3 then bbOkClick(self);end
 
                    else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4
                         else    // 5...
                                 if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
-                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName4;if ActiveControl=EditPersonalName4 then bbOkClick(self);end
 
                         else if (TcxCurrencyEdit(Sender).Tag = 5) then if Value = 0 then ActiveControl:=EditPersonalName5
                              else    // 1...
-                                     if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+                                     if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName5;if ActiveControl=EditPersonalName5 then bbOkClick(self);end
 
-                             else if (TcxCurrencyEdit(Sender).Tag = 11) then if Value = 0 then ActiveControl:=EditPersonalStickName1 else bbOkClick(self);
+                             else if (TcxCurrencyEdit(Sender).Tag = 11) then if Value = 0 then ActiveControl:=EditPersonalStickName1 else begin ActiveControl:=EditPersonalStickName1;if ActiveControl=EditPersonalStickName1 then bbOkClick(self);end;
     end;
 end;
 {------------------------------------------------------------------------------}
