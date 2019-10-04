@@ -940,7 +940,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
                                  ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Member_Unit.ChildObjectId
@@ -1521,7 +1526,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
                                  ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                                 AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Member_Unit.ChildObjectId

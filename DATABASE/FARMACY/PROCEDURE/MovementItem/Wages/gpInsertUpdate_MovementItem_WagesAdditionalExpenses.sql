@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_WagesAdditionalExpenses()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaCleaning       TFloat    , -- Уборка
     IN inSummaSP             TFloat    , -- СП
     IN inSummaOther          TFloat    , -- Прочее
+    IN inValidationResults   TFloat    , -- Результаты проверки
     IN inisIssuedBy          Boolean   , -- Выдано
     IN inComment             TVarChar  , -- Примечание
    OUT outSummaTotal         TFloat    , -- Итого
@@ -71,6 +72,10 @@ BEGIN
                                           ON MIFloat_SummaOther.MovementItemId = MovementItem.Id
                                          AND MIFloat_SummaOther.DescId = zc_MIFloat_SummaOther()
 
+              LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
+                                          ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
               LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
                                             ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
                                            AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
@@ -79,7 +84,8 @@ BEGIN
           AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = True
           AND (COALESCE (MIFloat_SummaCleaning.ValueData, 0) <> COALESCE (inSummaCleaning, 0)
             OR COALESCE (MIFloat_SummaSP.ValueData, 0) <>  COALESCE (inSummaSP, 0)
-            OR COALESCE (MIFloat_SummaOther.ValueData, 0) <>  COALESCE (inSummaOther, 0)))
+            OR COALESCE (MIFloat_SummaOther.ValueData, 0) <>  COALESCE (inSummaOther, 0)
+            OR COALESCE (MIFloat_ValidationResults.ValueData, 0) <>  COALESCE (inValidationResults, 0)))
       THEN
         RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';            
       END IF;
@@ -94,6 +100,7 @@ BEGIN
                                                                , inSummaCleaning       := inSummaCleaning       -- Уборка
                                                                , inSummaSP             := inSummaSP             -- СП
                                                                , inSummaOther          := inSummaOther          -- Прочее
+                                                               , inValidationResults   := inValidationResults   -- Результаты проверки
                                                                , inisIssuedBy          := inisIssuedBy          -- Выдано
                                                                , inComment             := inComment             -- Примечание
                                                                , inUserId              := vbUserId              -- пользователь
@@ -109,6 +116,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.10.19                                                        *
  01.09.19                                                        *
 */
 

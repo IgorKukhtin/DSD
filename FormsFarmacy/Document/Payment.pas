@@ -101,6 +101,11 @@ type
     actExecStoredProcUkrxim: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     cbPaymentFormed: TcxCheckBox;
+    actExportToXLSConcord: TdsdExportToXLS;
+    actExecStoredProcConcord: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
+    spExportBankConcordFileName: TdsdStoredProc;
+    spExportBankConcord: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaCleaning       TFloat    , -- Уборка
     IN inSummaSP             TFloat    , -- СП
     IN inSummaOther          TFloat    , -- Прочее
+    IN inValidationResults   TFloat    , -- Результаты проверки
     IN inisIssuedBy          Boolean   , -- Выдано
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer   -- пользователь
@@ -23,7 +24,8 @@ BEGIN
      -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, COALESCE (inSummaCleaning, 0) + 
                                                                                      COALESCE (inSummaSP, 0) + 
-                                                                                     COALESCE (inSummaOther, 0), 0);
+                                                                                     COALESCE (inSummaOther, 0) + 
+                                                                                     COALESCE (inValidationResults, 0), 0);
     
      -- сохранили свойство <Уборка>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaCleaning(), ioId, inSummaCleaning);
@@ -33,6 +35,9 @@ BEGIN
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaOther(), ioId, inSummaOther);
+
+     -- сохранили свойство <Прочее>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
 
     -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -60,6 +65,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.10.19                                                        *
  01.09.19                                                        *
 */
 

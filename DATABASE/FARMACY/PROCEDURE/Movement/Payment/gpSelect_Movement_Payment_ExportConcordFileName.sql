@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Payment_ExportPrivatFileName()
+-- Function: gpSelect_Movement_Payment_ExportConcordFileName()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Payment_ExportPrivatFileName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Payment_ExportConcordFileName (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Payment_ExportPrivatFileName(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Payment_ExportConcordFileName(
     IN inMovementId    Integer   , -- ключ Документа
    OUT outFileName     TVarChar  , -- Имя файла
     IN inSession       TVarChar    -- сессия пользователя
@@ -23,7 +23,7 @@ BEGIN
     SELECT Movement_Payment.OperDate, Movement_Payment.JuridicalName, Object_Bank.ValueData
       INTO vbOperDate, vbJuridicalName, vbBankName
     FROM Movement_Payment_View AS Movement_Payment
-         LEFT JOIN Object AS Object_Bank ON Object_Bank.id = 1020650
+         LEFT JOIN Object AS Object_Bank ON Object_Bank.id = 4611431
     WHERE Movement_Payment.Id = inMovementId;
 
     SELECT Sum(MI_Payment.SummaPay)          AS SummaPay
@@ -40,7 +40,7 @@ BEGIN
     WHERE MI_Payment.MovementId = inMovementId
       AND MI_Payment.isErased = FALSE
       AND MI_Payment.NeedPay = TRUE
-      AND COALESCE(Object_Bank.id, 0) = 1020650;
+      AND COALESCE(Object_Bank.id, 0) = 4611431;
 
     outFileName := REPLACE(vbJuridicalName||' '||vbBankName||' '||TO_CHAR (vbOperDate, 'dd.mm.yyyy')||
                            '='||TRIM(to_char(COALESCE(vbSummaPay, 0), '999999999999D99'))||'.xls', '"', '');
@@ -48,7 +48,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Payment_ExportUkrximFileName (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Payment_ExportConcordFileName (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -56,4 +56,5 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportUkrximFileName (Integer, TVarChar
  08.09.19                                                                       *
 */
 
--- SELECT * FROM gpSelect_Movement_Payment_ExportPrivatFileName (inMovementId := 15584404 , inSession:= '5');
+-- 
+SELECT * FROM gpSelect_Movement_Payment_ExportConcordFileName (inMovementId := 15584404 , inSession:= '5');

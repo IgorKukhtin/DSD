@@ -80,6 +80,7 @@ BEGIN
 
    WHERE Object_User.DescId = zc_Object_User()
      AND ObjectLink_Member_Position.ChildObjectId = 1672498
+     AND (COALESCE (Object_Unit.ValueData ) <> '' OR COALESCE (tmpResult.Attempts, 0) <> 0)
    ORDER BY Object_Member.ValueData;
 
 END;
