@@ -41,6 +41,7 @@ function GoodsAnalog_lcl: String;
 function CashAttachment_lcl: String;
 function UserHelsi_lcl: String;
 function UserSettings_lcl: String;
+function EmployeeSchedule_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -156,6 +157,11 @@ End;
 function UserSettings_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'UserSettings.local';
+End;
+
+function EmployeeSchedule_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'EmployeeSchedule.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
