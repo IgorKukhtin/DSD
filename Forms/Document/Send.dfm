@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 602
-  ClientWidth = 1038
-  ExplicitWidth = 1054
+  ClientWidth = 1050
+  ExplicitWidth = 1066
   ExplicitHeight = 640
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1038
+    Width = 1050
     Height = 476
     ExplicitTop = 126
     ExplicitWidth = 1038
     ExplicitHeight = 476
     ClientRectBottom = 476
-    ClientRectRight = 1038
+    ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1038
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
-        Width = 1038
+        Width = 1050
         Height = 452
         ExplicitWidth = 1038
         ExplicitHeight = 452
@@ -354,9 +354,10 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1038
+    Width = 1050
     Height = 100
     TabOrder = 3
+    ExplicitTop = -8
     ExplicitWidth = 1038
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -408,10 +409,10 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 238
+      Width = 275
     end
     object edTo: TcxButtonEdit
-      Left = 423
+      Left = 460
       Top = 23
       Properties.Buttons = <
         item
@@ -422,28 +423,28 @@ inherited SendForm: TSendForm
       Width = 220
     end
     object cxLabel4: TcxLabel
-      Left = 423
+      Left = 460
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object cxLabel22: TcxLabel
-      Left = 649
+      Left = 686
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 649
+      Left = 686
       Top = 63
       TabOrder = 11
       Width = 210
     end
     object cxLabel8: TcxLabel
-      Left = 868
+      Left = 905
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 868
+      Left = 905
       Top = 24
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -454,12 +455,12 @@ inherited SendForm: TSendForm
       Width = 146
     end
     object cxLabel7: TcxLabel
-      Left = 868
+      Left = 905
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 868
+      Left = 905
       Top = 63
       Properties.Buttons = <
         item
@@ -472,12 +473,12 @@ inherited SendForm: TSendForm
       Width = 146
     end
     object cxLabel27: TcxLabel
-      Left = 423
+      Left = 460
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object edInvNumberSend: TcxButtonEdit
-      Left = 423
+      Left = 460
       Top = 63
       Properties.Buttons = <
         item
@@ -491,12 +492,12 @@ inherited SendForm: TSendForm
     end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 649
+    Left = 686
     Top = 5
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit [3]
-    Left = 649
+    Left = 686
     Top = 23
     Properties.Buttons = <
       item
@@ -508,12 +509,30 @@ inherited SendForm: TSendForm
     Width = 210
   end
   object edIsAuto: TcxCheckBox [4]
-    Left = 195
+    Left = 179
     Top = 63
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 187
+  end
+  object cxLabel5: TcxLabel [5]
+    Left = 373
+    Top = 45
+    Caption = #8470' '#1079#1072#1103#1074#1082#1080
+  end
+  object edInvNumberOrder: TcxButtonEdit [6]
+    Left = 373
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 81
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1216,6 +1235,21 @@ inherited SendForm: TSendForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1697,7 +1731,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 480
+    Left = 520
     Top = 65520
   end
   object GuidesDocumentKind: TdsdGuides
@@ -1793,5 +1827,191 @@ inherited SendForm: TSendForm
       end>
     Left = 524
     Top = 56
+  end
+  object GuidesInvNumberOrder: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 42094d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner_Sale'
+        Value = 42192d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = 'False'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 388
+    Top = 64
   end
 end

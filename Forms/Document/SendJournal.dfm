@@ -1,26 +1,26 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 761
+  ClientWidth = 876
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 777
+  ExplicitWidth = 892
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 761
+    Width = 876
     Height = 478
     TabOrder = 3
     ExplicitWidth = 761
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 761
+    ClientRectRight = 876
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 761
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 761
+        Width = 876
         Height = 478
         ExplicitWidth = 761
         ExplicitHeight = 478
@@ -296,12 +296,34 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 120
           end
+          object InvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumberOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object OperDate_Order: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'OperDate_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartnerName_Order: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'PartnerName_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 132
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 761
+    Width = 876
     ExplicitWidth = 761
     inherited deStart: TcxDateEdit
       EditValue = 42370d

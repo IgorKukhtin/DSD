@@ -862,6 +862,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
