@@ -53,7 +53,7 @@ RETURNS TABLE (MovementId          Integer
              , PartionGoodsDateClose TDateTime
              , isOrderSecond       Boolean
 
-             , OperDate_fact       TVarChar --TDateTime
+--             , OperDate_fact       TVarChar --TDateTime
              , Amount_fact         TFloat
              , Percent_fact        TFloat
              , Day_avg_fact        TFloat
@@ -84,6 +84,22 @@ BEGIN
        WHERE Object.DescId = zc_Object_Goods()
          AND COALESCE (inGoodsGroupId, 0) = 0
        ;
+
+     -- если выбранна группа получаем список подразделений
+     CREATE TEMP TABLE _tmpUnitFrom (UnitId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnitTo (UnitId Integer) ON COMMIT DROP;
+     
+     IF COALESCE (inFromId,0) <> 0 
+     THEN
+         INSERT INTO _tmpUnitFrom (UnitId)
+           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect;
+     END IF;
+     IF COALESCE (inToId,0) <> 0
+     THEN
+         INSERT INTO _tmpUnitTo (UnitId)
+           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect;
+     END IF;
+
 
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
@@ -126,7 +142,7 @@ BEGIN
                                INNER JOIN MovementLinkObject AS MLO_To
                                                              ON MLO_To.MovementId = Movement.Id
                                                             AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                            AND MLO_To.ObjectId IN (inFromId, vbFromId_group)
+                                                            AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom)     --(inFromId, vbFromId_group)
 
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
@@ -186,6 +202,7 @@ BEGIN
                                            ELSE 0
                                       END) <> 0
                          )
+     -- Док. производства 
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
                                , Movement.InvNumber                                             AS InvNumber
                                , Movement.OperDate                                              AS OperDate
@@ -220,10 +237,13 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
+                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MLO_From.ObjectId
+
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-         
+                               INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = MLO_To.ObjectId
+
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_UnitFrom_PartionDate
                                                        ON ObjectBoolean_UnitFrom_PartionDate.ObjectId = MLO_From.ObjectId
                                                       AND ObjectBoolean_UnitFrom_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
@@ -234,8 +254,8 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              AND MLO_From.ObjectId = inFromId
-                              AND MLO_To.ObjectId = inToId
+                              --AND MLO_From.ObjectId = inFromId
+                              --AND MLO_To.ObjectId = inToId
                            )
       , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
                                , tmpMI_order2.MovementItemId AS MovementItemId_order
@@ -248,7 +268,8 @@ BEGIN
                                , CASE WHEN tmpMI_order2.AmountSecond <> 0 THEN TRUE ELSE FALSE END AS isOrderSecond
                                , tmpMI_order2.CuterCount
                           FROM tmpMI_order2
-                          WHERE tmpMI_order2.ToId = inFromId
+                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = tmpMI_order2.ToId
+                          --WHERE tmpMI_order2.ToId = inFromId
                          )
         , tmpMI_order_find AS (SELECT tmpMI_order22.MovementItemId_order    AS MovementItemId_order
                                     , MAX (tmpMI_production.MovementItemId) AS MovementItemId
@@ -346,7 +367,7 @@ BEGIN
            --т.е. док произв цех-цех - это то что сделали,  в нем есть дата партии (это дата док, например 01.09) 
            --а к нему нужно найти док произв цех-склад база (zc_MI_Master с такой же датой - zc_MIDate_PartionGoods) - это выход факт, и даты документов могут быть 3,4,5.09
            tmpFact_production1 AS (SELECT tmp.OperDate
-                                        , tmp.OperDate_str
+                                        , NULL ::TVarChar AS OperDate_str--tmp.OperDate_str
                                         , tmp.GoodsId
                                         , tmp.GoodsKindId
                                         , tmp.ReceiptId
@@ -400,6 +421,7 @@ BEGIN
                                                     LEFT JOIN MovementLinkObject AS MLO_From
                                                                                  ON MLO_From.MovementId = Movement.Id
                                                                                 AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                                    INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MLO_From.ObjectId
                                                     LEFT JOIN MovementLinkObject AS MLO_To
                                                                                  ON MLO_To.MovementId = Movement.Id
                                                                                 AND MLO_To.DescId = zc_MovementLinkObject_To()
@@ -409,8 +431,9 @@ BEGIN
                                                  WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '2 DAY' AND inEndDate + INTERVAL '10 DAY'
                                                    AND Movement.DescId = zc_Movement_ProductionUnion()
                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                   AND MLO_From.ObjectId = inFromId
-                                                   AND MLO_To.ObjectId <> inFromId
+                                                   --AND MLO_From.ObjectId = inFromId
+                                                   --AND MLO_To.ObjectId <> inFromId
+                                                   AND MLO_To.ObjectId <> MLO_From.ObjectId
                                                  GROUP BY MovementItem.ObjectId
                                                         , MILO_GoodsKind.ObjectId
                                                         , MILO_Receipt.ObjectId
@@ -453,7 +476,7 @@ BEGIN
                                 UNION 
                                   --свернуто
                                   SELECT zfConvert_DateToString (tmp.OperDate) ::TVarChar AS OperDate
-                                       , tmp.OperDate_str ::TVarChar
+                                       , tmp.OperDate_str ::TVarChar AS OperDate_str
                                        , tmp.GoodsId
                                        , tmp.GoodsKindId
                                        , tmp.ReceiptId
@@ -500,7 +523,7 @@ BEGIN
                                , MIFloat_RealWeight.ValueData        AS RealWeight
                                , MIFloat_CuterWeight.ValueData       AS CuterWeight
 
-                               , tmpFact_production.OperDate_str ::TVarChar AS OperDate_fact
+                               --, tmpFact_production.OperDate_str ::TVarChar AS OperDate_fact
                                , COALESCE (tmpFact_production.Amount,0)        ::TFloat  AS Amount_fact
                                , COALESCE (tmpFact_production.Persent,0)       ::TFloat  AS Percent_fact
                                , tmpFact_production.Day_avg                    ::TFloat  AS Day_avg_fact
@@ -561,7 +584,7 @@ BEGIN
                                , 0  :: TFloat        AS RealWeight
                                , 0  :: TFloat        AS CuterWeight
 
-                               , tmpFact_production.OperDate_str  AS OperDate_fact
+                               --, tmpFact_production.OperDate_str  AS OperDate_fact
                                , COALESCE (tmpFact_production.Amount,0)        ::TFloat  AS Amount_fact
                                , COALESCE (tmpFact_production.Persent,0)       ::TFloat  AS Percent_fact
                                , tmpFact_production.Day_avg                    ::TFloat  AS Day_avg_fact
@@ -627,7 +650,7 @@ BEGIN
             , SUM (tmp.Amount_Order)    AS Amount_Order
             , SUM (tmp.CuterCount_Order) AS CuterCount_Order
 
-            , tmp.OperDate_fact
+            --, tmp.OperDate_fact
             , SUM (tmp.Amount_fact)          ::TFloat    AS Amount_fact
             , SUM (tmp.Percent_fact)         ::TFloat    AS Percent_fact
             , MAX (tmp.Day_avg_fact)         ::TFloat    AS Day_avg_fact
@@ -670,7 +693,7 @@ BEGIN
                   , _tmpListMaster.PartionGoodsDateClose
                   , _tmpListMaster.isOrderSecond
 
-                  , _tmpListMaster.OperDate_fact                 ::TVarChar AS OperDate_fact
+                  --, _tmpListMaster.OperDate_fact                 ::TVarChar AS OperDate_fact
                   , COALESCE (_tmpListMaster.Amount_fact,0)      ::TFloat   AS Amount_fact
                   , COALESCE (_tmpListMaster.Percent_fact,0)     ::TFloat   AS Percent_fact
                   , _tmpListMaster.Day_avg_fact                  ::TFloat   AS Day_avg_fact
@@ -744,7 +767,7 @@ BEGIN
                     , tmp.PartionGoodsDate
                     , tmp.PartionGoodsDateClose
                     , tmp.isOrderSecond
-                    , tmp.OperDate_fact
+                    --, tmp.OperDate_fact
            ;
 
     -- Результат
@@ -800,7 +823,7 @@ BEGIN
 
             , tmpData.isOrderSecond
 
-            , tmpData.OperDate_fact   :: TVarChar
+            --, tmpData.OperDate_fact   :: TVarChar
             , tmpData.Amount_fact     :: TFloat
 
             , CAST (tmpData.Percent_fact AS NUMERIC (16,1))  ::TFloat AS Percent_fact

@@ -127,6 +127,8 @@ begin
     end;
   finally
     ReleaseMutex(MutexEmployeeWorkLog);
+    if EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Close;
+    EmployeeWorkLogCDS.Free;
   end;
 end;
 

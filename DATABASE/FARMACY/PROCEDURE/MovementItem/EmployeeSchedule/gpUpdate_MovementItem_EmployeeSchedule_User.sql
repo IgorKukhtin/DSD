@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_EmployeeSchedule_User(
     IN inStartMin            TVarChar,   -- Минуты прихода
     IN inEndHour             TVarChar,   -- Час ухода
     IN inEndMin              TVarChar,   -- Минуты ухода
-    IN inServiceExit         Boolean,    -- Минуты ухода
+    IN inServiceExit         Boolean,    -- Служебный выход
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS void

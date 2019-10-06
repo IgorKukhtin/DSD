@@ -45,6 +45,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaTotal
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaValidationResults
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil

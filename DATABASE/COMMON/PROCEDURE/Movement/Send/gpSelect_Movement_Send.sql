@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnionDate TDateTime
              , InsertDate TDateTime, InsertName TVarChar
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
+             , MovementId_Order Integer, OperDate_Order TDateTime, InvNumberOrder TVarChar
+             , PartnerName_Order TVarChar
               )
 AS
 $BODY$
@@ -45,7 +47,17 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
-
+        , tmpMovement AS (SELECT Movement.id
+                          FROM tmpStatus
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
+                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                         )
+        , tmpMLM AS (SELECT MovementLinkMovement.*
+                     FROM MovementLinkMovement
+                     WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Send()
+                                                         , zc_MovementLinkMovement_Order())
+                     )
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -85,11 +97,21 @@ BEGIN
            || zfCalc_PartionMovementName (Movement_Send.DescId, MovementDesc_Send.ItemName, Movement_Send.InvNumber, Movement_Send.OperDate)
              , ' ')                     :: TVarChar      AS InvNumber_SendFull
 
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            ) AS tmpMovement
+           -- Á‡ˇ‚Í‡
+           , MovementLinkMovement_Order.MovementChildId         AS MovementId_Order
+           , Movement_Order.OperDate    :: TDateTime            AS OperDate_Order
+           , CASE WHEN MovementLinkMovement_Order.MovementChildId IS NOT NULL
+                  THEN CASE WHEN Movement_Order.StatusId IN (zc_Enum_Status_Complete())
+                                 THEN ''
+                            ELSE '???'
+                       END
+                    || CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner_Order.ValueData, '')) <> ''
+                                 THEN MovementString_InvNumberPartner_Order.ValueData
+                            ELSE '***' || Movement_Order.InvNumber
+                       END
+             END                                    :: TVarChar AS InvNumberOrder
+           , Object_Partner_order.ValueData                     AS PartnerName_order
+       FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
@@ -150,11 +172,25 @@ BEGIN
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Send
-                                           ON MovementLinkMovement_Send.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
+            LEFT JOIN tmpMLM AS MovementLinkMovement_Send
+                             ON MovementLinkMovement_Send.MovementId = Movement.Id
+                            AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
             LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
+
+            --Á‡ˇ‚Í‡
+            LEFT JOIN tmpMLM AS MovementLinkMovement_Order
+                             ON MovementLinkMovement_Order.MovementId = Movement.Id
+                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
+                                     ON MovementString_InvNumberPartner_Order.MovementId = Movement_Order.Id
+                                    AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner 
+                                         ON MovementLinkObject_Partner.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner_order ON Object_Partner_order.Id = MovementLinkObject_Partner.ObjectId
 
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
       ;
@@ -166,6 +202,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.10.19         *
  27.02.19         * 
  03.10.17         add Comment
  05.10.16         * add inJuridicalBasisId

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar
              , InsertDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
+             , MovementId_Order Integer, InvNumberOrder TVarChar
               )
 AS
 $BODY$
@@ -56,6 +57,8 @@ BEGIN
 
              , 0                                                AS MovementId_Send
              , CAST ('' AS TVarChar)                            AS InvNumber_SendFull
+             , 0                                                AS MovementId_Order
+             , CAST ('' AS TVarChar) 			        AS InvNumberOrder
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -91,7 +94,21 @@ BEGIN
                    ELSE ''
               END
            || zfCalc_PartionMovementName (Movement_Send.DescId, MovementDesc_Send.ItemName, Movement_Send.InvNumber, Movement_Send.OperDate)
-             , ' ')                     :: TVarChar      AS InvNumber_SendFull
+             , ' ')                            :: TVarChar      AS InvNumber_SendFull
+
+           -- заявка
+           , MovementLinkMovement_Order.MovementChildId         AS MovementId_Order
+           , CASE WHEN MovementLinkMovement_Order.MovementChildId IS NOT NULL
+                  THEN CASE WHEN Movement_Order.StatusId IN (zc_Enum_Status_Complete())
+                                 THEN ''
+                            ELSE '???'
+                       END
+                    || CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner_Order.ValueData, '')) <> ''
+                                 THEN MovementString_InvNumberPartner_Order.ValueData
+                            ELSE '***' || Movement_Order.InvNumber
+                       END
+             END                                    :: TVarChar AS InvNumberOrder
+           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -136,6 +153,14 @@ BEGIN
                                           AND MovementLinkMovement_Send.DescId          = zc_MovementLinkMovement_Send()
             LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
+                                     ON MovementString_InvNumberPartner_Order.MovementId = Movement_Order.Id
+                                    AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();

@@ -407,6 +407,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend_out
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = UnitName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -1048,6 +1053,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
               Format = ',0.####'
               Kind = skSum
               Column = ch2Amount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ch2FromName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1459,6 +1469,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
               Format = ',0.####'
               Kind = skSum
               Column = chAmountSend_out
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = chFromName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1937,6 +1952,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           item
             Format = ',0.####'
             Kind = skSum
+          end
+          item
+            Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+            Kind = skCount
+            Column = dsFromName
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -2219,6 +2239,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Format = ',0.####'
             Kind = skSum
             Column = cxGridDBColumn3
+          end
+          item
+            Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+            Kind = skCount
+            Column = cxGridDBColumn1
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList

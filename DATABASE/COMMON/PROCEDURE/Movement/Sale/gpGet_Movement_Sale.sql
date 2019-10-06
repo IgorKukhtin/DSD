@@ -360,7 +360,7 @@ BEGIN
                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
                LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
-                                        ON MovementString_InvNumberPartner_Order.MovementId =  Movement_Order.Id
+                                        ON MovementString_InvNumberPartner_Order.MovementId = Movement_Order.Id
                                        AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
 
                LEFT JOIN Object AS ObjectCurrencyDocumentInf ON ObjectCurrencyDocumentInf.Id = zc_Enum_Currency_Basis()

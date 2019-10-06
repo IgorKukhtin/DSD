@@ -77,6 +77,9 @@ type
     cxLabel27: TcxLabel;
     edInvNumberSend: TcxButtonEdit;
     GuidesSendDoc: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

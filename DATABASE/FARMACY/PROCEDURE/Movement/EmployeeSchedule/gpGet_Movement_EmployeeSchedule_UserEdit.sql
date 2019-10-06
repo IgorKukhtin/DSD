@@ -82,7 +82,7 @@ BEGIN
                              ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                             AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(ObjectLink_Member_Unit.ChildObjectId, MILinkObject_Unit.ObjectId)
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
 
     WHERE Movement.Id =  inMovementId;
 

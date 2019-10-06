@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Check (Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
@@ -53,6 +52,22 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY
+         WITH tmpPromoCode AS (SELECT Movement_PromoCode.InvNumber
+                                    , Movement_PromoCode.OperDate  
+                                    , MIString_GUID.ValueData 
+                                    FROM MovementFloat AS MovementFloat_MovementItemId
+                                                              
+                                       LEFT JOIN MovementItem AS MI_PromoCode 
+                                                              ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                                             AND MI_PromoCode.isErased = FALSE
+                                       LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
+                            
+                                       LEFT JOIN MovementItemString AS MIString_GUID
+                                                                    ON MIString_GUID.MovementItemId = MI_PromoCode.Id
+                                                                   AND MIString_GUID.DescId = zc_MIString_GUID()
+                                    WHERE MovementFloat_MovementItemId.MovementId = inMovementId
+                                      AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId())
+
          SELECT       
              Movement_Check.Id
            , Movement_Check.InvNumber
@@ -87,8 +102,8 @@ BEGIN
            , Movement_Check.SPKindId
            , Movement_Check.SPKindName 
 
-           , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
-           , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
+           , ('№ ' || tmpPromoCode.InvNumber || ' от ' || tmpPromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
+           , tmpPromoCode.ValueData                   ::TVarChar AS GUID_PromoCode
            , Movement_Check.ManualDiscount                      AS ManualDiscount
            
            , Movement_Check.MemberSPId
@@ -117,7 +132,8 @@ BEGIN
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
 
              -- инфа из документа промо код
-             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+             LEFT JOIN tmpPromoCode ON 1 = 1
+/*             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                      ON MovementFloat_MovementItemId.MovementId = Movement_Check.Id
                                     AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
              LEFT JOIN MovementItem AS MI_PromoCode 
@@ -128,7 +144,7 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_GUID
                                           ON MIString_GUID.MovementItemId = MI_PromoCode.Id
                                          AND MIString_GUID.DescId = zc_MIString_GUID()
-
+*/
              LEFT JOIN ObjectString AS ObjectString_Address
                                     ON ObjectString_Address.ObjectId = Movement_Check.MemberSPId
                                    AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
@@ -177,6 +193,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 02.10.19                                                                      * Оптимизация
  20.04.19         * PartionDateKind
  01.04.19                                                                      * add Delay
  25.02.19                                                                      * add JackdawsChecks
@@ -193,4 +210,4 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Check (inMovementId:= 1, inSession:= '9818')
+-- select * from gpGet_Movement_Check(inMovementId := 15241125 ,  inSession := '3');

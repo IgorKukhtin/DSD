@@ -214,7 +214,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           object InvNumberOrder: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'InvNumberOrder'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55

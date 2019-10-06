@@ -1,8 +1,8 @@
--- Function: gpSelect_MovementItem_Wages_Sign()
+-- Function: gpSelect_MovementItem_WagesAdditionalExpenses()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Wages_Sign (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_WagesAdditionalExpenses (Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages_Sign(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages_Sign(
 )
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -70,6 +70,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaCleaning
                  , NULL::TFloat                       AS SummaSP
                  , NULL::TFloat                       AS SummaOther
+                 , NULL::TFloat                       AS SummaValidationResults
                  , NULL::TFloat                       AS SummaTotal
 
                  , False                              AS isIssuedBy
@@ -90,22 +91,23 @@ BEGIN
                                          WHERE MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId = zc_MI_Sign())
             UNION ALL
-            SELECT MovementItem.Id                    AS Id
-                 , MovementItem.ObjectId              AS UnitID
-                 , Object_Unit.ObjectCode             AS UnitCode
-                 , Object_Unit.ValueData              AS UnitName
+            SELECT MovementItem.Id                     AS Id
+                 , MovementItem.ObjectId               AS UnitID
+                 , Object_Unit.ObjectCode              AS UnitCode
+                 , Object_Unit.ValueData               AS UnitName
 
-                 , MIFloat_SummaCleaning.ValueData    AS SummaCleaning
-                 , MIFloat_SummaSP.ValueData          AS SummaSP
-                 , MIFloat_SummaOther.ValueData       AS SummaOther
-                 , MovementItem.Amount                AS SummaTotal
+                 , MIFloat_SummaCleaning.ValueData     AS SummaCleaning
+                 , MIFloat_SummaSP.ValueData           AS SummaSP
+                 , MIFloat_SummaOther.ValueData        AS SummaOther
+                 , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                 , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
-                 , MIDate_IssuedBy.ValueData          AS DateIssuedBy
-                 , MIS_Comment.ValueData              AS Comment
+                 , MIDate_IssuedBy.ValueData            AS DateIssuedBy
+                 , MIS_Comment.ValueData                AS Comment
 
-                 , MovementItem.isErased              AS isErased
-                 , zc_Color_Black()                   AS Color_Calc
+                 , MovementItem.isErased               AS isErased
+                 , zc_Color_Black()                    AS Color_Calc
             FROM  MovementItem
 
 
@@ -122,6 +124,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaOther
                                               ON MIFloat_SummaOther.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaOther.DescId = zc_MIFloat_SummaOther()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
+                                              ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -141,22 +147,23 @@ BEGIN
     ELSE
         -- Результат другой
         RETURN QUERY
-            SELECT MovementItem.Id                    AS Id
-                 , MovementItem.ObjectId              AS UnitID
-                 , Object_Unit.ObjectCode             AS UnitCode
-                 , Object_Unit.ValueData              AS UnitName
+            SELECT MovementItem.Id                     AS Id
+                 , MovementItem.ObjectId               AS UnitID
+                 , Object_Unit.ObjectCode              AS UnitCode
+                 , Object_Unit.ValueData               AS UnitName
 
-                 , MIFloat_SummaCleaning.ValueData    AS SummaCleaning
-                 , MIFloat_SummaSP.ValueData          AS SummaSP
-                 , MIFloat_SummaOther.ValueData       AS SummaOther
-                 , MovementItem.Amount                AS SummaTotal
+                 , MIFloat_SummaCleaning.ValueData     AS SummaCleaning
+                 , MIFloat_SummaSP.ValueData           AS SummaSP
+                 , MIFloat_SummaOther.ValueData        AS SummaOther
+                 , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                 , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
-                 , MIDate_IssuedBy.ValueData          AS DateIssuedBy
-                 , MIS_Comment.ValueData              AS Comment
+                 , MIDate_IssuedBy.ValueData           AS DateIssuedBy
+                 , MIS_Comment.ValueData               AS Comment
 
-                 , MovementItem.isErased              AS isErased
-                 , zc_Color_Black()                   AS Color_Calc
+                 , MovementItem.isErased               AS isErased
+                 , zc_Color_Black()                    AS Color_Calc
             FROM  MovementItem
 
 
@@ -173,6 +180,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaOther
                                               ON MIFloat_SummaOther.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaOther.DescId = zc_MIFloat_SummaOther()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
+                                              ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -198,6 +209,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 01.089.19                                                        *
+ 02.10.19                                                        *
+ 01.09.19                                                        *
 */
--- select * from gpSelect_MovementItem_Wages_Sign(inMovementId := 15414488 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
