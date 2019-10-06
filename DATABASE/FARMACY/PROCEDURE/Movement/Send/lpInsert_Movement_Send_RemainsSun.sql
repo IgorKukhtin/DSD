@@ -483,6 +483,9 @@ BEGIN
              -- отбросили !!закрытые!!
              INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
                                          AND Object_Goods_View.IsClose = FALSE
+             -- отбросили !!закрытые!!
+             INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
+                                              AND Object_Goods.ValueData NOT ILIKE 'ААА%'
         -- !!!только с таким НТЗ!!!
         -- WHERE tmpObject_Price.MCSValue >= 0.5
         -- !!!отключил, взяли все!!!
