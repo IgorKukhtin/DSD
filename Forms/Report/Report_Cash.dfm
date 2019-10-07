@@ -4,10 +4,9 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -309
-  ExplicitTop = -101
+  ExplicitLeft = -86
   ExplicitWidth = 1036
-  ExplicitHeight = 594
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -806,6 +805,9 @@ inherited Report_CashForm: TReport_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byElements: TdsdPrintAction
       Category = 'DSDLib'
@@ -886,6 +888,9 @@ inherited Report_CashForm: TReport_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -931,7 +936,9 @@ inherited Report_CashForm: TReport_CashForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
+          IndexFieldNames = 
+            'cashname;CurrencyName;GroupId;InfoMoneyName_all;MoneyPlaceName;C' +
+            'omment'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -961,6 +968,9 @@ inherited Report_CashForm: TReport_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
