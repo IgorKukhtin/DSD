@@ -1,6 +1,7 @@
  -- Function: gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
  INOUT ioId	                 Integer,       -- ключ объекта < —чет>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
     IN inBeneficiarysBankAccount TVarChar,  -- —чет банка бенефициара
     IN inBeneficiarysAccount TVarChar,      -- —чет бенефициара
     IN inCBAccount TVarChar,                -- —чет - дл€ выгрузки в клиент банк
+    IN inCBAccountOld TVarChar,             -- —чет старый - дл€ выгрузки в клиент банк
 
     IN inSession             TVarChar       -- сесси€ пользовател€
 )
@@ -55,6 +57,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_BankAccount_BeneficiarysBankAccount(), ioId, inBeneficiarysBankAccount);
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_BankAccount_BeneficiarysAccount(), ioId, inBeneficiarysAccount);
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_BankAccount_CBAccount(), ioId, inCBAccount);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_BankAccount_CBAccountOld(), ioId, inCBAccountOld);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

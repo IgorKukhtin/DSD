@@ -234,7 +234,7 @@ end if;*/
      
       IF (COALESCE(vbGoodsName,'') <> '') 
       THEN
-          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во рвспределено <%> больше, чем есть на остатке <%> по партии.', vbGoodsName, vbAmount, vbSaldo;
+          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во распределено <%> больше, чем есть на остатке <%> по партии.', vbGoodsName, vbAmount, vbSaldo;
       END IF;
     END IF;
 

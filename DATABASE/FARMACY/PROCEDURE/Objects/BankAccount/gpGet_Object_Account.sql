@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
                CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar,
-               CBAccount TVarChar
+               CBAccount TVarChar, CBAccountOld TVarChar
 
                ) AS
 $BODY$
@@ -44,7 +44,8 @@ BEGIN
            , CAST ('' as TVarChar) AS CorrespondentAccount
            , CAST ('' as TVarChar) AS BeneficiarysBankAccount
            , CAST ('' as TVarChar) AS BeneficiarysAccount
-           , CAST ('' as TVarChar) AS CBAccount;
+           , CAST ('' as TVarChar) AS CBAccount
+           , CAST ('' as TVarChar) AS CBAccountOld;
    ELSE
        RETURN QUERY
        SELECT
@@ -66,6 +67,7 @@ BEGIN
            , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
            , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount
            , OS_BankAccount_CBAccount.ValueData                 AS CBAccount
+           , OS_BankAccount_CBAccountOld.ValueData              AS CBAccountOld
 
        FROM Object
         LEFT JOIN ObjectLink AS BankAccount_Juridical
@@ -101,6 +103,9 @@ BEGIN
         LEFT JOIN ObjectString AS OS_BankAccount_CBAccount
                                ON OS_BankAccount_CBAccount.ObjectId = Object.Id
                               AND OS_BankAccount_CBAccount.DescId = zc_ObjectString_BankAccount_CBAccount()
+        LEFT JOIN ObjectString AS OS_BankAccount_CBAccountOld
+                               ON OS_BankAccount_CBAccountOld.ObjectId = Object.Id
+                              AND OS_BankAccount_CBAccountOld.DescId = zc_ObjectString_BankAccount_CBAccountOld()
 
        WHERE Object.Id = inId;
   END IF;

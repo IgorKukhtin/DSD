@@ -140,6 +140,8 @@ type
     EmployeeWorkLogCDS: TClientDataSet;
     spEmployeeWorkLog: TdsdStoredProc;
     TimerNeedRemainsDiff: TTimer;
+    EmployeeScheduleCDS: TClientDataSet;
+    spEmployeeSchedule: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -193,6 +195,7 @@ type
 
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
+    procedure SendEmployeeSchedule;
     procedure SecureUpdateVersion;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
@@ -220,7 +223,7 @@ var
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi: THandle;
+  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule : THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -584,6 +587,8 @@ begin
   LastErr := GetLastError;
   MutexUserHelsi := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
   LastErr := GetLastError;
+  MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
+  LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
@@ -616,6 +621,7 @@ begin
     SaveListDiff; // Отправляем листы отказов
     SendZReport;  // Отправляем Z отчеты
     SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
+    SendEmployeeSchedule;  // Отправляем времени работы сотрудников
     tiServise.Hint := '';
   end;
   if not FHasError then
@@ -1035,6 +1041,7 @@ begin
       SaveListDiff;
       SendZReport;
       SendEmployeeWorkLog;
+      SendEmployeeSchedule;
     end;
   finally
     tiServise.Hint := '';
@@ -2456,6 +2463,60 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SendEmployeeSchedule;
+begin
+  // Отправка времени работы сотрудников
+  if FileExists(EmployeeSchedule_lcl) then
+  begin
+
+    tiServise.Hint := 'Отправка времени работы сотрудников';
+
+    Add_Log('Start MutexEmployeeSchedule');
+    WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
+    try
+      try
+
+        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+        if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
+
+        EmployeeScheduleCDS.First;
+        while not EmployeeScheduleCDS.Eof do
+        begin
+          if not EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean then
+          begin
+            spEmployeeSchedule.Execute;
+            EmployeeScheduleCDS.Edit;
+            EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean := True;
+            EmployeeScheduleCDS.Post;
+          end;
+          EmployeeScheduleCDS.Next;
+        end;
+
+        EmployeeScheduleCDS.First;
+        while not EmployeeScheduleCDS.Eof do
+        begin
+          if EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean and
+            (StartOfTheDay(EmployeeScheduleCDS.FieldByName('Date').AsDateTime) < IncDay(Date, - 7)) then
+          begin
+            EmployeeScheduleCDS.Delete;
+            Continue;
+          end;
+          EmployeeScheduleCDS.Next;
+        end;
+
+        SaveLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки времени работы сотрудников:' + E.Message);
+      end;
+    finally
+      Add_Log('End MutexEmployeeSchedule');
+      ReleaseMutex(MutexEmployeeSchedule);
+      EmployeeScheduleCDS.Close;
+    end;
+  end;
+end;
+
 procedure TMainCashForm2.SecureUpdateVersion;
   var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
       OldProgram, OldServise : Boolean;
@@ -2546,6 +2607,7 @@ begin
  CloseHandle(MutexGoodsExpirationDate);
  CloseHandle(MutexGoods);
  CloseHandle(MutexGoodsAnalog);
+ CloseHandle(MutexEmployeeSchedule);
  CloseHandle(MutexUserHelsi);
 end;
 

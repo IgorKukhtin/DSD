@@ -127,15 +127,17 @@ BEGIN
              TO_CHAR (MI_Payment.ContractStartDate, 'dd.mm.yyyy')||' ð Ó ò.÷. ÏÄÂ '||
              MI_Payment.Income_NDS::Integer::TVarChar||'%')::TVarChar    AS N_P
           , CASE WHEN TRIM(upper(SUBSTRING(OS_BankAccount_CBAccount.ValueData, 1, 2))) <> 'UA'
-            THEN OS_BankAccount_CBAccount.ValueData END::TVarChar AS KL_CHK
-          , MI_Payment.Unit_OKPO                                  AS KL_OKP
+            THEN OS_BankAccount_CBAccount.ValueData 
+            ELSE OS_BankAccount_CBAccountOld.ValueData END::TVarChar AS KL_CHK
+          , MI_Payment.Unit_OKPO                                     AS KL_OKP
 
 
-          , ObjectString_CBMFO.ValueData                          AS KL_OKP_K
+          , ObjectString_CBMFO.ValueData                           AS KL_OKP_K
           , CASE WHEN TRIM(upper(SUBSTRING(ObjectString_CBAccount.ValueData, 1, 2))) <> 'UA'
-            THEN ObjectString_CBAccount.ValueData END::TVarChar   AS KL_CHK_K
-          , MI_Payment.OKPO                                       AS KL_OKP_K
-          , ObjectString_CBName.ValueData                         AS KL_NM_K
+            THEN ObjectString_CBAccount.ValueData
+            ELSE ObjectString_CBAccountOld.ValueData END::TVarChar AS KL_CHK_K
+          , MI_Payment.OKPO                                        AS KL_OKP_K
+          , ObjectString_CBName.ValueData                          AS KL_NM_K
 
 
 
@@ -160,17 +162,26 @@ BEGIN
                                     ON ObjectString_CBAccount.ObjectId = MI_Payment.income_JuridicalId
                                    AND ObjectString_CBAccount.DescId = zc_ObjectString_Juridical_CBAccount()
 
+             LEFT JOIN ObjectString AS ObjectString_CBAccountOld
+                                    ON ObjectString_CBAccountOld.ObjectId = MI_Payment.income_JuridicalId
+                                   AND ObjectString_CBAccountOld.DescId = zc_ObjectString_Juridical_CBAccountOld()
+
              LEFT JOIN ObjectString AS ObjectString_CBPurposePayment
                                     ON ObjectString_CBPurposePayment.ObjectId = MI_Payment.income_JuridicalId
                                    AND ObjectString_CBPurposePayment.DescId = zc_ObjectString_Juridical_CBPurposePayment()
+
 
              LEFT JOIN ObjectString AS OS_BankAccount_CBAccount
                                     ON OS_BankAccount_CBAccount.ObjectId = MI_Payment.BankAccountId
                                    AND OS_BankAccount_CBAccount.DescId = zc_ObjectString_BankAccount_CBAccount()
 
-            LEFT JOIN ObjectString AS OS_Bank_MFO
-                                   ON OS_Bank_MFO.ObjectId = 4611431
-                                  AND OS_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
+             LEFT JOIN ObjectString AS OS_BankAccount_CBAccountOld
+                                    ON OS_BankAccount_CBAccountOld.ObjectId = MI_Payment.BankAccountId
+                                   AND OS_BankAccount_CBAccountOld.DescId = zc_ObjectString_BankAccount_CBAccountOld()
+
+             LEFT JOIN ObjectString AS OS_Bank_MFO
+                                    ON OS_Bank_MFO.ObjectId = 4611431
+                                   AND OS_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
 
         ORDER BY MI_Payment.Income_JuridicalName
                , MI_Payment.Income_NDS
@@ -190,6 +201,4 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportConcord (Integer,TVarChar) OWNER 
  08.09.19                                                                       *
 */
 
---
-SELECT * FROM gpSelect_Movement_Payment_ExportConcord (inMovementId := 15945942  , inSession:= '5');
-
+-- select * from gpSelect_Movement_Payment_ExportConcord(inMovementId := 16025389 ,  inSession := '3');

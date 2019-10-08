@@ -120,6 +120,8 @@ type
     edCBMFO: TcxTextEdit;
     edCBAccount: TcxTextEdit;
     edCBPurposePayment: TcxTextEdit;
+    edCBAccountOld: TcxTextEdit;
+    cxLabel24: TcxLabel;
   private
     { Private declarations }
   public

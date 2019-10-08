@@ -3062,7 +3062,6 @@ inherited MainCashForm2: TMainCashForm2
       CancelAction = actBanCash
       AfterAction = actBanCash
       Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072
-      ShortCut = 16468
       FormName = 'TEmployeeScheduleUserForm'
       FormNameParam.Value = 'TEmployeeScheduleUserForm'
       FormNameParam.DataType = ftString
@@ -3583,7 +3582,9 @@ inherited MainCashForm2: TMainCashForm2
       Action = actExpirationDateFilter
     end
     object N22: TMenuItem
-      Action = actEmployeeScheduleUser
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072
+      ShortCut = 16468
+      OnClick = N22Click
     end
     object actUpdateRemainsCDS1: TMenuItem
       Action = actDoesNotShare

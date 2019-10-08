@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inCBName                  TVarChar  ,    -- Полное название поставщика для клиент банка
     IN inCBMFO                   TVarChar  ,    -- МФО для клиент банка
     IN inCBAccount               TVarChar  ,    -- Расчетный счет для клиент банка
+    IN inCBAccountOld            TVarChar  ,    -- Расчетный счет стврый для клиент банка
     IN inCBPurposePayment        TVarChar  ,    -- Назначение платежа для клиент банка
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -68,6 +70,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBMFO(), ioId, inCBMFO);
    -- сохранили свойство <Расчетный счет для клиент банка>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBAccount(), ioId, inCBAccount);
+   -- сохранили свойство <Расчетный счет старый для клиент банка>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBAccountOld(), ioId, inCBAccountOld);
    -- сохранили свойство <Назначение платежа для клиент банка>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBPurposePayment(), ioId, inCBPurposePayment);
 

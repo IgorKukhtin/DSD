@@ -526,6 +526,7 @@ type
     procedure MainGridDBTableViewCanFocusRecord(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure actNotTransferTimeExecute(Sender: TObject);
+    procedure N22Click(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -667,7 +668,7 @@ var
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
   MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
   MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi : THandle;  // MutexAllowedConduct только 2 форма
+  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -685,7 +686,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
-     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit;
+     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash;
 
 const
   StatusUnCompleteCode = 1;
@@ -4056,6 +4057,9 @@ begin
   LastErr := GetLastError;
   MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
   LastErr := GetLastError;
+  MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
+  LastErr := GetLastError;
+
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -4985,6 +4989,20 @@ begin
   PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 30);
 end;
 
+procedure TMainCashForm2.N22Click(Sender: TObject);
+begin
+
+  if gc_User.Local then
+  begin
+    with TEmployeeScheduleCashForm.Create(nil) do
+      try
+         EmployeeScheduleCashExecute;
+      finally
+         Free;
+      end;
+  end else actEmployeeScheduleUser.Execute;
+end;
+
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
   FormParams.ParamByName('CheckId').Value := 0;
@@ -5163,6 +5181,7 @@ begin
   CloseHandle(MutexGoods);
   CloseHandle(MutexGoodsAnalog);
   CloseHandle(MutexUserHelsi);
+  CloseHandle(MutexEmployeeSchedule);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;

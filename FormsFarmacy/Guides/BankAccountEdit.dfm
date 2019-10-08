@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-  ClientHeight = 321
+  ClientHeight = 364
   ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,8 +29,8 @@
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
-    Left = 368
-    Top = 284
+    Left = 149
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 512
-    Top = 284
+    Left = 456
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -190,6 +190,18 @@
     Cursor = crDrag
     Caption = #1057#1095#1077#1090' - '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1082#1083#1080#1077#1085#1090' '#1073#1072#1085#1082
   end
+  object edCBAccountOld: TcxTextEdit
+    Left = 344
+    Top = 292
+    TabOrder = 24
+    Width = 273
+  end
+  object cxLabel11: TcxLabel
+    Left = 344
+    Top = 269
+    Cursor = crDrag
+    Caption = #1057#1095#1077#1090' '#1089#1090#1072#1088#1099#1081' - '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1082#1083#1080#1077#1085#1090' '#1073#1072#1085#1082
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -317,6 +329,14 @@
         Name = 'inCBAccount'
         Value = Null
         Component = edCBAccount
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCBAccountOld'
+        Value = Null
+        Component = edCBAccountOld
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -466,8 +486,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AccountName'
+        Name = 'CBAccountOld'
         Value = Null
+        Component = edCBAccountOld
         DataType = ftString
         MultiSelectSeparator = ','
       end>

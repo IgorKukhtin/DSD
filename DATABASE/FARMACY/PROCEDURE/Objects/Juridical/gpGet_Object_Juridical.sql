@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PayOrder TFloat,
                isLoadBarcode Boolean,
                isDeferred Boolean,
-               CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
+               CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -41,6 +41,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS CBName 
            , CAST ('' as TVarChar)   AS CBMFO
            , CAST ('' as TVarChar)   AS CBAccount
+           , CAST ('' as TVarChar)   AS CBAccountOld
            , CAST ('' as TVarChar)   AS CBPurposePayment
 
            , CAST (NULL AS Boolean)  AS isErased;
@@ -65,6 +66,7 @@ BEGIN
            , ObjectString_CBName.ValueData             AS CBName 
            , ObjectString_CBMFO.ValueData              AS CBMFO
            , ObjectString_CBAccount.ValueData          AS CBAccount
+           , ObjectString_CBAccountOld.ValueData       AS CBAccountOld
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
            
            , Object_Juridical.isErased                 AS isErased
@@ -107,6 +109,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_CBAccount
                                   ON ObjectString_CBAccount.ObjectId = Object_Juridical.Id
                                  AND ObjectString_CBAccount.DescId = zc_ObjectString_Juridical_CBAccount()
+
+           LEFT JOIN ObjectString AS ObjectString_CBAccountOld
+                                  ON ObjectString_CBAccountOld.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBAccountOld.DescId = zc_ObjectString_Juridical_CBAccountOld()
 
            LEFT JOIN ObjectString AS ObjectString_CBPurposePayment
                                   ON ObjectString_CBPurposePayment.ObjectId = Object_Juridical.Id

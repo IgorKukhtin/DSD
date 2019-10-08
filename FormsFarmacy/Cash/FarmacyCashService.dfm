@@ -25898,8 +25898,8 @@ object MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Name'
     Params = <>
     StoreDefs = True
-    Left = 488
-    Top = 80
+    Left = 536
+    Top = 88
   end
   object spSendListDiff: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff_cash'
@@ -26032,7 +26032,7 @@ object MainCashForm2: TMainCashForm2
     IndexFieldNames = 'DateLogIn'
     Params = <>
     StoreDefs = True
-    Left = 488
+    Left = 536
     Top = 152
   end
   object spEmployeeWorkLog: TdsdStoredProc
@@ -26108,5 +26108,68 @@ object MainCashForm2: TMainCashForm2
     OnTimer = TimerNeedRemainsDiffTimer
     Left = 172
     Top = 132
+  end
+  object EmployeeScheduleCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Date'
+    Params = <>
+    StoreDefs = True
+    Left = 536
+    Top = 216
+  end
+  object spEmployeeSchedule: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_spEmployeeSchedule_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = EmployeeScheduleCDS
+        ComponentItem = 'UserID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = EmployeeScheduleCDS
+        ComponentItem = 'Date'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 'NULL'
+        Component = EmployeeScheduleCDS
+        ComponentItem = 'DateStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = 'NULL'
+        Component = EmployeeScheduleCDS
+        ComponentItem = 'DateEnd'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceExit'
+        Value = Null
+        Component = EmployeeScheduleCDS
+        ComponentItem = 'ServiceExit'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 24
   end
 end

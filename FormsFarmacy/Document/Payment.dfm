@@ -100,9 +100,6 @@ inherited PaymentForm: TPaymentForm
           object Income_StatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' '#1055'/'#1053
             DataBinding.FieldName = 'Income_StatusName'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -265,31 +262,7 @@ inherited PaymentForm: TPaymentForm
           DataController.DataSource = PaymentCorrSummDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = '+,0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
-              Format = '+,0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
-              Format = '+,0.00;-,0.00; ;'
-              Kind = skSum
-            end>
+          DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True

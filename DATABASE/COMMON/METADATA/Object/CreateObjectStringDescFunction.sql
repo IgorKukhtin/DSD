@@ -991,17 +991,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBAccount() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Juridical_CBAccount', zc_Object_Juridical(), 'Расчетный счет для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBAccount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBAccountOld() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBAccountOld'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_CBAccountOld', zc_Object_Juridical(), 'Расчетный счет старый для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBAccountOld');
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_CBPurposePayment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBPurposePayment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Juridical_CBPurposePayment', zc_ObjectString_Juridical_CBPurposePayment(), 'Назначение платежа для клиент банка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_CBPurposePayment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_BankAccount_CBAccountOld() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BankAccount_CBAccountOld'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_BankAccount_CBAccountOld', zc_Object_BankAccount(), 'Счет старый - для выгрузки в клиент банк' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BankAccount_CBAccountOld');
 
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
- 10.09.19                                                                                                         * zc_ObjectString_BankAccount_CBAccount
+ 10.09.19                                                                                                         * zc_ObjectString_BankAccount_CBAccountб zc_ObjectString_BankAccount_CBAccountOld
  09.09.19         * zc_ObjectString_Member_CardIBAN
                     zc_ObjectString_Member_CardIBANSecond
  06.09.19                                                                                                         * zc_ObjectString_Juridical_CB...

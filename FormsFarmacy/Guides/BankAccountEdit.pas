@@ -52,6 +52,8 @@ type
     dsdBeneficiarysBankGuides: TdsdGuides;
     edCBAccount: TcxTextEdit;
     cxLabel10: TcxLabel;
+    edCBAccountOld: TcxTextEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

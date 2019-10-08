@@ -412,7 +412,7 @@
         end
         object cxLabel23: TcxLabel
           Left = 16
-          Top = 153
+          Top = 196
           Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
         end
         object edCBName: TcxTextEdit
@@ -435,9 +435,20 @@
         end
         object edCBPurposePayment: TcxTextEdit
           Left = 16
-          Top = 171
+          Top = 214
           TabOrder = 7
           Width = 537
+        end
+        object edCBAccountOld: TcxTextEdit
+          Left = 16
+          Top = 165
+          TabOrder = 8
+          Width = 537
+        end
+        object cxLabel24: TcxLabel
+          Left = 16
+          Top = 148
+          Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' '#1089#1090#1072#1088#1099#1081
         end
       end
     end
@@ -846,6 +857,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCBAccountOld'
+        Value = Null
+        Component = edCBAccountOld
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCBPurposePayment'
         Value = Null
         Component = edCBPurposePayment
@@ -971,6 +990,13 @@
         Name = 'CBAccount'
         Value = Null
         Component = edCBAccount
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CBAccountOld'
+        Value = Null
+        Component = edCBAccountOld
         DataType = ftString
         MultiSelectSeparator = ','
       end
