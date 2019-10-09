@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_SummSUN(
     IN inSummSUN               TFloat    ,     --
     IN inSession               TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
