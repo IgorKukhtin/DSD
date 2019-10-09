@@ -77,6 +77,8 @@ type
     PriceListGuides: TdsdGuides;
     cePrice: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    edWeightTare: TcxCurrencyEdit;
   private
     { Private declarations }
   public

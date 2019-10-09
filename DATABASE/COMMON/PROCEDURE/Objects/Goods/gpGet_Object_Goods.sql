@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Weight TFloat
+             , WeightTare TFloat
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , MeasureId Integer,  MeasureName TVarChar
@@ -43,6 +44,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Goods()) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (0 as TFloat)     AS Weight
+           , CAST (0 as TFloat)     AS WeightTare
 
            , CAST (0 as Integer)   AS GoodsGroupId
            , CAST ('' as TVarChar) AS GoodsGroupName 
@@ -83,7 +85,9 @@ BEGIN
              Object_Goods.Id              AS Id
            , Object_Goods.ObjectCode      AS Code
            , Object_Goods.ValueData       AS Name
-           , ObjectFloat_Weight.ValueData AS Weight
+           
+           , ObjectFloat_Weight.ValueData     AS Weight
+           , ObjectFloat_WeightTare.ValueData AS WeightTare
          
            , Object_GoodsGroup.Id         AS GoodsGroupId
            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
@@ -132,7 +136,7 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-          
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -146,7 +150,11 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight 
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
+                                ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_WeightTare.DescId = zc_ObjectFloat_Goods_WeightTare()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -184,6 +192,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.10.19         * add WeightTare
  24.11.14         * add inGoodsGroupAnalystId               
  15.09.14         * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * 

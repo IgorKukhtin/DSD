@@ -485,15 +485,20 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_WeightTareDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_WeightTareDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ObjectForm');
 

@@ -1104,7 +1104,8 @@ uses
   Report_ReceiptAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptAnalyzeDialog.pas' {Report_ReceiptAnalyzeDialogForm: TParentForm},
   PersonalRate in '..\..\Forms\Document\PersonalRate.pas' {PersonalRateForm: TParentForm},
   PersonalRateJournal in '..\..\Forms\Document\PersonalRateJournal.pas' {PersonalRateJournalForm: TParentForm},
-  WeighingPartnerDialog in '..\..\Forms\Document\WeighingPartnerDialog.pas' {WeighingPartnerDialogForm: TParentForm};
+  WeighingPartnerDialog in '..\..\Forms\Document\WeighingPartnerDialog.pas' {WeighingPartnerDialogForm: TParentForm},
+  Goods_WeightTareDialog in '..\..\Forms\Guides\Goods_WeightTareDialog.pas' {Goods_WeightTareDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
