@@ -83,13 +83,13 @@ BEGIN
                                  ON ObjectLink_Goods_PayrollGroup.ObjectId = MILinkObject_PayrollType.ObjectId
                                 AND ObjectLink_Goods_PayrollGroup.DescId = zc_ObjectLink_PayrollType_PayrollGroup()
 
-            LEFT JOIN MovementItemDate AS MIDate_Start
-                                       ON MIDate_Start.MovementItemId = MIChild.Id
-                                      AND MIDate_Start.DescId = zc_MIDate_Start()
+            INNER JOIN MovementItemDate AS MIDate_Start
+                                        ON MIDate_Start.MovementItemId = MIChild.Id
+                                       AND MIDate_Start.DescId = zc_MIDate_Start()
 
-            LEFT JOIN MovementItemDate AS MIDate_End
-                                       ON MIDate_End.MovementItemId = MIChild.Id
-                                      AND MIDate_End.DescId = zc_MIDate_End()
+            INNER JOIN MovementItemDate AS MIDate_End
+                                        ON MIDate_End.MovementItemId = MIChild.Id
+                                       AND MIDate_End.DescId = zc_MIDate_End()
 
        WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
           AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -392,4 +392,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Calculation_Wages (('01.09.2019')::TDateTime, 0, '3')
+-- SELECT * FROM gpSelect_Calculation_Wages (('01.10.2019')::TDateTime, 0, '3')
