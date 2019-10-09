@@ -26,7 +26,6 @@ object RetailForm: TRetailForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 457
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,7 +79,6 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1081' '#1074#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1057#1059#1053
-        Options.Editing = False
         Width = 72
       end
       object isErased: TcxGridDBColumn
@@ -367,10 +365,10 @@ object RetailForm: TRetailForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateGLNCode
+      StoredProc = spUpdate_SummSUN
       StoredProcList = <
         item
-          StoredProc = spUpdateGLNCode
+          StoredProc = spUpdate_SummSUN
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -624,5 +622,31 @@ object RetailForm: TRetailForm
     PackSize = 1
     Left = 352
     Top = 96
+  end
+  object spUpdate_SummSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_SummSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummSUN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'SummSUN'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 152
   end
 end

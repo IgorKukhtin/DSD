@@ -62,6 +62,7 @@ type
     actChoiceGoodsProperty: TOpenChoiceForm;
     actChoicePersonalMarketing: TOpenChoiceForm;
     actChoicePersonalTrade: TOpenChoiceForm;
+    spUpdate_SummSUN: TdsdStoredProc;
   private
     { Private declarations }
   public
