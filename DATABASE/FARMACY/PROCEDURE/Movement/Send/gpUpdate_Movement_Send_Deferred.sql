@@ -57,7 +57,8 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Коллеги, отложенные перемещение по СУН проводить нельзя.';
     END IF;
     
-    IF vbisSUN = TRUE AND vbSumma < 1000 AND inisDeferred = TRUE
+    IF vbisSUN = TRUE AND vbSumma < 1000 AND inisDeferred = TRUE 
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
       RAISE EXCEPTION 'Ошибка. Коллеги, перемещения по СУН с суммой менее 1000 грн. отлаживать нельзя.';
     END IF;

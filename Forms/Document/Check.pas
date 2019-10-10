@@ -149,6 +149,17 @@ type
     astChoicePartionDateKind: TOpenChoiceForm;
     actPartionGoods: TdsdOpenForm;
     dxBarButton6: TdxBarButton;
+    actAddGoods: TMultiAction;
+    actEditAmount: TMultiAction;
+    actAmountDialog: TExecuteDialog;
+    actExecAddGoods: TdsdExecStoredProc;
+    actExecEditAmount: TdsdExecStoredProc;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    spAddGoods: TdsdStoredProc;
+    spEditAmount: TdsdStoredProc;
+    actGoodsChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -369,18 +369,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
 
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksEditForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
 
@@ -2033,6 +2034,12 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
 end;
