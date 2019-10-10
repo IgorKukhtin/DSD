@@ -21,7 +21,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Left = 0
     Top = 0
     Width = 1252
-    Height = 31
+    Height = 51
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -52,12 +52,13 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      Style.Color = clWindow
       TabOrder = 3
       Width = 315
     end
     object edFilter: TcxTextEdit
-      Left = 649
-      Top = 5
+      Left = 272
+      Top = 27
       TabOrder = 4
       DesignSize = (
         373
@@ -65,27 +66,51 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Width = 373
     end
     object cxLabel2: TcxLabel
-      Left = 601
-      Top = 6
+      Left = 205
+      Top = 28
       Caption = #1060#1080#1083#1100#1090#1088
+    end
+    object cxLabel6: TcxLabel
+      Left = 703
+      Top = 33
+      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' > min '#1087#1083#1072#1085' '#1080' >= '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+      ParentColor = False
+      Style.Color = clLime
+    end
+    object cxLabel5: TcxLabel
+      Left = 703
+      Top = 16
+      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' >= min '#1087#1083#1072#1085' '#1085#1086' < '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+      ParentColor = False
+      Style.Color = clYellow
+    end
+    object cxLabel4: TcxLabel
+      Left = 703
+      Top = 1
+      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' < '#1079#1085#1072#1095#1077#1085#1080#1077' min '#1087#1083#1072#1085' '
+      ParentColor = False
+      Style.Color = 8684799
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 57
+    Top = 77
     Width = 1252
-    Height = 603
+    Height = 583
     Align = alClient
     BevelOuter = bvNone
     ShowCaption = False
     TabOrder = 5
+    ExplicitTop = 57
+    ExplicitHeight = 603
     object cxImplementationPlanEmployee: TcxGrid
       Left = 0
       Top = 0
       Width = 1252
-      Height = 456
+      Height = 436
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 456
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -130,6 +155,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GroupName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 140
           Position.BandIndex = 0
           Position.ColIndex = 0
@@ -140,6 +166,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GoodsCode'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 49
           Position.BandIndex = 0
           Position.ColIndex = 1
@@ -150,6 +177,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GoodsName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 234
           Position.BandIndex = 0
           Position.ColIndex = 2
@@ -163,6 +191,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.000'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 0
@@ -176,6 +205,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 1
@@ -189,6 +219,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 2
@@ -202,6 +233,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 3
@@ -215,6 +247,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 4
@@ -242,20 +275,22 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxSplitter1: TcxSplitter
       Left = 0
-      Top = 456
+      Top = 436
       Width = 1252
       Height = 8
       AlignSplitter = salBottom
       Control = Panel3
+      ExplicitTop = 456
     end
     object Panel3: TPanel
       Left = 0
-      Top = 464
+      Top = 444
       Width = 1252
       Height = 139
       Align = alBottom
       ShowCaption = False
       TabOrder = 2
+      ExplicitTop = 464
       object cxUnit: TcxGrid
         Left = 1
         Top = 1
@@ -735,7 +770,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
-    Left = 184
+    Left = 112
     Top = 8
   end
   object RefreshDispatcher: TRefreshDispatcher

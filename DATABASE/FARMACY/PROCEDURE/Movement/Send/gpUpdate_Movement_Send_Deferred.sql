@@ -13,7 +13,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbisDeferred Boolean;
+   DECLARE vbisSUN Boolean;
    DECLARE vbisDefSUN Boolean;
+   DECLARE vbSumma TFloat;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -26,23 +28,38 @@ BEGIN
     SELECT
         Movement.StatusId,
         COALESCE (MovementBoolean_Deferred.ValueData, FALSE),
-        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
+        COALESCE (MovementBoolean_SUN.ValueData, FALSE),
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
+        COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
     INTO
         vbStatusId,
         vbisDeferred,
-        vbisDefSUN
+        vbisSUN,
+        vbisDefSUN,
+        vbSumma
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
         LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                   ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
     THEN
-      RAISE EXCEPTION 'Ошибка. Коллеги, отложенные переиещение по СУН проводить нельзя.';
+      RAISE EXCEPTION 'Ошибка. Коллеги, отложенные перемещение по СУН проводить нельзя.';
+    END IF;
+    
+    IF vbisSUN = TRUE AND vbSumma < 1000 AND inisDeferred = TRUE
+    THEN
+      RAISE EXCEPTION 'Ошибка. Коллеги, перемещения по СУН с суммой менее 1000 грн. отлаживать нельзя.';
     END IF;
 
    -- свойство не меняем у проведенных документов

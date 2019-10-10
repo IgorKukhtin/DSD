@@ -22,6 +22,8 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbReasonDifferencesId Integer;
    DECLARE vbIsSUN       Boolean;
+   DECLARE vbSumma       TFloat;
+   DECLARE vbSummaNew    TFloat;
    DECLARE vbUnitId_from Integer;
    DECLARE vbUnitId_to   Integer;
 BEGIN
@@ -32,9 +34,11 @@ BEGIN
      SELECT MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
+          , COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
             INTO vbUnitId_from
                , vbUnitId_to 
                , vbIsSUN
+               , vbSumma
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.ID
@@ -48,6 +52,9 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                     ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                    AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                  ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                                 AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
      WHERE Movement.Id = inMovementId;
 
      -- определяются данные из MovementItem
@@ -110,6 +117,21 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementId);
+     -- Для СУН проверили сумму
+     IF vbisSUN = TRUE 
+     THEN
+       SELECT COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
+       INTO  vbSummaNew
+       FROM MovementFloat AS MovementFloat_TotalSummFrom
+       WHERE MovementFloat_TotalSummFrom.MovementId = inMovementId
+         AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom();
+     
+       IF vbSummaNew < 1000 AND vbSummaNew < vbSumma
+       THEN
+         RAISE EXCEPTION 'Ошибка. Коллеги, уменьшать сумму перемещения по СУН менее 1000 грню запрещено.';
+       END IF;
+     END IF;
+     
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
