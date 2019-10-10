@@ -160,6 +160,16 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 45
       end
+      object WeightTare: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
+        DataBinding.FieldName = 'WeightTare'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 72
+      end
       object GoodsCode_basis: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1094#1077#1093')'
         DataBinding.FieldName = 'GoodsCode_basis'
@@ -440,6 +450,14 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -536,6 +554,10 @@ object GoodsForm: TGoodsForm
     end
     object bbUpdateGoods_In: TdxBarButton
       Action = macUpdateGoods_In
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdate_WeightTareList
       Category = 0
     end
   end
@@ -874,6 +896,74 @@ object GoodsForm: TGoodsForm
         end>
       isShowModal = True
     end
+    object actUpdate_WeightTare: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_WeightTare
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_WeightTare
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      ImageIndex = 60
+    end
+    object macUpdate_WeightTare: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_WeightTare
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      ImageIndex = 60
+    end
+    object macUpdate_WeightTareList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogWeightTare
+        end
+        item
+          Action = macUpdate_WeightTare
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080' '#1074#1089#1077#1084' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
+      InfoAfterExecute = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      ImageIndex = 60
+    end
+    object ExecuteDialogWeightTare: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      ImageIndex = 26
+      FormName = 'TGoods_WeightTareDialogForm'
+      FormNameParam.Value = 'TGoods_WeightTareDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inWeightTare'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'WeightTare'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -992,8 +1082,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 267
+    Left = 200
+    Top = 275
   end
   object spUpdateGoods_In: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Goods_In'
@@ -1051,5 +1141,31 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 648
     Top = 256
+  end
+  object spUpdate_WeightTare: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_WeightTare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightTare'
+        Value = 42887d
+        Component = FormParams
+        ComponentItem = 'WeightTare'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 139
   end
 end

@@ -109,6 +109,9 @@ type
     edFilter: TcxTextEdit;
     cxLabel2: TcxLabel;
     dsdFieldFilter1: TdsdFieldFilter;
+    cxLabel6: TcxLabel;
+    cxLabel5: TcxLabel;
+    cxLabel4: TcxLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -131,11 +134,15 @@ type
       var AText: string);
     procedure actConsiderExecute(Sender: TObject);
     procedure cdsUnitAfterOpen(DataSet: TDataSet);
+    procedure colGroupNameStylesGetContentStyle(Sender: TcxCustomGridTableView;
+      ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
+      out AStyle: TcxStyle);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
     FCountO : Integer;
     FCountYes : Integer;
+    FStyle : TcxStyle;
 
     FUnitCalck : Integer;
     FUnitCategoryID : Integer;
@@ -646,6 +653,16 @@ begin
   end;
 end;
 
+procedure TReport_ImplementationPlanEmployeeForm.colGroupNameStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; out AStyle: TcxStyle);
+begin
+  if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanTab.Index] then FStyle.Color := $008484FF
+  else if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanAwardTab.Index] then FStyle.Color := clYellow
+  else FStyle.Color := clLime;
+  AStyle := FStyle
+end;
+
 procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
   Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
   var AText: string);
@@ -684,10 +701,12 @@ begin
   FCountO := 0;
   FUnitCalck := 0;
   UserSettingsStorageAddOn.LoadUserSettings;
+  FStyle := TcxStyle.Create(nil);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.FormDestroy(Sender: TObject);
 begin
+  FStyle.Free;
   FUnit.Free;
   FUnitCategory.Free;
 end;

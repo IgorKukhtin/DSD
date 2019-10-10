@@ -72,17 +72,17 @@
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxLabel2: TcxLabel
-    Left = 264
+    Left = 253
     Top = 274
     Caption = #1042#1077#1089
   end
   object ceWeight: TcxCurrencyEdit
-    Left = 264
+    Left = 253
     Top = 292
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
-    Width = 49
+    Width = 60
   end
   object ceParentGroup: TcxButtonEdit
     Left = 40
@@ -176,7 +176,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 219
+    Width = 207
   end
   object cxLabel9: TcxLabel
     Left = 40
@@ -211,7 +211,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 273
+    Width = 207
   end
   object ceGoodsGroupAnalyst: TcxButtonEdit
     Left = 184
@@ -275,6 +275,19 @@
     Left = 189
     Top = 410
     Caption = #1062#1077#1085#1072' :'
+  end
+  object cxLabel15: TcxLabel
+    Left = 253
+    Top = 319
+    Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
+  end
+  object edWeightTare: TcxCurrencyEdit
+    Left = 253
+    Top = 336
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 33
+    Width = 60
   end
   object ActionList: TActionList
     Left = 304
@@ -345,6 +358,14 @@
         Name = 'inWeight'
         Value = 0.000000000000000000
         Component = ceWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightTare'
+        Value = Null
+        Component = edWeightTare
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -580,6 +601,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'WeightTare'
+        Value = Null
+        Component = edWeightTare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'FuelId'
         Value = ''
         Component = FuelGuides
@@ -681,8 +709,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 240
+    Left = 80
+    Top = 248
   end
   object TradeMarkGuides: TdsdGuides
     KeyField = 'Id'
@@ -750,7 +778,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 280
+    Left = 176
     Top = 323
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -808,8 +836,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 280
+    Left = 64
+    Top = 320
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -909,8 +937,8 @@
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 314
+    Left = 144
+    Top = 322
   end
   object GoodsGroupAnalystGuides: TdsdGuides
     KeyField = 'Id'

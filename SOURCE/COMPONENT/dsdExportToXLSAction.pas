@@ -611,9 +611,9 @@ begin
                 ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
                 else
                 begin
-                  if TryStrToCurr(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, i64) and (i64 > 1000000) then
-                    xlRange.NumberFormat := '0000';
-                  xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  xlRange.NumberFormat := AnsiChar(64);
+                  xlRange.FormulaR1C1 := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  xlRange.NumberFormat := '';
                 end;
               end;
           end;
@@ -634,9 +634,9 @@ begin
               ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
               else
               begin
-                if TryStrToCurr(FItemsDataSet.Fields.Fields[I].AsString, i64) and (i64 > 1000000) then
-                  xlRange.NumberFormat := '0000';
+                xlRange.NumberFormat := AnsiChar(64);
                 xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
+                xlRange.NumberFormat := '';
               end;
             end;
         end;

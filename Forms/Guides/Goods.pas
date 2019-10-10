@@ -97,6 +97,12 @@ type
     AssetName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     PriceIn: TcxGridDBColumn;
+    spUpdate_WeightTare: TdsdStoredProc;
+    actUpdate_WeightTare: TdsdExecStoredProc;
+    macUpdate_WeightTare: TMultiAction;
+    macUpdate_WeightTareList: TMultiAction;
+    ExecuteDialogWeightTare: TExecuteDialog;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
