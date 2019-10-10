@@ -74,6 +74,8 @@ type
     bbPrint_byComments: TdxBarButton;
     actPrint_byService: TdsdPrintAction;
     bbPrint_byService: TdxBarButton;
+    CurrencyValue_calc: TcxGridDBColumn;
+    CurrencyValue_mi_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

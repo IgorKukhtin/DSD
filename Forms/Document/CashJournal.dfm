@@ -5,8 +5,9 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -129
   ExplicitWidth = 991
-  ExplicitHeight = 589
+  ExplicitHeight = 586
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -387,6 +388,9 @@ inherited CashJournalForm: TCashJournalForm
           object AmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
@@ -394,6 +398,9 @@ inherited CashJournalForm: TCashJournalForm
           object AmountSumm: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
             DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -419,6 +426,9 @@ inherited CashJournalForm: TCashJournalForm
           object CurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -427,6 +437,9 @@ inherited CashJournalForm: TCashJournalForm
           object ParPartnerValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'ParPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -435,6 +448,9 @@ inherited CashJournalForm: TCashJournalForm
           object CurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'CurrencyValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -443,6 +459,9 @@ inherited CashJournalForm: TCashJournalForm
           object ParValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'ParValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -528,6 +547,30 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
+          end
+          object CurrencyValue_calc: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1076#1083#1103' '#1082'.'#1088'. '#1088#1072#1089#1095'.'
+            DataBinding.FieldName = 'CurrencyValue_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099' - '#1088#1072#1089#1095#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1100#1085#1091#1102' '#1076#1072#1090#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object CurrencyValue_mi_calc: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1076#1083#1103' '#1082'.'#1088'. '#1092#1072#1082#1090
+            DataBinding.FieldName = 'CurrencyValue_mi_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099' - '#1092#1072#1082#1090' '#1080#1079' '#1087#1088#1086#1074#1086#1076#1086#1082
+            Options.Editing = False
+            Width = 70
           end
         end
       end

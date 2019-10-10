@@ -220,6 +220,15 @@ BEGIN
                   FROM MovementItemLinkObject AS MILO
                   WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMotion.MovementItemId FROM tmpMotion)
                  )
+      , tmpMI AS (SELECT *
+                  FROM MovementItem AS MI
+                  WHERE MI.Id IN (SELECT DISTINCT tmpMotion.MovementItemId
+                                  FROM tmpMotion
+                                  WHERE tmpMotion.MovementDescId = zc_Movement_Cash()
+                                    AND tmpMotion.AccountId      = zc_Enum_Account_100301() -- прибыль текущего периода
+                                 )
+                    AND MI.DescId         = zc_MI_Master()
+                 )
     , tmpData AS (SELECT tmp.BusinessId
                        , tmp.ContainerId
                        , tmp.AccountId
@@ -240,11 +249,16 @@ BEGIN
                        --, tmp.OperPrice
 
                        , CASE WHEN inIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
+                       , CASE WHEN inIsMovement = TRUE THEN MILinkObject_InfoMoney.ObjectId  ELSE 0 END :: Integer AS InfoMoneyId_inf
+                       , CASE WHEN inIsMovement = TRUE THEN tmpMI.ObjectId                   ELSE 0 END :: Integer AS CashId_inf
                        , MILinkObject_Route.ObjectId  AS RouteId_inf
                        , MILinkObject_Unit.ObjectId   AS UnitId_inf
                        , MILinkObject_Branch.ObjectId AS BranchId_inf
 
                   FROM tmpMotion AS tmp
+                       LEFT JOIN tmpMI AS tmpMI
+                                       ON tmpMI.Id     = tmp.MovementItemId
+                                      AND tmpMI.DescId = zc_MI_Master()
                        LEFT JOIN tmpMILO AS MILinkObject_Route
                                          ON MILinkObject_Route.MovementItemId = tmp.MovementItemId
                                         AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
@@ -257,6 +271,10 @@ BEGIN
                        LEFT JOIN tmpMILO AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = tmp.MovementItemId
                                         AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                       LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
+                                         ON MILinkObject_InfoMoney.MovementItemId = tmp.MovementItemId
+                                        AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                        
                   WHERE MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0
                   )
 
@@ -279,6 +297,8 @@ BEGIN
                              , 0 AS SummIn
                              , 0 AS SummOut
                              , 0 AS MoneyPlaceId_inf
+                             , 0 AS InfoMoneyId_inf
+                             , 0 AS CashId_inf
                              , 0 AS RouteId_inf
                              , 0 AS UnitId_inf
                              , 0 AS BranchId_inf
@@ -303,6 +323,8 @@ BEGIN
                              , tmp.SummIn
                              , tmp.SummOut
                              , tmp.MoneyPlaceId_inf
+                             , tmp.InfoMoneyId_inf
+                             , tmp.CashId_inf
                              , tmp.RouteId_inf
                              , tmp.UnitId_inf
                              , tmp.BranchId_inf
@@ -338,7 +360,10 @@ BEGIN
                  )
     , tmpReport AS (SELECT ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
                          , tmpReport_All.BusinessId
-                         , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId) AS InfoMoneyId
+                         , CASE WHEN tmpReport_All.MovementDescId = zc_Movement_Cash() AND tmpReport_All.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                     THEN tmpReport_All.InfoMoneyId_inf
+                                     ELSE COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId)
+                           END AS InfoMoneyId
                          , ContainerLO_PaidKind.ObjectId  AS PaidKindId
                          , ContainerLO_Contract.ObjectId  AS ContractId
                          , ContainerLO_Currency.ObjectId  AS CurrencyId
@@ -375,6 +400,7 @@ BEGIN
 
                          , tmpReport_All.ObjectId_inf
                          , tmpReport_All.MoneyPlaceId_inf
+                         , tmpReport_All.CashId_inf
                          , tmpReport_All.UnitId_inf
                          , tmpReport_All.RouteId_inf
                          , tmpReport_All.ContainerId_inf
@@ -428,23 +454,23 @@ BEGIN
                                                                                AND ContainerLO_Branch_inf.ObjectId > 0
 
                         LEFT JOIN tmpCLO AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                                  AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
-                                                                                  AND ContainerLO_Juridical_inf.ObjectId > 0
+                                                                     AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
+                                                                     AND ContainerLO_Juridical_inf.ObjectId > 0
                         LEFT JOIN tmpCLO AS ContainerLO_Unit_inf ON ContainerLO_Unit_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                             AND ContainerLO_Unit_inf.DescId = zc_ContainerLinkObject_Unit()
-                                                                             AND ContainerLO_Unit_inf.ObjectId > 0
+                                                                AND ContainerLO_Unit_inf.DescId = zc_ContainerLinkObject_Unit()
+                                                                AND ContainerLO_Unit_inf.ObjectId > 0
                         LEFT JOIN tmpCLO AS ContainerLO_Car_inf ON ContainerLO_Car_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                            AND ContainerLO_Car_inf.DescId = zc_ContainerLinkObject_Car()
-                                                                            AND ContainerLO_Car_inf.ObjectId > 0
+                                                               AND ContainerLO_Car_inf.DescId = zc_ContainerLinkObject_Car()
+                                                               AND ContainerLO_Car_inf.ObjectId > 0
                         LEFT JOIN tmpCLO AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                               AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
-                                                                               AND ContainerLO_Member_inf.ObjectId > 0
+                                                                  AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
+                                                                  AND ContainerLO_Member_inf.ObjectId > 0
                         LEFT JOIN tmpCLO AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                             AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
-                                                                             AND ContainerLO_Cash_inf.ObjectId > 0
+                                                                AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
+                                                                AND ContainerLO_Cash_inf.ObjectId > 0
                         LEFT JOIN tmpCLO AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = tmpReport_All.ContainerId_inf
-                                                                                    AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
-                                                                                    AND ContainerLO_BankAccount_inf.ObjectId > 0
+                                                                       AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
+                                                                       AND ContainerLO_BankAccount_inf.ObjectId > 0
 
                         LEFT JOIN tmpCLO AS ContainerLO_InfoMoney_inf ON ContainerLO_InfoMoney_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                                   AND ContainerLO_InfoMoney_inf.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -497,6 +523,8 @@ BEGIN
 
                            , tmpReport_All.ObjectId_inf
                            , tmpReport_All.MoneyPlaceId_inf
+                           , tmpReport_All.InfoMoneyId_inf
+                           , tmpReport_All.CashId_inf
                            , tmpReport_All.BranchId_inf
                            , tmpReport_All.UnitId_inf
                            , tmpReport_All.RouteId_inf
@@ -602,19 +630,23 @@ BEGIN
        LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
 
        LEFT JOIN Object AS Object_Direction
-                        ON Object_Direction.Id = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                        ON Object_Direction.Id = CASE WHEN tmpReport.MovementDescId = zc_Movement_Cash() AND tmpReport.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                           THEN tmpReport.CashId_inf
+                                                      WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                                            THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE tmpReport.ObjectId_Destination END
                                                       ELSE COALESCE (tmpReport.ObjectId_Direction
                                                                    , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END)
                                                  END
        LEFT JOIN Object AS Object_Destination
-                        ON Object_Destination.Id = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                        ON Object_Destination.Id = CASE WHEN tmpReport.MovementDescId = zc_Movement_Cash() AND tmpReport.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                             THEN tmpReport.MoneyPlaceId_inf
+                                                        WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                                              THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE tmpReport.ObjectId_Direction END
                                                         ELSE COALESCE (tmpReport.ObjectId_Destination
                                                                      , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END)
                                                    END
 
-       LEFT JOIN ObjectDesc AS ObjectDesc_Direction ON ObjectDesc_Direction.Id = Object_Direction.DescId
+       LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
 
        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank

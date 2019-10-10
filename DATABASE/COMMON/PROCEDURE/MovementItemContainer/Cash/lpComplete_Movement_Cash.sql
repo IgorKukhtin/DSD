@@ -19,7 +19,8 @@ BEGIN
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId) AND MovementDate.DescId = zc_MovementDate_ServiceDate());
      
      -- определили 
-     vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
+   --vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
+     vbOperDate_currency:= (SELECT Movement.OperDate - INTERVAL '0 DAY' FROM Movement WHERE Movement.Id = inMovementId);
 
 
          -- пока определяется "из справочника", доработать - вывести на форму
@@ -482,8 +483,8 @@ BEGIN
                     -- результат - курс "накопительный" - "факт"
                     SELECT CASE WHEN tmpSumm.OperSumm_Currency <> 0 AND tmpItem.OperSumm_Currency <> 0 
                                      THEN tmpItem.OperSumm_Currency
-                                        * (tmpSumm.OperSumm / tmpSumm.OperSumm_Currency
-                                         - tmpItem.OperSumm / tmpItem.OperSumm_Currency
+                                        * (tmpItem.OperSumm / tmpItem.OperSumm_Currency
+                                         - tmpSumm.OperSumm / tmpSumm.OperSumm_Currency
                                           )
                                 ELSE 0
                            END
@@ -550,7 +551,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , zc_Enum_Currency_Basis() AS CurrencyId
+           --, zc_Enum_Currency_Basis() AS CurrencyId
+             , _tmpItem.CurrencyId
 
              , FALSE AS IsActive
              , FALSE AS IsMaster

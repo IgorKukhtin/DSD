@@ -448,9 +448,8 @@ BEGIN
                          GROUP BY tmpPartionGoods.MovementItemId
                                 , Container.WhereObjectId
                         )
-          -- Данные: Продажа + Приход + Остаток + Пемещения
-        , tmpData_all AS (-- 1. Продажа / Возврат от Покупателя
-                          SELECT Object_PartionGoods.MovementItemId AS PartionId
+          -- Продажа / Возврат от Покупателя
+        , tmpSale_all AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
                                , Object_PartionGoods.BrandId
                                , Object_PartionGoods.PeriodId
                                , Object_PartionGoods.PeriodYear
@@ -854,6 +853,168 @@ BEGIN
 
                                  , Object_PartionGoods.Olap_Goods
                                  , Object_PartionGoods.Olap_Partion
+                         )
+          -- Данные: Продажа + Приход + Остаток + Пемещения
+        , tmpData_all AS (-- 1. Продажа / Возврат от Покупателя
+                          SELECT tmpSale_all.PartionId
+                               , tmpSale_all.BrandId
+                               , tmpSale_all.PeriodId
+                               , tmpSale_all.PeriodYear
+                               , tmpSale_all.PartnerId
+
+                               , tmpSale_all.GoodsGroupId
+                               , tmpSale_all.LabelId
+                               , tmpSale_all.CompositionGroupId
+                               , tmpSale_all.CompositionId
+
+                               , tmpSale_all.GoodsId
+                               , tmpSale_all.GoodsInfoId
+                               , tmpSale_all.LineFabricaId
+                               , tmpSale_all.GoodsSizeId
+
+                               , tmpSale_all.UnitId
+                               , tmpSale_all.OperDate_doc
+                               , tmpSale_all.OrdDay_doc
+                               , tmpSale_all.ClientId
+
+                               , tmpSale_all.ChangePercent
+                               , tmpSale_all.DiscountSaleKindId
+
+                               , tmpSale_all.UnitId_in
+                               , tmpSale_all.CurrencyId
+                               , tmpSale_all.OperPrice
+
+                                 -- Приход от поставщика - только для UnitId
+                               , tmpSale_all.Income_Amount
+                               , tmpSale_all.Income_Summ
+                                 -- Приход от поставщика - только для UnitId
+                               , tmpSale_all.IncomeReal_Amount
+                               , tmpSale_all.IncomeReal_Summ
+
+                                 -- Остаток - без учета "долга"
+                               , tmpSale_all.Remains_Amount
+                               , tmpSale_all.Remains_Summ
+                                 -- Остаток - с учетом "долга"
+                               , tmpSale_all.Remains_Amount_real
+
+                                 -- Перемещение
+                               , tmpSale_all.SendIn_Amount
+                               , tmpSale_all.SendOut_Amount
+                               , tmpSale_all.SendIn_Summ
+                               , tmpSale_all.SendOut_Summ
+
+                                 -- Списание + Возврат поставщ.
+                               , tmpSale_all.Loss_Amount
+                               , tmpSale_all.Loss_Summ
+
+                                 -- Кол-во: Долг
+                               , tmpSale_all.Debt_Amount
+                                 -- Сумма: Долг
+                               , tmpSale_all.Debt_Summ
+
+                                 -- Кол-во: Только Продажа
+                               , tmpSale_all.Sale_Amount
+                                 -- С\с продажа - calc из валюты в Грн
+                               , tmpSale_all.Sale_SummCost_calc
+
+                                 -- Сумма продажа
+                               , tmpSale_all.Sale_Summ
+                                  -- переводим в валюту 
+                               , tmpSale_all.Sale_Summ_curr
+
+                                 -- С\с продажа - ГРН
+                               , tmpSale_all.Sale_SummCost
+                                 -- С\с продажа - валюта
+                               , tmpSale_all.Sale_SummCost_curr
+
+                                 -- Сумма Прайс
+                               , tmpSale_all.Sale_Summ_10100
+                                 -- Сезонная скидка
+                               , tmpSale_all.Sale_Summ_10201
+                                 -- Скидка outlet
+                               , tmpSale_all.Sale_Summ_10202
+                                 -- Скидка клиента
+                               , tmpSale_all.Sale_Summ_10203
+                                 -- скидка дополнительная
+                               , tmpSale_all.Sale_Summ_10204
+
+                                 -- Скидка ИТОГО
+                               , tmpSale_all.Sale_Summ_10200
+                                  -- переводим в валюту 
+                               , tmpSale_all.Sale_Summ_10200_curr
+
+                                 -- Кол-во: Только Возврат
+                               , tmpSale_all.Return_Amount
+                                 -- С\с возврат - calc из валюты в Грн
+                               , tmpSale_all.Return_SummCost_calc
+
+                                 -- Сумма возврат
+                               , tmpSale_all.Return_Summ
+                                  -- переводим в валюту 
+                               , tmpSale_all.Return_Summ_curr
+
+                                 -- С\с возврат - ГРН
+                               , tmpSale_all.Return_SummCost
+                                 -- С\с возврат - валюта
+                               , tmpSale_all.Return_SummCost_curr
+
+                                 -- Скидка возврат
+                               , tmpSale_all.Return_Summ_10200
+                                 -- переводим в валюту 
+                               , tmpSale_all.Return_Summ_10200_curr
+
+                                 -- Кол-во: Продажа - Возврат
+                               , tmpSale_all.Result_Amount
+
+                                 --  № п/п
+                               , tmpSale_all.Ord
+
+                                 -- Кол-во продажа (ПО Сезонным скидкам)
+                               , tmpSale_all.Sale_Amount_InDiscount
+                                      
+                                 -- Кол-во продажа (ДО Сезонных скидок)
+                               , tmpSale_all.Sale_Amount_OutDiscount
+
+                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
+                               , tmpSale_all.Return_Amount_InDiscount
+                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
+                               , tmpSale_all.Return_Amount_OutDiscount
+
+                                  -- С\с продажа - валюта (ПО Сезонным скидкам)
+                               , tmpSale_all.Sale_SummCost_curr_InDiscount
+                                 -- С\с продажа - валюта (ДО Сезонных скидок)
+                               , tmpSale_all.Sale_SummCost_curr_OutDiscount
+
+                                 -- Сумма продажа (ПО Сезонным скидкам)
+                               , tmpSale_all.Sale_Summ_InDiscount
+
+                                 -- Сумма продажа (ДО Сезонных скидок)
+                               , tmpSale_all.Sale_Summ_OutDiscount
+
+                                 -- Скидка ИТОГО (ПО Сезонным скидкам)
+                               , tmpSale_all.Sale_Summ_10200_InDiscount
+                                 -- Скидка ИТОГО (ДО Сезонных скидок)
+                               , tmpSale_all.Sale_Summ_10200_OutDiscount
+
+                                 -- С\с возврат - валюта (ПО Сезонным скидкам)
+                               , tmpSale_all.Return_SummCost_curr_InDiscount
+                                 -- С\с возврат - валюта (ДО Сезонных скидок)
+                               , tmpSale_all.Return_SummCost_curr_OutDiscount
+
+                                 -- Сумма возврат (ПО Сезонным скидкам)
+                               , tmpSale_all.Return_Summ_InDiscount
+                                 -- Сумма возврат (ДО Сезонных скидок)
+                               , tmpSale_all.Return_Summ_OutDiscount
+
+                                 -- Скидка возврат (ПО Сезонным скидкам)
+                               , tmpSale_all.Return_Summ_10200_InDiscount
+                                 -- Скидка возврат (ДО Сезонных скидок)
+                               , tmpSale_all.Return_Summ_10200_OutDiscount
+
+                               , tmpSale_all.Olap_Goods
+                               , tmpSale_all.Olap_Partion
+
+                          FROM tmpSale_all
 
                          UNION ALL
                           -- 2. Приход от Поставщика
@@ -1019,6 +1180,9 @@ BEGIN
                                LEFT JOIN _tmpUnit     ON _tmpUnit.UnitId        = Object_PartionGoods.UnitId
 
                           WHERE (_tmpUnit.UnitId > 0 OR inPartnerId <> 0 OR inBrandId <> 0)
+                            AND (Object_PartionGoods.MovementItemId IN (SELECT tmpSale_all.PartionId FROM tmpSale_all)
+                              OR inIsPeriodAll = TRUE
+                                )
 
                          UNION ALL
                           -- 3. Остаток + Пемещения
@@ -1192,6 +1356,9 @@ BEGIN
                                                 FULL JOIN tmpSend ON tmpSend.PartionId = tmpRemains.PartionId
                                                                  AND tmpSend.UnitId    = tmpRemains.UnitId
                                           ) AS tmp ON tmp.PartionId = Object_PartionGoods.MovementItemId
+                          WHERE (Object_PartionGoods.MovementItemId IN (SELECT tmpSale_all.PartionId FROM tmpSale_all)
+                              OR inIsPeriodAll = TRUE
+                                )
                          )
          , tmpData AS (SELECT tmpData_all.BrandId
                             , tmpData_all.PeriodId

@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , MemberId Integer, MemberName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
-             , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
+             , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
              , SummMinus TFloat, SummFine TFloat, SummAdd TFloat
@@ -216,6 +216,7 @@ BEGIN
             , MIFloat_SummCardRecalc.ValueData        AS SummCardRecalc
             , MIFloat_SummCardSecond.ValueData        AS SummCardSecond
             , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
+            , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
             , MIFloat_SummNalog.ValueData             AS SummNalog
             , MIFloat_SummNalogRecalc.ValueData       AS SummNalogRecalc
@@ -278,6 +279,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
                                         ON MIFloat_SummCardSecondRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondDiff
+                                        ON MIFloat_SummCardSecondDiff.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummCardSecondDiff.DescId         = zc_MIFloat_SummCardSecondDiff()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                         ON MIFloat_SummCardSecondCash.MovementItemId = tmpAll.MovementItemId

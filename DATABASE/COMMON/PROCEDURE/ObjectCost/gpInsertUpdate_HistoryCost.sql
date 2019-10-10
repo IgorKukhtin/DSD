@@ -390,14 +390,30 @@ end if;
                                           AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
                                           -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.isActive               = TRUE
                                           AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
+
                                          WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
                                           AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
                                           -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.isActive               = TRUE
                                           AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
+
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                          AND inBranchId                         = 8379    -- филиал Киев
+                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                          AND inBranchId                         = 3080683 -- филиал Львов
+                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+
                                          WHEN 1=1
                                          THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
                                          ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
@@ -413,14 +429,29 @@ end if;
                                           AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
                                           -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.isActive               = TRUE
                                           AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
+
                                          WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
                                           AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
                                           -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                          AND MIContainer.isActive               = TRUE
                                           AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
+
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                          AND inBranchId                         = 8379    -- филиал Киев
+                                          AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                          AND inBranchId                         = 3080683 -- филиал Львов
+                                          AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN 0
+
                                          WHEN 1=1
                                          THEN COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)
                                          ELSE COALESCE (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END, 0)

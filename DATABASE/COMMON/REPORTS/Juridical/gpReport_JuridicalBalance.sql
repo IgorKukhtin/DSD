@@ -114,8 +114,9 @@ BEGIN
                               AND ObjectLink_Contract_JuridicalBasis.DescId   = zc_ObjectLink_Contract_JuridicalBasis()
      WHERE _tmpSummContract_all.Amount <> 0 OR _tmpSummContract_all.Amount_move <> 0;
      
-     -- Проверка
+     -- Проверка - !ОТКЛЮЧИЛ!
      IF inPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbJuridicalId1_Basis > 0 AND vbJuridicalId1_Basis <> vbJuridicalId2_Basis
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Для выбранного Юр.лица <%> установлены разные значение От Кого Печатать Документ:%<%>%и%<%>.'
                         , lfGet_Object_ValueData_sh (inJuridicalId)
@@ -268,7 +269,7 @@ BEGIN
                                         ON OHS_AccounterName.ObjectHistoryId = ViewHistory_JuridicalDetails.ObjectHistoryId
                                        AND OHS_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
 
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbJuridicalId1_Basis ELSE COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis()) END
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN vbJuridicalId1_Basis = vbJuridicalId2_Basis THEN vbJuridicalId1_Basis ELSE NULL END ELSE COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis()) END
           LEFT JOIN ObjectHistory_JuridicalDetails_View AS ViewHistory_JuridicalDetails_Basis ON ViewHistory_JuridicalDetails_Basis.JuridicalId = Object_Juridical_Basis.Id
           LEFT JOIN ObjectHistoryString AS OHS_FullName_Basis
                                         ON OHS_FullName_Basis.ObjectHistoryId = ViewHistory_JuridicalDetails_Basis.ObjectHistoryId

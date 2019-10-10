@@ -176,6 +176,7 @@ type
     spSelectPrintDetail: TdsdStoredProc;
     actPrint_Detail: TdsdPrintAction;
     bbPrint_Child: TdxBarButton;
+    SummCardSecondDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -228,8 +228,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, inSummCardSecondRecalc);
+     -- сохранили свойство <Карта БН (ввод) - 2ф.>
+   --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, inSummCardSecondRecalc);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, ROUND (inSummCardSecondRecalc, 1));
+     -- сохранили свойство <Карта БН (округление) - 2ф>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), ioId, inSummCardSecondRecalc - ROUND (inSummCardSecondRecalc, 1));
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondCash(), ioId, inSummCardSecondCash);
      -- сохранили свойство <>

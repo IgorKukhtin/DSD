@@ -46,6 +46,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyId_x  Integer
              , MovementId_x  Integer
              , AmountSumm_x  TFloat
+             , CurrencyValue_calc    TFloat
+             , CurrencyValue_mi_calc TFloat
               )
 AS
 $BODY$
@@ -146,7 +148,7 @@ BEGIN
                                          WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                            AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
                                          )
-                                     
+
          , tmpMLM_Invoice AS (SELECT MovementLinkMovement.*
                               FROM MovementLinkMovement
                               WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -159,12 +161,12 @@ BEGIN
                                            AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
                                                                        , zc_MovementString_Comment()
                                                                          )
-                                )     
+                                )
 
          , tmpMI2 AS (SELECT MovementItem.*
                       FROM MovementItem
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                       AND MovementItem.DescId = zc_MI_Master()
+                        AND MovementItem.DescId = zc_MI_Master()
                        -- AND MovementItem.ObjectId = inCashId
                      )
          , tmpMI AS (SELECT MovementItem.*
@@ -173,6 +175,70 @@ BEGIN
                                                  AND MovementItem.DescId = zc_MI_Master()
                                                  AND MovementItem.ObjectId = inCashId
                      )
+           -- проводки
+         , tmpMIС AS (SELECT MovementItemContainer.MovementId, SUM (MovementItemContainer.Amount) AS Amount
+                      FROM MovementItemContainer
+                      WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                        AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
+                        AND MovementItemContainer.AccountId         = zc_Enum_Account_100301()   -- прибыль текущего периода
+                        AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                        AND inCurrencyId                            <> zc_Enum_Currency_Basis()
+                      GROUP BY MovementItemContainer.MovementId
+                     )
+           -- остаток суммы на дату в ГРН
+         , tmpListContainer_SummCurrency AS
+                    (SELECT Container.ParentId AS ContainerId
+                          , Container.Id       AS ContainerId_Currency
+                          , Container.Amount
+                     FROM ContainerLinkObject AS CLO_Cash
+                          INNER JOIN ContainerLinkObject AS CLO_Currency
+                                                         ON CLO_Currency.ContainerId = CLO_Cash.ContainerId
+                                                        AND CLO_Currency.ObjectId    = inCurrencyId
+                                                        AND CLO_Currency.DescId      = zc_ContainerLinkObject_Currency()
+                          INNER JOIN Container ON Container.Id     = CLO_Cash.ContainerId
+                                              AND Container.DescId = zc_Container_SummCurrency()
+                          INNER JOIN Object_Account_View AS View_Account
+                                                         ON View_Account.AccountId      = Container.ObjectId
+                                                        AND View_Account.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+                     WHERE CLO_Cash.DescId      = zc_ContainerLinkObject_Cash()
+                       AND CLO_Cash.ObjectId    = inCashId
+                       AND inCurrencyId         <> zc_Enum_Currency_Basis()
+                    )
+           -- остаток суммы на дату в ГРН
+         , tmpListContainer_Summ AS
+                    (SELECT Container.Id       AS ContainerId
+                          , Container.Amount
+                     FROM ContainerLinkObject AS CLO_Cash
+                          INNER JOIN ContainerLinkObject AS CLO_Currency
+                                                         ON CLO_Currency.ContainerId = CLO_Cash.ContainerId
+                                                        AND CLO_Currency.ObjectId    = inCurrencyId
+                                                        AND CLO_Currency.DescId      = zc_ContainerLinkObject_Currency()
+                          INNER JOIN Container ON Container.Id     = CLO_Cash.ContainerId
+                                              AND Container.DescId = zc_Container_Summ()
+                          INNER JOIN Object_Account_View AS View_Account
+                                                         ON View_Account.AccountId      = Container.ObjectId
+                                                        AND View_Account.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+                     WHERE CLO_Cash.DescId      = zc_ContainerLinkObject_Cash()
+                       AND CLO_Cash.ObjectId    = inCashId
+                       AND inCurrencyId         <> zc_Enum_Currency_Basis()
+                    )
+           --
+         , tmpMIContainer_SummCurrency AS
+                    (SELECT MIContainer.*, tmpListContainer_SummCurrency.Amount AS Amount_Container
+                     FROM tmpListContainer_SummCurrency
+                          LEFT JOIN MovementItemContainer AS MIContainer
+                                                          ON MIContainer.Containerid = tmpListContainer_SummCurrency.ContainerId_Currency
+                                                         AND MIContainer.OperDate    >= inStartDate
+                    )
+           --
+         , tmpMIContainer_Summ AS
+                    (SELECT MIContainer.*, tmpListContainer_Summ.Amount AS Amount_Container
+                     FROM tmpListContainer_Summ
+                          LEFT JOIN MovementItemContainer AS MIContainer
+                                                          ON MIContainer.Containerid = tmpListContainer_Summ.ContainerId
+                                                         AND MIContainer.OperDate    >= inStartDate
+                    )
+           --
          , tmpMIDate_ServiceDate AS (SELECT MovementItemDate.MovementItemId
                                           , MovementItemDate.ValueData
                                           , MovementItemDate.DescId
@@ -266,7 +332,7 @@ BEGIN
            , CASE WHEN MovementFloat_AmountSumm.ValueData <> 0 THEN MovementFloat_AmountSumm.ValueData * CASE WHEN MovementItem.Amount < 0 THEN 1 ELSE -1 END
                   WHEN ObjectDesc.Id = zc_Object_Cash() AND Object_Currency.Id <> zc_Enum_Currency_Basis() THEN -1 * MovementItem.Amount -- !!!с обратным знаком!!!
              END :: TFloat AS AmountSumm
-             
+
            , MIDate_ServiceDate.ValueData      AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
@@ -319,12 +385,47 @@ BEGIN
            , Object_Unit_mobile.ValueData           AS UnitName_Mobile
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position_mobile.ValueData ELSE '' END :: TVarChar AS PositionName_Mobile
            , MovementString_GUID.ValueData          AS GUID
-           
+
            , MILinkObject_Currency.ObjectId     AS CurrencyId_x
            , MovementItem.MovementId            AS MovementId_x
            , MovementFloat_AmountSumm.ValueData AS AmountSumm_x
 
+           -- расч. курс на дату - для курс разн.
+           , CASE WHEN (SELECT SUM (tmp.Amount)
+                        FROM (SELECT tmpMIContainer.Amount_Container - COALESCE (SUM (tmpMIContainer.Amount), 0) AS Amount
+                              FROM tmpMIContainer_SummCurrency AS tmpMIContainer
+                              WHERE tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                              GROUP BY tmpMIContainer.ContainerId, tmpMIContainer.Amount_Container
+                             ) AS tmp
+                       ) <> 0
+                  THEN
+                       (SELECT SUM (tmp.Amount)
+                        FROM (SELECT tmpMIContainer.Amount_Container - COALESCE (SUM (tmpMIContainer.Amount), 0) AS Amount
+                              FROM tmpMIContainer_Summ AS tmpMIContainer
+                              WHERE tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                              GROUP BY tmpMIContainer.ContainerId, tmpMIContainer.Amount_Container
+                             ) AS tmp
+                       )
+                       /
+                       (SELECT SUM (tmp.Amount)
+                        FROM (SELECT tmpMIContainer.Amount_Container - COALESCE (SUM (tmpMIContainer.Amount), 0) AS Amount
+                              FROM tmpMIContainer_SummCurrency AS tmpMIContainer
+                              WHERE tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                              GROUP BY tmpMIContainer.ContainerId, tmpMIContainer.Amount_Container
+                             ) AS tmp
+                       )
+                  ELSE 0
+             END :: TFloat AS CurrencyValue_calc
+
+           -- факт. курс на дату - для курс разн.
+         , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0 THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData) ELSE 0 END :: TFloat AS CurrencyValue_mi_calc
+--       , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
+--       , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
+--       , MovementFloat_AmountCurrency.ValueData
+
        FROM tmpMovement
+
+            LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpMovement.Id
@@ -375,7 +476,7 @@ BEGIN
                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
-            
+
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN tmpMD_PartionMovement AS MovementDate_OperDatePartner_PartionMovement
                                             ON MovementDate_OperDatePartner_PartionMovement.MovementId = Movement_PartionMovement.Id
@@ -474,8 +575,8 @@ BEGIN
                                  ON Car_CarModel.ObjectId = MILinkObject_Car.ObjectId
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
-            
-            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                  ON ObjectLink_Car_Unit.ObjectId = MILinkObject_Car.ObjectId
                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN Object AS Object_Unit_Car ON Object_Unit_Car.Id = ObjectLink_Car_Unit.ChildObjectId
@@ -483,7 +584,7 @@ BEGIN
     -- WHERE MILinkObject_Currency.ObjectId = inCurrencyId
     --    OR (inCurrencyId = zc_Enum_Currency_Basis() AND MovementFloat_AmountSumm.ValueData <> 0)
       )
-      
+
        SELECT *
        FROM tmpRes
        WHERE (tmpRes.CurrencyId_x = inCurrencyId
@@ -518,4 +619,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
---select * from gpSelect_Movement_Cash(inStartDate := ('08.01.2019')::TDateTime , inEndDate := ('09.01.2019')::TDateTime , inCashId := 14462 , inCurrencyId := 14461 , inJuridicalBasisId := 9399 , inIsErased := 'False' ,  inSession := '5');
+-- select * from gpSelect_Movement_Cash(inStartDate := ('09.09.2019')::TDateTime , inEndDate := ('10.09.2019')::TDateTime , inCashId := 619818 , inCurrencyId := 76965 , inJuridicalBasisId := 9399 , inIsErased := 'False' ,  inSession := '5');

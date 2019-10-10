@@ -174,10 +174,11 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
 
+                    /*08.10.2019
                     WHEN _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
                      AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
-                         THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
+                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)*/
 
                     WHEN _tmpItem.CurrencyId             = zc_Enum_Currency_Basis()
                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы, т.е. сумма грн сразу в ОПиУ
@@ -203,10 +204,12 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
 
+                    /*08.10.2019
                     WHEN _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
                      AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
+                    */
 
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0
