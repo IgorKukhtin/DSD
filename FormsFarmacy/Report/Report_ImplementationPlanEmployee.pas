@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, Winapi.ShellAPI, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
+  System.Classes, Vcl.Graphics, DateUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
@@ -109,9 +109,10 @@ type
     edFilter: TcxTextEdit;
     cxLabel2: TcxLabel;
     dsdFieldFilter1: TdsdFieldFilter;
-    cxLabel6: TcxLabel;
-    cxLabel5: TcxLabel;
-    cxLabel4: TcxLabel;
+    cbHighlightStrings: TcxCheckBox;
+    cbFilter1: TcxCheckBox;
+    cbFilter2: TcxCheckBox;
+    cbFilter3: TcxCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -137,6 +138,9 @@ type
     procedure colGroupNameStylesGetContentStyle(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
       out AStyle: TcxStyle);
+    procedure cbHighlightStringsClick(Sender: TObject);
+    procedure cbFilter1Click(Sender: TObject);
+    procedure ClientDataSetFilterRecord(DataSet: TDataSet; var Accept: Boolean);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
@@ -146,6 +150,10 @@ type
 
     FUnitCalck : Integer;
     FUnitCategoryID : Integer;
+
+    FAmountPlan :  TcxGridDBBandedColumn;
+    FAmountPlanAward :  TcxGridDBBandedColumn;
+
   public
   end;
 
@@ -226,6 +234,26 @@ begin
   end;
 end;
 
+procedure TReport_ImplementationPlanEmployeeForm.cbHighlightStringsClick(
+  Sender: TObject);
+begin
+
+  cbFilter1.Visible := cbHighlightStrings.Checked;
+  cbFilter2.Visible := cbHighlightStrings.Checked;
+  cbFilter3.Visible := cbHighlightStrings.Checked;
+
+  if not ClientDataSet.Active  then Exit;
+
+  ClientDataSet.DisableControls;
+  if ClientDataSet.Filtered then
+  begin
+    ClientDataSet.Filtered := False;
+    ClientDataSet.Filtered := True;
+  end;
+  ClientDataSet.EnableControls;
+  cxImplementationPlanEmployee.SetFocus;
+end;
+
 procedure TReport_ImplementationPlanEmployeeForm.cdsListBandsAfterClose(
   DataSet: TDataSet);
 begin
@@ -239,6 +267,7 @@ procedure TReport_ImplementationPlanEmployeeForm.cdsListBandsAfterOpen(
   var nIndexUnitCategory, nIndexUnit, I : Integer;
 begin
   nIndexUnitCategory := -1; nIndexUnit := -1;
+  FAmountPlan := Nil; FAmountPlanAward := Nil;
   FUnit.Clear;
   FUnitCategory.Clear;
 
@@ -301,6 +330,7 @@ begin
         13 : DataBinding.FieldName := 'AmountTheFineTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
         14 : DataBinding.FieldName := 'BonusAmountTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
       end;
+      Name := 'col' + DataBinding.FieldName;
 
       if I in [7, 8, 13, 14] then
       begin
@@ -319,6 +349,7 @@ begin
           TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.00';
         end;
       end;
+      Styles.OnGetContentStyle := colGroupNameStylesGetContentStyle;
     end;
 
     cdsListBands.Next;
@@ -399,7 +430,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterOpen(
   DataSet: TDataSet);
-  var nCount : integer;
+  var nCount : integer; I : Integer;
 begin
   FUnitCalck := 0;
   nCount := 0;
@@ -416,6 +447,13 @@ begin
       end;
       cdsUnit.Next;
     end;
+    for I := 0 to ComponentCount - 1 do if Components[I] is TcxGridDBBandedColumn then
+    begin
+      if TcxGridDBBandedColumn(Components[I]).Name = 'col' + 'AmountPlan' + FUnit.Strings[FUnitCalck] then
+         FAmountPlan := TcxGridDBBandedColumn(Components[I]);
+      if TcxGridDBBandedColumn(Components[I]).Name = 'col' + 'AmountPlanAward' + FUnit.Strings[FUnitCalck] then
+         FAmountPlanAward := TcxGridDBBandedColumn(Components[I]);
+    end;
   finally
     cdsUnit.First;
     cdsUnit.EnableControls;
@@ -431,7 +469,6 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterOpen(
   DataSet: TDataSet);
- // var cur : Currency;
 begin
   FCountO := 0;
   FCountYes := 0;
@@ -653,14 +690,82 @@ begin
   end;
 end;
 
+procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetFilterRecord(
+  DataSet: TDataSet; var Accept: Boolean);
+  var I, rnUnit : Integer; nAmount, nAmountPlan, nAmountPlanAward : Currency;
+
+  function Min(A, B : Currency) : Currency;
+  begin
+    if A > B then Result := B else Result := A;
+  end;
+
+begin
+  if not cbHighlightStrings.Checked then Exit;
+  if cbFilter1.Checked and cbFilter2.Checked and cbFilter3.Checked then Exit;
+  nAmount := 0; nAmountPlan := 0; nAmountPlanAward := 0;
+
+  for I := 0 to FUnit.Count - 1 do
+    nAmount := nAmount + Dataset['Amount' + FUnit.Strings[I]];
+
+  if StartOfTheMonth(deStart.Date) < StartOfTheMonth(Date)  then
+  begin
+    rnUnit := cdsUnit.RecNo;
+    try
+      cdsUnit.DisableControls;
+      if cdsUnit.Locate('UnitCode', FUnit.Strings[FUnitCalck], []) then
+      begin
+        nAmountPlan := nAmountPlan + Dataset['AmountPlan' + FUnit.Strings[FUnitCalck]] * Min(cdsUnit.FieldByName('PercentAttendance').AsCurrency, 100) / 100;;
+        nAmountPlanAward := nAmountPlanAward + Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] * Min(cdsUnit.FieldByName('PercentAttendance').AsCurrency, 100) / 100;
+      end;
+    finally
+      cdsUnit.RecNo := rnUnit;
+      cdsUnit.EnableControls;
+    end;
+  end else
+  begin
+    nAmountPlan := nAmountPlan + Dataset['AmountPlan' + FUnit.Strings[FUnitCalck]];
+    nAmountPlanAward := nAmountPlanAward + Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]];
+  end;
+
+  if not cbFilter1.Checked and (nAmount < nAmountPlan) then Accept := False
+  else if not cbFilter2.Checked and (nAmount >= nAmountPlan) and (nAmount < nAmountPlanAward) then Accept := False
+  else if not cbFilter3.Checked and (nAmount >= nAmountPlanAward) then Accept := False;
+end;
+
 procedure TReport_ImplementationPlanEmployeeForm.colGroupNameStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; out AStyle: TcxStyle);
 begin
-  if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanTab.Index] then FStyle.Color := $008484FF
-  else if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanAwardTab.Index] then FStyle.Color := clYellow
-  else FStyle.Color := clLime;
-  AStyle := FStyle
+  if cbHighlightStrings.Checked then
+  begin
+    if StartOfTheMonth(deStart.Date) < StartOfTheMonth(Date)  then
+    begin
+      if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanTab.Index] then FStyle.TextColor := clRed
+      else if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanAwardTab.Index] then FStyle.TextColor := clGreen
+      else FStyle.TextColor := clBlue;
+      AStyle := FStyle
+    end else if Assigned(FAmountPlan) and Assigned(FAmountPlanAward) then
+    begin
+      if ARecord.Values[colAmount.Index] < ARecord.Values[FAmountPlan.Index] then FStyle.TextColor := clRed
+      else if ARecord.Values[colAmount.Index] < ARecord.Values[FAmountPlanAward.Index] then FStyle.TextColor := clGreen
+      else FStyle.TextColor := clBlue;
+      AStyle := FStyle
+    end;
+  end;
+end;
+
+procedure TReport_ImplementationPlanEmployeeForm.cbFilter1Click(
+  Sender: TObject);
+begin
+  if cbHighlightStrings.Checked then
+  try
+    ClientDataSet.DisableControls;
+    ClientDataSet.Filtered := False;
+    ClientDataSet.Filtered := not cbFilter1.Checked or not cbFilter2.Checked or not cbFilter3.Checked or
+      (Trim(edFilter.Text) <> '');
+  finally
+    ClientDataSet.EnableControls;
+  end;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
@@ -700,6 +805,8 @@ begin
   FUnitCategory := TStringList.Create;
   FCountO := 0;
   FUnitCalck := 0;
+  FAmountPlan := Nil;
+  FAmountPlanAward := Nil;
   UserSettingsStorageAddOn.LoadUserSettings;
   FStyle := TcxStyle.Create(nil);
 end;

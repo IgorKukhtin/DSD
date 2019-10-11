@@ -810,9 +810,13 @@ type
 
     FOldStr : string;
 
+    FFilterRecord: TFilterRecordEvent;
+    FFiltered: Boolean;
+
     procedure OnEditChange(Sender: TObject);
     procedure OnEditExit(Sender: TObject);
     procedure SetTextEdit(const Value: TcxTextEdit);
+    procedure SetDataSet(const Value: TDataSet);
     procedure SetColumn(const Value: TcxGridColumn);
     procedure TimerTimer(Sender: TObject);
   protected
@@ -824,7 +828,7 @@ type
   published
     // Edit - для ввода текста фильтра
     property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
-    property DataSet: TDataSet read FDataSet write FDataSet;
+    property DataSet: TDataSet read FDataSet write SetDataSet;
     property Column: TcxGridColumn read FColumn write SetColumn;
   end;
 
@@ -4155,6 +4159,8 @@ begin
   FOldStr := '';
   FOnEditChange := Nil;
   FOnEditExit := Nil;
+  FFilterRecord := Nil;
+  FFiltered := False;
 end;
 
 destructor TdsdFieldFilter.Destroy;
@@ -4200,6 +4206,20 @@ begin
   end;
 end;
 
+procedure TdsdFieldFilter.SetDataSet(const Value: TDataSet);
+begin
+  FDataSet := Value;
+  if Assigned(Value) then
+  begin
+    FFilterRecord := FDataSet.OnFilterRecord;
+    FFiltered := FDataSet.Filtered;
+  end else
+  begin
+    FFilterRecord := Nil;
+    FFiltered := False;
+  end;
+end;
+
 procedure TdsdFieldFilter.SetColumn(const Value: TcxGridColumn);
 begin
   if (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
@@ -4233,10 +4253,12 @@ begin
   if not Assigned(FColumn) then Exit;
   FDataSet.DisableControls;
   try
-    FDataSet.Filtered:=False;
-    FDataSet.OnFilterRecord:=Nil;
+    FDataSet.OnFilterRecord := FFilterRecord;
+    FDataSet.Filtered := FFiltered;
+
     if FOldStr <> '' then
     begin
+      FDataSet.Filtered:=False;
       FDataSet.OnFilterRecord:=FilterRecord;
       FDataSet.Filtered:=True;
     end;
@@ -4249,6 +4271,12 @@ end;
 procedure TdsdFieldFilter.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
   Var S,S1,Name:String; k:integer; F:Boolean;
 begin
+  if Assigned(FFilterRecord) then
+  begin
+    FFilterRecord(DataSet, Accept);
+    if not Accept then Exit;
+  end;
+
   S1 := Trim(FOldStr);
 
   if not FDataSet.Active then Exit;

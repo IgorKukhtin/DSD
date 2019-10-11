@@ -21,7 +21,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Left = 0
     Top = 0
     Width = 1252
-    Height = 51
+    Height = 59
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -58,7 +58,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object edFilter: TcxTextEdit
       Left = 272
-      Top = 27
+      Top = 31
       TabOrder = 4
       DesignSize = (
         373
@@ -67,50 +67,65 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxLabel2: TcxLabel
       Left = 205
-      Top = 28
+      Top = 32
       Caption = #1060#1080#1083#1100#1090#1088
     end
-    object cxLabel6: TcxLabel
-      Left = 703
-      Top = 33
-      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' > min '#1087#1083#1072#1085' '#1080' >= '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
-      ParentColor = False
-      Style.Color = clLime
+    object cbHighlightStrings: TcxCheckBox
+      Left = 32
+      Top = 28
+      Caption = #1055#1086#1076#1089#1074#1077#1095#1080#1074#1072#1090#1100' '#1089#1090#1088#1086#1082#1080
+      State = cbsChecked
+      TabOrder = 6
+      OnClick = cbHighlightStringsClick
+      Width = 154
     end
-    object cxLabel5: TcxLabel
-      Left = 703
-      Top = 16
-      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' >= min '#1087#1083#1072#1085' '#1085#1086' < '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
-      ParentColor = False
-      Style.Color = clYellow
-    end
-    object cxLabel4: TcxLabel
-      Left = 703
-      Top = 1
+    object cbFilter1: TcxCheckBox
+      Left = 681
+      Top = 0
       Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' < '#1079#1085#1072#1095#1077#1085#1080#1077' min '#1087#1083#1072#1085' '
-      ParentColor = False
-      Style.Color = 8684799
+      State = cbsChecked
+      Style.TextColor = clRed
+      TabOrder = 7
+      OnClick = cbFilter1Click
+      Width = 224
+    end
+    object cbFilter2: TcxCheckBox
+      Left = 681
+      Top = 18
+      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' >= min '#1087#1083#1072#1085' '#1085#1086' < '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+      State = cbsChecked
+      Style.TextColor = clGreen
+      TabOrder = 8
+      OnClick = cbFilter1Click
+      Width = 283
+    end
+    object cbFilter3: TcxCheckBox
+      Left = 681
+      Top = 36
+      Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' > min '#1087#1083#1072#1085' '#1080' >= '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+      State = cbsChecked
+      Style.TextColor = clBlue
+      TabOrder = 9
+      OnClick = cbFilter1Click
+      Width = 283
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 77
+    Top = 85
     Width = 1252
-    Height = 583
+    Height = 575
     Align = alClient
     BevelOuter = bvNone
     ShowCaption = False
     TabOrder = 5
-    ExplicitTop = 57
-    ExplicitHeight = 603
     object cxImplementationPlanEmployee: TcxGrid
       Left = 0
       Top = 0
       Width = 1252
-      Height = 436
+      Height = 428
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 456
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -263,6 +278,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             'No')
           HeaderAlignmentHorz = taCenter
           Styles.Content = dmMain.cxGreenEdit
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 5
@@ -275,22 +291,20 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxSplitter1: TcxSplitter
       Left = 0
-      Top = 436
+      Top = 428
       Width = 1252
       Height = 8
       AlignSplitter = salBottom
       Control = Panel3
-      ExplicitTop = 456
     end
     object Panel3: TPanel
       Left = 0
-      Top = 444
+      Top = 436
       Width = 1252
       Height = 139
       Align = alBottom
       ShowCaption = False
       TabOrder = 2
-      ExplicitTop = 464
       object cxUnit: TcxGrid
         Left = 1
         Top = 1
@@ -460,6 +474,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     AfterOpen = ClientDataSetAfterOpen
     AfterPost = ClientDataSetAfterPost
     OnCalcFields = ClientDataSetCalcFields
+    OnFilterRecord = ClientDataSetFilterRecord
     Left = 40
     Top = 264
   end
@@ -483,6 +498,11 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = cbHighlightStrings
+        Properties.Strings = (
+          'State')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -770,8 +790,8 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
-    Left = 112
-    Top = 8
+    Left = 96
+    Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
