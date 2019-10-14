@@ -199,6 +199,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Position.RowIndex = 0
         end
         object colAmount: TcxGridDBBandedColumn
+          Tag = 1
           Caption = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,6 +214,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Position.RowIndex = 0
         end
         object colAmountPlanTab: TcxGridDBBandedColumn
+          Tag = 1
           Caption = #1052#1080#1085'. '#1055#1083#1072#1085' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
           DataBinding.FieldName = 'AmountPlanTab'
           PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -226,23 +228,23 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object colAmountPlanAwardTab: TcxGridDBBandedColumn
-          Caption = #1055#1083#1072#1085' '#1076#1083#1103' '#1055#1088#1077#1084#1080#1080' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
-          DataBinding.FieldName = 'AmountPlanAwardTab'
+        object AmountPlan: TcxGridDBBandedColumn
+          Tag = 1
+          Caption = #1052#1080#1085'. '#1055#1083#1072#1085
+          DataBinding.FieldName = 'AmountPlan'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
-          Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object colAmountTheFineTab: TcxGridDBBandedColumn
-          Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
-          DataBinding.FieldName = 'AmountTheFineTab'
+        object colAmountPlanAwardTab: TcxGridDBBandedColumn
+          Tag = 1
+          Caption = #1055#1083#1072#1085' '#1076#1083#1103' '#1055#1088#1077#1084#1080#1080' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
+          DataBinding.FieldName = 'AmountPlanAwardTab'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00'
@@ -254,7 +256,36 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Position.ColIndex = 3
           Position.RowIndex = 0
         end
+        object AmountPlanAward: TcxGridDBBandedColumn
+          Tag = 1
+          Caption = #1055#1083#1072#1085' '#1076#1083#1103' '#1055#1088#1077#1084#1080#1080
+          DataBinding.FieldName = 'AmountPlanAward'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object colAmountTheFineTab: TcxGridDBBandedColumn
+          Tag = 1
+          Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
+          DataBinding.FieldName = 'AmountTheFineTab'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 80
+          Position.BandIndex = 1
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
         object colBonusAmountTab: TcxGridDBBandedColumn
+          Tag = 1
           Caption = #1057#1091#1084#1084#1072' '#1055#1088#1077#1084#1080#1080' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
           DataBinding.FieldName = 'BonusAmountTab'
           PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -265,10 +296,11 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 4
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object colConsider: TcxGridDBBandedColumn
+          Tag = 1
           Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1076#1083#1103' '#1085#1077#1086#1073#1093#1086#1076#1080#1084#1086#1075#1086' % '#1087#1086#1089#1090#1088#1086#1095#1085#1086#1075#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           DataBinding.FieldName = 'Consider'
           PropertiesClassName = 'TcxComboBoxProperties'
@@ -281,7 +313,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 5
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
       end

@@ -4,10 +4,11 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Sent(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Sent(
     IN inMovementId          Integer   ,    -- ключ документа
-    IN inisReceived          Boolean   ,    -- Получено-да
+    IN inisSent          Boolean   ,    -- Получено-да
+   OUT outisSent         Boolean   ,    -- Получено-да
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbUnitId     Integer;
@@ -67,7 +68,7 @@ BEGIN
 
    WHERE Movement.Id = inMovementId;
 
-   IF COALESCE(inisSent, NOT vbisReceived) <> vbisSent
+   IF COALESCE(inisSent, NOT vbisSent) <> vbisSent
    THEN
       RAISE EXCEPTION 'Ошибка. Признак <Отправлено-да> бал изменен. Обновите данные и повторите изменение признака.';
    END IF;
@@ -108,7 +109,7 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
-
+   outisSent := not inisSent;
 END;
 $BODY$
 
@@ -117,5 +118,6 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 12.10.19                                                                      *
  06.08.19                                                                      *
 */-- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')

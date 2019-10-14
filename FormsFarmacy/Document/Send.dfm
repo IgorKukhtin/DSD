@@ -1318,6 +1318,55 @@ inherited SendForm: TSendForm
       Caption = 'actUpdateDataSetDetailDS'
       DataSource = DetailDS
     end
+    object actSetReceived: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSetReceived
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      ImageIndex = 61
+    end
+    object actExecSetReceived: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Received
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Received
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+    end
+    object actSetSent: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSetSent
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      ImageIndex = 43
+    end
+    object actExecSetSent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Sent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Sent
+        end>
+      Caption = 'actExecSetSent'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1469,6 +1518,18 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1527,6 +1588,14 @@ inherited SendForm: TSendForm
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdate_SendOverdue
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actSetSent
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actSetReceived
       Category = 0
     end
   end
@@ -2979,5 +3048,69 @@ inherited SendForm: TSendForm
       end>
     Left = 104
     Top = 96
+  end
+  object spUpdate_Movement_Received: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Received'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReceived'
+        Value = Null
+        Component = cbReceived
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReceived'
+        Value = Null
+        Component = cbReceived
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 355
+  end
+  object spUpdate_Movement_Sent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSent'
+        Value = Null
+        Component = cbSent
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSent'
+        Value = Null
+        Component = cbSent
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 403
   end
 end

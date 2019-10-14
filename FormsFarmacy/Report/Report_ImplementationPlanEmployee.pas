@@ -113,6 +113,8 @@ type
     cbFilter1: TcxCheckBox;
     cbFilter2: TcxCheckBox;
     cbFilter3: TcxCheckBox;
+    AmountPlan: TcxGridDBBandedColumn;
+    AmountPlanAward: TcxGridDBBandedColumn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -274,6 +276,16 @@ begin
   I := 0;
   while I < cxImplementationPlanEmployeeDBBandedTableView1.ColumnCount do
   begin
+    if cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Position.BandIndex <>
+      cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Tag then
+      cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Position.BandIndex :=
+      cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Tag;
+    Inc(I);
+  end;
+
+  I := 0;
+  while I < cxImplementationPlanEmployeeDBBandedTableView1.ColumnCount do
+  begin
     if cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Position.BandIndex > 1 then
       cxImplementationPlanEmployeeDBBandedTableView1.Columns[I].Free
     else Inc(I);
@@ -331,6 +343,7 @@ begin
         14 : DataBinding.FieldName := 'BonusAmountTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
       end;
       Name := 'col' + DataBinding.FieldName;
+      Tag := nIndexUnit;
 
       if I in [7, 8, 13, 14] then
       begin
@@ -374,16 +387,18 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  for I := 1 to 5 do
+  for I := 1 to 7 do
   begin
     Field := TCurrencyField.Create(Self);
     Field.FieldKind := fkCalculated;
     case I of
       1 : Field.FieldName := 'Amount';
       2 : Field.FieldName := 'AmountPlanTab';
-      3 : Field.FieldName := 'AmountPlanAwardTab';
-      4 : Field.FieldName := 'AmountTheFineTab';
-      5 : Field.FieldName := 'BonusAmountTab';
+      3 : Field.FieldName := 'AmountPlan';
+      4 : Field.FieldName := 'AmountPlanAwardTab';
+      5 : Field.FieldName := 'AmountPlanAward';
+      6 : Field.FieldName := 'AmountTheFineTab';
+      7 : Field.FieldName := 'BonusAmountTab';
     end;
     Field.Name := 'cds' + Field.FieldName;
     Field.DataSet := ClientDataSet;
@@ -647,6 +662,7 @@ begin
 //    end;
 //    Dataset['AmountPlanTab'] := Min(nSum, nSumMax);
     Dataset['AmountPlanTab'] := Dataset['AmountPlanTab' + FUnit.Strings[FUnitCalck]];
+    Dataset['AmountPlan'] := Dataset['AmountPlan' + FUnit.Strings[FUnitCalck]];
 
 //    nSum := 0; nSumMax := 0;
 //    for I := 0 to FUnit.Count - 1 do
@@ -656,6 +672,7 @@ begin
 //    end;
 //    Dataset['AmountPlanAwardTab'] := Min(nSum, nSumMax);
     Dataset['AmountPlanAwardTab'] := Dataset['AmountPlanAwardTab' + FUnit.Strings[FUnitCalck]];
+    Dataset['AmountPlanAward'] := Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]];
 
 //    nSum := 0;
 //    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];

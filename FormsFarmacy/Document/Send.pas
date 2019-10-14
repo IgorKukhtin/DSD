@@ -140,6 +140,14 @@ type
     cxLabel8: TcxLabel;
     edDriver: TcxButtonEdit;
     GuidesDriver: TdsdGuides;
+    spUpdate_Movement_Received: TdsdStoredProc;
+    spUpdate_Movement_Sent: TdsdStoredProc;
+    actSetReceived: TMultiAction;
+    actExecSetReceived: TdsdExecStoredProc;
+    actSetSent: TMultiAction;
+    actExecSetSent: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
