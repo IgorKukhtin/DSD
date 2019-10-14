@@ -282,7 +282,6 @@ inherited CheckForm: TCheckForm
       PopupMenu = nil
       ExplicitTop = 48
       ExplicitWidth = 141
-      ExplicitHeight = 22
       Width = 141
     end
     object edCashRegisterName: TcxTextEdit
@@ -1609,6 +1608,102 @@ inherited CheckForm: TCheckForm
         end>
       isShowModal = False
     end
+    object actAddGoods: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsChoice
+        end
+        item
+          Action = actAmountDialog
+        end
+        item
+          Action = actExecAddGoods
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1042#1089#1090#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1095#1077#1082
+      Hint = #1042#1089#1090#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1095#1077#1082
+      ImageIndex = 54
+    end
+    object actGoodsChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsChoice'
+      FormName = 'TGoodsLiteForm'
+      FormNameParam.Value = 'TGoodsLiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actAmountDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actAmountDialog'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecAddGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spAddGoods
+      StoredProcList = <
+        item
+          StoredProc = spAddGoods
+        end>
+      Caption = 'actExecAddGoods'
+    end
+    object actEditAmount: TMultiAction
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actAmountDialog
+        end
+        item
+          Action = actExecEditAmount
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1086#1074#1072#1088#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 45
+    end
+    object actExecEditAmount: TdsdExecStoredProc
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spEditAmount
+      StoredProcList = <
+        item
+          StoredProc = spEditAmount
+        end>
+      Caption = 'actExecEditAmount'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1716,6 +1811,18 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateMemberSp'
         end
         item
@@ -1732,11 +1839,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarButton9'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -1784,6 +1887,18 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton6: TdxBarButton
       Action = actPartionGoods
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actAddGoods
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actEditAmount
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actGridToExcel
       Category = 0
     end
   end
@@ -1863,6 +1978,17 @@ inherited CheckForm: TCheckForm
       item
         Name = 'PartionDateKindId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = 0c
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -2500,7 +2626,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 682
+    Left = 690
     Top = 328
   end
   object GuidesMemberSP: TdsdGuides
@@ -2772,8 +2898,8 @@ inherited CheckForm: TCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 584
-    Top = 192
+    Left = 712
+    Top = 176
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>
@@ -2883,5 +3009,73 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 370
     Top = 440
+  end
+  object spAddGoods: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Check_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 658
+    Top = 225
+  end
+  object spEditAmount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_AmountAdmin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 738
+    Top = 225
   end
 end

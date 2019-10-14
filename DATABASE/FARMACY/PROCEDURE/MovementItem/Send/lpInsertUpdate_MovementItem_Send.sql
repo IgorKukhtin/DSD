@@ -118,7 +118,8 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementId);
      -- Для СУН проверили сумму
-     IF vbisSUN = TRUE 
+     IF vbisSUN = TRUE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+
      THEN
        SELECT COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
        INTO  vbSummaNew

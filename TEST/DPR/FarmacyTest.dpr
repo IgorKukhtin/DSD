@@ -751,7 +751,9 @@ uses
   BankAccount in '..\..\FormsFarmacy\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankAccountEdit in '..\..\FormsFarmacy\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   PayrollTypeDialog in '..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas' {PayrollTypeDialogForm: TParentForm},
-  EmployeeScheduleFilling in '..\..\FormsFarmacy\Document\EmployeeScheduleFilling.pas' {EmployeeScheduleFillingForm: TParentForm};
+  EmployeeScheduleFilling in '..\..\FormsFarmacy\Document\EmployeeScheduleFilling.pas' {EmployeeScheduleFillingForm: TParentForm},
+  AmountDialog in '..\..\FormsFarmacy\Guides\AmountDialog.pas' {AmountDialogForm: TParentForm},
+  GoodsDialog in '..\..\FormsFarmacy\Guides\GoodsDialog.pas' {GoodsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

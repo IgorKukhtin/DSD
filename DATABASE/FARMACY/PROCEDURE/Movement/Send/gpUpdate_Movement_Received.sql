@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Received(Integer, Boolean, TVarChar);
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Received(
     IN inMovementId          Integer   ,    -- ключ документа
     IN inisReceived          Boolean   ,    -- Получено-да
+   OUT outisReceived         Boolean   ,    -- Получено-да
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbUnitId     Integer;
@@ -99,6 +100,8 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+   
+   outisReceived := not inisReceived;
 
 END;
 $BODY$
@@ -108,5 +111,6 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 12.10.19                                                                      *
  06.08.19                                                                      *
 */
