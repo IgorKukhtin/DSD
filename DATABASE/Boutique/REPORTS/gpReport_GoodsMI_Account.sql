@@ -25,6 +25,8 @@ RETURNS TABLE (-- Документ
              , UnitName              TVarChar
              , ClientName            TVarChar
              , PartionId             Integer
+             , MI_Id                 Integer
+             , MI_Id_Partion         Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar
              , CompositionName  TVarChar
@@ -480,6 +482,8 @@ BEGIN
                           , tmp.ClientId            AS ClientId
                           , tmp.PartionId           AS PartionId
                           , tmp.MI_Id               AS MI_Id
+                          , tmp.MI_Id_Partion       AS MI_Id_Partion
+                          , tmp.Ord                 AS Ord
                           , tmp.ChangePercent       AS ChangePercent
                           , tmp.OperPriceList       AS OperPriceList
                           , tmp.GoodsId
@@ -507,6 +511,7 @@ BEGIN
                                 , tmp.GoodsId
                                 , tmp.PartionId
                                 , tmp.MI_Id
+                                , tmpDebt.MI_Id AS MI_Id_Partion
                                 , tmp.ChangePercent
                                 , tmp.OperPriceList
                                 , tmpMI_Child.CurrencyValue
@@ -520,6 +525,8 @@ BEGIN
                                 , (tmpMI_Child.Amount_USD * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_USD
                                 , (tmpMI_Child.Amount_EUR * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_EUR
                                 , (tmpMI_Child.Amount_Bank* (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_Card
+                                  -- № п/п
+                                , ROW_NUMBER() OVER (PARTITION BY tmp.PartionId, tmp.ClientId, tmp.GoodsId, COALESCE (tmpDebt.MI_Id, 0)) AS Ord
 
                            FROM tmpData_MI AS tmp
                                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmp.MI_Id
@@ -543,6 +550,7 @@ BEGIN
                                 , -1 AS GoodsId
                                 , 0  AS PartionId
                                 , 0  AS MI_Id
+                                , 0  AS MI_Id_Partion
                                 , 0    :: TFloat    AS ChangePercent
                                 , 0    :: TFloat    AS OperPriceList
                                 , tmpMI_Child_Exc.CurrencyValue
@@ -555,6 +563,8 @@ BEGIN
                                 , tmpMI_Child_Exc.Amount_USD     :: TFloat AS TotalPay_USD
                                 , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS TotalPay_EUR
                                 , 0    :: TFloat    AS TotalPay_Card
+                                  -- № п/п
+                                , 0 AS Ord
 
                            FROM (SELECT DISTINCT tmp.MovementId
                                       , tmp.MovementDescId
@@ -582,6 +592,8 @@ BEGIN
                              , tmp.ClientId
                              , tmp.PartionId
                              , tmp.MI_Id
+                             , tmp.MI_Id_Partion
+                             , tmp.Ord
                              , tmp.ChangePercent
                              , tmp.OperPriceList
                              , tmp.GoodsId
@@ -603,6 +615,7 @@ BEGIN
                      , tmp.ClientId              AS ClientId
                      , tmp.PartionId             AS PartionId
                      , tmp.MI_Id                 AS MI_Id
+                     , tmp.MI_Id_Partion         AS MI_Id_Partion
                      , tmp.ChangePercent         AS ChangePercent
                      , tmp.OperPriceList         AS OperPriceList
                      , tmp.GoodsId
@@ -615,7 +628,7 @@ BEGIN
                      , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
                      , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
                      , SUM (tmp.TotalPay)          AS TotalPay
-                     , SUM (tmp.Debt)              AS Debt
+                     , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Debt ELSE 0 END) AS Debt
                      , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId, tmp.MI_Id ORDER BY tmp.MovementId, tmp.MI_Id DESC) AS Ord
                 FROM tmpData AS tmp
                 GROUP BY CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END
@@ -632,6 +645,7 @@ BEGIN
                      , tmp.ClientId
                      , tmp.PartionId
                      , tmp.MI_Id
+                     , tmp.MI_Id_Partion
                      , tmp.ChangePercent
                      , tmp.OperPriceList
                      , tmp.GoodsId
@@ -653,6 +667,8 @@ BEGIN
              , Object_Unit.ValueData          AS UnitName
              , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId              AS PartionId
+             , tmpData.MI_Id                  AS MI_Id
+             , tmpData.MI_Id_Partion          AS MI_Id_Partion
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
              , CASE WHEN tmpData.GoodsId <> -1 THEN Object_Goods.ValueData ELSE 'Обмен' END ::TVarChar  AS GoodsName

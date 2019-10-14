@@ -168,6 +168,17 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
+          -- если вдруг для альтернативной формы опл - такая же дата, тогда игнорируем
+          LEFT JOIN _tmpPeriodClose AS _tmpPeriodClose_check
+                                    ON _tmpPeriodClose_check.CloseDate      = _tmpPeriodClose.CloseDate
+                                   AND _tmpPeriodClose_check.UserId         = _tmpPeriodClose.UserId
+                                   AND _tmpPeriodClose_check.MovementDescId = _tmpPeriodClose.MovementDescId
+                                   AND _tmpPeriodClose_check.BranchId       = _tmpPeriodClose.BranchId
+                                   AND _tmpPeriodClose_check.PaidKindId     = CASE WHEN _tmpPeriodClose.PaidKindId = zc_Enum_PaidKind_FirstForm()  THEN zc_Enum_PaidKind_SecondForm()
+                                                                                   WHEN _tmpPeriodClose.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Enum_PaidKind_FirstForm()
+                                                                                   ELSE NULL
+                                                                              END
+          -- 
           LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
                         , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
                         , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
@@ -190,7 +201,9 @@ BEGIN
                     ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = 0)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0)
+       AND (_tmpPeriodClose_check.PaidKindId IS NULL OR _tmpPeriodClose.PaidKindId = zc_Enum_PaidKind_SecondForm())
+       ;
 
      -- Проверка - tmp
      IF inUserId = zc_Enum_Process_Auto_PrimeCost() THEN RAISE EXCEPTION 'Ошибка. ??? inUserId = zc_Enum_Process_Auto_PrimeCost() ???'; END IF;

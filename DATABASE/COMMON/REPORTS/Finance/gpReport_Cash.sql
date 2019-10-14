@@ -27,7 +27,7 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , StartAmount_Currency TFloat, StartAmountD_Currency TFloat, StartAmountK_Currency TFloat
              , DebetSumm_Currency TFloat, KreditSumm_Currency TFloat
              , EndAmount_Currency TFloat, EndAmountD_Currency TFloat, EndAmountK_Currency TFloat
-             , Summ_Currency TFloat
+             , Summ_Currency TFloat, Summ_Currency_pl TFloat
              , Comment TVarChar
               )
 AS
@@ -164,14 +164,19 @@ BEGIN
                          )     
                          
         -- ƒЋя движение в валюте баланса   
-        , tmpContainerBalance AS (SELECT MIContainer.MovementItemId,
-                                         tmpContainer.ObjectId,
-                                         tmpContainer.CashId,
-                                         tmpContainer.CurrencyId,
-                                         SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
-                                         SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
-                                         SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END)                                        AS Summ_Currency,
-                                         MIContainer.isActive
+        , tmpContainerBalance AS (SELECT MIContainer.MovementItemId
+                                       , tmpContainer.ObjectId
+                                       , tmpContainer.CashId
+                                       , tmpContainer.CurrencyId
+                                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm
+                                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm
+                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END)                                        AS Summ_Currency
+                                       , SUM (CASE WHEN MIContainer.AccountId          = zc_Enum_Account_40801()  --  урсова€ разница
+                                                    AND MIContainer.AccountId_Analyzer = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Summ_Currency_pl
+                                       , MIContainer.isActive
                                   FROM tmpContainer
                                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                                        -- AND MIContainer.OperDate >= inStartDate
@@ -291,6 +296,7 @@ BEGIN
                                    0                         AS DebetSumm_Currency,
                                    0                         AS KreditSumm_Currency,
                                    0                         AS Summ_Currency,
+                                   0                         AS Summ_Currency_pl,
                                    ''                        AS Comment,
                                    NULL :: Boolean           AS isActive
                             FROM tmpContainer
@@ -317,6 +323,7 @@ BEGIN
                                    0                         AS DebetSumm_Currency,
                                    0                         AS KreditSumm_Currency,
                                    0                         AS Summ_Currency,
+                                   0                         AS Summ_Currency_pl,
                                    ''                        AS Comment,
                                    NULL :: Boolean           AS isActive
                             FROM tmpContainer
@@ -345,6 +352,7 @@ BEGIN
                                    0                                         AS DebetSumm_Currency,
                                    0                                         AS KreditSumm_Currency,
                                    SUM (tmpContainer.Summ_Currency)          AS Summ_Currency,
+                                   SUM (tmpContainer.Summ_Currency_pl)       AS Summ_Currency_pl,
                                    COALESCE (MIString_Comment.ValueData, '') AS Comment,
                                    tmpContainer.isActive                     AS isActive
                             FROM tmpContainerBalance AS tmpContainer
@@ -378,6 +386,7 @@ BEGIN
                                    SUM (tmpContainer.DebetSumm_Currency)     AS DebetSumm_Currency,
                                    SUM (tmpContainer.KreditSumm_Currency)    AS KreditSumm_Currency,
                                    0                                         AS Summ_Currency,
+                                   0                                         AS Summ_Currency_pl,
                                    COALESCE (MIString_Comment.ValueData, '') AS Comment,
                                    tmpContainer.isActive                     AS isActive
                             FROM tmpContainerCurrency AS tmpContainer
@@ -440,6 +449,7 @@ BEGIN
         CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END :: TFloat        AS EndAmountK_Currency,
 
         Operation.Summ_Currency :: TFloat,  
+        Operation.Summ_Currency_pl :: TFloat,  
 
         Operation.Comment :: TVarChar                                                               AS Comment
 
@@ -454,7 +464,8 @@ BEGIN
                      SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency,
                      SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency,
                      SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency,
-                     SUM (Operation_all.Summ_Currency)        AS Summ_Currency
+                     SUM (Operation_all.Summ_Currency)        AS Summ_Currency,
+                     SUM (Operation_all.Summ_Currency_pl)     AS Summ_Currency_pl
           FROM Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId,
                    Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, 

@@ -506,11 +506,11 @@ BEGIN
                                                                             , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
-                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
-                                                                                                                                             , zc_Enum_AccountDirection_40200()
-                                                                                                                                             , zc_Enum_AccountDirection_40500()
-                                                                                                                                             , zc_Enum_AccountDirection_40600()
-                                                                                                                                             , 4144357 -- Курсовая разница - zc_Enum_AccountDirection_40800
+                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100() -- касса
+                                                                                                                                             , zc_Enum_AccountDirection_40200() -- касса филиалов
+                                                                                                                                             , zc_Enum_AccountDirection_40500() -- касса БН
+                                                                                                                                             , zc_Enum_AccountDirection_40600() -- касса Павильонов
+                                                                                                                                             , zc_Enum_AccountDirection_40800() -- Курсовая разница
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
@@ -658,7 +658,7 @@ BEGIN
      UPDATE _tmpItem SET
                 ContainerId_Currency = CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
                                               OR _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                              OR _tmpItem.AccountId = 4144358                  -- Денежные средства  + касса в валюте + Курсовая разница
+                                              OR _tmpItem.AccountId = zc_Enum_Account_40801()  -- Денежные средства  + касса в валюте + Курсовая разница
                                               OR _tmpItem.MovementDescId = zc_Movement_Currency()
                                                  THEN 0
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110302()) -- Транзит + расчетный счет + валютный
