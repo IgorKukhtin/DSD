@@ -27,8 +27,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummChildRecalc     TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc  TFloat    , -- Удержания сторон. юр.л. (ввод)
     
-    IN inSummFine            TFloat    , -- штраф
-    IN inSummHosp            TFloat    , -- больничный
+    IN inSummFineRecalc      TFloat    , -- штраф (ввод)
+    IN inSummHospRecalc      TFloat    , -- больничный (ввод)
 
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
@@ -62,8 +62,8 @@ BEGIN
                                                      , inSummSocialAdd          := inSummSocialAdd
                                                      , inSummChildRecalc        := inSummChildRecalc
                                                      , inSummMinusExtRecalc     := inSummMinusExtRecalc
-                                                     , inSummFine               := 0
-                                                     , inSummHosp               := 0
+                                                     , inSummFineRecalc         := inSummFineRecalc
+                                                     , inSummHospRecalc         := inSummHospRecalc
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
                                                      , inUnitId                 := inUnitId
@@ -79,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.10.19         * замена inSummFine, inSummHosp на inSummFineRecalc, inSummHospRecalc
  05.01.18         * add inSummNalogRetRecalc
  20.06.17         * add inSummCardSecondCash
  20.04.16         * add inSummHoliday

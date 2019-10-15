@@ -17,11 +17,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummCard TFloat, TotalSummCardSecond TFloat, TotalSummCardSecondCash TFloat
              , TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
-             , TotalSummChild TFloat, TotalSummChildRecalc TFloat, TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
+             , TotalSummChild TFloat, TotalSummChildRecalc TFloat
+             , TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
              , TotalSummNalogRet TFloat, TotalSummNalogRetRecalc TFloat
              , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
-             , TotalSummFine TFloat, TotalSummHosp TFloat
+             , TotalSummFine TFloat, TotalSummFineRecalc TFloat
+             , TotalSummHosp TFloat, TotalSummHospRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -209,8 +211,10 @@ BEGIN
            , MovementFloat_TotalSummAddOth.ValueData           AS TotalSummAddOth
            , MovementFloat_TotalSummAddOthRecalc.ValueData     AS TotalSummAddOthRecalc
            
-           , MovementFloat_TotalSummFine.ValueData :: TFloat   AS TotalSummFine
-           , MovementFloat_TotalSummHosp.ValueData :: TFloat   AS TotalSummHosp
+           , MovementFloat_TotalSummFine.ValueData       :: TFloat AS TotalSummFine
+           , MovementFloat_TotalSummFineRecalc.ValueData :: TFloat AS TotalSummFineRecalc
+           , MovementFloat_TotalSummHosp.ValueData       :: TFloat AS TotalSummHosp
+           , MovementFloat_TotalSummHospRecalc.ValueData :: TFloat AS TotalSummHospRecalc
            
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
@@ -332,6 +336,13 @@ BEGIN
                                     ON MovementFloat_TotalSummHosp.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHosp.DescId = zc_MovementFloat_TotalSummHosp()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFineRecalc
+                                    ON MovementFloat_TotalSummFineRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummFineRecalc.DescId = zc_MovementFloat_TotalSummFineRecalc()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHospRecalc
+                                    ON MovementFloat_TotalSummHospRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHospRecalc.DescId = zc_MovementFloat_TotalSummHospRecalc()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -361,6 +372,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.10.19         *
  29.07.19         *
  20.09.18         *
  25.06.18         * add TotalSummAddOth,

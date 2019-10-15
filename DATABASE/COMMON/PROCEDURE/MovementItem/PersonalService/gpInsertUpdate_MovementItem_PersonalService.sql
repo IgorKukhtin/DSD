@@ -33,8 +33,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummSocialAdd         TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChildRecalc       TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc    TFloat    , -- Удержания сторон. юр.л. (ввод)
-    IN inSummFine              TFloat    , -- штраф
-    IN inSummHosp              TFloat    , -- больничный
+    IN inSummFineRecalc        TFloat    , -- штраф (ввод)
+    IN inSummHospRecalc        TFloat    , -- больничный (ввод)
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -73,8 +73,8 @@ BEGIN
                                                      , inSummSocialAdd         := inSummSocialAdd
                                                      , inSummChildRecalc       := inSummChildRecalc
                                                      , inSummMinusExtRecalc    := inSummMinusExtRecalc
-                                                     , inSummFine              := inSummFine
-                                                     , inSummHosp              := inSummHosp
+                                                     , inSummFineRecalc        := inSummFineRecalc
+                                                     , inSummHospRecalc        := inSummHospRecalc
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
                                                      , inUnitId                := inUnitId
