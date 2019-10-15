@@ -546,6 +546,11 @@ type
     N191: TMenuItem;
     actReport_CheckSUN: TdsdOpenForm;
     miReport_CheckSUN: TMenuItem;
+    actGoodsAll_Tab: TdsdOpenForm;
+    actGoodsAllRetail_Tab: TdsdOpenForm;
+    miGoodsAll_Tab: TMenuItem;
+    miGoodsAllRetail_Tab: TMenuItem;
+    N192: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

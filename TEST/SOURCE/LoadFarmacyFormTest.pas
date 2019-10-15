@@ -515,6 +515,11 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAll_TabForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAll_TabForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetail_TabForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAllRetail_TabForm');
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailForm');

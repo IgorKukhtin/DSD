@@ -270,8 +270,8 @@ BEGIN
                                                                   , inSummSocialAdd      := 0 :: TFloat
                                                                   , inSummChildRecalc    := 0 :: TFloat
                                                                   , inSummMinusExtRecalc := 0 :: TFloat
-                                                                  , inSummFine           := 0 :: TFloat
-                                                                  , inSummHosp           := 0 :: TFloat
+                                                                  , inSummFineRecalc     := 0 :: TFloat
+                                                                  , inSummHospRecalc     := 0 :: TFloat
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
                                                                   , inUnitId             := _tmpMI_Recalc.UnitId

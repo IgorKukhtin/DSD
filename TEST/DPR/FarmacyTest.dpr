@@ -753,7 +753,9 @@ uses
   PayrollTypeDialog in '..\..\FormsFarmacy\Guides\PayrollTypeDialog.pas' {PayrollTypeDialogForm: TParentForm},
   EmployeeScheduleFilling in '..\..\FormsFarmacy\Document\EmployeeScheduleFilling.pas' {EmployeeScheduleFillingForm: TParentForm},
   AmountDialog in '..\..\FormsFarmacy\Guides\AmountDialog.pas' {AmountDialogForm: TParentForm},
-  GoodsDialog in '..\..\FormsFarmacy\Guides\GoodsDialog.pas' {GoodsDialogForm: TParentForm};
+  GoodsDialog in '..\..\FormsFarmacy\Guides\GoodsDialog.pas' {GoodsDialogForm: TParentForm},
+  GoodsAllRetail_Tab in '..\..\FormsFarmacy\Guides\GoodsAllRetail_Tab.pas' {GoodsAllRetail_TabForm: TParentForm},
+  GoodsAll_Tab in '..\..\FormsFarmacy\Guides\GoodsAll_Tab.pas' {GoodsAll_TabForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
