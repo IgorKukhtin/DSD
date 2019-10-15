@@ -4,9 +4,10 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -86
+  ExplicitLeft = -247
+  ExplicitTop = -133
   ExplicitWidth = 1036
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -113,6 +114,11 @@ inherited Report_CashForm: TReport_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency_pl
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -199,6 +205,11 @@ inherited Report_CashForm: TReport_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency_pl
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -451,7 +462,7 @@ inherited Report_CashForm: TReport_CashForm
             Width = 80
           end
           object Summ_Currency: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+            Caption = #1050#1091#1088#1089'. '#1088#1072#1079#1085'. ('#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Summ_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -459,7 +470,19 @@ inherited Report_CashForm: TReport_CashForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072' ('#1089#1095#1077#1090')'
             Options.Editing = False
+            Width = 70
+          end
+          object Summ_Currency_pl: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089'. '#1088#1072#1079#1085'. ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'Summ_Currency_pl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072' ('#1079#1072#1090#1088#1072#1090#1099' - '#1089#1090#1072#1090#1100#1103' '#1054#1055#1080#1059')'
             Width = 70
           end
           object StartAmount_Currency: TcxGridDBColumn
@@ -642,14 +665,14 @@ inherited Report_CashForm: TReport_CashForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42005d
+      EditValue = 43466d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 42005d
+      EditValue = 43466d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30

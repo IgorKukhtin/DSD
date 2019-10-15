@@ -14,10 +14,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased boolean
              ) AS
 $BODY$
+    DECLARE vbUserId Integer;
+    DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelService);
+    vbUserId := lpGetUserBySession (inSession);
 
+     -- определяется уровень доступа
+     vbObjectId_Constraint_Branch:= COALESCE ((SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), 0);
+     -- определяется уровень доступа
+     IF vbObjectId_Constraint_Branch = 0 AND EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS Object_View WHERE Object_View.UserId = vbUserId AND Object_View.AccessKeyId = zc_Enum_Process_AccessKey_UserBranch())
+     THEN vbObjectId_Constraint_Branch:= -1;
+     END IF;
+
+
+     -- Результат
      RETURN QUERY 
        SELECT 
              Object_ModelService.Id          AS Id
@@ -48,7 +60,8 @@ BEGIN
             LEFT JOIN Object AS Object_ModelServiceKind ON Object_ModelServiceKind.Id = ObjectLink_ModelService_ModelServiceKind.ChildObjectId
 
        WHERE Object_ModelService.DescId = zc_Object_ModelService()
-         AND (Object_ModelService.isErased = False OR inIsShowAll = True)
+         AND (Object_ModelService.isErased = FALSE OR inIsShowAll = TRUE)
+         AND vbObjectId_Constraint_Branch = 0
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code

@@ -4,6 +4,7 @@ codepage=1252
 "Войти"="Login"
 "Отмена"="Cancel"
 "Пользователь:"="User:"
+"Пользователь"="User"
 "Пароль:"="Password:"
 "Документы"="Documents"
 "Финансовый учет"="Financial Accounting"
@@ -16,14 +17,26 @@ codepage=1252
 "Партии товаров"="Partion goods"
 "Размер товара"="Size goods"
 "Единицы измерения"="Measures"
-"Группа для состава товара"="Composition Group"
+
 "Состав товара"="Composition"
+"Состав"="Composition"
+
 "Описание товара"="Goods Info"
+"Описание"="Description"
+
 "Линия коллекции"="Line Fabrica"
+"Линия"="Line"
 "Название для ценника"="Label print"
+
 "Группы товаров"="Groups Goods"
+"Группа (тов.)"="Groups Goods"
+"Группа"="Group"
+"Группа состава" ="Composition group"
+"Группа для состава товара"="Composition Group"
+
 "Подразделения"="Units"
 "Юридические лица"="Juridical"
+"Юр. лицо"="Juridical"
 "Группы юридических лиц" = "Juridical Group"
 "Прайс листы"="PriceList"
 "Страна производитель"="Country Brand"
@@ -36,6 +49,9 @@ codepage=1252
 "Расчетные счета"="BankAccount"
 "Банк"="Bank"
 "Валюта"="Currency"
+"Валюта (приход)"="Currency income"
+"Вал. вх."="Currency income"
+
 "Сотрудники"="Personal"
 "Должности"="Position"
 "Физические лица"="Member"
@@ -68,12 +84,20 @@ codepage=1252
 "показать Поставщика (Да/Нет)"="Show Supplier (Yes/No)"
 
 "Остаток = 0"="Remains = 0"
+"Ост. Итого"="Total remains"
+"Ост. долг"="Remains debt"
+
+
 "Показать с остатком = 0"="Show Remains = 0 (Yes/No)"
 
 "Подразделение / Группа:"="Division / Group:"
 "Подразделение"="Shop"
 "Подразделение:"="Shop:"
 "Подразделение :"="Shop :"
+"Подразделение (приход)"="Shop income"
+
+"Печать ценников:"="Print price"
+
 "Магазин"="Shop"
 "Магазин:"="Shop:"
 "Торговая марка"="Brand"
@@ -101,6 +125,7 @@ codepage=1252
 "Отчет по продажам / возвратам"="Sales and Returns Report"
 "Отчет по расчетам"="Billing report"
 "Акт сверки"="Act of reconciliation"
+"Акт сверки по покупателю c:"="Customer reconciliation report with"
 "Долги Покупателей"="Buyer Debts"
 "Реестр товаров"="Product Registry"
 "База клиентов СМС"="Customer base SMS"
@@ -118,42 +143,127 @@ codepage=1252
 "Аналитика ключевых показателей"="Key indicators analytics"
 "Аналитика ключевых показателей (ВСЕ)"="Key indicators analytics (ALL)"
 "Статус"="Status"
+
+
+"Вид данных"="Type of data"
 "Вид документа"="Type of document"
+"Вид док. (продажа)"="Type of document (sale)"
+"Вид док. партии"="Type of document (partion)"
+
 "Дата/время создания"="Date / time of creation"
+"Дата/вр. (созд.)"="Date / time of creation"
+"Дата/время (созд.)  (партия пок.)" = "Date / time of creation (partion sale)"
+
+"Дата/ время (корр.) цены"="Date / time of change price"
+
+"Долг"="Debt"
+"Долг, грн"="Debt, UAH"
+"Долг ГРН"="Debt, UAH"
+"Долг (счет приб. б.п.)"="Debt (account deferred profit)"
+
+
 "Покупатель"="Buyer"
+
 "Штрих код поставщика"="Barcode Supplier"
 "Код"="Code"
 "Артикул"="Vendor code"
 "Размер"="Size"
 "Размер:"="Size"
+
 "% скидки"="Discount percentage"
+"% ск."="Discount percent"
+
+"% нац."="% margins"
+"(-)% Ск. (+)% Нац. (приход)"="(-)% discount, (+)% margins (income)"
+
+
 "Дополнительная скидка в продаже"="Additional discount on sale"
+"Доп. ск. в док."="Additional discount"
+"Доп. ск. в прод./ расч." = "Additional discount (sale/payment)"
+"Доп. ск. в прод."="Additional discount (sale)"
+
+"Курс" = "Rates"
+"Номинал"="Par"
+
 "Количество"="Quantity"
+"Кол." = "Qty"
+"Кол. в партии прод."="Qty in partion sale"
+"Кол-во долг (нач.)"="Qty debt (start)"
+"Кол-во долг (конечн.)" ="Qty debt (final)"
+"Кол-во долг"="Qty debt"
+"Кол-во приход"="Qty income"
+"Кол-во для печати"="Qty for print"
+"Кол. в цене"="Qty in price"
+
+"Продажа кол-во"="Qty sale"
+"Продажа / Возврат ГРН"="Sale/return, UAH"
+
+
 "Цена"="Price"
-"Итого оплата -> ГРН"="Total payment -> UAH"
+"Цена ГРН"="Price, UAH"
+"Цена вх. без ск."=Price income without discount"
+"Цена вх."="Price income"
+
+
+"Итого оплата -> ГРН"="Total payment, UAH"
+"Итого оплата в Расчетах"="Total payment in the calculations"
+"Итого оплата в Расчетах"="Total payment in the calculations"
+"Итого оплата в прод."="Total payment in the sale"
+"Итого Сумма ск."="Total sum discount"
+"ИТОГО Сумма возврата"="Total sum return"
+"ИТОГО Сумма возврата оплаты"="Total sum return payment"
+"Итого Доп. ск. (в расч.)"="Total additional discount (payment)"
+"ИТОГО Кол-во возврат"="Total qty return"
+
+"Оплата / Возврат кол-во"="Payment/Return, Qty"
+"Оплата / Возврат опл. ГРН"="Payment/Return, UAH"
+
 "Оплата ГРН"="Payment UAH"
 "Оплата $"="Payment $"
 "Оплата EUR"="Payment EUR"
 "Оплата карта"="Payment card"
+
 "Сумма без скидки"="Sum without discount"
-"Итого оплата в Расчетах"="Total payment in the calculations"
+"Сумма вх. без скидки"="Sum income without discount"
+"Сумма вх. в вал."="Sum income in currency"
+"Сумма вх. (ГРН)"="Sum income, UAH"
+"Сумма ГРН без скидки" = "Sum without discount, UAH"
+"Сумма ГРН"="Sum UAH"
+"Сумма ск. по %"="Sum discount"
+"Сумма ск. по % в прод."="Sum discount (sale)"
 "Сумма долга"="Sum of debt"
 "Сумма к оплате"="Sum to pay"
-"Группа"="Group"
-"Дата док. (продажа)"="Date of the document (sale)"
-"№ док. (продажа)"="Document number (sale)"
-"Возвр. > 31д."="Return > 31d."
+"Сумма долга (нач.)" = "Sum debt (start)"
+"Сумма долга (конечн.)" = "Sum debt (final)"
+"Сумма оплаты итого" = "Total sum payment"
+
+
 "Дата документа"="Date of the document"
-"Подразделение"="Division"
-"Валюта"="Currency"
-"Долг"="Debt"
-"Группа (тов.)"="Group (goods)"
-"Линия"="Line"
-"Описание"="Description"
-"Состав"="Composition"
-"Фабрика"="Factory"
-"Вид данных"="Type of data"
+"Дата док. (продажа)"="Date of the document (sale)"
+"Дата док. (пр.)"="Date of the document (sale)"
+"Дата док."="Date of the document"
+"Дата док. (партия пок.)"="Date of the document (partion sale)"
+"Дата док. партии"="Date of the document (partion)"
+
+"№ док. (продажа)"="Document number (sale)"
+"№ док. пр."="Document number (sale)"
 "№ док."="Document number"
+"№ док. (партия пок.)"="Document number (partion sale)"
+"№ док. партии"=""Document number (partion)"
+"№ док. приход"="Document number income"
+
+
+"Возвр. > 31д."="Return > 31d."
+
+"Подразделение"="Division"
+"Примечание (приход)"="Comment (income)"
+
+
+
+
+"Фабрика"="Factory"
+
+
 "Ед. изм."="Units"
 
 "1.Отлично, % от:"="1.Excellent, % from"
@@ -165,5 +275,7 @@ codepage=1252
 
 "за Весь период"="All period"
 "несколько Магазинов"="several Shop"
-"показать Линию"="show Line Fabrica"
 "несколько ТМ"="several Brand"
+
+"показать Линию"="show Line Fabrica"
+

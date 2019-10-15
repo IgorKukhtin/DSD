@@ -129,7 +129,7 @@ BEGIN
                                           INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
                                                               AND Container.DescId  = zc_Container_Summ()
                                                               -- !!!без виртуальной курсовой разницы!!!
-                                                              AND Container.ObjectId <> 4144358 -- Курсовая разница
+                                                              AND Container.ObjectId <> zc_Enum_Account_40801() -- Курсовая разница
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                                                         ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
@@ -264,8 +264,8 @@ BEGIN
              , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 0 ELSE _tmpItem.ObjectId END AS ObjectIntId_Analyzer
              , 0 AS AccountGroupId
                -- сформируем позже
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 4144357 ELSE 0 END AS AccountDirectionId -- Курсовая разница
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 4144358 ELSE 0 END AS AccountId          -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_AccountDirection_40800() ELSE 0 END AS AccountDirectionId -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_Account_40801()          ELSE 0 END AS AccountId          -- Курсовая разница
 
                -- Группы ОПиУ: не используется
              , 0 AS ProfitLossGroupId

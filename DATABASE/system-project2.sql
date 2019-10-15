@@ -1,8 +1,8 @@
 -- TRUNCATE TABLE SoldTable;
 -- TRUNCATE TABLE MovementItemContainer;
 
--- SELECT COUNT(*) FROM MovementProtocol 
--- SELECT COUNT(*) FROM MovementItemProtocol
+-- SELECT COUNT(*), min(Id), max(Id) FROM MovementProtocol 
+-- SELECT COUNT(*), min(Id), max(Id) FROM MovementItemProtocol
 
 -- TRUNCATE TABLE MovementProtocol_arc;
 -- TRUNCATE TABLE MovementItemProtocol_arc;

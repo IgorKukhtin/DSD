@@ -5,8 +5,9 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -286
   ExplicitWidth = 1092
-  ExplicitHeight = 390
+  ExplicitHeight = 387
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -93,6 +94,16 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Send_pl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss_loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss_send
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -159,6 +170,16 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Send_pl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss_loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss_send
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -342,6 +363,28 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_ProfitLoss_loss: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1054#1055#1080#1059' ('#1089#1087#1080#1089#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'Summ_ProfitLoss_loss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1054#1055#1080#1059' ('#1089#1087#1080#1089#1072#1085#1080#1077', '#1079#1072#1090#1088#1072#1090#1099')'
+            Width = 70
+          end
+          object Summ_ProfitLoss_send: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1054#1055#1080#1059' ('#1087#1077#1088#1077#1084#1077#1097')'
+            DataBinding.FieldName = 'Summ_ProfitLoss_send'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1054#1055#1080#1059' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077', '#1079#1072#1090#1088#1072#1090#1099')'
             Width = 70
           end
           object Price_PriceList: TcxGridDBColumn

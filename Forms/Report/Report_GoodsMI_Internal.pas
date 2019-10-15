@@ -106,6 +106,8 @@ type
     bbPrintComment: TdxBarButton;
     actPrintArticleLossGroup: TdsdPrintAction;
     bbPrintArticleLossGroup: TdxBarButton;
+    Summ_ProfitLoss_loss: TcxGridDBColumn;
+    Summ_ProfitLoss_send: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -34,8 +34,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummSocialAdd          TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChildRecalc        TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc     TFloat    , -- Удержания сторон. юр.л. (ввод)
-    IN inSummFine               TFloat    , -- штраф
-    IN inSummHosp               TFloat    , -- больничный
+    IN inSummFineRecalc         TFloat    , -- штраф (ввод)
+    IN inSummHospRecalc         TFloat    , -- больничный (ввод)
 
     IN inComment                TVarChar  , -- 
     IN inInfoMoneyId            Integer   , -- Статьи назначения
@@ -185,14 +185,14 @@ BEGIN
 
 
      -- рассчитываем сумму (затраты)
-     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
-               + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) -- - COALESCE (inSummSocialIn, 0);
+     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFineRecalc, 0)
+               + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHospRecalc, 0) -- - COALESCE (inSummSocialIn, 0);
                  -- "плюс" <Премия (распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
                 ;
      -- рассчитываем сумму к выплате
-     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
-                    + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) + COALESCE (inSummSocialAdd, 0)
+     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFineRecalc, 0)
+                    + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHospRecalc, 0) + COALESCE (inSummSocialAdd, 0)
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
                       -- "плюс" <Премия (распределено)>
@@ -270,9 +270,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), ioId, COALESCE (outSummPhone, 0));
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFine(), ioId, inSummFine);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFineRecalc(), ioId, inSummFineRecalc);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHosp(), ioId, inSummHosp);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospRecalc(), ioId, inSummHospRecalc);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -301,6 +301,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.10.19         * замена inSummFine, inSummHosp на inSummFineRecalc, inSummHospRecalc
  29.07.19         * inSummFine, inSummHosp
  25.06.18         * inSummAddOthRecalc
  05.01.18         * add inSummNalogRetRecalc

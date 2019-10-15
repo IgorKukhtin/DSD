@@ -515,8 +515,8 @@ BEGIN
              , 0 AS ContainerId                                               
              , 0 AS AccountGroupId
                -- сформируем позже
-             , 4144357 AS AccountDirectionId -- Курсовая разница
-             , 4144358 AS AccountId          -- Курсовая разница
+             , zc_Enum_AccountDirection_40800() AS AccountDirectionId -- Курсовая разница
+             , zc_Enum_Account_40801()          AS AccountId          -- Курсовая разница
 
                -- Группы ОПиУ: не используется
              , 0 AS ProfitLossGroupId
@@ -574,8 +574,8 @@ BEGIN
              , 0 AS ContainerId                                               
              , 0 AS AccountGroupId
                -- сформируем позже
-             , CASE WHEN Object.DescId = zc_Object_Cash() THEN 4144357 ELSE 0 END AS AccountDirectionId -- Курсовая разница
-             , CASE WHEN Object.DescId = zc_Object_Cash() THEN 4144358 ELSE 0 END AS AccountId          -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN zc_Enum_AccountDirection_40800() ELSE 0 END AS AccountDirectionId -- Курсовая разница
+             , CASE WHEN Object.DescId = zc_Object_Cash() THEN zc_Enum_Account_40801()          ELSE 0 END AS AccountId          -- Курсовая разница
 
                -- Группы ОПиУ: не используется
              , 0 AS ProfitLossGroupId

@@ -87,6 +87,7 @@ type
     CurrencyGuides: TdsdGuides;
     cbCurrency: TcxCheckBox;
     bbcbCurrency: TdxBarControlContainerItem;
+    Summ_Currency_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -26,7 +26,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ArticleLossCode Integer, ArticleLossName TVarChar
              , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat
              , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_zavod TFloat, SummIn_branch TFloat, SummIn_60000 TFloat
-             , Amount_Send_pl TFloat, Summ_ProfitLoss TFloat
+             , Amount_Send_pl TFloat, Summ_ProfitLoss TFloat, Summ_ProfitLoss_loss TFloat, Summ_ProfitLoss_send TFloat
              , PriceOut_zavod TFloat, PriceOut_branch TFloat, PriceIn_zavod TFloat, PriceIn_branch TFloat
              , Price_PriceList TFloat, SummOut_PriceList TFloat
              , ProfitLossCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar
@@ -175,6 +175,8 @@ BEGIN
                         , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS SummIn
  
                         , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
+                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss_loss
+                        , 0 AS Summ_ProfitLoss_send
  
                         , 0 AS Amount_Send_pl
  
@@ -211,7 +213,9 @@ BEGIN
                         , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS AmountIn
                         , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS SummIn
 
-                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
+                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN (zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
+                        , 0 AS Summ_ProfitLoss_loss
+                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN -1 * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss_send
 
                         , SUM (COALESCE (tmpSend_ProfitLoss_mi.Amount, 0)) AS Amount_Send_pl
 
@@ -250,7 +254,9 @@ BEGIN
                       , SUM (tmpCont.AmountIn) AS AmountIn
                       , SUM (tmpCont.SummIn) AS SummIn
 
-                      , SUM (tmpCont.Summ_ProfitLoss) AS Summ_ProfitLoss
+                      , SUM (tmpCont.Summ_ProfitLoss)      AS Summ_ProfitLoss
+                      , SUM (tmpCont.Summ_ProfitLoss_loss) AS Summ_ProfitLoss_loss
+                      , SUM (tmpCont.Summ_ProfitLoss_send) AS Summ_ProfitLoss_send
 
                       , SUM (tmpCont.Amount_Send_pl) AS Amount_Send_pl
                  FROM tmpCont
@@ -308,8 +314,10 @@ BEGIN
          , tmpOperationGroup.SummIn_branch   :: TFloat AS SummIn_branch
          , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummIn_60000 END :: TFloat AS SummIn_60000
 
-         , tmpOperationGroup.Amount_Send_pl  :: TFloat AS Amount_Send_pl
-         , tmpOperationGroup.Summ_ProfitLoss :: TFloat AS Summ_ProfitLoss
+         , tmpOperationGroup.Amount_Send_pl       :: TFloat AS Amount_Send_pl
+         , tmpOperationGroup.Summ_ProfitLoss      :: TFloat AS Summ_ProfitLoss
+         , tmpOperationGroup.Summ_ProfitLoss_loss :: TFloat AS Summ_ProfitLoss_loss
+         , tmpOperationGroup.Summ_ProfitLoss_send :: TFloat AS Summ_ProfitLoss_send
 
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_branch / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_branch
@@ -358,7 +366,10 @@ BEGIN
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_branch
                 , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END)                AS SummIn_60000
 
-                , SUM (tmpContainer.Summ_ProfitLoss)   AS Summ_ProfitLoss
+                , SUM (tmpContainer.Summ_ProfitLoss)      AS Summ_ProfitLoss
+                , SUM (tmpContainer.Summ_ProfitLoss_loss) AS Summ_ProfitLoss_loss
+                , SUM (tmpContainer.Summ_ProfitLoss_send) AS Summ_ProfitLoss_send
+
                 , SUM (tmpContainer.Amount_Send_pl)       AS Amount_Send_pl
 
            FROM (SELECT tmpMI.ContainerId
@@ -382,6 +393,8 @@ BEGIN
                       , tmpMI.SummIn
 
                       , tmpMI.Summ_ProfitLoss
+                      , tmpMI.Summ_ProfitLoss_loss
+                      , tmpMI.Summ_ProfitLoss_send
                       , tmpMI.Amount_Send_pl
 
                  FROM tmpMI

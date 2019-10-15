@@ -754,9 +754,17 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummFine() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_SummFine', 'Сумма штрафа, грн' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummFine');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummFineRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummFineRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_SummFineRecalc', 'Сумма штрафа (ввод), грн' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummFineRecalc');
+
 CREATE OR REPLACE FUNCTION zc_MIFloat_SummHosp() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummHosp'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_SummHosp', 'Сумма больничного, грн' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummHosp');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummHospRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummHospRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_SummHospRecalc', 'Сумма больничного (ввод), грн' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummHospRecalc');
 
 ----!!!!!!Farmacy
 
@@ -1141,6 +1149,8 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 15.10.19         * zc_MIFloat_SummFineRecalc
+                    zc_MIFloat_SummHospRecalc
  02.10.19                                                                                                     * zc_MIFloat_ValidationResults
  05.09.19                                                                                                     * zc_MIFloat_HolidaysHospital, zc_MIFloat_Director
  01.09.19                                                                                                     * zc_MIFloat_SummaCleaning, zc_MIFloat_SummaSP, zc_MIFloat_SummaOther
