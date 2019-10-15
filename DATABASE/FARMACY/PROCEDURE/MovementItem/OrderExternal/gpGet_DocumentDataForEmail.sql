@@ -169,11 +169,11 @@ BEGIN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
     END IF;
 
-    IF vbUnitId in (4135547, 5120968, 3457773, 6741875, 377610, 377613, 494882, 6128298) AND vbFromId = 59610 --AND inSession = '3'
+/*    IF vbUnitId in (4135547, 5120968, 3457773, 6741875, 377610, 377613, 494882, 6128298) AND vbFromId = 59610 --AND inSession = '3'
     THEN
       vbMail := 'orders_processing@badm.biz';
     END IF;
-
+*/
     -- еще
     SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData
            INTO vbUserMail, vbUserMailSign
