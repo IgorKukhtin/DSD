@@ -10,13 +10,13 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               NDS TFloat, MinimumLot TFloat,
+               MinimumLot TFloat,
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean,
                isUpload Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
-               MakerName TVarChar, MakerLinkName TVarChar,
+               MakerName TVarChar,
                ConditionsKeepName TVarChar,
                AreaName TVarChar,
                CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
@@ -51,6 +51,7 @@ BEGIN
                        WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                         AND 1=0
                       )
       , tmpBarCode AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
                             , Object_Goods.ObjectCode       AS GoodsCode
@@ -68,6 +69,7 @@ BEGIN
                        WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                         AND 1=0
                       )
    -- Результат
    SELECT
@@ -91,7 +93,7 @@ BEGIN
 
            , ObjectBoolean_Goods_Close.ValueData    AS isClose
            , ObjectBoolean_Goods_TOP.ValueData      AS isTOP
-           , Object_Goods_Juridical.IsPromo
+           , Object_Goods_Juridical.IsPromo         AS isPromo
            , ObjectBoolean_First.ValueData          AS isFirst
            , ObjectBoolean_Second.ValueData         AS isSecond
            , ObjectBoolean_Published.ValueData      AS isPublished
@@ -109,7 +111,7 @@ BEGIN
            , Object_GoodsObject.ValueData       AS  ObjectName
 
            , Object_Goods_Juridical.MakerName
-           , Object_Maker.ValueData             AS MakerLinkName
+
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
            , Object_Area.ValueData              AS AreaName
 
@@ -123,6 +125,8 @@ BEGIN
            , tmpBarCode.Ord :: Integer AS OrdBar
 
     FROM Object_Goods_Juridical
+          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Juridical.ConditionsKeepId
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_Goods_Juridical.AreaId
 
          -- ObjectLink ...
          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -133,10 +137,6 @@ BEGIN
                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods_Juridical.Id
                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-         LEFT JOIN ObjectLink AS ObjectLink_Goods_Maker
-                              ON ObjectLink_Goods_Maker.ObjectId = Object_Goods_Juridical.Id
-                             AND ObjectLink_Goods_Maker.DescId = zc_ObjectLink_Goods_Maker()
-         LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = ObjectLink_Goods_Maker.ChildObjectId
 
         -- НДС
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
@@ -144,11 +144,8 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-        -- связь с Юридические лица или Торговая сеть или ...
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
-                             ON ObjectLink_Goods_Object.ObjectId = Object_Goods_Juridical.Id
-                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = ObjectLink_Goods_Object.ChildObjectId
+        -- связь с Юридические лица
+        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_Juridical.JuridicalID
         LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
 
         -- Float ...
@@ -184,23 +181,11 @@ BEGIN
                                 ON ObjectBoolean_Published.ObjectId = Object_Goods_Juridical.Id
                                AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
 
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
-                                  ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods_Juridical.Id
-                                 AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                                 AND ObjectBoolean_Goods_isMain.ValueData = TRUE
-
-          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Juridical.ConditionsKeepId
-          LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_Goods_Juridical.AreaId
-
           LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods_Juridical.GoodsMainId
                               AND tmpMarion.Ord         = 1
           LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Juridical.GoodsMainId
                               AND tmpBarCode.Ord         = 1
 
-    WHERE ObjectBoolean_Goods_isMain.ObjectId IS NULL
-      AND (Object_GoodsObject.DescId = zc_Object_Juridical()
-        OR ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
-          )
    ;
 
 END;
