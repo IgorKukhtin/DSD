@@ -75,10 +75,10 @@ BEGIN
    -- Результат
    SELECT
              Object_Goods_Retail.Id
-           , Object_Goods.ObjectCode   AS Code
-           , '' ::TVarChar             AS CodeStr
-           , Object_Goods.Name         AS Name
-           , Object_Goods.isErased
+           , Object_Goods_Main.ObjectCode   AS Code
+           , '' ::TVarChar                  AS CodeStr
+           , Object_Goods_Main.Name         AS Name
+           , Object_Goods_Main.isErased
 
            , Object_Goods_Retail.GoodsMainId AS GoodsMainId
            
@@ -92,10 +92,10 @@ BEGIN
 
            , Object_Goods_Retail.MinimumLot
 
-           , NULL :: Boolean           AS isClose
+           , NULL :: Boolean               AS isClose
            , Object_Goods_Retail.isTOP
 
-           , NULL :: Boolean           AS IsPromo
+           , NULL :: Boolean               AS IsPromo
            , Object_Goods_Retail.isFirst
            , Object_Goods_Retail.isSecond
 
@@ -114,7 +114,7 @@ BEGIN
            , ObjectDesc_GoodsObject.itemname    AS  ObjectDescName
            , Object_Retail.ValueData            AS  ObjectName
 
-           , Object_Goods.MakerName    AS MakerName
+           , Object_Goods_Main.MakerName    AS MakerName
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
            , '' ::TVarChar             AS AreaName
 
@@ -128,12 +128,12 @@ BEGIN
            , tmpBarCode.Ord :: Integer AS OrdBar
 
     FROM Object_Goods_Retail
-         LEFT JOIN Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+         LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods.GoodsGroupId
-         LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = Object_Goods.MeasureId
-         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods.ConditionsKeepId
-         LEFT JOIN Object AS Object_NDSKind    ON Object_NDSKind.Id    = Object_Goods.NDSKindId
+         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods_Main.GoodsGroupId
+         LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = Object_Goods_Main.MeasureId
+         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Main.ConditionsKeepId
+         LEFT JOIN Object AS Object_NDSKind    ON Object_NDSKind.Id    = Object_Goods_Main.NDSKindId
 
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_Retail.RetailId
          LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_Retail.DescId
@@ -142,7 +142,6 @@ BEGIN
                              AND tmpMarion.Ord         = 1
          LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
                              AND tmpBarCode.Ord         = 1
-
 --limit 10
    ;
 
