@@ -1184,7 +1184,18 @@ CREATE OR REPLACE FUNCTION zc_Object_PayrollGroup() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PayrollGroup', 'Группы расчета заработной платы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PayrollGroup');
 
+CREATE OR REPLACE FUNCTION zc_Object_LabSample() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_LabSample'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_LabSample', 'Название исследования (образца)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LabSample');
 
+CREATE OR REPLACE FUNCTION zc_Object_LabProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_LabProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_LabProduct', 'Продукт исследования (информативно)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LabProduct');
+
+
+CREATE OR REPLACE FUNCTION zc_Object_LabMark() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_LabMark'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_LabMark', 'Название показателя (вид исследования)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LabMark');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1202,6 +1213,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 16.10.19         * zc_Object_LabSample
+                    zc_Object_LabProduct
+                    zc_Object_LabMark
  22.09.19                                                                                        * zc_Object_PayrollType, zc_Object_PayrollGroup
  07.09.19                                                                                        * zc_Object_Driver
  06.08.19         * zc_Object_JuridicalOrderFinance

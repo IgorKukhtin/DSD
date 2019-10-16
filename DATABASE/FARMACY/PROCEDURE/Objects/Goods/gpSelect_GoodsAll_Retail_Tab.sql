@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescId Integer, ObjectDescName TVarChar, ObjectName TVarChar,
-               MakerName TVarChar, MakerLinkName TVarChar,
+               MakerName TVarChar,
                ConditionsKeepName TVarChar,
                AreaName TVarChar,
                CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
@@ -71,55 +71,51 @@ BEGIN
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
                          AND 1=0
                       )
-      , tmpObject_Goods_Retail AS (SELECT * FROM Object_Goods_Retail 
-limit 1000
-                                  )
 
    -- Результат
    SELECT
              Object_Goods.Id
            , Object_Goods.ObjectCode            AS Code
-           , ObjectString_Goods_Code.ValueData  AS CodeStr
+           , '' ::TVarChar                      AS CodeStr
            , Object_Goods.ValueData             AS Name
            , Object_Goods.isErased
 
            , Object_Goods_Retail.GoodsMainId AS GoodsMainId
-           , Object_GoodsGroup.Id          AS GoodsGroupId
-           , Object_GoodsGroup.ValueData   AS GoodsGroupName
-           , Object_Measure.Id             AS MeasureId
-           , Object_Measure.ValueData      AS MeasureName
+           , 0                         AS GoodsGroupId
+           , '' ::TVarChar             AS GoodsGroupName
+           , 0                         AS MeasureId
+           , '' ::TVarChar             AS MeasureName
 
-           , Object_NDSKind.Id                 AS NDSKindId
-           , Object_NDSKind.ValueData          AS NDSKindName
+           , 0                         AS NDSKindId
+           , '' ::TVarChar             AS NDSKindName
 
            , Object_Goods_Retail.MinimumLot
 
-           , ObjectBoolean_Goods_Close.ValueData    AS isClose
+           , NULL :: Boolean           AS isClose
            , Object_Goods_Retail.isTOP
 
-           , ObjectBoolean_Goods_IsPromo.ValueData  AS IsPromo
+           , NULL :: Boolean           AS IsPromo
            , Object_Goods_Retail.isFirst
            , Object_Goods_Retail.isSecond
 
-           , ObjectBoolean_Published.ValueData            AS isPublished
-           , ObjectBoolean_Goods_IsUpload.ValueData       AS IsUpload
-           , ObjectBoolean_Goods_SpecCondition.ValueData  AS IsSpecCondition
+           , NULL :: Boolean           AS isPublished
+           , NULL :: Boolean           AS IsUpload
+           , NULL :: Boolean           AS IsSpecCondition
 
            , Object_Goods_Retail.PercentMarkup
            , Object_Goods_Retail.Price
 
-           , ObjectFloat_Goods_ReferCode.ValueData     AS ReferCode
-           , ObjectFloat_Goods_ReferPrice.ValueData    AS ReferPrice
+           , 0 ::TFloat                AS ReferCode
+           , 0 ::TFloat                AS ReferPrice
 
 
            , ObjectDesc_GoodsObject.Id          AS  ObjectDescId
            , ObjectDesc_GoodsObject.itemname    AS  ObjectDescName
            , Object_GoodsObject.ValueData       AS  ObjectName
 
-           , ObjectString_Goods_Maker.ValueData AS MakerName
-           , Object_Maker.ValueData             AS MakerLinkName
-           , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
-           , Object_Area.ValueData              AS AreaName
+           , '' ::TVarChar             AS MakerName
+           , '' ::TVarChar             AS ConditionsKeepName
+           , '' ::TVarChar             AS AreaName
 
            , tmpMarion.GoodsCode       AS CodeMarion
            , tmpMarion.GoodsCodeStr    AS CodeMarionStr
@@ -130,106 +126,19 @@ limit 1000
            , tmpBarCode.GoodsName      AS NameBar
            , tmpBarCode.Ord :: Integer AS OrdBar
 
-    FROM tmpObject_Goods_Retail AS Object_Goods_Retail
+    FROM Object_Goods_Retail
          LEFT JOIN Object AS Object_Goods
                           ON Object_Goods.Id = Object_Goods_Retail.Id
                          AND Object_Goods.DescId = zc_Object_Goods()
 
-         -- String ...
-         LEFT JOIN ObjectString AS ObjectString_Goods_Code
-                                ON ObjectString_Goods_Code.ObjectId = Object_Goods.Id
-                               AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
-         LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                                ON ObjectString_Goods_Maker.ObjectId = Object_Goods.Id
-                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+         LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_Retail.RetailId
+         LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
 
-         -- ObjectLink ...
-         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-         LEFT JOIN ObjectLink AS ObjectLink_Goods_Maker
-                              ON ObjectLink_Goods_Maker.ObjectId = Object_Goods.Id
-                             AND ObjectLink_Goods_Maker.DescId = zc_ObjectLink_Goods_Maker()
-         LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = ObjectLink_Goods_Maker.ChildObjectId
+         LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                             AND tmpMarion.Ord         = 1
+         LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                             AND tmpBarCode.Ord         = 1
 
-        -- НДС
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                            --AND 1=0
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-
-
-        -- связь с Торговая сеть
-        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_Retail.RetailId
-        LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
-
-        -- Float ...
-        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ReferCode
-                              ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Goods_ReferCode.DescId = zc_ObjectFloat_Goods_ReferCode()
-                             AND 1=0
-        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ReferPrice
-                              ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()
-                             AND 1=0
-
-        -- Boolean ...
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
-                               AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()
-                              -- AND 1=0
-
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
-                                ON ObjectBoolean_Goods_IsPromo.ObjectId = Object_Goods.Id
-                               AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
-                               --AND 1=0
-
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_Published
-                                ON ObjectBoolean_Published.ObjectId = Object_Goods.Id
-                               AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
-                               AND 1=0
-
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
-                                  ON ObjectBoolean_Goods_IsUpload.ObjectId = Object_Goods.Id
-                                 AND ObjectBoolean_Goods_IsUpload.DescId = zc_ObjectBoolean_Goods_IsUpload()
-                                 AND 1=0
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
-                                  ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
-                                 AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
-                                 AND 1=0
-
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
-                                  ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
-                                 AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                                 AND ObjectBoolean_Goods_isMain.ValueData = TRUE
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
-                               ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
-                               ON ObjectLink_Goods_Area.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
-          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-
-          LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                              AND tmpMarion.Ord         = 1
-                              --AND 1=0
-          LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                              AND tmpBarCode.Ord         = 1
-                              --AND 1=0
-
-   /* WHERE ObjectBoolean_Goods_isMain.ObjectId IS NULL
-      AND COALESCE (Object_GoodsObject.DescId, 0) IN (0, zc_Object_Retail())
-      AND COALESCE (Object_GoodsObject.Id, 0) IN (0, 4) -- Не болей
-      */
    ;
 
 END;

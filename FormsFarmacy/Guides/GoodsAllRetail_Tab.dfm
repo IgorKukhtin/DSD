@@ -457,30 +457,9 @@ inherited GoodsAllRetail_TabForm: TGoodsAllRetail_TabForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object LinkId_2: TcxGridDBColumn
-            DataBinding.FieldName = 'LinkId'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.DisplayFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object Code_2: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.DisplayFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object CodeStr_2: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090#1088#1086#1095#1085#1099#1081
-            DataBinding.FieldName = 'CodeStr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.DisplayFormat = True
             Properties.DecimalPlaces = 4
@@ -619,20 +598,6 @@ inherited GoodsAllRetail_TabForm: TGoodsAllRetail_TabForm
             Options.Editing = False
             Width = 40
           end
-          object ObjectDescName_2: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectDescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ObjectName_2: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
           object MakerName_2: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
@@ -640,14 +605,6 @@ inherited GoodsAllRetail_TabForm: TGoodsAllRetail_TabForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
-          end
-          object MakerLinkName_2: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' - Link'
-            DataBinding.FieldName = 'MakerLinkName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
           object GoodsGroupName_2: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -718,22 +675,6 @@ inherited GoodsAllRetail_TabForm: TGoodsAllRetail_TabForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object MinimumLot_2: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'MinimumLot'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 58
-          end
-          object PercentMarkup_2: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'PercentMarkup'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 59
           end
           object Price_2: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'

@@ -1105,7 +1105,9 @@ uses
   PersonalRate in '..\..\Forms\Document\PersonalRate.pas' {PersonalRateForm: TParentForm},
   PersonalRateJournal in '..\..\Forms\Document\PersonalRateJournal.pas' {PersonalRateJournalForm: TParentForm},
   WeighingPartnerDialog in '..\..\Forms\Document\WeighingPartnerDialog.pas' {WeighingPartnerDialogForm: TParentForm},
-  Goods_WeightTareDialog in '..\..\Forms\Guides\Goods_WeightTareDialog.pas' {Goods_WeightTareDialogForm: TParentForm};
+  Goods_WeightTareDialog in '..\..\Forms\Guides\Goods_WeightTareDialog.pas' {Goods_WeightTareDialogForm: TParentForm},
+  LabSampleEdit in '..\..\Forms\Guides\LabSampleEdit.pas' {LabSampleEditForm: TParentForm},
+  LabSample in '..\..\Forms\Guides\LabSample.pas' {LabSampleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

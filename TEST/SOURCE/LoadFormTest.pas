@@ -87,6 +87,7 @@ type
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalOrderFinanceFormTest;
+    procedure LoadLabFormTest;
     procedure LoadLossFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossPersonalFormTest;
@@ -1292,6 +1293,14 @@ begin
     ActionDataSet.Free;
     MainFormInstance.Free;
   end;
+end;
+
+procedure TLoadFormTest.LoadLabFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabSampleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabSampleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabSampleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabSampleEditForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

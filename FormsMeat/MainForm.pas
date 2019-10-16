@@ -1051,6 +1051,9 @@ type
     miPersonalRate: TMenuItem;
     actPersonalCashLviv: TdsdOpenForm;
     miPersonalCashLviv: TMenuItem;
+    miLab: TMenuItem;
+    actLabSample: TdsdOpenForm;
+    miLabSample: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
