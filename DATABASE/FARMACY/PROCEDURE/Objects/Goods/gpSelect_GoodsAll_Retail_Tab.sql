@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsAll_Retail_Tab(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isErased Boolean,
-               LinkId Integer, GoodsMainId Integer,
+               GoodsMainId Integer,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               NDS TFloat, MinimumLot TFloat,
+               MinimumLot TFloat,
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean,
                isUpload Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
@@ -51,6 +51,7 @@ BEGIN
                        WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                         AND 1=0
                       )
       , tmpBarCode AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
                             , Object_Goods.ObjectCode       AS GoodsCode
@@ -68,9 +69,10 @@ BEGIN
                        WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                         AND 1=0
                       )
       , tmpObject_Goods_Retail AS (SELECT * FROM Object_Goods_Retail 
---limit 100
+limit 1000
                                   )
 
    -- Результат
@@ -81,7 +83,6 @@ BEGIN
            , Object_Goods.ValueData             AS Name
            , Object_Goods.isErased
 
-           , 0/*ObjectLink_Main.ObjectId*/   AS LinkId
            , Object_Goods_Retail.GoodsMainId AS GoodsMainId
            , Object_GoodsGroup.Id          AS GoodsGroupId
            , Object_GoodsGroup.ValueData   AS GoodsGroupName
@@ -90,7 +91,6 @@ BEGIN
 
            , Object_NDSKind.Id                 AS NDSKindId
            , Object_NDSKind.ValueData          AS NDSKindName
-           , ObjectFloat_NDSKind_NDS.ValueData AS NDS
 
            , Object_Goods_Retail.MinimumLot
 
@@ -163,16 +163,10 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                             --AND 1=0
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                             --AND 1=0
 
-        -- связь с Юридические лица или Торговая сеть или ...
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
-                             ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = ObjectLink_Goods_Object.ChildObjectId
+
+        -- связь с Торговая сеть
+        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_Retail.RetailId
         LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
 
         -- Float ...
@@ -232,9 +226,10 @@ BEGIN
                               AND tmpBarCode.Ord         = 1
                               --AND 1=0
 
-    WHERE ObjectBoolean_Goods_isMain.ObjectId IS NULL
+   /* WHERE ObjectBoolean_Goods_isMain.ObjectId IS NULL
       AND COALESCE (Object_GoodsObject.DescId, 0) IN (0, zc_Object_Retail())
       AND COALESCE (Object_GoodsObject.Id, 0) IN (0, 4) -- Не болей
+      */
    ;
 
 END;

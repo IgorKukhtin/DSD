@@ -27,10 +27,15 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
         ExplicitWidth = 1079
         ExplicitHeight = 153
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Name_1
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -65,30 +70,9 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object LinkId_1: TcxGridDBColumn
-            DataBinding.FieldName = 'LinkId'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.DisplayFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object Code_1: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.DisplayFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object CodeStr_1: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090#1088#1086#1095#1085#1099#1081
-            DataBinding.FieldName = 'CodeStr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.DisplayFormat = True
             Properties.DecimalPlaces = 4
@@ -228,20 +212,6 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
             Options.Editing = False
             Width = 40
           end
-          object ObjectDescName_1: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectDescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ObjectName_1: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
           object MakerName_1: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
@@ -249,14 +219,6 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
-          end
-          object MakerLinkName_1: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' - Link'
-            DataBinding.FieldName = 'MakerLinkName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
           object GoodsGroupName_1: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -328,22 +290,6 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
             Options.Editing = False
             Width = 55
           end
-          object MinimumLot_1: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'MinimumLot'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 58
-          end
-          object PercentMarkup_1: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'PercentMarkup'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 59
-          end
           object Price_1: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
@@ -392,7 +338,12 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
           DataController.DataSource = ChildDS_1
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Name_2
+            end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -403,6 +354,7 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
@@ -784,7 +736,12 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
           DataController.DataSource = ChildDS_2
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Name_3
+            end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -795,6 +752,7 @@ inherited GoodsAll_TabForm: TGoodsAll_TabForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True

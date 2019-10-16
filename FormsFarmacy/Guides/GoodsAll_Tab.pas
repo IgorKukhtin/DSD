@@ -51,12 +51,10 @@ type
     dsdDBViewAddOnChild2: TdsdDBViewAddOn;
     spSelectChild2: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
-    LinkId_1: TcxGridDBColumn;
     isUpload_1: TcxGridDBColumn;
     isSpecCondition_1: TcxGridDBColumn;
     ReferCode_1: TcxGridDBColumn;
     ReferPrice_1: TcxGridDBColumn;
-    MakerLinkName_1: TcxGridDBColumn;
     Protocol2OpenForm: TdsdOpenForm;
     Protocol3OpenForm: TdsdOpenForm;
     bbProtocol2OpenForm: TdxBarButton;

@@ -86,7 +86,6 @@ BEGIN
 
            , Object_NDSKind.Id                 AS NDSKindId
            , Object_NDSKind.ValueData          AS NDSKindName
-           , ObjectFloat_NDSKind_NDS.ValueData AS NDS
 
            , Object_Goods_Juridical.MinimumLot
 
@@ -139,23 +138,11 @@ BEGIN
                              AND ObjectLink_Goods_Maker.DescId = zc_ObjectLink_Goods_Maker()
          LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = ObjectLink_Goods_Maker.ChildObjectId
 
-
         -- НДС
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods_Juridical.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-
-
-        -- получается GoodsMainId
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_Juridical.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-
 
         -- связь с Юридические лица или Торговая сеть или ...
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
