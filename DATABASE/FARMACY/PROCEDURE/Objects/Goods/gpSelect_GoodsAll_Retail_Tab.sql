@@ -123,7 +123,7 @@ BEGIN
            , tmpMarion.GoodsName       AS NameMarion
            , tmpMarion.Ord  :: Integer AS OrdMarion
 
-           , tmpBarCode.GoodsCode      AS CodeBar
+           , tmpBarCode.GoodsCode      AS CodeBar111
            , tmpBarCode.GoodsName      AS NameBar
            , tmpBarCode.Ord :: Integer AS OrdBar
 
@@ -142,6 +142,7 @@ BEGIN
                              AND tmpMarion.Ord         = 1
          LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
                              AND tmpBarCode.Ord         = 1
+    WHERE Object_Goods_Retail.RetailId = 4
 --limit 10
    ;
 

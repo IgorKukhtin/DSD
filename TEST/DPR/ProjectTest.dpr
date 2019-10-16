@@ -1107,7 +1107,11 @@ uses
   WeighingPartnerDialog in '..\..\Forms\Document\WeighingPartnerDialog.pas' {WeighingPartnerDialogForm: TParentForm},
   Goods_WeightTareDialog in '..\..\Forms\Guides\Goods_WeightTareDialog.pas' {Goods_WeightTareDialogForm: TParentForm},
   LabSampleEdit in '..\..\Forms\Guides\LabSampleEdit.pas' {LabSampleEditForm: TParentForm},
-  LabSample in '..\..\Forms\Guides\LabSample.pas' {LabSampleForm: TParentForm};
+  LabSample in '..\..\Forms\Guides\LabSample.pas' {LabSampleForm: TParentForm},
+  LabProduct in '..\..\Forms\Guides\LabProduct.pas' {LabProductForm: TParentForm},
+  LabProductEdit in '..\..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
+  LabMark in '..\..\Forms\Guides\LabMark.pas' {LabMarkForm: TParentForm},
+  LabMarkEdit in '..\..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
