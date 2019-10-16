@@ -1197,6 +1197,10 @@ CREATE OR REPLACE FUNCTION zc_Object_LabMark() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_LabMark', 'Название показателя (вид исследования)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LabMark');
 
+CREATE OR REPLACE FUNCTION zc_Object_LabReceiptChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_LabReceiptChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_LabReceiptChild', 'Нормы для исследования' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LabReceiptChild');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1216,6 +1220,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
  16.10.19         * zc_Object_LabSample
                     zc_Object_LabProduct
                     zc_Object_LabMark
+                    zc_Object_LabReceiptChild
  22.09.19                                                                                        * zc_Object_PayrollType, zc_Object_PayrollGroup
  07.09.19                                                                                        * zc_Object_Driver
  06.08.19         * zc_Object_JuridicalOrderFinance

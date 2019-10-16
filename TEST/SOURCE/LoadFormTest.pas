@@ -1311,6 +1311,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLabMarkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabMarkEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLabMarkEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabMark_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabMark_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabReceiptChildEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabReceiptChildEditForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

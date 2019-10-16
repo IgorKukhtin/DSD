@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxButtonEdit, cxImageComboBox, cxSplitter;
 
 type
   TLabMarkForm = class(TParentForm)
@@ -57,6 +58,32 @@ type
     spErasedUnErased: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    LabReceiptChildDS: TDataSource;
+    LabReceiptChildCDS: TClientDataSet;
+    cxGridContractCondition: TcxGrid;
+    cxGridDBTableViewLabReceiptChild: TcxGridDBTableView;
+    GoodsName: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxTopSplitter: TcxSplitter;
+    spSelectLabReceiptChild: TdsdStoredProc;
+    spInsertUpdateLabReceiptChild: TdsdStoredProc;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    actInsertChild: TdsdInsertUpdateAction;
+    actUpdateChild: TdsdInsertUpdateAction;
+    spErasedUnErasedChild: TdsdStoredProc;
+    dsdSetErasedChild: TdsdUpdateErased;
+    dsdSetUnErasedChild: TdsdUpdateErased;
+    ProtocolOpenFormChild: TdsdOpenForm;
+    bbProtocolOpenFormChild: TdxBarButton;
+    bbInsertChild: TdxBarButton;
+    bbUpdateChild: TdxBarButton;
+    bbSetErasedChild: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
   private
     { Private declarations }
   public

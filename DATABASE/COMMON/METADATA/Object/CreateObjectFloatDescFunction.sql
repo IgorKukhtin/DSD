@@ -1436,10 +1436,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollType_MinAccrualAmount() RETURNS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PayrollType(), 'zc_ObjectFloat_PayrollType_MinAccrualAmount', 'Мин сумма начисления' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollType_MinAccrualAmount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_LabReceiptChild_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_LabReceiptChild_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_LabReceiptChild(), 'zc_ObjectFloat_LabReceiptChild_Value', 'Значение(Нормы для исследования)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_LabReceiptChild_Value');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.10.19         * zc_ObjectFloat_LabReceiptChild_Value
  09.10.19         * zc_ObjectFloat_Goods_WeightTare
  26.08.19         * zc_ObjectFloat_Unit_KoeffInSUN, zc_ObjectFloat_Unit_KoeffOutSUN
  22.08.19                                                                                      * zc_ObjectFloat_PayrollType_Percent, zc_ObjectFloat_PayrollType_MinAccrualAmount 

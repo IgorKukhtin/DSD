@@ -1111,7 +1111,9 @@ uses
   LabProduct in '..\..\Forms\Guides\LabProduct.pas' {LabProductForm: TParentForm},
   LabProductEdit in '..\..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
   LabMark in '..\..\Forms\Guides\LabMark.pas' {LabMarkForm: TParentForm},
-  LabMarkEdit in '..\..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm};
+  LabMarkEdit in '..\..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm},
+  LabReceiptChildEdit in '..\..\Forms\Guides\LabReceiptChildEdit.pas' {LabReceiptChildEditForm: TParentForm},
+  LabMark_Object in '..\..\Forms\Guides\LabMark_Object.pas' {LabMark_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
