@@ -1,4 +1,4 @@
-unit LabSample;
+unit LabProduct;
 
 interface
 

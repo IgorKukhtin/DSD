@@ -1,4 +1,4 @@
-unit LabSampleEdit;
+unit LabProductEdit;
 
 interface
 
