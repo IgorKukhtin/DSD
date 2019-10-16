@@ -15,12 +15,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean,
                ReferCode TFloat, ReferPrice TFloat,
                MakerName TVarChar,
                ConditionsKeepName TVarChar,
-               AreaName TVarChar
-               /*,
+               AreaName TVarChar,
                CodeMarion Integer,
                CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
                CodeBar Integer, NameBar TVarChar, OrdBar Integer
-*/
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -72,7 +70,10 @@ BEGIN
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
                          AND 1=0
                       )
-      , tmpObject_Goods AS (SELECT * FROM Object_Goods limit 1000)
+      , tmpObject_Goods AS (SELECT *
+                            FROM Object_Goods 
+                          --limit 1000
+                            )
 
    -- Результат
    SELECT
