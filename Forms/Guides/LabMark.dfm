@@ -1,7 +1,7 @@
-object LabProductForm: TLabProductForm
+object LabMarkForm: TLabMarkForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1086#1076#1091#1082#1090' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1103' ('#1074#1080#1076' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103')>'
   ClientHeight = 436
   ClientWidth = 552
   Color = clBtnFace
@@ -257,8 +257,8 @@ object LabProductForm: TLabProductForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TLabProductEditForm'
-      FormNameParam.Value = 'TLabProductEditForm'
+      FormName = 'TLabMarkEditForm'
+      FormNameParam.Value = 'TLabMarkEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -278,8 +278,8 @@ object LabProductForm: TLabProductForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TLabProductEditForm'
-      FormNameParam.Value = 'TLabProductEditForm'
+      FormName = 'TLabMarkEditForm'
+      FormNameParam.Value = 'TLabMarkEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -392,7 +392,7 @@ object LabProductForm: TLabProductForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_LabProduct'
+    StoredProcName = 'gpSelect_Object_LabMark'
     DataSet = ClientDataSet
     DataSets = <
       item

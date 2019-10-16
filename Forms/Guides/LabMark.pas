@@ -1,4 +1,4 @@
-unit LabProduct;
+unit LabMark;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TLabProductForm = class(TParentForm)
+  TLabMarkForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -67,5 +67,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TLabProductForm);
+  RegisterClass(TLabMarkForm);
 end.

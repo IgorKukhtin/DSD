@@ -1,4 +1,4 @@
-unit LabProductEdit;
+unit LabMarkEdit;
 
 interface
 
@@ -21,7 +21,7 @@ uses
   cxLabel, cxTextEdit;
 
 type
-  TLabProductEditForm = class(TParentForm)
+  TLabMarkEditForm = class(TParentForm)
     edMeasureName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -48,5 +48,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TLabProductEditForm);
+  RegisterClass(TLabMarkEditForm);
 end.

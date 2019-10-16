@@ -74,20 +74,21 @@ BEGIN
 
    -- Результат
    SELECT
-             Object_Goods.Id
-           , Object_Goods.ObjectCode            AS Code
-           , '' ::TVarChar                      AS CodeStr
-           , Object_Goods.ValueData             AS Name
+             Object_Goods_Retail.Id
+           , Object_Goods.ObjectCode   AS Code
+           , '' ::TVarChar             AS CodeStr
+           , Object_Goods.Name         AS Name
            , Object_Goods.isErased
 
            , Object_Goods_Retail.GoodsMainId AS GoodsMainId
-           , 0                         AS GoodsGroupId
-           , '' ::TVarChar             AS GoodsGroupName
-           , 0                         AS MeasureId
-           , '' ::TVarChar             AS MeasureName
+           
+           , Object_GoodsGroup.Id          AS GoodsGroupId
+           , Object_GoodsGroup.ValueData   AS GoodsGroupName
+           , Object_Measure.Id             AS MeasureId
+           , Object_Measure.ValueData      AS MeasureName
 
-           , 0                         AS NDSKindId
-           , '' ::TVarChar             AS NDSKindName
+           , Object_NDSKind.Id             AS NDSKindId
+           , Object_NDSKind.ValueData      AS NDSKindName
 
            , Object_Goods_Retail.MinimumLot
 
@@ -111,10 +112,10 @@ BEGIN
 
            , ObjectDesc_GoodsObject.Id          AS  ObjectDescId
            , ObjectDesc_GoodsObject.itemname    AS  ObjectDescName
-           , Object_GoodsObject.ValueData       AS  ObjectName
+           , Object_Retail.ValueData            AS  ObjectName
 
-           , '' ::TVarChar             AS MakerName
-           , '' ::TVarChar             AS ConditionsKeepName
+           , Object_Goods.MakerName    AS MakerName
+           , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
            , '' ::TVarChar             AS AreaName
 
            , tmpMarion.GoodsCode       AS CodeMarion
@@ -127,18 +128,22 @@ BEGIN
            , tmpBarCode.Ord :: Integer AS OrdBar
 
     FROM Object_Goods_Retail
-         LEFT JOIN Object AS Object_Goods
-                          ON Object_Goods.Id = Object_Goods_Retail.Id
-                         AND Object_Goods.DescId = zc_Object_Goods()
+         LEFT JOIN Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
-         LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_Retail.RetailId
-         LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
+         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods.GoodsGroupId
+         LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = Object_Goods.MeasureId
+         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods.ConditionsKeepId
+         LEFT JOIN Object AS Object_NDSKind    ON Object_NDSKind.Id    = Object_Goods.NDSKindId
+
+         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_Retail.RetailId
+         LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_Retail.DescId
 
          LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods_Retail.GoodsMainId
                              AND tmpMarion.Ord         = 1
          LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
                              AND tmpBarCode.Ord         = 1
 
+--limit 10
    ;
 
 END;
