@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_andArea(
 RETURNS Integer
 AS
 $BODY$
+  DECLARE text_var1 text;
 BEGIN
    
 -- RAISE EXCEPTION '<%>', inAreaId;
@@ -46,6 +47,17 @@ BEGIN
  
   -- сохранили свойство
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_UKTZED(), ioId, inCodeUKTZED);
+  
+  -- Сохранили в плоскую таблицй
+  BEGIN
+    UPDATE Object_Goods_Juridical SET AreaId      = inAreaId
+                                    , UKTZED      = inCodeUKTZED
+    WHERE Object_Goods_Juridical.ID = ioId;  
+  EXCEPTION
+     WHEN others THEN 
+       GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+       PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_Goods_andArea', text_var1::TVarChar, inUserId);
+  END;
 
 END;
 $BODY$

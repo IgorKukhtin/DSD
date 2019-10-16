@@ -27,6 +27,7 @@ RETURNS Integer
 AS
 $BODY$
   DECLARE vbCode Integer;
+  DECLARE text_var1 text;
 BEGIN
    -- !!!проверка уникальности <Наименование> для "любого" inObjectId
    IF inCheckName = TRUE
@@ -124,13 +125,35 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
+   
+    -- Сохранили в плоскую таблицй
+   BEGIN
+   PERFORM lpInsertUpdate_Object_Goods_Flat (ioId             :=  ioId
+                                            , inCode           :=  inCode
+                                            , inName           :=  inName
+                                            , inGoodsGroupId   :=  inGoodsGroupId
+                                            , inMeasureId      :=  inMeasureId
+                                            , inNDSKindId      :=  inNDSKindId
+                                            , inObjectId       :=  inObjectId
+                                            , inUserId         :=  inUserId
+                                            , inMakerId        :=  inMakerId
+                                            , inMakerName      :=  inMakerName
+                                            , inCheckName      :=  inCheckName
+                                            , inAreaId         :=  inAreaId
+                                            , inNameUkr        :=  inNameUkr 
+                                            , inCodeUKTZED     :=  inCodeUKTZED
+                                            , inExchangeId     :=  inExchangeId);
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_Goods_Flat', text_var1::TVarChar, inUserId);
+   END;
 
    -- сохранили протокол - !!!только для "общего справочника"!!!
    IF COALESCE (inObjectId, 0) = 0
    THEN
        PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
    END IF; 
-
 
 END;
 $BODY$

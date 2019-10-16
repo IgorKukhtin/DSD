@@ -29,6 +29,7 @@ AS
 $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE text_var1 text;
 BEGIN
      -- определяется <Торговая сеть>
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', inUserId);
@@ -78,8 +79,34 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, inUserId);
     END IF;
 
-     -- сохранили протокол
-     PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
+    -- Сохранили в плоскую таблицй
+    BEGIN
+    PERFORM lpInsertUpdate_Object_Goods_Retail_Flat (ioId             :=  ioId
+                                                    , inCode           :=  inCode
+                                                    , inName           :=  inName
+                                                    , inGoodsGroupId   :=  inGoodsGroupId
+                                                    , inMeasureId      :=  inMeasureId
+                                                    , inNDSKindId      :=  inNDSKindId
+                                                    , inMinimumLot     :=  inMinimumLot
+                                                    , inReferCode      :=  inReferCode
+                                                    , inReferPrice     :=  inReferPrice
+                                                    , inPrice          :=  inPrice
+                                                    , inIsClose        :=  inIsClose
+                                                    , inTOP            :=  inTOP
+                                                    , inPercentMarkup  :=  inPercentMarkup
+                                                    , inNameUkr        :=  inNameUkr
+                                                    , inCodeUKTZED     :=  inCodeUKTZED
+                                                    , inExchangeId     :=  inExchangeId
+                                                    , inObjectId       :=  inObjectId
+                                                    , inUserId         :=  inUserId);
+    EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_Goods_Retail_Flat', text_var1::TVarChar, inUserId);
+    END;
+
+    -- сохранили протокол
+    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
 
 
 END;$BODY$

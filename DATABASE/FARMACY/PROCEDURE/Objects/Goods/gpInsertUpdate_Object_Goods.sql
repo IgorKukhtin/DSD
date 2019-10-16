@@ -120,6 +120,20 @@ BEGIN
                                               , inUserId        := vbUserId
                                                );*/
 
+     -- !!!поиск по коду главного товара - vbCode!!!
+     vbMainGoodsId:= --(SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
+                      (SELECT ObjectBoolean_Goods_isMain.ObjectId
+                       FROM Object AS Object_Goods
+                            INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
+                                                     ON ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+                                                    AND ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
+                       WHERE Object_Goods.DescId = zc_Object_Goods()
+                         AND Object_Goods.ObjectCode  = vbCode
+                       );
+
+     -- Добавление/Изменение данных в общем справочнике
+     vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, 0, vbUserId, 0, '');
+
 
      -- !!!временно!!! - для сквозной синхронизации!!! со "всеми" Retail.Id (а не только vbObjectId)
      PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
@@ -183,20 +197,6 @@ BEGIN
      END IF;
 
      -- Кусок ниже реализован !!!временно!!! пока работает одна сеть или много сетей !!!но со сквозной синхронизацией!!!
-
-     -- !!!поиск по коду - vbCode!!!
-     vbMainGoodsId:= --(SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
-                      (SELECT ObjectBoolean_Goods_isMain.ObjectId
-                       FROM Object AS Object_Goods 
-                            INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain 
-                                                     ON ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                                                    AND ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
-                       WHERE Object_Goods.DescId = zc_Object_Goods()
-                         AND Object_Goods.ObjectCode  = vbCode
-                       );
-
-     -- Добавление/Изменение данных в общем справочнике
-     vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, 0, vbUserId, 0, '');
 
      -- сохранили свойства - связи товаров сети с общим
      PERFORM gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := inCode
