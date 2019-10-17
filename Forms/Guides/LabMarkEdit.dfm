@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1103' ('#1074#1080#1076' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103')>'
-  ClientHeight = 167
+  ClientHeight = 252
   ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,9 +18,9 @@
   TextHeight = 13
   object edMeasureName: TcxTextEdit
     Left = 32
-    Top = 86
+    Top = 91
     TabOrder = 0
-    Width = 273
+    Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 32
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 120
+    Left = 72
+    Top = 208
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 120
+    Left = 216
+    Top = 208
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -59,7 +59,24 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 32
+    Top = 134
+    Caption = #1055#1088#1086#1076#1091#1082#1090' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+  end
+  object edLabProduct: TcxButtonEdit
+    Left = 32
+    Top = 157
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 296
   end
   object ActionList: TActionList
     Left = 304
@@ -120,6 +137,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLabProductId'
+        Value = Null
+        Component = GuidesLabProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -161,10 +186,25 @@
         Component = edMeasureName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabProductId'
+        Value = Null
+        Component = GuidesLabProduct
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabProductName'
+        Value = Null
+        Component = GuidesLabProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
-    Top = 80
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -183,5 +223,35 @@
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 168
+  end
+  object GuidesLabProduct: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLabProduct
+    FormNameParam.Value = 'TLabProductForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLabProductForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLabProduct
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLabProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 153
+    Top = 155
   end
 end

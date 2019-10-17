@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_LabMark()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_LabMark (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_LabMark (Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_LabMark(
  INOUT ioId             Integer   ,     -- ключ объекта <> 
     IN inCode           Integer   ,     -- Код объекта <> 
     IN inName           TVarChar  ,     -- Название объекта <>
+    IN inLabProductId   Integer   ,     -- 
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -29,6 +31,9 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_LabMark(), vbCode_calc, inName);
+   
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_LabMark_LabProduct(), ioId, inLabProductId);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -1,9 +1,9 @@
 object LabMarkForm: TLabMarkForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1103' ('#1074#1080#1076' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1086#1088#1084#1099' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1088#1077#1072#1082#1090#1080#1074#1086#1074'>'
   ClientHeight = 436
-  ClientWidth = 827
+  ClientWidth = 657
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,15 +20,13 @@ object LabMarkForm: TLabMarkForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 827
+    Width = 657
     Height = 233
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 552
-    ExplicitHeight = 410
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,7 +44,6 @@ object LabMarkForm: TLabMarkForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -56,14 +53,31 @@ object LabMarkForm: TLabMarkForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 109
+        Width = 107
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 427
+        Width = 229
+      end
+      object LabProductCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1088#1086#1076'.'
+        DataBinding.FieldName = 'LabProductCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object LabProductName: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1091#1082#1090' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1103' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+        DataBinding.FieldName = 'LabProductName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 280
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -82,15 +96,13 @@ object LabMarkForm: TLabMarkForm
   object cxGridContractCondition: TcxGrid
     Left = 0
     Top = 264
-    Width = 827
+    Width = 657
     Height = 172
     Align = alBottom
     TabOrder = 5
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -66
-    ExplicitWidth = 618
     object cxGridDBTableViewLabReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = LabReceiptChildDS
@@ -103,10 +115,9 @@ object LabMarkForm: TLabMarkForm
       OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -116,6 +127,7 @@ object LabMarkForm: TLabMarkForm
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
       object GoodsName: TcxGridDBColumn
@@ -124,16 +136,22 @@ object LabMarkForm: TLabMarkForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
+            Action = actGoodsChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 297
+        Width = 377
       end
       object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
@@ -151,11 +169,10 @@ object LabMarkForm: TLabMarkForm
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 259
-    Width = 827
+    Width = 657
     Height = 5
     AlignSplitter = salBottom
     Control = cxGrid
-    ExplicitTop = 21
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -243,10 +260,6 @@ object LabMarkForm: TLabMarkForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbInsertChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateChild'
         end
         item
           Visible = True
@@ -357,7 +370,7 @@ object LabMarkForm: TLabMarkForm
       Category = 0
     end
     object bbInsertChild: TdxBarButton
-      Action = actInsertChild
+      Action = InsertRecordChild
       Category = 0
     end
     object bbUpdateChild: TdxBarButton
@@ -366,10 +379,12 @@ object LabMarkForm: TLabMarkForm
     end
     object bbSetErasedChild: TdxBarButton
       Action = dsdSetErasedChild
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1072#1082#1090#1080#1074'>'
       Category = 0
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = dsdSetUnErasedChild
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1072#1082#1090#1080#1074'>'
       Category = 0
     end
   end
@@ -565,8 +580,20 @@ object LabMarkForm: TLabMarkForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = LabReceiptChildDS
+    end
+    object InsertRecordChild: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewLabReceiptChild
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1072#1082#1090#1080#1074'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1072#1082#1090#1080#1074'>'
+      ImageIndex = 0
     end
     object dsdSetUnErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
@@ -579,6 +606,7 @@ object LabMarkForm: TLabMarkForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = LabReceiptChildDS
@@ -666,6 +694,45 @@ object LabMarkForm: TLabMarkForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsChoiceForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = LabReceiptChildCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = LabReceiptChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdateDataSetChild: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateLabReceiptChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateLabReceiptChild
+        end>
+      Caption = 'actUpdateDataSetChild'
+      DataSource = LabReceiptChildDS
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -789,15 +856,6 @@ object LabMarkForm: TLabMarkForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
-        Value = Null
-        Component = LabReceiptChildCDS
-        ComponentItem = 'Value'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inLabMarkId'
         Value = Null
         Component = ClientDataSet
@@ -812,21 +870,24 @@ object LabMarkForm: TLabMarkForm
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = LabReceiptChildCDS
+        ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 352
-    Top = 344
+    Left = 304
+    Top = 376
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableViewLabReceiptChild
-    OnDblClickActionList = <
-      item
-        Action = actUpdate
-      end
-      item
-        Action = dsdChoiceGuides
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = dsdChoiceGuides

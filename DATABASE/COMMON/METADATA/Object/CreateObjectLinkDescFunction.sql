@@ -2241,9 +2241,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_LabReceiptChild_Goods() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_LabReceiptChild_Goods', 'Связь Нормы для исследования с Реактивы (товар)', zc_Object_LabReceiptChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabReceiptChild_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_LabMark_LabProduct() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabMark_LabProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_LabMark_LabProduct', 'Связь Название показателя с Продукт исследования', zc_Object_LabMark(), zc_Object_LabProduct() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabMark_LabProduct');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.10.19         * zc_ObjectLink_LabMark_LabProduct
  16.10.19         * zc_ObjectLink_LabReceiptChild_LabMark
                     zc_ObjectLink_LabReceiptChild_Goods
  02.09.19                                                                                      * zc_ObjectLink_Member_Unit

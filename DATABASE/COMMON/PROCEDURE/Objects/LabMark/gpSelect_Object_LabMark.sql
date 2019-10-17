@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_LabMark(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_LabMark(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , LabProductId Integer, LabProductCode Integer, LabProductName TVarChar
+             , isErased boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -13,12 +15,19 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id         AS Id 
-   , Object.ObjectCode AS Code
-   , Object.ValueData  AS Name
-   , Object.isErased   AS isErased
-   FROM Object
-   WHERE Object.DescId = zc_Object_LabMark();
+     Object_LabMark.Id            AS Id 
+   , Object_LabMark.ObjectCode    AS Code
+   , Object_LabMark.ValueData     AS Name
+   , Object_LabProduct.Id         AS LabProductId
+   , Object_LabProduct.ObjectCode AS LabProductCode
+   , Object_LabProduct.ValueData  AS LabProductName
+   , Object_LabMark.isErased      AS isErased
+   FROM Object AS Object_LabMark
+        LEFT JOIN ObjectLink AS ObjectLink_LabMark_LabProduct
+                             ON ObjectLink_LabMark_LabProduct.ObjectId = Object_LabMark.Id
+                            AND ObjectLink_LabMark_LabProduct.DescId = zc_ObjectLink_LabMark_LabProduct()
+        LEFT JOIN Object AS Object_LabProduct ON Object_LabProduct.Id = ObjectLink_LabMark_LabProduct.ChildObjectId
+   WHERE Object_LabMark.DescId = zc_Object_LabMark();
   
 END;$BODY$
 
