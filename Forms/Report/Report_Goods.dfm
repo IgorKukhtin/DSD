@@ -5,7 +5,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1042
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -892,6 +892,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 300
     end
@@ -908,6 +909,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 210
     end
