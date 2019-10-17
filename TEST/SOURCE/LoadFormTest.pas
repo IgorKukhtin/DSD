@@ -1799,13 +1799,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeDialogForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderDialogForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
@@ -1887,7 +1887,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
 
@@ -1906,7 +1906,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
  exit;
@@ -1939,7 +1939,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
 
