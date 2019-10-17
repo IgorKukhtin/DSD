@@ -53,23 +53,13 @@ BEGIN
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
                          AND 1=0
                       )
-      , tmpBarCode AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
+      , tmpBarCode AS (SELECT Object_Goods_BarCode.GoodsMainId AS GoodsMainId
                             , Object_Goods.ObjectCode       AS GoodsCode
                             , Object_Goods.ValueData        AS GoodsName
                               --  № п/п
-                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main.ChildObjectId ORDER BY Object_Goods.ObjectCode DESC) AS Ord
-
-                       FROM ObjectLink AS ObjectLink_Goods_Object -- связь с Юридические лица или Торговая сеть или ...
-                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-                            -- получается GoodsMainId
-                            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
-                                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                       WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                         AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                         AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
-                         AND 1=0
+                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_BarCode.GoodsMainId ORDER BY Object_Goods.ObjectCode DESC) AS Ord
+                       FROM Object_Goods_BarCode
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_Goods_BarCode.BarCodeId
                       )
 
    -- Результат
