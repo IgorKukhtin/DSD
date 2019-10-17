@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_isFirst(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -58,6 +59,16 @@ BEGIN
                     ) AS tmpGoods;
 
    
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Retail SET isFirst = inisFirst
+     WHERE Object_Goods_Retail.GoodsMainId IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpInsertUpdate_Object_Goods', text_var1::TVarChar, vbUserId);
+   END;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -67,7 +78,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.10.19                                                       *  
  15.03.16         *
 
 */

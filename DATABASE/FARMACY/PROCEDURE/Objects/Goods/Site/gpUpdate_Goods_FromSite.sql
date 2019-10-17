@@ -29,6 +29,7 @@ $BODY$
   DECLARE vbId Integer;
   DECLARE vbCount Integer;
   DECLARE vbApoitmentId Integer;
+  DECLARE text_var1 text;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
@@ -60,22 +61,50 @@ BEGIN
         -- сохранили свойство <Ключ товара на сайте>
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Site(), vbId, inId);
 
-            -- сохранили свойство <Фото>
-            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
-            -- сохранили свойство <Превью>
-            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Thumb(), vbId, inThumb);
-            -- сохранили свойство <Опубликован>
-            PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), vbId, inPublished);
+        -- сохранили свойство <Фото>
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
+        -- сохранили свойство <Превью>
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Thumb(), vbId, inThumb);
+        -- сохранили свойство <Опубликован>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), vbId, inPublished);
+
+          -- Сохранили в плоскую таблицй
+        BEGIN
+          UPDATE Object_Goods_Main SET SiteId = inId
+                                     , Foto = inPhoto
+                                     , Thumb = inThumb
+                                     , isPublished = inPublished
+          WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = vbId);  
+        EXCEPTION
+           WHEN others THEN 
+             GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+             PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_NotTransferTime', text_var1::TVarChar, vbUserId);
+        END;
 
         IF COALESCE (inIsOnly, FALSE) = FALSE -- сохранить Только 2 и 3 параметр
         THEN
-        -- сохранили свойство <название на сайте>
-        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
+          -- сохранили свойство <название на сайте>
+          PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
 
-            -- сохранили свойство <описание на сайте>
-            PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
-            -- сохранили свойство <производитель>
-            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), vbId, inManufacturer);
+          -- сохранили свойство <описание на сайте>
+          PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
+          -- сохранили свойство <производитель>
+          PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), vbId, inManufacturer);
+
+
+            -- Сохранили в плоскую таблицй
+          BEGIN
+            UPDATE Object_Goods_Main SET MakerName = inManufacturer
+            WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = vbId);  
+
+            UPDATE Object_Goods_Blob SET Description = inDescription
+                                       , NameSite    = inName
+            WHERE Object_Goods_Blob.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = vbId);  
+          EXCEPTION
+             WHEN others THEN 
+               GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+               PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_NotTransferTime', text_var1::TVarChar, vbUserId);
+          END;
         END IF;
         
     END IF;
@@ -94,8 +123,18 @@ BEGIN
         -- если нашли
         IF vbId <> 0
         THEN
-            -- сохранили свойство <Apoitment>
-            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Appointment(), vbId, vbApoitmentId);
+          -- сохранили свойство <Apoitment>
+          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Appointment(), vbId, vbApoitmentId);
+
+            -- Сохранили в плоскую таблицй
+          BEGIN
+            UPDATE Object_Goods_Main SET AppointmentId = vbApoitmentId
+            WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = vbId);  
+          EXCEPTION
+             WHEN others THEN 
+               GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+               PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_NotTransferTime', text_var1::TVarChar, vbUserId);
+          END;
         END IF;
 
     END IF;
@@ -106,7 +145,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 17.10.19                                                                      *    
  06.04.16                                        * ALL
  11.11.15                                                          *
 */

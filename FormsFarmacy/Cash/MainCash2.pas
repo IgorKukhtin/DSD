@@ -1077,7 +1077,7 @@ begin
   //***25.02.19
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
   //***02.04.19
-  FormParams.ParamByName('RoundingDown').Value              := False;
+  FormParams.ParamByName('RoundingDown').Value              := True;
   //***25.04.19
   FormParams.ParamByName('HelsiID').Value := '';
   FormParams.ParamByName('HelsiIDList').Value := '';
@@ -3261,7 +3261,7 @@ begin
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
   FormParams.ParamByName('MemberSPID').Value := MemberSPID;
-  FormParams.ParamByName('RoundingDown').Value := SPKindId = 4823009;
+  FormParams.ParamByName('RoundingDown').Value := True; //SPKindId = 4823009;
   FormParams.ParamByName('HelsiID').Value := HelsiID;
   FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
   FormParams.ParamByName('HelsiName').Value := HelsiName;
@@ -5048,7 +5048,7 @@ begin
   //***25.02.19
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
   //***02.04.19
-  FormParams.ParamByName('RoundingDown').Value              := False;
+  FormParams.ParamByName('RoundingDown').Value              := True;
   //***25.04.19
   FormParams.ParamByName('HelsiID').Value := '';
   FormParams.ParamByName('HelsiIDList').Value := '';

@@ -13,6 +13,7 @@ RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbisPromo Boolean;
+   DECLARE text_var1 text;
 BEGIN
 
     IF COALESCE(inId, 0) = 0 THEN
@@ -34,6 +35,18 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
          -- сохранили свойство <Пользователь (корректировка)>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inId, vbUserId);
+
+          -- Сохранили в плоскую таблицй
+         BEGIN
+           UPDATE Object_Goods_Juridical SET isPromo      = inisPromo
+                                           , UserUpdateId = vbUserId
+                                           , DateUpdate   = CURRENT_TIMESTAMP
+           WHERE Object_Goods_Juridical.Id = inId;  
+         EXCEPTION
+            WHEN others THEN 
+              GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+              PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_Promo', text_var1::TVarChar, vbUserId);
+         END;
      END IF;
 
      -- 
