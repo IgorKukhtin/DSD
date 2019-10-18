@@ -99,6 +99,11 @@ BEGIN
          vbLinkGoodsId:= gpInsertUpdate_Object_LinkGoods (0, vbMainGoodsId, vbBarCodeGoodsId, inSession);
      END IF;  
      
+
+
+       -- Сохранили в плоскую таблицй
+     PERFORM lpInsertUpdate_Object_Goods_BarCode (vbMainGoodsId, vbBarCodeGoodsId, inBarCode, vbUserId);     
+     
 /*     IF COALESCE (vbLinkGoodsId, 0) <> 0  
      THEN -- чистим ненужные связи "товар штрих-код -> главный товар"
       PERFORM lpDelete_Object(ObjectLink_LinkGoods_Goods.ObjectId, zfCalc_UserAdmin())     
@@ -121,7 +126,8 @@ $BODY$
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 18.10.19                                                                     * 
  11.07.17         *
 */
 
