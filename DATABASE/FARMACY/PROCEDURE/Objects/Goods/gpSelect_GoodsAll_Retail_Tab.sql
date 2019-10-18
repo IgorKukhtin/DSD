@@ -54,12 +54,11 @@ BEGIN
                          AND 1=0
                       )
       , tmpBarCode AS (SELECT Object_Goods_BarCode.GoodsMainId AS GoodsMainId
-                            , Object_Goods.ObjectCode       AS GoodsCode
-                            , Object_Goods.ValueData        AS GoodsName
+                            , Object_Goods_BarCode.BarCode     AS BarCode
                               --  № п/п
-                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_BarCode.GoodsMainId ORDER BY Object_Goods.ObjectCode DESC) AS Ord
+                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_BarCode.GoodsMainId ORDER BY Object_Goods_BarCode.BarCodeId DESC) AS Ord
                        FROM Object_Goods_BarCode
-                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_Goods_BarCode.BarCodeId
+                       --     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_Goods_BarCode.BarCodeId
                       )
 
    -- Результат
@@ -113,9 +112,9 @@ BEGIN
            , tmpMarion.GoodsName       AS NameMarion
            , tmpMarion.Ord  :: Integer AS OrdMarion
 
-           , tmpBarCode.GoodsCode      AS CodeBar111
-           , tmpBarCode.GoodsName      AS NameBar
-           , tmpBarCode.Ord :: Integer AS OrdBar
+           , 0                    ::Integer  AS CodeBar
+           , tmpBarCode.BarCode              AS NameBar
+           , tmpBarCode.Ord       :: Integer AS OrdBar
 
     FROM Object_Goods_Retail
          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
