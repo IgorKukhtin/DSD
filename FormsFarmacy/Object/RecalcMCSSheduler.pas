@@ -52,6 +52,13 @@ type
     actRecalcMCSSheduler: TdsdExecStoredProc;
     spRecalcMCSSheduler: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
+    UserRun: TcxGridDBColumn;
+    SelectRun: TcxGridDBColumn;
+    actRecalcMCSShedulerSelect: TdsdExecStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    spRecalcMCSShedulerSelect: TdsdStoredProc;
+    spUpdate_SelectRun: TdsdStoredProc;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public
