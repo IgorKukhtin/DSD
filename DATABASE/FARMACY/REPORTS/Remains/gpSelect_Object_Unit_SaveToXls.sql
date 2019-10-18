@@ -18,7 +18,8 @@ BEGIN
        FROM Object_Unit_View
        WHERE COALESCE(Object_Unit_View.ParentId, 0) <> 0
          AND Object_Unit_View.isErased = false
-         AND COALESCE(Object_Unit_View.ParentId, 0) not in (377612, 2141104);
+         AND COALESCE(Object_Unit_View.ParentId, 0) not in (377612, 2141104)
+         AND Object_Unit_View.Id NOT IN (183293, 183294, 183288, 389328);
   
 END;
 $BODY$

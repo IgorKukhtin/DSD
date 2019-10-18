@@ -13,6 +13,7 @@ RETURNS TFloat AS
 $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbLastPriceOldDate  TDateTime;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inGoodsMainId, 0) = 0 THEN
@@ -31,6 +32,16 @@ BEGIN
 
    -- сохранили свойство <Пред Послед. дата наличия на рынке>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPriceOld(), inGoodsMainId, inLastPriceOldDate);
+
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Main SET LastPriceOld = inLastPriceOldDate
+     WHERE Object_Goods_Main.Id = inGoodsMainId;  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_LastPriceOld', text_var1::TVarChar, vbUserId);
+   END;
    
 END;
 $BODY$

@@ -26,6 +26,7 @@ $BODY$
    DECLARE vbSummaNew    TFloat;
    DECLARE vbUnitId_from Integer;
    DECLARE vbUnitId_to   Integer;
+   DECLARE vbisReceived Boolean;
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -35,10 +36,12 @@ BEGIN
           , MovementLinkObject_To.ObjectId
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
           , COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
+          , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
             INTO vbUnitId_from
                , vbUnitId_to 
                , vbIsSUN
                , vbSumma
+               , vbisReceived
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.ID
@@ -55,6 +58,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
                                   ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
                                  AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+          LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                    ON MovementBoolean_Received.MovementId = Movement.Id
+                                   AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
      WHERE Movement.Id = inMovementId;
 
      -- определяются данные из MovementItem
@@ -117,8 +123,10 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementId);
+     
      -- Для СУН проверили сумму
-     IF vbisSUN = TRUE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     IF vbisSUN = TRUE AND vbisReceived = FALSE 
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
 
      THEN
        SELECT COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)

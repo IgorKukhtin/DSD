@@ -13,6 +13,7 @@ RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMinimumLot TFloat; 
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -38,6 +39,17 @@ BEGIN
          -- сохранили свойство <Пользователь (корректировка)>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inId, vbUserId);
    
+          -- Сохранили в плоскую таблицй
+         BEGIN
+           UPDATE Object_Goods_Juridical SET isMinimumLot = inMinimumLot
+                                           , UserUpdateId = vbUserId
+                                           , DateUpdate   = CURRENT_TIMESTAMP
+           WHERE Object_Goods_Juridical.Id = inId;  
+         EXCEPTION
+            WHEN others THEN 
+              GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+              PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_MinimumLot', text_var1::TVarChar, vbUserId);
+         END;
    END IF;
 
           outUpdateDate:=COALESCE((SELECT ObjectDate.ValueData FROM ObjectDate WHERE ObjectDate.ObjectId = inId AND ObjectDate.DescId = zc_ObjectDate_Protocol_Update()),Null) ::TDateTime;    
@@ -58,7 +70,8 @@ ALTER FUNCTION gpUpdate_Goods_MinimumLot(Integer, TFloat, TVarChar) OWNER TO pos
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 17.10.19                                                      * 
  11.11.14                        *
 
 */

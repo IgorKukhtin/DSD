@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_NDS(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -74,6 +75,27 @@ BEGIN
                    WHERE Object_Goods.Id = inId
                   ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
    WHERE Object_Retail.DescId = zc_Object_Retail();
+   
+    -- Сохранили в плоскую таблицй
+   BEGIN
+       -- сохраняем новое значение НДС в главный товар
+     UPDATE Object_Goods_Main SET NDSKindId = (SELECT OF_NDSKind_NDS.ObjectId
+                                               FROM ObjectFloat AS OF_NDSKind_NDS
+                                               WHERE OF_NDSKind_NDS.DescId    = zc_ObjectFloat_NDSKind_NDS()
+                                               AND OF_NDSKind_NDS.ValueData = inNDS_PriceList)
+     WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+
+       -- при уменьшении значения НДС Топ по сети = Да, иначе Нет
+       -- при уменьшении значения НДС Наценка = прошлое НДС (inNDS), иначе = 0
+     UPDATE Object_Goods_Retail SET isTOP         = CASE WHEN inNDS_PriceList < inNDS THEN TRUE ELSE FALSE END
+                                  , PercentMarkup = CASE WHEN inNDS_PriceList < inNDS THEN inNDS ELSE 0 END
+     WHERE Object_Goods_Retail.GoodsMainId IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_NDS', text_var1::TVarChar, vbUserId);
+   END;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -84,7 +106,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 17.10.19                                                                      *         
  04.01.18         *
 */
 

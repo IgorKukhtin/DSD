@@ -2172,6 +2172,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_RecalcMCSSheduler_User() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_RecalcMCSSheduler_User', 'Связь с Пользователем', zc_Object_RecalcMCSSheduler(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RecalcMCSSheduler_UserRun() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_UserRun'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RecalcMCSSheduler_UserRun', 'Кто выполнил пересчет', zc_Object_RecalcMCSSheduler(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_UserRun');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsCategory_Goods', 'Товар Главный', zc_Object_GoodsCategory(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Goods');
@@ -2248,6 +2252,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.10.19                                                                                      * zc_ObjectLink_RecalcMCSSheduler_UserRun
  17.10.19         * zc_ObjectLink_LabMark_LabProduct
  16.10.19         * zc_ObjectLink_LabReceiptChild_LabMark
                     zc_ObjectLink_LabReceiptChild_Goods
