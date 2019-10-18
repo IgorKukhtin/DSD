@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_isNotUploadSites(
 RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
 
@@ -54,6 +55,16 @@ BEGIN
                      WHERE Object_Goods.Id = inId
                     ) AS tmpGoods;
 
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Main SET isNotUploadSites = inisNotUploadSites
+     WHERE Object_Goods_Main.Id IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_isNotUploadSites', text_var1::TVarChar, vbUserId);
+   END;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -63,8 +74,9 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 24.05.18        *         
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.10.19                                                       *  
+ 24.05.18                                                       *         
 
 */
 

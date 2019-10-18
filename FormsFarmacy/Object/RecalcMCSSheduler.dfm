@@ -153,6 +153,21 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 52
           end
+          object UserRun: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1083
+            DataBinding.FieldName = 'UserRun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object SelectRun: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100
+            DataBinding.FieldName = 'SelectRun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 52
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -359,6 +374,34 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actRecalcMCSShedulerSelect: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spRecalcMCSShedulerSelect
+      StoredProcList = <
+        item
+          StoredProc = spRecalcMCSShedulerSelect
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1087#1086' '#1074#1099#1076#1077#1083#1077#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1087#1086' '#1074#1099#1076#1077#1083#1077#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      ImageIndex = 79
+      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1053#1058#1047' '#1087#1086' '#1074#1099#1076#1077#1083#1077#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SelectRun
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SelectRun
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -418,6 +461,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -501,6 +548,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     end
     object dxBarButton6: TdxBarButton
       Action = actRecalcMCSSheduler
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actRecalcMCSShedulerSelect
       Category = 0
     end
   end
@@ -611,7 +662,50 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 496
+    Left = 544
+    Top = 112
+  end
+  object spRecalcMCSShedulerSelect: TdsdStoredProc
+    StoredProcName = 'gpRun_Object_RecalcMCSShedulerSelect'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 544
     Top = 168
+  end
+  object spUpdate_SelectRun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_RecalcMCSSheduler'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSelectRun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SelectRun'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSelectRun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SelectRun'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 232
   end
 end

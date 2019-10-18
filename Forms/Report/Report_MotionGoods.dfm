@@ -971,6 +971,16 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 30
       end
+      object WeightTare: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
+        DataBinding.FieldName = 'WeightTare'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
       object InDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
         DataBinding.FieldName = 'InDate'

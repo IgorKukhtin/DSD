@@ -101,6 +101,22 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Options.Editing = False
             Width = 63
           end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object GoodsGroupPromoName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'GoodsGroupPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -2600,8 +2616,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 248
-    Top = 160
+    Left = 256
+    Top = 168
   end
   object spUpdateMasterAmount: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Amount'

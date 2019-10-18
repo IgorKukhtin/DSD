@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_NotTransferTime(
 RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
@@ -55,6 +56,16 @@ BEGIN
                      WHERE Object_Goods.Id = inId
                     ) AS tmpGoods;
 
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Main SET isNotTransferTime = ioNotTransferTime
+     WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_NotTransferTime', text_var1::TVarChar, vbUserId);
+   END;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -65,6 +76,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.10.19                                                       *         
  23.09.19                                                       *         
 
 */

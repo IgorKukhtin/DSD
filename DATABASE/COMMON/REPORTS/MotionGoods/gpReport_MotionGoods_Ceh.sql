@@ -21,7 +21,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
-             , Weight TFloat
+             , Weight TFloat, WeightTare TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
 
              , CountStart TFloat
@@ -357,8 +357,9 @@ BEGIN
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
         , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
-        , Object_Measure.ValueData       AS MeasureName
-        , ObjectFloat_Weight.ValueData   AS Weight
+        , Object_Measure.ValueData           AS MeasureName
+        , ObjectFloat_Weight.ValueData       AS Weight
+        , ObjectFloat_WeightTare.ValueData ::TFloat  AS WeightTare
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
         , CAST (COALESCE(Object_PartionGoods.ValueData,'') AS TVarChar)  AS PartionGoodsName
         , Object_AssetTo.ValueData       AS AssetToName
@@ -945,8 +946,13 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                              ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+        LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare 
+                              ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
+                             AND ObjectFloat_WeightTare.DescId = zc_ObjectFloat_Goods_WeightTare()
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                              ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId

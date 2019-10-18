@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer
              , MovementId_Promo Integer, InvNumber_Promo_Full TVarChar, MakerName_Promo TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GoodsGroupPromoId Integer, GoodsGroupPromoName TVarChar
              , isReport Boolean
              , isErased Boolean
               )
@@ -206,6 +208,12 @@ BEGIN
                 , Object_Contract.Id          AS ContractId
                 , Object_Contract.ValueData   AS ContractName
 
+                , Object_GoodsGroup.Id              AS GoodsGroupId
+                , Object_GoodsGroup.ValueData       AS GoodsGroupName
+
+                , Object_GoodsGroupPromo.Id              AS GoodsGroupPromoId
+                , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
+
                 , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
                 , MovementItem.IsErased       AS IsErased
            FROM tmpMI_Master AS MovementItem
@@ -241,7 +249,16 @@ BEGIN
 
               LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId = Movement_Promo.Id
                                   AND tmpMIPromo.GoodsId = MovementItem.ObjectId
-                      
+
+              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                                   ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = MovementItem.ObjectId
+                                  AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+              LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
 
               ;
 END;

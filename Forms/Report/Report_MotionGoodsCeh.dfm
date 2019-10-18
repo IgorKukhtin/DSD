@@ -873,6 +873,16 @@ object Report_MotionGoodsCehForm: TReport_MotionGoodsCehForm
         Options.Editing = False
         Width = 30
       end
+      object WeightTare: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
+        DataBinding.FieldName = 'WeightTare'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
       object CountStart: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountStart'

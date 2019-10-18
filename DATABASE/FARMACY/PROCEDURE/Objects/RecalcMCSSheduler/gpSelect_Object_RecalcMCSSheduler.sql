@@ -17,6 +17,8 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , DateRun TDateTime
              , Color_cal Integer
              , AllRetail boolean
+             , UserRun TVarChar
+             , SelectRun boolean
              , isErased boolean) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -25,30 +27,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
    RETURN QUERY
-       WITH tmpRetal AS (SELECT MIN(Object_RecalcMCSSheduler.Id)           AS ShedulerID
-                              , ObjectLink_Juridical_Retail.ChildObjectId  AS RetalID
-                         FROM Object AS Object_RecalcMCSSheduler
-
-                              LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                                   ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
-                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
-
-                              LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
-                                                      ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
-                                                     AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
-
-                              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                   ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
-                                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-
-                              LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                          
-                         WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
-                           AND Object_RecalcMCSSheduler.isErased = False
-                           AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = True
-                         GROUP BY ObjectLink_Juridical_Retail.ChildObjectId)
                          
        SELECT
              ROW_NUMBER() OVER (ORDER BY Object_RecalcMCSSheduler.Id)::Integer as Ord
@@ -69,28 +47,13 @@ BEGIN
            , Object_User.Id                                   AS UnitId
            , Object_User.ValueData                            AS UnitName
            , ObjectDate_DateRun.ValueData                     AS DateRun
-           , CASE WHEN COALESCE (tmpRetal.ShedulerID, 0) <> 0 AND COALESCE (tmpRetal.ShedulerID, 0) <> Object_RecalcMCSSheduler.Id
+           , CASE WHEN COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
              THEN
-               zc_Color_Cyan()
-             ELSE CASE WHEN COALESCE (ObjectFloat_Period.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period1.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period2.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period3.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period4.ValueData, 0) <=0 OR
-                COALESCE ( ObjectFloat_Period5.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period6.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Period7.ValueData, 0) <=0 OR
-
-                COALESCE (ObjectFloat_Day.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day1.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day2.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day3.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day4.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day5.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day6.ValueData, 0) <=0 OR
-                COALESCE (ObjectFloat_Day7.ValueData, 0) <=0
-                THEN zc_Color_Yelow() ELSE zc_Color_White() END END                             AS Color_cal
+               42495
+             ELSE  zc_Color_White() END                                                         AS Color_cal
            , COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE)                                AS AllRetail
+           , Object_UserRun.ValueData                                                           AS UserRun
+           , COALESCE (ObjectBoolean_SelectRun.ValueData, FALSE)                                AS SelectRun
            , Object_RecalcMCSSheduler.isErased                                                  AS isErased
 
        FROM Object AS Object_RecalcMCSSheduler
@@ -118,8 +81,6 @@ BEGIN
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
            
-           LEFT JOIN tmpRetal ON tmpRetal.RetalId = ObjectLink_Juridical_Retail.ChildObjectId
-
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                                 ON ObjectLink_Unit_Area.ObjectId = ObjectLink_Unit_Juridical.ObjectId
                                AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
@@ -188,7 +149,17 @@ BEGIN
                                  ON ObjectLink_User.ObjectId = Object_RecalcMCSSheduler.Id
                                 AND ObjectLink_User.DescId = zc_ObjectLink_RecalcMCSSheduler_User()
            LEFT JOIN Object AS Object_User
-                             ON Object_User.Id = ObjectLink_User.ChildObjectId
+                            ON Object_User.Id = ObjectLink_User.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_UserRun
+                                 ON ObjectLink_UserRun.ObjectId = Object_RecalcMCSSheduler.Id
+                                AND ObjectLink_UserRun.DescId = zc_ObjectLink_RecalcMCSSheduler_UserRun()
+           LEFT JOIN Object AS Object_UserRun
+                            ON Object_UserRun.Id = ObjectLink_UserRun.ChildObjectId
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_SelectRun
+                                   ON ObjectBoolean_SelectRun.ObjectId = Object_RecalcMCSSheduler.Id
+                                  AND ObjectBoolean_SelectRun.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
 
        WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler();
 

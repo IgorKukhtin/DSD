@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxButtonEdit, cxImageComboBox, cxSplitter;
+  cxButtonEdit, cxImageComboBox, cxSplitter, cxCurrencyEdit;
 
 type
   TLabMarkForm = class(TParentForm)
@@ -84,6 +84,11 @@ type
     bbUpdateChild: TdxBarButton;
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
+    LabProductName: TcxGridDBColumn;
+    LabProductCode: TcxGridDBColumn;
+    InsertRecordChild: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    actUpdateDataSetChild: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

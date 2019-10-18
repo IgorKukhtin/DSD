@@ -25,7 +25,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , BarCode_Main TVarChar
-             , Weight TFloat
+             , Weight TFloat, WeightTare TFloat
              , InDate TDateTime, PartnerInName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsName TVarChar, AssetToName TVarChar
              , DriverName TVarChar, UnitName_to TVarChar
@@ -1162,6 +1162,7 @@ BEGIN
           , CASE WHEN tmpObject_GoodsPropertyValue_basis.BarCode <> '' THEN tmpObject_GoodsPropertyValue_basis.BarCode ELSE '0000000000000' END :: TVarChar AS BarCode_Main
   
           , ObjectFloat_Weight.ValueData   AS Weight
+          , ObjectFloat_WeightTare.ValueData ::TFloat AS WeightTare
           
           , ObjectDate_In.ValueData       :: TDateTime AS InDate
           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
@@ -1372,9 +1373,13 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                               ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+        LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare 
+                              ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
+                             AND ObjectFloat_WeightTare.DescId = zc_ObjectFloat_Goods_WeightTare()
 
         LEFT JOIN ObjectDate AS ObjectDate_In
                              ON ObjectDate_In.ObjectId = tmpResult.GoodsId

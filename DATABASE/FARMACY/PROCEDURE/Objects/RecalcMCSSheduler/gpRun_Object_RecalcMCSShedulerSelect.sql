@@ -1,8 +1,8 @@
--- Function: gpRun_Object_RecalcMCSSheduler()
+-- Function: gpRun_Object_RecalcMCSShedulerSelect()
 
-DROP FUNCTION IF EXISTS gpRun_Object_RecalcMCSSheduler(TVarChar);
+DROP FUNCTION IF EXISTS gpRun_Object_RecalcMCSShedulerSelect(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpRun_Object_RecalcMCSSheduler(
+CREATE OR REPLACE FUNCTION gpRun_Object_RecalcMCSShedulerSelect(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS VOID AS
@@ -14,10 +14,11 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
   vbUserId:= inSession;
    
-  IF NOT EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-     AND (vbUserId <> 183242)
+  IF NOT EXISTS(SELECT ObjectBoolean.ValueData FROM ObjectBoolean 
+                             WHERE ObjectBoolean.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
+                               AND ObjectBoolean.ValueData = TRUE)
   THEN
-    RAISE EXCEPTION 'Ошибка. Выполнение полного пересчета вам запрещено.';
+    RAISE EXCEPTION 'Ошибка. Не выделено шт одного подразделения.';
   END IF;
    
   IF EXISTS(SELECT
@@ -56,6 +57,11 @@ BEGIN
                                     ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
                                    AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
 
+           INNER JOIN ObjectBoolean AS ObjectBoolean_SelectRun
+                                   ON ObjectBoolean_SelectRun.ObjectId = Object_RecalcMCSSheduler.Id
+                                  AND ObjectBoolean_SelectRun.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
+                                  AND ObjectBoolean_SelectRun.ValueData = TRUE
+                                  
            INNER JOIN ObjectLink AS ObjectLink_Unit
                                  ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
@@ -165,6 +171,11 @@ BEGIN
                                     ON ObjectBoolean_Unit_AutoMCS.ObjectId = ObjectLink_Unit.ChildObjectId
                                    AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
 
+           INNER JOIN ObjectBoolean AS ObjectBoolean_SelectRun
+                                   ON ObjectBoolean_SelectRun.ObjectId = Object_RecalcMCSSheduler.Id
+                                  AND ObjectBoolean_SelectRun.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
+                                  AND ObjectBoolean_SelectRun.ValueData = TRUE
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
                                    ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
                                   AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
@@ -215,6 +226,11 @@ BEGIN
     AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False;
+    
+  PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_RecalcMCSSheduler_SelectRun(), ObjectBoolean.ObjectId, False)
+  FROM ObjectBoolean 
+  WHERE ObjectBoolean.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
+    AND ObjectBoolean.ValueData = TRUE;
 
 END;
 $BODY$

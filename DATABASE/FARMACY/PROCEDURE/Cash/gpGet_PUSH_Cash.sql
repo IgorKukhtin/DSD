@@ -89,6 +89,27 @@ BEGIN
                     AND MIMaster.ObjectId = vbUserId
                     AND (COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE
                      OR MIBoolean_ServiceExit.ValueData IS NOT NULL AND MIDate_End.ValueData IS NOT NULL))
+           OR
+           EXISTS(SELECT 1 
+                  FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = MIMaster.MovementId
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
+
+                       INNER JOIN MovementItemDate AS MIDate_End
+                                                   ON MIDate_End.MovementItemId = MIChild.Id
+                                                  AND MIDate_End.DescId = zc_MIDate_End()
+                                                  AND MIDate_End.ValueData > date_trunc('day', CURRENT_DATE)
+
+
+                  WHERE MIMaster.MovementId = (SELECT Movement.ID
+                                               FROM Movement
+                                               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE - interval '1 day')
+                                                 AND Movement.DescId = zc_Movement_EmployeeSchedule() )
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId)                  
         THEN
           vbEmployeeShow := False;
         END IF;

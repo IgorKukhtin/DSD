@@ -18,7 +18,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TLabMarkEditForm = class(TParentForm)
@@ -37,6 +37,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    cxLabel2: TcxLabel;
+    edLabProduct: TcxButtonEdit;
+    GuidesLabProduct: TdsdGuides;
   private
     { Private declarations }
   public
