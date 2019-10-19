@@ -177,6 +177,8 @@ type
     actPrint_Detail: TdsdPrintAction;
     bbPrint_Child: TdxBarButton;
     SummCardSecondDiff: TcxGridDBColumn;
+    SummFineOth: TcxGridDBColumn;
+    SummHospOth: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -22,8 +22,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
-             , SummMinus TFloat, SummFine TFloat, SummFineRecalc TFloat, SummAdd TFloat
-             , SummHoliday TFloat, SummHosp TFloat, SummHospRecalc TFloat
+             , SummMinus TFloat, SummFine TFloat, SummFineOth TFloat, SummFineOthRecalc TFloat, SummAdd TFloat
+             , SummHoliday TFloat, SummHosp TFloat, SummHospOth TFloat, SummHospOthRecalc TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
@@ -224,11 +224,13 @@ BEGIN
             , MIFloat_SummNalogRetRecalc.ValueData    AS SummNalogRetRecalc
             , MIFloat_SummMinus.ValueData             AS SummMinus
             , MIFloat_SummFine.ValueData              AS SummFine
-            , MIFloat_SummFineRecalc.ValueData        AS SummFineRecalc
+            , MIFloat_SummFineOth.ValueData           AS SummFineOth
+            , MIFloat_SummFineOthRecalc.ValueData     AS SummFineOthRecalc
             , MIFloat_SummAdd.ValueData               AS SummAdd
             , MIFloat_SummHoliday.ValueData           AS SummHoliday
             , MIFloat_SummHosp.ValueData              AS SummHosp
-            , MIFloat_SummHospRecalc.ValueData        AS SummHospRecalc
+            , MIFloat_SummHospOth.ValueData           AS SummHospOth
+            , MIFloat_SummHospOthRecalc.ValueData     AS SummHospOthRecalc
             , MIFloat_SummSocialIn.ValueData          AS SummSocialIn
             , MIFloat_SummSocialAdd.ValueData         AS SummSocialAdd
             , MIFloat_SummChild.ValueData             AS SummChild
@@ -309,9 +311,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummFine
                                         ON MIFloat_SummFine.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummFineRecalc
-                                        ON MIFloat_SummFineRecalc.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummFineRecalc.DescId = zc_MIFloat_SummFineRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummFineOth
+                                        ON MIFloat_SummFineOth.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummFineOth.DescId = zc_MIFloat_SummFineOth()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummFineOthRecalc
+                                        ON MIFloat_SummFineOthRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
@@ -323,9 +328,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                         ON MIFloat_SummHosp.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummHospRecalc
-                                        ON MIFloat_SummHospRecalc.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummHospRecalc.DescId = zc_MIFloat_SummHospRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHospOth
+                                        ON MIFloat_SummHospOth.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHospOthRecalc
+                                        ON MIFloat_SummHospOthRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                         ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId

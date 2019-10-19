@@ -95,6 +95,8 @@ type
     spSelectPrint_Detail: TdsdStoredProc;
     actPrint_Detail: TdsdPrintAction;
     bbPrint_Detail: TdxBarButton;
+    TotalSummFineOth: TcxGridDBColumn;
+    TotalSummHospOth: TcxGridDBColumn;
   private
     { Private declarations }
   public

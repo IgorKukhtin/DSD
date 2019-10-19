@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Intege
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -27,8 +28,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummChildRecalc     TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc  TFloat    , -- Удержания сторон. юр.л. (ввод)
     
-    IN inSummFineRecalc      TFloat    , -- штраф (ввод)
-    IN inSummHospRecalc      TFloat    , -- больничный (ввод)
+    IN inSummFine               TFloat    , -- штраф
+    IN inSummFineOthRecalc      TFloat    , -- штраф (ввод для распределения)
+    IN inSummHosp               TFloat    , -- больничный
+    IN inSummHospOthRecalc      TFloat    , -- больничный (ввод для распределения)
 
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
@@ -62,8 +65,10 @@ BEGIN
                                                      , inSummSocialAdd          := inSummSocialAdd
                                                      , inSummChildRecalc        := inSummChildRecalc
                                                      , inSummMinusExtRecalc     := inSummMinusExtRecalc
-                                                     , inSummFineRecalc         := inSummFineRecalc
-                                                     , inSummHospRecalc         := inSummHospRecalc
+                                                     , inSummFine               := inSummFine
+                                                     , inSummFineOthRecalc      := inSummFineOthRecalc
+                                                     , inSummHosp               := inSummHosp
+                                                     , inSummHospOthRecalc      := inSummHospOthRecalc
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
                                                      , inUnitId                 := inUnitId

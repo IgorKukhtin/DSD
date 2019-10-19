@@ -22,8 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
              , TotalSummNalogRet TFloat, TotalSummNalogRetRecalc TFloat
              , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
-             , TotalSummFine TFloat, TotalSummFineRecalc TFloat
-             , TotalSummHosp TFloat, TotalSummHospRecalc TFloat
+             , TotalSummFine TFloat, TotalSummFineOth TFloat, TotalSummFineOthRecalc TFloat
+             , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -211,10 +211,12 @@ BEGIN
            , MovementFloat_TotalSummAddOth.ValueData           AS TotalSummAddOth
            , MovementFloat_TotalSummAddOthRecalc.ValueData     AS TotalSummAddOthRecalc
            
-           , MovementFloat_TotalSummFine.ValueData       :: TFloat AS TotalSummFine
-           , MovementFloat_TotalSummFineRecalc.ValueData :: TFloat AS TotalSummFineRecalc
-           , MovementFloat_TotalSummHosp.ValueData       :: TFloat AS TotalSummHosp
-           , MovementFloat_TotalSummHospRecalc.ValueData :: TFloat AS TotalSummHospRecalc
+           , MovementFloat_TotalSummFine.ValueData          :: TFloat AS TotalSummFine
+           , MovementFloat_TotalSummFineOth.ValueData       :: TFloat AS TotalSummFineOth
+           , MovementFloat_TotalSummFineOthRecalc.ValueData :: TFloat AS TotalSummFineOthRecalc
+           , MovementFloat_TotalSummHosp.ValueData          :: TFloat AS TotalSummHosp
+           , MovementFloat_TotalSummHospOth.ValueData       :: TFloat AS TotalSummHospOth
+           , MovementFloat_TotalSummHospOthRecalc.ValueData :: TFloat AS TotalSummHospOthRecalc
            
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
@@ -331,17 +333,22 @@ BEGIN
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummFine
                                     ON MovementFloat_TotalSummFine.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummFine.DescId = zc_MovementFloat_TotalSummFine()
+                                   AND MovementFloat_TotalSummFine.DescId     = zc_MovementFloat_TotalSummFine()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFineOth
+                                    ON MovementFloat_TotalSummFineOth.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummFineOth.DescId     = zc_MovementFloat_TotalSummFineOth()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFineOthRecalc
+                                    ON MovementFloat_TotalSummFineOthRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummFineOthRecalc.DescId     = zc_MovementFloat_TotalSummFineOthRecalc()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHosp
                                     ON MovementFloat_TotalSummHosp.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummHosp.DescId = zc_MovementFloat_TotalSummHosp()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFineRecalc
-                                    ON MovementFloat_TotalSummFineRecalc.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummFineRecalc.DescId = zc_MovementFloat_TotalSummFineRecalc()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHospRecalc
-                                    ON MovementFloat_TotalSummHospRecalc.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummHospRecalc.DescId = zc_MovementFloat_TotalSummHospRecalc()
+                                   AND MovementFloat_TotalSummHosp.DescId     = zc_MovementFloat_TotalSummHosp()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHospOth
+                                    ON MovementFloat_TotalSummHospOth.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHospOth.DescId     = zc_MovementFloat_TotalSummHospOth()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHospOthRecalc
+                                    ON MovementFloat_TotalSummHospOthRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHospOthRecalc.DescId     = zc_MovementFloat_TotalSummHospOthRecalc()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id

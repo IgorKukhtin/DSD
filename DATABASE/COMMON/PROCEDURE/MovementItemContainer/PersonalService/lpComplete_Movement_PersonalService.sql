@@ -32,7 +32,7 @@ BEGIN
                                         , MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer
                                         , ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer
                                         , SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat
-                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
      END IF;
 
 
@@ -44,6 +44,8 @@ BEGIN
                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummMinus()), 0)
                     -- SummFine
                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummFine()), 0)
+                    -- SummFineOth
+                  - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummFineOth()), 0)
                     -- SummAdd
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummAdd()), 0)
                     -- SummAddOth
@@ -52,6 +54,8 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHoliday()), 0)
                     -- SummHosp
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHosp()), 0)
+                    -- SummHospOth
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
                     -- 
                   , MovementItem.ParentId
                   )
@@ -1136,7 +1140,7 @@ BEGIN
                                , COALESCE (MIFloat_SummNalogRet.ValueData, 0)  AS SummNalogRet
                                , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
                                , COALESCE (MIFloat_SummMinusExt.ValueData, 0)  AS SummMinusExt
-                               , COALESCE (MIFloat_SummAddOth.ValueData, 0)    AS SummAddOth
+                            -- , COALESCE (MIFloat_SummAddOth.ValueData, 0)    AS SummAddOth
                          FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                                           ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
@@ -1153,9 +1157,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
                                                           ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
-                              LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
-                                                          ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
+                           -- LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                           --                             ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
+                           --                            AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
                               LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = MovementItem.Id
                                                 AND _tmpItem.IsMaster       = TRUE
                          WHERE MovementItem.MovementId = inMovementId
@@ -1247,7 +1251,7 @@ BEGIN
                 , tmpMI.SummNalogRet
                 , tmpMI.SummChild
                 , tmpMI.SummMinusExt
-                , tmpMI.SummAddOth
+             -- , tmpMI.SummAddOth
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransport        ELSE 0 END), 0) AS SummTransport
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAdd     ELSE 0 END), 0) AS SummTransportAdd
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAddLong ELSE 0 END), 0) AS SummTransportAddLong
@@ -1267,7 +1271,7 @@ BEGIN
                   , tmpMI.SummNalogRet
                   , tmpMI.SummChild
                   , tmpMI.SummMinusExt
-                  , tmpMI.SummAddOth
+               -- , tmpMI.SummAddOth
           UNION ALL
            SELECT lpInsertUpdate_MovementItem_PersonalService_item (ioId                     := 0
                                                                   , inMovementId             := inMovementId
@@ -1287,8 +1291,10 @@ BEGIN
                                                                   , inSummSocialAdd          := 0 :: TFloat
                                                                   , inSummChildRecalc        := 0 :: TFloat
                                                                   , inSummMinusExtRecalc     := 0 :: TFloat
-                                                                  , inSummFineRecalc         := 0 :: TFloat
-                                                                  , inSummHospRecalc         := 0 :: TFloat
+                                                                  , inSummFine               := 0 :: TFloat
+                                                                  , inSummFineOthRecalc      := 0 :: TFloat
+                                                                  , inSummHosp               := 0 :: TFloat
+                                                                  , inSummHospOthRecalc      := 0 :: TFloat
                                                                   , inComment                := ''
                                                                   , inInfoMoneyId            := tmpMI.InfoMoneyId
                                                                   , inUnitId                 := tmpMI.UnitId
@@ -1303,7 +1309,7 @@ BEGIN
                 , 0 AS SummNalogRet
                 , 0 AS SummChild
                 , 0 AS SummMinusExt
-                , 0 AS SummAddOth
+             -- , 0 AS SummAddOth
                 , tmpMI.SummTransport
                 , tmpMI.SummTransportAdd
                 , tmpMI.SummTransportAddLong

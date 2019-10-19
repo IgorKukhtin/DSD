@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
-             , TotalCount TFloat, TotalCountTare TFloat
+             , TotalCountKg TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
@@ -71,7 +71,7 @@ BEGIN
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
              , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
-             , MovementFloat_TotalCount.ValueData         AS TotalCount
+             , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
 
              , Object_From.ValueData           AS FromName
@@ -126,9 +126,9 @@ BEGIN
                                      ON MovementString_PartionGoods.MovementId =  Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()

@@ -4,8 +4,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -431
   ExplicitWidth = 1237
-  ExplicitHeight = 442
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -188,12 +189,22 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummFineRecalc
+              Column = TotalSummFineOthRecalc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummHospRecalc
+              Column = TotalSummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummFineOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummHospOth
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -354,12 +365,22 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummFineRecalc
+              Column = TotalSummFineOthRecalc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummHospRecalc
+              Column = TotalSummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummFineOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummHospOth
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -713,32 +734,55 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummFineRecalc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummFineRecalc'
+          object TotalSummFineOth: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'TotalSummFineOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Width = 87
+          end
+          object TotalSummFineOthRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummFineOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 80
           end
           object TotalSummHosp: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
             DataBinding.FieldName = 'TotalSummHosp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
             Options.Editing = False
             Width = 87
           end
-          object TotalSummHospRecalc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummHospRecalc'
+          object TotalSummHospOth: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'TotalSummHospOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Width = 87
+          end
+          object TotalSummHospOthRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummHospOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 87
           end
           object isAuto: TcxGridDBColumn
