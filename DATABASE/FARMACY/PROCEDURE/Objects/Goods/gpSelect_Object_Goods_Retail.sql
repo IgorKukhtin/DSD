@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
              , isMarketToday Boolean
+             , isNotMarion Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime 
@@ -276,6 +277,7 @@ BEGIN
 
            --, CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
            , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+           , COALESCE (ObjectBoolean_Goods_NotMarion.ValueData, FALSE) :: Boolean AS isNotMarion
            
            , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
            , DATE_TRUNC ('DAY', ObjectDate_LastPriceOld.ValueData)                ::TDateTime  AS LastPriceOldDate
@@ -382,7 +384,11 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
                                    ON ObjectBoolean_Goods_NotTransferTime.ObjectId = Object_Goods_View.Id 
                                   AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
-           
+
+           -- не привязыввать код Марион
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotMarion
+                                   ON ObjectBoolean_Goods_NotMarion.ObjectId = Object_Goods_View.Id
+                                  AND ObjectBoolean_Goods_NotMarion.DescId = zc_ObjectBoolean_Goods_NotMarion() 
 
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;
@@ -398,6 +404,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 19.10.19
  14.06.19                                                                     * add AllowDivision
  15.03.19                                                                     * add DoesNotShare
  11.02.19         * признак Товары соц-проект берем и документа

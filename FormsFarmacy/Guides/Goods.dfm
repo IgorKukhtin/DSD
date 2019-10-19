@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 902
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,6 +193,17 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103' ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 70
+          end
+          object isNotMarion: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079'. '#1052#1072#1088#1080#1086#1085
+            DataBinding.FieldName = 'isNotMarion'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Properties.AllowGrayed = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1091#1089#1090#1072#1085#1072#1074#1083#1080#1074#1072#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1082#1086#1076#1086#1084' '#1052#1072#1088#1080#1086#1085
+            Options.Editing = False
+            Width = 86
           end
           object LastPriceDate: TcxGridDBColumn
             Caption = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
@@ -608,6 +619,76 @@ inherited GoodsForm: TGoodsForm
       Caption = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
       Hint = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
     end
+    object macUpdateNotMarion_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateNotMarion_No
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1053#1045#1058'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1053#1045#1058
+      ImageIndex = 77
+    end
+    object macUpdateNotMarion_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateNotMarion_Yes
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1044#1072'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085'> = '#1044#1072
+      ImageIndex = 76
+    end
+    object actUpdateNotMarion_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateNotMarion_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdateNotMarion_No
+        end>
+      Caption = 'actUpdateNotMarion_Yes'
+    end
+    object actUpdateNotMarion_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateNotMarion_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateNotMarion_Yes
+        end>
+      Caption = 'actUpdateNotMarion_Yes'
+    end
+    object actSimpleUpdateNotMarion_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateNotMarion_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085
+      Hint = #1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085
+    end
+    object actSimpleUpdateNotMarion_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateNotMarion_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085
+      Hint = #1053#1077' '#1087#1088#1080#1074#1103#1079#1099#1074#1072#1090#1100' '#1082#1086#1076' '#1052#1072#1088#1080#1086#1085
+    end
     object actPublishedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -706,8 +787,8 @@ inherited GoodsForm: TGoodsForm
     Top = 88
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 96
+    Left = 40
+    Top = 168
     DockControlHeights = (
       0
       0
@@ -755,6 +836,18 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbPublished'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNotMarion_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNotMarion_No'
         end
         item
           Visible = True
@@ -826,6 +919,14 @@ inherited GoodsForm: TGoodsForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbUpdateNotMarion_Yes: TdxBarButton
+      Action = macUpdateNotMarion_Yes
+      Category = 0
+    end
+    object bbUpdateNotMarion_No: TdxBarButton
+      Action = macUpdateNotMarion_No
       Category = 0
     end
   end
@@ -1341,8 +1442,8 @@ inherited GoodsForm: TGoodsForm
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <>
-    Left = 544
-    Top = 96
+    Left = 440
+    Top = 88
   end
   object spUpdate_Goods_NDS: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_NDS'
@@ -1537,5 +1638,69 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 336
     Top = 336
+  end
+  object spUpdateNotMarion_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_NotMarion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMarion'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotMarion'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotMarion'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 83
+  end
+  object spUpdateNotMarion_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_NotMarion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMarion'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotMarion'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotMarion'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 91
   end
 end
