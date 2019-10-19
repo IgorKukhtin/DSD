@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbCode Integer;
    DECLARE vbLinkGoodsId Integer;
+   DECLARE text_var1 text;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
@@ -97,8 +98,11 @@ BEGIN
 
        IF COALESCE (vbLinkGoodsId, 0) = 0
        THEN
-           vbLinkGoodsId:= gpInsertUpdate_Object_LinkGoods (0, ioGoodsMainId, ioBarCodeGoodsId, inSession);
+         vbLinkGoodsId:= gpInsertUpdate_Object_LinkGoods (0, ioGoodsMainId, ioBarCodeGoodsId, inSession);
        END IF;
+
+       -- Сохранили в плоскую таблицй
+       PERFORM lpInsertUpdate_Object_Goods_BarCode (ioGoodsMainId, ioBarCodeGoodsId, inBarCode, vbUserId);     
 
        IF COALESCE (vbLinkGoodsId, 0) <> 0
        THEN -- чистим ненужные связи "товар штрих-код -> главный товар"
@@ -143,8 +147,30 @@ BEGIN
            AND ObjectLink_Goods_Object.ObjectId = ioBarCodeGoodsId;
          ioBarCodeGoodsId := NULL;
          ioGoodsMainId := NULL;
+         
+         -- Удалили из плоской таблицы
+         BEGIN
+            
+           IF EXISTS(SELECT 1 FROM Object_Goods_BarCode 
+                     WHERE Object_Goods_BarCode.GoodsMainId = ioGoodsMainId
+                     AND Object_Goods_BarCode.BarCodeId = ioBarCodeGoodsId)
+           THEN 
+             DELETE FROM Object_Goods_BarCode
+             WHERE Object_Goods_BarCode.GoodsMainId = ioGoodsMainId
+               AND Object_Goods_BarCode.BarCodeId = ioBarCodeGoodsId;
+           END IF;
+             
+         EXCEPTION
+            WHEN others THEN 
+              GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+              PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_Goods_BarCode', text_var1::TVarChar, vbUserId);
+         END;
+         
        ELSE
          UPDATE Object SET ValueData = inBarCode WHERE Id = ioBarCodeGoodsId AND DescId = zc_Object_Goods();
+
+         -- Сохранили в плоскую таблицй
+         PERFORM lpInsertUpdate_Object_Goods_BarCode (ioGoodsMainId, ioBarCodeGoodsId, inBarCode, vbUserId);              
        END IF;
      END IF;
 
@@ -155,6 +181,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 18.10.19                                                                      * Плоские таблицы
  17.06.19                                                                      *
 */
 

@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbConditionsKeepId Integer;
    DECLARE vbId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
      IF COALESCE(inObjectId,0) = 0
@@ -153,6 +154,20 @@ BEGIN
               ) AS tmp
                   ;  
 
+    -- Сохранили в плоскую таблицй
+    BEGIN
+      
+      UPDATE Object_Goods_Juridical SET ConditionsKeepId = vbConditionsKeepId
+      WHERE Object_Goods_Juridical.ID = vbId;
+     
+      UPDATE Object_Goods_Main SET ConditionsKeepId = vbConditionsKeepId
+      WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = ioId);  
+    EXCEPTION
+       WHEN others THEN 
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_ConditionsKeep', text_var1::TVarChar, vbUserId);
+    END;
+    
     -- сохранили протокол
     --PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
 
@@ -162,7 +177,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 17.10.19                                                      * 
  08.05.18         *
  07.01.17         *
 */

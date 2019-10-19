@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_isUploadBadm(
 RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -27,6 +28,19 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_UploadBadm(), inId, outisUploadBadm);
 
+     -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Juridical SET isUploadBadm = COALESCE(inisUploadBadm, FALSE)
+                                     , UserUpdateId = vbUserId
+                                     , DateUpdate   = CURRENT_TIMESTAMP
+     WHERE Object_Goods_Juridical.Id = inId
+       AND Object_Goods_Juridical.isUploadBadm <> COALESCE(inisUploadBadm, FALSE);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_isUploadBadm', text_var1::TVarChar, vbUserId);
+   END;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -36,7 +50,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 17.10.19                                                                      * 
  18.01.17         *
 
 */

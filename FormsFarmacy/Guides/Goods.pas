@@ -92,6 +92,16 @@ type
     spUpdate_Goods_AllowDivision: TdsdStoredProc;
     spUpdate_Goods_Analog: TdsdStoredProc;
     NotTransferTime: TcxGridDBColumn;
+    actUpdateNotMarion_Yes: TdsdExecStoredProc;
+    spUpdateNotMarion_Yes: TdsdStoredProc;
+    actSimpleUpdateNotMarion_Yes: TMultiAction;
+    macUpdateNotMarion_Yes: TMultiAction;
+    spUpdateNotMarion_No: TdsdStoredProc;
+    actUpdateNotMarion_No: TdsdExecStoredProc;
+    actSimpleUpdateNotMarion_No: TMultiAction;
+    macUpdateNotMarion_No: TMultiAction;
+    bbUpdateNotMarion_Yes: TdxBarButton;
+    bbUpdateNotMarion_No: TdxBarButton;
   private
     { Private declarations }
   public

@@ -515,6 +515,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAll_TabForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAll_TabForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetail_TabForm'));
@@ -526,7 +527,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailDialogForm');
     exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
     //exit;
@@ -551,7 +552,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
@@ -560,7 +561,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAnalogEditForm');
 
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TExchangeForm');
 

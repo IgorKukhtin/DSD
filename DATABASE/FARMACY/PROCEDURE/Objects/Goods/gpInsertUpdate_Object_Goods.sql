@@ -234,6 +234,9 @@ BEGIN
           END IF;
      END IF;
 
+       -- Изменили код мориона
+     PERFORM lpUpdate_Object_Goods_MorionCode (vbMainGoodsId, inMorionCode, vbUserId);
+
      IF COALESCE (inBarCode, '') <> ''
      THEN
 
@@ -258,6 +261,8 @@ BEGIN
           THEN
                PERFORM gpInsertUpdate_Object_LinkGoods(0, vbMainGoodsId, vbBarCodeGoodsId, inSession);
           END IF;
+          
+          PERFORM lpInsertUpdate_Object_Goods_BarCode (vbMainGoodsId, vbBarCodeGoodsId, inBarCode, vbUserId);
       END IF;
 END;
 $BODY$
@@ -266,6 +271,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 18.10.19                                                                      * Плоские таблицы
  23.07.19         * ускорение
  15.06.16                                                                      *
  01.04.16                                                                      *
