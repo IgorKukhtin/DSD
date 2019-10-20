@@ -75,7 +75,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCount
+          Column = TotalCountKg
         end
         item
           Format = ',0.####'
@@ -86,7 +86,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCount
+          Column = TotalCountKg
         end
         item
           Format = ',0.####'
@@ -267,9 +267,9 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 77
       end
-      object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'TotalCount'
+      object TotalCountKg: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089
+        DataBinding.FieldName = 'TotalCountKg'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

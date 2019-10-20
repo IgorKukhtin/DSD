@@ -802,6 +802,7 @@ type
     tblObject_ConstWebService_three: TStringField;
     tblObject_ConstWebService_four: TStringField;
     tblObject_ConstAPIKey: TStringField;
+    tblObject_ConstCriticalWeight: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -3902,6 +3903,7 @@ var
   CurInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
+  TotalW : Double;
 begin
   Result := false;
 
@@ -3909,16 +3911,26 @@ begin
   with cdsOrderItems do
   begin
     isHasItems := false;
+    TotalW:= 0;
     First;
     while not EOF do
     begin
       if FieldbyName('Count').AsFloat > 0 then
       begin
         isHasItems := true;
-        break;
+        if FieldbyName('Weight').AsFloat > 0
+        then TotalW:= FieldbyName('Count').AsFloat * FieldbyName('Weight').AsFloat
+        else TotalW:= TotalW + FieldbyName('Count').AsFloat;
+        //break;
       end;
 
       Next;
+    end;
+
+    if (Complete = TRUE) and (TotalW < DM.tblObject_ConstCriticalWeight.AsFloat) then
+    begin
+      ErrorMessage := 'Разрешены заявки с общим весом >= ' + FloatToStr(DM.tblObject_ConstCriticalWeight.AsFloat) + ' кг. Сохранение заявки с весом = ' + FloatToStr(TotalW) + ' кг. невозможно.';
+      exit;
     end;
 
     if not isHasItems then

@@ -87,7 +87,7 @@ type
     WeighingNumber: TcxGridDBColumn;
     PartionGoods: TcxGridDBColumn;
     TotalCountTare: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
     IsProductionIn: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     edJuridicalBasis: TcxButtonEdit;

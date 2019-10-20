@@ -169,6 +169,10 @@ object DM: TDM
       FieldName = 'APIKey'
       Size = 250
     end
+    object tblObject_ConstCriticalWeight: TFloatField
+      FieldName = 'CriticalWeight'
+      Origin = 'CriticalWeight'
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain

@@ -42,6 +42,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , CriticalOverDays      Integer   -- Количество дней просрочки|После которого формирование заявки невозможно (default 21)
              , CriticalDebtSum       TFloat    -- Сумма долга|После которого формирование заявки невозможно (default 1 грн.)
              , APIKey                TVarChar  -- APIKey для гугл карт
+             , CriticalWeight        TFloat    -- Минимально допустимый Вес заявки
 )
 AS
 $BODY$
@@ -168,16 +169,16 @@ BEGIN
     --        , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
       --      , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
-            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService
-            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService_two
-            , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
-            , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
+            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
+            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
+            , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_three
+            , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_four
 
             -- AS LastDateIn
             -- AS LastDateOut
 
             -- , '1.26.0'::TVarChar             AS MobileVersion
-            , getMobileConst.MobileVersion
+             , getMobileConst.MobileVersion
             -- , 'ProjectMobile.apk'::TVarChar  AS MobileAPKFileName
             , getMobileConst.MobileAPKFileName
 
@@ -193,6 +194,8 @@ BEGIN
             -- , 1::TFloat   AS CriticalDebtSum
             , getMobileConst.CriticalDebtSum
             , zc_Google_APIKey() AS APIKey
+
+            , 5::TFloat   AS CriticalWeight
 
        FROM tmpPersonal
             LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1
@@ -268,3 +271,4 @@ FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для: '+FloatToStr(
 -- UPDATE ObjectString SET ValueData = '1.54.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')
+-- D:\Project-Basis\Bin\aMobile.sdb

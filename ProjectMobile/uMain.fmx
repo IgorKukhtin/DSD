@@ -1450,7 +1450,7 @@ object frmMain: TfrmMain
                   Align = VertCenter
                   TabOrder = 0
                   ReturnKeyType = Done
-                  Text = 'http://integer-srv2.alan.dp.ua/projectmobile/index.php'
+                  Text = 'http://integer-srv.alan.dp.ua/projectmobile/index.php'
                   TextSettings.Font.Family = 'Times New Roman'
                   TextSettings.Font.Size = 13.000000000000000000
                   TextSettings.FontColor = xFF005078
@@ -10239,7 +10239,7 @@ object frmMain: TfrmMain
             object lUnitRet: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 200.000000000000000000
+              Position.Y = 265.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10275,7 +10275,7 @@ object frmMain: TfrmMain
             object lMember: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 330.000000000000000000
+              Position.Y = 395.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10311,7 +10311,7 @@ object frmMain: TfrmMain
             object lSyncDateIn: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 525.000000000000000000
+              Position.Y = 590.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10347,7 +10347,7 @@ object frmMain: TfrmMain
             object lWebService: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 395.000000000000000000
+              Position.Y = 460.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10383,7 +10383,7 @@ object frmMain: TfrmMain
             object lCash: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 265.000000000000000000
+              Position.Y = 330.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10419,11 +10419,11 @@ object frmMain: TfrmMain
             object lUnit: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 135.000000000000000000
+              Position.Y = 200.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 10
+              TabOrder = 11
               object Label22: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -10459,7 +10459,7 @@ object frmMain: TfrmMain
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 9
+              TabOrder = 10
               object Label31: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -10491,11 +10491,11 @@ object frmMain: TfrmMain
             object lSyncDateOut: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 590.000000000000000000
+              Position.Y = 655.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 7
+              TabOrder = 8
               object Label32: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -10531,7 +10531,7 @@ object frmMain: TfrmMain
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 8
+              TabOrder = 9
               object Label48: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -10579,7 +10579,7 @@ object frmMain: TfrmMain
             object lCurWebService: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 460.000000000000000000
+              Position.Y = 525.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
@@ -10615,11 +10615,11 @@ object frmMain: TfrmMain
             object lReturnDayCount: TLayout
               Align = Top
               Margins.Top = 5.000000000000000000
-              Position.Y = 655.000000000000000000
+              Position.Y = 720.000000000000000000
               Size.Width = 328.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 6
+              TabOrder = 7
               object Label97: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -10634,6 +10634,42 @@ object frmMain: TfrmMain
                 Text = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1090#1072#1088#1086#1081' '#1094#1077#1085#1077' ('#1076#1085#1077#1081')'
               end
               object eReturnDayCount: TEdit
+                Touch.InteractiveGestures = [LongTap, DoubleTap]
+                Align = Client
+                TabOrder = 1
+                ReadOnly = True
+                TextSettings.Font.Size = 11.000000000000000000
+                Margins.Left = 5.000000000000000000
+                Margins.Top = 5.000000000000000000
+                Margins.Right = 5.000000000000000000
+                Size.Width = 318.000000000000000000
+                Size.Height = 32.000000000000000000
+                Size.PlatformDefault = False
+                StyledSettings = [Family, Style, FontColor]
+              end
+            end
+            object lCriticalWeight: TLayout
+              Align = Top
+              Margins.Top = 5.000000000000000000
+              Position.Y = 135.000000000000000000
+              Size.Width = 328.000000000000000000
+              Size.Height = 60.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 6
+              object LabelCriticalWeight: TLabel
+                Align = Top
+                StyledSettings = [Family, FontColor]
+                Margins.Left = 5.000000000000000000
+                Margins.Right = 5.000000000000000000
+                Position.X = 5.000000000000000000
+                Size.Width = 318.000000000000000000
+                Size.Height = 23.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 11.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Text = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1074#1089#1077#1081' '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
+              end
+              object eCriticalWeight: TEdit
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
                 Align = Client
                 TabOrder = 1

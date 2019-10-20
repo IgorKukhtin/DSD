@@ -779,8 +779,11 @@ type
     Layout48: TLayout;
     cbPaidKindTC: TComboBox;
     lReturnDayCount: TLayout;
+    lCriticalWeight: TLayout;
     Label97: TLabel;
+    LabelCriticalWeight: TLabel;
     eReturnDayCount: TEdit;
+    eCriticalWeight: TEdit;
     CurWebServerLayout12: TLayout;
     CurWebServerEdit: TEdit;
     CurWebServerLayout11: TLayout;
@@ -6151,6 +6154,8 @@ begin
   eSyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
 
   eReturnDayCount.Text :=  DM.tblObject_ConstReturnDayCount.AsString;
+
+  eCriticalWeight.Text :=  DM.tblObject_ConstCriticalWeight.AsString;
 
   SwitchToForm(tiInformation, nil);
 end;
