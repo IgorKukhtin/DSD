@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 681
   ClientWidth = 1307
   ExplicitWidth = 1323
-  ExplicitHeight = 716
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -769,7 +769,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 75
           end
           object SummFineOth: TcxGridDBColumn [36]
@@ -804,7 +803,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
-            Options.Editing = False
             Width = 75
           end
           object SummHospOth: TcxGridDBColumn [39]
@@ -1553,9 +1551,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -3222,10 +3217,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummFine'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummFine'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inSummFineOthRecalc'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummFineOthRecalc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHosp'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummHosp'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

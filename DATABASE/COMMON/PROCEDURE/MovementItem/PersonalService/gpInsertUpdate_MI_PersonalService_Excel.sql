@@ -107,8 +107,10 @@ BEGIN
                                                         , inSummSocialAdd      := COALESCE (gpSelect.SummSocialAdd, 0)
                                                         , inSummChildRecalc    := COALESCE (gpSelect.SummChildRecalc, 0)
                                                         , inSummMinusExtRecalc := COALESCE (gpSelect.SummMinusExtRecalc, 0)
-                                                        , inSummFineRecalc     := COALESCE (gpSelect.SummFineRecalc, 0)
-                                                        , inSummHospRecalc     := COALESCE (gpSelect.SummHospRecalc, 0)
+                                                        , inSummFine           := COALESCE (gpSelect.SummFine, 0)
+                                                        , inSummFineOthRecalc  := COALESCE (gpSelect.SummFineOthRecalc, 0)
+                                                        , inSummHosp           := COALESCE (gpSelect.SummHosp, 0)
+                                                        , inSummHospOthRecalc  := COALESCE (gpSelect.SummHospOthRecalc, 0)
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
                                                         , inUnitId             := tmpPersonal.UnitId

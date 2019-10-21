@@ -29,7 +29,7 @@ BEGIN
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
              , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
              , SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat, SummAddOthRecalc TFloat
-             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummFineRecalc TFloat, SummHospRecalc TFloat) ON COMMIT DROP;
+             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummFine TFloat, SummFineOthRecalc TFloat, SummHosp TFloat, SummHospOthRecalc TFloat) ON COMMIT DROP;
 
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
                            , MovementItem.ObjectId                     AS PersonalId
@@ -57,7 +57,7 @@ BEGIN
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
                            , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash
                            , SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd, SummAddOthRecalc
-                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc, SummFineRecalc, SummHospRecalc)
+                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc, SummFine, SummFineOthRecalc, SummHosp, SummHospOthRecalc)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
                  , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
@@ -82,8 +82,10 @@ BEGIN
                  , COALESCE (MIFloat_SummSocialAdd.ValueData, 0)       :: TFloat  AS SummSocialAdd
                  , COALESCE (MIFloat_SummChildRecalc.ValueData, 0)     :: TFloat  AS SummChildRecalc
                  , COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)  :: TFloat  AS SummMinusExtRecalc
-                 , COALESCE (MIFloat_SummFineRecalc.ValueData, 0)      :: TFloat  AS SummFineRecalc
-                 , COALESCE (MIFloat_SummHospRecalc.ValueData, 0)      :: TFloat  AS SummHospRecalc
+                 , COALESCE (MIFloat_SummFine.ValueData, 0)            :: TFloat  AS SummFine
+                 , COALESCE (MIFloat_SummFineOthRecalc.ValueData, 0)   :: TFloat  AS SummFineOthRecalc
+                 , COALESCE (MIFloat_SummHosp.ValueData, 0)            :: TFloat  AS SummHosp
+                 , COALESCE (MIFloat_SummHospOthRecalc.ValueData, 0)   :: TFloat  AS SummHospOthRecalc
             FROM MovementItem
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -156,12 +158,19 @@ BEGIN
                                              ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
 
-                 LEFT JOIN MovementItemFloat AS MIFloat_SummFineRecalc
-                                             ON MIFloat_SummFineRecalc.MovementItemId = MovementItem.Id
-                                            AND MIFloat_SummFineRecalc.DescId = zc_MIFloat_SummFineRecalc()
-                 LEFT JOIN MovementItemFloat AS MIFloat_SummHospRecalc
-                                             ON MIFloat_SummHospRecalc.MovementItemId = MovementItem.Id
-                                            AND MIFloat_SummHospRecalc.DescId = zc_MIFloat_SummHospRecalc()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummFine
+                                             ON MIFloat_SummFine.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummFine.DescId = zc_MIFloat_SummFine()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
+                                             ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummFineOthRecalc
+                                             ON MIFloat_SummFineOthRecalc.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummHospOthRecalc
+                                             ON MIFloat_SummHospOthRecalc.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
 
                  LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                ON MIBoolean_Main.MovementItemId = MovementItem.Id
@@ -193,8 +202,10 @@ BEGIN
                                                         , inSummSocialAdd      := SummSocialAdd
                                                         , inSummChildRecalc    := SummChildRecalc
                                                         , inSummMinusExtRecalc := SummMinusExtRecalc
-                                                        , inSummFineRecalc     := SummFineRecalc
-                                                        , inSummHospRecalc     := SummHospRecalc
+                                                        , inSummFine           := SummFine
+                                                        , inSummFineOthRecalc  := SummFineOthRecalc
+                                                        , inSummHosp           := SummHosp
+                                                        , inSummHospOthRecalc  := SummHospOthRecalc
                                                         , inComment            := 'копирование из другой ведомости'
                                                         , inInfoMoneyId        := InfoMoneyId
                                                         , inUnitId             := UnitId

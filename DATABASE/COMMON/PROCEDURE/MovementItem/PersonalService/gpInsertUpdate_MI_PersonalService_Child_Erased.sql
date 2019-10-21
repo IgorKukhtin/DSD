@@ -98,8 +98,10 @@ end if;
                                                              , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
                                                              , inSummChildRecalc        := 0
                                                              , inSummMinusExtRecalc     := 0
-                                                             , inSummFineRecalc         := 0
-                                                             , inSummHospRecalc         := 0
+                                                             , inSummFine               := 0
+                                                             , inSummFineOthRecalc      := 0
+                                                             , inSummHosp               := 0
+                                                             , inSummHospOthRecalc      := 0
                                                              , inComment                := MIString_Comment.ValueData
                                                              , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                              , inUnitId                 := MILinkObject_Unit.ObjectId

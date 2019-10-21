@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -33,8 +37,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummSocialAdd         TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChildRecalc       TFloat    , -- Алименты - удержание (ввод)
     IN inSummMinusExtRecalc    TFloat    , -- Удержания сторон. юр.л. (ввод)
-    IN inSummFineRecalc        TFloat    , -- штраф (ввод)
-    IN inSummHospRecalc        TFloat    , -- больничный (ввод)
+    IN inSummFine              TFloat    , -- штраф
+    IN inSummFineOthRecalc     TFloat    , -- штраф (ввод для распределения)
+    IN inSummHosp              TFloat    , -- больничный
+    IN inSummHospOthRecalc     TFloat    , -- больничный (ввод для распределения)
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -73,8 +79,10 @@ BEGIN
                                                      , inSummSocialAdd         := inSummSocialAdd
                                                      , inSummChildRecalc       := inSummChildRecalc
                                                      , inSummMinusExtRecalc    := inSummMinusExtRecalc
-                                                     , inSummFineRecalc        := inSummFineRecalc
-                                                     , inSummHospRecalc        := inSummHospRecalc
+                                                     , inSummFine              := inSummFine
+                                                     , inSummFineOthRecalc     := inSummFineOthRecalc
+                                                     , inSummHosp              := inSummHosp
+                                                     , inSummHospOthRecalc     := inSummHospOthRecalc
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
                                                      , inUnitId                := inUnitId
