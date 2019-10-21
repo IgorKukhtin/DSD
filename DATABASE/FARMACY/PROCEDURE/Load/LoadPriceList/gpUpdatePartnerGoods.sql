@@ -214,6 +214,25 @@ BEGIN
              WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
               AND Object_Goods_View.Id NOT IN (SELECT GoodsId FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
             ) AS DDD;
+            
+
+      PERFORM 
+            -- Обновляем производителя для товара Штрихкод
+            lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), DD.Id, DD.ProducerName)
+
+      FROM (
+            WITH tmpObject_Goods_View AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsName 
+                                          FROM Object_Goods_View 
+                                          WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_BarCode())
+                  
+            SELECT Object_Goods_View.Id, LoadPriceListItem.ProducerName
+            FROM LoadPriceListItem
+
+                 INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
+                                                 ON Object_Goods_View.GoodsName = LoadPriceListItem.BarCode
+                       
+            WHERE LoadPriceListItem.GoodsId <> 0        
+              AND LoadPriceListItem.LoadPriceListId = inId) AS DD;
    END IF;
 
 
