@@ -49,10 +49,9 @@ BEGIN
    EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-         PERFORM lpAddObject_Goods_Temp_Error('gpDelete_Object_LinkGoods', text_var1::TVarChar, inUserId);
+         PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_LinkGoods', text_var1::TVarChar, inUserId);
    END;
    
-
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= inUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 

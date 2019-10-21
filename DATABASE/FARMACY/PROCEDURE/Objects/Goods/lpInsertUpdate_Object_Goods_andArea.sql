@@ -47,7 +47,7 @@ BEGIN
  
   -- сохранили свойство
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_UKTZED(), ioId, inCodeUKTZED);
-  
+    
   -- Сохранили в плоскую таблицй
   BEGIN
     UPDATE Object_Goods_Juridical SET AreaId      = inAreaId

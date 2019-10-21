@@ -56,7 +56,7 @@ BEGIN
                                    ON ObjectBoolean_BarCode.ObjectId = LoadPriceList.ContractId
                                   AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
       WHERE LoadPriceList.Id = inId;
-      
+            
      -- Создаем общие коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, LoadPriceListItem.GoodsName), zc_Enum_GlobalConst_Marion())
             FROM LoadPriceListItem 
@@ -126,7 +126,7 @@ BEGIN
                        WHERE ObjectId = vbJuridicalId)
         GROUP BY LoadPriceListItem.GoodsId , 
                  Object_Goods.Id ;
-   
+
    IF vbisMorionCode = TRUE
    THEN
        -- Выбираем коды Мориона, у которых нет стыковки с главным товаром
@@ -159,8 +159,8 @@ BEGIN
         AND Object.DescId = zc_Object_Goods()
         ;
         */
-     
-      PERFORM 
+
+/*      PERFORM 
             --Обновляем Наименование для товара Код Мариона
             lpInsertUpdate_Object (Object_Goods_View.Id, zc_Object_Goods(), LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName)
             -- Обновляем производителя для товара Код Мариона
@@ -171,7 +171,28 @@ BEGIN
                                  AND LoadPriceListItem.LoadPriceListId = inId
       WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() 
         AND LoadPriceListItem.GoodsId <> 0
-      ;
+*/
+
+      PERFORM 
+            --Обновляем Наименование для товара Код Мариона
+            lpInsertUpdate_Object (DD.Id, zc_Object_Goods(), DD.CommonCode, DD.GoodsName)
+            -- Обновляем производителя для товара Код Мариона
+          , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), DD.Id, DD.ProducerName)
+
+      FROM (
+            WITH tmpObject_Goods_View AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCodeInt 
+                                          FROM Object_Goods_View 
+                                          WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion())
+                  
+            SELECT Object_Goods_View.Id, LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName, LoadPriceListItem.ProducerName
+            FROM LoadPriceListItem
+
+                 INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
+                                                 ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
+                       
+            WHERE LoadPriceListItem.GoodsId <> 0        
+              AND LoadPriceListItem.LoadPriceListId = inId) AS DD;
+
    END IF;
 
    IF vbisBarCode = TRUE

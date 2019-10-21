@@ -32,7 +32,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink.ObjectId
                                AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-      WHERE ObjectLink.ObjectId = ioId
+      WHERE ObjectLink.ObjectId = inId
         AND ObjectLink.DescId = zc_ObjectLink_LinkGoods_Goods();
 
       PERFORM lpDelete_Object_Goods_Link(vbGoodsId, vbGoodsMainId, vbObjectId, vbUserId);
@@ -50,15 +50,3 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpDelete_Object_LinkGoods (Integer, TVarChar) OWNER TO postgres;
-
-  
-/*---------------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
- 21.10.19                                                      *
- 16.10.14                         *
-  
-*/
-
--- тест
--- SELECT * FROM gpInsertUpdate_Object_LinkGoods (ioId:=0, inGoodsMainId:=5, inGoodsId:=6, inRetailId:=0, inSession:='2')

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpDelete_Object_Goods_Link(
 
     IN inUserId              Integer       -- текущий пользователь
 )
-RETURNS integer AS
+RETURNS VOID AS
 $BODY$
    DECLARE text_var1 text;
 BEGIN
