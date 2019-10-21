@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE text_var1 text;
 BEGIN
     --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
     vbUserId := inSession;
@@ -37,6 +38,21 @@ BEGIN
             -- ТОП - позиция
             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), vbGoodsId, TRUE);
         END IF;
+
+         -- Сохранили в плоскую таблицй
+        BEGIN
+
+           -- сохраняем цену
+            -- если цена в экселе > 0 , ставить этим товарам zc_ObjectBoolean_Goods_TOP
+            -- ТОП - позиция
+          UPDATE Object_Goods_Retail SET Price  = inPrice
+                                       , isTOP  = CASE WHEN COALESCE(inPrice,0) > 0 THEN TRUE ELSE isTOP END
+          WHERE Object_Goods_Retail.GoodsMainId IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+        EXCEPTION
+           WHEN others THEN 
+             GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+             PERFORM lpAddObject_Goods_Temp_Error('gpInsertUpdate_Object_Goods_PriceLoad', text_var1::TVarChar, vbUserId);
+        END;
     ELSE 
         RAISE EXCEPTION 'Ошибка.Товар с кодом <%> не найден.', inGoodsCode;
     END IF;
@@ -48,6 +64,7 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 21.10.19                                                      * 
  02.04.18         *
-*/
+*/*/

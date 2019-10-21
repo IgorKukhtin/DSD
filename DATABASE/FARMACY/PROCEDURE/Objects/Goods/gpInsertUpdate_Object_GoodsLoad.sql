@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbGoodsMainId Integer;
   DECLARE vbLinkId Integer;
   DECLARE vbMeasureId Integer;
+  DECLARE text_var1 text;
 BEGIN
 
     vbUserId := inSession;
@@ -66,6 +67,15 @@ BEGIN
                                    );
      END IF;  
 
+      -- Сохранили в плоскую таблицй
+     BEGIN
+
+       PERFORM lpInsertUpdate_Object_Goods_Link (ioId, vbGoodsMainId, inObjectId, vbUserId); 
+     EXCEPTION
+        WHEN others THEN
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+          PERFORM gpInsertUpdate_Object_GoodsLink('gpInsertUpdate_Object_GoodsLoad', text_var1::TVarChar, vbUserId);
+     END;
 
 END;$BODY$
 
@@ -75,7 +85,8 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarC
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 21.10.19                                                      *
  10.10.14                        *
  28.08.14                        *
  30.07.14                        *

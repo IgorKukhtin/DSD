@@ -127,7 +127,7 @@ BEGIN
                    INNER JOIN tmpBoard AS Board
                                        ON Board.UnitID = Movement.UnitID
                                       AND Board.DateStart <= Movement.OperDate
-                                      AND Board.DateEnd > Movement.OperDate
+                                      AND (Board.DateEnd + INTERVAL '30 second') > Movement.OperDate
                                       AND Board.PayrollGroupID = zc_Enum_PayrollGroup_Check()),
            tmpCheckCount AS (
                SELECT  Movement.ID                                        AS ID
@@ -385,6 +385,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 19.10.19                                                        *
  09.09.19                                                        *
  02.09.19                                                        *
  22.08.19                                                        *

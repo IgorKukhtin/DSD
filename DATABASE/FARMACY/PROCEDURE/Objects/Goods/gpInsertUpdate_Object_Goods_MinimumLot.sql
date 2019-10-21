@@ -15,6 +15,7 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
+   DECLARE text_var1 text;
 BEGIN
     --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
     vbUserId := inSession;
@@ -53,6 +54,19 @@ BEGIN
     IF COALESCE(vbGoodsId,0) <> 0
     THEN
         PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Goods_MinimumLot(), vbGoodsId, inMinimumLot);    
+
+          -- Сохранили в плоскую таблицй
+        BEGIN
+          UPDATE Object_Goods_Juridical SET MinimumLot = NULLIF(inMinimumLot, 0)
+                                          , UserUpdateId = vbUserId
+                                          , DateUpdate   = CURRENT_TIMESTAMP
+          WHERE Object_Goods_Juridical.Id = inId
+            AND COALESCE(Object_Goods_Juridical.MinimumLot, 0) <> COALESCE(inMinimumLot, 0);  
+        EXCEPTION
+           WHEN others THEN 
+             GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+             PERFORM lpAddObject_Goods_Temp_Error('gpInsertUpdate_Object_Goods_MinimumLot', text_var1::TVarChar, vbUserId);
+        END;
     END IF;
 END;
 $BODY$
@@ -60,7 +74,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.10.19                                                                      * 
  08.02.18         *
  15.08.15                                                          *
 

@@ -13,13 +13,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLink(
 )
 RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
    DECLARE vbId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   UserId := inSession;
+   vbUserId := inSession;
    
    IF COALESCE(ioId, 0) = 0 THEN
      -- Ищем по коду и inObjectId
@@ -31,7 +32,7 @@ BEGIN
       vbGoodsId := ioId;
     END IF;
    
-    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inObjectId, UserId);
+    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inObjectId, vbUserId);
 
     SELECT Id INTO vbId 
        FROM Object_LinkGoods_View
@@ -47,8 +48,18 @@ BEGIN
                                    );
      END IF;    
 
+      -- Сохранили в плоскую таблицй
+     BEGIN
+
+       PERFORM lpInsertUpdate_Object_Goods_Link (vbGoodsId, inGoodsMainId, inObjectId, vbUserId); 
+     EXCEPTION
+        WHEN others THEN
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+          PERFORM gpInsertUpdate_Object_GoodsLink('lpInsertUpdate_Object_Goods_Link', text_var1::TVarChar, vbUserId);
+     END;
+
    -- сохранили протокол
-   -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   -- PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
@@ -58,11 +69,11 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Inte
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 21.10.19                                                      *
  19.07.14                        *
 
 */                                          
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Goods
-                                           
