@@ -3919,7 +3919,7 @@ begin
       begin
         isHasItems := true;
         if FieldbyName('Weight').AsFloat > 0
-        then TotalW:= FieldbyName('Count').AsFloat * FieldbyName('Weight').AsFloat
+        then TotalW:= TotalW + FieldbyName('Count').AsFloat * FieldbyName('Weight').AsFloat
         else TotalW:= TotalW + FieldbyName('Count').AsFloat;
         //break;
       end;
