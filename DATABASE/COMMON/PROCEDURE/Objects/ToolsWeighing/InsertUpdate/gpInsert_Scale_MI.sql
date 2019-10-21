@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
-    IN inCount                 TFloat    , -- Количество пакетов или Количество батонов или Кол-во для Печати ЭТИКЕТОК
+    IN inCount                 TFloat    , -- Количество пакетов или Количество батонов или Кол-во втулок (склад Специй) или Кол-во для Печати ЭТИКЕТОК
     IN inHeadCount             TFloat    , --
     IN inBoxCount              TFloat    , --
     IN inBoxCode               Integer   , --
@@ -54,6 +54,10 @@ $BODY$
    DECLARE vbChangePercent         TFloat;
             
    DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
+
+   DECLARE vbWeight_goods              TFloat;
+   DECLARE vbWeightTare_goods          TFloat;
+   DECLARE vbAmount_byWeightTare_goods TFloat;
 
    DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
@@ -105,6 +109,49 @@ BEGIN
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
      WHERE Movement.Id = inMovementId;
 
+
+     -- если склад Специй + Кол-во втулок - меняем Значение
+     IF inBranchCode BETWEEN 301 AND 310 AND 1=0
+     THEN
+         -- вес для перевода из веса в метры или что-то еще
+         vbWeight_goods:= (SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_Weight());
+         --
+         IF vbWeight_goods > 0
+         THEN
+             -- вес втулки
+             vbWeightTare_goods:= COALESCE ((SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_WeightTare()), 0);
+
+             -- Проверка
+             IF vbWeightTare_goods > 0 AND COALESCE (inCount, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не введено кол-во втулок с весом <%>', zfConvert_FloatToString (vbWeightTare_goods);
+             END IF;
+             -- если все-таки втулки нет
+             IF inCount < 0 THEN inCount:= 0; END IF;
+             
+             IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
+                IN (zc_Measure_Sht() -- шт.
+                   )
+             THEN
+                 -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
+                 vbAmount_byWeightTare_goods:= ROUND (inRealWeight / vbWeight_goods - vbWeightTare_goods * inCount);
+             ELSE
+                 -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
+                 vbAmount_byWeightTare_goods:= inRealWeight / vbWeight_goods - vbWeightTare_goods * inCount;
+             END IF;
+
+             -- Проверка
+             IF vbAmount_byWeightTare_goods <= 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Расчетное кол-во за вычетом веса втулок = <%> Не может быть <= 0.', zfConvert_FloatToString (vbAmount_byWeightTare_goods);
+             END IF;
+
+         ELSE
+             -- обнулили Кол-во втулок
+             inCount:= 0;
+         END IF;
+
+     END IF;
 
      -- если Тара - меняем Значение на 0
      IF inChangePercentAmount <> 0
@@ -292,8 +339,10 @@ BEGIN
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                        , inMovementId          := inMovementId
-                                                       , inGoodsId             := inGoodsId
-                                                       , inAmount              := CASE WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                       , inGoodsId             := inGoodsId 
+                                                       , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                                            THEN vbAmount_byWeightTare_goods
+                                                                                       WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
                                                                                         AND vbAmount_byPack <> 0
                                                                                             THEN vbAmount_byPack
                                                                                        ELSE inRealWeight - inCountTare * inWeightTare
@@ -302,6 +351,8 @@ BEGIN
                                                                                        /*WHEN vbRetailId IN (310828) -- Метро
                                                                                             THEN CEIL ((inRealWeight - inCountTare * inWeightTare) * 100) / 100
                                                                                        */
+                                                                                       WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                                            THEN vbAmount_byWeightTare_goods
                                                                                        WHEN inIsBarCode = TRUE
                                                                                             THEN (inRealWeight - inCountTare * inWeightTare)
                                                                                        WHEN inChangePercentAmount = 0

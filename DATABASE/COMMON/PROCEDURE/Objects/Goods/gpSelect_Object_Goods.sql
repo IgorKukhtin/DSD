@@ -168,11 +168,10 @@ BEGIN
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
+                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
-                                   ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id 
-                                  AND ObjectFloat_WeightTare.DescId = zc_ObjectFloat_Goods_WeightTare()
+                                   ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                      ON ObjectBoolean_PartionCount.ObjectId = Object_Goods.Id
@@ -280,7 +279,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  09.10.19         * add WeightTare
  21.03.19         *
- 12.12.18         * 
+ 12.12.18         *
  18.10.18         *
  15.04.15         * add GoodsPlatform
  23.02.15         * add inShowAll

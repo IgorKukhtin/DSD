@@ -20,17 +20,18 @@ $BODY$
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
 
-  DECLARE vbPartnerId Integer;
-  DECLARE vbUnitId_From Integer;
+  DECLARE vbPartnerId        Integer;
+  DECLARE vbUnitId_From      Integer;
   DECLARE vbArticleLoss_From Integer;
-  DECLARE vbContractId  Integer;
+  DECLARE vbContractId       Integer;
+  DECLARE vbIsLessWeigth     Boolean;
 BEGIN
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := inUserId :: TVarChar);
 
      -- таблица - элементы документа
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , GoodsId Integer, GoodsKindId Integer
-                               , OperCount TFloat, OperCount_Second TFloat, OperSumm_Partner TFloat
+                               , OperCount TFloat, OperCount_Second TFloat, OperCount_Weight TFloat, OperCount_Weight_Second TFloat, OperSumm_Partner TFloat
                                , ChangePercent TFloat, PriceEDI TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 
@@ -45,9 +46,15 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+          
+          , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
+                   OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
+                      THEN TRUE
+                 ELSE FALSE
+            END AS шsLessWeigth
 
             INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbIsLessWeigth
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -70,6 +77,13 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                       ON MovementLinkObject_Route.MovementId = Movement.Id
+                                      AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+          LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_OrderExternal()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
@@ -84,7 +98,7 @@ BEGIN
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, GoodsKindId
-                         , OperCount, OperCount_Second, OperSumm_Partner
+                         , OperCount, OperCount_Second, OperCount_Weight, OperCount_Weight_Second, OperSumm_Partner
                          , ChangePercent, PriceEDI, Price, CountForPrice)
         SELECT
               _tmp.MovementItemId
@@ -93,6 +107,10 @@ BEGIN
 
             , _tmp.OperCount
             , _tmp.OperCount_Second
+              -- вес
+            , _tmp.OperCount_Weight
+              -- вес дозаказ
+            , _tmp.OperCount_Weight_Second
 
               -- конечная сумма по Контрагенту - с округлением до 2-х знаков
             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
@@ -133,6 +151,10 @@ BEGIN
                   , tmpMI.OperCount
                     -- количество дозаказ
                   , tmpMI.OperCount_Second
+                    -- вес
+                  , tmpMI.OperCount_Weight
+                    -- вес дозаказ
+                  , tmpMI.OperCount_Weight_Second
 
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST ((tmpMI.OperCount + tmpMI.OperCount_Second) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
@@ -145,6 +167,9 @@ BEGIN
 
                    , (MovementItem.Amount) AS OperCount
                    , (COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS OperCount_Second
+
+                   , (MovementItem.Amount                          * CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS OperCount_Weight
+                   , (COALESCE (MIFloat_AmountSecond.ValueData, 0) * CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS OperCount_Weight_Second
 
                    , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                    , COALESCE (MIFloat_PriceEDI.ValueData, 0) AS PriceEDI
@@ -181,11 +206,26 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                   LEFT JOIN ObjectLink AS ObjectLink_Measure
+                                        ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight 
+                                         ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                        AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_OrderExternal()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmpMI
              ) AS _tmp;
+
+     -- проверка - если не разрешен вес < 5 и в документе < 5
+     IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Разрешены заявки с общим весом >= 5 кг.%Проведение заявки с весом = % кг. невозможно.'
+                        , CHR(13)
+                        , zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))
+                         ;
+     END IF;
 
 
      -- Расчеты сумм
