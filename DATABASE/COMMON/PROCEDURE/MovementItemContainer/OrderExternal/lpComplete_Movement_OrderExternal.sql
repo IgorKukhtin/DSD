@@ -219,13 +219,13 @@ BEGIN
              ) AS _tmp;
 
      -- проверка - если не разрешен вес < 5 и в документе < 5
-     IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < 5
+     /*IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < 5
      THEN
          RAISE EXCEPTION 'Ошибка.Разрешены заявки с общим весом >= 5 кг.%Проведение заявки с весом = % кг. невозможно.'
                         , CHR(13)
                         , zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))
                          ;
-     END IF;
+     END IF;*/
 
 
      -- Расчеты сумм

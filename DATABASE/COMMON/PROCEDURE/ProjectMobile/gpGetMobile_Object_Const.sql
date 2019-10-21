@@ -195,7 +195,7 @@ BEGIN
             , getMobileConst.CriticalDebtSum
             , zc_Google_APIKey() AS APIKey
 
-            , 5::TFloat   AS CriticalWeight
+            , 0::TFloat   AS CriticalWeight
 
        FROM tmpPersonal
             LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1
@@ -268,7 +268,7 @@ FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для: '+FloatToStr(
 */
 -- тест
 -- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion();
--- UPDATE ObjectString SET ValueData = '1.55.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
+-- UPDATE ObjectString SET ValueData = '1.58.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')
 -- D:\Project-Basis\Bin\aMobile.sdb
