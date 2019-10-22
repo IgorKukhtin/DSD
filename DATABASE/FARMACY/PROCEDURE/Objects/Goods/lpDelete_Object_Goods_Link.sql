@@ -51,6 +51,21 @@ BEGIN
               WHERE Object_Goods_Retail.Id = inGoodsId;
             END IF;
        
+         -- Связь с Штрихкодом
+       ELSEIF inObjectId =zc_Enum_GlobalConst_BarCode()
+       THEN
+       
+         -- Удаляем связь с кодом Штрихкодом       
+         
+         IF EXISTS(SELECT 1 FROM Object_Goods_BarCode WHERE  GoodsMainId = inGoodsMainId AND BarCodeId = inGoodsId)
+         THEN
+         
+           DELETE FROM Object_Goods_BarCode WHERE  GoodsMainId = inGoodsMainId AND BarCodeId = inGoodsId;
+         END IF;
+       ELSEIF inObjectId =  zc_Enum_GlobalConst_Marion()
+       THEN
+          UPDATE Object_Goods_Main SET MorionCode = NULL
+          WHERE Object_Goods_Main.Id = inGoodsMainId;
        ELSE
     /*     RAISE EXCEPTION 'Значение <(%) %> не допустимо.', inObjectId,
            COALESCE((SELECT ObjectDesc_GoodsObject.ItemName
@@ -58,12 +73,12 @@ BEGIN
                           LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
                      WHERE Object_GoodsObject.Id = inObjectId), '');
     */
-            PERFORM lpAddObject_Goods_Temp_Error('lpInsertUpdate_Object_Goods_Link',
-                Format('Значение <(%s) %s> не допустимо.', inObjectId,
+            PERFORM lpAddObject_Goods_Temp_Error('lpDelete_Object_Goods_Link',
+                Format('Значение <(%s) %s> не допустимо. Товар % Главный товар %', inObjectId,
                        COALESCE((SELECT ObjectDesc_GoodsObject.ItemName
                        FROM Object AS Object_GoodsObject
                           LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
-                       WHERE Object_GoodsObject.Id = inObjectId), '')) , inUserId);
+                       WHERE Object_GoodsObject.Id = inObjectId), ''), inGoodsId, inGoodsMainId) , inUserId);
        END IF;
 
     EXCEPTION
@@ -86,4 +101,4 @@ ALTER FUNCTION lpDelete_Object_Goods_Link(Integer, Integer, Integer, Integer) OW
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Object_Goods_Link
+-- SELECT * FROM lpDelete_Object_Goods_Link

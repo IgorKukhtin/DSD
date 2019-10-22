@@ -97,7 +97,28 @@ BEGIN
               AND COALESCE(Object_Goods_Retail.GoodsMainId, 0) <> COALESCE(inGoodsMainId, 0);
           END IF;
        
-       ELSE
+         -- Связь с Штрихкодом
+       ELSEIF inObjectId = zc_Enum_GlobalConst_BarCode()
+       THEN
+       
+         -- Связь с кодом Штрихкодом       
+         
+         PERFORM lpInsertUpdate_Object_Goods_BarCode (inGoodsMainId, inGoodsId, 
+                 (SELECT Object_Goods_BarCode.ValueData FROM Object AS Object_Goods_BarCode WHERE Object_Goods_BarCode.Id = inGoodsId), inUserId);
+       ELSEIF inObjectId =  zc_Enum_GlobalConst_Marion()
+       THEN
+            -- Устанавливаем кодом мориона       
+         IF COALESCE((SELECT Object_Goods_Morion.ObjectCode FROM Object AS Object_Goods_Morion WHERE Object_Goods_Morion.Id = inGoodsId), 0) <>
+            COALESCE((SELECT Object_Goods_Main.MorionCode FROM Object_Goods_Main WHERE Object_Goods_Main.Id = inGoodsMainId), 0)
+         THEN
+            UPDATE Object_Goods_Main SET MorionCode = NULLIF((SELECT Object_Goods_Morion.ObjectCode AS MorionCode 
+                                                              FROM Object AS Object_Goods_Morion 
+                                                              WHERE Object_Goods_Morion.Id = inGoodsId), 0)
+                                            , UserUpdateId = inUserId
+                                            , DateUpdate   = CURRENT_TIMESTAMP
+            WHERE Object_Goods_Main.Id = inGoodsMainId;
+         END IF;
+       ELSE 
     /*     RAISE EXCEPTION 'Значение <(%) %> не допустимо.', inObjectId,
            COALESCE((SELECT ObjectDesc_GoodsObject.ItemName
                      FROM Object AS Object_GoodsObject

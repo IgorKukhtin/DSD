@@ -178,6 +178,8 @@ BEGIN
             lpInsertUpdate_Object (DD.Id, zc_Object_Goods(), DD.CommonCode, DD.GoodsName)
             -- Обновляем производителя для товара Код Мариона
           , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), DD.Id, DD.ProducerName)
+            -- Обновляем Код Мариона в плоской таблице
+          , lpUpdate_Object_Goods_MorionCode(DD.Id, DD.CommonCode, vbUserId)
 
       FROM (
             WITH tmpObject_Goods_View AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCodeInt 
