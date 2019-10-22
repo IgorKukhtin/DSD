@@ -117,13 +117,13 @@ BEGIN
                                     inSession )
        FROM LoadPriceListItem
                JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
-                                FROM Object_Goods_View 
-                               WHERE ObjectId = vbJuridicalId
+                     FROM Object_Goods_View 
+                     WHERE ObjectId = vbJuridicalId
                     ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
           WHERE GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
-           AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN 
-               (SELECT GoodsMainId, GoodsId FROM Object_LinkGoods_View
-                       WHERE ObjectId = vbJuridicalId)
+           AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN (SELECT GoodsMainId, GoodsId
+                                                                    FROM Object_LinkGoods_View
+                                                                    WHERE ObjectId = vbJuridicalId)
         GROUP BY LoadPriceListItem.GoodsId , 
                  Object_Goods.Id ;
 
@@ -148,52 +148,27 @@ BEGIN
             ) AS DDD;
 
      --Обновляем Наименование для товара Код Мариона
-     /*UPDATE Object
-      SET ValueData = LoadPriceListItem.GoodsName
-      FROM Object_Goods_View
-           JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
-                                 AND LoadPriceListItem.GoodsId <> 0
-                                 AND LoadPriceListItem.LoadPriceListId = inId
-      WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() 
-        AND Object_Goods_View.Id = Object.Id
-        AND Object.DescId = zc_Object_Goods()
-        ;
-        */
+     PERFORM 
+           --Обновляем Наименование для товара Код Мариона
+           lpInsertUpdate_Object (DD.Id, zc_Object_Goods(), DD.CommonCode, DD.GoodsName)
+           -- Обновляем производителя для товара Код Мариона
+         , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), DD.Id, DD.ProducerName)
+           -- Обновляем Код Мариона в плоской таблице
+         , lpUpdate_Object_Goods_MorionCode(DD.Id, DD.CommonCode, vbUserId)
 
-/*      PERFORM 
-            --Обновляем Наименование для товара Код Мариона
-            lpInsertUpdate_Object (Object_Goods_View.Id, zc_Object_Goods(), LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName)
-            -- Обновляем производителя для товара Код Мариона
-          , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), Object_Goods_View.Id, LoadPriceListItem.ProducerName)
+     FROM (
+           WITH tmpObject_Goods_View AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCodeInt 
+                                         FROM Object_Goods_View 
+                                         WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion())
+                 
+           SELECT Object_Goods_View.Id, LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName, LoadPriceListItem.ProducerName
+           FROM LoadPriceListItem
 
-      FROM Object_Goods_View
-           JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
-                                 AND LoadPriceListItem.LoadPriceListId = inId
-      WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() 
-        AND LoadPriceListItem.GoodsId <> 0
-*/
-
-      PERFORM 
-            --Обновляем Наименование для товара Код Мариона
-            lpInsertUpdate_Object (DD.Id, zc_Object_Goods(), DD.CommonCode, DD.GoodsName)
-            -- Обновляем производителя для товара Код Мариона
-          , lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), DD.Id, DD.ProducerName)
-            -- Обновляем Код Мариона в плоской таблице
-          , lpUpdate_Object_Goods_MorionCode(DD.Id, DD.CommonCode, vbUserId)
-
-      FROM (
-            WITH tmpObject_Goods_View AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCodeInt 
-                                          FROM Object_Goods_View 
-                                          WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion())
-                  
-            SELECT Object_Goods_View.Id, LoadPriceListItem.CommonCode, LoadPriceListItem.GoodsName, LoadPriceListItem.ProducerName
-            FROM LoadPriceListItem
-
-                 INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
-                                                 ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
-                       
-            WHERE LoadPriceListItem.GoodsId <> 0        
-              AND LoadPriceListItem.LoadPriceListId = inId) AS DD;
+                INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
+                                                ON LoadPriceListItem.CommonCode = Object_Goods_View.GoodsCodeInt
+                      
+           WHERE LoadPriceListItem.GoodsId <> 0        
+             AND LoadPriceListItem.LoadPriceListId = inId) AS DD;
 
    END IF;
 
@@ -212,6 +187,7 @@ BEGIN
              FROM Object_Goods_View 
                JOIN LoadPriceListItem ON LoadPriceListItem.BarCode = Object_Goods_View.GoodsName
                                      AND LoadPriceListItem.LoadPriceListId = inId
+                                     AND LoadPriceListItem.BarCode <> ''
       
              WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
               AND Object_Goods_View.Id NOT IN (SELECT GoodsId FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
@@ -233,8 +209,10 @@ BEGIN
                  INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
                                                  ON Object_Goods_View.GoodsName = LoadPriceListItem.BarCode
                        
-            WHERE LoadPriceListItem.GoodsId <> 0        
-              AND LoadPriceListItem.LoadPriceListId = inId) AS DD;
+            WHERE LoadPriceListItem.GoodsId <> 0
+              AND LoadPriceListItem.BarCode <> ''
+              AND LoadPriceListItem.LoadPriceListId = inId
+              AND ) AS DD;
    END IF;
 
 
