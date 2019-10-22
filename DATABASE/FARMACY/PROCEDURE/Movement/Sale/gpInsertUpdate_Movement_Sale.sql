@@ -96,6 +96,20 @@ BEGIN
           END IF;
    END IF;
 
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      AND vbUserId <> 235009 
+      AND EXISTS(SELECT 1 FROM MovementLinkMovement AS MLM_Child
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                   ON MovementLinkObject_SPKind.MovementId = MLM_Child.MovementId
+                                                  AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                  AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_1303()
+                     INNER JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+                 WHERE MLM_Child.MovementId = ioId
+                   AND MLM_Child.descId = zc_MovementLinkMovement_Child())
+   THEN
+     RAISE EXCEPTION 'Ошибка. По документу выписан <Счет (пост.1303)> изменение документа запрещено.';            
+   END IF;        
+
    IF COALESCE (inMedicSP, '') <> ''
       THEN
           inMedicSP:= TRIM (COALESCE (inMedicSP, ''));
@@ -112,7 +126,7 @@ BEGIN
                                                              );
           END IF;
    END IF;
-
+   
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Sale (ioId          := ioId
                                         , inInvNumber   := inInvNumber
@@ -135,7 +149,7 @@ BEGIN
       COALESCE (inInvNumberSP,'') <> '' OR
       COALESCE (inMedicSP,'') <> '' OR
       COALESCE (inMemberSP,'') <> '' THEN
-
+      
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SP(), MovementItem.Id, True)
      FROM MovementItem
      WHERE MovementItem.MovementId = ioId

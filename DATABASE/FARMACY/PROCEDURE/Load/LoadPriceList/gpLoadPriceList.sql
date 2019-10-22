@@ -78,6 +78,12 @@ BEGIN
                             THEN lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPriceOld(), GoodsId, ObjectDate_LastPrice.ValueData)              
                        END
                   ELSE lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPriceOld(), GoodsId, ObjectDate_LastPrice.ValueData) 
+             END,
+             CASE WHEN COALESCE (ObjectDate_LastPriceOLd.ValueData, NULL) <> NULL
+                  THEN CASE WHEN COALESCE (ObjectDate_LastPrice.ValueData, NULL) <> NULL AND ObjectDate_LastPrice.ValueData > ObjectDate_LastPriceOLd.ValueData
+                            THEN lpUpdate_Goods_LastPriceOld (GoodsId, ObjectDate_LastPrice.ValueData, vbUserId)              
+                       END
+                  ELSE lpUpdate_Goods_LastPriceOld (GoodsId, ObjectDate_LastPrice.ValueData, vbUserId) 
              END 
         
       FROM LoadPriceListItem 
@@ -112,6 +118,7 @@ BEGIN
                                                         tmp.Remains , -- остаток
                                                            vbUserId)
         , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), tmp.GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
+        , lpUpdate_Goods_LastPrice (tmp.GoodsId, vbOperDate, vbUserId)
           -- Кол-во позиций по всем прайсам
         --, lpInsertUpdate_Goods_CountPrice (vbMovementId_pl, vbOperDate, tmp.GoodsId)
 
@@ -163,7 +170,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
+ 22.10.19                                                                   *
  18.08.17         *
  21.04.17         *
  28.01.15                        *  меняем цены в случае изменения прайса

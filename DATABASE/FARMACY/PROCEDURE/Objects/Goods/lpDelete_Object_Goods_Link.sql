@@ -74,7 +74,7 @@ BEGIN
                      WHERE Object_GoodsObject.Id = inObjectId), '');
     */
             PERFORM lpAddObject_Goods_Temp_Error('lpDelete_Object_Goods_Link',
-                Format('Значение <(%s) %s> не допустимо. Товар % Главный товар %', inObjectId,
+                Format('Значение <(%s) %s> не допустимо. Товар %s Главный товар %s', inObjectId,
                        COALESCE((SELECT ObjectDesc_GoodsObject.ItemName
                        FROM Object AS Object_GoodsObject
                           LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
@@ -84,7 +84,7 @@ BEGIN
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-         PERFORM lpAddObject_Goods_Temp_Error('lpDelete_Object_Goods_Link', text_var1::TVarChar, vbUserId);
+         PERFORM lpAddObject_Goods_Temp_Error('lpDelete_Object_Goods_Link', text_var1::TVarChar, inUserId);
     END;
 
 END;$BODY$
