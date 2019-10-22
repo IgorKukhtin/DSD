@@ -17,6 +17,7 @@ $BODY$
   DECLARE vbAccountDirectionId_To   Integer;
   DECLARE vbJuridicalId_Basis       Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
+  DECLARE vbContainerId_err         Integer;
   DECLARE vbId_err                  Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
@@ -586,21 +587,25 @@ BEGIN
      IF inUserId <> zc_User_Sybase()
      -- AND inUserId <> 1017903 -- 
      THEN
-         vbId_err:= (WITH tmpContainer AS (SELECT Container.Id, Container.Amount
-                                           FROM _tmpItem
-                                                INNER JOIN Container ON Container.Id = _tmpItem.ContainerId_Goods
-                                                LEFT JOIN ContainerLinkObject AS CLO_Client
-                                                                              ON CLO_Client.ContainerId = Container.Id
-                                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                           WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+         --
+         vbContainerId_err:= (WITH tmpContainer AS (SELECT Container.Id, Container.Amount
+                                                    FROM _tmpItem
+                                                         INNER JOIN Container ON Container.Id = _tmpItem.ContainerId_Goods
+                                                         LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                                       ON CLO_Client.ContainerId = Container.Id
+                                                                                      AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                                    WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+         
+                                                   )
+                              SELECT _tmpItem.ContainerId_Goods
+                              FROM _tmpItem
+                                   LEFT JOIN tmpContainer ON tmpContainer.Id = _tmpItem.ContainerId_Goods
+                              WHERE _tmpItem.OperCount > COALESCE (tmpContainer.Amount, 0)
+                              LIMIT 1
+                             );
+         --
+         vbId_err:= (SELECT Container.PartionId FROM Container WHERE Container.Id = vbContainerId_err);
 
-                                          )
-                     SELECT _tmpItem.PartionId
-                     FROM _tmpItem
-                          LEFT JOIN tmpContainer ON tmpContainer.Id = _tmpItem.ContainerId_Goods
-                     WHERE _tmpItem.OperCount > COALESCE (tmpContainer.Amount, 0)
-                     LIMIT 1
-                    );
      END IF;
      -- проверка: ОСТАТОК должен быть
      IF vbId_err > 0 AND 1=1
@@ -609,8 +614,8 @@ BEGIN
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
                       , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
-                      , zfConvert_FloatToString (COALESCE ((SELECT Container.Amount
-                                                            FROM Container
+                      , zfConvert_FloatToString (COALESCE ((SELECT Container.Amount FROM Container WHERE Container.Id = vbContainerId_err
+                                                          /*FROM Container
                                                                  LEFT JOIN ContainerLinkObject AS CLO_Client
                                                                                                ON CLO_Client.ContainerId = Container.Id
                                                                                               AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
@@ -619,6 +624,7 @@ BEGIN
                                                               AND Container.WhereObjectId = vbUnitId
                                                               AND Container.Amount        > 0
                                                               AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                                                          */
                                                            ), 0))
                       -- , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.ContainerId_Goods = vbId_err), 0))
                       , zfConvert_FloatToString (COALESCE ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.PartionId = vbId_err), 0))
