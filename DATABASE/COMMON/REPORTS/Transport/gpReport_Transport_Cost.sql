@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_Transport_Cost (
     IN inUnitId           Integer   ,
     IN inCarId            Integer   ,
     IN inIsMovement       Boolean   ,
-    IN inIsPersonal       Boolean   ,
+    IN inIsPartner        Boolean   ,
     IN inIsGoods          Boolean   ,
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -27,6 +27,16 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , WeightTransport TFloat, WeightSale TFloat
              , One_KM TFloat, One_KG TFloat
              , isAccount_50000 Boolean
+
+             , MovemenId_Sale Integer
+             , OperDate_Sale  TDateTime
+             , Invnumber_Sale TVarChar
+             , GoodsId        Integer
+             , GoodsCode      Integer
+             , GoodsName      TVarChar
+             , GoodsKindId    Integer
+             , GoodsKindName  TVarChar
+             , Amount_Sale    TFloat
              )   
 AS
 $BODY$
@@ -215,13 +225,13 @@ BEGIN
                                        , tmpContainer.BusinessId
                                        , tmpContainer.isAccount_50000
                           )
-
+        -- выбираем данные путевых из реестра, получаем док. продаж которые указаны в реестре
         , tmpWeight AS (SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
                              , MLO_Route.ObjectId                             AS RouteId
                              , MovementLinkObject_Car.ObjectId                AS CarId
                              , MovementLinkObject_PersonalDriver.ObjectId     AS PersonalDriverId
                              , MovementFloat_MovementItemId.MovementId        AS MovementId_Sale
-                             , MovementLinkObject_To.ObjectId                 AS PartnerId
+                             , MovementLinkObject_To.ObjectId                 AS PartnerId_Sale
                              , SUM (MovemenTFloat_TotalCountKg.ValueData)     AS TotalCountKg
                         FROM MovementLinkMovement AS MLM_Transport
                              JOIN Movement ON Movement.Id = MLM_Transport.MovementId 
@@ -239,6 +249,7 @@ BEGIN
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                           ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId -- покупатель
                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND inIsPartner = TRUE
 
                              LEFT JOIN MovemenTFloat AS MovemenTFloat_TotalCountKg
                                                      ON MovemenTFloat_TotalCountKg.MovementId = MovementFloat_MovementItemId.MovementId
@@ -269,7 +280,40 @@ BEGIN
                                , MovementFloat_MovementItemId.MovementId
                                , MovementLinkObject_To.ObjectId
                        )
-                         
+
+        -- получение данных из док. продаж по товарам
+       , tmpSale_MI AS (SELECT MovementItem.MovementId
+                             , CASE WHEN inisGoods = TRUE THEN MovementItem.Id ELSE 0 END AS MI_Id
+                             , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
+                             , SUM (MovementItem.Amount)    AS Amount
+                         FROM (SELECT DISTINCT tmpWeight.MovementId_Sale FROM tmpWeight) AS tmpSale
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpSale.MovementId_Sale
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                         GROUP BY MovementItem.MovementId
+                                , CASE WHEN inisGoods = TRUE THEN MovementItem.Id ELSE 0 END
+                                , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END
+                       )
+       , tmpMILO_GoodsKind AS (SELECT *
+                               FROM MovementItemLinkObject
+                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
+                                 AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                 AND inisGoods = TRUE
+                              )
+
+        , tmpSale_Goods AS (SELECT tmpSale_MI.MovementId
+                                 , tmpSale_MI.GoodsId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , SUM (tmpSale_MI.Amount) AS Amount
+                            FROM tmpSale_MI
+                                 LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = tmpSale_MI.MI_Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                            GROUP BY tmpSale_MI.MovementId
+                                   , tmpSale_MI.GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                             )
+
         , tmpWeight_All AS (SELECT tmpWeight.MovementTransportId 
                                  , tmpWeight.TotalCountKg
                                  , COALESCE (tmpContainer.CarId, tmpWeight.CarId) AS CarId
@@ -281,10 +325,13 @@ BEGIN
                                  , tmpContainer.ProfitLossId
                                  , tmpContainer.BusinessId
                                  , tmpContainer.isAccount_50000
+                                 , tmpWeight.PartnerId_Sale
+                                 , tmpWeight.MovementId_Sale
                             FROM tmpWeight
                                  LEFT JOIN tmpContainer ON tmpContainer.MovementId = tmpWeight.MovementTransportId
                                                        --AND tmpContainer.RouteId    = tmpWeight.RouteId 
                             )
+                            
 
         , tmpUnion AS (SELECT tmpAll.MovementId
                             , tmpAll.CarId
@@ -307,6 +354,8 @@ BEGIN
                             , SUM(tmpAll.SumAmount_PersonalSendCash) AS SumAmount_PersonalSendCash
                             , SUM(tmpAll.Distance)        AS Distance
                             , SUM(tmpAll.WeightTransport) AS WeightTransport
+                            , tmpAll.MovementId_Sale
+                            , tmpAll.PartnerId_Sale
         
                        FROM ( SELECT tmpContainer.MovementId
                                    , tmpContainer.CarId
@@ -329,6 +378,8 @@ BEGIN
                                    , tmpContainer.SumAmount_PersonalSendCash
                                    , tmpContainer.Distance
                                    , tmpContainer.WeightTransport
+                                   , 0 AS MovementId_Sale
+                                   , 0 AS PartnerId_Sale
  
                               FROM tmpContainer
                              UNION ALL
@@ -353,7 +404,9 @@ BEGIN
                                    , 0 AS SumAmount_PersonalSendCash
                                    , 0 AS Distance
                                    , 0 AS WeightTransport
-       
+                                   , tmpWeight_All.MovementId_Sale
+                                   , tmpWeight_All.PartnerId_Sale
+
                               FROM tmpWeight_All
                              ) AS tmpAll
 
@@ -367,6 +420,8 @@ BEGIN
                               , tmpAll.ProfitLossId
                               , tmpAll.BusinessId
                               , tmpAll.isAccount_50000
+                              , tmpAll.MovementId_Sale
+                              , tmpAll.PartnerId_Sale
                        )
 
 
@@ -409,6 +464,18 @@ BEGIN
             , CAST (CASE WHEN SUM (tmpUnion.WeightTransport) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_ServiceAdd + tmpUnion.SumAmount_PersonalSendCash) /SUM (tmpUnion.WeightTransport)
                          ELSE 0 END AS TFloat)  AS One_KG
             , tmpUnion.isAccount_50000 :: Boolean AS isAccount_50000
+            
+            , Movemen_Sale.Id            AS MovemenId_Sale
+            , Movemen_Sale.OperDate      AS OperDate_Sale
+            , Movemen_Sale.Invnumber     AS Invnumber_Sale
+
+            , Object_Goods.Id            AS GoodsId
+            , Object_Goods.ObjectCode    AS GoodsCode
+            , Object_Goods.ValueData     AS GoodsName
+
+            , Object_GoodsKind.Id         AS GoodsKindId
+            , Object_GoodsKind.ValueData  AS GoodsKindName
+            , SUM (tmpSale_Goods.Amount)  ::TFloat AS Amount_Sale
       FROM tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
                  LEFT JOIN Object_Unit_View  on Object_Unit_View.Id = tmpUnion.UnitId
@@ -431,8 +498,17 @@ BEGIN
                  LEFT JOIN Object                 AS Object_CarModel ON Object_CarModel.Id           = ObjectLink_Car_CarModel.ChildObjectId
                  LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpUnion.ProfitLossId
                  LEFT JOIN Object_Account_View    AS View_Account    ON View_Account.AccountId       = tmpUnion.ProfitLossId
-                 LEFT JOIN Object                 AS Object_Business ON Object_Business.Id           = tmpUnion.BusinessId                               
-               
+                 LEFT JOIN Object                 AS Object_Business ON Object_Business.Id           = tmpUnion.BusinessId
+
+                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id           = tmpUnion.PartnerId_Sale
+                 LEFT JOIN Movement AS Movemen_Sale
+                                    ON Movemen_Sale.Id = tmpUnion.MovementId_Sale
+                                   AND inisMovement = TRUE 
+                 LEFT JOIN tmpSale_Goods ON tmpSale_Goods.MovementId = Movemen_Sale.Id
+
+                 LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpSale_Goods.GoodsId
+                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpSale_Goods.GoodsKindId
+
        GROUP BY COALESCE (Movement.Invnumber, '') , COALESCE (MovementDesc.ItemName, '')
               , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
               , Object_Fuel.ValueData 
@@ -450,7 +526,16 @@ BEGIN
               , COALESCE (View_ProfitLoss.ProfitLossName, View_Account.AccountName)
               , COALESCE (View_ProfitLoss.ProfitLossName_all, View_Account.AccountName_all)
               , tmpUnion.isAccount_50000
-            
+
+            , Movemen_Sale.Id
+            , Movemen_Sale.OperDate
+            , Movemen_Sale.Invnumber
+            , Object_Goods.Id
+            , Object_Goods.ObjectCode
+            , Object_Goods.ValueData
+            , Object_GoodsKind.Id
+            , Object_GoodsKind.ValueData
+
        ORDER BY Object_Unit_View.BusinessName
               , Object_Unit_View.BranchName
               , Object_Unit_View.Name
@@ -459,8 +544,6 @@ BEGIN
               , Object_Car.ValueData 
               , Object_Fuel.ValueData 
               , Object_Route.ValueData 
-              
-              
   ;
          
 END;
@@ -474,4 +557,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Transport_Cost  (inStartDate := ('01.10.2019')::TDateTime , inEndDate := ('02.10.2019')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 0, inCarId := 1200072  , inIsMovement := 'true' ,  inIsPersonal:=False, inIsGoods:= False, inSession := '5');
+-- select * from gpReport_Transport_Cost  (inStartDate := ('01.10.2019')::TDateTime , inEndDate := ('02.10.2019')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 0, inCarId := 1200072  , inIsMovement := False ,  inIsPartner:=False, inIsGoods:= False, inSession := '5');
