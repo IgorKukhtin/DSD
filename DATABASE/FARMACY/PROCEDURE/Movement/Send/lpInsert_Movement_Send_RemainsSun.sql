@@ -483,9 +483,19 @@ BEGIN
              -- отбросили !!закрытые!!
              INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
                                          AND Object_Goods_View.IsClose = FALSE
-             -- отбросили !!закрытые!!
+             -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
+             -- отбросили !!холод!!
+             LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
+                                  ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
+                                 AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+        WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
+           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+              )
+           OR Object_ConditionsKeep.ValueData IS NULL
+
         -- !!!только с таким НТЗ!!!
         -- WHERE tmpObject_Price.MCSValue >= 0.5
         -- !!!отключил, взяли все!!!

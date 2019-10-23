@@ -36,6 +36,13 @@ BEGIN
     AND MovementItem.ObjectId = inPersonalId
     AND MovementItem.DescId = zc_MI_Master();
 
+  -- сохранили протокол
+  PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId, inIsInsert:= FALSE, inIsErased:= TRUE)
+  FROM MovementItem
+  WHERE MovementItem.MovementId = inMovementId
+    AND MovementItem.ObjectId = inPersonalId
+    AND MovementItem.DescId = zc_MI_Master();
+
   -- пересчитали Итоговые суммы по накладной
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
