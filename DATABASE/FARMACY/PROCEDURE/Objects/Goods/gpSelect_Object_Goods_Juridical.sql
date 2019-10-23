@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , ConditionsKeepId Integer, ConditionsKeepName TVarChar
              , AreaId Integer, AreaName TVarChar
              , MinimumLot TFloat
-             , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean
+             , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isUploadYuriFarm Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
              , isErased boolean
@@ -49,11 +49,12 @@ BEGIN
          , Object_Area.ValueData                   AS AreaName
 
          , ObjectFloat_Goods_MinimumLot.ValueData  AS MinimumLot
-         , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload
-         , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)  AS IsPromo
-         , COALESCE(ObjectBoolean_Goods_SpecCondition.ValueData,FALSE)  AS IsSpecCondition
-         , COALESCE(ObjectBoolean_Goods_UploadBadm.ValueData,FALSE)     AS IsUploadBadm
-         , COALESCE(ObjectBoolean_Goods_UploadTeva.ValueData,FALSE)     AS IsUploadTeva
+         , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE)         AS IsUpload
+         , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)          AS IsPromo
+         , COALESCE(ObjectBoolean_Goods_SpecCondition.ValueData,FALSE)    AS IsSpecCondition
+         , COALESCE(ObjectBoolean_Goods_UploadBadm.ValueData,FALSE)       AS IsUploadBadm
+         , COALESCE(ObjectBoolean_Goods_UploadTeva.ValueData,FALSE)       AS IsUploadTeva
+         , COALESCE(ObjectBoolean_Goods_UploadYuriFarm.ValueData,FALSE  ) AS isUploadYuriFarm
 
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate
@@ -94,6 +95,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_UploadTeva
                                   ON ObjectBoolean_Goods_UploadTeva.ObjectId = ObjectLink_Goods_Object.ObjectId
                                  AND ObjectBoolean_Goods_UploadTeva.DescId = zc_ObjectBoolean_Goods_UploadTeva()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_UploadYuriFarm
+                                  ON ObjectBoolean_Goods_UploadYuriFarm.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                 AND ObjectBoolean_Goods_UploadYuriFarm.DescId = zc_ObjectBoolean_Goods_UploadYuriFarm()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = ObjectLink_Goods_Object.ObjectId
@@ -136,10 +140,11 @@ $BODY$
 --ALTER FUNCTION gpSelect_Object_Goods_Juridical(Integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 23.10.19                                                                      * isUploadYuriFarm
  11.12.17         * Goods_UKTZED
  21.10.17         * add Area
  30.03.17                                                      * isUploadTeva

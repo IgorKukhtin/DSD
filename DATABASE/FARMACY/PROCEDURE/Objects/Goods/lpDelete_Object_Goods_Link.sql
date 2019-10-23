@@ -78,7 +78,7 @@ BEGIN
                        COALESCE((SELECT ObjectDesc_GoodsObject.ItemName
                        FROM Object AS Object_GoodsObject
                           LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
-                       WHERE Object_GoodsObject.Id = inObjectId), ''), inGoodsId, inGoodsMainId) , inUserId);
+                       WHERE Object_GoodsObject.Id = inObjectId), ''), COALESCE(inGoodsId, 0), COALESCE(inGoodsMainId, 0)) , inUserId);
        END IF;
 
     EXCEPTION
