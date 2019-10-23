@@ -79,6 +79,8 @@ type
     cxLabel14: TcxLabel;
     cxLabel15: TcxLabel;
     edWeightTare: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    edCountForWeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public

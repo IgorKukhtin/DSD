@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Weight TFloat
              , WeightTare TFloat
+             , CountForWeight TFloat
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , MeasureId Integer,  MeasureName TVarChar
@@ -45,6 +46,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS Name
            , CAST (0 as TFloat)     AS Weight
            , CAST (0 as TFloat)     AS WeightTare
+           , CAST (0 as TFloat)     AS CountForWeight
 
            , CAST (0 as Integer)   AS GoodsGroupId
            , CAST ('' as TVarChar) AS GoodsGroupName 
@@ -88,6 +90,7 @@ BEGIN
            
            , ObjectFloat_Weight.ValueData     AS Weight
            , ObjectFloat_WeightTare.ValueData AS WeightTare
+           , ObjectFloat_CountForWeight.ValueData ::TFloat AS CountForWeight
          
            , Object_GoodsGroup.Id         AS GoodsGroupId
            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
@@ -155,6 +158,10 @@ BEGIN
                                 ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_WeightTare.DescId = zc_ObjectFloat_Goods_WeightTare()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_CountForWeight.DescId = zc_ObjectFloat_Goods_CountForWeight()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -192,6 +199,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.10.19         * CountForWeight
  09.10.19         * add WeightTare
  24.11.14         * add inGoodsGroupAnalystId               
  15.09.14         * add zc_ObjectLink_Goods_GoodsTag()
@@ -207,4 +215,4 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Goods (100, '2')
+-- SELECT * FROM gpGet_Object_Goods (0, '2')
