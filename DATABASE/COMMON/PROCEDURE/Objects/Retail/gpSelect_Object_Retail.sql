@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
+             , isOrderMin Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
@@ -26,6 +27,7 @@ BEGIN
            , Object_Retail.ValueData  AS NAME
 
            , COALESCE (ObjectBoolean_OperDateOrder.ValueData, CAST (False AS Boolean)) AS OperDateOrder
+           , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)             AS isOrderMin
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
@@ -54,7 +56,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
                                 ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
                                AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
-    
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+                                ON ObjectBoolean_isOrderMin.ObjectId = Object_Retail.Id 
+                               AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Retail_isOrderMin()
+
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()

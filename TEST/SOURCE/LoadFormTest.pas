@@ -1367,11 +1367,13 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
@@ -1393,6 +1395,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalUKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalUKTZEDForm');
+  }
 end;
 
  procedure TLoadFormTest.LoadJuridicalOrderFinanceFormTest;

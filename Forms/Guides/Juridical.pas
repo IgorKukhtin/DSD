@@ -100,6 +100,9 @@ type
     isGUID: TcxGridDBColumn;
     GUID: TcxGridDBColumn;
     INN: TcxGridDBColumn;
+    spUpdate_IsOrderMin: TdsdStoredProc;
+    actUpdate_IsOrderMin: TdsdExecStoredProc;
+    bbUpdate_IsOrderMin: TdxBarButton;
   private
     { Private declarations }
   public
