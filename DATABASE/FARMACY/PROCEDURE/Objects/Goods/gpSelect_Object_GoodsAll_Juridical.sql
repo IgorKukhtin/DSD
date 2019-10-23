@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat,
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean,
-               isUpload Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isSpecCondition Boolean,
+               isUpload Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isUploadYuriFarm Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
@@ -96,10 +96,11 @@ BEGIN
            , ObjectBoolean_First.ValueData          AS isFirst
            , ObjectBoolean_Second.ValueData         AS isSecond
            , ObjectBoolean_Published.ValueData      AS isPublished
-           , ObjectBoolean_Goods_IsUpload.ValueData       AS IsUpload
-           , ObjectBoolean_Goods_IsUploadBadm.ValueData   AS isUploadBadm
-           , ObjectBoolean_Goods_IsUploadTeva.ValueData   AS isUploadTeva
-           , ObjectBoolean_Goods_SpecCondition.ValueData  AS IsSpecCondition
+           , ObjectBoolean_Goods_IsUpload.ValueData         AS IsUpload
+           , ObjectBoolean_Goods_IsUploadBadm.ValueData     AS isUploadBadm
+           , ObjectBoolean_Goods_IsUploadTeva.ValueData     AS isUploadTeva
+           , ObjectBoolean_Goods_IsUploadYuriFarm.ValueData AS isUploadYuriFarm
+           , ObjectBoolean_Goods_SpecCondition.ValueData    AS IsSpecCondition
 
            , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData         AS Price
@@ -219,6 +220,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUploadTeva
                                   ON ObjectBoolean_Goods_IsUploadTeva.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_IsUploadTeva.DescId = zc_ObjectBoolean_Goods_UploadTeva()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUploadYuriFarm
+                                  ON ObjectBoolean_Goods_IsUploadYuriFarm.ObjectId = Object_Goods.Id
+                                 AND ObjectBoolean_Goods_IsUploadYuriFarm.DescId = zc_ObjectBoolean_Goods_UploadYuriFarm()
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
@@ -254,10 +258,11 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.10.19                                                       * isUploadYuriFarm
  25.03.16                                        *
  25.02.16         *
 */

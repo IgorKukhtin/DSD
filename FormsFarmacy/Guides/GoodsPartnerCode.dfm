@@ -5,7 +5,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
-  ExplicitHeight = 567
+  ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -169,6 +169,13 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1058#1077#1074#1072
+            Width = 89
+          end
+          object isUploadYuriFarm: TcxGridDBColumn
+            Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1070#1088#1080#1103'-'#1060#1072#1088#1084
+            DataBinding.FieldName = 'isUploadYuriFarm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 89
           end
           object UpdateDate: TcxGridDBColumn
@@ -623,6 +630,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           StoredProc = spUpdate_Goods_isUploadTeva
+        end
+        item
+          StoredProc = spUpdate_Goods_isUploadYuriFarm
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -1717,5 +1727,39 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         MultiSelectSeparator = ','
       end>
     Left = 728
+  end
+  object spUpdate_Goods_isUploadYuriFarm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isUploadYuriFarm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUploadYuriFarm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadYuriFarm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUploadYuriFarm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadYuriFarm'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 191
   end
 end

@@ -109,6 +109,8 @@ type
     GuidesArea: TdsdGuides;
     ProtocolOpenTwoForm: TdsdOpenForm;
     bbProtocolOpenTwoForm: TdxBarButton;
+    spUpdate_Goods_isUploadYuriFarm: TdsdStoredProc;
+    isUploadYuriFarm: TcxGridDBColumn;
   private
     { Private declarations }
   public

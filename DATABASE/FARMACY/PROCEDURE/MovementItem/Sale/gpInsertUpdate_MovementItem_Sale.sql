@@ -50,6 +50,20 @@ BEGIN
       vbAmount := 0;
     END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       AND vbUserId <> 235009 
+       AND EXISTS(SELECT 1 FROM MovementLinkMovement AS MLM_Child
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                    ON MovementLinkObject_SPKind.MovementId = MLM_Child.MovementId
+                                                   AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                   AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_1303()
+                      INNER JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+                  WHERE MLM_Child.MovementId = inMovementId
+                    AND MLM_Child.descId = zc_MovementLinkMovement_Child())
+    THEN
+      RAISE EXCEPTION 'Ошибка. По документу выписан <Счет (пост.1303)> изменение документа запрещено.';            
+    END IF;        
+
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
              (SELECT CASE WHEN COALESCE(MovementString_InvNumberSP.ValueData,'') <> '' OR
