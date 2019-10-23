@@ -1,24 +1,24 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 443
-  ClientWidth = 886
+  ClientWidth = 1060
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 902
+  ExplicitWidth = 1076
   ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 886
+    Width = 1060
     Height = 417
     ExplicitWidth = 886
     ExplicitHeight = 417
     ClientRectBottom = 417
-    ClientRectRight = 886
+    ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 886
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 886
+        Width = 1060
         Height = 417
         ExplicitWidth = 886
         ExplicitHeight = 417

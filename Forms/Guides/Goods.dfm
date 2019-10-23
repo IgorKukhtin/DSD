@@ -466,7 +466,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_WeightTareList'
         end
         item
           Visible = True
@@ -491,6 +491,14 @@ object GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -572,8 +580,12 @@ object GoodsForm: TGoodsForm
       Action = macUpdateGoods_In
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_WeightTareList: TdxBarButton
       Action = macUpdate_WeightTareList
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -980,6 +992,45 @@ object GoodsForm: TGoodsForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actGetImportSetting_Goods_Price: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_Goods_Price'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_Price
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1062#1077#1085#1099
+      ImageIndex = 41
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -1129,7 +1180,12 @@ object GoodsForm: TGoodsForm
     Top = 208
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 464
     Top = 232
   end
@@ -1183,5 +1239,37 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 832
     Top = 139
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_Weight'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 136
   end
 end
