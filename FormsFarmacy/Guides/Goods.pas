@@ -102,6 +102,16 @@ type
     macUpdateNotMarion_No: TMultiAction;
     bbUpdateNotMarion_Yes: TdxBarButton;
     bbUpdateNotMarion_No: TdxBarButton;
+    spUpdateHot_Yes: TdsdStoredProc;
+    spUpdateHot_No: TdsdStoredProc;
+    actUpdateHot_No: TdsdExecStoredProc;
+    actUpdateHot_Yes: TdsdExecStoredProc;
+    actSimpleUpdateHot_No: TMultiAction;
+    actSimpleUpdateHot_Yes: TMultiAction;
+    macUpdateHot_No: TMultiAction;
+    macUpdateHot_Yes: TMultiAction;
+    bbUpdateNot_Yes: TdxBarButton;
+    bbUpdateNot_No: TdxBarButton;
   private
     { Private declarations }
   public

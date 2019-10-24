@@ -10,17 +10,17 @@ inherited GoodsForm: TGoodsForm
   inherited PageControl: TcxPageControl
     Width = 1060
     Height = 417
-    ExplicitWidth = 886
+    ExplicitWidth = 1060
     ExplicitHeight = 417
     ClientRectBottom = 417
     ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 886
+      ExplicitWidth = 1060
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
         Width = 1060
         Height = 417
-        ExplicitWidth = 886
+        ExplicitWidth = 1060
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -193,6 +193,17 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103' ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 70
+          end
+          object isNot: TcxGridDBColumn
+            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'isNot'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Properties.AllowGrayed = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Options.Editing = False
+            Width = 86
           end
           object isNotMarion: TcxGridDBColumn
             Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079'. '#1052#1072#1088#1080#1086#1085
@@ -446,6 +457,14 @@ inherited GoodsForm: TGoodsForm
       FormNameParam.Value = 'TGoodsEditForm'
       DataSetRefresh = spRefreshOneRecord
     end
+    object InsertRecord1: TInsertRecord [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Params = <>
+      Caption = 'InsertRecord1'
+    end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -471,20 +490,18 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end>
     end
-    object spRefreshOneRecord: TdsdDataSetRefresh
-      Category = 'Refresh'
+    object macSimpleUpdateNDS: TMultiAction [8]
+      Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spGet
+          Action = actUpdateNDS
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
     end
-    object mactAfterInsert: TMultiAction
+    object mactAfterInsert: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -499,36 +516,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'mactAfterInsert'
     end
-    object DataSetInsert1: TDataSetInsert
-      Category = 'Dataset'
-      Caption = '&Insert'
-      Hint = 'Insert'
-      ImageIndex = 73
-      DataSource = MasterDS
-    end
-    object actUpdateNDS: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Goods_NDS
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Goods_NDS
-        end>
-      Caption = 'actUpdateNDS'
-    end
-    object macSimpleUpdateNDS: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateNDS
-        end>
-      View = cxGridDBTableView
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
-    end
-    object macUpdateNDS: TMultiAction
+    object macUpdateNDS: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -543,6 +531,102 @@ inherited GoodsForm: TGoodsForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       ImageIndex = 76
+    end
+    object actUpdateNDS: TdsdExecStoredProc [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_NDS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_NDS
+        end>
+      Caption = 'actUpdateNDS'
+    end
+    object macUpdateHot_Yes: TMultiAction [12]
+      Category = 'UpdateHot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateHot_Yes
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
+      ImageIndex = 52
+    end
+    object actSimpleUpdateHot_Yes: TMultiAction
+      Category = 'UpdateHot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateHot_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1044#1072
+      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1044#1072
+    end
+    object spRefreshOneRecord: TdsdDataSetRefresh
+      Category = 'Refresh'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actUpdateHot_Yes: TdsdExecStoredProc
+      Category = 'UpdateHot'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateHot_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateHot_Yes
+        end>
+      Caption = 'actUpdateHot_Yes'
+    end
+    object macUpdateHot_No: TMultiAction
+      Category = 'UpdateHot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateHot_No
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
+      ImageIndex = 58
+    end
+    object DataSetInsert1: TDataSetInsert
+      Category = 'Dataset'
+      Caption = '&Insert'
+      Hint = 'Insert'
+      ImageIndex = 73
+      DataSource = MasterDS
+    end
+    object actSimpleUpdateHot_No: TMultiAction
+      Category = 'UpdateHot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateHot_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
+      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
     end
     object DataSetPost1: TDataSetPost
       Category = 'Dataset'
@@ -562,13 +646,16 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'spRefreshOnInsert'
     end
-    object InsertRecord1: TInsertRecord
-      Category = 'DSDLib'
+    object actUpdateHot_No: TdsdExecStoredProc
+      Category = 'UpdateHot'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      View = cxGridDBTableView
-      Params = <>
-      Caption = 'InsertRecord1'
+      StoredProc = spUpdateHot_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdateHot_No
+        end>
+      Caption = 'actUpdateHot_No'
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -855,6 +942,18 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateNot_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_CountPrice'
         end
         item
@@ -927,6 +1026,14 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdateNotMarion_No: TdxBarButton
       Action = macUpdateNotMarion_No
+      Category = 0
+    end
+    object bbUpdateNot_Yes: TdxBarButton
+      Action = macUpdateHot_Yes
+      Category = 0
+    end
+    object bbUpdateNot_No: TdxBarButton
+      Action = macUpdateHot_No
       Category = 0
     end
   end
@@ -1391,8 +1498,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 107
+    Left = 704
+    Top = 123
   end
   object spUpdate_Goods_LastPriceOld: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_LastPriceOld'
@@ -1700,7 +1807,55 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 91
+    Left = 624
+    Top = 107
+  end
+  object spUpdateHot_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNOT'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNot'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 99
+  end
+  object spUpdateHot_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNot'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 155
   end
 end
