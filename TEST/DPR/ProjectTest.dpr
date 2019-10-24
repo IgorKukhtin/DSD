@@ -1113,7 +1113,9 @@ uses
   LabMark in '..\..\Forms\Guides\LabMark.pas' {LabMarkForm: TParentForm},
   LabMarkEdit in '..\..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm},
   LabReceiptChildEdit in '..\..\Forms\Guides\LabReceiptChildEdit.pas' {LabReceiptChildEditForm: TParentForm},
-  LabMark_Object in '..\..\Forms\Guides\LabMark_Object.pas' {LabMark_ObjectForm: TParentForm};
+  LabMark_Object in '..\..\Forms\Guides\LabMark_Object.pas' {LabMark_ObjectForm: TParentForm},
+  Report_Transport_CostDialog in '..\..\Forms\Report\Report_Transport_CostDialog.pas' {Report_Transport_CostDialogForm: TParentForm},
+  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
