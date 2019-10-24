@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListId_30201 Integer, PriceListName_30201 TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                GUID TVarChar, isGUID Boolean,
+               isBranchAll Boolean,
                isErased Boolean
               )
 AS
@@ -152,6 +153,7 @@ BEGIN
 
        , ObjectString_GUID.ValueData AS GUID
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
+       , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
        , Object_Juridical.isErased   AS isErased
 
    FROM tmpIsErased
@@ -182,6 +184,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                 ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isBranchAll.DescId = zc_ObjectBoolean_Juridical_isBranchAll()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
@@ -279,6 +285,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.10.19         * isBranchAll
  24.10.19         * isOrderMin
  30.07.19         * SummOrderFinance
  07.02.17         * isPriceWithVAT

@@ -220,6 +220,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 72
       end
+      object isBranchAll: TcxGridDBColumn
+        Caption = #1044#1086#1089#1090#1091#1087' '#1091' '#1074#1089#1077#1093' '#1092#1080#1083#1080#1072#1083#1086#1074
+        DataBinding.FieldName = 'isBranchAll'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1091' '#1074#1089#1077#1093' '#1092#1080#1083#1080#1072#1083#1086#1074
+        Options.Editing = False
+        Width = 92
+      end
       object isTaxSummary: TcxGridDBColumn
         Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
         DataBinding.FieldName = 'isTaxSummary'
@@ -523,6 +532,14 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_IsBranchAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -588,6 +605,10 @@ object JuridicalForm: TJuridicalForm
     end
     object bbUpdate_IsOrderMin: TdxBarButton
       Action = actUpdate_IsOrderMin
+      Category = 0
+    end
+    object bbUpdate_IsBranchAll: TdxBarButton
+      Action = actUpdate_IsBranchAll
       Category = 0
     end
   end
@@ -1011,6 +1032,19 @@ object JuridicalForm: TJuridicalForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdate_IsBranchAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsBranchAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsBranchAll
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1091' '#1074#1089#1077#1093' '#1092#1080#1083#1080#1072#1083#1086#1074'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1091' '#1074#1089#1077#1093' '#1092#1080#1083#1080#1072#1083#1086#1074'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 77
+    end
     object actUpdate_IsOrderMin: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1178,7 +1212,41 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
+    Left = 376
+    Top = 120
+  end
+  object spUpdate_IsBranchAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Juridical_isBranchAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBranchAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsBranchAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsBranchAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsBranchAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
     Top = 120
   end
 end
