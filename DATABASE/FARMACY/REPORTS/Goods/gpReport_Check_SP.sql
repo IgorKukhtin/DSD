@@ -118,6 +118,11 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
     
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_DirectorPartner())
+    THEN
+       inUnitId := zc_DirectorPartner_UnitID();
+    END IF;
+
     IF inJuridicalMedicId <> 0 AND inStartDate >= '01.04.2019' THEN
     -- Результат
     RETURN QUERY

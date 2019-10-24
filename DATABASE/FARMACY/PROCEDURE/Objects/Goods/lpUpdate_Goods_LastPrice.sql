@@ -12,7 +12,7 @@ $BODY$
    DECLARE text_var1 text;
 BEGIN
 
-   IF COALESCE(inGoodsMainId, 0) <> 0 THEN
+   IF COALESCE(inGoodsMainId, 0) = 0 THEN
       RETURN;
    END IF;
 

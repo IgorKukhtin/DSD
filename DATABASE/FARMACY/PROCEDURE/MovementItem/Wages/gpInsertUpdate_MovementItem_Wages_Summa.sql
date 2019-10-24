@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN inMarketing           TFloat    , -- Маркетинг
     IN inDirector            TFloat    , -- Директор. премии / штрафы
     IN inAmountCard          TFloat    , -- На карту
-    IN inisIssuedBy          Boolean   , -- 
+    IN inisIssuedBy          Boolean   , -- Выдана
    OUT outAmountHand         TFloat    , -- На руки
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -18,6 +18,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -112,6 +113,31 @@ BEGIN
        -- сохранили свойство <Дата выдачи>
       IF inisIssuedBy <> COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE DescID = zc_MIBoolean_isIssuedBy() AND MovementItemID = ioId), FALSE)
       THEN
+      
+        SELECT Movement.OperDate 
+        INTO vbOperDate
+        FROM MovementItem 
+             INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
+        WHERE MovementItem.ID = ioId;
+      
+        IF inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND
+           NOT EXISTS(SELECT 1
+                      FROM Movement
+
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+
+                      WHERE Movement.DescId = zc_Movement_TestingUser()
+                        AND Movement.OperDate = (SELECT Movement.OperDate 
+                                                 FROM MovementItem 
+                                                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
+                                                 WHERE MovementItem.ID = ioId)
+                        AND MovementItem.ObjectId = (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId)
+                        AND MovementItem.Amount >= 85)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Сотрудник не сдал экзамен. Выдача зарплаты запрещена.';            
+        END IF;
+
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_IssuedBy(), ioId, CURRENT_TIMESTAMP);
       
          -- сохранили свойство <Выдано>
@@ -148,7 +174,6 @@ BEGIN
       WHERE MovementItem.Id = ioId;
   END IF;
 
-    --
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
