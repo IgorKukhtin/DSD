@@ -75,10 +75,10 @@ BEGIN
                                 , tmpContainer.BusinessId
                                 , tmpContainer.isAccount_50000
                    
-                                , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
+                                , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
                                        WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN (MovementItem.Amount + COALESCE(MIFloat_Distance.ValueData,0))
                                        ELSE 0 END)   AS Distance
-                                , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)  AS WeightTransport
+                                , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)  AS WeightTransport
                                 
                            FROM (
                                   SELECT MIContainer.MovementId               AS MovementId
@@ -221,6 +221,10 @@ BEGIN
                                        --, tmpContainer.ProfitLossId
                                        , tmpContainer.BusinessId
                                        , tmpContainer.isAccount_50000
+                                , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
+                                       WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN (MovementItem.Amount + COALESCE(MIFloat_Distance.ValueData,0))
+                                       ELSE 0 END)
+                                , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)
                           )
         -- выбираем данные путевых из реестра, получаем док. продаж которые указаны в реестре
         , tmpWeight1 AS (SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
@@ -319,35 +323,44 @@ BEGIN
 -----------------***-----------------------
         -- получение данных из док. продаж по товарам
        , tmpSale_MI AS (SELECT MovementItem.MovementId
-                             , CASE WHEN inisGoods = TRUE THEN MovementItem.Id ELSE 0 END AS MI_Id
-                             , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
+                             , MovementItem.Id AS MI_Id
+                             , MovementItem.ObjectId AS GoodsId
                              , SUM (MovementItem.Amount)    AS Amount
                          FROM (SELECT DISTINCT tmpWeight.MovementId_Sale FROM tmpWeight) AS tmpSale
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpSale.MovementId_Sale
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
---and 1 = 0
                          GROUP BY MovementItem.MovementId
-                                , CASE WHEN inisGoods = TRUE THEN MovementItem.Id ELSE 0 END
-                                , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END
+                                , MovementItem.Id
+                                , MovementItem.ObjectId
                        )
        , tmpMILO_GoodsKind AS (SELECT *
                                FROM MovementItemLinkObject
                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                                  AND inisGoods = TRUE
---and 1 = 0
                               )
 
+       , tmpMIF_AmountPartner AS (SELECT *
+                                  FROM MovementItemFloat AS MIFloat_AmountPartner
+                                  WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
+                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  )
+     
         , tmpSale_Goods AS (SELECT tmpSale_MI.MovementId
-                                 , tmpSale_MI.GoodsId
+                                 , CASE WHEN inisGoods = TRUE THEN tmpSale_MI.GoodsId ELSE 0 END AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                 , SUM (tmpSale_MI.Amount) AS Amount
-                                 , SUM (tmpSale_MI.Amount* CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight
+                                 --, SUM (tmpSale_MI.Amount) AS Amount
+                                 --, SUM (tmpSale_MI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight
+                                 , SUM (MIFloat_AmountPartner.ValueData) AS Amount
+                                 , SUM (MIFloat_AmountPartner.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight
                             FROM tmpSale_MI
                                  LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = tmpSale_MI.MI_Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                 LEFT JOIN tmpMIF_AmountPartner AS MIFloat_AmountPartner
+                                                                ON MIFloat_AmountPartner.MovementItemId = tmpSale_MI.MI_Id
 
                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure 
                                                       ON ObjectLink_Goods_Measure.ObjectId = tmpSale_MI.GoodsId
@@ -355,8 +368,9 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                        ON ObjectFloat_Weight.ObjectId = tmpSale_MI.GoodsId
                                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
                             GROUP BY tmpSale_MI.MovementId
-                                   , tmpSale_MI.GoodsId
+                                   , CASE WHEN inisGoods = TRUE THEN tmpSale_MI.GoodsId ELSE 0 END
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    
                              )
@@ -440,7 +454,6 @@ BEGIN
                                   , tmpWeight_All.MovementId_Sale
                                   , tmpWeight_All.PartnerId_Sale
                                   , 1 AS Count_doc
-
                              FROM tmpContainer
                                   LEFT JOIN tmpWeight_All ON tmpWeight_All.MovementTransportId = tmpContainer.MovementId
                                                          AND tmpWeight_All.CarId = tmpContainer.CarId
@@ -493,7 +506,7 @@ BEGIN
 
             , (tmpUnion.Distance):: TFloat         AS Distance
             , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
-            , (tmpUnion.WeightSale):: TFloat       AS TotalWeight_Sale
+            , SUM (tmpUnion.WeightSale):: TFloat       AS TotalWeight_Sale
             , tmpUnion.One_KM
             , tmpUnion.One_KG
             , tmpUnion.isAccount_50000 :: Boolean AS isAccount_50000
@@ -510,7 +523,7 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , SUM (tmpSale_Goods.Amount)  ::TFloat AS Amount_Sale
             , SUM (tmpSale_Goods.Weight)  ::TFloat AS Weight_Sale
-            , 0/*SUM (tmpUnion.Count_doc) */:: TFloat AS Count_doc-- кол. накладных
+            , SUM (tmpUnion.Count_doc) :: TFloat AS Count_doc-- кол. накладных
             
       FROM tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
@@ -586,7 +599,6 @@ BEGIN
 
               , (tmpUnion.Distance)
               , (tmpUnion.WeightTransport)
-              , (tmpUnion.WeightSale)
               , tmpUnion.One_KM
               , tmpUnion.One_KG
               , tmpUnion.isAccount_50000
@@ -612,4 +624,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Transport_Cost  (inStartDate := ('01.10.2019')::TDateTime , inEndDate := ('02.10.2019')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 0, inCarId := 1200072  , inIsMovement := false ,  inIsPartner:=true, inIsGoods:= true, inSession := '5');
+-- select * from gpReport_Transport_Cost  (inStartDate := ('01.10.2019')::TDateTime , inEndDate := ('02.10.2019')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 0, inCarId := 1200072  , inIsMovement := false ,  inIsPartner:=false, inIsGoods:= false, inSession := '5');
