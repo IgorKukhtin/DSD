@@ -152,7 +152,7 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , TestingUser.Status                 AS TestingStatus
-                 , TestingUser.DateTimeTest           AS TestingDate
+                 , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
@@ -315,7 +315,7 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , TestingUser.Status                 AS TestingStatus
-                 , TestingUser.DateTimeTest           AS TestingDate
+                 , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 

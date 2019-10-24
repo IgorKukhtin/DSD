@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUodate_Cash_DoesNotShare(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inGoodsID, 0) = 0 THEN
@@ -19,6 +20,16 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_DoesNotShare(), inGoodsID, inDoesNotShare);
+
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Main SET isDoesNotShare = inDoesNotShare
+     WHERE Object_Goods_Main.Id IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsID);  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_DoesNotShare', text_var1::TVarChar, vbUserId);
+   END;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inGoodsID, vbUserId);

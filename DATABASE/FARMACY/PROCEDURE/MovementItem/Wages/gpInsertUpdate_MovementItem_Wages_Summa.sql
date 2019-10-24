@@ -121,6 +121,16 @@ BEGIN
         WHERE MovementItem.ID = ioId;
       
         IF inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND
+           EXISTS(SELECT MovementItem.ObjectId 
+                  FROM MovementItem 
+                       INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                             ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                       INNER JOIN ObjectLink AS ObjectLink_Member_Position
+                                             ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                            AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                                            AND ObjectLink_Member_Position.ChildObjectId = 1672498 
+                  WHERE MovementItem.ID = ioId) AND
            NOT EXISTS(SELECT 1
                       FROM Movement
 
