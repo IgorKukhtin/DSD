@@ -91,6 +91,7 @@ type
     cbPartner: TcxCheckBox;
     cbGoods: TcxCheckBox;
     GoodsKindName: TcxGridDBColumn;
+    Count_doc: TcxGridDBColumn;
   private
   public
   end;

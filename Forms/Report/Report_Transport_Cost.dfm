@@ -108,6 +108,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalWeight_Sale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_doc
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -188,6 +193,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalWeight_Sale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_doc
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -527,6 +537,13 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
+      end
+      object Count_doc: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1085#1072#1082#1083'.'
+        DataBinding.FieldName = 'Count_doc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
