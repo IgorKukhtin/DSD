@@ -920,6 +920,7 @@ procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
@@ -2858,6 +2859,10 @@ end;
 
 procedure TLoadFormTest.LoadRouteFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoute_SelfForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoute_SelfForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoute_ObjectForm'));
