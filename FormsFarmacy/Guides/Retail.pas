@@ -63,6 +63,7 @@ type
     actChoicePersonalMarketing: TOpenChoiceForm;
     actChoicePersonalTrade: TOpenChoiceForm;
     spUpdate_SummSUN: TdsdStoredProc;
+    ShareFromPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
