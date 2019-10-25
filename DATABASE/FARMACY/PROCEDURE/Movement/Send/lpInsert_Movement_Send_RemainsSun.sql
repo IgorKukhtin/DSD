@@ -486,15 +486,16 @@ BEGIN
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
-             -- отбросили !!холод!!
+             -- НЕ отбросили !!холод!!
              LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                   ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
                                  AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
+        /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
            AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
               )
            OR Object_ConditionsKeep.ValueData IS NULL
+        */
 
         -- !!!только с таким НТЗ!!!
         -- WHERE tmpObject_Price.MCSValue >= 0.5
@@ -1137,6 +1138,15 @@ BEGIN
              _tmpRemains_calc
              -- все остатки, СРОК
              INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains_calc.GoodsId
+             -- а здесь, отбросили !!холод!!
+             LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
+                                  ON OL_Goods_ConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
+                                 AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+        WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
+           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+              )
+           OR Object_ConditionsKeep.ValueData IS NULL
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
