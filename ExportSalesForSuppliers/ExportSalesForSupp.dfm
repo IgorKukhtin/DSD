@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsADV
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -191,10 +191,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -212,8 +208,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -1324,6 +1318,145 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
+        end
+      end
+    end
+    object TabSheet1: TTabSheet
+      Caption = #1070#1088#1080#1103'-'#1060#1072#1088#1084
+      ImageIndex = 4
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 484
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView2: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_ADV
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          object cxGridDBColumn3: TcxGridDBColumn
+            DataBinding.FieldName = 'retailName'
+            Width = 70
+          end
+          object cxGridDBColumn4: TcxGridDBColumn
+            DataBinding.FieldName = 'city'
+            Width = 70
+          end
+          object cxGridDBColumn5: TcxGridDBColumn
+            DataBinding.FieldName = 'address'
+            Width = 70
+          end
+          object cxGridDBColumn6: TcxGridDBColumn
+            DataBinding.FieldName = 'checkID'
+            Width = 70
+          end
+          object cxGridDBColumn7: TcxGridDBColumn
+            DataBinding.FieldName = 'sale_date'
+            Width = 70
+          end
+          object cxGridDBColumn8: TcxGridDBColumn
+            DataBinding.FieldName = 'sale_time'
+            Width = 70
+          end
+          object cxGridDBColumn9: TcxGridDBColumn
+            DataBinding.FieldName = 'itemBC'
+            Width = 70
+          end
+          object cxGridDBColumn10: TcxGridDBColumn
+            DataBinding.FieldName = 'couponBC'
+            Width = 70
+          end
+          object cxGridDBColumn11: TcxGridDBColumn
+            DataBinding.FieldName = 'nameBC'
+            Width = 70
+          end
+          object cxGridDBColumn12: TcxGridDBColumn
+            DataBinding.FieldName = 'price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBColumn13: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBColumn14: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_couponsale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBColumn15: TcxGridDBColumn
+            DataBinding.FieldName = 'discount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBColumn16: TcxGridDBColumn
+            DataBinding.FieldName = 'discount_rel'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBColumn17: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_discount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableView2
+        end
+      end
+      object Panel4: TPanel
+        Left = 0
+        Top = 0
+        Width = 901
+        Height = 31
+        Align = alTop
+        TabOrder = 1
+        object YuriFarmDate: TcxDateEdit
+          Left = 85
+          Top = 4
+          EditValue = 42339d
+          Properties.ShowTime = False
+          TabOrder = 0
+          Width = 85
+        end
+        object cxLabel8: TcxLabel
+          Left = 6
+          Top = 6
+          Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
+        end
+        object btnYuriFarmExecute: TButton
+          Left = 384
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+          TabOrder = 2
+        end
+        object btnYuriFarmExport: TButton
+          Left = 503
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1069#1082#1089#1087#1086#1088#1090
+          TabOrder = 3
+        end
+        object btnYuriFarmSend: TButton
+          Left = 783
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' HTTPS'
+          TabOrder = 4
         end
       end
     end

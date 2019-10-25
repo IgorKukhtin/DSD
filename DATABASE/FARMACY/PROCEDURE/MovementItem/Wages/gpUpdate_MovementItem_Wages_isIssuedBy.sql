@@ -12,6 +12,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -23,11 +24,43 @@ BEGIN
     END IF;
 
     -- определяем <Статус>
-    vbStatusId := (SELECT StatusId FROM Movement WHERE Id = (SELECT MovementItem.MovementID FROM MovementItem WHERE MovementItem.ID = inId));
+    SELECT Movement.StatusId, Movement.OperDate
+    INTO vbStatusId, vbOperDate
+    FROM Movement 
+    WHERE Id = (SELECT MovementItem.MovementID FROM MovementItem WHERE MovementItem.ID = inId);
+    
     -- проверка - проведенные/удаленные документы Изменять нельзя
     IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+
+    IF inisIssuedBy = FALSE AND vbOperDate >= '01.10.2019'  AND 
+           EXISTS(SELECT MovementItem.ObjectId 
+                  FROM MovementItem 
+                       INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                             ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                       INNER JOIN ObjectLink AS ObjectLink_Member_Position
+                                             ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                            AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                                            AND ObjectLink_Member_Position.ChildObjectId = 1672498 
+                  WHERE MovementItem.ID = inId) AND
+       NOT EXISTS(SELECT 1
+                  FROM Movement
+
+                       LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                              AND MovementItem.DescId = zc_MI_Master()
+
+                  WHERE Movement.DescId = zc_Movement_TestingUser()
+                    AND Movement.OperDate = (SELECT Movement.OperDate 
+                                             FROM MovementItem 
+                                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
+                                             WHERE MovementItem.ID = inId)
+                    AND MovementItem.ObjectId = (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = inId)
+                    AND MovementItem.Amount >= 85)
+    THEN
+      RAISE EXCEPTION 'Ошибка. Сотрудник не сдал экзамен. Выдача зарплаты запрещена.';            
     END IF;
 
      -- сохранили свойство <Выдано>

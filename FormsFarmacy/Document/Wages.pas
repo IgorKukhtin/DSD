@@ -96,6 +96,8 @@ type
     actExecStoredProcUpdateUnit: TdsdExecStoredProc;
     spUpdateUnit: TdsdStoredProc;
     dxBarButton12: TdxBarButton;
+    TestingStatus: TcxGridDBBandedColumn;
+    TestingDate: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -78,6 +78,9 @@ type
     macUpdate_ClientKind_Retai: TMultiAction;
     bbUpdate_ClientKind_Retai: TdxBarButton;
     bbUpdate_ClientKind_Null: TdxBarButton;
+    spUpdate_IsOrderMin: TdsdStoredProc;
+    actUpdate_IsOrderMin: TdsdExecStoredProc;
+    bbUpdate_IsOrderMin: TdxBarButton;
   private
     { Private declarations }
   public

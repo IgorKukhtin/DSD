@@ -21,7 +21,7 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
-  cxCurrencyEdit;
+  cxCurrencyEdit, ExternalLoad;
 
 type
   TGoodsForm = class(TParentForm)
@@ -102,7 +102,12 @@ type
     macUpdate_WeightTare: TMultiAction;
     macUpdate_WeightTareList: TMultiAction;
     ExecuteDialogWeightTare: TExecuteDialog;
-    bb: TdxBarButton;
+    bbUpdate_WeightTareList: TdxBarButton;
+    actGetImportSetting_Goods_Price: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
   private
     { Private declarations }
   public

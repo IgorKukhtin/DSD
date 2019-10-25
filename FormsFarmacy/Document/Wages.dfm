@@ -1,26 +1,26 @@
 inherited WagesForm: TWagesForm
   Caption = #1047'/'#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 626
-  ClientWidth = 953
+  ClientWidth = 1051
   AddOnFormData.AddOnFormRefresh.ParentList = 'Wages'
-  ExplicitWidth = 969
+  ExplicitWidth = 1067
   ExplicitHeight = 665
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 953
+    Width = 1051
     Height = 549
     ExplicitTop = 77
     ExplicitWidth = 953
     ExplicitHeight = 549
     ClientRectBottom = 549
-    ClientRectRight = 953
+    ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 953
       ExplicitHeight = 525
       inherited cxGrid: TcxGrid
-        Width = 953
+        Width = 1051
         Height = 328
         ExplicitWidth = 953
         ExplicitHeight = 328
@@ -85,7 +85,7 @@ inherited WagesForm: TWagesForm
               FixedKind = fkLeft
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 332
+              Width = 428
             end
             item
               Options.HoldOwnColumnsOnly = True
@@ -98,7 +98,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 24
+            Width = 21
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -110,7 +110,7 @@ inherited WagesForm: TWagesForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 172
+            Width = 127
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -122,7 +122,7 @@ inherited WagesForm: TWagesForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 81
+            Width = 76
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -133,9 +133,31 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 37
+            Width = 43
             Position.BandIndex = 0
             Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object TestingStatus: TcxGridDBBandedColumn
+            Caption = #1069#1082#1079#1072' '#1084#1077#1085
+            DataBinding.FieldName = 'TestingStatus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object TestingDate: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1072' '#1089#1076#1072#1095#1080
+            DataBinding.FieldName = 'TestingDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+            Position.BandIndex = 0
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object UnitName: TcxGridDBBandedColumn
@@ -273,11 +295,12 @@ inherited WagesForm: TWagesForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 336
-        Width = 953
+        Width = 1051
         Height = 189
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 953
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -369,16 +392,17 @@ inherited WagesForm: TWagesForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 328
-        Width = 953
+        Width = 1051
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 953
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 953
+    Width = 1051
     Height = 51
     TabOrder = 3
     ExplicitWidth = 953

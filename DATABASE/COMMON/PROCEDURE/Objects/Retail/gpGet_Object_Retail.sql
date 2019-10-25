@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
+             , isOrderMin Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
@@ -29,6 +30,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
            , CAST ('' as TVarChar)   AS NAME
            , CAST (FALSE AS Boolean) AS OperDateOrder
+           , CAST (FALSE as Boolean) AS isOrderMin
            , CAST ('' as TVarChar)   AS GLNCode
            , CAST ('' as TVarChar)   AS GLNCodeCorporate
            , CAST ('' as TVarChar)   AS OKPO
@@ -52,6 +54,7 @@ BEGIN
            , Object_Retail.ValueData  AS NAME
 
            , COALESCE (ObjectBoolean_OperDateOrder.ValueData, CAST (False AS Boolean)) AS OperDateOrder
+           , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)             AS isOrderMin
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
@@ -81,7 +84,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
                                 ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
                                AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
-    
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+                                ON ObjectBoolean_isOrderMin.ObjectId = Object_Retail.Id 
+                               AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Retail_isOrderMin()
+
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
@@ -114,6 +121,7 @@ ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.19         *
  14.05.19         * ClientKind
  02.04.15         * add OperDateOrder
  19.02.15         * add GoodsProperty               

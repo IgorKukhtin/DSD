@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
+             , TestingStatus TVarChar,  TestingDate TDateTime
              , isIssuedBy Boolean, DateIssuedBy TDateTime
              , isErased Boolean
              , Color_Calc Integer
@@ -83,7 +84,8 @@ BEGIN
                                           WHERE MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId = zc_MI_Sign()
                                             AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-                                            AND MovementItem.Amount <> 0)
+                                            AND MovementItem.Amount <> 0),
+                tmpTestingUser AS (SELECT * FROM gpReport_TestingUser ((SELECT Movement.OperDate FROM Movement WHERE  Movement.Id = inMovementId), inSession))
 
             SELECT 0                                  AS Id
                  , tmpMember.UserID                   AS UserID
@@ -102,6 +104,9 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , NULL::TVarChar                     AS TestingStatus
+                 , NULL::TDateTime                    AS TestingDate
+
                  , False                              AS isIssuedBy
                  , NULL::TDateTime                    AS DateIssuedBy
                  , tmpMember.isErased                 AS isErased
@@ -146,6 +151,9 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , TestingUser.Status                 AS TestingStatus
+                 , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
+
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
@@ -209,6 +217,9 @@ BEGIN
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
 
+                  LEFT JOIN tmpTestingUser AS TestingUser 
+                                           ON TestingUser.ID = MovementItem.ObjectId   
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -230,6 +241,8 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , NULL::TVarChar                     AS TestingStatus
+                 , NULL::TDateTime                    AS TestingDate
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
                  , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 
@@ -278,6 +291,7 @@ BEGIN
                                             AND MovementItem.DescId = zc_MI_Sign()
                                             AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                             AND MovementItem.Amount <> 0)
+              , tmpTestingUser AS (SELECT * FROM gpReport_TestingUser ((SELECT Movement.OperDate FROM Movement WHERE  Movement.Id = inMovementId), inSession))
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -300,6 +314,8 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , TestingUser.Status                 AS TestingStatus
+                 , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
@@ -362,6 +378,9 @@ BEGIN
 
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
+                                                  
+                  LEFT JOIN tmpTestingUser AS TestingUser 
+                                           ON TestingUser.ID = MovementItem.ObjectId   
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
@@ -384,6 +403,8 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
+                 , NULL::TVarChar                     AS TestingStatus
+                 , NULL::TDateTime                    AS TestingDate
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
                  , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 
@@ -402,6 +423,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 24.10.19                                                        *
  21.08.19                                                        *
 */
--- select * from gpSelect_MovementItem_Wages(inMovementId := 15639631  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Wages(inMovementId := 15869587   , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

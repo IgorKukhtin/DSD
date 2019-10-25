@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
                isDiscountPrice Boolean, isPriceWithVAT Boolean,
                isLongUKTZED Boolean,
+               isOrderMin Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -28,6 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListId_30201 Integer, PriceListName_30201 TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                GUID TVarChar, isGUID Boolean,
+               isBranchAll Boolean,
                isErased Boolean
               )
 AS
@@ -101,6 +103,7 @@ BEGIN
        , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice
        , COALESCE (ObjectBoolean_isPriceWithVAT.ValueData, False::Boolean)   AS isPriceWithVAT
        , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE::Boolean)      AS isLongUKTZED
+       , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)       AS isOrderMin
 
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
@@ -150,6 +153,7 @@ BEGIN
 
        , ObjectString_GUID.ValueData AS GUID
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
+       , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
        , Object_Juridical.isErased   AS isErased
 
    FROM tmpIsErased
@@ -176,6 +180,14 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
                                 ON ObjectBoolean_isLongUKTZED.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+                                ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isBranchAll.DescId = zc_ObjectBoolean_Juridical_isBranchAll()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
@@ -273,6 +285,8 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.10.19         * isBranchAll
+ 24.10.19         * isOrderMin
  30.07.19         * SummOrderFinance
  07.02.17         * isPriceWithVAT
  13.01.17         * isLongUKTZED

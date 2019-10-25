@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , InDate TDateTime
              , PartnerInName TVarChar
              , AmountIn TFloat, PriceIn TFloat
-             , Weight TFloat, WeightTare TFloat
+             , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
              , isPartionCount Boolean, isPartionSumm Boolean
              , isCheck_basis Boolean, isCheck_main Boolean
              , isErased Boolean
@@ -90,6 +90,7 @@ BEGIN
 
             , ObjectFloat_Weight.ValueData     AS Weight
             , ObjectFloat_WeightTare.ValueData AS WeightTare
+            , ObjectFloat_CountForWeight.ValueData ::TFloat AS CountForWeight
             , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)   :: Boolean AS isPartionCount
             , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)     :: Boolean AS isPartionSumm
 
@@ -172,6 +173,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
                                    ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+             LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                   ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.Id 
+                                  AND ObjectFloat_CountForWeight.DescId = zc_ObjectFloat_Goods_CountForWeight()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                      ON ObjectBoolean_PartionCount.ObjectId = Object_Goods.Id
@@ -261,6 +265,8 @@ BEGIN
 
             , 0                   :: TFloat   AS Weight
             , 0                   :: TFloat   AS WeightTare
+            , 0                   :: TFloat   AS CountForWeight
+
             , FALSE                           AS isPartionCount
             , FALSE                           AS isPartionSumm
             , FALSE                           AS isCheck_basis
@@ -277,6 +283,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 23.10.19         * CountForWeight
  09.10.19         * add WeightTare
  21.03.19         *
  12.12.18         *

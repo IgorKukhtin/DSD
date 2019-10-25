@@ -1367,11 +1367,13 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
@@ -1393,6 +1395,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalUKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalUKTZEDForm');
+  }
 end;
 
  procedure TLoadFormTest.LoadJuridicalOrderFinanceFormTest;
@@ -2219,6 +2222,11 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportFuelForm');

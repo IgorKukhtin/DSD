@@ -39,7 +39,6 @@ object RetailForm: TRetailForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -125,7 +124,7 @@ object RetailForm: TRetailForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 113
       end
       object OperDateOrder: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
@@ -142,6 +141,15 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object isOrderMin: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'isOrderMin'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1079#1072#1082#1072#1079' < 5 '#1082#1075'.'
+        Options.Editing = False
+        Width = 86
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -257,9 +265,21 @@ object RetailForm: TRetailForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbUpdate_IsOrderMin'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -340,6 +360,10 @@ object RetailForm: TRetailForm
     end
     object bbUpdate_ClientKind_Null: TdxBarButton
       Action = macUpdate_ClientKind_Null
+      Category = 0
+    end
+    object bbUpdate_IsOrderMin: TdxBarButton
+      Action = actUpdate_IsOrderMin
       Category = 0
     end
   end
@@ -653,6 +677,19 @@ object RetailForm: TRetailForm
       Caption = 'macUpdate_ClientKind_Null_List'
       ImageIndex = 58
     end
+    object actUpdate_IsOrderMin: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsOrderMin
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsOrderMin
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085'. '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085'. '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 76
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Retail'
@@ -828,5 +865,39 @@ object RetailForm: TRetailForm
     PackSize = 1
     Left = 600
     Top = 176
+  end
+  object spUpdate_IsOrderMin: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_IsOrderMin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOrderMin'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IsOrderMin'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsOrderMin'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IsOrderMin'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 184
   end
 end
