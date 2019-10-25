@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MarginPercent TFloat
              , SummSUN TFloat
+             , ShareFromPrice TFloat
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -25,6 +26,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS Name
            , CAST (0 AS TFloat)      AS MarginPercent
            , CAST (0 AS TFloat)      AS SummSUN
+           , CAST (0 AS TFloat)      AS ShareFromPrice
 
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
@@ -36,6 +38,7 @@ BEGIN
 
            , COALESCE (ObjectFloat_MarginPercent.ValueData, 0) :: TFloat AS MarginPercent
            , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
+           , COALESCE (ObjectFloat_ShareFromPrice.ValueData, 0):: TFloat AS ShareFromPrice
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
@@ -45,6 +48,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_SummSUN
                                   ON ObjectFloat_SummSUN.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_SummSUN.DescId = zc_ObjectFloat_Retail_SummSUN()
+            LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
+                                  ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
+                                 AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
        WHERE Object_Retail.Id = inId;
 
    END IF; 

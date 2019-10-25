@@ -2,7 +2,7 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 242
+  ClientHeight = 290
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object RetailEditForm: TRetailEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 47
-    Top = 207
+    Left = 55
+    Top = 244
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 199
-    Top = 207
+    Left = 207
+    Top = 244
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -84,6 +84,19 @@ object RetailEditForm: TRetailEditForm
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
     Width = 309
+  end
+  object edShareFromPrice: TcxCurrencyEdit
+    Left = 10
+    Top = 216
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 10
+    Width = 309
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 195
+    Caption = #1062#1077#1085#1072', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1081' '#1088#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1077#1083#1077#1085#1080#1077' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   end
   object ActionList: TActionList
     Left = 296
@@ -160,6 +173,14 @@ object RetailEditForm: TRetailEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShareFromPrice'
+        Value = Null
+        Component = edShareFromPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112
@@ -213,6 +234,13 @@ object RetailEditForm: TRetailEditForm
         Name = 'SummSUN'
         Value = Null
         Component = edSummSUN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShareFromPrice'
+        Value = Null
+        Component = edShareFromPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
