@@ -1,26 +1,28 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 411
-  ClientWidth = 1362
-  ExplicitWidth = 1378
+  ClientWidth = 1364
+  ExplicitWidth = 1380
   ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1362
+    Width = 1364
     Height = 245
     ExplicitTop = 166
     ExplicitWidth = 1362
     ExplicitHeight = 245
     ClientRectBottom = 245
-    ClientRectRight = 1362
+    ClientRectRight = 1364
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
       ExplicitHeight = 221
       inherited cxGrid: TcxGrid
-        Width = 1362
+        Width = 1364
         Height = 221
+        ExplicitLeft = -616
+        ExplicitTop = 3
         ExplicitWidth = 1362
         ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -368,7 +370,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1362
+    Width = 1364
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1362
@@ -529,7 +531,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -2213,7 +2214,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     Left = 680
-    Top = 48
+    Top = 88
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2410,16 +2411,16 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 8
+    Left = 368
+    Top = 16
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRoute
-    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.Value = 'TRoute_SelfForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TRouteForm'
+    FormName = 'TRoute_SelfForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
