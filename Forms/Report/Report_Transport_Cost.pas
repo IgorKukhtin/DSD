@@ -92,6 +92,17 @@ type
     cbGoods: TcxCheckBox;
     GoodsKindName: TcxGridDBColumn;
     Count_doc: TcxGridDBColumn;
+    TotalSumm_Sale: TcxGridDBColumn;
+    HoursWork: TcxGridDBColumn;
+    Sum_one: TcxGridDBColumn;
+    Weight_one: TcxGridDBColumn;
+    Wage_kg: TcxGridDBColumn;
+    Wage_Hours: TcxGridDBColumn;
+    Wage_doc: TcxGridDBColumn;
+    TotalWageSumm: TcxGridDBColumn;
+    TotalWageKg: TcxGridDBColumn;
+    TotalSum_one: TcxGridDBColumn;
+    TotalSum_kg: TcxGridDBColumn;
   private
   public
   end;
