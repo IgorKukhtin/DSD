@@ -369,10 +369,34 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_PartionGoods_Cat_5() RETURNS Integer AS
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionGoods(), 'zc_ObjectDate_PartionGoods_Cat_5', 'Дата перевода в 5 категорию' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Cat_5');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_MondayStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_MondayStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_MondayStart', 'Пон. -  пятн. начало работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_MondayStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_MondayEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_MondayEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_MondayEnd', 'Пон. -  пятн. конец работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_MondayEnd');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SaturdayStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SaturdayStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SaturdayStart', 'Суббота начало работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SaturdayStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SaturdayEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SaturdayEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SaturdayEnd', 'Суббота конец работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SaturdayEnd');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SundayStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SundayStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SundayStart', 'Воскресенье начало работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SundayStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SundayEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SundayEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SundayEnd', 'Воскресенье конец работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SundayEnd');
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 28.10.19                                                                                     * График работы
  14.08.19                                                                                     * zc_ObjectDate_PartionGoods_Cat_5
  06.04.19         * zc_ObjectDate_Route_StartRunPlan
                     zc_ObjectDate_Route_EndRunPlan

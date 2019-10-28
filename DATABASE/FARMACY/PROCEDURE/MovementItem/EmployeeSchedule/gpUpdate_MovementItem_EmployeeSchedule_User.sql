@@ -90,8 +90,8 @@ BEGIN
     IF inServiceExit = FALSE
     THEN
 
-      vbDateStart := date_trunc('DAY', inOperDate) + (inStartHour||':'||inStartMin)::Time;
-      vbDateEnd := date_trunc('DAY', inOperDate) + (inEndHour||':'||inEndMin)::Time;
+      vbDateStart := date_trunc('DAY', inOperDate)::Date + (inStartHour||':'||inStartMin)::Time;
+      vbDateEnd := date_trunc('DAY', inOperDate)::Date + (inEndHour||':'||inEndMin)::Time;
 
       IF vbDateStart > vbDateEnd
       THEN
@@ -154,7 +154,7 @@ BEGIN
 
           IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
           THEN
-            RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода не должно быть менее 30 мин от текущего времени!';
+            RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода <%> не должно быть менее 30 мин от текущего времени <%>!', vbDateStart, CURRENT_TIME;
           END IF;
 
           IF date_part('HOUR', CURRENT_TIME)::Integer < 20
@@ -212,7 +212,7 @@ BEGIN
 
         IF CURRENT_TIME::Time - vbDateStart::Time > '0:30'::Time
         THEN
-          RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода не должно быть менее 30 мин от текущего времени!';
+          RAISE EXCEPTION 'Ошибка. Вы пытаетесь поставить время прихода не соответствующее реальному времени! Время прихода <%> не должно быть менее 30 мин от текущего времени <%>!', vbDateStart, CURRENT_TIME;
         END IF;
 
         IF date_part('HOUR', CURRENT_TIME)::Integer < 20
@@ -274,3 +274,4 @@ $BODY$
 10.12.18                                                        *
 
 */
+

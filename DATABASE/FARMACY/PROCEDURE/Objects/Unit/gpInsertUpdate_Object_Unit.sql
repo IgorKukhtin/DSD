@@ -50,6 +50,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, TVarChar);
                                                    
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -90,6 +96,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inUnitOverdueId           Integer   ,    -- Подразделение для перемещения просроченного товара
     IN inisAutoMCS               Boolean   ,    -- Автоматический пересчет НТЗ
     IN inisTopNo                 Boolean   ,    -- Не учитывать ТОП для аптеки
+
+    IN inLatitude                TFloat    ,    -- Географическая широта
+    IN inLongitude               TFloat    ,    -- Географическая долгота
+    IN inMondayStart             TDateTime ,    -- Пон. -  пятн. начало работы
+    IN inMondayEnd               TDateTime ,    -- Пон. -  пятн. конец работы
+    IN inSaturdayStart           TDateTime ,    -- Суббота начало работы
+    IN inSaturdayEnd             TDateTime ,    -- Суббота конец работы
+    IN inSundayStart             TDateTime ,    -- Воскресенье начало работы
+    IN inSundayEnd               TDateTime ,    -- Воскресенье конец работы
+
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -282,7 +298,66 @@ BEGIN
 
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_TopNo(), ioId, inisTopNo);
+   
+   
+   -- Географическая широта
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Latitude(), ioId, inLatitude);
+   -- Географическая долгота
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Longitude(), ioId, inLongitude);
 
+   IF inMondayStart ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_MondayStart(), ioId, inMondayStart);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_MondayStart(), ioId, NULL);
+   END IF;
+   
+   IF inMondayEnd ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_MondayEnd(), ioId, inMondayEnd);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_MondayEnd(), ioId, NULL);
+   END IF;
+
+   IF inSaturdayStart ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SaturdayStart(), ioId, inSaturdayStart);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SaturdayStart(), ioId, NULL);
+   END IF;
+
+   IF inSaturdayEnd ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SaturdayEnd(), ioId, inSaturdayEnd);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SaturdayEnd(), ioId, NULL);
+   END IF;
+
+   IF inSundayStart ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SundayStart(), ioId, inSundayStart);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SundayStart(), ioId, NULL);
+   END IF;
+
+   IF inSundayEnd ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SundayEnd(), ioId, inSundayEnd);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SundayEnd(), ioId, NULL);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -297,6 +372,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.10.19                                                        * Координаты и графики
  04.09.19         * inisTopNo
  26.08.19         * inKoeffInSUN, inKoeffOutSUN
  13.08.19                                                        * AutoMCS

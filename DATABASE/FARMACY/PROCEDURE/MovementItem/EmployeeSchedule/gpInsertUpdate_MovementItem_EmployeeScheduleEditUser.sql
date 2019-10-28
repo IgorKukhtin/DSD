@@ -45,7 +45,7 @@ BEGIN
     
     IF inPayrollTypeID >= 0 AND inTimeStart <> ''
     THEN
-       vbDateStart := date_trunc('DAY', vbDate) + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeStart::Time;
+       vbDateStart := date_trunc('DAY', vbDate)::Date + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeStart::Time;
 
       IF date_part('minute',  vbDateStart) not in (0, 30) 
       THEN
@@ -57,7 +57,7 @@ BEGIN
 
     IF inPayrollTypeID >= 0 AND inTimeEnd <> ''
     THEN
-       vbDateEnd := date_trunc('DAY', vbDate) + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeEnd::Time;
+       vbDateEnd := date_trunc('DAY', vbDate)::Date + ((inDay - 1)::TVarChar||' DAY')::interval + inTimeEnd::Time;
 
       IF date_part('minute',  vbDateEnd) not in (0, 30)
       THEN
