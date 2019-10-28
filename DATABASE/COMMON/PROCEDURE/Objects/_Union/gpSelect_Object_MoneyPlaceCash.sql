@@ -298,6 +298,7 @@ BEGIN
       AND Object_Member.isErased = FALSE
       AND (tmpPersonal_Branch.MemberId > 0
            OR vbIsConstraint_Branch = FALSE
+           OR Object_Member.Id = 4218193
           )
     UNION ALL
      SELECT tmpPartner.Id

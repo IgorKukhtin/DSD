@@ -265,6 +265,7 @@ BEGIN
                                                               , 8359 -- 04-сЯКСЦХ
                                                                )
            OR tmpListBranch_Constraint.JuridicalId > 0
+           OR ObjectBoolean_isBranchAll.ValueData = TRUE
            OR vbIsConstraint = FALSE
            OR Object_Juridical.Id IN (408130 -- юцпн яхпнбхмю рнб
                                     , 528407  -- норрнпц-15 рнб
