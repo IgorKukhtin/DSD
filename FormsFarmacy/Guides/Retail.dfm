@@ -3,7 +3,7 @@ object RetailForm: TRetailForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
   ClientHeight = 390
-  ClientWidth = 464
+  ClientWidth = 541
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object RetailForm: TRetailForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 464
+    Width = 541
     Height = 364
     Align = alClient
     TabOrder = 0
@@ -41,7 +41,7 @@ object RetailForm: TRetailForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
@@ -50,7 +50,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 56
+        Width = 50
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -58,7 +58,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 223
+        Width = 199
       end
       object MarginPercent: TcxGridDBColumn
         Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -69,7 +69,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' < 6 '#1084#1077#1089'.'
         Options.Editing = False
-        Width = 72
+        Width = 64
       end
       object SummSUN: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1057#1059#1053
@@ -79,6 +79,16 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1081' '#1074#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1057#1059#1053
+        Width = 65
+      end
+      object ShareFromPrice: TcxGridDBColumn
+        Caption = #1044#1077#1083#1080#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1086#1090' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'ShareFromPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 72
       end
       object isErased: TcxGridDBColumn

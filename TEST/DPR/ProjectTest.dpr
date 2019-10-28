@@ -1115,7 +1115,8 @@ uses
   LabReceiptChildEdit in '..\..\Forms\Guides\LabReceiptChildEdit.pas' {LabReceiptChildEditForm: TParentForm},
   LabMark_Object in '..\..\Forms\Guides\LabMark_Object.pas' {LabMark_ObjectForm: TParentForm},
   Report_Transport_CostDialog in '..\..\Forms\Report\Report_Transport_CostDialog.pas' {Report_Transport_CostDialogForm: TParentForm},
-  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm};
+  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
+  Route_Self in '..\..\Forms\Guides\Route_Self.pas' {Route_SelfForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Retail()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inName                  TVarChar  ,     -- Название объекта 
     IN inMarginPercent         TFloat    ,     --
     IN inSummSUN               TFloat    ,     --
+    IN inShareFromPrice        TFloat    ,     --
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -39,13 +40,16 @@ BEGIN
    -- сохранили св-во <сумма, при которой включается СУН>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_SummSUN(), ioId, inSummSUN);
    
+   -- сохранили св-во <Делить медикамент от цены>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_ShareFromPrice(), ioId, inShareFromPrice);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

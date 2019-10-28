@@ -102,6 +102,7 @@ BEGIN
               SELECT Movement.ID                                                             AS ID
                    , Movement.OperDate                                                       AS OperDate
                    , MovementLinkObject_Unit.ObjectId                                        AS UnitId
+                   , MLO_Insert.ObjectId                                                     AS UserID 
                    , MovementFloat_TotalSumm.ValueData                                       AS TotalSumm
               FROM Movement
 
@@ -112,6 +113,10 @@ BEGIN
                    INNER JOIN MovementFloat AS MovementFloat_TotalSumm
                                             ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                   LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                ON MLO_Insert.MovementId = Movement.Id
+                                               AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
 
               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate + INTERVAL '9 hour'
                 AND Movement.DescId = zc_Movement_Check()
@@ -128,7 +133,8 @@ BEGIN
                                        ON Board.UnitID = Movement.UnitID
                                       AND Board.DateStart <= Movement.OperDate
                                       AND (Board.DateEnd + INTERVAL '30 second') > Movement.OperDate
-                                      AND Board.PayrollGroupID = zc_Enum_PayrollGroup_Check()),
+                                      AND Board.PayrollGroupID = zc_Enum_PayrollGroup_Check()
+              WHERE Movement.UnitId <> 394426 OR COALESCE(Movement.UserID, 0) <> 8720522),
            tmpCheckCount AS (
                SELECT  Movement.ID                                        AS ID
                     , COUNT(*)                                            AS  CountUser
@@ -385,6 +391,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 25.10.19                                                        *
  19.10.19                                                        *
  09.09.19                                                        *
  02.09.19                                                        *

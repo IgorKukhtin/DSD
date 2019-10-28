@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
-               ParentName TVarChar,
+               ParentName TVarChar, ShareFromPrice TFloat,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
@@ -72,6 +72,7 @@ BEGIN
        , Object_Unit.ValueData                               AS Name
 
        , Object_Parent.ValueData                             AS ParentName
+       , ObjectFloat_ShareFromPrice.ValueData                AS ShareFromPrice
 
        , COALESCE (tmpTaxUnitNight.UnitId, 0) <> 0
          AND COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00'
@@ -111,6 +112,20 @@ BEGIN
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
+                              ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
+                             AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
 
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
                              ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
@@ -176,6 +191,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.10.19                                                       *
  14.06.19                                                       *
  21.04.19                                                       *
  05.04.19                                                       *
@@ -185,4 +201,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')
+--
+ SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

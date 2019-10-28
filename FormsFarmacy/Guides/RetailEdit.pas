@@ -42,6 +42,8 @@ type
     edMarginPercent: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     edSummSUN: TcxCurrencyEdit;
+    edShareFromPrice: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
