@@ -20,7 +20,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -114,6 +114,25 @@ type
     edKoeffOutSUN: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
     cbTopNo: TcxCheckBox;
+    cxPageControl: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    ceLongitude: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    ceLatitude: TcxCurrencyEdit;
+    cxLabel31: TcxLabel;
+    cxLabel32: TcxLabel;
+    cxLabel33: TcxLabel;
+    cxLabel34: TcxLabel;
+    cxLabel35: TcxLabel;
+    cxLabel36: TcxLabel;
+    cxLabel37: TcxLabel;
+    ceMondayEnd: TcxDateEdit;
+    ceMondayStart: TcxDateEdit;
+    ceSaturdayEnd: TcxDateEdit;
+    ceSaturdayStart: TcxDateEdit;
+    ceSundayEnd: TcxDateEdit;
+    ceSundayStart: TcxDateEdit;
   private
     { Private declarations }
   public

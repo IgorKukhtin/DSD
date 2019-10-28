@@ -38,7 +38,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DividePartionDate Boolean,
                RedeemByHandSP Boolean,
                UnitOverdueId  Integer, UnitOverdueName TVarChar,
-               isAutoMCS Boolean
+               isAutoMCS Boolean,
+               Latitude TFloat, Longitude TFloat,
+               MondayStart TDateTime, MondayEnd TDateTime,
+               SaturdayStart TDateTime, SaturdayEnd TDateTime,
+               SundayStart TDateTime, SundayEnd TDateTime
                ) AS
 $BODY$
 BEGIN
@@ -121,6 +125,14 @@ BEGIN
            , CAST ('' as TVarChar) AS UnitOverdueName
            , FALSE                 AS isAutoMCS
            
+           , CAST (0 as TFloat)       AS Latitude 
+           , CAST (0 as TFloat)       AS Longitude
+           , CAST (Null as TDateTime) AS MondayStart
+           , CAST (Null as TDateTime) AS MondayEnd
+           , CAST (Null as TDateTime) AS SaturdayStart
+           , CAST (Null as TDateTime) AS SaturdayEnd
+           , CAST (Null as TDateTime) AS SundayStart
+           , CAST (Null as TDateTime) AS SundayEnd
 ;
    ELSE
        RETURN QUERY 
@@ -200,6 +212,16 @@ BEGIN
       , COALESCE (Object_UnitOverdue.Id,0)          ::Integer  AS UnitOverdueId
       , COALESCE (Object_UnitOverdue.ValueData, '') ::TVarChar AS UnitOverdueName
       , COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE):: Boolean AS isAutoMCS
+      
+      , ObjectFloat_Latitude.ValueData        AS Latitude 
+      , ObjectFloat_Longitude.ValueData       AS Longitude
+      , CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayStart.ValueData ELSE Null END ::TDateTime AS MondayStart
+      , CASE WHEN COALESCE(ObjectDate_MondayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayEnd.ValueData ELSE Null END ::TDateTime AS MondayEnd
+      , CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SaturdayStart.ValueData ELSE Null END ::TDateTime AS SaturdayStart
+      , CASE WHEN COALESCE(ObjectDate_SaturdayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SaturdayEnd.ValueData ELSE Null END ::TDateTime AS SaturdayEnd
+      , CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SundayStart.ValueData ELSE Null END ::TDateTime AS SundayStart
+      , CASE WHEN COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SundayEnd.ValueData ELSE Null END ::TDateTime AS SundayEnd
+      
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -379,6 +401,32 @@ BEGIN
                                 ON ObjectBoolean_Unit_AutoMCS.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_Latitude
+                              ON ObjectFloat_Latitude.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_Latitude.DescId = zc_ObjectFloat_Unit_Latitude()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Longitude
+                              ON ObjectFloat_Longitude.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_Longitude.DescId = zc_ObjectFloat_Unit_Longitude()
+
+        LEFT JOIN ObjectDate AS ObjectDate_MondayStart
+                             ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_MondayEnd
+                             ON ObjectDate_MondayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
+        LEFT JOIN ObjectDate AS ObjectDate_SaturdayStart
+                             ON ObjectDate_SaturdayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SaturdayStart.DescId = zc_ObjectDate_Unit_SaturdayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_SaturdayEnd
+                             ON ObjectDate_SaturdayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
+        LEFT JOIN ObjectDate AS ObjectDate_SundayStart
+                             ON ObjectDate_SundayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SundayStart.DescId = zc_ObjectDate_Unit_SundayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
+                             ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -419,3 +467,4 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 -- SELECT * FROM gpSelect_Unit('2')
 
 --select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
+

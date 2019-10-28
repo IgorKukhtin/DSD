@@ -90,7 +90,7 @@ BEGIN
 
     IF upper(ioValue) <> 'ัย' AND ioValueStart <> ''
     THEN
-       vbDateStart := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueStart::Time;
+       vbDateStart := date_trunc('DAY', vbDate)::Date + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueStart::Time;
 
       IF date_part('minute',  vbDateStart) not in (0, 30) 
       THEN
@@ -102,7 +102,7 @@ BEGIN
 
     IF upper(ioValue) <> 'ัย' AND ioValueEnd <> ''
     THEN
-       vbDateEnd := date_trunc('DAY', vbDate) + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueEnd::Time;
+       vbDateEnd := date_trunc('DAY', vbDate)::Date + ((ioTypeId - 1)::TVarChar||' DAY')::interval + ioValueEnd::Time;
 
       IF date_part('minute',  vbDateEnd) not in (0, 30)
       THEN
