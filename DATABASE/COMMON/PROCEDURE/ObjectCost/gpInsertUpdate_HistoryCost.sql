@@ -386,19 +386,23 @@ end if;
                                           AND MIContainer.ObjectExtId_Analyzer   IN (SELECT _tmpUnit_branch_oth.UnitId FROM _tmpUnit_branch_oth)
                                           AND MIContainer.isActive               = FALSE
                                               THEN 0*/
-                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
-                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                         WHEN MLO_From.ObjectId                  = 3080691 -- Склад ГП ф.Львов"
+                                          AND MLO_To.ObjectId                    = 8411    -- Склад ГП ф.Киев"
+                                        --AND MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                        --AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
-                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
-                                          AND MIContainer.isActive               = TRUE
+                                        -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                        --AND MIContainer.isActive               = TRUE
                                           AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
 
-                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
-                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                         WHEN MLO_From.ObjectId                  = 8411    -- Склад ГП ф.Киев"
+                                          AND MLO_To.ObjectId                    = 3080691 -- Склад ГП ф.Львов"
+                                        --AND MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                        --AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
-                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
-                                          AND MIContainer.isActive               = TRUE
+                                        -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                        --AND MIContainer.isActive               = TRUE
                                           AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
 
@@ -425,19 +429,23 @@ end if;
                                           AND MIContainer.ObjectExtId_Analyzer   IN (SELECT _tmpUnit_branch_oth.UnitId FROM _tmpUnit_branch_oth)
                                           AND MIContainer.isActive               = FALSE
                                               THEN 0*/
-                                         WHEN MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
-                                          AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
+                                         WHEN MLO_From.ObjectId                  = 3080691 -- Склад ГП ф.Львов"
+                                          AND MLO_To.ObjectId                    = 8411    -- Склад ГП ф.Киев"
+                                        --AND MIContainer.WhereObjectId_Analyzer = 8411    -- Склад ГП ф.Киев"
+                                        --AND MIContainer.ObjectExtId_Analyzer   = 3080691 -- Склад ГП ф.Львов"
                                           AND inBranchId                         = 8379    -- филиал Киев
-                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
-                                          AND MIContainer.isActive               = TRUE
+                                        -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                        --AND MIContainer.isActive               = TRUE
                                           AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
 
-                                         WHEN MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
-                                          AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
+                                         WHEN MLO_From.ObjectId                  = 8411    -- Склад ГП ф.Киев"
+                                          AND MLO_To.ObjectId                    = 3080691 -- Склад ГП ф.Львов"
+                                        --AND MIContainer.WhereObjectId_Analyzer = 3080691 -- Склад ГП ф.Львов"
+                                        --AND MIContainer.ObjectExtId_Analyzer   = 8411    -- Склад ГП ф.Киев"
                                           AND inBranchId                         = 3080683 -- филиал Львов
-                                          -- AND MovementBoolean_HistoryCost.ValueData = TRUE
-                                          AND MIContainer.isActive               = TRUE
+                                        -- AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                        --AND MIContainer.isActive               = TRUE
                                           AND MIContainer.AccountId <> zc_Enum_Account_110101() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                               THEN MIContainer.Amount
 
@@ -493,6 +501,12 @@ end if;
                    LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                              ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                             AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
+                   LEFT JOIN MovementLinkObject AS MLO_From
+                                                ON MLO_From.MovementId = MIContainer.MovementId
+                                               AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                   LEFT JOIN MovementLinkObject AS MLO_To
+                                                ON MLO_To.MovementId = MIContainer.MovementId
+                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
               GROUP BY Container.Id
                      , Container.UnitId
                      , Container.isHistoryCost_ReturnIn
@@ -1530,4 +1544,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2019', inEndDate:= '30.09.2019', inBranchId:= 0 , inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId = 695073 -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.10.2019', inEndDate:= '26.10.2019', inBranchId:= 3080683 /*филиал Львов*/, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

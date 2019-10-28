@@ -413,12 +413,18 @@ BEGIN
                              AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
          LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
 
-    WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
+   WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
-           OR vbIsConstraint = FALSE)
+           OR ObjectBoolean_isBranchAll.ValueData = TRUE
+           OR vbIsConstraint = FALSE
+          )
       AND (ObjectLink_Juridical_Retail.ChildObjectId      = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
       AND (ObjectLink_Partner_Route.ChildObjectId         = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
       AND (ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId OR COALESCE (inPersonalTradeId, 0) = 0)

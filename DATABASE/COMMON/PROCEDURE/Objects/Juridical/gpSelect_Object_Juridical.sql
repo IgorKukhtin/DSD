@@ -187,7 +187,7 @@ BEGIN
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isBranchAll.DescId = zc_ObjectBoolean_Juridical_isBranchAll()
+                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id

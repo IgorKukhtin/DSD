@@ -543,6 +543,10 @@ BEGIN
                                ON Partner_GPSE.ObjectId = Object_Partner.Id
                               AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
 
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -565,6 +569,7 @@ BEGIN
                                                               , 8359 -- 04-Услуги
                                                                )
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
+          OR ObjectBoolean_isBranchAll.ValueData = TRUE
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239

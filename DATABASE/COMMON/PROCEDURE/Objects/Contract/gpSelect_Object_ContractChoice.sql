@@ -593,10 +593,15 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
            OR tmpListBranch_Constraint.JuridicalId > 0
+           OR ObjectBoolean_isBranchAll.ValueData = TRUE
            OR vbIsConstraint = FALSE
            OR inJuridicalId <> 0
           )

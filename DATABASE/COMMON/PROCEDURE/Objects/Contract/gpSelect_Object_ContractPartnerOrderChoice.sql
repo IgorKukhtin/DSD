@@ -636,6 +636,10 @@ BEGIN
                               ON Partner_GPSE.ObjectId = Object_Partner.Id
                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -671,6 +675,7 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
+          OR ObjectBoolean_isBranchAll.ValueData = TRUE
           OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130  -- АГРО СИРОВИНА ТОВ
                                                           , 528407  -- ОПТТОРГ-15 ТОВ
                                                           , 3136014 -- СХІДТОРГ 2018 ТОВ

@@ -157,6 +157,10 @@ BEGIN
                               AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+                                  ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                                 AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
        -- AND View_Contract.isErased = FALSE
@@ -165,7 +169,9 @@ BEGIN
                                                                 , 8359 -- 04-Услуги
                                                                  )
             OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
-            OR vbIsConstraint = FALSE)
+            OR ObjectBoolean_isBranchAll.ValueData = TRUE
+            OR vbIsConstraint = FALSE
+           )
     )
 
      -- Результат
@@ -298,7 +304,7 @@ BEGIN
       AND Object_Member.isErased = FALSE
       AND (tmpPersonal_Branch.MemberId > 0
            OR vbIsConstraint_Branch = FALSE
-           OR Object_Member.Id = 4218193
+           OR Object_Member.Id = 4218193 -- Клиент Харьков-Одесса
           )
     UNION ALL
      SELECT tmpPartner.Id
