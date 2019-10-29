@@ -56,6 +56,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
                                                    TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -97,8 +103,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inisAutoMCS               Boolean   ,    -- Автоматический пересчет НТЗ
     IN inisTopNo                 Boolean   ,    -- Не учитывать ТОП для аптеки
 
-    IN inLatitude                TFloat    ,    -- Географическая широта
-    IN inLongitude               TFloat    ,    -- Географическая долгота
+    IN inLatitude                TVarChar  ,    -- Географическая широта
+    IN inLongitude               TVarChar  ,    -- Географическая долгота
     IN inMondayStart             TDateTime ,    -- Пон. -  пятн. начало работы
     IN inMondayEnd               TDateTime ,    -- Пон. -  пятн. конец работы
     IN inSaturdayStart           TDateTime ,    -- Суббота начало работы
@@ -115,8 +121,9 @@ $BODY$
    DECLARE vbCode_calc    Integer;  
    DECLARE vbOldId        Integer;
    DECLARE vbOldParentId  Integer;
-   DECLARE vbCreateDate  TDateTime;
-   DECLARE vbCloseDate   TDateTime;
+   DECLARE vbCreateDate   TDateTime;
+   DECLARE vbCloseDate    TDateTime;
+   DECLARE vbFloat        Float;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
@@ -132,6 +139,29 @@ BEGIN
    THEN
       RAISE EXCEPTION 'Ошибка.Изменение признака <Разбивать товар по партиям на кассах> разрешено только администратору.';   
    END IF;
+   
+   IF TRIM(inLatitude) <> ''
+   THEN
+     BEGIN
+          vbFloat:= TRIM(inLatitude) :: Float;
+     EXCEPTION           
+        WHEN data_exception
+        THEN vbFloat := -1;
+        RAISE EXCEPTION 'Ошибка.Ошибка широт <%> невозможно преобразовать в число.', inLatitude;   
+     END;
+   END IF;
+
+   IF TRIM(inLongitude) <> ''
+   THEN
+     BEGIN
+          vbFloat:= TRIM(inLongitude) :: Float;
+     EXCEPTION           
+        WHEN data_exception
+        THEN vbFloat := -1;
+        RAISE EXCEPTION 'Ошибка.Ошибка долгота <%> невозможно преобразовать в число.', inLongitude;   
+     END;
+   END IF;
+
    
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
@@ -301,9 +331,9 @@ BEGIN
    
    
    -- Географическая широта
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Latitude(), ioId, inLatitude);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_Latitude(), ioId, TRIM(inLatitude));
    -- Географическая долгота
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Longitude(), ioId, inLongitude);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_Longitude(), ioId, TRIM(inLongitude));
 
    IF inMondayStart ::Time <> '00:00'
    THEN

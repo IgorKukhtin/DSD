@@ -529,9 +529,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_NotTransferTime() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Member(), 'zc_ObjectBoolean_Goods_NotTransferTime', 'Не перевдить в сроки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_NotTransferTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Route_PayForWeight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Route_PayForWeight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Route(), 'zc_ObjectBoolean_Route_PayForWeight', 'оплата водителю за вес' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Route_PayForWeight');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 29.10.19         * zc_ObjectBoolean_Route_PayForWeight
  24.10.19         * zc_ObjectBoolean_Juridical_isBranchAll
  24.10.19         * zc_ObjectBoolean_Retail_isOrderMin
                     zc_ObjectBoolean_Juridical_isOrderMin

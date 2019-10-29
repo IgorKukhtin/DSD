@@ -1003,10 +1003,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_BankAccount_CBAccountOld() RETURNS In
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_BankAccount_CBAccountOld', zc_Object_BankAccount(), 'Счет старый - для выгрузки в клиент банк' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BankAccount_CBAccountOld');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_Latitude() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Latitude'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_Latitude', zc_object_Unit(), 'Географическая широта' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Latitude');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_Longitude() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Longitude'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_Longitude', zc_object_Unit(), 'Географическая долгота' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Longitude');
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 29.09.19                                                                                                         * zc_ObjectString_Unit_Latitude zc_ObjectString_Unit_Longitude
  10.09.19                                                                                                         * zc_ObjectString_BankAccount_CBAccountб zc_ObjectString_BankAccount_CBAccountOld
  09.09.19         * zc_ObjectString_Member_CardIBAN
                     zc_ObjectString_Member_CardIBANSecond

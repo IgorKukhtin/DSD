@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TVarChar
              , HoursPlan TFloat, MinutePlan TFloat
+             , isPayForWeight Boolean
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -59,10 +60,11 @@ $BODY$BEGIN
            , CAST ('' as TVarChar) AS RouteGroupName           
 
            , NULL   :: TDateTime   AS StartRunPlan
-           , NULL   :: TVarChar   AS EndRunPlan 
+           , NULL   :: TVarChar    AS EndRunPlan 
            , CAST (0 as TFloat)    AS HoursPlan
            , CAST (0 as TFloat)    AS MinutePlan
 
+           , FALSE  ::Boolean       AS isPayForWeight
            , CAST (NULL AS Boolean) AS isErased
            ;
    ELSE
@@ -123,6 +125,7 @@ $BODY$BEGIN
                   ELSE 0
              END                   :: TFloat AS MinutePlan
              
+           , COALESCE (ObjectBoolean_PayForWeight.ValueData, FALSE) ::Boolean AS isPayForWeight
            , Object_Route.isErased   AS isErased
            
        FROM Object AS Object_Route
@@ -151,6 +154,10 @@ $BODY$BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
                                  ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
                                 AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PayForWeight
+                                    ON ObjectBoolean_PayForWeight.ObjectId = Object_Route.Id
+                                   AND ObjectBoolean_PayForWeight.DescId = zc_ObjectBoolean_Route_PayForWeight()
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -185,6 +192,7 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.10.19         *
  18.04.19         * 
  29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd

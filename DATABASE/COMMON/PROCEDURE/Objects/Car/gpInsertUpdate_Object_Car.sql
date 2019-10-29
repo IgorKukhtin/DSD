@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
    INOUT ioId                       Integer,     -- ид
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
       IN inFuelChildId              Integer,     -- Вид топлива (дополнительный)
       IN inJuridicalId              Integer,     -- Юридическое лицо(стороннее)
       IN inAssetId                  Integer,     -- Основные средства
+      IN inKoeffHoursWork           TFloat ,     -- коэфф. для модели Рабочее время из путевого листа
       IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
@@ -63,6 +65,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Осн.средством>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Asset(), ioId, inAssetId);
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_KoeffHoursWork(), ioId, inKoeffHoursWork);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -75,6 +80,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.19         * inKoeffHoursWork
  28.11.16         * add Asset
  18.11.15         * add comment
  17.12.14         * add Juridical               

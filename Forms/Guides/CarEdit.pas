@@ -64,6 +64,8 @@ type
     cxLabel10: TcxLabel;
     ceAsset: TcxButtonEdit;
     AssetGuides: TdsdGuides;
+    edKoeffHoursWork: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
   private
     { Private declarations }
   public

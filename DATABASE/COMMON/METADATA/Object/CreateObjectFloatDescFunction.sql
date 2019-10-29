@@ -994,6 +994,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance', zc_Object_JuridicalOrderFinance(), 'Лимит по сумме отсрочки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_KoeffHoursWork() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_KoeffHoursWork'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Car_KoeffHoursWork', zc_Object_Car(), 'коэфф. для модели Рабочее время из путевого листа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_KoeffHoursWork');
+
 
 --!!! АПТЕКА
 
@@ -1458,6 +1462,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.10.19         * zc_ObjectFloat_Car_KoeffHoursWork
  28.10.19                                                                                      * zc_ObjectFloat_Unit_Latitude, zc_ObjectFloat_Unit_Longitude
  25.10.19                                                                                      * zc_ObjectFloat_Retail_ShareFromPrice
  23.10.19         * zc_ObjectFloat_Goods_CountForWeight
