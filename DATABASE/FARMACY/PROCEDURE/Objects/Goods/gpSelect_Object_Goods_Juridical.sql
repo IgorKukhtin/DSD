@@ -131,9 +131,10 @@ BEGIN
                                          AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
 
       WHERE ObjectLink_Goods_Object.ChildObjectId = inObjectId
-     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
-                         
-  
+     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+     AND (CASE WHEN inObjectId = zc_Enum_GlobalConst_BarCode() THEN ObjectLink_LinkGoods_GoodsMain.ChildObjectId IS NOT NULL ELSE 1=1 END) -- пока так убрала чтоб не было линков у которых нет связи с гл.товаром, утром удалю сами линки, на ночь не рискую
+     ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

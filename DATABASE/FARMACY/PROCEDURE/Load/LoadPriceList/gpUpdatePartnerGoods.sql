@@ -65,10 +65,10 @@ BEGIN
               AND CommonCode > 0;
 
      -- Создаем штрих коды, которых еще нет
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), 0, BarCode), zc_Enum_GlobalConst_BarCode())
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), 0, TRIM (BarCode)), zc_Enum_GlobalConst_BarCode())
             FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
-             AND BarCode NOT IN (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
-             AND BarCode <> '';
+             AND TRIM (BarCode) NOT IN (SELECT TRIM (GoodsName) FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
+             AND TRIM  (COALESCE (BarCode,'')) <> '';
 
      -- Тут мы меняем или добавляем товары в справочник товаров прайс-листа
      PERFORM lpInsertUpdate_Object_Goods_andArea(
@@ -187,7 +187,7 @@ BEGIN
              FROM Object_Goods_View 
                JOIN LoadPriceListItem ON LoadPriceListItem.BarCode = Object_Goods_View.GoodsName
                                      AND LoadPriceListItem.LoadPriceListId = inId
-                                     AND LoadPriceListItem.BarCode <> ''
+                                     AND TRIM (COALESCE (LoadPriceListItem.BarCode,'')) <> ''
       
              WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
               AND Object_Goods_View.Id NOT IN (SELECT GoodsId FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
@@ -207,12 +207,12 @@ BEGIN
             FROM LoadPriceListItem
 
                  INNER JOIN tmpObject_Goods_View AS Object_Goods_View 
-                                                 ON Object_Goods_View.GoodsName = LoadPriceListItem.BarCode
+                                                 ON TRIM (Object_Goods_View.GoodsName) = TRIM (LoadPriceListItem.BarCode)
                        
             WHERE LoadPriceListItem.GoodsId <> 0
-              AND LoadPriceListItem.BarCode <> ''
+              AND TRIM (COALESCE (LoadPriceListItem.BarCode,'')) <> ''
               AND LoadPriceListItem.LoadPriceListId = inId
-              AND ) AS DD;
+              ) AS DD;
    END IF;
 
 
