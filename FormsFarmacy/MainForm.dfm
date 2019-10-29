@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2969,6 +2969,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_DiscountExternal: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1087#1088#1086#1077#1082#1090#1099')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1087#1088#1086#1077#1082#1090#1099')'
+      FormName = 'TReport_MovementCheck_DiscountExternalForm'
+      FormNameParam.Value = 'TReport_MovementCheck_DiscountExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3618,6 +3630,9 @@ inherited MainForm: TMainForm
       end
       object miReport_IncomeSample: TMenuItem
         Action = actReport_IncomeSample
+      end
+      object N193: TMenuItem
+        Action = actReport_DiscountExternal
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange

@@ -551,6 +551,8 @@ type
     miGoodsAll_Tab: TMenuItem;
     miGoodsAllRetail_Tab: TMenuItem;
     N192: TMenuItem;
+    actReport_DiscountExternal: TdsdOpenForm;
+    N193: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

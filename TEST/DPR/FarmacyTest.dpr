@@ -755,7 +755,9 @@ uses
   AmountDialog in '..\..\FormsFarmacy\Guides\AmountDialog.pas' {AmountDialogForm: TParentForm},
   GoodsDialog in '..\..\FormsFarmacy\Guides\GoodsDialog.pas' {GoodsDialogForm: TParentForm},
   GoodsAllRetail_Tab in '..\..\FormsFarmacy\Guides\GoodsAllRetail_Tab.pas' {GoodsAllRetail_TabForm: TParentForm},
-  GoodsAll_Tab in '..\..\FormsFarmacy\Guides\GoodsAll_Tab.pas' {GoodsAll_TabForm: TParentForm};
+  GoodsAll_Tab in '..\..\FormsFarmacy\Guides\GoodsAll_Tab.pas' {GoodsAll_TabForm: TParentForm},
+  Report_MovementCheck_DiscountExternal in '..\..\FormsFarmacy\Report\Report_MovementCheck_DiscountExternal.pas',
+  Report_DiscountExternalDialog in '..\..\FormsFarmacy\Report\Report_DiscountExternalDialog.pas' {Report_DiscountExternalDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
