@@ -78,22 +78,24 @@ BEGIN
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
+                                       , Movement.StatusId
                                   FROM Movement
                                   WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по Ш/К - Приход, т.к. период 80 дней
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
+                                       , Movement.StatusId
                                   FROM Movement
                                   WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
                                     AND Movement.DescId = zc_Movement_OrderIncome()
                                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                     AND inBranchCode BETWEEN 301 AND 310
                                  UNION
                                   -- по № документа
@@ -101,27 +103,77 @@ BEGIN
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
+                                       , Movement.StatusId
                                   FROM tmpInvNumber AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по № документа - Приход, т.к. период 80 дней
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
+                                       , Movement.StatusId
                                   FROM tmpInvNumber AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId = zc_Movement_OrderIncome()
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   WHERE inBranchCode BETWEEN 301 AND 310
                                  );
 
+    -- DELETE
+    IF EXISTS (SELECT 1 FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased())
+       AND EXISTS (SELECT 1 FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId <> zc_Enum_Status_Erased())
+    THEN
+         DELETE FROM _tmpMovement_find_all WHERE _tmpMovement_find_all.StatusId = zc_Enum_Status_Erased();
+    END IF;
+
     -- ANALYZE
     ANALYZE _tmpMovement_find_all;
+
+
+    -- Проверка
+    IF EXISTS (SELECT 1 FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased())
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> удален.'
+                      , (SELECT tmp.InvNumber FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased() ORDER BY tmp.Id LIMIT 1)
+                      , zfConvert_DateToString ((SELECT tmp.OperDate FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased() ORDER BY tmp.Id LIMIT 1))
+                       ;
+    END IF;
+
+    -- Проверка
+    IF inBranchCode < 100
+       AND EXISTS (WITH tmpUnit_Branch AS (SELECT OL.ObjectId AS UnitId
+                                           FROM ObjectLink AS OL
+                                           WHERE OL.ChildObjectId = vbBranchId
+                                             AND OL.DescId        = zc_ObjectLink_Unit_Branch()
+                                          UNION
+                                           -- Склады
+                                           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
+                                           WHERE vbBranchId = zc_Branch_Basis()
+                                          )
+                   SELECT 1
+                   FROM _tmpMovement_find_all AS tmp
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                     ON MovementLinkObject_From.MovementId = tmp.Id
+                                                    AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                     ON MovementLinkObject_To.MovementId = tmp.Id
+                                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                        LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_From ON tmpUnit_Branch_From.UnitId = MovementLinkObject_From.ObjectId
+                        LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = MovementLinkObject_To.ObjectId
+                   WHERE tmpUnit_Branch_From.UnitId IS NULL AND tmpUnit_Branch_To.UnitId IS NULL
+                  )
+    THEN
+        RAISE EXCEPTION 'Ошибка.В документ № <%> от <%> неправильно указан склад = <%>.'
+                      , (SELECT tmp.InvNumber FROM _tmpMovement_find_all AS tmp ORDER BY tmp.Id LIMIT 1)
+                      , zfConvert_DateToString    ((SELECT tmp.OperDate FROM _tmpMovement_find_all AS tmp ORDER BY tmp.Id LIMIT 1))
+                      , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM _tmpMovement_find_all AS tmp LEFT JOIN MovementLinkObject AS MLO ON MLO.MovementId = tmp.Id AND MLO.DescId = zc_MovementLinkObject_To() ORDER BY tmp.Id LIMIT 1))
+                       ;
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -149,11 +201,11 @@ BEGIN
 
                                    -- ContractId
                                  , MovementLinkObject_Contract.ObjectId AS ContractId
- 
+
                                    -- От кого
                                  , CASE -- Для заявки поставщику
                                         WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                                        
+
                                              THEN MovementLinkObject_Unit.ObjectId
 
                                         -- Для остальных - Заявка покупателя или SendOnPrice
@@ -235,7 +287,7 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                             
+
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -526,7 +578,7 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
                                         AND tmpMovement.DescId = zc_Movement_OrderIncome()
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                 ON ObjectLink_Juridical_PriceList.ObjectId = MovementLinkObject_Juridical.ObjectId 
+                                 ON ObjectLink_Juridical_PriceList.ObjectId = MovementLinkObject_Juridical.ObjectId
                                 AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
 
             -- LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
