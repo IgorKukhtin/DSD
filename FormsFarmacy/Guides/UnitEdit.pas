@@ -117,9 +117,7 @@ type
     cxPageControl: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
-    ceLongitude: TcxCurrencyEdit;
     cxLabel30: TcxLabel;
-    ceLatitude: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
     cxLabel32: TcxLabel;
     cxLabel33: TcxLabel;
@@ -133,6 +131,8 @@ type
     ceSaturdayStart: TcxDateEdit;
     ceSundayEnd: TcxDateEdit;
     ceSundayStart: TcxDateEdit;
+    edLatitude: TcxTextEdit;
+    edLongitude: TcxTextEdit;
   private
     { Private declarations }
   public

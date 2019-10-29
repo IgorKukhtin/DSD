@@ -169,7 +169,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 472
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -612,27 +611,10 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
-      ExplicitHeight = 601
-      object ceLongitude: TcxCurrencyEdit
-        Left = 162
-        Top = 31
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
-        TabOrder = 1
-        Width = 129
-      end
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
-        Caption = #1043#1077#1086#1075#1088#1072#1092#1080#1095#1077#1089#1082#1072#1103' '#1076#1086#1083#1075#1086#1090#1072
-      end
-      object ceLatitude: TcxCurrencyEdit
-        Left = 15
-        Top = 31
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
-        TabOrder = 0
-        Width = 129
+        Caption = #1043#1077#1086#1075#1088#1072#1092#1080#1095#1077#1089#1082#1072#1103' '#1076#1086#1083#1075#1086#1090#1072' ('#1074#1074#1086#1076#1080#1090#1100' '#1095#1077#1088#1077#1079' '#1090#1086#1095#1082#1091')'
       end
       object cxLabel31: TcxLabel
         Left = 15
@@ -749,6 +731,18 @@
         Properties.YearsInMonthList = False
         TabOrder = 6
         Width = 100
+      end
+      object edLatitude: TcxTextEdit
+        Left = 15
+        Top = 35
+        TabOrder = 0
+        Width = 129
+      end
+      object edLongitude: TcxTextEdit
+        Left = 163
+        Top = 35
+        TabOrder = 1
+        Width = 129
       end
     end
   end
@@ -1107,16 +1101,16 @@
       item
         Name = 'inLatitude'
         Value = Null
-        Component = ceLatitude
-        DataType = ftFloat
+        Component = edLatitude
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inLongitude'
         Value = Null
-        Component = ceLongitude
-        DataType = ftFloat
+        Component = edLongitude
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1566,15 +1560,15 @@
       item
         Name = 'Latitude'
         Value = Null
-        Component = ceLatitude
-        DataType = ftFloat
+        Component = edLatitude
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Longitude'
         Value = Null
-        Component = ceLongitude
-        DataType = ftFloat
+        Component = edLongitude
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

@@ -39,7 +39,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RedeemByHandSP Boolean,
                UnitOverdueId  Integer, UnitOverdueName TVarChar,
                isAutoMCS Boolean,
-               Latitude TFloat, Longitude TFloat,
+               Latitude TVarChar, Longitude TVarChar,
                MondayStart TDateTime, MondayEnd TDateTime,
                SaturdayStart TDateTime, SaturdayEnd TDateTime,
                SundayStart TDateTime, SundayEnd TDateTime
@@ -125,8 +125,8 @@ BEGIN
            , CAST ('' as TVarChar) AS UnitOverdueName
            , FALSE                 AS isAutoMCS
            
-           , CAST (0 as TFloat)       AS Latitude 
-           , CAST (0 as TFloat)       AS Longitude
+           , CAST ('' as TVarChar)    AS Latitude 
+           , CAST ('' as TVarChar)    AS Longitude
            , CAST (Null as TDateTime) AS MondayStart
            , CAST (Null as TDateTime) AS MondayEnd
            , CAST (Null as TDateTime) AS SaturdayStart
@@ -213,8 +213,8 @@ BEGIN
       , COALESCE (Object_UnitOverdue.ValueData, '') ::TVarChar AS UnitOverdueName
       , COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE):: Boolean AS isAutoMCS
       
-      , ObjectFloat_Latitude.ValueData        AS Latitude 
-      , ObjectFloat_Longitude.ValueData       AS Longitude
+      , ObjectString_Latitude.ValueData        AS Latitude 
+      , ObjectString_Longitude.ValueData       AS Longitude
       , CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayStart.ValueData ELSE Null END ::TDateTime AS MondayStart
       , CASE WHEN COALESCE(ObjectDate_MondayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayEnd.ValueData ELSE Null END ::TDateTime AS MondayEnd
       , CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SaturdayStart.ValueData ELSE Null END ::TDateTime AS SaturdayStart
@@ -401,12 +401,12 @@ BEGIN
                                 ON ObjectBoolean_Unit_AutoMCS.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Unit_AutoMCS.DescId = zc_ObjectBoolean_Unit_AutoMCS()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_Latitude
-                              ON ObjectFloat_Latitude.ObjectId = Object_Unit.Id
-                             AND ObjectFloat_Latitude.DescId = zc_ObjectFloat_Unit_Latitude()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Longitude
-                              ON ObjectFloat_Longitude.ObjectId = Object_Unit.Id
-                             AND ObjectFloat_Longitude.DescId = zc_ObjectFloat_Unit_Longitude()
+        LEFT JOIN ObjectString AS ObjectString_Latitude
+                               ON ObjectString_Latitude.ObjectId = Object_Unit.Id
+                              AND ObjectString_Latitude.DescId = zc_ObjectString_Unit_Latitude()
+        LEFT JOIN ObjectString AS ObjectString_Longitude
+                               ON ObjectString_Longitude.ObjectId = Object_Unit.Id
+                              AND ObjectString_Longitude.DescId = zc_ObjectString_Unit_Longitude()
 
         LEFT JOIN ObjectDate AS ObjectDate_MondayStart
                              ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
