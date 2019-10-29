@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
+             , KoeffHoursWork TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -38,6 +39,8 @@ BEGIN
            , Object_Car.ValueData   AS Name
            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS NameAll
            
+           
+           , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData        AS Comment
            
@@ -85,7 +88,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Car.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
-                                                             
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
+                                  ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
+
             LEFT JOIN ObjectLink AS Car_CarModel
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -151,4 +158,4 @@ $BODY$
 UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, zc_Enum_Process_AccessKey_TrasportDnepr()) FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Car_Unit() AND Object.DescId = zc_Object_Car();
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Car (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Car (false , zfCalc_UserAdmin())

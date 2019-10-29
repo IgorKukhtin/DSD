@@ -69,6 +69,7 @@ type
     AssetName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    KoeffHoursWork: TcxGridDBColumn;
   private
     { Private declarations }
   public

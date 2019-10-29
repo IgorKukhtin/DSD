@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Car(
     IN inId          Integer,       -- ключ объекта <Автомобиль>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , KoeffHoursWork TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -31,6 +32,8 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Car()) AS Code
 --           , COALESCE (MAX (Object_Car.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS NAME
+
+           , CAST (0 AS TFloat)     AS KoeffHoursWork
            
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
@@ -75,6 +78,8 @@ BEGIN
            , Object_Car.ObjectCode  AS Code
            , Object_Car.ValueData   AS Name
            
+           , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
+
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData     AS Comment
            
@@ -116,7 +121,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Car.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
-                                                             
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
+                                  ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
+
             LEFT JOIN ObjectLink AS Car_CarModel 
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -164,7 +173,8 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.11.16         * add Asset 
+ 29.10.19         * KoeffHoursWork
+ 28.11.16         * add Asset
  17.12.14         * add Juridical               
  30.09.13                                        * add Object_Personal_View
  26.09.13         * del StartDateRate, EndDateRate, RateFuelKind               

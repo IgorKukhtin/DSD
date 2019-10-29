@@ -69,6 +69,7 @@ type
     StartRunPlan: TcxGridDBColumn;
     EndRunPlan: TcxGridDBColumn;
     HoursRunPlan: TcxGridDBColumn;
+    isPayForWeight: TcxGridDBColumn;
 
   private
     { Private declarations }

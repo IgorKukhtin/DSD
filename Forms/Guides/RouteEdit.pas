@@ -19,7 +19,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
   cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls,
-  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar, cxCheckBox;
 
 type
   TRouteEditForm = class(TParentForm)
@@ -71,6 +71,7 @@ type
     edMinutePlan: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edEndRunPlan: TcxTextEdit;
+    cbPayForWeight: TcxCheckBox;
 
   private
     { Private declarations }

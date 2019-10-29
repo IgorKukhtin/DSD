@@ -9,7 +9,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
@@ -29,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
     IN inFreightId      Integer   , -- ссылка на Название груза
     IN inRouteGroupId   Integer   , -- ссылка на Группу маршрута
+    IN inisPayForWeight Boolean   , -- Оплата водителю за вес
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -84,6 +86,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_EndRunPlan(), ioId, (inStartRunPlan + (inHoursPlan||' hour '||inMinutePlan||' minute') :: INTERVAL) );
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Route_PayForWeight(), ioId, inisPayForWeight);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -95,6 +100,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.19         *
  06.04.19         *
  29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd

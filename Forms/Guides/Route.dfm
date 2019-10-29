@@ -3,7 +3,7 @@ object RouteForm: TRouteForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
   ClientHeight = 395
-  ClientWidth = 967
+  ClientWidth = 976
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object RouteForm: TRouteForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 967
+    Width = 976
     Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 967
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -190,6 +191,15 @@ object RouteForm: TRouteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
+      end
+      object isPayForWeight: TcxGridDBColumn
+        Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076'. '#1079#1072' '#1074#1077#1089
+        DataBinding.FieldName = 'isPayForWeight'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
+        Options.Editing = False
+        Width = 85
       end
     end
     object cxGridLevel: TcxGridLevel

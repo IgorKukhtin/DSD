@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
   ClientHeight = 485
-  ClientWidth = 348
+  ClientWidth = 328
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,12 +54,12 @@
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 32
+    Left = 31
     Top = 22
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 134
   end
   object cxLabel5: TcxLabel
     Left = 32
@@ -202,6 +202,22 @@
     TabOrder = 23
     Width = 273
   end
+  object edKoeffHoursWork: TcxCurrencyEdit
+    Left = 172
+    Top = 22
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 24
+    Width = 133
+  end
+  object cxLabel33: TcxLabel
+    Left = 172
+    Top = 5
+    Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
+    Caption = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088'.'#1074#1088'.'
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
@@ -326,6 +342,14 @@
         Value = Null
         Component = AssetGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffHoursWork'
+        Value = Null
+        Component = edKoeffHoursWork
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -488,6 +512,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KoeffHoursWork'
+        Value = Null
+        Component = edKoeffHoursWork
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 40
@@ -508,8 +539,7 @@
     Top = 56
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 65528
+    Top = 120
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

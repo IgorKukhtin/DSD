@@ -296,6 +296,13 @@
     TabOrder = 33
     Width = 88
   end
+  object cbPayForWeight: TcxCheckBox
+    Left = 173
+    Top = 463
+    Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
+    TabOrder = 34
+    Width = 156
+  end
   object ActionList: TActionList
     Left = 304
     Top = 10
@@ -457,6 +464,14 @@
         Value = Null
         Component = RouteGroupGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPayForWeight'
+        Value = Null
+        Component = cbPayForWeight
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -637,6 +652,13 @@
         Value = Null
         Component = edMinutePlan
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPayForWeight'
+        Value = Null
+        Component = cbPayForWeight
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
