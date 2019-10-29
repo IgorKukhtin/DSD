@@ -63,7 +63,7 @@
   end
   object ceUnit: TcxButtonEdit
     Left = 32
-    Top = 182
+    Top = 177
     Properties.Buttons = <
       item
         Default = True
@@ -80,12 +80,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 207
+    Top = 202
     Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteKind: TcxButtonEdit
     Left = 32
-    Top = 228
+    Top = 219
     Properties.Buttons = <
       item
         Default = True
@@ -97,12 +97,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 254
+    Top = 246
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
   end
   object ceFreight: TcxButtonEdit
     Left = 32
-    Top = 274
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -131,12 +131,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 32
-    Top = 303
+    Top = 287
     Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteGroup: TcxButtonEdit
     Left = 32
-    Top = 323
+    Top = 303
     Properties.Buttons = <
       item
         Default = True
@@ -148,12 +148,12 @@
   end
   object cxLabel29: TcxLabel
     Left = 32
-    Top = 353
+    Top = 357
     Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088'.'
   end
   object edRateSumma: TcxCurrencyEdit
     Left = 32
-    Top = 372
+    Top = 374
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -163,13 +163,13 @@
   end
   object cxLabel6: TcxLabel
     Left = 32
-    Top = 398
+    Top = 403
     Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
     Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
   end
   object edRatePrice: TcxCurrencyEdit
     Left = 32
-    Top = 416
+    Top = 420
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -179,13 +179,13 @@
   end
   object cxLabel8: TcxLabel
     Left = 173
-    Top = 353
+    Top = 357
     Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
     Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
   end
   object edTimePrice: TcxCurrencyEdit
     Left = 173
-    Top = 372
+    Top = 374
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -195,13 +195,13 @@
   end
   object cxLabel9: TcxLabel
     Left = 173
-    Top = 398
+    Top = 403
     Hint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.)'
     Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087'. ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
   end
   object edRateSummaAdd: TcxCurrencyEdit
     Left = 173
-    Top = 416
+    Top = 420
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -219,7 +219,7 @@
   end
   object edRateSummaExp: TcxCurrencyEdit
     Left = 32
-    Top = 463
+    Top = 460
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -296,12 +296,12 @@
     TabOrder = 33
     Width = 88
   end
-  object cbPayForWeight: TcxCheckBox
-    Left = 173
-    Top = 463
-    Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
+  object cbNotPayForWeight: TcxCheckBox
+    Left = 32
+    Top = 330
+    Caption = #1053#1077#1090' '#1086#1087#1083#1072#1090#1099' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
     TabOrder = 34
-    Width = 156
+    Width = 273
   end
   object ActionList: TActionList
     Left = 304
@@ -468,9 +468,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPayForWeight'
+        Name = 'inIsNotPayForWeight'
         Value = Null
-        Component = cbPayForWeight
+        Component = cbNotPayForWeight
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -655,9 +655,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPayForWeight'
+        Name = 'isNotPayForWeight'
         Value = Null
-        Component = cbPayForWeight
+        Component = cbNotPayForWeight
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -830,7 +830,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 159
-    Top = 305
+    Left = 151
+    Top = 281
   end
 end

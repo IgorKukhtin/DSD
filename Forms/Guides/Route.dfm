@@ -27,7 +27,6 @@ object RouteForm: TRouteForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 967
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -183,6 +182,15 @@ object RouteForm: TRouteForm
         Options.Editing = False
         Width = 95
       end
+      object isNotPayForWeight: TcxGridDBColumn
+        Caption = #1053#1077#1090' '#1086#1087#1083'. '#1079#1072' '#1074#1077#1089
+        DataBinding.FieldName = 'isNotPayForWeight'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077#1090' '#1086#1087#1083#1072#1090#1099' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
+        Options.Editing = False
+        Width = 70
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -191,15 +199,6 @@ object RouteForm: TRouteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
-      end
-      object isPayForWeight: TcxGridDBColumn
-        Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076'. '#1079#1072' '#1074#1077#1089
-        DataBinding.FieldName = 'isPayForWeight'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1087#1083#1072#1090#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
-        Options.Editing = False
-        Width = 85
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TVarChar
              , HoursRunPlan TVarChar
-             , isPayForWeight Boolean
+             , isNotPayForWeight Boolean
              , isErased Boolean
              ) AS
 $BODY$
@@ -83,7 +83,7 @@ BEGIN
                    ELSE ''
              END :: TVarChar AS HoursRunPlan
                                                         
-       , COALESCE (ObjectBoolean_PayForWeight.ValueData, FALSE) ::Boolean AS isPayForWeight
+       , COALESCE (ObjectBoolean_NotPayForWeight.ValueData, FALSE) ::Boolean AS isNotPayForWeight
        , Object_Route.isErased   AS isErased
        
    FROM Object AS Object_Route
@@ -115,9 +115,9 @@ BEGIN
                              ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
                             AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_PayForWeight
-                                ON ObjectBoolean_PayForWeight.ObjectId = Object_Route.Id
-                               AND ObjectBoolean_PayForWeight.DescId = zc_ObjectBoolean_Route_PayForWeight()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotPayForWeight
+                                ON ObjectBoolean_NotPayForWeight.ObjectId = Object_Route.Id
+                               AND ObjectBoolean_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
 
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -178,7 +178,7 @@ BEGIN
            , NULL   :: TVarChar  AS EndRunPlan 
            , NULL   :: TVarChar  AS HoursRunPlan
 
-           , FALSE  ::Boolean    AS isPayForWeight
+           , FALSE  ::Boolean    AS isNotPayForWeight
            , FALSE  ::Boolean    AS isErased
   ;
   
@@ -210,4 +210,3 @@ UPDATE Object SET AccessKeyId = Object2.AccessKeyId  from ObjectLink  left join 
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Route (zfCalc_UserAdmin())
-

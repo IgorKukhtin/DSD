@@ -71,7 +71,7 @@ type
     edMinutePlan: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edEndRunPlan: TcxTextEdit;
-    cbPayForWeight: TcxCheckBox;
+    cbNotPayForWeight: TcxCheckBox;
 
   private
     { Private declarations }

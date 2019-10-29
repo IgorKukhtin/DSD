@@ -1,16 +1,7 @@
 -- Function: gpInsertUpdate_Object_Route(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
@@ -18,19 +9,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
     IN inCode           Integer   , -- свойство <Код маршрута>
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
     IN inStartRunPlan   TDateTime , -- Время выезда план
-    IN inHoursPlan      Tfloat    , -- Время в пути - часы
-    IN inMinutePlan     Tfloat    , -- Время в пути - минуты
-    IN inRateSumma      Tfloat    , -- Сумма коммандировочных
-    IN inRatePrice      Tfloat    , -- Ставка грн/км (дальнобойные)
-    IN inTimePrice      Tfloat    , -- Ставка грн/ч (коммандировочные)
-    IN inRateSummaAdd   Tfloat    , -- Сумма доплата (дальнобойные)
-    IN inRateSummaExp   Tfloat    , -- Сумма командировочных экспедитору
+    IN inHoursPlan      TFloat    , -- Время в пути - часы
+    IN inMinutePlan     TFloat    , -- Время в пути - минуты
+    IN inRateSumma      TFloat    , -- Сумма коммандировочных
+    IN inRatePrice      TFloat    , -- Ставка грн/км (дальнобойные)
+    IN inTimePrice      TFloat    , -- Ставка грн/ч (коммандировочные)
+    IN inRateSummaAdd   TFloat    , -- Сумма доплата (дальнобойные)
+    IN inRateSummaExp   TFloat    , -- Сумма командировочных экспедитору
     IN inUnitId         Integer   , -- ссылка на Подразделение
     IN inBranchId       Integer   , -- ссылка на Филиал
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
     IN inFreightId      Integer   , -- ссылка на Название груза
     IN inRouteGroupId   Integer   , -- ссылка на Группу маршрута
-    IN inisPayForWeight Boolean   , -- Оплата водителю за вес
+    IN inIsNotPayForWeight Boolean   , -- Нет оплаты водителю за вес
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -71,23 +62,23 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_RouteGroup(), ioId, inRouteGroupId);   
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSumma(), ioId, inRateSumma);
+   PERFORM lpInsertUpdate_ObjecTFloat (zc_ObjecTFloat_Route_RateSumma(), ioId, inRateSumma);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RatePrice(), ioId, inRatePrice);
+   PERFORM lpInsertUpdate_ObjecTFloat (zc_ObjecTFloat_Route_RatePrice(), ioId, inRatePrice);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_TimePrice(), ioId, inTimePrice);
+   PERFORM lpInsertUpdate_ObjecTFloat (zc_ObjecTFloat_Route_TimePrice(), ioId, inTimePrice);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSummaAdd(), ioId, inRateSummaAdd);
+   PERFORM lpInsertUpdate_ObjecTFloat (zc_ObjecTFloat_Route_RateSummaAdd(), ioId, inRateSummaAdd);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSummaExp(), ioId, inRateSummaExp);
+   PERFORM lpInsertUpdate_ObjecTFloat (zc_ObjecTFloat_Route_RateSummaExp(), ioId, inRateSummaExp);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_StartRunPlan(), ioId, inStartRunPlan);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_EndRunPlan(), ioId, (inStartRunPlan + (inHoursPlan||' hour '||inMinutePlan||' minute') :: INTERVAL) );
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Route_PayForWeight(), ioId, inisPayForWeight);
+   -- сохранили свойство <Нет оплаты водителю за вес>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Route_NotPayForWeight(), ioId, inIsNotPayForWeight);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

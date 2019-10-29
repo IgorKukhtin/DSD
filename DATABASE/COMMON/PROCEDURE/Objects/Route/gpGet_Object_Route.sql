@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TVarChar
              , HoursPlan TFloat, MinutePlan TFloat
-             , isPayForWeight Boolean
+             , isNotPayForWeight Boolean
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -64,7 +64,7 @@ $BODY$BEGIN
            , CAST (0 as TFloat)    AS HoursPlan
            , CAST (0 as TFloat)    AS MinutePlan
 
-           , FALSE  ::Boolean       AS isPayForWeight
+           , FALSE  ::Boolean       AS isNotPayForWeight
            , CAST (NULL AS Boolean) AS isErased
            ;
    ELSE
@@ -125,7 +125,7 @@ $BODY$BEGIN
                   ELSE 0
              END                   :: TFloat AS MinutePlan
              
-           , COALESCE (ObjectBoolean_PayForWeight.ValueData, FALSE) ::Boolean AS isPayForWeight
+           , COALESCE (ObjectBoolean_NotPayForWeight.ValueData, FALSE) ::Boolean AS isNotPayForWeight
            , Object_Route.isErased   AS isErased
            
        FROM Object AS Object_Route
@@ -155,9 +155,9 @@ $BODY$BEGIN
                                  ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
                                 AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_PayForWeight
-                                    ON ObjectBoolean_PayForWeight.ObjectId = Object_Route.Id
-                                   AND ObjectBoolean_PayForWeight.DescId = zc_ObjectBoolean_Route_PayForWeight()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotPayForWeight
+                                    ON ObjectBoolean_NotPayForWeight.ObjectId = Object_Route.Id
+                                   AND ObjectBoolean_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
