@@ -757,7 +757,8 @@ uses
   GoodsAllRetail_Tab in '..\..\FormsFarmacy\Guides\GoodsAllRetail_Tab.pas' {GoodsAllRetail_TabForm: TParentForm},
   GoodsAll_Tab in '..\..\FormsFarmacy\Guides\GoodsAll_Tab.pas' {GoodsAll_TabForm: TParentForm},
   Report_MovementCheck_DiscountExternal in '..\..\FormsFarmacy\Report\Report_MovementCheck_DiscountExternal.pas',
-  Report_DiscountExternalDialog in '..\..\FormsFarmacy\Report\Report_DiscountExternalDialog.pas' {Report_DiscountExternalDialogForm: TParentForm};
+  Report_DiscountExternalDialog in '..\..\FormsFarmacy\Report\Report_DiscountExternalDialog.pas' {Report_DiscountExternalDialogForm: TParentForm},
+  GoodsMainTab_Error in '..\..\FormsFarmacy\Guides\GoodsMainTab_Error.pas' {GoodsMainTab_ErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

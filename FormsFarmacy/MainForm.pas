@@ -553,6 +553,8 @@ type
     N192: TMenuItem;
     actReport_DiscountExternal: TdsdOpenForm;
     N193: TMenuItem;
+    actGoodsMainTab_Error: TdsdOpenForm;
+    miGoodsMainTab_Error: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
