@@ -257,7 +257,7 @@ BEGIN
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
           , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
           , Object_JuridicalGoods.MakerName    AS MakerName
-          , LastPriceList_View.ContractId      AS ContractId
+          , LastPriceList_find_View.ContractId      AS ContractId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
@@ -273,7 +273,7 @@ BEGIN
              -- Прайс-лист (поставщика) - MovementItem
             JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
              -- Прайс-лист (поставщика) - Movement
-            JOIN LastPriceList_View ON LastPriceList_View.MovementId = PriceList.MovementId
+            JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
              -- Срок партии товара (или Срок годности?) в Прайс-лист (поставщика)
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
@@ -281,9 +281,9 @@ BEGIN
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
              -- Установки для юр. лиц (для поставщика определяется договор и т.п)
-            LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId 
+            LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_find_View.JuridicalId 
                                        AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
-                                       AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId 
+                                       AND JuridicalSettings.ContractId      = LastPriceList_find_View.ContractId 
             -- связываем с элементами  установок юр.лиц. 
             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                               AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
@@ -296,16 +296,16 @@ BEGIN
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = GoodsList.ObjectId
        
             -- Поставщик
-            INNER JOIN Object AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
+            INNER JOIN Object AS Juridical ON Juridical.Id = LastPriceList_find_View.JuridicalId
 
             -- Дней отсрочки по договору
             LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
-                                  ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
+                                  ON ObjectFloat_Deferment.ObjectId = LastPriceList_find_View.ContractId
                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
        
             -- % бонуса из Маркетинговый контракт
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = GoodsList.ObjectId
-                                AND GoodsPromo.JuridicalId = LastPriceList_View.JuridicalId
+                                AND GoodsPromo.JuridicalId = LastPriceList_find_View.JuridicalId
 
         WHERE  COALESCE (JuridicalSettings.isPriceClose, FALSE) <> TRUE 
 
