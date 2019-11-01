@@ -327,7 +327,7 @@ BEGIN
 
      -- Результат
      SELECT tmpTab.Id 
-          , tmpTab.ObjectCode        AS ObjectCode_tab        , tmpObject.ObjectCode       , CASE WHEN tmpTab.ObjectCode <> tmpObject.ObjectCode THEN zc_Color_Red() ELSE 0 ENd AS Color_Code
+          , tmpTab.ObjectCode        AS ObjectCode_tab        , tmpObject.ObjectCode       , CASE WHEN tmpTab.ObjectCode <> tmpObject.ObjectCode THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Code
           , tmpTab.Name              AS Name_tab              , tmpObject.Name             , CASE WHEN COALESCE (tmpTab.Name,'')                   <> COALESCE (tmpObject.Name, '')                 THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Name
           , tmpTab.MorionCode        AS MorionCode_tab        , tmpObject.MorionCode       , CASE WHEN COALESCE (tmpTab.MorionCode,0)              <> COALESCE (tmpObject.MorionCode ,0)            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MorionCode  --10
          
