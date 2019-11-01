@@ -29,6 +29,7 @@ RETURNS TABLE (
     Price              TFloat,
     SuperFinalPrice    TFloat,
     isTop              Boolean,
+    isTOP_Price        Boolean,
     isOneJuridical     Boolean,
     PercentMarkup      TFloat
 )
@@ -43,7 +44,6 @@ BEGIN
     vbIsGoodsPromo:= inObjectId >=0;
     -- !!!меняется параметр в нормальное значение!!!
     inObjectId:= ABS (inObjectId);
-
 
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
@@ -292,6 +292,7 @@ BEGIN
           , JuridicalSettings.isPriceClose     AS JuridicalIsPriceClose
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
           , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
+          , COALESCE (GoodsPrice.isTOP, FALSE) AS isTOP_Price
           , COALESCE (GoodsPrice.PercentMarkup, 0) AS PercentMarkup
 
           , tmpJuridicalArea.AreaId            AS AreaId
@@ -405,6 +406,7 @@ BEGIN
       , (FinalPrice - FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit)) / 100) :: TFloat AS SuperFinalPrice
 /* */
       , ddd.isTOP
+      , ddd.isTOP_Price
       , ddd.PercentMarkup
 
     FROM (SELECT DISTINCT
@@ -433,6 +435,7 @@ BEGIN
           , tmpMinPrice_RemainsPrice.JuridicalName
           , tmpMinPrice_RemainsPrice.Deferment
           , tmpMinPrice_RemainsPrice.isTOP
+          , tmpMinPrice_RemainsPrice.isTOP_Price
           , tmpMinPrice_RemainsPrice.PercentMarkup
 
           , tmpMinPrice_RemainsPrice.AreaId
@@ -481,6 +484,7 @@ BEGIN
         MinPriceList.Price,
         MinPriceList.SuperFinalPrice,
         MinPriceList.isTop :: Boolean AS isTop,
+        MinPriceList.isTOP_Price :: Boolean AS isTOP_Price,
         CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
         MinPriceList.PercentMarkup :: TFloat AS PercentMarkup
     FROM MinPriceList
@@ -495,6 +499,7 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.10.19                                                                                      * isTopNo_Unit только для TOP сети
  07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  11.10.17         * add area

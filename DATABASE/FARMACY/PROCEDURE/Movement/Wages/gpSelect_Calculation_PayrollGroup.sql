@@ -23,7 +23,7 @@ $BODY$
    DECLARE vbFormula   TVarChar;
 BEGIN
 
-  IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS(), zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS())
+  IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS(), zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS(), zc_Enum_PayrollType_WorkI())
   THEN
     vbSummaBase := inSummBase;
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);

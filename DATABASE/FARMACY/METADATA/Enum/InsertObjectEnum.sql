@@ -267,6 +267,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4, inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5, inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSAS(),   inDescId:= zc_Object_PayrollType(), inCode:= 6, inName:= 'Подмена средней смены'       , inEnumName:= 'zc_Enum_PayrollType_WorkSAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkI(),     inDescId:= zc_Object_PayrollType(), inCode:= 7, inName:= 'Исключение'                  , inEnumName:= 'zc_Enum_PayrollType_WorkI');
 
 -- !!! Группы расчета заработной платы
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_Check(),       inDescId:= zc_Object_PayrollGroup(), inCode:= 1, inName:= 'От суммы проведенных чеков'                    , inEnumName:= 'zc_Enum_PayrollGroup_Check');

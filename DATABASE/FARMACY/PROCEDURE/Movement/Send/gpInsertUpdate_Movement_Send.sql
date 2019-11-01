@@ -69,6 +69,17 @@ BEGIN
         THEN 
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
+        
+        IF (COALESCE (ioId, 0) = 0 OR inToId <> (SELECT MovementLinkObject_To.ObjectId FROM MovementLinkObject AS MovementLinkObject_To
+                                                 WHERE MovementLinkObject_To.MovementId = ioId
+                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()))
+          AND inToId = (SELECT ObjectLink_Unit_UnitOverdue.ChildObjectId FROM ObjectLink AS ObjectLink_Unit_UnitOverdue
+                        WHERE ObjectLink_Unit_UnitOverdue.ObjectId = vbUserUnitId
+                          AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()) 
+        THEN 
+          RAISE EXCEPTION 'Ошибка. Вам запрещено создавать перемещения на виртуальный склад Сроки.';     
+        END IF;     
+        
      END IF;     
 
      -- сохранили <Документ>

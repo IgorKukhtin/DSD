@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -145,31 +145,17 @@ type
     cxGridDBTableView1Column13: TcxGridDBColumn;
     cxGridDBTableView1Column14: TcxGridDBColumn;
     cxGridDBTableView1Column15: TcxGridDBColumn;
-    TabSheet1: TTabSheet;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
-    cxGridDBColumn5: TcxGridDBColumn;
-    cxGridDBColumn6: TcxGridDBColumn;
-    cxGridDBColumn7: TcxGridDBColumn;
-    cxGridDBColumn8: TcxGridDBColumn;
-    cxGridDBColumn9: TcxGridDBColumn;
-    cxGridDBColumn10: TcxGridDBColumn;
-    cxGridDBColumn11: TcxGridDBColumn;
-    cxGridDBColumn12: TcxGridDBColumn;
-    cxGridDBColumn13: TcxGridDBColumn;
-    cxGridDBColumn14: TcxGridDBColumn;
-    cxGridDBColumn15: TcxGridDBColumn;
-    cxGridDBColumn16: TcxGridDBColumn;
-    cxGridDBColumn17: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
+    tsYuriFarm: TTabSheet;
+    grYuriFarm: TcxGrid;
+    grYuriFarmDBTableView: TcxGridDBTableView;
+    grYuriFarmLevel: TcxGridLevel;
     Panel4: TPanel;
     YuriFarmDate: TcxDateEdit;
     cxLabel8: TcxLabel;
     btnYuriFarmExecute: TButton;
-    btnYuriFarmExport: TButton;
     btnYuriFarmSend: TButton;
+    dsReport_Upload_YuriFarm: TDataSource;
+    qryReport_Upload_YuriFarm: TZQuery;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -187,6 +173,8 @@ type
     procedure btnADVExecuteClick(Sender: TObject);
     procedure btnADVExportClick(Sender: TObject);
     procedure btnADVSendClick(Sender: TObject);
+    procedure btnYuriFarmExecuteClick(Sender: TObject);
+    procedure btnYuriFarmSendClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -196,6 +184,7 @@ type
     SavePathOptima: String;
     FileNameTeva: String;
     SavePathTeva: String;
+    SavePathYuriFarm: String;
     IntervalCount: Integer;
     IntervalMin: Integer;  // в минутах
 
@@ -223,6 +212,7 @@ type
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
+    procedure OpenAndFormatSQL(qryReport : TZQuery; grtView : TcxGridDBTableView);
   end;
 
 var
@@ -251,6 +241,55 @@ begin
   except
   end;
 end;
+
+procedure TExportSalesForSuppForm.OpenAndFormatSQL(qryReport : TZQuery; grtView : TcxGridDBTableView);
+  var I, W : integer;
+begin
+  qryReport.Close;
+  qryReport.DisableControls;
+  try
+    try
+      qryReport.Open;
+    except
+      on E:Exception do
+      begin
+        Add_Log(E.Message);
+        Exit;
+      end;
+    end;
+
+    if qryReport.IsEmpty then
+    begin
+      qryReport.Close;
+      Exit;
+    end;
+
+    grtView.ClearItems;
+
+    for I := 0 to qryReport.FieldCount - 1 do with grtView.CreateColumn do
+    begin
+      HeaderAlignmentHorz := TAlignment.taCenter;
+      Options.Editing := False;
+      DataBinding.FieldName := qryReport.Fields.Fields[I].FieldName;
+      if qryReport.Fields.Fields[I].DataType in [ftString, ftWideString] then
+      begin
+        W := 10;
+        qryReport.First;
+        while not qryReport.Eof do
+        begin
+          W := Max(W, LengTh(qryReport.Fields.Fields[I].AsString));
+          if W > 70 then Break;
+          qryReport.Next;
+        end;
+        qryReport.First;
+        Width := 6 * Min(W, 70) + 2;
+      end;
+    end;
+  finally
+    qryReport.EnableControls;
+  end;
+end;
+
 
 procedure TExportSalesForSuppForm.btnADVExecuteClick(Sender: TObject);
 begin
@@ -679,6 +718,105 @@ begin
   end;
 end;
 
+procedure TExportSalesForSuppForm.btnYuriFarmExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета Юрия-Фарм');
+
+  qryReport_Upload_YuriFarm.Close;
+  qryReport_Upload_YuriFarm.Params.ParamByName('inDate').Value := YuriFarmDate.Date;
+
+  OpenAndFormatSQL(qryReport_Upload_YuriFarm, grYuriFarmDBTableView);
+
+end;
+
+function StrToXML(Q : TZQuery; F : String) : string;
+begin
+  Result := Q.FieldByName(F).AsString;
+  Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '&', '&amp;', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '''', '&apos;', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '"', '&quot;', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+function CurrToXML(Q : TZQuery; F : String) : String;
+begin
+  Result := Q.FieldByName(F).AsString;
+  Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+function DateTimeToXML(Q : TZQuery; F : String) : String;
+begin
+  if Q.FieldByName(F).IsNull then Result := ''
+  else Result := FormatDateTime('YYYY-MM-DDTHH:NN:SS', Q.FieldByName(F).AsDateTime);
+end;
+
+function DateToXML(Q : TZQuery; F : String) : String;
+begin
+  if Q.FieldByName(F).IsNull then Result := ''
+  else Result := FormatDateTime('YYYY-MM-DD', Q.FieldByName(F).AsDateTime);
+end;
+
+procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
+  var cFileNameYuriFarm : string; nID : Integer;
+      sl : TStringList;
+
+  procedure StartXML;
+  begin
+    sl.Add('<?xml version="1.0" encoding="UTF-8"?>');
+    sl.Add('<pack>');
+    sl.Add('    <meta type_id=' + qryReport_Upload_YuriFarm.FieldByName('type_id').AsString +
+                    ' data_start="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '"' +
+                    ' data_end="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '"/>');
+    sl.Add('    <body>');
+  end;
+
+  procedure EndXML;
+  begin
+    sl.Add('    </body>');
+    sl.Add('</pack>');
+  end;
+
+  procedure SendXML;
+  begin
+    EndXML;
+    sl.SaveToFile(SavePathYuriFarm + cFileNameYuriFarm + '.xml', TEncoding.UTF8);
+    sl.Clear;
+  end;
+
+begin
+
+  if not qryReport_Upload_YuriFarm.Active then Exit;
+  Add_Log('Начало выгрузки отчетов Юрия-Фарм');
+  if not ForceDirectories(SavePathYuriFarm) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+
+  sl := TStringList.Create;
+  try
+    qryReport_Upload_YuriFarm.First;
+    nID := 0;
+    while not qryReport_Upload_YuriFarm.Eof do
+    begin
+
+      if nID <> qryReport_Upload_YuriFarm.FieldByName('id').AsInteger then
+      begin
+        if nID <> 0 then SendXML;
+        nID := qryReport_Upload_YuriFarm.FieldByName('id').AsInteger;
+        cFileNameYuriFarm := 'YuriFarm_' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '.xml';
+        StartXML;
+      end;
+
+      qryReport_Upload_YuriFarm.Next;
+    end;
+    if nID <> 0 then SendXML;
+  finally
+    sl.Free;
+  end;
+
+end;
+
 procedure TExportSalesForSuppForm.btnOptimaAllClick(Sender: TObject);
 var lCount: Integer;
 begin
@@ -756,6 +894,11 @@ begin
       SavePathADV := SavePathADV + '\';
     Ini.WriteString('Options', 'PathADV', SavePathADV);
 
+    SavePathYuriFarm := Trim(Ini.ReadString('Options', 'PathYuriFarm', ExtractFilePath(Application.ExeName)));
+    if SavePathADV[Length(SavePathYuriFarm)] <> '\' then
+      SavePathYuriFarm := SavePathYuriFarm + '\';
+    Ini.WriteString('Options', 'PathPathYuriFarm', SavePathYuriFarm);
+
     BaDMID.Value := Ini.ReadInteger('Options','BaDM_ID',59610);
     Ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
@@ -827,6 +970,7 @@ begin
   OptimaDate.Date := Date - 1;
   TevaDate.Date := Date - 1;
   AVDDate.Date := Date - 1;
+  YuriFarmDate.Date := Date - 1;
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
   try
