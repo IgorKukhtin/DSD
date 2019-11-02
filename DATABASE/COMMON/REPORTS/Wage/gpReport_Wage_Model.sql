@@ -997,6 +997,8 @@ AS  (SELECT
              , OL_Car_Unit.ChildObjectId AS UnitId_car
                -- HoursWork
              , COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS HoursWork
+               -- KoeffHoursWork_car
+             , CASE WHEN ObjectFloat_KoeffHoursWork.ValueData > 0 THEN ObjectFloat_KoeffHoursWork.ValueData ELSE 1 END AS KoeffHoursWork_car
 
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
@@ -1005,6 +1007,10 @@ AS  (SELECT
              LEFT JOIN ObjectLink AS OL_Car_Unit
                                   ON OL_Car_Unit.ObjectId = MovementLinkObject_Car.ObjectId
                                  AND OL_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
+                                   ON ObjectFloat_KoeffHoursWork.ObjectId = MovementLinkObject_Car.ObjectId
+                                  AND ObjectFloat_KoeffHoursWork.DescId   = zc_ObjectFloat_Car_KoeffHoursWork()
 
              INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = OL_Car_Unit.ChildObjectId
 
@@ -1034,7 +1040,23 @@ AS  (SELECT
           -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
           AND EXISTS (SELECT 1 FROM tmpUnit_Reestr)
        )
-         -- Данные для - Реестр Документов
+         -- Данные для - Реестр Документов - из zc_Movement_Transport - кому не платят за вес
+       , tmpMovement_Reestr_notWeight AS
+       (SELECT DISTINCT Movement.Id AS MovementId
+        FROM Movement
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+             INNER JOIN ObjectBoolean AS OB_NotPayForWeight
+                                      ON OB_NotPayForWeight.ObjectId = MovementItem.ObjectId
+                                     AND OB_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
+        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND Movement.DescId = zc_Movement_Transport()
+          AND Movement.StatusId = zc_Enum_Status_Complete()
+          -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
+          AND EXISTS (SELECT 1 FROM tmpUnit_Reestr)
+       )
+         -- Данные для - Реестр Документов - из zc_Movement_Transport
        , tmpMovement_Reestr AS
        (SELECT Movement.OperDate
              , DATE_PART ('ISODOW', Movement.OperDate)  AS OperDate_num
@@ -1050,7 +1072,7 @@ AS  (SELECT
                -- Подразделение - Автомобиль
              , OL_Car_Unit.ChildObjectId        AS UnitId_car
                -- Вес
-             , SUM (COALESCE (MovementFloat_TotalCountKg.ValueData, 0))   :: TFloat AS TotalCountKg
+             , SUM (CASE WHEN tmpMovement_Reestr_notWeight.MovementId > 0 THEN 0 ELSE COALESCE (MovementFloat_TotalCountKg.ValueData, 0) END) :: TFloat AS TotalCountKg
                -- Кол. док. (компл.)
              , COUNT (DISTINCT Movement_Sale.Id)  :: TFloat AS CountMovement
 
@@ -1104,6 +1126,9 @@ AS  (SELECT
 
              -- INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = MovementLinkObject_From.ObjectId
              INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = OL_Car_Unit.ChildObjectId
+
+             -- Нет оплаты водителю за вес
+             LEFT JOIN tmpMovement_Reestr_notWeight ON tmpMovement_Reestr_notWeight.MovementId = Movement.Id
 
         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
           AND Movement.DescId = zc_Movement_Transport()

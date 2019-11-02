@@ -108,7 +108,7 @@ BEGIN
         		        		   
    WHERE Object_Route.DescId = zc_Object_Route()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
-     AND Object_Route.Id = 419580 -- самовывоз
+   --AND Object_Route.Id = 419580 -- самовывоз
 
       UNION ALL
        SELECT 
