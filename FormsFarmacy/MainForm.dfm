@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2993,6 +2993,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Profitability: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1105#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      Hint = #1054#1090#1095#1105#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      FormName = 'TReport_ProfitabilityForm'
+      FormNameParam.Value = 'TReport_ProfitabilityForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3470,6 +3482,9 @@ inherited MainForm: TMainForm
       end
       object miReportMovementCheckFLForm: TMenuItem
         Action = actReportMovementCheckFLForm
+      end
+      object N194: TMenuItem
+        Action = actReport_Profitability
       end
       object N143: TMenuItem
         Action = actReportMovementCheckLight

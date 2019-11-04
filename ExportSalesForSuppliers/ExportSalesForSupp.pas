@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, XSBuiltIns,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxSpinEdit, Vcl.StdCtrls,
@@ -156,6 +156,16 @@ type
     btnYuriFarmSend: TButton;
     dsReport_Upload_YuriFarm: TDataSource;
     qryReport_Upload_YuriFarm: TZQuery;
+    grYuriFarmUnit: TcxGrid;
+    grYuriFarmUnitDBTableView: TcxGridDBTableView;
+    grYuriFarmUnitLevel: TcxGridLevel;
+    dsReport_Upload_YuriFarm_Unit: TDataSource;
+    qryReport_Upload_YuriFarm_Unit: TZQuery;
+    btnYuriFarmUnitExecute: TButton;
+    grYuriFarmUnit_ID: TcxGridDBColumn;
+    grYuriFarmUnit_UnitName: TcxGridDBColumn;
+    grYuriFarmUnit_OKPO: TcxGridDBColumn;
+    grYuriFarmUnit_UnitAddress: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -175,6 +185,7 @@ type
     procedure btnADVSendClick(Sender: TObject);
     procedure btnYuriFarmExecuteClick(Sender: TObject);
     procedure btnYuriFarmSendClick(Sender: TObject);
+    procedure btnYuriFarmUnitExecuteClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -720,10 +731,12 @@ end;
 
 procedure TExportSalesForSuppForm.btnYuriFarmExecuteClick(Sender: TObject);
 begin
+  if not qryReport_Upload_YuriFarm_Unit.Active then Exit;
   Add_Log('Начало Формирования отчета Юрия-Фарм');
 
   qryReport_Upload_YuriFarm.Close;
   qryReport_Upload_YuriFarm.Params.ParamByName('inDate').Value := YuriFarmDate.Date;
+  qryReport_Upload_YuriFarm.Params.ParamByName('inUnitID').Value := qryReport_Upload_YuriFarm_Unit.FieldByName('id').AsInteger;
 
   OpenAndFormatSQL(qryReport_Upload_YuriFarm, grYuriFarmDBTableView);
 
@@ -746,8 +759,16 @@ end;
 
 function DateTimeToXML(Q : TZQuery; F : String) : String;
 begin
-  if Q.FieldByName(F).IsNull then Result := ''
-  else Result := FormatDateTime('YYYY-MM-DDTHH:NN:SS', Q.FieldByName(F).AsDateTime);
+  if not Q.FieldByName(F).IsNull then
+    with TXSDateTime.Create() do
+    try
+      AsDateTime := Q.FieldByName(F).AsDateTime; // convert from TDateTime
+      Result := NativeToXS; // convert to WideString
+    finally
+      Free;
+    end
+  else Result := ''
+//  else Result := FormatDateTime('YYYY-MM-DDTHH:NN:SS', Q.FieldByName(F).AsDateTime);
 end;
 
 function DateToXML(Q : TZQuery; F : String) : String;
@@ -759,6 +780,7 @@ end;
 procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   var cFileNameYuriFarm : string; nID : Integer;
       sl : TStringList;
+      id_storage : string;
 
   procedure StartXML;
   begin
@@ -770,8 +792,53 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
     sl.Add('    <body>');
   end;
 
+  procedure DocCheck;
+  begin
+    sl.Add('        <doc' +
+           ' id="' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '"' +
+           ' id_storage="' + id_storage + '"' +
+           ' name="' + StrToXML(qryReport_Upload_YuriFarm, 'InvNumber') + '"' +
+           ' date="' + DateTimeToXML(qryReport_Upload_YuriFarm, 'OperDate') + '"' +
+           ' owner="' + StrToXML(qryReport_Upload_YuriFarm, 'InsertName') + '"' +
+           ' case_type="' + StrToXML(qryReport_Upload_YuriFarm, 'case_type') + '"' +
+           ' case_name="' + StrToXML(qryReport_Upload_YuriFarm, 'InvNumberSP') + '"' +
+           ' discount_card="' + StrToXML(qryReport_Upload_YuriFarm, 'DiscountCardName') + '"' +
+           ' payment_type="' + StrToXML(qryReport_Upload_YuriFarm, 'PaidTypeName') + '"' +
+           ' deleted="0"' +
+           '>');
+  end;
+
+  procedure DocCheckList;
+  begin
+    sl.Add('            <item' +
+           ' id_item="' + StrToXML(qryReport_Upload_YuriFarm, 'MovementItemId') + '"' +
+           ' id_parsel="' + StrToXML(qryReport_Upload_YuriFarm, 'id_parsel') + '"' +
+           ' id_drug="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsId') + '"' +
+           ' id_morion="' + StrToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
+           ' drug_name="' + StrToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
+           ' drug_form="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsName') + '"' +
+           ' drug_number="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsCode') + '"' +
+           ' drug_maker="' + StrToXML(qryReport_Upload_YuriFarm, 'MakerName') + '"' +
+           ' date_expire="' + DateTimeToXML(qryReport_Upload_YuriFarm, 'ExpirationDate') + '"' +
+           ' series="' + StrToXML(qryReport_Upload_YuriFarm, 'PartionGoods') + '"' +
+           ' vat="' + StrToXML(qryReport_Upload_YuriFarm, 'NDS') + '"' +
+           ' supplier="' + StrToXML(qryReport_Upload_YuriFarm, 'Supplier') + '"' +
+           ' okpo="' + StrToXML(qryReport_Upload_YuriFarm, 'OKPO') + '"' +
+
+           ' quant_num="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' quant_div="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' amount_buy="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' amount_sell="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' amount_reparation="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' amount_discount="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+           ' amount_divergence="' + qryReport_Upload_YuriFarm.FieldByName('PaidTypeName').AsString + '"' +
+
+           '/>');
+  end;
+
   procedure EndXML;
   begin
+    sl.Add('        </doc>');
     sl.Add('    </body>');
     sl.Add('</pack>');
   end;
@@ -806,6 +873,13 @@ begin
         nID := qryReport_Upload_YuriFarm.FieldByName('id').AsInteger;
         cFileNameYuriFarm := 'YuriFarm_' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '.xml';
         StartXML;
+        case qryReport_Upload_YuriFarm.FieldByName('type_id').AsInteger of
+          3 : DocCheck;
+        end;
+      end;
+
+      case qryReport_Upload_YuriFarm.FieldByName('type_id').AsInteger of
+        3 : DocCheckList;
       end;
 
       qryReport_Upload_YuriFarm.Next;
@@ -814,6 +888,27 @@ begin
   finally
     sl.Free;
   end;
+
+end;
+
+procedure TExportSalesForSuppForm.btnYuriFarmUnitExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета Юрия-Фарм аптеки');
+
+  qryReport_Upload_YuriFarm_Unit.Close;
+  qryReport_Upload_YuriFarm_Unit.Params.ParamByName('inDate').Value := YuriFarmDate.Date;
+
+  try
+    qryReport_Upload_YuriFarm_Unit.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  if qryReport_Upload_YuriFarm_Unit.IsEmpty then qryReport_Upload_YuriFarm_Unit.Close;
 
 end;
 

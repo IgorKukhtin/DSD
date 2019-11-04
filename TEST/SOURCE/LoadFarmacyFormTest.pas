@@ -776,6 +776,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
