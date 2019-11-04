@@ -760,7 +760,9 @@ uses
   Report_DiscountExternalDialog in '..\..\FormsFarmacy\Report\Report_DiscountExternalDialog.pas' {Report_DiscountExternalDialogForm: TParentForm},
   GoodsMainTab_Error in '..\..\FormsFarmacy\Guides\GoodsMainTab_Error.pas' {GoodsMainTab_ErrorForm: TParentForm},
   Report_Profitability in '..\..\FormsFarmacy\Report\Report_Profitability.pas' {Report_ProfitabilityForm: TParentForm},
-  Report_ProfitabilityDialog in '..\..\FormsFarmacy\Report\Report_ProfitabilityDialog.pas' {Report_ProfitabilityDialogForm: TParentForm};
+  Report_ProfitabilityDialog in '..\..\FormsFarmacy\Report\Report_ProfitabilityDialog.pas' {Report_ProfitabilityDialogForm: TParentForm},
+  Loyalty in '..\..\FormsFarmacy\Document\Loyalty.pas' {LoyaltyForm: TParentForm},
+  LoyaltyJournal in '..\..\FormsFarmacy\Document\LoyaltyJournal.pas' {LoyaltyJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

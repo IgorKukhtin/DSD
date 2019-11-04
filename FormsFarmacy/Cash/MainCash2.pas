@@ -4226,7 +4226,8 @@ begin
     (Pos(' амп', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) = 0) and
     (Pos('инъекц', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) = 0) and
     (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1269) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 9496) then
+    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 9496) and
+    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1336) then
   begin
     ShowMessage('Деление медикамента c ценой менее ' + UnitConfigCDS.FieldByName('ShareFromPrice').AsString + ' грн. заблокировано!');
     exit;
