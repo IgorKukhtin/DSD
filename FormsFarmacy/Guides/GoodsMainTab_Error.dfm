@@ -12,21 +12,18 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
     Width = 1079
     Height = 509
     ExplicitWidth = 1079
-    ExplicitHeight = 466
+    ExplicitHeight = 509
     ClientRectBottom = 509
     ClientRectRight = 1079
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = -3
       ExplicitWidth = 1079
-      ExplicitHeight = 841
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
         Width = 1079
         Height = 243
         Align = alTop
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = ''
-        ExplicitLeft = -3
-        ExplicitTop = 14
         ExplicitWidth = 1079
         ExplicitHeight = 243
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -107,6 +104,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 55
           end
           object isNotUploadSites_1: TcxGridDBColumn
+            Caption = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074
             DataBinding.FieldName = 'isNotUploadSites'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -114,6 +112,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isDoesNotShare_1: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
             DataBinding.FieldName = 'isDoesNotShare'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -121,6 +120,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isAllowDivision_1: TcxGridDBColumn
+            Caption = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
             DataBinding.FieldName = 'isAllowDivision'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -128,6 +128,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isNotTransferTime_1: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
             DataBinding.FieldName = 'isNotTransferTime'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -135,6 +136,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isNotMarion_1: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079'. '#1052#1072#1088#1080#1086#1085
             DataBinding.FieldName = 'isNotMarion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -142,6 +144,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 55
           end
           object isNOT_1: TcxGridDBColumn
+            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'isNOT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -173,6 +176,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 40
           end
           object ExchangeName_1: TcxGridDBColumn
+            Caption = #1054#1076'.'
             DataBinding.FieldName = 'ExchangeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -197,6 +201,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 80
           end
           object ReferCode_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1092#1077#1088#1077#1085#1090#1085#1086#1081' '#1094#1077#1085#1099
             DataBinding.FieldName = 'ReferCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -204,6 +209,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 70
           end
           object ReferPrice_1: TcxGridDBColumn
+            Caption = #1056#1077#1092#1077#1088#1077#1085#1090#1085#1072#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'ReferPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -211,6 +217,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 70
           end
           object CountPrice_1: TcxGridDBColumn
+            Caption = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             DataBinding.FieldName = 'CountPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -218,11 +225,17 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 100
           end
           object LastPrice_1: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             DataBinding.FieldName = 'LastPrice'
-            Width = 70
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object LastPriceOld_1: TcxGridDBColumn
+            Caption = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             DataBinding.FieldName = 'LastPriceOld'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object MakerName_1: TcxGridDBColumn
@@ -242,11 +255,17 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 80
           end
           object CodeUKTZED_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
             DataBinding.FieldName = 'CodeUKTZED'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object Analog_1: TcxGridDBColumn
+            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'Analog'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object isPublished_1: TcxGridDBColumn
@@ -258,6 +277,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object SiteKey_1: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1089#1072#1081#1090#1077
             DataBinding.FieldName = 'SiteKey'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -265,6 +285,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 58
           end
           object Foto_1: TcxGridDBColumn
+            Caption = #1060#1086#1090#1086
             DataBinding.FieldName = 'Foto'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -272,11 +293,17 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 59
           end
           object Thumb_1: TcxGridDBColumn
+            Caption = #1052#1077#1083#1082#1080#1077' '#1092#1086#1090#1086
             DataBinding.FieldName = 'Thumb'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object AppointmentName_1: TcxGridDBColumn
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'AppointmentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object Color_Code: TcxGridDBColumn
@@ -473,10 +500,6 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
         TabOrder = 1
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = ''
-        ExplicitLeft = 24
-        ExplicitTop = 264
-        ExplicitWidth = 1052
-        ExplicitHeight = 233
         object cxGridDBTableViewChild1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_1
@@ -567,6 +590,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 55
           end
           object isNotUploadSites_2: TcxGridDBColumn
+            Caption = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074
             DataBinding.FieldName = 'isNotUploadSites'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -574,6 +598,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isDoesNotShare_2: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
             DataBinding.FieldName = 'isDoesNotShare'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -581,6 +606,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isAllowDivision_2: TcxGridDBColumn
+            Caption = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
             DataBinding.FieldName = 'isAllowDivision'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -588,6 +614,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isNotTransferTime_2: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
             DataBinding.FieldName = 'isNotTransferTime'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -595,6 +622,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object isNotMarion_2: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079'. '#1052#1072#1088#1080#1086#1085
             DataBinding.FieldName = 'isNotMarion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -602,6 +630,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 55
           end
           object isNOT_2: TcxGridDBColumn
+            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'isNOT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -633,6 +662,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 40
           end
           object ExchangeName_2: TcxGridDBColumn
+            Caption = #1054#1076'.'
             DataBinding.FieldName = 'ExchangeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -657,6 +687,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 80
           end
           object ReferCode_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1092#1077#1088#1077#1085#1090#1085#1086#1081' '#1094#1077#1085#1099
             DataBinding.FieldName = 'ReferCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -664,6 +695,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 70
           end
           object ReferPrice_2: TcxGridDBColumn
+            Caption = #1056#1077#1092#1077#1088#1077#1085#1090#1085#1072#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'ReferPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -671,6 +703,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 70
           end
           object CountPrice_2: TcxGridDBColumn
+            Caption = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             DataBinding.FieldName = 'CountPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -678,12 +711,14 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 100
           end
           object LastPrice_2: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             DataBinding.FieldName = 'LastPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object LastPriceOld_2: TcxGridDBColumn
+            Caption = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             DataBinding.FieldName = 'LastPriceOld'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -706,12 +741,14 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 80
           end
           object CodeUKTZED: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
             DataBinding.FieldName = 'CodeUKTZED'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object Analog_2: TcxGridDBColumn
+            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'Analog'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -726,6 +763,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 45
           end
           object SiteKey_2: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1089#1072#1081#1090#1077
             DataBinding.FieldName = 'SiteKey'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -733,6 +771,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 58
           end
           object Foto_2: TcxGridDBColumn
+            Caption = #1060#1086#1090#1086
             DataBinding.FieldName = 'Foto'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -740,11 +779,17 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
             Width = 59
           end
           object Thumb_2: TcxGridDBColumn
+            Caption = #1052#1077#1083#1082#1080#1077' '#1092#1086#1090#1086
             DataBinding.FieldName = 'Thumb'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object AppointmentName_2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'AppointmentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
         end
@@ -759,17 +804,16 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
         Height = 9
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitTop = 249
       end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
-    Top = 48
+    Top = 128
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 624
-    Top = 72
+    Top = 128
   end
   inherited ActionList: TActionList
     Left = 199
@@ -1220,8 +1264,8 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
     Top = 112
   end
   inherited PopupMenu: TPopupMenu
-    Left = 680
-    Top = 64
+    Left = 696
+    Top = 120
     object N9: TMenuItem [5]
       Action = mactListDelete
     end
@@ -1292,7 +1336,7 @@ inherited GoodsMainTab_ErrorForm: TGoodsMainTab_ErrorForm
       item
       end>
     Left = 568
-    Top = 56
+    Top = 104
   end
   object dsdStoredProc1: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoods'
