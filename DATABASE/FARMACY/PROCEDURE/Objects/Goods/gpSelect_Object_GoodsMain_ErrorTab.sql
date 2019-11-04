@@ -17,70 +17,119 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    
    CREATE TEMP TABLE tmpData (Id Integer
-                            , ObjectCode_tab        Integer  , ObjectCode        Integer  , Color_Code               Integer
-                            , Name_tab              TVarChar , Name              TVarChar , Color_Name               Integer
-                            , MorionCode_tab        Integer  , MorionCode        Integer  , Color_MorionCode         Integer
-                            , isErased_tab          Boolean  , isErased          Boolean  , Color_isErased           Integer
-                            , isClose_tab           Boolean  , isClose           Boolean  , Color_isClose            Integer
-                            , isNotUploadSites_tab  Boolean  , isNotUploadSites  Boolean  , Color_isNotUploadSites   Integer
-                            , isDoesNotShare_tab    Boolean  , isDoesNotShare    Boolean  , Color_isDoesNotShare     Integer
-                            , isAllowDivision_tab   Boolean  , isAllowDivision   Boolean  , Color_isAllowDivision    Integer
-                            , isNotTransferTime_tab Boolean  , isNotTransferTime Boolean  , Color_isNotTransferTime  Integer
-                            , isNotMarion_tab       Boolean  , isNotMarion       Boolean  , Color_isNotMarion        Integer
-                            , isNOT_tab             Boolean  , isNOT             Boolean  , Color_isNOT              Integer
-                            , GoodsGroupId_tab      integer  , GoodsGroupId      Integer  , Color_GoodsGroupId       Integer
-                            , MeasureId_tab         integer  , MeasureId         Integer  , Color_MeasureId          Integer
-                            , NDSKindId_tab         integer  , NDSKindId         Integer  , Color_NDSKindId          Integer
-                            , ExchangeId_tab        integer  , ExchangeId        Integer  , Color_Exchange           Integer
-                            , ConditionsKeepId_tab  integer  , ConditionsKeepId  Integer  , Color_ConditionsKeepId   Integer
-                            , GoodsGroupPromoId_tab integer  , GoodsGroupPromoID Integer  , Color_GoodsGroupPromoID  Integer
-                            , ReferCode_tab         integer  , ReferCode         Integer  , Color_ReferCode          Integer
-                            , ReferPrice_tab        TFloat   , ReferPrice        TFloat   , Color_ReferPrice         Integer
-                            , CountPrice_tab        TFloat   , CountPrice        TFloat   , Color_CountPrice         Integer
-                            , LastPrice_tab         TDateTime, LastPrice         TDateTime, Color_LastPrice          Integer
-                            , LastPriceOld_tab      TDateTime, LastPriceOld      TDateTime, Color_LastPriceOld       Integer
-                            , MakerName_tab         TVarChar , MakerName         TVarChar , Color_MakerName          Integer
-                            , NameUkr_tab           TVarChar , NameUkr           TVarChar , Color_NameUkr            Integer
-                            , CodeUKTZED_tab        TVarChar , CodeUKTZED        TVarChar , Color_CodeUKTZED         Integer
-                            , Analog_tab            TVarChar , Analog            TVarChar , Color_Analog             Integer
-                            , isPublished_tab       Boolean  , isPublished       Boolean  , Color_isPublished        Integer
-                            , SiteKey_tab           integer  , SiteKey           integer  , Color_SiteKey            Integer
-                            , Foto_tab              TVarChar , Foto              TVarChar , Color_Foto               Integer
-                            , Thumb_tab             TVarChar , Thumb             TVarChar , Color_Thumb              Integer
-                            , AppointmentId_tab     integer  , AppointmentId     integer  , Color_AppointmentId      Integer) ON COMMIT DROP;
+                            , ObjectCode_tab        Integer  , ObjectCode        Integer  , Color_Code               Integer, isErr_Code              Boolean
+                            , Name_tab              TVarChar , Name              TVarChar , Color_Name               Integer, isErr_Name              Boolean
+                            , MorionCode_tab        Integer  , MorionCode        Integer  , Color_MorionCode         Integer, isErr_MorionCode        Boolean
+                            , isErased_tab          Boolean  , isErased          Boolean  , Color_isErased           Integer, isErr_isErased          Boolean
+                            , isClose_tab           Boolean  , isClose           Boolean  , Color_isClose            Integer, isErr_isClose           Boolean
+                            , isNotUploadSites_tab  Boolean  , isNotUploadSites  Boolean  , Color_isNotUploadSites   Integer, isErr_isNotUploadSites  Boolean
+                            , isDoesNotShare_tab    Boolean  , isDoesNotShare    Boolean  , Color_isDoesNotShare     Integer, isErr_isDoesNotShare    Boolean
+                            , isAllowDivision_tab   Boolean  , isAllowDivision   Boolean  , Color_isAllowDivision    Integer, isErr_isAllowDivision   Boolean
+                            , isNotTransferTime_tab Boolean  , isNotTransferTime Boolean  , Color_isNotTransferTime  Integer, isErr_isNotTransferTime Boolean
+                            , isNotMarion_tab       Boolean  , isNotMarion       Boolean  , Color_isNotMarion        Integer, isErr_isNotMarion       Boolean
+                            , isNOT_tab             Boolean  , isNOT             Boolean  , Color_isNOT              Integer, isErr_isNOT             Boolean
+                            , GoodsGroupId_tab      integer  , GoodsGroupId      Integer  , Color_GoodsGroupId       Integer, isErr_GoodsGroupId      Boolean
+                            , MeasureId_tab         integer  , MeasureId         Integer  , Color_MeasureId          Integer, isErr_MeasureId         Boolean
+                            , NDSKindId_tab         integer  , NDSKindId         Integer  , Color_NDSKindId          Integer, isErr_NDSKindId         Boolean
+                            , ExchangeId_tab        integer  , ExchangeId        Integer  , Color_Exchange           Integer, isErr_Exchange          Boolean
+                            , ConditionsKeepId_tab  integer  , ConditionsKeepId  Integer  , Color_ConditionsKeepId   Integer, isErr_ConditionsKeepId  Boolean
+                            , GoodsGroupPromoId_tab integer  , GoodsGroupPromoID Integer  , Color_GoodsGroupPromoID  Integer, isErr_GoodsGroupPromoID Boolean
+                            , ReferCode_tab         integer  , ReferCode         Integer  , Color_ReferCode          Integer, isErr_ReferCode         Boolean
+                            , ReferPrice_tab        TFloat   , ReferPrice        TFloat   , Color_ReferPrice         Integer, isErr_ReferPrice        Boolean
+                            , CountPrice_tab        TFloat   , CountPrice        TFloat   , Color_CountPrice         Integer, isErr_CountPrice        Boolean
+                            , LastPrice_tab         TDateTime, LastPrice         TDateTime, Color_LastPrice          Integer, isErr_LastPrice         Boolean
+                            , LastPriceOld_tab      TDateTime, LastPriceOld      TDateTime, Color_LastPriceOld       Integer, isErr_LastPriceOld      Boolean
+                            , MakerName_tab         TVarChar , MakerName         TVarChar , Color_MakerName          Integer, isErr_MakerName         Boolean
+                            , NameUkr_tab           TVarChar , NameUkr           TVarChar , Color_NameUkr            Integer, isErr_NameUkr           Boolean
+                            , CodeUKTZED_tab        TVarChar , CodeUKTZED        TVarChar , Color_CodeUKTZED         Integer, isErr_CodeUKTZED        Boolean
+                            , Analog_tab            TVarChar , Analog            TVarChar , Color_Analog             Integer, isErr_Analog            Boolean
+                            , isPublished_tab       Boolean  , isPublished       Boolean  , Color_isPublished        Integer, isErr_isPublished       Boolean
+                            , SiteKey_tab           integer  , SiteKey           integer  , Color_SiteKey            Integer, isErr_SiteKey           Boolean
+                            , Foto_tab              TVarChar , Foto              TVarChar , Color_Foto               Integer, isErr_Foto              Boolean
+                            , Thumb_tab             TVarChar , Thumb             TVarChar , Color_Thumb              Integer, isErr_Thumb             Boolean
+                            , AppointmentId_tab     integer  , AppointmentId     integer  , Color_AppointmentId      Integer, isErr_AppointmentId     Boolean
+                            ) ON COMMIT DROP;
 
-         INSERT INTO tmpData (Id 
-                            , ObjectCode_tab        , ObjectCode       , Color_Code             
-                            , Name_tab              , Name             , Color_Name             
-                            , MorionCode_tab        , MorionCode       , Color_MorionCode       
-                            , isErased_tab          , isErased         , Color_isErased         
-                            , isClose_tab           , isClose          , Color_isClose          
-                            , isNotUploadSites_tab  , isNotUploadSites , Color_isNotUploadSites 
-                            , isDoesNotShare_tab    , isDoesNotShare   , Color_isDoesNotShare   
-                            , isAllowDivision_tab   , isAllowDivision  , Color_isAllowDivision  
-                            , isNotTransferTime_tab , isNotTransferTime, Color_isNotTransferTime
-                            , isNotMarion_tab       , isNotMarion      , Color_isNotMarion      
-                            , isNOT_tab             , isNOT            , Color_isNOT            
-                            , GoodsGroupId_tab      , GoodsGroupId     , Color_GoodsGroupId     
-                            , MeasureId_tab         , MeasureId        , Color_MeasureId        
-                            , NDSKindId_tab         , NDSKindId        , Color_NDSKindId        
-                            , ExchangeId_tab        , ExchangeId       , Color_Exchange         
-                            , ConditionsKeepId_tab  , ConditionsKeepId , Color_ConditionsKeepId 
-                            , GoodsGroupPromoId_tab , GoodsGroupPromoID, Color_GoodsGroupPromoID
-                            , ReferCode_tab         , ReferCode        , Color_ReferCode        
-                            , ReferPrice_tab        , ReferPrice       , Color_ReferPrice       
-                            , CountPrice_tab        , CountPrice       , Color_CountPrice       
-                            , LastPrice_tab         , LastPrice        , Color_LastPrice        
-                            , LastPriceOld_tab      , LastPriceOld     , Color_LastPriceOld     
-                            , MakerName_tab         , MakerName        , Color_MakerName        
-                            , NameUkr_tab           , NameUkr          , Color_NameUkr          
-                            , CodeUKTZED_tab        , CodeUKTZED       , Color_CodeUKTZED       
-                            , Analog_tab            , Analog           , Color_Analog           
-                            , isPublished_tab       , isPublished      , Color_isPublished      
-                            , SiteKey_tab           , SiteKey          , Color_SiteKey          
-                            , Foto_tab              , Foto             , Color_Foto             
-                            , Thumb_tab             , Thumb            , Color_Thumb            
-                            , AppointmentId_tab     , AppointmentId    , Color_AppointmentId    )
+         INSERT INTO tmpData (Id
+                            , ObjectCode_tab        , ObjectCode       , Color_Code               , isErr_Code             
+                            , Name_tab              , Name             , Color_Name               , isErr_Name             
+                            , MorionCode_tab        , MorionCode       , Color_MorionCode         , isErr_MorionCode       
+                            , isErased_tab          , isErased         , Color_isErased           , isErr_isErased         
+                            , isClose_tab           , isClose          , Color_isClose            , isErr_isClose          
+                            , isNotUploadSites_tab  , isNotUploadSites , Color_isNotUploadSites   , isErr_isNotUploadSites 
+                            , isDoesNotShare_tab    , isDoesNotShare   , Color_isDoesNotShare     , isErr_isDoesNotShare   
+                            , isAllowDivision_tab   , isAllowDivision  , Color_isAllowDivision    , isErr_isAllowDivision  
+                            , isNotTransferTime_tab , isNotTransferTime, Color_isNotTransferTime  , isErr_isNotTransferTime
+                            , isNotMarion_tab       , isNotMarion      , Color_isNotMarion        , isErr_isNotMarion      
+                            , isNOT_tab             , isNOT            , Color_isNOT              , isErr_isNOT            
+                            , GoodsGroupId_tab      , GoodsGroupId     , Color_GoodsGroupId       , isErr_GoodsGroupId     
+                            , MeasureId_tab         , MeasureId        , Color_MeasureId          , isErr_MeasureId        
+                            , NDSKindId_tab         , NDSKindId        , Color_NDSKindId          , isErr_NDSKindId        
+                            , ExchangeId_tab        , ExchangeId       , Color_Exchange           , isErr_Exchange         
+                            , ConditionsKeepId_tab  , ConditionsKeepId , Color_ConditionsKeepId   , isErr_ConditionsKeepId 
+                            , GoodsGroupPromoId_tab , GoodsGroupPromoID, Color_GoodsGroupPromoID  , isErr_GoodsGroupPromoID
+                            , ReferCode_tab         , ReferCode        , Color_ReferCode          , isErr_ReferCode        
+                            , ReferPrice_tab        , ReferPrice       , Color_ReferPrice         , isErr_ReferPrice       
+                            , CountPrice_tab        , CountPrice       , Color_CountPrice         , isErr_CountPrice       
+                            , LastPrice_tab         , LastPrice        , Color_LastPrice          , isErr_LastPrice        
+                            , LastPriceOld_tab      , LastPriceOld     , Color_LastPriceOld       , isErr_LastPriceOld     
+                            , MakerName_tab         , MakerName        , Color_MakerName          , isErr_MakerName        
+                            , NameUkr_tab           , NameUkr          , Color_NameUkr            , isErr_NameUkr          
+                            , CodeUKTZED_tab        , CodeUKTZED       , Color_CodeUKTZED         , isErr_CodeUKTZED       
+                            , Analog_tab            , Analog           , Color_Analog             , isErr_Analog           
+                            , isPublished_tab       , isPublished      , Color_isPublished        , isErr_isPublished      
+                            , SiteKey_tab           , SiteKey          , Color_SiteKey            , isErr_SiteKey          
+                            , Foto_tab              , Foto             , Color_Foto               , isErr_Foto             
+                            , Thumb_tab             , Thumb            , Color_Thumb              , isErr_Thumb            
+                            , AppointmentId_tab     , AppointmentId    , Color_AppointmentId      , isErr_AppointmentId    
+                            )
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
   
    WITH tmpObject AS (  
                       WITH 
@@ -327,47 +376,47 @@ BEGIN
 
      -- Результат
      SELECT tmpTab.Id 
-          , tmpTab.ObjectCode        AS ObjectCode_tab        , tmpObject.ObjectCode       , CASE WHEN tmpTab.ObjectCode <> tmpObject.ObjectCode THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Code
-          , tmpTab.Name              AS Name_tab              , tmpObject.Name             , CASE WHEN COALESCE (tmpTab.Name,'')                   <> COALESCE (tmpObject.Name, '')                 THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Name
-          , tmpTab.MorionCode        AS MorionCode_tab        , tmpObject.MorionCode       , CASE WHEN COALESCE (tmpTab.MorionCode,0)              <> COALESCE (tmpObject.MorionCode ,0)            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MorionCode  --10
-         
-          , tmpTab.isErased          AS isErased_tab          , tmpObject.isErased         , CASE WHEN COALESCE (tmpTab.isErased, FALSE)           <> COALESCE (tmpObject.isErased , FALSE)         THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isErased         
-          , tmpTab.isClose           AS isClose_tab           , tmpObject.isClose          , CASE WHEN COALESCE (tmpTab.isClose, FALSE)            <> COALESCE (tmpObject.isClose , FALSE)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isClose          
-          , tmpTab.isNotUploadSites  AS isNotUploadSites_tab  , tmpObject.isNotUploadSites , CASE WHEN COALESCE (tmpTab.isNotUploadSites, FALSE)   <> COALESCE (tmpObject.isNotUploadSites , FALSE) THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotUploadSites --19
-          
-          , tmpTab.isDoesNotShare    AS isDoesNotShare_tab    , tmpObject.isDoesNotShare   , CASE WHEN COALESCE (tmpTab.isDoesNotShare, FALSE)     <> COALESCE (tmpObject.isDoesNotShare , FALSE)   THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isDoesNotShare   
-          , tmpTab.isAllowDivision   AS isAllowDivision_tab   , tmpObject.isAllowDivision  , CASE WHEN COALESCE (tmpTab.isAllowDivision, FALSE)    <> COALESCE (tmpObject.isAllowDivision , FALSE)  THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isAllowDivision  
-          , tmpTab.isNotTransferTime AS isNotTransferTime_tab , tmpObject.isNotTransferTime, CASE WHEN COALESCE (tmpTab.isNotTransferTime, FALSE)  <> COALESCE (tmpObject.isNotTransferTime, FALSE) THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotTransferTime --28
-          
-          , tmpTab.isNotMarion       AS isNotMarion_tab       , tmpObject.isNotMarion      , CASE WHEN COALESCE (tmpTab.isNotMarion, FALSE)        <> COALESCE (tmpObject.isNotMarion , FALSE)      THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotMarion      
-          , tmpTab.isNOT             AS isNOT_tab             , tmpObject.isNOT            , CASE WHEN COALESCE (tmpTab.isNOT, FALSE)              <> COALESCE (tmpObject.isNOT , FALSE)            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNOT            
-          , tmpTab.GoodsGroupId      AS GoodsGroupId_tab      , tmpObject.GoodsGroupId     , CASE WHEN COALESCE (tmpTab.GoodsGroupId,0)            <> COALESCE (tmpObject.GoodsGroupId,0)           THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_GoodsGroupId     --37
+          , tmpTab.ObjectCode        AS ObjectCode_tab        , tmpObject.ObjectCode       , CASE WHEN tmpTab.ObjectCode                           <> tmpObject.ObjectCode                          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Code             , CASE WHEN tmpTab.ObjectCode                           <> tmpObject.ObjectCode                          THEN TRUE ELSE FALSE ENd AS isErr_Code                                                                
+          , tmpTab.Name              AS Name_tab              , tmpObject.Name             , CASE WHEN COALESCE (tmpTab.Name,'')                   <> COALESCE (tmpObject.Name, '')                 THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Name             , CASE WHEN COALESCE (tmpTab.Name,'')                   <> COALESCE (tmpObject.Name, '')                 THEN TRUE ELSE FALSE ENd AS isErr_Name             
+          , tmpTab.MorionCode        AS MorionCode_tab        , tmpObject.MorionCode       , CASE WHEN COALESCE (tmpTab.MorionCode,0)              <> COALESCE (tmpObject.MorionCode ,0)            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MorionCode       , CASE WHEN COALESCE (tmpTab.MorionCode,0)              <> COALESCE (tmpObject.MorionCode ,0)            THEN TRUE ELSE FALSE ENd AS isErr_MorionCode       --10
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.isErased          AS isErased_tab          , tmpObject.isErased         , CASE WHEN COALESCE (tmpTab.isErased, FALSE)           <> COALESCE (tmpObject.isErased , FALSE)         THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isErased         , CASE WHEN COALESCE (tmpTab.isErased, FALSE)           <> COALESCE (tmpObject.isErased , FALSE)         THEN TRUE ELSE FALSE ENd AS isErr_isErased         
+          , tmpTab.isClose           AS isClose_tab           , tmpObject.isClose          , CASE WHEN COALESCE (tmpTab.isClose, FALSE)            <> COALESCE (tmpObject.isClose , FALSE)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isClose          , CASE WHEN COALESCE (tmpTab.isClose, FALSE)            <> COALESCE (tmpObject.isClose , FALSE)          THEN TRUE ELSE FALSE ENd AS isErr_isClose          
+          , tmpTab.isNotUploadSites  AS isNotUploadSites_tab  , tmpObject.isNotUploadSites , CASE WHEN COALESCE (tmpTab.isNotUploadSites, FALSE)   <> COALESCE (tmpObject.isNotUploadSites , FALSE) THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotUploadSites , CASE WHEN COALESCE (tmpTab.isNotUploadSites, FALSE)   <> COALESCE (tmpObject.isNotUploadSites , FALSE) THEN TRUE ELSE FALSE ENd AS isErr_isNotUploadSites --19
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.isDoesNotShare    AS isDoesNotShare_tab    , tmpObject.isDoesNotShare   , CASE WHEN COALESCE (tmpTab.isDoesNotShare, FALSE)     <> COALESCE (tmpObject.isDoesNotShare , FALSE)   THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isDoesNotShare   , CASE WHEN COALESCE (tmpTab.isDoesNotShare, FALSE)     <> COALESCE (tmpObject.isDoesNotShare , FALSE)   THEN TRUE ELSE FALSE ENd AS isErr_isDoesNotShare   
+          , tmpTab.isAllowDivision   AS isAllowDivision_tab   , tmpObject.isAllowDivision  , CASE WHEN COALESCE (tmpTab.isAllowDivision, FALSE)    <> COALESCE (tmpObject.isAllowDivision , FALSE)  THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isAllowDivision  , CASE WHEN COALESCE (tmpTab.isAllowDivision, FALSE)    <> COALESCE (tmpObject.isAllowDivision , FALSE)  THEN TRUE ELSE FALSE ENd AS isErr_isAllowDivision  
+          , tmpTab.isNotTransferTime AS isNotTransferTime_tab , tmpObject.isNotTransferTime, CASE WHEN COALESCE (tmpTab.isNotTransferTime, FALSE)  <> COALESCE (tmpObject.isNotTransferTime, FALSE) THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotTransferTime, CASE WHEN COALESCE (tmpTab.isNotTransferTime, FALSE)  <> COALESCE (tmpObject.isNotTransferTime, FALSE) THEN TRUE ELSE FALSE ENd AS isErr_isNotTransferTime --28
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.isNotMarion       AS isNotMarion_tab       , tmpObject.isNotMarion      , CASE WHEN COALESCE (tmpTab.isNotMarion, FALSE)        <> COALESCE (tmpObject.isNotMarion , FALSE)      THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNotMarion      , CASE WHEN COALESCE (tmpTab.isNotMarion, FALSE)        <> COALESCE (tmpObject.isNotMarion , FALSE)      THEN TRUE ELSE FALSE ENd AS isErr_isNotMarion      
+          , tmpTab.isNOT             AS isNOT_tab             , tmpObject.isNOT            , CASE WHEN COALESCE (tmpTab.isNOT, FALSE)              <> COALESCE (tmpObject.isNOT , FALSE)            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isNOT            , CASE WHEN COALESCE (tmpTab.isNOT, FALSE)              <> COALESCE (tmpObject.isNOT , FALSE)            THEN TRUE ELSE FALSE ENd AS isErr_isNOT            
+          , tmpTab.GoodsGroupId      AS GoodsGroupId_tab      , tmpObject.GoodsGroupId     , CASE WHEN COALESCE (tmpTab.GoodsGroupId,0)            <> COALESCE (tmpObject.GoodsGroupId,0)           THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_GoodsGroupId     , CASE WHEN COALESCE (tmpTab.GoodsGroupId,0)            <> COALESCE (tmpObject.GoodsGroupId,0)           THEN TRUE ELSE FALSE ENd AS isErr_GoodsGroupId      --37
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.MeasureId         AS MeasureId_tab         , tmpObject.MeasureId        , CASE WHEN COALESCE (tmpTab.MeasureId,0)               <> COALESCE (tmpObject.MeasureId,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MeasureId        , CASE WHEN COALESCE (tmpTab.MeasureId,0)               <> COALESCE (tmpObject.MeasureId,0)              THEN TRUE ELSE FALSE ENd AS isErr_MeasureId        
+          , tmpTab.NDSKindId         AS NDSKindId_tab         , tmpObject.NDSKindId        , CASE WHEN COALESCE (tmpTab.NDSKindId,0)               <> COALESCE (tmpObject.NDSKindId,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_NDSKindId        , CASE WHEN COALESCE (tmpTab.NDSKindId,0)               <> COALESCE (tmpObject.NDSKindId,0)              THEN TRUE ELSE FALSE ENd AS isErr_NDSKindId        
+          , tmpTab.ExchangeId        AS ExchangeId_tab        , tmpObject.ExchangeId       , CASE WHEN COALESCE (tmpTab.ExchangeId,0)              <> COALESCE (tmpObject.ExchangeId,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Exchange         , CASE WHEN COALESCE (tmpTab.ExchangeId,0)              <> COALESCE (tmpObject.ExchangeId,0)             THEN TRUE ELSE FALSE ENd AS isErr_Exchange          --46
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.ConditionsKeepId  AS ConditionsKeepId_tab  , tmpObject.ConditionsKeepId , CASE WHEN COALESCE (tmpTab.ConditionsKeepId,0)        <> COALESCE (tmpObject.ConditionsKeepId,0)       THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ConditionsKeepId , CASE WHEN COALESCE (tmpTab.ConditionsKeepId,0)        <> COALESCE (tmpObject.ConditionsKeepId,0)       THEN TRUE ELSE FALSE ENd AS isErr_ConditionsKeepId 
+          , tmpTab.GoodsGroupPromoID AS GoodsGroupPromoId_tab , tmpObject.GoodsGroupPromoID, CASE WHEN COALESCE (tmpTab.GoodsGroupPromoID,0)       <> COALESCE (tmpObject.GoodsGroupPromoID,0)      THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_GoodsGroupPromoId, CASE WHEN COALESCE (tmpTab.GoodsGroupPromoID,0)       <> COALESCE (tmpObject.GoodsGroupPromoID,0)      THEN TRUE ELSE FALSE ENd AS isErr_GoodsGroupPromoID
+          , tmpTab.ReferCode         AS ReferCode_tab         , tmpObject.ReferCode        , CASE WHEN COALESCE (tmpTab.ReferCode,0)               <> COALESCE (tmpObject.ReferCode,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ReferCode        , CASE WHEN COALESCE (tmpTab.ReferCode,0)               <> COALESCE (tmpObject.ReferCode,0)              THEN TRUE ELSE FALSE ENd AS isErr_ReferCode         --55
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.ReferPrice        AS ReferPrice_tab        , tmpObject.ReferPrice       , CASE WHEN COALESCE (tmpTab.ReferPrice,0)              <> COALESCE (tmpObject.ReferPrice,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ReferPrice       , CASE WHEN COALESCE (tmpTab.ReferPrice,0)              <> COALESCE (tmpObject.ReferPrice,0)             THEN TRUE ELSE FALSE ENd AS isErr_ReferPrice       
+          , tmpTab.CountPrice        AS CountPrice_tab        , tmpObject.CountPrice       , CASE WHEN COALESCE (tmpTab.CountPrice,0)              <> COALESCE (tmpObject.CountPrice,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_CountPrice       , CASE WHEN COALESCE (tmpTab.CountPrice,0)              <> COALESCE (tmpObject.CountPrice,0)             THEN TRUE ELSE FALSE ENd AS isErr_CountPrice       
+          , tmpTab.LastPrice         AS LastPrice_tab         , tmpObject.LastPrice        , CASE WHEN COALESCE (tmpTab.LastPrice ,Null)           <> COALESCE (tmpObject.LastPrice ,Null)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_LastPrice        , CASE WHEN COALESCE (tmpTab.LastPrice ,Null)           <> COALESCE (tmpObject.LastPrice ,Null)          THEN TRUE ELSE FALSE ENd AS isErr_LastPrice         --64
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          , tmpTab.LastPriceOld      AS LastPriceOld_tab      , tmpObject.LastPriceOld     , CASE WHEN COALESCE (tmpTab.LastPriceOld,Null)         <> COALESCE (tmpObject.LastPriceOld,Null)        THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_LastPriceOld     , CASE WHEN COALESCE (tmpTab.LastPriceOld,Null)         <> COALESCE (tmpObject.LastPriceOld,Null)        THEN TRUE ELSE FALSE ENd AS isErr_LastPriceOld     
+          , tmpTab.MakerName         AS MakerName_tab         , tmpObject.MakerName ::TvarChar , CASE WHEN COALESCE (tmpTab.MakerName,'')          <> COALESCE (tmpObject.MakerName ,'')            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MakerName        , CASE WHEN COALESCE (tmpTab.MakerName,'')              <> COALESCE (tmpObject.MakerName ,'')            THEN TRUE ELSE FALSE ENd AS isErr_MakerName
+          , tmpTab.NameUkr           AS NameUkr_tab           , tmpObject.NameUkr   ::TvarChar , CASE WHEN COALESCE (tmpTab.NameUkr,'')            <> COALESCE (tmpObject.NameUkr,'')               THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_NameUkr          , CASE WHEN COALESCE (tmpTab.NameUkr,'')                <> COALESCE (tmpObject.NameUkr,'')               THEN TRUE ELSE FALSE ENd AS isErr_NameUkr           --73
 
-          , tmpTab.MeasureId         AS MeasureId_tab         , tmpObject.MeasureId        , CASE WHEN COALESCE (tmpTab.MeasureId,0)               <> COALESCE (tmpObject.MeasureId,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MeasureId        
-          , tmpTab.NDSKindId         AS NDSKindId_tab         , tmpObject.NDSKindId        , CASE WHEN COALESCE (tmpTab.NDSKindId,0)               <> COALESCE (tmpObject.NDSKindId,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_NDSKindId        
-          , tmpTab.ExchangeId        AS ExchangeId_tab        , tmpObject.ExchangeId       , CASE WHEN COALESCE (tmpTab.ExchangeId,0)              <> COALESCE (tmpObject.ExchangeId,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Exchange         --46
-
-          , tmpTab.ConditionsKeepId  AS ConditionsKeepId_tab  , tmpObject.ConditionsKeepId , CASE WHEN COALESCE (tmpTab.ConditionsKeepId,0)        <> COALESCE (tmpObject.ConditionsKeepId,0)       THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ConditionsKeepId 
-          , tmpTab.GoodsGroupPromoID AS GoodsGroupPromoId_tab , tmpObject.GoodsGroupPromoID, CASE WHEN COALESCE (tmpTab.GoodsGroupPromoID,0)       <> COALESCE (tmpObject.GoodsGroupPromoID,0)      THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_GoodsGroupPromoID
-          , tmpTab.ReferCode         AS ReferCode_tab         , tmpObject.ReferCode        , CASE WHEN COALESCE (tmpTab.ReferCode,0)               <> COALESCE (tmpObject.ReferCode,0)              THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ReferCode         --55
-
-          , tmpTab.ReferPrice        AS ReferPrice_tab        , tmpObject.ReferPrice       , CASE WHEN COALESCE (tmpTab.ReferPrice,0)              <> COALESCE (tmpObject.ReferPrice,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_ReferPrice       
-          , tmpTab.CountPrice        AS CountPrice_tab        , tmpObject.CountPrice       , CASE WHEN COALESCE (tmpTab.CountPrice,0)              <> COALESCE (tmpObject.CountPrice,0)             THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_CountPrice       
-          , tmpTab.LastPrice         AS LastPrice_tab         , tmpObject.LastPrice        , CASE WHEN COALESCE (tmpTab.LastPrice ,Null)           <> COALESCE (tmpObject.LastPrice ,Null)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_LastPrice         --64
-
-          , tmpTab.LastPriceOld      AS LastPriceOld_tab      , tmpObject.LastPriceOld     , CASE WHEN COALESCE (tmpTab.LastPriceOld,Null)         <> COALESCE (tmpObject.LastPriceOld,Null)        THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_LastPriceOld     
-          , tmpTab.MakerName         AS MakerName_tab         , tmpObject.MakerName ::TvarChar , CASE WHEN COALESCE (tmpTab.MakerName,'')          <> COALESCE (tmpObject.MakerName ,'')            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_MakerName        
-          , tmpTab.NameUkr           AS NameUkr_tab           , tmpObject.NameUkr   ::TvarChar , CASE WHEN COALESCE (tmpTab.NameUkr,'')            <> COALESCE (tmpObject.NameUkr,'')               THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_NameUkr           --73
-
-          , tmpTab.CodeUKTZED        AS CodeUKTZED_tab        , tmpObject.CodeUKTZED::TvarChar   , CASE WHEN COALESCE (tmpTab.CodeUKTZED,'')       <> COALESCE (tmpObject.CodeUKTZED,'')            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_CodeUKTZED       
-          , tmpTab.Analog            AS Analog_tab            , tmpObject.Analog           , CASE WHEN COALESCE (tmpTab.Analog,'')                 <> COALESCE (tmpObject.Analog,'')                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Analog
-          , tmpTab.isPublished       AS isPublished_tab       , tmpObject.isPublished      , CASE WHEN COALESCE (tmpTab.isPublished, FALSE)        <> COALESCE (tmpObject.isPublished, FALSE)       THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isPublished       --82
-
-          , tmpTab.SiteKey           AS SiteKey_tab           , tmpObject.SiteKey          , CASE WHEN COALESCE (tmpTab.SiteKey,0)                 <> COALESCE (tmpObject.SiteKey,0)                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_SiteKey
-          , tmpTab.Foto              AS Foto_tab              , tmpObject.Foto             , CASE WHEN COALESCE (tmpTab.Foto,'')                   <> COALESCE (tmpObject.Foto,'')                  THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Foto
-          , tmpTab.Thumb             AS Thumb_tab             , tmpObject.Thumb            , CASE WHEN COALESCE (tmpTab.Thumb,'')                  <> COALESCE (tmpObject.Thumb ,'')                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Thumb             --91
-
-          , tmpTab.AppointmentId     AS AppointmentId_tab     , tmpObject.AppointmentId    , CASE WHEN COALESCE (tmpTab.AppointmentId,0)           <> COALESCE (tmpObject.AppointmentId,0)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_AppointmentId    
+          , tmpTab.CodeUKTZED        AS CodeUKTZED_tab        , tmpObject.CodeUKTZED::TvarChar   , CASE WHEN COALESCE (tmpTab.CodeUKTZED,'')       <> COALESCE (tmpObject.CodeUKTZED,'')            THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_CodeUKTZED       , CASE WHEN COALESCE (tmpTab.CodeUKTZED,'')             <> COALESCE (tmpObject.CodeUKTZED,'')            THEN TRUE ELSE FALSE ENd AS isErr_CodeUKTZED       
+          , tmpTab.Analog            AS Analog_tab            , tmpObject.Analog           , CASE WHEN COALESCE (tmpTab.Analog,'')                 <> COALESCE (tmpObject.Analog,'')                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Analog           , CASE WHEN COALESCE (tmpTab.Analog,'')                 <> COALESCE (tmpObject.Analog,'')                THEN TRUE ELSE FALSE ENd AS isErr_Analog       
+          , tmpTab.isPublished       AS isPublished_tab       , tmpObject.isPublished      , CASE WHEN COALESCE (tmpTab.isPublished, FALSE)        <> COALESCE (tmpObject.isPublished, FALSE)       THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_isPublished      , CASE WHEN COALESCE (tmpTab.isPublished, FALSE)        <> COALESCE (tmpObject.isPublished, FALSE)       THEN TRUE ELSE FALSE ENd AS isErr_isPublished       --82
+                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+          , tmpTab.SiteKey           AS SiteKey_tab           , tmpObject.SiteKey          , CASE WHEN COALESCE (tmpTab.SiteKey,0)                 <> COALESCE (tmpObject.SiteKey,0)                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_SiteKey          , CASE WHEN COALESCE (tmpTab.SiteKey,0)                 <> COALESCE (tmpObject.SiteKey,0)                THEN TRUE ELSE FALSE ENd AS isErr_SiteKey      
+          , tmpTab.Foto              AS Foto_tab              , tmpObject.Foto             , CASE WHEN COALESCE (tmpTab.Foto,'')                   <> COALESCE (tmpObject.Foto,'')                  THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Foto             , CASE WHEN COALESCE (tmpTab.Foto,'')                   <> COALESCE (tmpObject.Foto,'')                  THEN TRUE ELSE FALSE ENd AS isErr_Foto         
+          , tmpTab.Thumb             AS Thumb_tab             , tmpObject.Thumb            , CASE WHEN COALESCE (tmpTab.Thumb,'')                  <> COALESCE (tmpObject.Thumb ,'')                THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_Thumb            , CASE WHEN COALESCE (tmpTab.Thumb,'')                  <> COALESCE (tmpObject.Thumb ,'')                THEN TRUE ELSE FALSE ENd AS isErr_Thumb             --91
+                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+          , tmpTab.AppointmentId     AS AppointmentId_tab     , tmpObject.AppointmentId    , CASE WHEN COALESCE (tmpTab.AppointmentId,0)           <> COALESCE (tmpObject.AppointmentId,0)          THEN zc_Color_Red() ELSE zc_Color_White() ENd AS Color_AppointmentId    , CASE WHEN COALESCE (tmpTab.AppointmentId,0)           <> COALESCE (tmpObject.AppointmentId,0)          THEN TRUE ELSE FALSE ENd AS isErr_AppointmentId
       FROM tmpTab
            LEFT JOIN tmpObject ON tmpTab.Id = tmpObject.Id               
       WHERE tmpTab.ObjectCode   <> tmpObject.ObjectCode        
@@ -408,47 +457,47 @@ BEGIN
      OPEN Cursor1 FOR
 
        SELECT tmpData.Id 
-            , tmpData.ObjectCode_tab        AS  ObjectCode       , tmpData.Color_Code
-            , tmpData.Name_tab              AS  Name             , tmpData.Color_Name
-            , tmpData.MorionCode_tab        AS  MorionCode       , tmpData.Color_MorionCode
-                                                                 
-            , tmpData.isErased_tab          AS  isErased         , tmpData.Color_isErased         
-            , tmpData.isClose_tab           AS  isClose          , tmpData.Color_isClose          
-            , tmpData.isNotUploadSites_tab  AS  isNotUploadSites , tmpData.Color_isNotUploadSites
-                                                                 
-            , tmpData.isDoesNotShare_tab    AS  isDoesNotShare   , tmpData.Color_isDoesNotShare   
-            , tmpData.isAllowDivision_tab   AS  isAllowDivision  , tmpData.Color_isAllowDivision  
-            , tmpData.isNotTransferTime_tab AS  isNotTransferTime, tmpData.Color_isNotTransferTime
-                                                                 
-            , tmpData.isNotMarion_tab       AS  isNotMarion      , tmpData.Color_isNotMarion      
-            , tmpData.isNOT_tab             AS  isNOT            , tmpData.Color_isNOT            
-            , Object_GoodsGroup.ValueData   AS  GoodsGroupName   , tmpData.Color_GoodsGroupId
-                                                                 
-            , Object_Measure.ValueData      AS  MeasureName      , tmpData.Color_MeasureId        
-            , Object_NDSKind.ValueData      AS  NDSKindName      , tmpData.Color_NDSKindId        
-            , Object_Exchange.ValueData     AS  ExchangeName     , tmpData.Color_Exchange
-                                                                 
-            , Object_ConditionsKeep.ValueData  AS ConditionsKeepName, tmpData.Color_ConditionsKeepId 
-            , Object_GoodsGroupPromo.ValueData AS GoodsGroupPromoName, tmpData.Color_GoodsGroupPromoID
-            , tmpData.ReferCode_tab         AS  ReferCode        , tmpData.Color_ReferCode
-                                                                 
-            , tmpData.ReferPrice_tab        AS  ReferPrice       , tmpData.Color_ReferPrice       
-            , tmpData.CountPrice_tab        AS  CountPrice       , tmpData.Color_CountPrice       
-            , tmpData.LastPrice_tab         AS  LastPrice        , tmpData.Color_LastPrice
-                                                                 
-            , tmpData.LastPriceOld_tab      AS  LastPriceOld     , tmpData.Color_LastPriceOld     
-            , tmpData.MakerName_tab         AS  MakerName        , tmpData.Color_MakerName        
-            , tmpData.NameUkr_tab           AS  NameUkr          , tmpData.Color_NameUkr
-                                                                 
-            , tmpData.CodeUKTZED_tab        AS  CodeUKTZED       , tmpData.Color_CodeUKTZED       
-            , tmpData.Analog_tab            AS  Analog           , tmpData.Color_Analog
-            , tmpData.isPublished_tab       AS  isPublished      , tmpData.Color_isPublished
-                                                                 
-            , tmpData.SiteKey_tab           AS  SiteKey          , tmpData.Color_SiteKey
-            , tmpData.Foto_tab              AS  Foto             , tmpData.Color_Foto
-            , tmpData.Thumb_tab             AS  Thumb            , tmpData.Color_Thumb
-                                                                 
-            , Object_Appointment.ValueData  AS  AppointmentName  , tmpData.Color_AppointmentId
+            , tmpData.ObjectCode_tab        AS  ObjectCode           , tmpData.Color_Code              , tmpData.isErr_Code             
+            , tmpData.Name_tab              AS  Name                 , tmpData.Color_Name              , tmpData.isErr_Name             
+            , tmpData.MorionCode_tab        AS  MorionCode           , tmpData.Color_MorionCode        , tmpData.isErr_MorionCode       
+                                                                                                                                        
+            , tmpData.isErased_tab          AS  isErased             , tmpData.Color_isErased          , tmpData.isErr_isErased         
+            , tmpData.isClose_tab           AS  isClose              , tmpData.Color_isClose           , tmpData.isErr_isClose          
+            , tmpData.isNotUploadSites_tab  AS  isNotUploadSites     , tmpData.Color_isNotUploadSites  , tmpData.isErr_isNotUploadSites 
+                                                                                                                                        
+            , tmpData.isDoesNotShare_tab    AS  isDoesNotShare       , tmpData.Color_isDoesNotShare    , tmpData.isErr_isDoesNotShare   
+            , tmpData.isAllowDivision_tab   AS  isAllowDivision      , tmpData.Color_isAllowDivision   , tmpData.isErr_isAllowDivision  
+            , tmpData.isNotTransferTime_tab AS  isNotTransferTime    , tmpData.Color_isNotTransferTime , tmpData.isErr_isNotTransferTime
+                                                                                                                                        
+            , tmpData.isNotMarion_tab       AS  isNotMarion          , tmpData.Color_isNotMarion       , tmpData.isErr_isNotMarion      
+            , tmpData.isNOT_tab             AS  isNOT                , tmpData.Color_isNOT             , tmpData.isErr_isNOT            
+            , Object_GoodsGroup.ValueData   AS  GoodsGroupName       , tmpData.Color_GoodsGroupId      , tmpData.isErr_GoodsGroupId     
+                                                                                                                                        
+            , Object_Measure.ValueData      AS  MeasureName          , tmpData.Color_MeasureId         , tmpData.isErr_MeasureId        
+            , Object_NDSKind.ValueData      AS  NDSKindName          , tmpData.Color_NDSKindId         , tmpData.isErr_NDSKindId        
+            , Object_Exchange.ValueData     AS  ExchangeName         , tmpData.Color_Exchange          , tmpData.isErr_Exchange         
+                                                                                                                                        
+            , Object_ConditionsKeep.ValueData  AS ConditionsKeepName , tmpData.Color_ConditionsKeepId  , tmpData.isErr_ConditionsKeepId 
+            , Object_GoodsGroupPromo.ValueData AS GoodsGroupPromoName, tmpData.Color_GoodsGroupPromoId , tmpData.isErr_GoodsGroupPromoID
+            , tmpData.ReferCode_tab         AS  ReferCode            , tmpData.Color_ReferCode         , tmpData.isErr_ReferCode        
+                                                                                                                                        
+            , tmpData.ReferPrice_tab        AS  ReferPrice           , tmpData.Color_ReferPrice        , tmpData.isErr_ReferPrice       
+            , tmpData.CountPrice_tab        AS  CountPrice           , tmpData.Color_CountPrice        , tmpData.isErr_CountPrice       
+            , tmpData.LastPrice_tab         AS  LastPrice            , tmpData.Color_LastPrice         , tmpData.isErr_LastPrice        
+                                                                                                                                        
+            , tmpData.LastPriceOld_tab      AS  LastPriceOld         , tmpData.Color_LastPriceOld      , tmpData.isErr_LastPriceOld     
+            , tmpData.MakerName_tab         AS  MakerName            , tmpData.Color_MakerName         , tmpData.isErr_MakerName        
+            , tmpData.NameUkr_tab           AS  NameUkr              , tmpData.Color_NameUkr           , tmpData.isErr_NameUkr          
+                                                                                                                                        
+            , tmpData.CodeUKTZED_tab        AS  CodeUKTZED           , tmpData.Color_CodeUKTZED        , tmpData.isErr_CodeUKTZED       
+            , tmpData.Analog_tab            AS  Analog               , tmpData.Color_Analog            , tmpData.isErr_Analog           
+            , tmpData.isPublished_tab       AS  isPublished          , tmpData.Color_isPublished       , tmpData.isErr_isPublished      
+                                                                                                                                        
+            , tmpData.SiteKey_tab           AS  SiteKey              , tmpData.Color_SiteKey           , tmpData.isErr_SiteKey          
+            , tmpData.Foto_tab              AS  Foto                 , tmpData.Color_Foto              , tmpData.isErr_Foto             
+            , tmpData.Thumb_tab             AS  Thumb                , tmpData.Color_Thumb             , tmpData.isErr_Thumb            
+                                                                                                                                        
+            , Object_Appointment.ValueData  AS  AppointmentName      , tmpData.Color_AppointmentId     , tmpData.isErr_AppointmentId    
        FROM tmpData
             LEFT JOIN Object AS Object_Measure         ON Object_Measure.Id         = tmpData.MeasureId_tab
             LEFT JOIN Object AS Object_NDSKind         ON Object_NDSKind.Id         = tmpData.NDSKindId_tab
