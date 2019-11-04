@@ -148,6 +148,7 @@ type
     actExecSetSent: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
+    DateInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public

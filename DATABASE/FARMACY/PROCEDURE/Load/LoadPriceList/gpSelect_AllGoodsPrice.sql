@@ -270,10 +270,13 @@ BEGIN
                                        THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
                                    ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)    -- % наценки в КАТЕГОРИИ
                               END
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.isTOP_Price   ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
                             , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 
+                                        CASE WHEN Object_Price.Fix = TRUE 
+                                             THEN Object_Price.Price ELSE 0
+                                        END      
                                    ELSE CASE WHEN Object_Price.Fix = TRUE 
                                              THEN Object_Price.Price ELSE Object_Goods.Price
                                         END -- Цена у товара (почти фиксированная)
@@ -489,6 +492,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.10.19                                                                                      * isTopNo_Unit только для TOP сети
  04.09.19         * isTopNo_Unit
  11.02.19         * признак Товары соц-проект берем и документа
  03.05.18                                                                                      *

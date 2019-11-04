@@ -132,7 +132,7 @@ BEGIN
 
       WHERE ObjectLink_Goods_Object.ChildObjectId = inObjectId
      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-     AND (CASE WHEN inObjectId = zc_Enum_GlobalConst_BarCode() THEN ObjectLink_LinkGoods_GoodsMain.ChildObjectId IS NOT NULL ELSE 1=1 END) -- пока так убрала чтоб не было линков у которых нет связи с гл.товаром, утром удалю сами линки, на ночь не рискую
+     AND (CASE WHEN inObjectId = zc_Enum_GlobalConst_BarCode() THEN ObjectLink_LinkGoods_GoodsMain.ChildObjectId IS NOT NULL ELSE 1=1 END) -- пока так убрала чтоб не было линков у которых нет связи с гл.товаром, (удалила из базы 60 тыщ.) , нужно такие не записывать
      ;
 
 END;

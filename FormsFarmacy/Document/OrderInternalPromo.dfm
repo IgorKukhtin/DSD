@@ -1362,6 +1362,25 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090
       ImageIndex = 74
     end
+    object actUpdate_Price: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Price
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Price
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectPromoPartner
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1090#1077#1082'.'#1076#1072#1090#1091
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1090#1077#1082'.'#1076#1072#1090#1091
+      ImageIndex = 56
+    end
     object actGetImportSettingId: TdsdExecStoredProc
       Category = 'Load'
       MoveParams = <>
@@ -1610,6 +1629,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Price'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertChild'
         end
         item
@@ -1745,6 +1772,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = macInsertByPromo
       Category = 0
       ImageIndex = 27
+    end
+    object bbUpdate_Price: TdxBarButton
+      Action = actUpdate_Price
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2664,5 +2695,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 744
     Top = 352
+  end
+  object spUpdate_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 448
+    Top = 120
   end
 end

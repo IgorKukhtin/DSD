@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
-  ClientWidth = 1003
-  ExplicitWidth = 1019
+  ClientWidth = 1001
+  ExplicitWidth = 1017
   ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
-    Width = 1003
+    Width = 1001
     Height = 462
     ExplicitTop = 155
     ExplicitWidth = 1003
     ExplicitHeight = 462
     ClientRectBottom = 462
-    ClientRectRight = 1003
+    ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1003
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
-        Width = 1003
+        Width = 1001
         Height = 318
         ExplicitWidth = 1003
         ExplicitHeight = 318
@@ -460,7 +460,7 @@ inherited SendForm: TSendForm
             Width = 70
           end
           object DateInsertChild: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1087#1072#1088#1090#1080#1099
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'DateInsertChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -474,25 +474,35 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 94
           end
+          object DateInsert: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'DateInsert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 1003
+        Width = 1001
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1003
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 326
-        Width = 1003
+        Width = 1001
         Height = 112
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1003
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -627,7 +637,7 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1003
+    Width = 1001
     Height = 129
     TabOrder = 3
     ExplicitWidth = 1003

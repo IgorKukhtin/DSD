@@ -141,6 +141,12 @@ BEGIN
        END IF;
      END IF;
      
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили ВСЕГДА
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+     END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 

@@ -21,7 +21,6 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
              , MinExpirationDate TDateTime
-             , DateInsertChild TDateTime
              
              , isErased Boolean
              , GoodsGroupName TVarChar
@@ -32,6 +31,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isFirst    Boolean
              , isSecond   Boolean
              , AccommodationId Integer, AccommodationName TVarChar
+             , DateInsertChild TDateTime , DateInsert TDateTime
 
               )
 AS
@@ -225,6 +225,7 @@ BEGIN
                                       , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))),0)                                 ::TFloat  AS SummaWithVAT
                                       , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
+                                      , MIDate_Insert.ValueData                                AS DateInsert
                                       
                                    FROM MovementItem AS MovementItem_Send
                                        -- цена подразделений записанная при автоматическом распределении 
@@ -253,6 +254,10 @@ BEGIN
                                                                         ON MILinkObject_PartionDateKind.MovementItemId = MovementItem_Send.Id
                                                                        AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
                                                                      
+                                       LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                                  ON MIDate_Insert.MovementItemId = MovementItem_Send.Id
+                                                                 AND MIDate_Insert.DescId = zc_MIDate_Insert()
+
                                    WHERE MovementItem_Send.MovementId = inMovementId
                                      AND MovementItem_Send.DescId = zc_MI_Master()
                                      AND (MovementItem_Send.isErased = FALSE or inIsErased = TRUE)    
@@ -266,6 +271,7 @@ BEGIN
                                           , COALESCE(MIFloat_AmountManual.ValueData,0) 
                                           , COALESCE(MIFloat_AmountStorage.ValueData,0) 
                                           , MILinkObject_PartionDateKind.ObjectId
+                                          ,  MIDate_Insert.ValueData  
                                 )
 
           , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
@@ -379,7 +385,6 @@ BEGIN
               , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
               , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
               , COALESCE (tmpMI_Child.ExpirationDate, tmpRemains.MinExpirationDate)::TDateTime AS MinExpirationDate   
-              , tmpMI_Child.DateInsertChild::TDateTime                     AS DateInsertChild
 
               , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
@@ -393,6 +398,8 @@ BEGIN
 
               , Accommodation.AccommodationId                              AS AccommodationId
               , Object_Accommodation.ValueData                             AS AccommodationName
+              , tmpMI_Child.DateInsertChild::TDateTime                     AS DateInsertChild
+              , MovementItem_Send.DateInsert                               AS DateInsert
 
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -441,6 +448,7 @@ BEGIN
                                       , COALESCE(MIFloat_PriceTo.ValueData,0)        ::TFloat  AS PriceTo        
                                       , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
+                                      , MIDate_Insert.ValueData                                AS DateInsert
 
                                  FROM MovementItem   
                                      -- цена подразделений записанная при автоматическом распределении 
@@ -462,6 +470,9 @@ BEGIN
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                                       ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
+                                     LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                                ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                               AND MIDate_Insert.DescId = zc_MIDate_Insert()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -720,7 +731,6 @@ BEGIN
            --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
            , COALESCE (tmpMI_Child.ExpirationDate, 
              CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END)::TDateTime AS MinExpirationDate
-           , tmpMI_Child.DateInsertChild::TDateTime                    AS DateInsertChild
            
            , MovementItem_Send.IsErased                                AS isErased
 
@@ -734,6 +744,9 @@ BEGIN
 
            , Accommodation.AccommodationId                                    AS AccommodationId
            , Object_Accommodation.ValueData                                   AS AccommodationName
+
+           , tmpMI_Child.DateInsertChild::TDateTime                           AS DateInsertChild
+           , MovementItem_Send.DateInsert                                     AS DateInsert
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId

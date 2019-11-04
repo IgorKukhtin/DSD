@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = TabSheet1
+    ActivePage = tsYuriFarm
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -1321,97 +1321,25 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
       end
     end
-    object TabSheet1: TTabSheet
+    object tsYuriFarm: TTabSheet
       Caption = #1070#1088#1080#1103'-'#1060#1072#1088#1084
       ImageIndex = 4
-      object cxGrid1: TcxGrid
+      object grYuriFarm: TcxGrid
         Left = 0
         Top = 31
         Width = 901
         Height = 484
         Align = alClient
         TabOrder = 0
-        object cxGridDBTableView2: TcxGridDBTableView
+        object grYuriFarmDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = dsReport_Upload_ADV
+          DataController.DataSource = dsReport_Upload_YuriFarm
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
-          object cxGridDBColumn3: TcxGridDBColumn
-            DataBinding.FieldName = 'retailName'
-            Width = 70
-          end
-          object cxGridDBColumn4: TcxGridDBColumn
-            DataBinding.FieldName = 'city'
-            Width = 70
-          end
-          object cxGridDBColumn5: TcxGridDBColumn
-            DataBinding.FieldName = 'address'
-            Width = 70
-          end
-          object cxGridDBColumn6: TcxGridDBColumn
-            DataBinding.FieldName = 'checkID'
-            Width = 70
-          end
-          object cxGridDBColumn7: TcxGridDBColumn
-            DataBinding.FieldName = 'sale_date'
-            Width = 70
-          end
-          object cxGridDBColumn8: TcxGridDBColumn
-            DataBinding.FieldName = 'sale_time'
-            Width = 70
-          end
-          object cxGridDBColumn9: TcxGridDBColumn
-            DataBinding.FieldName = 'itemBC'
-            Width = 70
-          end
-          object cxGridDBColumn10: TcxGridDBColumn
-            DataBinding.FieldName = 'couponBC'
-            Width = 70
-          end
-          object cxGridDBColumn11: TcxGridDBColumn
-            DataBinding.FieldName = 'nameBC'
-            Width = 70
-          end
-          object cxGridDBColumn12: TcxGridDBColumn
-            DataBinding.FieldName = 'price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
-          object cxGridDBColumn13: TcxGridDBColumn
-            DataBinding.FieldName = 'sum_price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
-          object cxGridDBColumn14: TcxGridDBColumn
-            DataBinding.FieldName = 'sum_couponsale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
-          object cxGridDBColumn15: TcxGridDBColumn
-            DataBinding.FieldName = 'discount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
-          object cxGridDBColumn16: TcxGridDBColumn
-            DataBinding.FieldName = 'discount_rel'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
-          object cxGridDBColumn17: TcxGridDBColumn
-            DataBinding.FieldName = 'sum_discount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.00'
-            Width = 70
-          end
         end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableView2
+        object grYuriFarmLevel: TcxGridLevel
+          GridView = grYuriFarmDBTableView
         end
       end
       object Panel4: TPanel
@@ -1441,14 +1369,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Height = 25
           Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
           TabOrder = 2
-        end
-        object btnYuriFarmExport: TButton
-          Left = 503
-          Top = 0
-          Width = 113
-          Height = 25
-          Caption = #1069#1082#1089#1087#1086#1088#1090
-          TabOrder = 3
+          OnClick = btnYuriFarmExecuteClick
         end
         object btnYuriFarmSend: TButton
           Left = 783
@@ -1456,7 +1377,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Width = 113
           Height = 25
           Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' HTTPS'
-          TabOrder = 4
+          TabOrder = 3
+          OnClick = btnYuriFarmSendClick
         end
       end
     end
@@ -1651,8 +1573,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_BaDM_byUnit: TDataSource
     DataSet = qryReport_Upload_BaDM_byUnit
-    Left = 496
-    Top = 136
+    Left = 624
+    Top = 152
   end
   object qryBadm_byUnit: TZQuery
     Connection = ZConnection1
@@ -1758,6 +1680,34 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       end>
     Left = 716
     Top = 232
+    ParamData = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end>
+  end
+  object dsReport_Upload_YuriFarm: TDataSource
+    DataSet = qryReport_Upload_YuriFarm
+    Left = 576
+    Top = 448
+  end
+  object qryReport_Upload_YuriFarm: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'SELECT * FROM gpReport_Upload_YuriFarm (:inDate, zfCalc_UserAdmi' +
+        'n())')
+    Params = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end>
+    Left = 580
+    Top = 376
     ParamData = <
       item
         DataType = ftDateTime

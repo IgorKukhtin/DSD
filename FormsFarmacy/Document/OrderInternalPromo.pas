@@ -139,6 +139,9 @@ type
     actPromoJournalChoiceForm: TOpenChoiceForm;
     spInsertByPromo: TdsdStoredProc;
     macInsertByPromo: TMultiAction;
+    spUpdate_Price: TdsdStoredProc;
+    actUpdate_Price: TdsdExecStoredProc;
+    bbUpdate_Price: TdxBarButton;
   private
     { Private declarations }
   public
