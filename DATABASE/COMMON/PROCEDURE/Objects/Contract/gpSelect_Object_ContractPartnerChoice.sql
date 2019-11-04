@@ -332,6 +332,8 @@ BEGIN
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                         )
+       , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Juridical_isBranchAll())
+
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id
        , Object_Contract_View.ContractCode    :: Integer   AS Code
@@ -543,9 +545,9 @@ BEGIN
                                ON Partner_GPSE.ObjectId = Object_Partner.Id
                               AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
 
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
-                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
-                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+         LEFT JOIN tmpOB_isBranchAll AS ObjectBoolean_isBranchAll
+                                     ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                                 -- AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
@@ -589,7 +591,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -607,4 +608,5 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- select * from gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= '2030723');
+-- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= zfCalc_UserAdmin())

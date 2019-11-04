@@ -33,6 +33,7 @@ RETURNS TABLE (Id               Integer
              , PriceListId      Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
              , PriceListId_ret  Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
              , ContainerId      Integer
+             , isOrderMin       Boolean  -- Разрешен минимальный заказ = заказ меньше 5 кг.
              , isErased         Boolean  -- Удаленный ли элемент
              , isSync           Boolean  -- Синхронизируется (да/нет)
               )
@@ -314,6 +315,7 @@ BEGIN
                   , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
 
                   , tmpDebt.ContainerId :: Integer AS ContainerId
+                  , COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) :: Boolean AS isOrderMin
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
@@ -381,6 +383,11 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_Partner_GUID
                                          ON ObjectString_Partner_GUID.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_GUID.DescId = zc_ObjectString_Partner_GUID()
+
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+                                          ON ObjectBoolean_isOrderMin.ObjectId = tmpContract.JuridicalId
+                                         AND ObjectBoolean_isOrderMin.DescId   = zc_ObjectBoolean_Juridical_isOrderMin()
+
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
                -- AND (COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) = 4 or inSession <> '1839161')

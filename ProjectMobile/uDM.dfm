@@ -175,6 +175,7 @@ object DM: TDM
     end
   end
   object tblObject_Partner: TFDTable
+    IndexFieldNames = 'ID;CONTRACTID'
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Partner'
     TableName = 'Object_Partner'
@@ -260,6 +261,10 @@ object DM: TDM
     object tblObject_PartnerShortName: TStringField
       FieldName = 'ShortName'
       Size = 255
+    end
+    object tblObject_PartnerisOrderMin: TBooleanField
+      FieldName = 'isOrderMin'
+      Origin = 'isOrderMin'
     end
   end
   object tblObject_Juridical: TFDTable
@@ -664,6 +669,9 @@ object DM: TDM
     object qryPartnerShortName: TStringField
       FieldName = 'ShortName'
       Size = 255
+    end
+    object qryPartnerIsOrderMin: TBooleanField
+      FieldName = 'isOrderMin'
     end
   end
   object qryPriceList: TFDQuery
@@ -1165,8 +1173,11 @@ object DM: TDM
     object cdsOrderExternalOrderDayCount: TFloatField
       FieldName = 'OrderDayCount'
     end
-    object cdsOrderExternalisOperDateOrder: TBooleanField
+    object cdsOrderExternalIsOperDateOrder: TBooleanField
       FieldName = 'isOperDateOrder'
+    end
+    object cdsOrderExternalIsOrderMin: TBooleanField
+      FieldName = 'isOrderMin'
     end
     object cdsOrderExternalPartnerFullName: TStringField
       FieldName = 'PartnerFullName'

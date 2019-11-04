@@ -431,6 +431,7 @@ BEGIN
      , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
      , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
      , tmpObject_ContractCondition_ValueView AS (SELECT * FROM Object_ContractCondition_ValueView)
+     , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId   = zc_ObjectBoolean_Juridical_isBranchAll())
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id
        , Object_Contract_View.ContractCode    :: Integer   AS Code
@@ -636,9 +637,9 @@ BEGIN
                               ON Partner_GPSE.ObjectId = Object_Partner.Id
                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
-                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+        LEFT JOIN tmpOB_isBranchAll AS ObjectBoolean_isBranchAll
+                                    ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                                -- AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
@@ -796,5 +797,6 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerOrderChoice (Boolean, TVarChar) OW
 */
 
 -- тест
+-- SELECT * FROM gpSelect_Object_ContractPartnerOrderChoice (inShowAll:= FALSE, inSession:= '2030723');
 -- SELECT * FROM gpSelect_Object_ContractPartnerOrderChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
 -- WHERE PartnerId = 464943

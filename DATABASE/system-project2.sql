@@ -17,10 +17,12 @@ SELECT * FROM MovementItemProtocol where OperDate > CURRENT_DATE;
 */
 
 -- Protocol...
+VACUUM ObjectProtocol;
 VACUUM MovementProtocol;
 VACUUM MovementProtocol_arc;
 VACUUM MovementItemProtocol;
 VACUUM MovementItemProtocol_arc;
+VACUUM ANALYZE ObjectProtocol;
 VACUUM ANALYZE MovementProtocol;
 VACUUM ANALYZE MovementProtocol_arc;
 VACUUM ANALYZE MovementItemProtocol;

@@ -5025,7 +5025,11 @@ begin
 
     if tcMain.ActiveTab = tiPartnerInfo then
     begin
-      lCaption.Text := DM.qryPartnerFullName.AsString;
+      if DM.qryPartnerIsOrderMin.AsBoolean = TRUE
+      then
+         lCaption.Text := DM.qryPartnerFullName.AsString + ' (+)мин.заказ'
+      else
+         lCaption.Text := DM.qryPartnerFullName.AsString + ' (-)мин.заказ';
     end
     else
     if tcMain.ActiveTab = tiMain then
@@ -5074,7 +5078,11 @@ begin
       lCaption.Text := 'Ввод новой ТТ'
     else
     if tcMain.ActiveTab = tiOrderExternal then
-      lCaption.Text := DM.cdsOrderExternalPartnerFullName.AsString
+      if DM.qryPartnerIsOrderMin.AsBoolean = TRUE
+      then
+         lCaption.Text := DM.cdsOrderExternalPartnerFullName.AsString + ' (+)мин.заказ'
+      else
+         lCaption.Text := DM.cdsOrderExternalPartnerFullName.AsString + ' (-)мин.заказ'
     else
     if tcMain.ActiveTab = tiStoreReal then
       lCaption.Text := DM.cdsStoreRealsPartnerFullName.AsString

@@ -65,6 +65,7 @@ CONST
    + '       , Object_Partner.OrderDayCount '
    + '       , Object_Partner.isOperDateOrder  '
    + '       , COALESCE (OrderExternal_Partner.PartnerCount, 0) + COALESCE (StoreReal_Partner.PartnerCount, 0) AS PartnerCount '
+   + '       , Object_Partner.isOrderMin AS isOrderMin'
    + ' FROM  Object_Partner  '
    + '       LEFT JOIN Object_Juridical            ON Object_Juridical.Id         = Object_Partner.JuridicalId '
    + '                                            AND Object_Juridical.ContractId = Object_Partner.ContractId '
@@ -607,6 +608,7 @@ type
     qryPartnerPRICELISTID_RET: TIntegerField;
     qryPartnerPriceWithVAT_RET: TBooleanField;
     qryPartnerVATPercent_RET: TFloatField;
+    qryPartnerIsOrderMin: TBooleanField;
     tblObject_PartnerGUID: TStringField;
     tblObject_JuridicalGUID: TStringField;
     tblObject_JuridicalisSync: TBooleanField;
@@ -628,7 +630,7 @@ type
     tblMovement_OrderExternalUnitId: TIntegerField;
     cdsOrderExternalComment: TStringField;
     tblMovement_ReturnInUnitId: TIntegerField;
-    cdsOrderExternalisSync: TBooleanField;
+    cdsOrderExternalIsSync: TBooleanField;
     cdsStoreRealsisSync: TBooleanField;
     cdsReturnInisSync: TBooleanField;
     cdsOrderExternalStatusId: TIntegerField;
@@ -650,7 +652,8 @@ type
     cdsOrderExternalChangePercent: TFloatField;
     cdsOrderExternalCalcDayCount: TFloatField;
     cdsOrderExternalOrderDayCount: TFloatField;
-    cdsOrderExternalisOperDateOrder: TBooleanField;
+    cdsOrderExternalIsOperDateOrder: TBooleanField;
+    cdsOrderExternalIsOrderMin: TBooleanField;
     cdsOrderExternalAddress: TStringField;
     cdsOrderExternalContractName: TStringField;
     cdsReturnInPartnerId: TIntegerField;
@@ -803,6 +806,7 @@ type
     tblObject_ConstWebService_four: TStringField;
     tblObject_ConstAPIKey: TStringField;
     tblObject_ConstCriticalWeight: TFloatField;
+    tblObject_PartnerisOrderMin: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -3927,8 +3931,11 @@ begin
       Next;
     end;
 
-    if (Complete = TRUE) and (TotalW < DM.tblObject_ConstCriticalWeight.AsFloat) then
-    begin
+    if (Complete = TRUE) and (TotalW < 5{DM.tblObject_ConstCriticalWeight.AsFloat})
+       and ((cdsOrderExternalIsOrderMin.AsBoolean <> TRUE) or (cdsOrderExternalIsOrderMin.isNull = TRUE))
+       and (Pos(AnsiUpperCase('самовывоз'),AnsiUpperCase(Comment)) = 0)
+       and (Pos(AnsiUpperCase('самовивіз'),AnsiUpperCase(Comment)) = 0)
+    then begin
       ErrorMessage := 'Разрешены заявки с общим весом >= ' + FloatToStr(DM.tblObject_ConstCriticalWeight.AsFloat) + ' кг. Сохранение заявки с весом = ' + FloatToStr(TotalW) + ' кг. невозможно.';
       exit;
     end;
@@ -4052,7 +4059,7 @@ begin
     cdsOrderExternalWeight.AsString := 'Вес: 0';
     cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
     cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-    cdsOrderExternalisSync.AsBoolean := false;
+    cdsOrderExternalIsSync.AsBoolean := false;
 
     cdsOrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
     cdsOrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
@@ -4063,7 +4070,8 @@ begin
     cdsOrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
     cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
     cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
-    cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+    cdsOrderExternalIsOperDateOrder.AsBoolean := qryPartnerIsOperDateOrder.AsBoolean;
+    cdsOrderExternalIsOrderMin.AsBoolean := qryPartnerIsOrderMin.AsBoolean;
     cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
     cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
     cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
@@ -4151,7 +4159,7 @@ begin
         cdsOrderExternalStatus.AsString := 'Неизвестный';
 
       cdsOrderExternalStatusId.AsInteger := qryOrderExternal.FieldByName('STATUSID').AsInteger;
-      cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
+      cdsOrderExternalIsSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
 
       cdsOrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
       cdsOrderExternalPaidKindId.AsInteger := qryOrderExternal.FieldByName('PAIDKINDID').AsInteger;
@@ -4162,7 +4170,8 @@ begin
       cdsOrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
       cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
       cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
-      cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+      cdsOrderExternalIsOperDateOrder.AsBoolean := qryPartnerIsOperDateOrder.AsBoolean;
+      cdsOrderExternalIsOrderMin.AsBoolean := qryPartnerIsOrderMin.AsBoolean;
       cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
       cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
       cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
@@ -4231,6 +4240,7 @@ begin
      + '       , Object_Partner.CalcDayCount '
      + '       , Object_Partner.OrderDayCount '
      + '       , Object_Partner.isOperDateOrder '
+     + '       , Object_Partner.isOrderMin '
      + ' FROM  Movement_OrderExternal '
      + '       JOIN Object_Partner        ON Object_Partner.Id           = Movement_OrderExternal.PartnerId '
      + '                                 AND Object_Partner.ContractId   = Movement_OrderExternal.ContractId '
@@ -4270,7 +4280,7 @@ begin
         cdsOrderExternalStatus.AsString := 'Неизвестный';
 
       cdsOrderExternalStatusId.AsInteger := qryOrderExternal.FieldByName('STATUSID').AsInteger;
-      cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
+      cdsOrderExternalIsSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
 
       cdsOrderExternalPartnerId.AsInteger := qryOrderExternal.FieldByName('PartnerId').AsInteger;
       cdsOrderExternalPaidKindId.AsInteger := qryOrderExternal.FieldByName('PaidKindId').AsInteger;
@@ -4281,7 +4291,8 @@ begin
       cdsOrderExternalChangePercent.AsFloat := qryOrderExternal.FieldByName('ChangePercent').AsFloat;
       cdsOrderExternalCalcDayCount.AsFloat := qryOrderExternal.FieldByName('CalcDayCount').AsFloat;
       cdsOrderExternalOrderDayCount.AsFloat := qryOrderExternal.FieldByName('OrderDayCount').AsFloat;
-      cdsOrderExternalisOperDateOrder.AsBoolean := qryOrderExternal.FieldByName('isOperDateOrder').AsBoolean;
+      cdsOrderExternalIsOperDateOrder.AsBoolean := qryOrderExternal.FieldByName('isOperDateOrder').AsBoolean;
+      cdsOrderExternalIsOrderMin.AsBoolean := qryOrderExternal.FieldByName('isOrderMin').AsBoolean;
       cdsOrderExternalAddress.AsString := qryOrderExternal.FieldByName('Address').AsString;
       cdsOrderExternalPartnerName.AsString := qryOrderExternal.FieldByName('PartnerName').AsString;
       cdsOrderExternalContractName.AsString := qryOrderExternal.FieldByName('ContractName').AsString;
@@ -4407,7 +4418,7 @@ begin
   try
     qryGoodsListSale.Connection := conMain;
 
-    if cdsOrderExternalisOperDateOrder.AsBoolean then
+    if cdsOrderExternalIsOperDateOrder.AsBoolean then
       PriceField := 'OrderPrice'
     else
       PriceField := 'SalePrice';
@@ -4505,7 +4516,7 @@ begin
   try
     qryGoodsListOrder.Connection := conMain;
 
-    if cdsOrderExternalisOperDateOrder.AsBoolean then
+    if cdsOrderExternalIsOperDateOrder.AsBoolean then
       PriceField := 'OrderPrice'
     else
       PriceField := 'SalePrice';
@@ -4595,7 +4606,7 @@ var
   PriceField, PromoPriceField : string;
   Params: TParams;
 begin
-  if cdsOrderExternalisOperDateOrder.AsBoolean then
+  if cdsOrderExternalIsOperDateOrder.AsBoolean then
     PriceField := 'OrderPrice'
   else
     PriceField := 'SalePrice';
