@@ -3266,7 +3266,8 @@ end;
  begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
+
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerDialogForm'));
@@ -3276,8 +3277,10 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerEditForm');
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternal_SendOnPriceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternal_SendOnPriceJournalChoiceForm');
