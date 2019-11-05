@@ -762,7 +762,8 @@ uses
   Report_Profitability in '..\..\FormsFarmacy\Report\Report_Profitability.pas' {Report_ProfitabilityForm: TParentForm},
   Report_ProfitabilityDialog in '..\..\FormsFarmacy\Report\Report_ProfitabilityDialog.pas' {Report_ProfitabilityDialogForm: TParentForm},
   Loyalty in '..\..\FormsFarmacy\Document\Loyalty.pas' {LoyaltyForm: TParentForm},
-  LoyaltyJournal in '..\..\FormsFarmacy\Document\LoyaltyJournal.pas' {LoyaltyJournalForm: TParentForm};
+  LoyaltyJournal in '..\..\FormsFarmacy\Document\LoyaltyJournal.pas' {LoyaltyJournalForm: TParentForm},
+  GoodsRetailTab_Error in '..\..\FormsFarmacy\Guides\GoodsRetailTab_Error.pas' {GoodsRetailTab_ErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
