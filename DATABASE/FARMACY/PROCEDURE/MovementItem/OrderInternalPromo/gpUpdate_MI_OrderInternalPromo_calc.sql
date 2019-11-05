@@ -46,14 +46,10 @@ BEGIN
              , tmpGoodsPromo AS (SELECT MovementItem.Id                              AS MI_Id
                                       , MovementItem.ObjectId                        AS GoodsId_retail
                                       , MIFloat_PromoMovementId.ValueData :: Integer AS PromoMovementId
-                                      , MILO_Juridical.ObjectId                      AS JuridicalId
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
                                                                   ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
-                                      LEFT JOIN MovementItemLinkObject AS MILO_Juridical
-                                                                       ON MILO_Juridical.MovementItemId = MovementItem.Id
-                                                                      AND MILO_Juridical.DescId = zc_MILinkObject_Juridical()
                                  WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId = zc_MI_Master()
                                     AND MovementItem.isErased = FALSE

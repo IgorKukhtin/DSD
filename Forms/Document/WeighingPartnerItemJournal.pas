@@ -119,6 +119,8 @@ type
     StartBegin: TcxGridDBColumn;
     EndBegin: TcxGridDBColumn;
     diffBegin_sec: TcxGridDBColumn;
+    Count_Doc: TcxGridDBColumn;
+    Count_Item: TcxGridDBColumn;
   private
   public
   end;

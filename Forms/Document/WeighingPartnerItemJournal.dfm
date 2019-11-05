@@ -115,6 +115,25 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec
+        end
+        item
+          Format = ',0.####'
+          Column = Count_Doc
+        end
+        item
+          Kind = skSum
+          Position = spFooter
+          Column = Count_Doc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_Item
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = diffBegin_sec_movement
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -166,6 +185,21 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_Doc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_Item
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = diffBegin_sec_movement
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -180,6 +214,22 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Count_Doc: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'Count_Doc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Count_Item: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1089#1090#1088#1086#1082' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'Count_Item'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
