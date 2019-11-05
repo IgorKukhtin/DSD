@@ -1,17 +1,15 @@
--- Function: gpSelect_Movement_Loyalty()
+-- Function: gpGet_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Loyalty (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Loyalty (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Loyalty(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpGet_Movement_Loyalty(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- ключ Документа
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , InvNumber     TVarChar
              , OperDate      TDateTime
-             , StatusId      Integer
              , StatusCode    Integer
              , StatusName    TVarChar
              , StartPromo    TDateTime
@@ -26,31 +24,55 @@ RETURNS TABLE (Id Integer
              , UpdateId      Integer
              , UpdateName    TVarChar
              , UpdateDate    TDateTime
-             , Comment       TVarChar
-              )
-
+             , Comment       TVarChar)
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
 BEGIN
-    RETURN QUERY
-        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                     UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                     UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
 
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
+    vbUserId := inSession;
+
+    IF COALESCE (inMovementId, 0) = 0
+    THEN
+        RETURN QUERY
+        SELECT
+            0                           AS Id
+          , CAST (NEXTVAL ('movement_Loyalty_seq') AS TVarChar) AS InvNumber
+          , inOperDate		            AS OperDate
+          , Object_Status.Code          AS StatusCode
+          , Object_Status.Name          AS StatusName
+          , Null  :: TDateTime          AS StartPromo
+          , Null  :: TDateTime          AS EndPromo 
+          , Null  :: TDateTime          AS StartSale
+          , Null  :: TDateTime          AS EndSale
+          , 0     ::TFloat              AS StartSummCash
+          , 0     ::Integer             AS MonthCount
+          , NULL  ::Integer             AS InsertId
+          , Object_Insert.ValueData     AS InsertName
+          , CURRENT_TIMESTAMP :: TDateTime AS InsertDate
+          , NULL  ::Integer             AS UpdateId
+          , NULL  ::TVarChar            AS UpdateName
+          , Null  :: TDateTime          AS UpdateDate
+          , NULL  ::TVarChar            AS Comment
+        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
+  
+   ELSE
+ 
+  RETURN QUERY
      SELECT Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
-          , Movement.StatusId
           , Object_Status.ObjectCode                                       AS StatusCode
           , Object_Status.ValueData                                        AS StatusName
           , MovementDate_StartPromo.ValueData                              AS StartPromo
           , MovementDate_EndPromo.ValueData                                AS EndPromo
           , MovementDate_StartSale.ValueData                               AS StartSale
           , MovementDate_EndSale.ValueData                                 AS EndSale
-          , MovementFloat_StartSummCash.ValueData                          AS StartSummCash
-          , MovementFloat_MonthCount.ValueData::Integer                    AS MonthCount
+          , COALESCE(MovementFloat_StartSummCash.ValueData,0)::TFloat      AS StartSummCash
+          , COALESCE(MovementFloat_MonthCount.ValueData,0)::Integer        AS MonthCount
           , Object_Insert.Id                                               AS InsertId
           , Object_Insert.ValueData                                        AS InsertName
           , MovementDate_Insert.ValueData                                  AS InsertDate
@@ -58,8 +80,7 @@ BEGIN
           , Object_Update.ValueData                                        AS UpdateName
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
-     FROM Movement
-        INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
+     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
         LEFT JOIN MovementFloat AS MovementFloat_StartSummCash
@@ -92,30 +113,32 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Update
                                ON MovementDate_Update.MovementId = Movement.Id
                               AND MovementDate_Update.DescId = zc_MovementDate_Update()
-
+                              
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                      ON MovementLinkObject_Insert.MovementId = Movement.Id
                                     AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId 
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Update
                                      ON MovementLinkObject_Update.MovementId = Movement.Id
                                     AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
-        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId  
+        
+     WHERE Movement.Id =  inMovementId;
 
-     WHERE Movement.DescId = zc_Movement_Loyalty()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-     ORDER BY InvNumber;
+    END IF;
 
 END;
-
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 04.10.19                                                       *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.  Шаблий О.В.
+ 12.09.18                                                                                  *
+ 13.12.17         *
 */
--- select * from gpSelect_Movement_Loyalty(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2016')::TDateTime , inIsErased:= true, inSession := '3');
+
+--тест 
+--select * from gpGet_Movement_Loyalty(inMovementId := 0 , inOperDate := ('13.03.2016')::TDateTime ,  inSession := '3');
+--select * from gpGet_Movement_Loyalty(inMovementId := 1923638 , inOperDate := ('24.04.2016')::TDateTime ,  inSession := '3');

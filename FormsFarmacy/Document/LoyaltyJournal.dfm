@@ -89,6 +89,14 @@ inherited LoyaltyJournalForm: TLoyaltyJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
+          object MonthCount: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094#1077#1074' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1077
+            DataBinding.FieldName = 'MonthCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'

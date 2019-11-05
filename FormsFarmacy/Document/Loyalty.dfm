@@ -12,17 +12,17 @@ inherited LoyaltyForm: TLoyaltyForm
     Width = 1034
     Height = 442
     ExplicitTop = 123
-    ExplicitWidth = 991
+    ExplicitWidth = 1034
     ExplicitHeight = 442
     ClientRectBottom = 442
     ClientRectRight = 1034
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 991
+      ExplicitWidth = 1034
       ExplicitHeight = 418
       inherited cxGrid: TcxGrid
         Width = 1034
         Height = 200
-        ExplicitWidth = 991
+        ExplicitWidth = 1034
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = SignDS
@@ -32,8 +32,9 @@ inherited LoyaltyForm: TLoyaltyForm
               Kind = skSum
             end>
           OptionsBehavior.IncSearch = True
-          OptionsData.Appending = True
+          OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
@@ -44,62 +45,90 @@ inherited LoyaltyForm: TLoyaltyForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object sgIsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 41
-          end
-          object GUID: TcxGridDBColumn
+          object sgGUID: TcxGridDBColumn
             Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076
             DataBinding.FieldName = 'GUID'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
-            Width = 59
+            Options.Editing = False
+            Width = 150
           end
-          object clBayerName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1082#1083#1080#1077#1085#1090#1072
-            DataBinding.FieldName = 'BayerName'
+          object sgOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 174
+            Options.Editing = False
+            Width = 68
           end
-          object clComment: TcxGridDBColumn
+          object sgAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object sgInvnumber_Check: TcxGridDBColumn
+            Caption = #8470' '#1095#1077#1082#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'Invnumber_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object sgOperDate_Check: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'OperDate_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object sgUnitName_Check: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082' '#1089#1086#1079#1076#1072#1085#1080#1103')'
+            DataBinding.FieldName = 'UnitName_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
+          object sqInvnumber_CheckSale: TcxGridDBColumn
+            Caption = #8470' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+            DataBinding.FieldName = 'Invnumber_CheckSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object sqOperDate_CheckSale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+            DataBinding.FieldName = 'OperDate_CheckSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object sqUnitName_CheckSale: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'UnitName_CheckSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 192
+          end
+          object sgComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 166
           end
-          object clIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'IsErased'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object BayerPhone: TcxGridDBColumn
-            Caption = #1058#1077#1083#1077#1092#1086#1085
-            DataBinding.FieldName = 'BayerPhone'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 62
-          end
-          object BayerEmail: TcxGridDBColumn
-            Caption = 'E-mail'
-            DataBinding.FieldName = 'BayerEmail'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 49
-          end
-          object InsertName: TcxGridDBColumn
+          object sgInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -107,7 +136,7 @@ inherited LoyaltyForm: TLoyaltyForm
             Options.Editing = False
             Width = 55
           end
-          object Insertdate: TcxGridDBColumn
+          object sgInsertdate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
             DataBinding.FieldName = 'Insertdate'
             HeaderAlignmentHorz = taCenter
@@ -115,7 +144,7 @@ inherited LoyaltyForm: TLoyaltyForm
             Options.Editing = False
             Width = 54
           end
-          object UpdateName: TcxGridDBColumn
+          object sgUpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -123,63 +152,13 @@ inherited LoyaltyForm: TLoyaltyForm
             Options.Editing = False
             Width = 56
           end
-          object UpdateDate: TcxGridDBColumn
+          object sgUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
-          end
-          object Count_Check: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
-            DataBinding.FieldName = 'Count_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
-            Options.Editing = False
-            Width = 51
-          end
-          object Invnumber_Check: TcxGridDBColumn
-            Caption = #8470' '#1095#1077#1082#1072
-            DataBinding.FieldName = 'Invnumber_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 74
-          end
-          object OperDate_Check: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072
-            DataBinding.FieldName = 'OperDate_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 62
-          end
-          object UnitName_Check: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082')'
-            DataBinding.FieldName = 'UnitName_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 135
-          end
-          object JuridicalName_Check: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
-            DataBinding.FieldName = 'JuridicalName_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 130
-          end
-          object RetailName_Check: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-            DataBinding.FieldName = 'RetailName_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1072#1087#1090#1077#1082#1072')'
-            Options.Editing = False
-            Width = 94
           end
         end
       end
@@ -192,7 +171,6 @@ inherited LoyaltyForm: TLoyaltyForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 991
       end
       object Panel1: TPanel
         Left = 0
@@ -204,7 +182,6 @@ inherited LoyaltyForm: TLoyaltyForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 2
-        ExplicitWidth = 991
         object Panel2: TPanel
           Left = 0
           Top = 0
@@ -215,7 +192,6 @@ inherited LoyaltyForm: TLoyaltyForm
           Caption = 'Panel2'
           ShowCaption = False
           TabOrder = 0
-          ExplicitWidth = 632
           object cxGrid1: TcxGrid
             Left = 0
             Top = 109
@@ -224,7 +200,6 @@ inherited LoyaltyForm: TLoyaltyForm
             Align = alBottom
             PopupMenu = PopupMenu
             TabOrder = 0
-            ExplicitWidth = 632
             object cxGridDBTableView1: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = DetailDS
@@ -239,9 +214,10 @@ inherited LoyaltyForm: TLoyaltyForm
               OptionsCustomize.ColumnHiding = True
               OptionsCustomize.ColumnsQuickCustomization = True
               OptionsCustomize.DataRowSizing = True
-              OptionsData.Appending = True
               OptionsData.CancelOnExit = False
+              OptionsData.Deleting = False
               OptionsData.DeletingConfirmation = False
+              OptionsData.Inserting = False
               OptionsView.ColumnAutoWidth = True
               OptionsView.GroupByBox = False
               OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -254,63 +230,42 @@ inherited LoyaltyForm: TLoyaltyForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-                Width = 59
+                Width = 88
               end
-              object ObjectCode: TcxGridDBColumn
+              object chUnitCode: TcxGridDBColumn
                 Caption = #1050#1086#1076
-                DataBinding.FieldName = 'ObjectlCode'
+                DataBinding.FieldName = 'UnitCode'
                 Options.Editing = False
-                Width = 42
+                Width = 38
               end
-              object ObjectName: TcxGridDBColumn
-                Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1070#1088'. '#1083#1080#1094#1086
-                DataBinding.FieldName = 'ObjectName'
-                PropertiesClassName = 'TcxButtonEditProperties'
-                Properties.Buttons = <
-                  item
-                    Action = JuridicalChoiceForm
-                    Default = True
-                    Kind = bkEllipsis
-                  end>
-                Properties.ReadOnly = True
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Width = 260
-              end
-              object DescName: TcxGridDBColumn
-                Caption = #1069#1083#1077#1084#1077#1085#1090
-                DataBinding.FieldName = 'DescName'
+              object chUnitName: TcxGridDBColumn
+                Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+                DataBinding.FieldName = 'UnitName'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 71
+                Width = 235
               end
-              object JuridicalName: TcxGridDBColumn
-                Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
+              object chJuridicalName: TcxGridDBColumn
+                Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1080')'
                 DataBinding.FieldName = 'JuridicalName'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 176
+                Width = 160
               end
-              object RetailName: TcxGridDBColumn
+              object chRetailName: TcxGridDBColumn
                 Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
                 DataBinding.FieldName = 'RetailName'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 155
-              end
-              object chComment: TcxGridDBColumn
-                Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-                DataBinding.FieldName = 'Comment'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Width = 176
+                Width = 140
               end
               object IsErased: TcxGridDBColumn
                 Caption = #1059#1076#1072#1083#1077#1085
                 DataBinding.FieldName = 'IsErased'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
@@ -329,7 +284,6 @@ inherited LoyaltyForm: TLoyaltyForm
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
-            ExplicitWidth = 632
             object cxGridDBTableView2: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = MasterDS
@@ -347,40 +301,25 @@ inherited LoyaltyForm: TLoyaltyForm
               Styles.Footer = dmMain.cxFooterStyle
               Styles.Header = dmMain.cxHeaderStyle
               Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-              object GoodsisErased: TcxGridDBColumn
+              object MasterErased: TcxGridDBColumn
                 DataBinding.FieldName = 'isErased'
                 Visible = False
               end
-              object IsChecked: TcxGridDBColumn
-                Caption = #1054#1090#1084#1077#1095#1077#1085
-                DataBinding.FieldName = 'IsChecked'
+              object MasterAmount: TcxGridDBColumn
+                Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+                DataBinding.FieldName = 'Amount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.00'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-                Width = 60
+                Width = 255
               end
-              object GoodsCode: TcxGridDBColumn
-                Caption = #1050#1086#1076
-                DataBinding.FieldName = 'GoodsCode'
+              object MasterCount: TcxGridDBColumn
+                Caption = #1055#1086#1074#1090#1086#1088#1086#1074
+                DataBinding.FieldName = 'Count'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                Options.Editing = False
-                Width = 51
-              end
-              object GoodsName: TcxGridDBColumn
-                Caption = #1058#1086#1074#1072#1088
-                DataBinding.FieldName = 'GoodsName'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Options.Editing = False
-                Width = 340
-              end
-              object Comment: TcxGridDBColumn
-                Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-                DataBinding.FieldName = 'Comment'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Width = 70
+                Width = 276
               end
             end
             object cxGridLevel2: TcxGridLevel
@@ -396,7 +335,6 @@ inherited LoyaltyForm: TLoyaltyForm
             Touch.TabletOptions = [toPressAndHold]
             AlignSplitter = salBottom
             Control = cxGrid1
-            ExplicitWidth = 632
           end
         end
         object Panel3: TPanel
@@ -409,7 +347,6 @@ inherited LoyaltyForm: TLoyaltyForm
           Caption = 'Panel3'
           ShowCaption = False
           TabOrder = 1
-          ExplicitLeft = 640
           object cxGrid3: TcxGrid
             Left = 0
             Top = 0
@@ -427,6 +364,8 @@ inherited LoyaltyForm: TLoyaltyForm
               OptionsBehavior.IncSearch = True
               OptionsData.Deleting = False
               OptionsData.DeletingConfirmation = False
+              OptionsData.Editing = False
+              OptionsData.Inserting = False
               OptionsView.ColumnAutoWidth = True
               OptionsView.GroupByBox = False
               Styles.Content = dmMain.cxContentStyle
@@ -465,7 +404,6 @@ inherited LoyaltyForm: TLoyaltyForm
           Touch.TabletOptions = [toPressAndHold]
           AlignSplitter = salRight
           Control = Panel3
-          ExplicitLeft = 632
         end
       end
     end
@@ -474,7 +412,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Width = 1034
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 991
+    ExplicitWidth = 1034
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -631,7 +569,7 @@ inherited LoyaltyForm: TLoyaltyForm
   object cxLabel9: TcxLabel [6]
     Left = 565
     Top = 5
-    Caption = #1052#1077#1089#1103#1094#1077#1074' '#1085#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1077
+    Caption = #1052#1077#1089#1103#1094#1077#1074' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1077
   end
   object edMonthCount: TcxCurrencyEdit [7]
     Left = 565
@@ -663,21 +601,19 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 'Checked'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePromoCodeSign_Checked_No
       StoredProcList = <
         item
-          StoredProc = spUpdatePromoCodeSign_Checked_No
         end>
       Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
       Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
     end
-    object actRefreshPromoCodeChild: TdsdDataSetRefresh [1]
+    object actRefreshLoyaltyChild: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect_MovementItem_PromoCodeChild
+      StoredProc = spSelect_MovementItem_LoyaltyChild
       StoredProcList = <
         item
-          StoredProc = spSelect_MovementItem_PromoCodeChild
+          StoredProc = spSelect_MovementItem_LoyaltyChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -689,15 +625,13 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 'Checked'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePromoCodeSign_Checked_Yes
       StoredProcList = <
         item
-          StoredProc = spUpdatePromoCodeSign_Checked_Yes
         end>
       Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
       Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
     end
-    object actRefreshPromoCodeGoods: TdsdDataSetRefresh [3]
+    object actRefreshLoyaltyGoods: TdsdDataSetRefresh [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -711,13 +645,13 @@ inherited LoyaltyForm: TLoyaltyForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshPromoCodeSign: TdsdDataSetRefresh [4]
+    object actRefreshLoyaltySign: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPromoCodeSign
+      StoredProc = spSelectPromoLoyaltySign
       StoredProcList = <
         item
-          StoredProc = spSelectPromoCodeSign
+          StoredProc = spSelectPromoLoyaltySign
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -731,71 +665,19 @@ inherited LoyaltyForm: TLoyaltyForm
           StoredProc = spGet
         end
         item
-          StoredProc = spSelectPromoCodeSign
+          StoredProc = spSelectPromoLoyaltySign
         end
         item
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_MovementItem_PromoCodeChild
+          StoredProc = spSelect_MovementItem_LoyaltyChild
         end
         item
-          StoredProc = spSelectPromoCodeInfo
+          StoredProc = spSelectLoyaltyInfo
         end>
     end
-    object macUpdateSignIsCheckedYes_S: TMultiAction [6]
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateSignIsCheckedYes
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateSignIsCheckedNo_S: TMultiAction [7]
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateSignIsCheckedNo
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
-    end
-    object macUpdateSignIsCheckedYes: TMultiAction [8]
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateSignIsCheckedYes_S
-        end
-        item
-          Action = actRefreshPromoCodeSign
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateSignIsCheckedNo: TMultiAction [9]
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateSignIsCheckedNo_S
-        end
-        item
-          Action = actRefreshPromoCodeSign
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
-    end
-    object actSetErasedPromoCodeSign: TdsdUpdateErased [11]
+    object actSetErasedLoyaltySign: TdsdUpdateErased [7]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMISign
@@ -803,15 +685,15 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           StoredProc = spErasedMISign
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = SignDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetErasedChild: TdsdUpdateErased [12]
+    object actMISetErasedChild: TdsdUpdateErased [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -830,7 +712,7 @@ inherited LoyaltyForm: TLoyaltyForm
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actSetUnErasedPromoCodeSign: TdsdUpdateErased [14]
+    object actSetUnErasedLoyaltySign: TdsdUpdateErased [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUpErasedMISign
@@ -846,7 +728,7 @@ inherited LoyaltyForm: TLoyaltyForm
       isSetErased = False
       DataSource = SignDS
     end
-    object actMISetUnErasedChild: TdsdUpdateErased [15]
+    object actMISetUnErasedChild: TdsdUpdateErased [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -871,34 +753,8 @@ inherited LoyaltyForm: TLoyaltyForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectPromoCodeSign
+          StoredProc = spSelectPromoLoyaltySign
         end>
-    end
-    object InsertRecordSign: TInsertRecord [19]
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView2
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1083#1080#1077#1085#1090#1072'>'
-      ImageIndex = 0
-    end
-    object InsertRecordChild: TInsertRecord [20]
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView1
-      Action = JuridicalChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' /'#1070#1088'. '#1083#1080#1094#1086'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' /'#1070#1088'. '#1083#1080#1094#1086'>'
-      ShortCut = 45
-      ImageIndex = 0
     end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
@@ -906,22 +762,22 @@ inherited LoyaltyForm: TLoyaltyForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_MovementItem_PromoCodeChild
+          StoredProc = spSelect_MovementItem_LoyaltyChild
         end>
     end
-    object dsdUpdateSignDS: TdsdUpdateDataSet [22]
+    object dsdUpdateSignDS: TdsdUpdateDataSet [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdatePromoCodeSign
+      StoredProc = spInsertUpdateLoyaltySign
       StoredProcList = <
         item
-          StoredProc = spInsertUpdatePromoCodeSign
+          StoredProc = spInsertUpdateLoyaltySign
         end>
       Caption = 'actUpdateSignDS'
       DataSource = SignDS
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [23]
+    object actUpdateChildDS: TdsdUpdateDataSet [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -936,7 +792,7 @@ inherited LoyaltyForm: TLoyaltyForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [24]
+    object actDoLoad: TExecuteImportSettingsAction [18]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -985,8 +841,8 @@ inherited LoyaltyForm: TLoyaltyForm
       Caption = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
       Hint = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
       ImageIndex = 24
-      FormName = 'TReport_Check_byPromoCodeForm'
-      FormNameParam.Value = 'TReport_Check_byPromoCodeForm'
+      FormName = 'TReport_Check_byLoyaltyForm'
+      FormNameParam.Value = 'TReport_Check_byLoyaltyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1136,17 +992,17 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       isShowModal = False
     end
-    object macInsertPromoCodeSign: TMultiAction
+    object macInsertLoyaltySign: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = ExecuteDialogPromoCodeSign
+          Action = ExecuteDialogLoyaltySign
         end
         item
         end
         item
-          Action = actRefreshPromoCodeSign
+          Action = actRefreshLoyaltySign
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'?'
       InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
@@ -1158,10 +1014,8 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 'Load'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_MovementItem_Promo_Set_Zero
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_MovementItem_Promo_Set_Zero
         end>
       Caption = 'actInsertUpdate_MovementItem_Promo_Set_Zero'
     end
@@ -1197,7 +1051,7 @@ inherited LoyaltyForm: TLoyaltyForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
-    object ExecuteDialogPromoCodeSign: TExecuteDialog
+    object ExecuteDialogLoyaltySign: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1205,8 +1059,8 @@ inherited LoyaltyForm: TLoyaltyForm
       Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
       Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
       ImageIndex = 26
-      FormName = 'TPromoCodeSignDialogForm'
-      FormNameParam.Value = 'TPromoCodeSignDialogForm'
+      FormName = 'TLoyaltySignDialogForm'
+      FormNameParam.Value = 'TLoyaltySignDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1219,158 +1073,6 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       isShowModal = True
       OpenBeforeShow = True
-    end
-    object spUpdateGoodsIsCheckedNo: TdsdExecStoredProc
-      Category = 'Checked'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIGoods_isChecked_No
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIGoods_isChecked_No
-        end>
-      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
-      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
-    end
-    object spUpdateGoodsIsCheckedYes: TdsdExecStoredProc
-      Category = 'Checked'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIGoods_isChecked_Yes
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIGoods_isChecked_Yes
-        end>
-      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
-      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
-    end
-    object macUpdateGoodsIsCheckedYes: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateGoodsIsCheckedYes_S
-        end
-        item
-          Action = actRefreshPromoCodeGoods
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateGoodsIsCheckedYes_S: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateGoodsIsCheckedYes
-        end>
-      View = cxGridDBTableView2
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateGoodsIsCheckedNo: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateGoodsIsCheckedNo_S
-        end
-        item
-          Action = actRefreshPromoCodeGoods
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
-    end
-    object macUpdateGoodsIsCheckedNo_S: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateGoodsIsCheckedNo
-        end>
-      View = cxGridDBTableView2
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
-    end
-    object spUpdateChildIsCheckedNo: TdsdExecStoredProc
-      Category = 'Checked'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMIChild_Cheked_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMIChild_Cheked_No
-        end>
-      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
-      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
-    end
-    object spUpdateChildIsCheckedYes: TdsdExecStoredProc
-      Category = 'Checked'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMIChild_Cheked_Yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMIChild_Cheked_Yes
-        end>
-      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
-      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
-    end
-    object macUpdateChildIsCheckedYes_S: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateChildIsCheckedYes
-        end>
-      View = cxGridDBTableView1
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateChildIsCheckedNo_S: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateChildIsCheckedNo
-        end>
-      View = cxGridDBTableView1
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
-    end
-    object macUpdateChildIsCheckedYes: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateChildIsCheckedYes_S
-        end
-        item
-          Action = actRefreshPromoCodeChild
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
-      ImageIndex = 76
-    end
-    object macUpdateChildIsCheckedNo: TMultiAction
-      Category = 'Checked'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateChildIsCheckedNo_S
-        end
-        item
-          Action = actRefreshPromoCodeChild
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
-      ImageIndex = 77
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1403,23 +1105,11 @@ inherited LoyaltyForm: TLoyaltyForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordPartner'
-        end
-        item
-          Visible = True
           ItemName = 'bbSetErasedPromoPartner'
         end
         item
           Visible = True
           ItemName = 'bbSetUnErasedPromoPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSignIsCheckedYes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSignIsCheckedNo'
         end
         item
           Visible = True
@@ -1435,19 +1125,7 @@ inherited LoyaltyForm: TLoyaltyForm
         end
         item
           Visible = True
-          ItemName = 'bbGoodsIsCheckedYes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsIsCheckedNo'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordChild'
         end
         item
           Visible = True
@@ -1456,14 +1134,6 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'bbMISetUnErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChildIsCheckedYes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChildIsCheckedNo'
         end
         item
           Visible = True
@@ -1530,27 +1200,33 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 0
     end
     object bbInsertRecordChild: TdxBarButton
-      Action = InsertRecordChild
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' /'#1070#1088'. '#1083#1080#1094#1086'>'
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' /'#1070#1088'. '#1083#1080#1094#1086'>'
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
       Category = 0
     end
     object bbInsertRecordPartner: TdxBarButton
-      Action = InsertRecordSign
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080'>'
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080'>'
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbSetErasedPromoPartner: TdxBarButton
-      Action = actSetErasedPromoCodeSign
+      Action = actSetErasedLoyaltySign
       Category = 0
     end
     object bbSetUnErasedPromoPartner: TdxBarButton
-      Action = actSetUnErasedPromoCodeSign
+      Action = actSetUnErasedLoyaltySign
       Category = 0
     end
-    object bbInsertPromoCodeSign: TdxBarButton
-      Action = macInsertPromoCodeSign
+    object bbInsertLoyaltySign: TdxBarButton
+      Action = macInsertLoyaltySign
       Category = 0
     end
     object bbReportMinPriceForm: TdxBarButton
@@ -1562,28 +1238,46 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 0
     end
     object bbGoodsIsCheckedYes: TdxBarButton
-      Action = macUpdateGoodsIsCheckedYes
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Visible = ivAlways
+      ImageIndex = 76
     end
     object bbGoodsIsCheckedNo: TdxBarButton
-      Action = macUpdateGoodsIsCheckedNo
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Visible = ivAlways
+      ImageIndex = 77
     end
     object bbChildIsCheckedNo: TdxBarButton
-      Action = macUpdateChildIsCheckedNo
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Visible = ivAlways
+      ImageIndex = 77
     end
     object bbChildIsCheckedYes: TdxBarButton
-      Action = macUpdateChildIsCheckedYes
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Visible = ivAlways
+      ImageIndex = 76
     end
     object bbSignIsCheckedNo: TdxBarButton
-      Action = macUpdateSignIsCheckedNo
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Visible = ivAlways
+      ImageIndex = 77
     end
     object bbSignIsCheckedYes: TdxBarButton
-      Action = macUpdateSignIsCheckedYes
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Visible = ivAlways
+      ImageIndex = 76
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1647,7 +1341,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 312
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PromoCode'
+    StoredProcName = 'gpUpdate_Status_Loyalty'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
   end
@@ -1681,6 +1375,7 @@ inherited LoyaltyForm: TLoyaltyForm
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -1695,35 +1390,6 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isElectron'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isOne'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isBuySite'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PromoCodeId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PromoCodeName'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1749,10 +1415,30 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
+        Name = 'StartSale'
+        Value = 'NULL'
+        Component = edStartSale
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndSale'
+        Value = 'NULL'
+        Component = edEndSale
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartSummCash'
+        Value = Null
+        Component = edStartSummCash
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MonthCount'
         Value = Null
         Component = edMonthCount
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -1803,7 +1489,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 224
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_PromoCode'
+    StoredProcName = 'gpInsertUpdate_Movement_Loyalty'
     Params = <
       item
         Name = 'ioId'
@@ -1846,37 +1532,33 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'inStartSale'
+        Value = 'NULL'
+        Component = edStartSale
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndSale'
+        Value = 'NULL'
+        Component = edEndSale
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartSummCash'
         Value = Null
-        Component = edMonthCount
+        Component = edStartSummCash
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisElectron'
+        Name = 'inMonthCount'
         Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisOne'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisBuySite'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPromoCodeId'
-        Value = Null
+        Component = edMonthCount
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1940,7 +1622,7 @@ inherited LoyaltyForm: TLoyaltyForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     Left = 120
-    Top = 336
+    Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
     Left = 550
@@ -1951,7 +1633,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 248
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCode'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loyalty'
     Params = <
       item
         Name = 'ioId'
@@ -1970,28 +1652,19 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inAmount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsChecked'
+        Name = 'inCount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'IsChecked'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
+        ComponentItem = 'Count'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2075,7 +1748,7 @@ inherited LoyaltyForm: TLoyaltyForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 444
+    Left = 412
     Top = 209
   end
   object DetailDCS: TClientDataSet
@@ -2090,8 +1763,8 @@ inherited LoyaltyForm: TLoyaltyForm
     Left = 80
     Top = 424
   end
-  object spSelect_MovementItem_PromoCodeChild: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PromoCodeChild'
+  object spSelect_MovementItem_LoyaltyChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_LoyaltyChild'
     DataSet = DetailDCS
     DataSets = <
       item
@@ -2123,8 +1796,8 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 544
-    Top = 408
+    Left = 520
+    Top = 432
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2150,7 +1823,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 489
   end
   object spInsertUpdateMIChild: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeChild'
+    StoredProcName = 'gpInsertUpdate_MovementItem_LoyaltyChild'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2171,10 +1844,10 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inUnitId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'ObjectId'
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2186,21 +1859,12 @@ inherited LoyaltyForm: TLoyaltyForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 536
-    Top = 352
+    Left = 520
+    Top = 496
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2251,24 +1915,6 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     Left = 734
     Top = 384
-  end
-  object spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Promo_Set_Zero'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    Left = 730
-    Top = 208
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2337,8 +1983,8 @@ inherited LoyaltyForm: TLoyaltyForm
     Left = 758
     Top = 273
   end
-  object spSelectPromoCodeSign: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PromoCodeSign'
+  object spSelectPromoLoyaltySign: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_LoyaltySign'
     DataSet = SignDCS
     DataSets = <
       item
@@ -2365,8 +2011,8 @@ inherited LoyaltyForm: TLoyaltyForm
     Left = 192
     Top = 496
   end
-  object spInsertUpdatePromoCodeSign: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeSign'
+  object spInsertUpdateLoyaltySign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_LoyaltySign'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2443,8 +2089,8 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 384
-    Top = 512
+    Left = 344
+    Top = 496
   end
   object spUpErasedMISign: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -2566,258 +2212,6 @@ inherited LoyaltyForm: TLoyaltyForm
     Left = 680
     Top = 480
   end
-  object spInsertUpdateMIGoods_isChecked_Yes: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCode_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 360
-    Top = 360
-  end
-  object spInsertUpdateMIGoods_isChecked_No: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCode_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 392
-    Top = 360
-  end
-  object spUpdateMIChild_Cheked_Yes: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeChild'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'ObjectId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 616
-    Top = 352
-  end
-  object spUpdateMIChild_Cheked_No: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeChild'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'ObjectId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 576
-    Top = 352
-  end
-  object spUpdatePromoCodeSign_Checked_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_PromoCodeSign_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 448
-    Top = 488
-  end
-  object spUpdatePromoCodeSign_Checked_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_PromoCodeSign_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 528
-    Top = 504
-  end
   object InfoDS: TDataSource
     DataSet = InfoDSD
     Left = 944
@@ -2830,8 +2224,8 @@ inherited LoyaltyForm: TLoyaltyForm
     Left = 896
     Top = 416
   end
-  object spSelectPromoCodeInfo: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PromoCodeInfo'
+  object spSelectLoyaltyInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_LoyaltyInfo'
     DataSet = InfoDSD
     DataSets = <
       item
