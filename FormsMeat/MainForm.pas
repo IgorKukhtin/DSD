@@ -1062,6 +1062,8 @@ type
     miCashOperationPriv: TMenuItem;
     actReport_Transport_Cost: TdsdOpenForm;
     miReport_Transport_Cost: TMenuItem;
+    actSendOnPrice_reestr: TdsdOpenForm;
+    miSendOnPrice_reestr: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

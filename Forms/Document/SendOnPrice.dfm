@@ -533,7 +533,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 260
+      Width = 257
     end
     object ceComment: TcxTextEdit
       Left = 628
@@ -571,6 +571,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.ReadOnly = True
       TabOrder = 27
       Width = 118
+    end
+    object cxLabel26: TcxLabel
+      Left = 830
+      Top = 90
+      Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+    end
+    object edReestrKind: TcxButtonEdit
+      Left = 830
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 29
+      Width = 144
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1782,6 +1800,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = Null
         Component = edIsChecked
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = edReestrKind
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216

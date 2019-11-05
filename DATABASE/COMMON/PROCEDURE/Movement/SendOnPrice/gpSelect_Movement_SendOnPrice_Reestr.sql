@@ -1,9 +1,9 @@
 -- Function: gpSelect_Movement_SendOnPrice()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Reestr (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice_Reestr(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsPartnerDate      Boolean ,
@@ -41,6 +41,31 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isHistoryCost Boolean
 
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , OperDate_reestr TDateTime, InvNumber_reestr TVarChar
+             , StatusCode_reestr Integer, StatusName_reestr TVarChar
+             , CarName_reestr TVarChar, CarModelName_reestr TVarChar
+             , PersonalDriverName_reestr TVarChar, MemberName_reestr TVarChar
+             , InvNumber_Transport_reestr TVarChar, OperDate_Transport_reestr TDateTime
+
+             , Date_Insert      TDateTime
+             , Date_PartnerIn   TDateTime
+             , Date_RemakeIn    TDateTime
+             , Date_RemakeBuh   TDateTime
+             , Date_Remake      TDateTime
+             , Date_Buh         TDateTime
+             , Date_TransferIn  TDateTime
+             , Date_TransferOut TDateTime
+             
+             , Member_Insert        TVarChar
+             , Member_PartnerInTo   TVarChar
+             , Member_PartnerInFrom TVarChar
+             , Member_RemakeInTo    TVarChar
+             , Member_RemakeInFrom  TVarChar
+             , Member_RemakeBuh     TVarChar
+             , Member_Remake        TVarChar
+             , Member_Buh           TVarChar
+             , Member_TransferIn    TVarChar
+             , Member_TransferOut   TVarChar
               )
 AS
 $BODY$
@@ -140,9 +165,43 @@ BEGIN
            , MovementDate_Checked.ValueData     AS CheckedDate
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)     AS Checked
            , COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) AS isHistoryCost
+
+           ---
+           , Object_ReestrKind.Id                       AS ReestrKindId
+           , Object_ReestrKind.ValueData                AS ReestrKindName
+
+           , Movement_reestr.OperDate                   AS OperDate_reestr
+           , Movement_reestr.InvNumber                  AS InvNumber_reestr
+           , Object_Status_reestr.ObjectCode            AS StatusCode_reestr
+           , Object_Status_reestr.ValueData             AS StatusName_reestr
+
+           , Object_Car_reestr.ValueData                AS CarName_reestr
+           , Object_CarModel_reestr.ValueData           AS CarModelName
+           , Object_PersonalDriver_reestr.PersonalName  AS PersonalDriverName_reestr
+           , Object_Member_reestr.ValueData             AS MemberName_reestr
+
+           , Movement_Transport_reestr.InvNumber        AS InvNumber_Transport_reestr
+           , Movement_Transport_reestr.OperDate         AS OperDate_Transport_reestr
+
+           , MIDate_Insert.ValueData         AS Date_Insert
+           , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
+           , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
+           , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
+           , MIDate_Remake.ValueData         AS Date_Remake
+           , MIDate_Buh.ValueData            AS Date_Buh
+           , MIDate_TransferIn.ValueData     AS Date_TransferIn
+           , MIDate_TransferOut.ValueData    AS Date_TransferOut
            
-           , Object_ReestrKind.Id             		    AS ReestrKindId
-           , Object_ReestrKind.ValueData       		    AS ReestrKindName
+           , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
+           , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
+           , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
+           , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
+           , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
+           , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
+           , Object_Remake.ValueData         AS Member_Remake
+           , Object_Buh.ValueData            AS Member_Buh
+           , Object_TransferIn.ValueData     AS Member_TransferIn
+           , Object_TransferOut.ValueData    AS Member_TransferOut
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -289,14 +348,14 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement_Order.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
-                                 ON ObjectBoolean_EdiOrdspr.ObjectId =  MovementLinkObject_Partner.ObjectId
-                                AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+                                    ON ObjectBoolean_EdiOrdspr.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                   AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiInvoice
-                                 ON ObjectBoolean_EdiInvoice.ObjectId =  MovementLinkObject_Partner.ObjectId
-                                AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+                                    ON ObjectBoolean_EdiInvoice.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                   AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
-                                 ON ObjectBoolean_EdiDesadv.ObjectId =  MovementLinkObject_Partner.ObjectId
-                                AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+                                    ON ObjectBoolean_EdiDesadv.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                   AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
 --
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -322,6 +381,7 @@ BEGIN
                                           AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
             LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                       ON MovementBoolean_Peresort.MovementId =  Movement_Production.Id
                                      AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
@@ -351,6 +411,112 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            -- инфа из Рееста
+            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
+                                   AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_reestr 
+                                   ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                  AND MI_reestr.isErased = FALSE
+            LEFT JOIN Movement AS Movement_reestr ON Movement_reestr.Id = MI_reestr.MovementId
+            LEFT JOIN Object AS Object_Status_reestr ON Object_Status_reestr.Id = Movement_reestr.StatusId
+
+            LEFT JOIN MovementLinkObject AS MLO_Car_reestr
+                                         ON MLO_Car_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_Car_reestr.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car_reestr ON Object_Car_reestr.Id = MLO_Car_reestr.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel_reestr ON ObjectLink_Car_CarModel_reestr.ObjectId = Object_Car_reestr.Id
+                                                                  AND ObjectLink_Car_CarModel_reestr.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel_reestr ON Object_CarModel_reestr.Id = ObjectLink_Car_CarModel_reestr.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MLO_PersonalDriver_reestr
+                                         ON MLO_PersonalDriver_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_PersonalDriver_reestr.DescId     = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS Object_PersonalDriver_reestr ON Object_PersonalDriver_reestr.PersonalId = MLO_PersonalDriver_reestr.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MLO_Member_reestr
+                                         ON MLO_Member_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_Member_reestr.DescId     = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member_reestr ON Object_Member_reestr.Id = MLO_Member_reestr.ObjectId
+            -- инфа из П/л (реестр)
+            LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
+                                           ON MLM_Transport_reestr.MovementId = Movement_reestr.Id
+                                          AND MLM_Transport_reestr.DescId     = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport_reestr ON Movement_Transport_reestr.Id = MLM_Transport_reestr.MovementChildId
+
+            --- протоколы Рееста
+            LEFT JOIN MovementItemDate AS MIDate_Insert
+                                       ON MIDate_Insert.MovementItemId = MI_reestr.Id
+                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
+            LEFT JOIN MovementItemDate AS MIDate_PartnerIn
+                                       ON MIDate_PartnerIn.MovementItemId = MI_reestr.Id
+                                      AND MIDate_PartnerIn.DescId = zc_MIDate_PartnerIn()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeIn
+                                       ON MIDate_RemakeIn.MovementItemId = MI_reestr.Id
+                                      AND MIDate_RemakeIn.DescId = zc_MIDate_RemakeIn()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
+                                       ON MIDate_RemakeBuh.MovementItemId = MI_reestr.Id
+                                      AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Remake
+                                       ON MIDate_Remake.MovementItemId = MI_reestr.Id
+                                      AND MIDate_Remake.DescId = zc_MIDate_Remake()
+            LEFT JOIN MovementItemDate AS MIDate_Buh
+                                       ON MIDate_Buh.MovementItemId = MI_reestr.Id
+                                      AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_TransferIn
+                                       ON MIDate_TransferIn.MovementItemId = MI_reestr.Id
+                                      AND MIDate_TransferIn.DescId = zc_MIDate_TransferIn()
+            LEFT JOIN MovementItemDate AS MIDate_TransferOut
+                                       ON MIDate_TransferOut.MovementItemId = MI_reestr.Id
+                                      AND MIDate_TransferOut.DescId = zc_MIDate_TransferOut()
+
+            LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = MI_reestr.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
+                                             ON MILinkObject_PartnerInTo.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_PartnerInTo.DescId = zc_MILinkObject_PartnerInTo()
+            LEFT JOIN Object AS Object_PartnerInTo ON Object_PartnerInTo.Id = MILinkObject_PartnerInTo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInFrom
+                                             ON MILinkObject_PartnerInFrom.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_PartnerInFrom.DescId = zc_MILinkObject_PartnerInFrom()
+            LEFT JOIN Object AS Object_PartnerInFrom ON Object_PartnerInFrom.Id = MILinkObject_PartnerInFrom.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInTo
+                                             ON MILinkObject_RemakeInTo.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_RemakeInTo.DescId = zc_MILinkObject_RemakeInTo()
+            LEFT JOIN Object AS Object_RemakeInTo ON Object_RemakeInTo.Id = MILinkObject_RemakeInTo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInFrom
+                                             ON MILinkObject_RemakeInFrom.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_RemakeInFrom()
+            LEFT JOIN Object AS Object_RemakeInFrom ON Object_RemakeInFrom.Id = MILinkObject_RemakeInFrom.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
+                                             ON MILinkObject_RemakeBuh.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
+            LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Remake
+                                             ON MILinkObject_Remake.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
+            LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
+                                             ON MILinkObject_Buh.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferIn
+                                             ON MILinkObject_TransferIn.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_TransferIn.DescId = zc_MILinkObject_TransferIn()
+            LEFT JOIN Object AS Object_TransferIn ON Object_TransferIn.Id = MILinkObject_TransferIn.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferOut
+                                             ON MILinkObject_TransferOut.MovementItemId = MI_reestr.Id
+                                            AND MILinkObject_TransferOut.DescId = zc_MILinkObject_TransferOut()
+            LEFT JOIN Object AS Object_TransferOut ON Object_TransferOut.Id = MILinkObject_TransferOut.ObjectId
+
 
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
