@@ -555,6 +555,10 @@ type
     N193: TMenuItem;
     actGoodsMainTab_Error: TdsdOpenForm;
     miGoodsMainTab_Error: TMenuItem;
+    actReport_Profitability: TdsdOpenForm;
+    N194: TMenuItem;
+    actLoyaltyJournal: TdsdOpenForm;
+    N195: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

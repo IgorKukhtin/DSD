@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2993,6 +2993,30 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Profitability: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1105#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      Hint = #1054#1090#1095#1105#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      FormName = 'TReport_ProfitabilityForm'
+      FormNameParam.Value = 'TReport_ProfitabilityForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLoyaltyJournal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
+      Hint = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
+      FormName = 'TLoyaltyJournalForm'
+      FormNameParam.Value = 'TLoyaltyJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3237,6 +3261,9 @@ inherited MainForm: TMainForm
           Action = actBarCode
         end
       end
+      object N195: TMenuItem
+        Action = actLoyaltyJournal
+      end
     end
     object miPersonal: TMenuItem [1]
       Caption = #1055#1077#1088#1089#1086#1085#1072#1083
@@ -3470,6 +3497,9 @@ inherited MainForm: TMainForm
       end
       object miReportMovementCheckFLForm: TMenuItem
         Action = actReportMovementCheckFLForm
+      end
+      object N194: TMenuItem
+        Action = actReport_Profitability
       end
       object N143: TMenuItem
         Action = actReportMovementCheckLight

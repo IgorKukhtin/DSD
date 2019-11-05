@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , MovementPromo TVarChar, PricePromo TFloat
              , isBarCode Boolean
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -115,7 +116,11 @@ BEGIN
            
            , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
            , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
-            
+
+           , tmpMI.StartBegin :: TDateTime
+           , tmpMI.EndBegin   :: TDateTime
+           , (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
+
            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat AS PricePromo
 
@@ -164,6 +169,10 @@ BEGIN
                   , tmpMI.InsertDate
                   , tmpMI.UpdateDate
 
+                  , MAX (tmpMI.StartBegin) AS StartBegin
+                  , MAX (tmpMI.EndBegin)   AS EndBegin
+                  , SUM (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
+
                   , tmpMI.MovementPromoId
                   
                   , tmpMI.isBarCode
@@ -199,7 +208,7 @@ BEGIN
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
-
+                  
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_PriceList.ObjectId, 0) ELSE 0 END AS PriceListId
@@ -207,11 +216,15 @@ BEGIN
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Insert.ValueData ELSE zc_DateStart() END AS InsertDate
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Update.ValueData ELSE zc_DateStart() END AS UpdateDate
 
+                  , COALESCE (MIDate_StartBegin.ValueData,zc_DateStart())  AS StartBegin
+                  , COALESCE (MIDate_EndBegin.ValueData,zc_DateStart())    AS EndBegin
+                  , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
                   , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
 
                   , MovementItem.isErased
                   
-                  ,  MIFloat_PromoMovement.ValueData AS MovementPromoId
+                  , MIFloat_PromoMovement.ValueData AS MovementPromoId
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -231,7 +244,14 @@ BEGIN
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                                                 
+
+                  LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                             ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                            AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
+                  LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                             ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                            AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
@@ -328,8 +348,12 @@ BEGIN
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
                   , 0 AS PriceListId
            
-                  , zc_DateStart() AS InsertDate
-                  , zc_DateStart() AS UpdateDate
+                  , zc_DateStart()  AS InsertDate
+                  , zc_DateStart()  AS UpdateDate
+
+                  , zc_DateStart()  AS StartBegin
+                  , zc_DateStart()  AS EndBegin
+                  , 0     :: TFloat AS diffBegin_sec
 
                   , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
 
@@ -457,10 +481,11 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 04.11.19         *
  01.12.15         * promo
  16.10.14                                        * all
  11.03.14         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 14764281 , inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')

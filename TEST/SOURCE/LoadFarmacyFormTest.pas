@@ -67,6 +67,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
+    procedure LoadLoyaltyFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
     procedure LoadListDiffFormTest;
@@ -759,6 +760,15 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadLoyaltyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyForm');
+end;
+
 procedure TLoadFormTest.LoadLossDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));
@@ -776,6 +786,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));

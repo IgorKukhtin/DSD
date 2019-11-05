@@ -473,9 +473,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_Replays() RETURNS Integer AS $BODY$B
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_Replays', 'Количество повторов сообщения' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Replays');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_MonthCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MonthCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_MonthCount', 'Количество месяцев' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MonthCount');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 04.11.19                                                                                     * zc_MovementFloat_MonthCount
  15.10.19         * zc_MovementFloat_TotalSummFineRecalc
                     zc_MovementFloat_TotalSummHospRecalc
  29.07.19         * zc_MovementFloat_TotalSummFine, zc_MovementFloat_TotalSummHosp

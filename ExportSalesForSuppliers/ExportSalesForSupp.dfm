@@ -1326,9 +1326,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       ImageIndex = 4
       object grYuriFarm: TcxGrid
         Left = 0
-        Top = 31
+        Top = 249
         Width = 901
-        Height = 484
+        Height = 266
         Align = alClient
         TabOrder = 0
         object grYuriFarmDBTableView: TcxGridDBTableView
@@ -1363,7 +1363,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
         end
         object btnYuriFarmExecute: TButton
-          Left = 384
+          Left = 440
           Top = 0
           Width = 113
           Height = 25
@@ -1379,6 +1379,64 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' HTTPS'
           TabOrder = 3
           OnClick = btnYuriFarmSendClick
+        end
+        object btnYuriFarmUnitExecute: TButton
+          Left = 256
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082
+          TabOrder = 4
+          OnClick = btnYuriFarmUnitExecuteClick
+        end
+      end
+      object grYuriFarmUnit: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 218
+        Align = alTop
+        TabOrder = 2
+        object grYuriFarmUnitDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_YuriFarm_Unit
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          object grYuriFarmUnit_ID: TcxGridDBColumn
+            DataBinding.FieldName = 'ID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 41
+          end
+          object grYuriFarmUnit_UnitName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 251
+          end
+          object grYuriFarmUnit_OKPO: TcxGridDBColumn
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
+          end
+          object grYuriFarmUnit_UnitAddress: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'UnitAddress'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 304
+          end
+        end
+        object grYuriFarmUnitLevel: TcxGridLevel
+          GridView = grYuriFarmUnitDBTableView
         end
       end
     end
@@ -1697,8 +1755,46 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Connection = ZConnection1
     SQL.Strings = (
       
-        'SELECT * FROM gpReport_Upload_YuriFarm (:inDate, zfCalc_UserAdmi' +
-        'n())')
+        'SELECT * FROM gpReport_Upload_YuriFarm (:inDate, :inUnitID, zfCa' +
+        'lc_UserAdmin())')
+    Params = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end
+      item
+        DataType = ftInteger
+        Name = 'inUnitID'
+        ParamType = ptUnknown
+      end>
+    Left = 580
+    Top = 376
+    ParamData = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end
+      item
+        DataType = ftInteger
+        Name = 'inUnitID'
+        ParamType = ptUnknown
+      end>
+  end
+  object dsReport_Upload_YuriFarm_Unit: TDataSource
+    DataSet = qryReport_Upload_YuriFarm_Unit
+    Left = 744
+    Top = 448
+  end
+  object qryReport_Upload_YuriFarm_Unit: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'SELECT * FROM gpReport_Upload_YuriFarm_Unit (:inDate, zfCalc_Use' +
+        'rAdmin())')
     Params = <
       item
         DataType = ftDateTime
@@ -1706,7 +1802,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 42773d
       end>
-    Left = 580
+    Left = 740
     Top = 376
     ParamData = <
       item
