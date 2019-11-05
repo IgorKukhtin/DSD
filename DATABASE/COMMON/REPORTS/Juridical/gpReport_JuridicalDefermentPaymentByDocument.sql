@@ -52,7 +52,18 @@ BEGIN
               Movement.Id
             , Movement.OperDate
             , Movement.InvNumber
-            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+            , (CASE WHEN vbIsSale = TRUE AND Movement.DescId = zc_Movement_Income()
+                         THEN (1 + COALESCE (MovementFloat_ChangePercentPartner.ValueData, 0) / 100)
+                            * CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() OR COALESCE (MovementFloat_ChangePercent.ValueData, 0) = 0
+                                        THEN MovementFloat_TotalSummPVAT.ValueData
+                                   ELSE CASE WHEN MovementFloat_ChangePercent.ValueData = -1 * 100
+                                                  THEN 0
+                                             ELSE MovementFloat_TotalSummMVAT.ValueData / (1 + MovementFloat_ChangePercent.ValueData / 100)
+                                                * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)
+                                        END
+                              END
+                    ELSE MovementFloat_TotalSumm.ValueData
+               END) :: TFloat AS TotalSumm
             , Object_From.ValueData AS FromName
             , Object_To.ValueData   AS ToName
             , View_Contract_InvNumber.InvNumber AS ContractNumber
@@ -61,6 +72,8 @@ BEGIN
          FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
               UNION ALL
                SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
+              UNION ALL
+               SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
               UNION ALL
                SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner, zc_MovementLinkObject_To() AS DescId_Unit WHERE vbIsSale = FALSE
               ) AS tmpDesc
@@ -77,7 +90,7 @@ BEGIN
                                           AND tmpDesc.DescId = zc_Movement_TransferDebtOut()
               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
-                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                  AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
 
               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -102,13 +115,30 @@ BEGIN
               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                       ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                      ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                     AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+              LEFT JOIN MovementFloat AS MovementFloat_ChangePercentPartner
+                                      ON MovementFloat_ChangePercentPartner.MovementId = Movement.Id
+                                     AND MovementFloat_ChangePercentPartner.DescId     = zc_MovementFloat_ChangePercentPartner()
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                      ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
+                                     AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
+                                     AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+              LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                      ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                     AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
 
               LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN vbIsSale = TRUE THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_Partner.ObjectId END
               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN vbIsSale = TRUE THEN COALESCE (MovementLinkObject_Partner_TransferDebtOut.ObjectId, MovementLinkObject_Partner.ObjectId) ELSE MovementLinkObject_From.ObjectId END
 
         WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
-          AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE)
+          AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0
+            OR (vbIsSale = TRUE AND inPaidKindId = zc_Enum_PaidKind_SecondForm() AND Movement.DescId = zc_Movement_Income())
+              )
+          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
     ORDER BY OperDate;
     
@@ -127,6 +157,8 @@ BEGIN
          FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
               UNION ALL
                SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
+              UNION ALL
+               SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
               UNION ALL
                SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner WHERE vbIsSale = FALSE
               ) AS tmpDesc
@@ -152,8 +184,10 @@ BEGIN
               LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
 
       	 WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
-           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE)
+           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0
+             OR (vbIsSale = TRUE AND inPaidKindId = zc_Enum_PaidKind_SecondForm() AND Movement.DescId = zc_Movement_Income())
+               )
+           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
       	   AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId;
       	 
      -- 	raise EXCEPTION 'vbNextOperDate %, % ', vbNextOperDate, vbOperDate   	 ;
@@ -167,6 +201,8 @@ BEGIN
                 FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
                      UNION ALL
                       SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
+                     UNION ALL
+                      SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
                      UNION ALL
                       SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner WHERE vbIsSale = FALSE
                      ) AS tmpDesc
@@ -197,10 +233,27 @@ BEGIN
                      LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                              ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                             AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                     LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                             ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                            AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+                     LEFT JOIN MovementFloat AS MovementFloat_ChangePercentPartner
+                                             ON MovementFloat_ChangePercentPartner.MovementId = Movement.Id
+                                            AND MovementFloat_ChangePercentPartner.DescId     = zc_MovementFloat_ChangePercentPartner()
+                     LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                             ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
+                                            AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                             ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
+                                            AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                            AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
 
                 WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
-                  AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-                  AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE)
+                  AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0
+                    OR (vbIsSale = TRUE AND inPaidKindId = zc_Enum_PaidKind_SecondForm() AND Movement.DescId = zc_Movement_Income())
+                      )
+                  AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
                   AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId;
 
              -- новый период
@@ -219,7 +272,18 @@ BEGIN
               Movement.Id
             , Movement.OperDate
             , Movement.InvNumber
-            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+            , (CASE WHEN vbIsSale = TRUE AND Movement.DescId = zc_Movement_Income()
+                         THEN (1 + COALESCE (MovementFloat_ChangePercentPartner.ValueData, 0) / 100)
+                            * CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() OR COALESCE (MovementFloat_ChangePercent.ValueData, 0) = 0
+                                        THEN MovementFloat_TotalSummPVAT.ValueData
+                                   ELSE CASE WHEN MovementFloat_ChangePercent.ValueData = -1 * 100
+                                                  THEN 0
+                                             ELSE MovementFloat_TotalSummMVAT.ValueData / (1 + MovementFloat_ChangePercent.ValueData / 100)
+                                                * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)
+                                        END
+                              END
+                    ELSE MovementFloat_TotalSumm.ValueData
+               END) :: TFloat AS TotalSumm
             , Object_From.ValueData AS FromName
             , Object_To.ValueData   AS ToName
             , View_Contract_InvNumber.InvNumber AS ContractNumber
@@ -250,7 +314,22 @@ BEGIN
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                    AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                     ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                    AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentPartner
+                                     ON MovementFloat_ChangePercentPartner.MovementId = Movement.Id
+                                    AND MovementFloat_ChangePercentPartner.DescId     = zc_MovementFloat_ChangePercentPartner()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                     ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                     ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                    AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
 
              LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN vbIsSale = TRUE THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId END
              LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN vbIsSale = TRUE THEN COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId) ELSE MovementLinkObject_From.ObjectId END

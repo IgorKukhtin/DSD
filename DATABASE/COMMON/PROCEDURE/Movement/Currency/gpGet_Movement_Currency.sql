@@ -38,13 +38,15 @@ BEGIN
            , 0::TFloat                        AS Amount
            , 1::TFloat                        AS ParValue
            , ''::TVarChar                     AS Comment
-           , 0                                AS CurrencyFromId
-           , CAST ('' as TVarChar)            AS CurrencyFromName
+           , Object_Currency.Id               AS CurrencyFromId
+           , Object_Currency.ValueData        AS CurrencyFromName
            , 0                                AS CurrencyToId
            , CAST ('' as TVarChar)            AS CurrencyToName
            , 0                     AS PaidKindId
            , CAST ('' AS TVarChar) AS PaidKindName
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
+            ;
   
      ELSE
 

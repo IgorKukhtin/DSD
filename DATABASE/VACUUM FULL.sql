@@ -13,6 +13,7 @@
    VACUUM ANALYZE MovementDate;
    VACUUM ANALYZE MovementBoolean;
    VACUUM ANALYZE MovementLinkObject;
+   VACUUM ANALYZE MovementLinkMovement;
    
    VACUUM FULL MovementFloat;
    VACUUM ANALYZE MovementFloat;

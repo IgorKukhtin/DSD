@@ -1,5 +1,9 @@
--- TRUNCATE TABLE SoldTable;
--- TRUNCATE TABLE MovementItemContainer;
+--
+-- VACUUM pg_toast.pg_toast_1107196;
+-- VACUUM ANALYZE pg_toast.pg_toast_1107196 ;
+
+-- -- TRUNCATE TABLE SoldTable;
+-- -- TRUNCATE TABLE MovementItemContainer;
 
 -- SELECT COUNT(*), min(Id), max(Id) FROM MovementProtocol 
 -- SELECT COUNT(*), min(Id), max(Id) FROM MovementItemProtocol
@@ -49,11 +53,6 @@ VACUUM ANALYZE ReplObject;
 VACUUM ResourseProtocol;
 VACUUM ANALYZE ResourseProtocol;
 
---
--- VACUUM pg_toast.pg_toast_1107196;
--- VACUUM ANALYZE pg_toast.pg_toast_1107196 ;
-
-
 -- 1.1. - Movement
 
 VACUUM Movement;
@@ -74,6 +73,8 @@ VACUUM ANALYZE MovementString;
 VACUUM MovementLinkObject;
 VACUUM ANALYZE MovementLinkObject;
 
+VACUUM MovementLinkMovement;
+VACUUM ANALYZE MovementLinkMovement;
 
 -- 1.2. - MovementItem
 

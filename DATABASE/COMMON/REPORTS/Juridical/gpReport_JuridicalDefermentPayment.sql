@@ -1,6 +1,5 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
@@ -238,11 +237,11 @@ from (
              , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
              , CLO_Juridical.ObjectId AS JuridicalId 
              , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate >= inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
-             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate)                 AND (MIContainer.OperDate >= ContractDate)               THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate                AND MIContainer.OperDate >= ContractDate - vbLenght)     THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm1
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm2
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm3
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm4
+             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate)                 AND (MIContainer.OperDate >= ContractDate)               THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate                AND MIContainer.OperDate >= ContractDate - vbLenght)     THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm1
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm2
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm3
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm4
              , ContractCondition_DefermentPayment.ContractConditionKindId
              , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
              , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
@@ -270,10 +269,11 @@ from (
               LEFT JOIN MovementItemContainer AS MIContainer 
                                               ON MIContainer.Containerid = Container.Id
                                              AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
-             LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+            --LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
          WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
             -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
+          --AND MIContainer.MovementDescId = zc_Movement_Income()
          GROUP BY Container.Id
                 , Container.ObjectId
                 , Container.Amount
@@ -411,7 +411,6 @@ where a.DebetRemains <> 0 or a.KreditRemains <> 0
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
