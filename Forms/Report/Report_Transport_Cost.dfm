@@ -24,7 +24,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     Height = 280
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1038
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -159,6 +158,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSum_kg
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_tt
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -289,6 +293,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSum_kg
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_tt
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -387,6 +396,14 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'.'#1076#1086#1082'. '#1042' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079
+        Width = 70
+      end
+      object Count_tt: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1090#1086#1095#1077#1082' '#1074' '#1088#1077#1077#1089#1090#1088#1077
+        DataBinding.FieldName = 'Count_tt'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1083'. '#1090#1086#1095#1077#1082' '#1087#1086' '#1087#1091#1090#1077#1074#1086#1084#1091' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '
         Width = 70
       end
       object TotalWeight_Sale: TcxGridDBColumn
@@ -744,7 +761,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     Height = 89
     Align = alTop
     TabOrder = 2
-    ExplicitWidth = 1038
     object deStart: TcxDateEdit
       Left = 122
       Top = 7
