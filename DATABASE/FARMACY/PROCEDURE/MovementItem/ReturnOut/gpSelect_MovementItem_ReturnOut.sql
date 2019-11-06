@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isErased Boolean
              , AmountInIncome TFloat
              , Remains TFloat
+             , RemainsAll TFloat
              , AmountCheck TFloat
              , WarningColor Integer
              , ExpirationDate TDateTime
@@ -155,7 +156,35 @@ BEGIN
                           WHERE Movement_ReturnOut.Id = inMovementId
                          )
 
+          -- таблица остатков
+          , tmpContainerRemains AS (SELECT Container.Id AS ContainerId
+                                  , Container.ObjectId  
+                                  , Container.Amount 
+                             FROM Container 
+                             WHERE Container.DescId = zc_Container_Count()
+                               AND Container.WhereObjectId = vbUnitid
+                               AND Container.Amount <> 0
+                             GROUP BY Container.Id, Container.ObjectId, Container.Amount
+                             )
 
+          , tmpRemainsAll AS (SELECT tmp.GoodsId
+                                   , SUM (tmp.RemainsStart)       AS RemainsStart
+                              FROM (SELECT tmpContainer.ObjectId  AS GoodsId
+                                         , tmpContainer.Amount - (SUM (COALESCE(MIContainer.Amount, 0)))  AS RemainsStart
+                                    FROM tmpContainerRemains AS tmpContainer
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                        AND MIContainer.OperDate >= vbOperDate
+                                                                        AND MIContainer.DescId = zc_Container_Count()
+                                    GROUP BY tmpContainer.ContainerId
+                                           , tmpContainer.ObjectId
+                                           , tmpContainer.Amount
+                                    HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
+                                    ) AS tmp
+                              GROUP BY tmp.GoodsId
+                             )
+
+         ----
          SELECT MovementItem_ReturnOut.Id
               , MovementItem_Income.Id                                                    AS ParentId
               , COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)     AS GoodsId
@@ -171,6 +200,7 @@ BEGIN
                       THEN MovementItem_ReturnOut.Amount
                     ELSE 0
                     END)::TFloat                                                          AS Remains
+              , tmpRemainsAll.RemainsStart :: TFloat                                      AS RemainsAll
               , tmpCheck.Amount::TFloat                                                   AS AmountCheck
               , CASE 
                   WHEN MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
@@ -186,6 +216,8 @@ BEGIN
                                   ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id
               
               LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
+
+              LEFT JOIN tmpRemainsAll ON tmpRemainsAll.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
 ;
 
     ELSE
@@ -250,10 +282,10 @@ BEGIN
                                , MI_ReturnOut.Id
                                , MI_ReturnOut.ParentId
                                , MI_ReturnOut.ObjectId    AS GoodsId
-                               , Object_Goods.ObjectCode            AS GoodsCode
-                               , Object_Goods.ValueData             AS GoodsName
+                               , Object_Goods.ObjectCode  AS GoodsCode
+                               , Object_Goods.ValueData   AS GoodsName
                                , MI_ReturnOut.Amount
-                               , MIFloat_Price.ValueData            AS Price
+                               , MIFloat_Price.ValueData  AS Price
                                , (((COALESCE (MI_ReturnOut.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
                                , MI_ReturnOut.isErased
                           FROM Movement AS Movement_ReturnOut
@@ -287,6 +319,35 @@ BEGIN
                          HAVING SUM (MI_Check.Amount) <> 0 
                         )
 
+          -- таблица остатков
+          , tmpContainerRemains AS (SELECT Container.Id AS ContainerId
+                                  , Container.ObjectId  
+                                  , COALESCE (Container.Amount,0) AS Amount 
+                             FROM Container 
+                                  INNER JOIN ReturnOut ON ReturnOut.GoodsId = Container.ObjectId
+                             WHERE Container.DescId = zc_Container_Count()
+                               AND Container.WhereObjectId = vbUnitid
+                               AND COALESCE (Container.Amount,0) <> 0
+                             GROUP BY Container.Id, Container.ObjectId, Container.Amount
+                             )
+          , tmpRemainsAll AS (SELECT tmp.GoodsId
+                                   , SUM (tmp.RemainsStart)       AS RemainsStart
+                              FROM (SELECT tmpContainer.ObjectId  AS GoodsId
+                                         , tmpContainer.Amount - (SUM (COALESCE(MIContainer.Amount, 0)))  AS RemainsStart
+                                    FROM tmpContainerRemains AS tmpContainer
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                        AND MIContainer.OperDate >= vbOperDate
+                                                                        AND MIContainer.DescId = zc_Container_Count()
+                                    GROUP BY tmpContainer.ContainerId
+                                           , tmpContainer.ObjectId
+                                           , tmpContainer.Amount
+                                    HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
+                                    ) AS tmp
+                              GROUP BY tmp.GoodsId
+                             )
+
+
             SELECT
                 MovementItem.Id
               , MovementItem.ParentId  
@@ -303,6 +364,7 @@ BEGIN
                       THEN MovementItem.Amount
                     ELSE 0
                     END)::TFloat AS Remains
+              , tmpRemainsAll.RemainsStart :: TFloat      AS RemainsAll
               , tmpCheck.Amount::TFloat                   AS AmountCheck
               , CASE 
                   WHEN MovementItem.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
@@ -316,6 +378,7 @@ BEGIN
             LEFT OUTER JOIN Income AS MovementItem_Income
                                    ON MovementItem.ParentId = MovementItem_Income.Id
             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = MovementItem.GoodsId
+            LEFT JOIN tmpRemainsAll ON tmpRemainsAll.GoodsId = MovementItem.GoodsId
             
 
 ;
@@ -327,6 +390,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.11.19         *
  16.02.18         *
  27.10.16         *
  14.04.16         *

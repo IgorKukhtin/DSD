@@ -24,6 +24,8 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     Height = 280
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = 155
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
