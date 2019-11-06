@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
    DECLARE vbInvNumberPartner TVarChar;
+   DECLARE vbUnitId Integer;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -126,7 +127,7 @@ BEGIN
                                         AND MIContainer_Income.DescId = zc_MIContainer_Count()                                        
     WHERE Movement_ReturnOut_View.Id =  inMovementId
       AND MovementItem_ReturnOut_View.isErased = FALSE;
-
+      
     -- А сюда товары
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
@@ -145,13 +146,91 @@ BEGIN
                           -- inObjectCostId       := NULL,
                           -- inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                           -- inObjectId_1        := _tmpItem.UnitId) 
-              , AccountId
-              , - OperSumm
-              , OperDate
-           FROM _tmpItem;
-   
+              , _tmpItem.AccountId
+              , CASE WHEN Container.Amount < _tmpItem.OperSumm THEN Container.Amount ELSE - _tmpItem.OperSumm END
+              , _tmpItem.OperDate
+           FROM _tmpItem
+                INNER JOIN Container ON Container.Id = _tmpItem.ContainerId
+                                    AND Container.Amount > 0;
 
+      -- Если нехватает по партиям прихода          
+    IF EXISTS(SELECT 1 FROM 
+                  _tmpItem
+                  LEFT JOIN Container ON Container.Id = _tmpItem.ContainerId
+              WHERE Container.Amount < _tmpItem.OperSumm)
+    THEN
     
+      vbUnitId := (SELECT Movement_ReturnOut_View.FromId FROM Movement_ReturnOut_View WHERE Movement_ReturnOut_View.Id = inMovementId);
+                 
+      -- А сюда товары
+      WITH ReturnOut AS (SELECT _tmpItem.MovementItemId              as MovementItemId 
+                              , _tmpItem.ObjectId                    as ObjectId
+                              , _tmpItem.OperDate                    as OperDate
+                              , _tmpItem.AccountId                   as AccountId
+                              , _tmpItem.OperSumm - COALESCE(Container.Amount, 0)  as Amount
+                         FROM _tmpItem
+                              LEFT JOIN Container ON Container.Id = _tmpItem.ContainerId
+                                                 AND Container.Amount > 0 
+                         WHERE COALESCE(Container.Amount, 0) < _tmpItem.OperSumm
+                         ),
+           REMAINS AS ( --остатки 
+                       SELECT Container.Id 
+                            , Container.ObjectId --Товар
+                            , Container.Amount   --Тек. остаток 
+                       FROM Container
+                            INNER JOIN ReturnOut ON Container.ObjectId = Container.ObjectId
+                       WHERE Container.DescID = zc_Container_Count()
+                         AND Container.WhereObjectId = vbUnitId
+                         AND Container.ID not IN (SELECT _tmpItem.ContainerId FROM _tmpItem)
+                         AND Container.Amount > 0
+                       ),
+           DD AS (SELECT ReturnOut.MovementItemId 
+                       , ReturnOut.Amount 
+                       , REMAINS.Amount      AS ContainerAmount 
+                       , ReturnOut.OperDate  AS OperDate 
+                       , ReturnOut.AccountId AS AccountId 
+                       , REMAINS.Id
+                       , SUM(REMAINS.Amount) OVER (PARTITION BY REMAINS.objectid ORDER BY Movement.OPERDATE, REMAINS.Id)
+                  FROM REMAINS 
+                       JOIN ReturnOut ON ReturnOut.objectid = REMAINS.objectid 
+                       JOIN containerlinkobject AS CLI_MI 
+                                                ON CLI_MI.containerid = REMAINS.Id
+                                               AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                       JOIN containerlinkobject AS CLI_Unit 
+                                                ON CLI_Unit.containerid = REMAINS.Id
+                                               AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+                                               AND CLI_Unit.ObjectId = vbUnitId
+                       JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                       JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
+                       JOIN Movement ON Movement.Id = movementitem.movementid
+                   WHERE REMAINS.Amount > 0), 
+          
+          tmpItem AS (SELECT 
+                        Id
+                      , MovementItemId
+                      , OperDate
+                      , AccountId
+                      , CASE 
+                          WHEN Amount - SUM > 0 THEN ContainerAmount 
+                          ELSE Amount - SUM + ContainerAmount
+                        END AS Amount
+                      FROM DD
+                      WHERE (Amount - (SUM - ContainerAmount) >= 0)
+                      )
+
+      INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+           SELECT 
+                  zc_Container_Count()
+                , zc_Movement_ReturnOut() 
+                , inMovementId
+                , tmpItem.MovementItemId
+                , tmpItem.Id
+                , AccountId
+                , -Amount
+                , OperDate
+             FROM tmpItem;
+    END IF;
+        
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
     --                                         , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -197,7 +276,7 @@ BEGIN
          WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0 
                       AND Amount IN (SELECT MAX (Amount) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0)
                                  );
-      END IF;	
+     END IF;	
 
      -- если это обычный возврат, но все равно надо списать сроковые партии
      IF EXISTS (SELECT 1 FROM Container WHERE Container.DescId   = zc_Container_CountPartionDate()
@@ -261,7 +340,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Шаблий О.В.
+ 06.11.19                                                                  *
  11.02.14                        * 
 */
 
