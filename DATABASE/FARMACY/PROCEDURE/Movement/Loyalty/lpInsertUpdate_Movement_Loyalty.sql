@@ -13,8 +13,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
     IN inEndSale               TDateTime  , -- Дата окончания погашения
     IN inStartSummCash         Tfloat     , -- Вылавать от суммы чека
     IN inMonthCount            Integer    , -- Количество месяцев погашения
+    IN inDayCount              Integer    , -- Промокодов в день для аптеки
+    IN inSummLimit             Tfloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
-    IN inUserId                Integer     -- сессия пользователя
+    IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -45,6 +47,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), ioId, inStartSummCash);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MonthCount(), ioId, inMonthCount);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Limit(), ioId, inSummLimit);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

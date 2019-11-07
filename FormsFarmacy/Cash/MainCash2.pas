@@ -406,6 +406,7 @@ type
     MainNotTransferTime: TcxGridDBColumn;
     actNotTransferTime: TAction;
     N35: TMenuItem;
+    spLoyaltyGUID: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -597,7 +598,7 @@ type
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
-      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string;
+      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -645,6 +646,9 @@ type
     function GetPartionDateKindId : Integer;
 
     procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
+
+    // Проверка и генерация промокода по Программе лояльности
+    procedure Check_Loyalty(ASumma : Currency);
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -1086,6 +1090,9 @@ begin
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   //**13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
+  //**07.11.19
+  FormParams.ParamByName('LoyaltySignID').Value := 0;
+  FormParams.ParamByName('LoyaltyText').Value := '';
 
   ClearFilterAll;
 
@@ -2179,6 +2186,8 @@ begin
                      //***13.05.19
                      FormParams.ParamByName('PartionDateKindId').Value,
                      FormParams.ParamByName('ConfirmationCodeSP').Value,
+                     //***07.11.19
+                     FormParams.ParamByName('LoyaltySignID').Value,
 
                      True,         // NeedComplete
                      CheckNumber,  // FiscalCheckNumber
@@ -2903,6 +2912,8 @@ begin
               //***13.05.19
               ,FormParams.ParamByName('PartionDateKindId').Value
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
+              //***07.11.19
+              ,FormParams.ParamByName('LoyaltySignID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2994,6 +3005,8 @@ begin
               //***13.05.19
               ,FormParams.ParamByName('PartionDateKindId').Value
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
+              //***07.11.19
+              ,FormParams.ParamByName('LoyaltySignID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3527,6 +3540,8 @@ begin
               //***13.05.19
               ,FormParams.ParamByName('PartionDateKindId').Value
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
+              //***07.11.19
+              ,FormParams.ParamByName('LoyaltySignID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -5070,6 +5085,9 @@ begin
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   //**13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
+  //**07.11.19
+  FormParams.ParamByName('LoyaltySignID').Value := 0;
+  FormParams.ParamByName('LoyaltyText').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -5417,10 +5435,10 @@ begin
         end;
       end;
 
-
-
       if isFiscal then Add_Check_History;
       if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
+
+      Check_Loyalty(FTotalSumm);
 
       // Непосредственно печать чека
       str_log_xml:=''; i:=0;
@@ -5474,6 +5492,8 @@ begin
           begin
             if result then result := Cash.SubTotal(true, true, 0, 0);
             if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
+            if result and (FormParams.ParamByName('LoyaltySignID').Value <> 0) and
+               (FormParams.ParamByName('LoyaltyText').Value <> '') then Cash.PrintFiscalText(FormParams.ParamByName('LoyaltyText').Value);
             if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
             if result and isFiscal then Finish_Check_History(FTotalSumm);
           end else
@@ -5932,6 +5952,46 @@ begin
   end;
 end;
 
+  // Проверка и генерация промокода по Программе лояльности
+procedure TMainCashForm2.Check_Loyalty(ASumma : Currency);
+begin
+
+  // Если уже получено повторно не делаем
+  if FormParams.ParamByName('LoyaltySignID').Value <> 0 then Exit;
+
+  // Если локально то ничего не делаем
+  if gc_User.Local then Exit;
+
+  // Если программы нет
+  if not UnitConfigCDS.Active or not Assigned(UnitConfigCDS.FindField('LoyaltyID')) then Exit;
+  if UnitConfigCDS.FindField('LoyaltyID').IsNull then Exit;
+  if UnitConfigCDS.FindField('LoyaltySummCash').AsCurrency > ASumma then Exit;
+
+  // Получаем новый GUID
+  try
+    spLoyaltyGUID.ParamByName('ioId').Value := 0;
+    spLoyaltyGUID.ParamByName('inMovementId').Value := UnitConfigCDS.FindField('LoyaltyID').AsCurrency;
+    spLoyaltyGUID.ParamByName('outGUID').Value := '';
+    spLoyaltyGUID.ParamByName('outAmount').Value := 0;
+    spLoyaltyGUID.ParamByName('inComment').Value := '';
+    spLoyaltyGUID.Execute;
+
+    if (spLoyaltyGUID.ParamByName('ioId').Value <> 0) and
+      (spLoyaltyGUID.ParamByName('outAmount').AsFloat > 0) then
+    begin
+      FormParams.ParamByName('LoyaltySignID').Value := spLoyaltyGUID.ParamByName('ioId').Value;
+      FormParams.ParamByName('LoyaltyText').Value := 'Промокод ' + spLoyaltyGUID.ParamByName('outGUID').Value +
+        ' на скидку ' + FormatCurr(',0.00', spLoyaltyGUID.ParamByName('outAmount').AsFloat) + ' грн';
+    end else
+    begin
+      FormParams.ParamByName('LoyaltySignID').Value := 0;
+      FormParams.ParamByName('LoyaltyText').Value := '';
+    end;
+
+  except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);
+  end;
+
+end;
 
 function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
@@ -5940,7 +6000,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
-      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string;
+      ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -6143,7 +6203,9 @@ begin
                                          ARoundingDown,            // Округление в низ
                                          //***13.05.19
                                          APartionDateKindId,       // Тип срок/не срок
-                                         AConfirmationCodeSP       // Код подтверждения рецепта
+                                         AConfirmationCodeSP,      // Код подтверждения рецепта
+                                         //***07.05.19
+                                         ALoyaltySignID            // Регистрация программы лояльности
                                         ]));
       End
       else

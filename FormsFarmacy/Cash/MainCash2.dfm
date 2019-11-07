@@ -2698,12 +2698,12 @@ inherited MainCashForm2: TMainCashForm2
     object actSetPromoCode: TAction
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076
+      ShortCut = 120
       OnExecute = actSetPromoCodeExecute
     end
     object actManualDiscount: TAction
       Caption = #1044#1072#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1089#1082#1080#1076#1082#1091
       Enabled = False
-      ShortCut = 120
       Visible = False
       OnExecute = actManualDiscountExecute
     end
@@ -3858,6 +3858,17 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySignID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyText'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -5082,5 +5093,48 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 360
     Top = 176
+  end
+  object spLoyaltyGUID: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Loyalty_GUID'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGUID'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 248
   end
 end

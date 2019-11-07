@@ -49,7 +49,7 @@ type
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
     cxLabel9: TcxLabel;
-    edMonthCount: TcxCurrencyEdit;
+    edDayCount: TcxCurrencyEdit;
     bbInsertRecordChild: TdxBarButton;
     bbOpenReportForm: TdxBarButton;
     cxGrid2: TcxGrid;
@@ -125,6 +125,13 @@ type
     sqOperDate_CheckSale: TcxGridDBColumn;
     sqUnitName_CheckSale: TcxGridDBColumn;
     chIsChecked: TcxGridDBColumn;
+    sgUnitName: TcxGridDBColumn;
+    edMonthCount: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edSummLimit: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    chDayCount: TcxGridDBColumn;
+    chSummLimit: TcxGridDBColumn;
   private
     { Private declarations }
   public

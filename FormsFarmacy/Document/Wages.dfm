@@ -12,17 +12,17 @@ inherited WagesForm: TWagesForm
     Width = 1051
     Height = 549
     ExplicitTop = 77
-    ExplicitWidth = 953
+    ExplicitWidth = 1051
     ExplicitHeight = 549
     ClientRectBottom = 549
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 953
+      ExplicitWidth = 1051
       ExplicitHeight = 525
       inherited cxGrid: TcxGrid
         Width = 1051
         Height = 328
-        ExplicitWidth = 953
+        ExplicitWidth = 1051
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -46,10 +46,6 @@ inherited WagesForm: TWagesForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
               Column = AmountCard
             end
             item
@@ -61,6 +57,21 @@ inherited WagesForm: TWagesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = AmountAccrued
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Marketing
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Director
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = HolidaysHospital
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -300,7 +311,6 @@ inherited WagesForm: TWagesForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 953
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -397,7 +407,6 @@ inherited WagesForm: TWagesForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 953
       end
     end
   end
@@ -405,7 +414,7 @@ inherited WagesForm: TWagesForm
     Width = 1051
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 953
+    ExplicitWidth = 1051
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Top = 22

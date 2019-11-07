@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_LoyaltyChild(
 )
 RETURNS TABLE (Id Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , DayCount      Integer, SummLimit     TFloat
              , JuridicalName TVarChar
              , RetailName    TVarChar
              , IsChecked Boolean
@@ -50,8 +51,17 @@ BEGIN
                           , MI_Loyalty.ObjectId       AS ObjectId
                           , MI_Loyalty.Amount         AS Amount
                           , MI_Loyalty.IsErased       AS IsErased
+                          , COALESCE(MIFloat_DayCount.ValueData,0)::Integer          AS DayCount
+                          , COALESCE(MIFloat_Limit.ValueData,0)::TFloat              AS SummLimit
                      FROM MovementItem AS MI_Loyalty
                     
+                          LEFT JOIN MovementItemFloat AS MIFloat_DayCount
+                                                      ON MIFloat_DayCount.MovementItemId =  MI_Loyalty.Id
+                                                      AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
+                          LEFT JOIN MovementItemFloat AS MIFloat_Limit
+                                                      ON MIFloat_Limit.MovementItemId =  MI_Loyalty.Id
+                                                     AND MIFloat_Limit.DescId = zc_MIFloat_Limit()
+
                      WHERE MI_Loyalty.MovementId = inMovementId
                        AND MI_Loyalty.DescId = zc_MI_Child()
                        AND (MI_Loyalty.isErased = FALSE or inIsErased = TRUE)
@@ -61,6 +71,8 @@ BEGIN
                 , Object_Unit.Id                        AS UnitId
                 , Object_Unit.ObjectCode                AS UnitCode
                 , Object_Unit.ValueData                 AS UnitName
+                , tmpMI.DayCount
+                , tmpMI.SummLimit
                 , Object_Juridical.ValueData            AS JuridicalName
                 , Object_Retail.ValueData               AS RetailName
                 , CASE WHEN COALESCE (tmpMI.Amount, 0) = 1 THEN TRUE ELSE FALSE END AS IsChecked
@@ -88,6 +100,8 @@ BEGIN
                 , Object_Unit.Id                   AS UnitId
                 , Object_Unit.ObjectCode           AS UnitCode
                 , Object_Unit.ValueData            AS UnitName
+                , COALESCE(MIFloat_DayCount.ValueData,0)::Integer          AS DayCount
+                , COALESCE(MIFloat_Limit.ValueData,0)::TFloat              AS SummLimit
                 , Object_Juridical.ValueData         AS JuridicalName
                 , Object_Retail.ValueData            AS RetailName
                 , CASE WHEN MI_Loyalty.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
@@ -106,6 +120,13 @@ BEGIN
                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+               LEFT JOIN MovementItemFloat AS MIFloat_DayCount
+                                           ON MIFloat_DayCount.MovementItemId =  MI_Loyalty.Id
+                                           AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
+               LEFT JOIN MovementItemFloat AS MIFloat_Limit
+                                           ON MIFloat_Limit.MovementItemId =  MI_Loyalty.Id
+                                          AND MIFloat_Limit.DescId = zc_MIFloat_Limit()
+
            WHERE MI_Loyalty.MovementId = inMovementId
              AND MI_Loyalty.DescId = zc_MI_Child()
              AND (MI_Loyalty.isErased = FALSE or inIsErased = TRUE);
@@ -123,5 +144,4 @@ $BODY$
  05.11.19                                                       *
 */
 
---
-select * from gpSelect_MovementItem_LoyaltyChild(inMovementId := 16406918  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3'::TVarChar);
+-- select * from gpSelect_MovementItem_LoyaltyChild(inMovementId := 16406918  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3'::TVarChar);

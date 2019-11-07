@@ -12,6 +12,7 @@ RETURNS TABLE (Id         Integer
              , GUID       TVarChar
              , OperDate   TDateTime
              , Amount     TFloat
+             , UnitName   TVarChar
              , Comment    TVarChar
 
              , InsertName TVarChar, UpdateName TVarChar
@@ -37,16 +38,19 @@ BEGIN
 
         RETURN QUERY
         WITH
-        tmpMI AS (SELECT MI_Sign.Id
+        tmpMIF AS (SELECT * FROM MovementFloat AS MovementFloat_MovementItemId
+                   WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                  )
+      , tmpMI AS (SELECT MI_Sign.Id
                        , MI_Sign.Amount
+                       , MI_Sign.ObjectId
                        , MI_Sign.IsErased
                        , MI_Sign.ParentId                                      AS MovementId
                        , MovementFloat_MovementItemId.MovementId               AS MovementSaleId
        
                   FROM MovementItem AS MI_Sign
-                       LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                               ON MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                                              AND MovementFloat_MovementItemId.ValueData = MI_Sign.Id
+                       LEFT JOIN tmpMIF AS MovementFloat_MovementItemId
+                                        ON MovementFloat_MovementItemId.ValueData = MI_Sign.Id
                   WHERE MI_Sign.MovementId = inMovementId
                     AND MI_Sign.DescId = zc_MI_Sign()
                     AND (MI_Sign.isErased = FALSE or inIsErased = TRUE)
@@ -83,6 +87,7 @@ BEGIN
 
                 , MIDate_OperDate.ValueData                AS OperDate
                 , MI_Sign.Amount
+                , Object_Unit.ValueData                    AS UnitName
                 , MIString_Comment.ValueData               AS Comment
                 
                 , Object_Insert.ValueData                  AS InsertName
@@ -103,6 +108,8 @@ BEGIN
                 , tmpCheckSale.UnitName         ::TVarChar  AS UnitName_CheckSale
                 
            FROM tmpMI AS MI_Sign
+
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MI_Sign.ObjectId
 
                LEFT JOIN tmpCheck ON tmpCheck.Id = MI_Sign.Id
                                  AND tmpCheck.isIssue = True
@@ -137,7 +144,7 @@ BEGIN
                                                 ON MILO_Update.MovementItemId = MI_Sign.Id
                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
                LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
-;
+           ORDER BY MIDate_OperDate.ValueData;
   
   
 END;
@@ -152,4 +159,4 @@ $BODY$
 */
 
 
---select * from gpSelect_MovementItem_LoyaltySign(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_LoyaltySign(inMovementId := 16406918 , inIsErased := 'False' ,  inSession := '3');

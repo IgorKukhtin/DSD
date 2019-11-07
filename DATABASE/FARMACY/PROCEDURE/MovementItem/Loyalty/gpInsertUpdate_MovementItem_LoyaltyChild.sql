@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LoyaltyChild(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUnitId              Integer   , -- Подразделение
     IN inIsChecked           Boolean   , -- отмечен
+    IN inDayCount            Integer    , -- Промокодов в день для аптеки
+    IN inSummLimit           Tfloat     , -- Лимит суммы скидки в день для аптеки
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -23,6 +25,10 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inUnitId, inMovementId, (CASE WHEN inIsChecked = TRUE THEN 1 ELSE 0 END) ::TFloat, NULL);
     
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DayCount(), ioId, inDayCount);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Limit(), ioId, inSummLimit);
      
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
     IN inEndSale               TDateTime  , -- Дата окончания погашения
     IN inStartSummCash         Tfloat     , -- Вылавать от суммы чека
     IN inMonthCount            Integer    , -- Количество месяцев погашения
+    IN inDayCount              Integer    , -- Промокодов в день для аптеки
+    IN inSummLimit             Tfloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -33,6 +35,8 @@ BEGIN
                                            , inEndSale       := inEndSale
                                            , inStartSummCash := inStartSummCash  
                                            , inMonthCount    := inMonthCount                                       
+                                           , inDayCount      := inDayCount                                       
+                                           , inSummLimit     := inSummLimit                                       
                                            , inComment       := inComment
                                            , inUserId        := vbUserId
                                            );

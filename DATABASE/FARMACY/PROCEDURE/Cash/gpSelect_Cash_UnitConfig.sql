@@ -15,7 +15,9 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                FtpDir TVarChar, DividePartionDate Boolean,
                Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
-               isSpotter boolean
+               isSpotter boolean,
+               LoyaltyID Integer, LoyaltySummCash TFloat
+
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -64,7 +66,34 @@ BEGIN
                             WHERE ObjectLink_TaxUnit_Unit.DescId = zc_ObjectLink_TaxUnit_Unit()
                               AND Object_TaxUnit.isErased = False
                               AND COALESCE(ObjectFloat_Value.ValueData, 0) <> 0)
+       , tmpLoyalty AS (SELECT Movement.Id                                 AS LoyaltyID
+                             , MovementFloat_StartSummCash.ValueData       AS LoyaltySummCash
+                        FROM Movement
 
+                             INNER JOIN MovementFloat AS MovementFloat_StartSummCash
+                                                      ON MovementFloat_StartSummCash.MovementId =  Movement.Id
+                                                     AND MovementFloat_StartSummCash.DescId = zc_MovementFloat_StartSummCash()
+
+                             INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                     ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                    AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                             INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                     ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                    AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                    
+                             INNER JOIN MovementItem AS MI_Loyalty
+                                                     ON MI_Loyalty.MovementId = Movement.Id
+                                                    AND MI_Loyalty.DescId = zc_MI_Child()
+                                                    AND MI_Loyalty.isErased = FALSE 
+                                                    AND MI_Loyalty.ObjectId = vbUnitId
+                                                    
+                        WHERE Movement.DescId = zc_Movement_Loyalty()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+                          AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
+                        ORDER BY Movement.OperDate
+                        LIMIT 1
+                        )
 
    SELECT
          Object_Unit.Id                                      AS Id
@@ -105,6 +134,9 @@ BEGIN
 
        , CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  
          WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin())) THEN TRUE ELSE FALSE END AS isSpotter
+         
+       , tmpLoyalty.LoyaltyID
+       , tmpLoyalty.LoyaltySummCash
 
    FROM Object AS Object_Unit
 
@@ -176,6 +208,8 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RedeemByHandSP
                                 ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
+                               
+        LEFT JOIN tmpLoyalty ON 1 = 1
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1

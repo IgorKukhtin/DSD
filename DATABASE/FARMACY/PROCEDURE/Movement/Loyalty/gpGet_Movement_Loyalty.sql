@@ -18,6 +18,8 @@ RETURNS TABLE (Id Integer
              , EndSale       TDateTime
              , StartSummCash TFloat
              , MonthCount    Integer
+             , DayCount      Integer
+             , SummLimit     TFloat
              , InsertId      Integer
              , InsertName    TVarChar
              , InsertDate    TDateTime
@@ -49,6 +51,8 @@ BEGIN
           , Null  :: TDateTime          AS EndSale
           , 0     ::TFloat              AS StartSummCash
           , 0     ::Integer             AS MonthCount
+          , 0     ::Integer             AS DayCount
+          , 0     ::TFloat              AS SummLimit
           , NULL  ::Integer             AS InsertId
           , Object_Insert.ValueData     AS InsertName
           , CURRENT_TIMESTAMP :: TDateTime AS InsertDate
@@ -73,6 +77,8 @@ BEGIN
           , MovementDate_EndSale.ValueData                                 AS EndSale
           , COALESCE(MovementFloat_StartSummCash.ValueData,0)::TFloat      AS StartSummCash
           , COALESCE(MovementFloat_MonthCount.ValueData,0)::Integer        AS MonthCount
+          , COALESCE(MovementFloat_DayCount.ValueData,0)::Integer          AS DayCount
+          , COALESCE(MovementFloat_Limit.ValueData,0)::TFloat              AS SummLimit
           , Object_Insert.Id                                               AS InsertId
           , Object_Insert.ValueData                                        AS InsertName
           , MovementDate_Insert.ValueData                                  AS InsertDate
@@ -89,6 +95,12 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                 ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+        LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                ON MovementFloat_DayCount.MovementId =  Movement.Id
+                               AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+        LEFT JOIN MovementFloat AS MovementFloat_Limit
+                                ON MovementFloat_Limit.MovementId =  Movement.Id
+                               AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
 
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                ON MovementDate_StartPromo.MovementId = Movement.Id
