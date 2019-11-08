@@ -27,7 +27,7 @@ CREATE OR REPLACE VIEW LastPriceList_find_View AS
 
              INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId          = MovementLinkObject_Juridical.ObjectId
                                      AND LoadPriceList.ContractId           = COALESCE (MovementLinkObject_Contract.ObjectId, 0)
-                                     AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (MovementLinkObject_Area.ObjectId, 0)
+                                    -- AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (MovementLinkObject_Area.ObjectId, 0)
 
         WHERE Movement.DescId = zc_Movement_PriceList()
           AND Movement.StatusId <> zc_Enum_Status_Erased()

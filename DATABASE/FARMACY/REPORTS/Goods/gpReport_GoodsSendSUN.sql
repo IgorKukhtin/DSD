@@ -17,6 +17,7 @@ RETURNS TABLE (OperDate  TDateTime
              , FromName  TVarChar
              , ToName  TVarChar
              , PartionDateKindName TVarChar
+             , GoodsId    Integer
              , GoodsCode  Integer
              , GoodsName  TVarChar
              , GoodsGroupName  TVarChar
@@ -154,6 +155,7 @@ BEGIN
            , Object_To.ValueData                            AS ToName
            , Object_PartionDateKind.ValueData               AS PartionDateKindName
 
+           , Object_Goods.Id                   :: Integer   AS GoodsId
            , Object_Goods.ObjectCode           :: Integer   AS GoodsCode
            , Object_Goods.ValueData                         AS GoodsName
            , Object_GoodsGroup.ValueData                    AS GoodsGroupName

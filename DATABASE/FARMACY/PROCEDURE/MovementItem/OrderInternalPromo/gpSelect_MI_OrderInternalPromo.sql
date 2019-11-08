@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromo(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, CodeStr_partner TVarChar, GoodsName TVarChar
              , Amount TFloat
              , AmountManual TFloat
              , Price TFloat, Summ TFloat
@@ -181,10 +181,14 @@ BEGIN
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                       )
 
+
+                     
+                     
            ----
            SELECT MovementItem.Id
                 , MovementItem.ObjectId                    AS GoodsId
                 , Object_Goods.ObjectCode                  AS GoodsCode
+                , tmpGoodsParam.CodeStr                    AS CodeStr_partner
                 , Object_Goods.ValueData                   AS GoodsName
                 , MovementItem.Amount             ::TFloat AS Amount
                 , MovementItem.AmountManual       ::TFloat AS AmountManual
@@ -259,6 +263,8 @@ BEGIN
                                    ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = MovementItem.ObjectId
                                   AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
               LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
+              
+
 
               ;
 END;

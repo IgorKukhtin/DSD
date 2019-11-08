@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderInternalPromo(
     IN inMovementId    Integer   ,
     IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, CodeStr_partner TVarChar, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -74,6 +74,7 @@ BEGIN
                              , MIFloat_AmountOut.ValueData      AS AmountOut
                              , MIFloat_Remains.ValueData        AS Remains
                              , Count (*) OVER (PARTITION BY MovementItem.ParentId) AS Count_calc
+                             , ObjectLink_Unit_Area.ChildObjectId AS AreaId
                         FROM MovementItem
                              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
@@ -85,6 +86,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                                  ON ObjectLink_Unit_Area.ObjectId = MovementItem.ObjectId 
+                                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId = zc_MI_Child()
                           AND MovementItem.isErased = FALSE 
@@ -101,10 +106,52 @@ BEGIN
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                      )
 
+      -- нужно найти код товара поставщика - 
+      , tmpJuridicalArea AS (SELECT *
+                             FROM gpSelect_Object_JuridicalArea(inJuridicalId := 0,  inSession := inSession) as tt
+                             WHERE tt.IsErased = FALSE)
+                    
+      --связь гл.товара и товара поставщика
+      , tmpGoodsParam AS (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId   AS GoodsMainId
+                               , ObjectLink_LinkGoods_Goods.ChildObjectId       AS GoodsId -- код поставщика
+                               , ObjectLink_Goods_Object.ChildObjectId          AS JuridicalId
+                               , ObjectLink_Goods_Area.ChildObjectId            AS AreaId
+                               , ObjectString_Goods_Code.ValueData              AS CodeStr
+ 
+                          FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                               INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
+                                                        ON ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+                                                       AND ObjectBoolean_Goods_isMain.ObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                               LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                               ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                               -- связь с Юридические лица или Торговая сеть или ...
+                               INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                    ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                   AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                               INNER JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                AND Object_GoodsObject.DescId = zc_Object_Juridical()
+     
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                                                    ON ObjectLink_Goods_Area.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId 
+                                                   AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+                               --LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+ 
+ 
+                               --INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = ObjectLink_Goods_Object.ChildObjectId
+                               --                           AND (tmpJuridicalArea.AreaId = ObjectLink_Goods_Area.ChildObjectId) -----AreaId = 5803492)) -- Днепр 
+ 
+                               LEFT JOIN ObjectString AS ObjectString_Goods_Code
+                                                      ON ObjectString_Goods_Code.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                     AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
+ 
+                          WHERE ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                         )
       
 
      SELECT tmpMI_Master.GoodsId
           , tmpMI_Master.GoodsCode
+          , COALESCE (tmpGoodsParam.CodeStr, tmpGoodsParam_basis.CodeStr, tmpGoodsParam_0.CodeStr):: TVarChar  AS CodeStr_partner-- CASE WHEN COALESCE (tmpGoodsParam.CodeStr,'') <> '' THEN tmpGoodsParam.CodeStr ELSE COALESCE (tmpGoodsParam_basis.CodeStr,'') END :: TVarChar  AS CodeStr_partner --
           , tmpMI_Master.GoodsName
           , Object_GoodsGroup.Id             AS GoodsGroupId
           , Object_GoodsGroup.ValueData      AS GoodsGroupName
@@ -144,7 +191,28 @@ BEGIN
                               AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
-;
+          
+          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods
+                               ON ObjectLink_LinkGoods.ChildObjectId = tmpMI_Master.GoodsId
+                              AND ObjectLink_LinkGoods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                                               
+          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods.ObjectId 
+                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          
+          LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                 AND tmpGoodsParam.JuridicalId = tmpMI_Master.JuridicalId
+                                 AND COALESCE (tmpGoodsParam.AreaId,0) = tmpMI_Child.AreaId
+
+          LEFT JOIN tmpGoodsParam AS tmpGoodsParam_0
+                                  ON tmpGoodsParam_0.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                 AND tmpGoodsParam_0.JuridicalId = tmpMI_Master.JuridicalId
+                                 AND COALESCE (tmpGoodsParam_0.AreaId,0) = 0
+          LEFT JOIN tmpGoodsParam AS tmpGoodsParam_basis
+                                  ON tmpGoodsParam_basis.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                 AND tmpGoodsParam_basis.JuridicalId = tmpMI_Master.JuridicalId
+                                 AND COALESCE (tmpGoodsParam_basis.AreaId,0) = zc_Area_Basis()                                                
+          ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -155,3 +223,4 @@ $BODY$
 */
 
 --select * from gpReport_OrderInternalPromo(inMovementId := 13840564, inSession := '3'::TVarChar);
+--select * from gpReport_OrderInternalPromo(inMovementId := 16413930 ,  inSession := '3')

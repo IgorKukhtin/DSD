@@ -562,6 +562,8 @@ type
     actGoodsRetailTab_Error: TdsdOpenForm;
     miGoodsRetailTab_Error: TMenuItem;
     N196: TMenuItem;
+    actReport_Send_RemainsSun_over: TdsdOpenForm;
+    miReport_GoodsSendSUN_over: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

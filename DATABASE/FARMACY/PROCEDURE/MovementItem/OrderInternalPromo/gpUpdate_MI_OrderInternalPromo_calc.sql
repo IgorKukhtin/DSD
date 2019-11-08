@@ -26,7 +26,8 @@ BEGIN
     WHERE Movement.Id = inMovementId;
     
     --сохраняем данные в мастере
-    PERFORM lpInsertUpdate_MI_OrderInternalPromo (ioId                 := tmpAll.MI_Id
+    PERFORM lpInsertUpdate_MI_OrderInternalPromo_calc
+                                                 (ioId                 := tmpAll.MI_Id
                                                 , inMovementId         := inMovementId
                                                 , inGoodsId            := tmpAll.GoodsId_retail
                                                 , inJuridicalId        := tmpAll.JuridicalId
