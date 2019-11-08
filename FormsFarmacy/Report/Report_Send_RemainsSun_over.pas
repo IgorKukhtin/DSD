@@ -38,14 +38,6 @@ type
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
     actRefreshOnDay: TdsdDataSetRefresh;
-    cxGrid2: TcxGrid;
-    cxGridDBTableViewResult_child: TcxGridDBTableView;
-    ch2FromName: TcxGridDBColumn;
-    ch2ToName: TcxGridDBColumn;
-    ch2Amount: TcxGridDBColumn;
-    ch2OperDate: TcxGridDBColumn;
-    ch2Invnumber: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
     cxGrid1: TcxGrid;
     cxGridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
@@ -56,29 +48,12 @@ type
     DBViewAddOn_Partion: TdsdDBViewAddOn;
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
-    DBViewAddOn_Result_child: TdsdDBViewAddOn;
-    Result_childCDS: TClientDataSet;
-    Result_childDS: TDataSource;
     chAmount_next: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
-    MovementId: TcxGridDBColumn;
-    cxSplitter2: TcxSplitter;
     cxSplitter1: TcxSplitter;
-    chExpirationDate_in: TcxGridDBColumn;
     spSendSUN: TdsdStoredProc;
-    DefSUNCDS: TClientDataSet;
-    DefSUNDS: TDataSource;
     actSendSUN: TdsdExecStoredProc;
     macSendSUN: TMultiAction;
     bbSendSUN: TdxBarButton;
-    cxSplitter3: TcxSplitter;
-    cxGrid3: TcxGrid;
-    cxGridDBTableViewDefSUN: TcxGridDBTableView;
-    dsFromName: TcxGridDBColumn;
-    dsToName: TcxGridDBColumn;
-    dsGoodsCode: TcxGridDBColumn;
-    dfGoodsName: TcxGridDBColumn;
-    cxGridLevel3: TcxGridLevel;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
     Amount_next_res: TcxGridDBColumn;
@@ -94,7 +69,6 @@ type
     chAmount_sale: TcxGridDBColumn;
     chAmountSun_summ_save: TcxGridDBColumn;
     chAmountSun_summ: TcxGridDBColumn;
-    chPartionDateKindName: TcxGridDBColumn;
     actOpenReportPartionHistoryForm: TdsdOpenForm;
     actOpenReportPartionDateForm: TdsdOpenForm;
     bbReportPartionDate: TdxBarButton;
@@ -109,18 +83,6 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
-    BalanceCDS: TClientDataSet;
-    BalanceDS: TDataSource;
-    DBViewAddOnBalance: TdsdDBViewAddOn;
-    cxGrid4: TcxGrid;
-    cxGridDBTableViewBalance: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
-    cxGridLevel4: TcxGridLevel;
-    DBViewAddOnDefSUN: TdsdDBViewAddOn;
-    cxGridDBColumn5: TcxGridDBColumn;
   private
     { Private declarations }
   public
