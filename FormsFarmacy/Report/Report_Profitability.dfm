@@ -192,6 +192,11 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = RemainsSum
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = Profit
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -207,6 +212,10 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             item
               Caption = #1056#1072#1089#1093#1086#1076#1099
               Width = 160
+            end
+            item
+              Caption = #1044#1086#1093#1086#1076' -'
+              Width = 76
             end
             item
               Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
@@ -280,6 +289,29 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object ExpensesAmount: TcxGridDBBandedColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077
+            DataBinding.FieldName = 'ExpensesAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object Profit: TcxGridDBBandedColumn
+            Caption = #1088#1072#1089#1093#1086#1076#1099
+            DataBinding.FieldName = 'Profit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 3
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
           object Remains: TcxGridDBBandedColumn
             Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Remains'
@@ -288,7 +320,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Position.BandIndex = 3
+            Position.BandIndex = 4
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -300,19 +332,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Position.BandIndex = 3
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object ExpensesAmount: TcxGridDBBandedColumn
-            Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077
-            DataBinding.FieldName = 'ExpensesAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Position.BandIndex = 2
+            Position.BandIndex = 4
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -575,8 +595,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 168
+    Top = 160
   end
   inherited BarManager: TdxBarManager
     Left = 120

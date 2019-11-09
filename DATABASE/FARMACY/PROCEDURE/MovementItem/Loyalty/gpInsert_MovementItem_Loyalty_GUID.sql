@@ -220,5 +220,4 @@ $BODY$
 
 -- zfCalc_FromHex
 
---
- SELECT * FROM gpInsert_MovementItem_Loyalty_GUID (0, 16406918, '', '3');
+-- SELECT * FROM gpInsert_MovementItem_Loyalty_GUID (0, 16406918, '', '3');

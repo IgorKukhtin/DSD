@@ -8,6 +8,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -39,6 +40,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inRoundingDown        Boolean   , -- Округление в низ
     IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inConfirmationCodeSP  TVarChar  , -- код подтверждения рецепта (Соц. проект)
+    IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -245,6 +247,21 @@ BEGIN
           -- сохранили свойство <Пользователь (создание)>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
     END IF;
+    
+    IF COALESCE(inLoyaltySignID, 0) <> 0
+    THEN
+      IF EXISTS(SELECT * FROM MovementItem WHERE ID = inLoyaltySignID)
+      THEN
+         IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.ID = inLoyaltySignID AND MovementItem.ParentId <> ioId AND COALESCE(MovementItem.ParentId, 0) <> 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Промокод % зарегестрирован на другой чек.', inLoyaltySignID;
+         ELSE
+             UPDATE MovementItem SET ParentId = ioId WHERE MovementItem.ID = inLoyaltySignID;
+         END IF;
+      ELSE
+         RAISE EXCEPTION 'Ошибка.Не найдена активация промокода %', inLoyaltySignID;
+      END IF;
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -264,6 +281,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
+ 07.11.19                                                                                                         * add inLoyaltySignID
  15.05.19                                                                                                         * add inPartionDateKindID, inConfirmationCodeSP
  28.11.18                                                                                                         * add SiteDiscount
  02.11.18                                                                                                         * add TotalSummPayAdd

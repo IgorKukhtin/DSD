@@ -407,6 +407,15 @@ type
     actNotTransferTime: TAction;
     N35: TMenuItem;
     spLoyaltyGUID: TdsdStoredProc;
+    actSetPromoCodeLoyalty: TAction;
+    N36: TMenuItem;
+    spLoyaltyCheckGUID: TdsdStoredProc;
+    pnlPromoCodeLoyalty: TPanel;
+    Label23: TLabel;
+    Label25: TLabel;
+    lblPromoCodeLoyalty: TLabel;
+    Label27: TLabel;
+    edPromoCodeLoyaltySumm: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -528,6 +537,7 @@ type
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure actNotTransferTimeExecute(Sender: TObject);
     procedure N22Click(Sender: TObject);
+    procedure actSetPromoCodeLoyaltyExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -655,6 +665,8 @@ type
     function pCheck_InvNumberSP(ASPKind : integer; ANumber : string) : boolean;
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: currency);
+    procedure SetPromoCodeLoyalty(APromoCodeId: Integer; APromoCodeGUID: String; APromoCodeSumma: currency);
+    procedure PromoCodeLoyaltyCalc;
   end;
 
 
@@ -690,7 +702,8 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
-     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash;
+     EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
+     EnterLoyaltyNumber;
 
 const
   StatusUnCompleteCode = 1;
@@ -1093,6 +1106,7 @@ begin
   //**07.11.19
   FormParams.ParamByName('LoyaltySignID').Value := 0;
   FormParams.ParamByName('LoyaltyText').Value := '';
+  FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
 
   ClearFilterAll;
 
@@ -1116,6 +1130,9 @@ begin
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
+  pnlPromoCodeLoyalty.Visible := false;
+  lblPromoCodeLoyalty.Caption := '';
+  edPromoCodeLoyaltySumm.Value := 0;
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
   edPromoCode.Text := '';
@@ -1839,6 +1856,9 @@ begin
   lblPromoName.Caption          := '';
   lblPromoCode.Caption          := '';
   edPromoCodeChangePrice.Value  := 0;
+  pnlPromoCodeLoyalty.Visible := false;
+  lblPromoCodeLoyalty.Caption := '';
+  edPromoCodeLoyaltySumm.Value := 0;
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
@@ -1982,6 +2002,7 @@ var
   nPOSTerminalCode : integer;
   HelsiError : Boolean;
   nOldColor : integer;
+  nSumAll : Currency;
 begin
   if CheckCDS.RecordCount = 0 then exit;
   TimerDroppedDown.Enabled := True;
@@ -2053,6 +2074,28 @@ begin
       Next;
     end;
   end;
+
+  // Контроль суммы скидки
+  if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
+  begin
+    nSumAll := 0;
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+      if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+      else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+      CheckCDS.Next;
+    end;
+
+    if nSumAll < FormParams.ParamByName('LoyaltyChangeSumma').Value then
+    begin
+      ShowMessage('Cумма отпускаемого товара ' + FormatCurr(',0.00', nSumAll) + ' должна быть больше суммы скидки ' +
+        FormatCurr(',0.00', FormParams.ParamByName('LoyaltyChangeSumma').Value) + '.');
+      Exit;
+    end;
+  end;
+
 
   Add_Log('PutCheckToCash');
   PaidType:=ptMoney;
@@ -2554,6 +2597,9 @@ begin
     lblPromoName.Caption          := '';
     lblPromoCode.Caption          := '';
     edPromoCodeChangePrice.Value  := 0;
+    pnlPromoCodeLoyalty.Visible := false;
+    lblPromoCodeLoyalty.Caption := '';
+    edPromoCodeLoyaltySumm.Value := 0;
   end else
   begin
     FormParams.ParamByName('PromoCodeID').Value             := APromoCodeId;
@@ -2575,6 +2621,9 @@ begin
   FormParams.ParamByName('ManualDiscount').Value            := 0;
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
+  pnlPromoCodeLoyalty.Visible := false;
+  lblPromoCodeLoyalty.Caption := '';
+  edPromoCodeLoyaltySumm.Value := 0;
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
@@ -2654,6 +2703,194 @@ begin
   end;
 
   SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, BayerName, PromoCodeChangePercent);
+end;
+
+
+procedure TMainCashForm2.PromoCodeLoyaltyCalc;
+var
+  nRecNo : Integer; nSumAll, nPrice : Currency;
+begin
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := False;
+  nSumAll := 0;
+  nRecNo := CheckCDS.RecNo;
+  try
+
+    if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then
+    begin
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+        else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.Next;
+      end;
+    end;
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then
+      begin
+        if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0) then
+        begin
+          if FormParams.ParamByName('LoyaltyChangeSumma').Value < nSumAll then
+          begin
+            if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+              nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
+                         (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0)
+            else nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
+                           (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0);
+          end else nPrice := 0.1;
+          if nPrice < 0.1 then nPrice := 0.1;
+
+          if nPrice <> checkCDS.FieldByName('Price').asCurrency then
+          begin
+            checkCDS.Edit;
+            checkCDS.FieldByName('Price').asCurrency    := nPrice;
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+              CheckCDS.FieldByName('Summ').asCurrency;
+            checkCDS.Post;
+          end;
+        end;
+      end else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(IfZero(checkCDS.FieldByName('PricePartionDate').asCurrency, checkCDS.FieldByName('PriceSale').asCurrency),
+                                                                Self.FormParams.ParamByName('SiteDiscount').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PricePartionDate').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency;
+        checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  0;
+        checkCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+end;
+
+
+procedure TMainCashForm2.SetPromoCodeLoyalty(APromoCodeId: Integer; APromoCodeGUID: String; APromoCodeSumma: currency);
+var
+  nRecNo: Integer;
+begin
+
+  if APromoCodeId = 0 then
+  begin
+    FormParams.ParamByName('PromoCodeID').Value         := 0;
+    FormParams.ParamByName('PromoCodeGUID').Value       := '';
+    FormParams.ParamByName('LoyaltyChangeSumma').Value  := 0;
+
+    pnlPromoCodeLoyalty.Visible := false;
+    lblPromoCodeLoyalty.Caption := '';
+    edPromoCodeLoyaltySumm.Value := 0;
+  end else
+  begin
+    FormParams.ParamByName('PromoCodeID').Value             := APromoCodeId;
+    FormParams.ParamByName('PromoCodeGUID').Value           := APromoCodeGUID;
+    FormParams.ParamByName('LoyaltyChangeSumma').Value      := APromoCodeSumma;
+    //***27.06.18
+
+    pnlPromoCodeLoyalty.Visible          := APromoCodeId > 0;
+    lblPromoCodeLoyalty.Caption   := '  ' + APromoCodeGUID + '  ';
+    edPromoCodeLoyaltySumm.Value  := APromoCodeSumma;
+    FormParams.ParamByName('ManualDiscount').Value          := 0;
+  end;
+
+  FormParams.ParamByName('ManualDiscount').Value            := 0;
+  pnlManualDiscount.Visible := false;
+  edManualDiscount.Value := 0;
+  pnlPromoCode.Visible := false;
+  lblPromoName.Caption := '';
+  lblPromoCode.Caption := '';
+  edPromoCodeChangePrice.Value := 0;
+
+  PromoCodeLoyaltyCalc;
+  CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actSetPromoCodeLoyaltyExecute(Sender: TObject);
+var
+  сGUID: String;
+begin
+
+  if gc_User.Local then
+  Begin
+    ShowMessage('В отложенном режиме неработает...');
+    Exit;
+  End;
+
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if (DiscountServiceForm.gCode = 2) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
+  begin
+    ShowMessage('Установлен промокод.'#13#10'Для променениея изменения обнулите промокод..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('SiteDiscount').Value <> 0
+   then
+  begin
+    ShowMessage('Установлена скидка через сайт.'#13#10'Для променениея программы лояльности обнулите скидку через сайт..');
+    Exit;
+  end;
+
+  if not InputEnterLoyaltyNumber(сGUID) then Exit;
+
+  spLoyaltyCheckGUID.ParamByName('inGUID').Value := сGUID;
+  spLoyaltyCheckGUID.ParamByName('outID').Value := 0;
+  spLoyaltyCheckGUID.ParamByName('outAmount').Value := 0;
+  spLoyaltyCheckGUID.ParamByName('outError').Value := '';
+  spLoyaltyCheckGUID.Execute;
+
+  if spLoyaltyCheckGUID.ParamByName('outError').Value <> '' then
+  begin
+    ShowMessage(spLoyaltyCheckGUID.ParamByName('outError').Value);
+    Exit;
+  end;
+
+  if (spLoyaltyCheckGUID.ParamByName('outID').Value = 0) or
+     (spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat = 0)  then
+  begin
+    ShowMessage('Ошибка получения данных о скидке.');
+    Exit;
+  end;
+
+  SetPromoCodeLoyalty(spLoyaltyCheckGUID.ParamByName('outID').Value, сGUID, spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat);
 end;
 
 procedure TMainCashForm2.edPromoCodeExit(Sender: TObject);
@@ -4799,6 +5036,9 @@ procedure TMainCashForm2.CalcTotalSumm;
 var
   B:TBookmark;
 Begin
+
+  if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then PromoCodeLoyaltyCalc;
+
   FTotalSumm := 0;
   WITH CheckCDS DO
   Begin
@@ -5088,6 +5328,7 @@ begin
   //**07.11.19
   FormParams.ParamByName('LoyaltySignID').Value := 0;
   FormParams.ParamByName('LoyaltyText').Value := '';
+  FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -5107,6 +5348,9 @@ begin
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
+  pnlPromoCodeLoyalty.Visible := false;
+  lblPromoCodeLoyalty.Caption := '';
+  edPromoCodeLoyaltySumm.Value := 0;
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
   edPromoCode.Text := '';
@@ -5306,11 +5550,11 @@ end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash,SalerCashAdd: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; APOSTerminalCode : Integer = 0; isFiscal: boolean = true): boolean;
-var str_log_xml : String; Disc: Currency;
+var str_log_xml : String; Disc, nSumAll: Currency;
     i, PosDisc : Integer; pPosTerm : IPos;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
-    var сAccommodationName : string;
+    var сAccommodationName : string; nDisc: Currency;
   begin
      // посылаем строку в кассу и если все OK, то ставим метку о продаже
      if not Assigned(Cash) or Cash.AlwaysSold then
@@ -5321,11 +5565,32 @@ var str_log_xml : String; Disc: Currency;
          begin
             if isFiscal or FieldByName('AccommodationName').IsNull then сAccommodationName := ''
             else сAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-            result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
-                                      AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
-                                      FieldByName('Amount').asCurrency,
-                                      FieldByName('Price').asCurrency,
-                                      FieldByName('NDS').asCurrency);
+            if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then
+            begin
+              if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+              begin
+                result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                          AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+                                          FieldByName('Amount').asCurrency,
+                                          FieldByName('PricePartionDate').asCurrency,
+                                          FieldByName('NDS').asCurrency);
+                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency) - FieldByName('Summ').AsCurrency;
+              end else
+              begin
+
+                result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                          AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+                                          FieldByName('Amount').asCurrency,
+                                          FieldByName('PriceSale').asCurrency,
+                                          FieldByName('NDS').asCurrency);
+                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency) - FieldByName('Summ').AsCurrency;
+              end;
+              if nDisc <> 0 then Cash.DiscountGoods(nDisc);
+            end else result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                               AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+                                               FieldByName('Amount').asCurrency,
+                                               FieldByName('Price').asCurrency,
+                                               FieldByName('NDS').asCurrency);
          end
        else result:=true;
   end;
@@ -5343,6 +5608,25 @@ begin
       if not isFiscal and Assigned(Cash) then Cash.AlwaysSold := False;
 
       // Контроль чека до печати
+      if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
+      begin
+        nSumAll := 0;
+        CheckCDS.First;
+        while not CheckCDS.Eof do
+        begin
+          if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+          else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+          CheckCDS.Next;
+        end;
+        if nSumAll < FormParams.ParamByName('LoyaltyChangeSumma').Value then
+        begin
+          ShowMessage('Cумма отпускаемого товара ' + FormatCurr(',0.00', nSumAll) + ' должна быть больше суммы скидки ' +
+            FormatCurr(',0.00', FormParams.ParamByName('LoyaltyChangeSumma').Value) + '.');
+          Exit;
+        end;
+
+      end else
       with CheckCDS do
       begin
         // Определяем сумму скидки наценки (скидки)
@@ -5986,6 +6270,7 @@ begin
     begin
       FormParams.ParamByName('LoyaltySignID').Value := 0;
       FormParams.ParamByName('LoyaltyText').Value := '';
+      FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
     end;
 
   except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);

@@ -144,7 +144,7 @@ BEGIN
                                                 ON MILO_Update.MovementItemId = MI_Sign.Id
                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
                LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
-           ORDER BY MIDate_OperDate.ValueData;
+           ORDER BY MIDate_Insert.ValueData DESC;
   
   
 END;

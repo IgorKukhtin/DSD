@@ -21,6 +21,8 @@ RETURNS TABLE (UnitID          Integer
              , WagesAmount     TFloat    -- Зарплата
              , ExpensesAmount  TFloat    -- Дополнительные затраты
 
+             , Profit          TFloat    -- Прибыль
+
               )
 AS
 $BODY$
@@ -215,13 +217,16 @@ BEGIN
              , Object_Unit.ValueData
              , tmpRealization.AmountSumJuridical ::TFloat
              , tmpRealization.AmountSum ::TFloat
-             , (tmpRealization.AmountSum - tmpRealization.AmountSumJuridical) ::TFloat
+             , (COALESCE(tmpRealization.AmountSum, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0)) ::TFloat
 
              , tmpRemains.Saldo::TFloat
              , tmpRemains.SaldoSum::TFloat
 
              , tmpWages.Amount::TFloat
              , tmpAdditionalExpenses.Amount::TFloat
+             
+             , (COALESCE(tmpRealization.AmountSum, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0) - 
+                COALESCE(tmpWages.Amount, 0) - COALESCE(tmpAdditionalExpenses.Amount, 0)) ::TFloat
         FROM tmpUnit
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
