@@ -121,7 +121,7 @@ BEGIN
                                    FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                         ) AS tmp
                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                           AND Movement.DescId = zc_Movement_Sale()
+                                                           AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '33 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   );
@@ -129,7 +129,7 @@ BEGIN
               vbMovementId_sale:= (SELECT Movement.Id
                                    FROM Movement
                                    WHERE Movement.InvNumber = TRIM (inBarCode)
-                                     AND Movement.DescId = zc_Movement_Sale()
+                                     AND Movement.DescId    IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                                      AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '8 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   );
