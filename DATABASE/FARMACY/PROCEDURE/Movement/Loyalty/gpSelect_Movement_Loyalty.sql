@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer
              , EndSale       TDateTime
              , StartSummCash TFloat
              , MonthCount    Integer
+             , DayCount      Integer
+             , SummLimit     TFloat
              , InsertId      Integer
              , InsertName    TVarChar
              , InsertDate    TDateTime
@@ -51,6 +53,8 @@ BEGIN
           , MovementDate_EndSale.ValueData                                 AS EndSale
           , MovementFloat_StartSummCash.ValueData                          AS StartSummCash
           , MovementFloat_MonthCount.ValueData::Integer                    AS MonthCount
+          , COALESCE(MovementFloat_DayCount.ValueData,0)::Integer          AS DayCount
+          , COALESCE(MovementFloat_Limit.ValueData,0)::TFloat              AS SummLimit
           , Object_Insert.Id                                               AS InsertId
           , Object_Insert.ValueData                                        AS InsertName
           , MovementDate_Insert.ValueData                                  AS InsertDate
@@ -68,6 +72,12 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                 ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+        LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                ON MovementFloat_DayCount.MovementId =  Movement.Id
+                               AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+        LEFT JOIN MovementFloat AS MovementFloat_Limit
+                                ON MovementFloat_Limit.MovementId =  Movement.Id
+                               AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
 
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -81,11 +91,6 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_EndSale
                                ON MovementDate_EndSale.MovementId = Movement.Id
                               AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoCode
-                                     ON MovementLinkObject_PromoCode.MovementId = Movement.Id
-                                    AND MovementLinkObject_PromoCode.DescId = zc_MovementLinkObject_PromoCode()
-        LEFT JOIN Object AS Object_PromoCode ON Object_PromoCode.Id = MovementLinkObject_PromoCode.ObjectId
 
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
@@ -123,4 +128,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  04.10.19                                                       *
 */
--- select * from gpSelect_Movement_Loyalty(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2016')::TDateTime , inIsErased:= true, inSession := '3');
+-- select * from gpSelect_Movement_Loyalty(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2020')::TDateTime , inIsErased:= true, inSession := '3');

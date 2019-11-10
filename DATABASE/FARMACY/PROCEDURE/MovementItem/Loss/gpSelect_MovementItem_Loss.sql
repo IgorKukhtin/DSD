@@ -168,8 +168,9 @@ BEGIN
                  , tmpGoods.GoodsCodeInt                 AS GoodsCode
                  , tmpGoods.GoodsName                    AS GoodsName
                  , MovementItem.Amount                   AS Amount
-                 , CurrPRICE.Price                       AS Price
-                 , (MovementItem.Amount*CurrPRICE.Price)::TFloat                           AS Summ
+                 , COALESCE(MIFloat_Price.ValueData, CurrPRICE.Price)                      AS Price
+                 , (MovementItem.Amount * 
+                          COALESCE(MIFloat_Price.ValueData, CurrPRICE.Price))::TFloat      AS Summ
                  , REMAINS.Amount                                                          AS Remains_Amount 
                  , tmpCheck.Amount::TFloat                                                 AS AmountCheck
                  , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
@@ -184,6 +185,9 @@ BEGIN
                 LEFT OUTER JOIN REMAINS ON REMAINS.ObjectId = tmpGoods.Id 
                 LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id
                 LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpGoods.Id
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()          
             WHERE (tmpGoods.isErased = FALSE OR MovementItem.Id IS NOT NULL);
      ELSE
 
@@ -194,7 +198,11 @@ BEGIN
                        , MovementItem.ObjectId
                        , MovementItem.Amount
                        , MovementItem.IsErased
+                       , MIFloat_Price.ValueData  AS Price
                   FROM MovementItem
+                       LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()          
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId = zc_MI_Master()
                     AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -327,13 +335,13 @@ BEGIN
              , Object_Goods.ObjectCode                                                 AS GoodsCode
              , Object_Goods.ValueData                                                  AS GoodsName
              , MovementItem.Amount                                                     AS Amount
-             , CurrPRICE.Price                                                         AS Price
-             , (MovementItem.Amount*CurrPRICE.Price)                          ::TFloat AS Summ
-             , REMAINS.Amount                                                 ::TFloat AS Remains_Amount
-             , tmpCheck.Amount                                                ::TFloat AS AmountCheck
-             , COALESCE(MIContainer.Price,REMAINS.Price)                      ::TFloat AS PriceIn
-             , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
-             , COALESCE(MovementItem.IsErased, FALSE)                                  AS isErased
+             , COALESCE(MovementItem.Price, CurrPRICE.Price)                       ::TFloat AS Price
+             , (MovementItem.Amount*COALESCE(MovementItem.Price, CurrPRICE.Price)) ::TFloat AS Summ
+             , REMAINS.Amount                                                      ::TFloat AS Remains_Amount
+             , tmpCheck.Amount                                                     ::TFloat AS AmountCheck
+             , COALESCE(MIContainer.Price,REMAINS.Price)                           ::TFloat AS PriceIn
+             , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))     ::TFloat AS SummIn
+             , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
         FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
             LEFT OUTER JOIN CurrPRICE ON CurrPRICE.GoodsId = Object_Goods.Id
@@ -365,5 +373,4 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Loss (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- 
-select * from gpSelect_MovementItem_Loss(inMovementId := 15264081 , inShowAll := 'False' , inIsErased := 'True' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Loss(inMovementId := 16461309 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

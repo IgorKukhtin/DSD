@@ -29,6 +29,7 @@ type
     bbReportMinPriceForm: TdxBarButton;
     actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
+    MonthCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

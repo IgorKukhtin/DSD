@@ -79,6 +79,8 @@ begin
       //***13.05.19
       AddIntField(LocalDataBaseHead,  'PDKINDID');    //Тип срок/не срок
       AddStrField(LocalDataBaseHead,  'CONFCODESP', 10); //Код подтверждения рецепта
+      //***07.11.19
+      AddIntField(LocalDataBaseHead,  'LOYALTYID');    //Программа лояльности
 
       LocalDataBaseHead.CreateTable;
     end
@@ -155,6 +157,9 @@ begin
           AddIntField(LFieldDefs,  'PDKINDID'); //Тип срок/не срок
         if FindField('CONFCODESP') = nil then
           AddStrField(LFieldDefs, 'CONFCODESP', 55);
+        //***07.11.19
+        if FindField('LOYALTYID') = nil then
+          AddIntField(LFieldDefs,  'LOYALTYID');  //Программа лояльности
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -217,7 +222,9 @@ begin
         (FindField('ROUNDDOWN') = nil) or
         //***13.05.19
         (FindField('PDKINDID') = nil) or
-        (FindField('CONFCODESP') = nil));
+        (FindField('CONFCODESP') = nil) or
+        //***07.11.19
+        (FindField('LOYALTYID') = nil));
 
       Close;
 

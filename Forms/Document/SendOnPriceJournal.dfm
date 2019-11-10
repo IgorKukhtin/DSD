@@ -5,9 +5,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -230
   ExplicitWidth = 1036
-  ExplicitHeight = 464
+  ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -176,19 +175,27 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object ReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Width = 74
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1088#1072#1089#1093#1086#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object OperDatePartner: TcxGridDBColumn [2]
+          object OperDatePartner: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 55

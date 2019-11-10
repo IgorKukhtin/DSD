@@ -282,19 +282,22 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 200
+    Top = 221
     Width = 820
-    Height = 181
+    Height = 160
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 200
+    ExplicitHeight = 181
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
       Width = 820
-      Height = 127
+      Height = 106
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 127
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -964,11 +967,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 148
+      Top = 127
       Width = 820
       Height = 33
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 148
       object ShapeState: TShape
         Left = 797
         Top = 13
@@ -1719,7 +1723,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlManualDiscount: TPanel [8]
     Left = 0
-    Top = 116
+    Top = 137
     Width = 820
     Height = 21
     Align = alTop
@@ -1728,6 +1732,7 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 8
     Visible = False
     OnClick = actSetSiteDiscountExecute
+    ExplicitTop = 116
     object Label9: TLabel
       Left = 1
       Top = 1
@@ -1780,7 +1785,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlSiteDiscount: TPanel [9]
     Left = 0
-    Top = 158
+    Top = 179
     Width = 820
     Height = 21
     Align = alTop
@@ -1788,6 +1793,7 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 9
     Visible = False
+    ExplicitTop = 158
     object Label16: TLabel
       Left = 1
       Top = 1
@@ -1840,7 +1846,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlTaxUnitNight: TPanel [10]
     Left = 0
-    Top = 137
+    Top = 158
     Width = 820
     Height = 21
     Align = alTop
@@ -1848,6 +1854,7 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 10
     Visible = False
+    ExplicitTop = 137
     object Label18: TLabel
       Left = 1
       Top = 1
@@ -1879,7 +1886,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlAnalogFilter: TPanel [11]
     Left = 0
-    Top = 179
+    Top = 200
     Width = 820
     Height = 21
     Align = alTop
@@ -1887,6 +1894,7 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 11
     Visible = False
+    ExplicitTop = 179
     DesignSize = (
       820
       21)
@@ -2027,6 +2035,85 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 3
       TabStop = False
       OnClick = cxButton6Click
+    end
+  end
+  object pnlPromoCodeLoyalty: TPanel [13]
+    Left = 0
+    Top = 116
+    Width = 820
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 13
+    Visible = False
+    ExplicitTop = 103
+    object Label23: TLabel
+      Left = 1
+      Top = 1
+      Width = 185
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label25: TLabel
+      Left = 186
+      Top = 1
+      Width = 57
+      Height = 19
+      Align = alLeft
+      Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitLeft = 219
+      ExplicitHeight = 13
+    end
+    object lblPromoCodeLoyalty: TLabel
+      Left = 243
+      Top = 1
+      Width = 12
+      Height = 19
+      Align = alLeft
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitHeight = 14
+    end
+    object Label27: TLabel
+      Left = 488
+      Top = 2
+      Width = 73
+      Height = 13
+      Align = alCustom
+      Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edPromoCodeLoyaltySumm: TcxCurrencyEdit
+      Left = 567
+      Top = -1
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 60
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2703,7 +2790,6 @@ inherited MainCashForm2: TMainCashForm2
     object actManualDiscount: TAction
       Caption = #1044#1072#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1089#1082#1080#1076#1082#1091
       Enabled = False
-      ShortCut = 120
       Visible = False
       OnExecute = actManualDiscountExecute
     end
@@ -3287,6 +3373,13 @@ inherited MainCashForm2: TMainCashForm2
       Visible = False
       OnExecute = actNotTransferTimeExecute
     end
+    object actSetPromoCodeLoyalty: TAction
+      Category = 'DSDLib'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' "'#1055#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080'"'
+      Hint = #1042#1074#1077#1089#1090#1080' '#1087#1088#1086#1084#1086#1082#1086#1076' "'#1055#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080'"'
+      ShortCut = 120
+      OnExecute = actSetPromoCodeLoyaltyExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3547,6 +3640,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object miSetPromo: TMenuItem
       Action = actSetPromoCode
+    end
+    object N36: TMenuItem
+      Action = actSetPromoCodeLoyalty
     end
     object miManualDiscount: TMenuItem
       Action = actManualDiscount
@@ -3858,6 +3954,23 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySignID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyText'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyChangeSumma'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -4189,8 +4302,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 96
+    Left = 104
+    Top = 72
   end
   object spGet_Password_MoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Password_MoneyInCash'
@@ -4204,8 +4317,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 96
+    Left = 256
+    Top = 64
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -4252,8 +4365,8 @@ inherited MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 280
-    Top = 120
+    Left = 264
+    Top = 136
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
@@ -4282,8 +4395,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 200
-    Top = 96
+    Left = 192
+    Top = 72
   end
   object TimerSaveAll: TTimer
     Enabled = False
@@ -4296,8 +4409,8 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 25000
     OnTimer = TimerMoneyInCashTimer
-    Left = 360
-    Top = 104
+    Left = 368
+    Top = 88
   end
   object spUpdate_UnitForFarmacyCash: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_UnitForFarmacyCash'
@@ -4313,13 +4426,13 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     Left = 424
-    Top = 120
+    Top = 136
   end
   object TimerBlinkBtn: TTimer
     Enabled = False
     OnTimer = TimerBlinkBtnTimer
     Left = 320
-    Top = 104
+    Top = 88
   end
   object spGet_BlinkVIP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check_ConfirmedKind'
@@ -4367,8 +4480,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 128
+    Left = 488
+    Top = 136
   end
   object spGet_BlinkCheck: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check_CommentError'
@@ -5021,8 +5134,8 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 200
     OnTimer = TimerDroppedDownTimer
-    Left = 472
-    Top = 103
+    Left = 432
+    Top = 87
   end
   object TimerAnalogFilter: TTimer
     Enabled = False
@@ -5066,7 +5179,7 @@ inherited MainCashForm2: TMainCashForm2
     Aggregates = <>
     Params = <>
     Left = 528
-    Top = 80
+    Top = 64
   end
   object spGet_BanCash: TdsdStoredProc
     StoredProcName = 'gpGet_EmployeeSchedule_Ban_Cash'
@@ -5082,5 +5195,86 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 360
     Top = 176
+  end
+  object spLoyaltyGUID: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Loyalty_GUID'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGUID'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 248
+  end
+  object spLoyaltyCheckGUID: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Loyalty_GUID'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outError'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 312
   end
 end

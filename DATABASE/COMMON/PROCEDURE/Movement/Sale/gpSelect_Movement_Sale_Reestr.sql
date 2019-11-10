@@ -377,7 +377,7 @@ BEGIN
 
             -- инфа из Рееста
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                    ON MovementFloat_MovementItemId.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
             LEFT JOIN MovementItem AS MI_reestr 
                                    ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer

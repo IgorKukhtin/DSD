@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
              , Comment TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
 
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
@@ -63,6 +64,9 @@ BEGIN
 
              , 0                                          AS MovementId_Production
              , CAST ('' AS TVarChar)                      AS InvNumber_ProductionFull
+
+             , 0                   			  AS ReestrKindId
+             , '' :: TVarChar                     	  AS ReestrKindName
 
              , 0                   			  AS MovementId_TransportGoods 
              , '' :: TVarChar                     	  AS InvNumber_TransportGoods 
@@ -118,6 +122,9 @@ BEGIN
               END
            || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              )                             :: TVarChar      AS InvNumber_ProductionFull
+
+           , Object_ReestrKind.Id             		    AS ReestrKindId
+           , Object_ReestrKind.ValueData       		    AS ReestrKindName
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
@@ -191,6 +198,11 @@ BEGIN
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();

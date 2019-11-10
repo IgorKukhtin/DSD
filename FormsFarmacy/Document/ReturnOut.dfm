@@ -59,6 +59,11 @@ inherited ReturnOutForm: TReturnOutForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCheck
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -98,6 +103,11 @@ inherited ReturnOutForm: TReturnOutForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCheck
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsAll
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -208,15 +218,6 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 76
           end
-          object Remains: TcxGridDBColumn
-            AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'Remains'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 74
-          end
           object WarningColor: TcxGridDBColumn
             AlternateCaption = #1055#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
             Caption = '!'
@@ -235,6 +236,24 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 20
+          end
+          object Remains: TcxGridDBColumn
+            AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'Remains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object RemainsAll: TcxGridDBColumn
+            AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
+            Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'RemainsAll'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
         end
       end

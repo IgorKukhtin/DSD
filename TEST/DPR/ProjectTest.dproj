@@ -3801,6 +3801,10 @@
 				<Form>Route_SelfForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendOnPrice_ReestrJournal.pas">
+				<Form>SendOnPrice_ReestrJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

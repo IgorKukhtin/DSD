@@ -29,6 +29,28 @@ BEGIN
 
 
       RETURN QUERY 
+      -- выбираем данные из прайсов для штрихкодов
+      WITH tmpLoadPriceListItem AS (SELECT DISTINCT 
+                                           tt.BarCode
+                                         , tt.GoodsName
+                                         , tt.ProducerName
+                                    FROM (SELECT DISTINCT 
+                                                 LoadPriceListItem.BarCode
+                                               , LoadPriceListItem.GoodsName
+                                               , LoadPriceListItem.ProducerName
+                                               , ROW_NUMBER()OVER(PARTITION BY LoadPriceListItem.BarCode ORDER BY ObjectBoolean_BarCode.ValueData ASC, LoadPriceListItem.GoodsName, LoadPriceListItem.ProducerName ASC) as ORD
+                                          FROM LoadPriceListItem
+                                               INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+                                                -- признак Импорт штрих-кодов из прайса (выполнять или нет связь по этому параметру)
+                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCode
+                                                                       ON ObjectBoolean_BarCode.ObjectId = LoadPriceList.ContractId
+                                                                      AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
+                                          WHERE LoadPriceListItem.BarCode <> ''
+                                            AND inObjectId = zc_Enum_GlobalConst_BarCode()
+                                          ) AS tt
+                                    WHERE tt.Ord = 1
+                                    )
+
       SELECT 
            ObjectLink_LinkGoods_GoodsMain.ObjectId AS Id
          , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
@@ -37,10 +59,13 @@ BEGIN
          , MainGoods.ValueData                     AS GoodsMainName
          , Object_Goods.Id                         AS GoodsId 
          , Object_Goods.ObjectCode                 AS GoodsCodeInt
-         , ObjectString.ValueData                  AS GoodsCode
-         , Object_Goods.ValueData                  AS GoodsName
+         --, ObjectString.ValueData                  AS GoodsCode
+         , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN Object_Goods.ValueData ELSE ObjectString.ValueData END :: TVarChar AS GoodsCode
+         --, Object_Goods.ValueData                  AS GoodsName
+         , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN tmpLPLI.GoodsName ELSE Object_Goods.ValueData END AS GoodsName
          , ObjectString_Goods_UKTZED.ValueData     AS CodeUKTZED
-         , ObjectString_Goods_Maker.ValueData      AS MakerName
+         --, ObjectString_Goods_Maker.ValueData      AS MakerName
+         , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN COALESCE (ObjectString_Goods_Maker.ValueData, tmpLPLI.ProducerName) ELSE ObjectString_Goods_Maker.ValueData END MakerName
 
          , Object_ConditionsKeep.Id                AS ConditionsKeepId
          , Object_ConditionsKeep.ValueData         AS ConditionsKeepName
@@ -129,6 +154,10 @@ BEGIN
                          
           LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
                                          AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+
+          LEFT JOIN tmpLoadPriceListItem AS tmpLPLI ON tmpLPLI.BarCode = Object_Goods.ValueData
+                                        AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                        AND (COALESCE (ObjectString_Goods_Maker.ValueData,'')= '' OR tmpLPLI.ProducerName = ObjectString_Goods_Maker.ValueData)
 
       WHERE ObjectLink_Goods_Object.ChildObjectId = inObjectId
      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()

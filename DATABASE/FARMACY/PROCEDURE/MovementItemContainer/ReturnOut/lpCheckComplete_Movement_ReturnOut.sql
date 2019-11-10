@@ -12,7 +12,13 @@ $BODY$
   DECLARE vbGoodsId Integer;
   DECLARE vbNDSKindId Integer;
   DECLARE vbGoodsName TVarChar;
+  DECLARE vbAmount    TFloat;
+  DECLARE vbSaldo     TFloat;
+  DECLARE vbUnitId Integer;
 BEGIN
+
+    vbUnitId := (SELECT Movement_ReturnOut_View.FromId FROM Movement_ReturnOut_View WHERE Movement_ReturnOut_View.Id = inMovementId);
+
     -- Проверяем все ли товары состыкованы. 
     IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
         RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
@@ -42,8 +48,9 @@ BEGIN
         FROM Object WHERE Id = vbGoodsId;
         RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', vbGoodsName;
     END IF;
+    
     --Проверяем, достаточно ли остатка партии для возврата
-    SELECT MIN(MovementItem_ReturnOut.ObjectId) INTO vbGoodsId
+/*    SELECT MIN(MovementItem_ReturnOut.ObjectId) INTO vbGoodsId
     FROM MovementItem AS MovementItem_ReturnOut
         LEFT OUTER JOIN MovementItem AS MovementItem_Income
                                      ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id
@@ -65,13 +72,41 @@ BEGIN
         FROM Object WHERE Id = vbGoodsId;
         RAISE EXCEPTION 'По товару "%" Вы возвращаете больше чем есть на остатке по партии прихода', vbGoodsName;
     END IF;
+*/
+
+    --Проверка на то что бы не продали больше чем есть на остатке
+    SELECT MI_ReturnOut.GoodsName
+         , COALESCE(MI_ReturnOut.Amount,0)
+         , COALESCE(SUM(Container.Amount),0)
+    INTO
+        vbGoodsName
+      , vbAmount
+      , vbSaldo
+    FROM MovementItem_ReturnOut_View AS MI_ReturnOut
+        LEFT OUTER JOIN Container ON MI_ReturnOut.GoodsId = Container.ObjectId
+                                 AND Container.WhereObjectId = vbUnitId
+                                 AND Container.DescId = zc_Container_Count()
+                                 AND Container.Amount > 0
+    WHERE MI_ReturnOut.MovementId = inMovementId
+      AND MI_ReturnOut.isErased = FALSE
+    GROUP BY MI_ReturnOut.GoodsId
+           , MI_ReturnOut.GoodsName
+           , MI_ReturnOut.Amount
+    HAVING COALESCE (MI_ReturnOut.Amount, 0) > COALESCE (SUM (Container.Amount) ,0);
+
+    IF (COALESCE(vbGoodsName,'') <> '')
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 06.11.19                                                                     *
  26.01.15                         *
  26.12.14                         *
 

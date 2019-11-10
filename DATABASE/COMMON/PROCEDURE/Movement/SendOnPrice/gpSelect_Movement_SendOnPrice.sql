@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckedDate   TDateTime
              , Checked       Boolean
              , isHistoryCost Boolean
+
+             , ReestrKindId Integer, ReestrKindName TVarChar
               )
 AS
 $BODY$
@@ -138,6 +140,9 @@ BEGIN
            , MovementDate_Checked.ValueData     AS CheckedDate
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)     AS Checked
            , COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) AS isHistoryCost
+           
+           , Object_ReestrKind.Id             		    AS ReestrKindId
+           , Object_ReestrKind.ValueData       		    AS ReestrKindName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -342,11 +347,16 @@ BEGIN
                                         AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
             LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
           OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
       ;
-
+                                               
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

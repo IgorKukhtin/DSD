@@ -136,6 +136,16 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       Width = 200
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
+    object CodeStr_partner: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      DataBinding.FieldName = 'CodeStr_partner'
+      Visible = True
+      Width = 130
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
     object NDSKindName: TcxDBPivotGridField
       AreaIndex = 2
       IsCaptionAssigned = True
@@ -145,7 +155,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     end
     object Price: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
       DataBinding.FieldName = 'Price'
@@ -201,7 +211,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     end
     object ContractName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1044#1086#1075#1086#1074#1086#1088
       DataBinding.FieldName = 'ContractName'
@@ -211,7 +221,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     end
     object JuridicalName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       DataBinding.FieldName = 'JuridicalName'
@@ -595,7 +605,7 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <>
-    ExpandRow = 3
+    ExpandRow = 4
     ExpandColumn = 1
     ColorRuleList = <>
     SummaryList = <>

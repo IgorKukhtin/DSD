@@ -59,6 +59,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isBarCode Boolean
              , MovementPromo TVarChar
              , isErased Boolean
+             , Count_Doc  Integer
+             , Count_Item Integer
               )
 AS
 $BODY$
@@ -100,6 +102,31 @@ BEGIN
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
+
+        , tmpMovement AS (SELECT Movement.*
+                          FROM tmpStatus
+                               INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
+                                                  AND Movement.OperDate BETWEEN '05.11.2019' AND '06.11.2019'  --inStartDate AND inEndDate
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+                             --  INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                         )
+        , tmpMI AS (SELECT *
+                    FROM (SELECT MovementItem.*
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.MovementId ORDER BY MovementItem.Id) AS Ord
+                               , COUNT(MovementItem.MovementId) OVER (PARTITION BY MovementItem.MovementId) AS Count
+                          FROM MovementItem
+                               INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND (MovementItem.isErased  = inIsErased
+                             OR inGoodsGroupId <> 0
+                             OR inGoodsId <> 0
+                             OR (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                                )
+                          ) AS tt
+                    WHERE tt.Ord = 1
+                    )
+
 
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
@@ -197,7 +224,8 @@ BEGIN
 
              , MovementDate_StartBegin.ValueData  AS StartBegin_movement
              , MovementDate_EndBegin.ValueData    AS EndBegin_movement
-             , EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec_movement
+             , CASE WHEN tmpMI.Ord = 1 then EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) 
+              else 0 END :: TFloat AS diffBegin_sec_movement
 
              , MIDate_StartBegin.ValueData  AS StartBegin
              , MIDate_EndBegin.ValueData    AS EndBegin
@@ -239,6 +267,9 @@ BEGIN
              , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
 
              , MovementItem.isErased
+             
+             , tmpMI.Ord   ::Integer AS Count_Doc
+             , tmpMI.Count ::Integer AS Count_Item
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
@@ -255,26 +286,26 @@ BEGIN
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
-                                   ON MovementDate_StartWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
                                   AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
-                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDescNumber.MovementId = Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                    ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                    ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -452,6 +483,8 @@ BEGIN
 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId
+      
+            left Join tmpMI on tmpMI.Id = MovementItem.Id
 
             LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                        ON MIDate_StartBegin.MovementItemId = MovementItem.Id
@@ -565,3 +598,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+
+--SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '05.11.2019', inEndDate:= '05.11.2019', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

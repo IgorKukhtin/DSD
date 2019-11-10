@@ -333,6 +333,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

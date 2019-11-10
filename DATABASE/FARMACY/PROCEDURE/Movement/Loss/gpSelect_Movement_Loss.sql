@@ -75,7 +75,7 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
                        )
         , tmpSumm AS (SELECT MovementItem.MovementId
-                           , SUM (MovementItem.Amount*CurrPRICE.Price)::TFloat AS SummPrice
+                           , SUM (MovementItem.Amount*COALESCE(MIFloat_Price.ValueData, CurrPRICE.Price))::TFloat AS SummPrice
                       FROM tmpMovement
                            JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                             AND MovementItem.DescId = zc_MI_Master()
@@ -83,6 +83,10 @@ BEGIN
                        
                            LEFT JOIN CurrPRICE ON CurrPRICE.GoodsId = MovementItem.ObjectId
                                               AND CurrPRICE.UnitId = tmpMovement.UnitId
+                                              
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()          
                       WHERE MovementItem.isErased = FALSE
                         AND MovementItem.DescId = zc_MI_Master()
                        -- AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)

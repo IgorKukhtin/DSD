@@ -114,6 +114,8 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    cxLabel26: TcxLabel;
+    edReestrKind: TcxButtonEdit;
   private
     { Private declarations }
   public

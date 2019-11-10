@@ -69,6 +69,8 @@ type
     //***15.05.19
     PDKINDID    : integer;       //Тип срок/не срок
     CONFCODESP  : String[10];    //Код подтверждения рецепта
+    //***07.11.19
+    LOYALTYID   : integer;       //Регистрация промокода
 
   end;
   TBodyRecord = record
@@ -1383,6 +1385,8 @@ begin
                 // ***15.05.19
                 PDKINDID := FieldByName('PDKINDID').AsInteger;
                 CONFCODESP := trim(FieldByName('CONFCODESP').AsString);
+                // ***07.11.19
+                LOYALTYID := FieldByName('LOYALTYID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1527,6 +1531,8 @@ begin
                   // ***15.05.19
                   dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Head.PDKINDID);
                   dsdSave.Params.AddParam('inConfirmationCodeSP', ftString, ptInput, Head.CONFCODESP);
+                  // ***07.11.19
+                  dsdSave.Params.AddParam('inLoyaltySignID', ftInteger, ptInput, Head.LOYALTYID);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
