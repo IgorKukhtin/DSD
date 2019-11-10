@@ -3931,7 +3931,7 @@ begin
       Next;
     end;
 
-    if (Complete = TRUE) and (TotalW < 5{DM.tblObject_ConstCriticalWeight.AsFloat})
+    if (Complete = TRUE) and (TotalW < DM.tblObject_ConstCriticalWeight.AsFloat)
        and ((cdsOrderExternalIsOrderMin.AsBoolean <> TRUE) or (cdsOrderExternalIsOrderMin.isNull = TRUE))
        and (Pos(AnsiUpperCase('самовывоз'),AnsiUpperCase(Comment)) = 0)
        and (Pos(AnsiUpperCase('самовивіз'),AnsiUpperCase(Comment)) = 0)
