@@ -85,6 +85,7 @@ type
     edAdjustingOurDate: TcxDateEdit;
     cxLabel17: TcxLabel;
     actPrintTTN: TdsdPrintAction;
+    AmountOther: TcxGridDBColumn;
   private
     { Private declarations }
   public

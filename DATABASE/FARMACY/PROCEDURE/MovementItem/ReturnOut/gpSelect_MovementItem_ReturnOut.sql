@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
              , MakerName TVarChar
+             , AmountOther TFloat
               )
 AS
 $BODY$
@@ -114,6 +115,19 @@ BEGIN
                        FROM tmpIncome
                               LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpIncome.Id
                        )
+
+          , ReturnOther AS (SELECT MI_ReturnOut.ParentId
+                                 , SUM(MI_ReturnOut.Amount)::TFloat AS Amount
+                            FROM Movement AS Movement_ReturnOut
+                                 INNER JOIN MovementItem AS MI_ReturnOut
+                                                         ON MI_ReturnOut.MovementId = Movement_ReturnOut.Id
+                                                        AND MI_ReturnOut.isErased   = FALSE
+                                                        AND MI_ReturnOut.DescId     = zc_MI_Master()
+                              WHERE Movement_ReturnOut.Id <> inMovementId
+                                AND Movement_ReturnOut.ParentId = vbMovementIncomeId
+                                AND Movement_ReturnOut.StatusId <> zc_Enum_Status_Erased()
+                              GROUP BY MI_ReturnOut.ParentId
+                              )
 
           , tmpCheck AS (SELECT MI_Check.ObjectId               AS GoodsId
                               , SUM (MI_Check.Amount) ::TFloat  AS Amount
@@ -211,6 +225,7 @@ BEGIN
              , MovementItem_Income.ExpirationDate
              , MovementItem_Income.PartionGoods
              , MovementItem_Income.MakerName
+             , ReturnOther.Amount                                                         AS AmountOther
          FROM Income AS MovementItem_Income
               FULL JOIN ReturnOut AS MovementItem_ReturnOut 
                                   ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id
@@ -218,6 +233,9 @@ BEGIN
               LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
 
               LEFT JOIN tmpRemainsAll ON tmpRemainsAll.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
+ 
+              LEFT JOIN ReturnOther ON ReturnOther.ParentId = MovementItem_ReturnOut.ParentId
+
 ;
 
     ELSE
@@ -301,6 +319,19 @@ BEGIN
                             WHERE Movement_ReturnOut.Id = inMovementId
                             )
 
+          , ReturnOther AS (SELECT MI_ReturnOut.ParentId
+                                 , SUM(MI_ReturnOut.Amount)::TFloat AS Amount
+                            FROM Movement AS Movement_ReturnOut
+                                 INNER JOIN MovementItem AS MI_ReturnOut
+                                                         ON MI_ReturnOut.MovementId = Movement_ReturnOut.Id
+                                                        AND MI_ReturnOut.isErased   = FALSE
+                                                        AND MI_ReturnOut.DescId     = zc_MI_Master()
+                              WHERE Movement_ReturnOut.Id <> inMovementId
+                                AND Movement_ReturnOut.ParentId = vbMovementIncomeId
+                                AND Movement_ReturnOut.StatusId <> zc_Enum_Status_Erased()
+                              GROUP BY MI_ReturnOut.ParentId
+                              )
+
           , tmpCheck AS (SELECT MI_Check.ObjectId                AS GoodsId
                               , SUM (MI_Check.Amount) ::TFloat   AS Amount
                          FROM Movement AS Movement_Check
@@ -374,11 +405,13 @@ BEGIN
              , MovementItem_Income.ExpirationDate
              , MovementItem_Income.PartionGoods
              , MovementItem_Income.MakerName
+             , ReturnOther.Amount                         AS AmountOther
         FROM ReturnOut AS MovementItem
             LEFT OUTER JOIN Income AS MovementItem_Income
                                    ON MovementItem.ParentId = MovementItem_Income.Id
             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = MovementItem.GoodsId
             LEFT JOIN tmpRemainsAll ON tmpRemainsAll.GoodsId = MovementItem.GoodsId
+            LEFT JOIN ReturnOther ON ReturnOther.ParentId = MovementItem.ParentId
             
 
 ;
