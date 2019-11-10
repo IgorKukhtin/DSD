@@ -415,8 +415,8 @@ BEGIN
         tmpInfoMoney.InfoMoneyGroupName                                                             AS InfoMoneyGroupName,
         tmpInfoMoney.InfoMoneyDestinationName                                                       AS InfoMoneyDestinationName,
         tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
-        tmpInfoMoney.InfoMoneyName                                                                  AS InfoMoneyName,
-        tmpInfoMoney.InfoMoneyName_all                                                              AS InfoMoneyName_all,
+        CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
+        CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
@@ -508,4 +508,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Cash (inStartDate:= '03.12.2016' ::TDateTime, inEndDate:= '31.12.2016'::TDateTime, inAccountId:= 0, inCashId:=280296 , inCurrencyId:=0,  inSession:= '2'::TVarChar);
+-- SELECT * FROM gpReport_Cash (inStartDate:= '03.12.2019' ::TDateTime, inEndDate:= '03.12.2019'::TDateTime, inAccountId:= 0, inCashId:=280296 , inCurrencyId:=0,  inSession:= '2'::TVarChar);
