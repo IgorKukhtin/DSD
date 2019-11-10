@@ -34,12 +34,25 @@ BEGIN
 
 
      -- сохранили список по всем документам за соответствующий <Месяц начислений>
-     INSERT INTO _tmpMovement_Recalc (MovementId, StatusId, PersonalServiceListId, PaidKindId, ServiceDate)
+     INSERT INTO _tmpMovement_Recalc (MovementId, StatusId, PersonalServiceListId, PaidKindId, ServiceDate, isRecalc)
         SELECT Movement.Id AS MovementId
              , Movement.StatusId
              , COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, 0)       AS PersonalServiceListId
              , COALESCE (ObjectLink_PersonalServiceList_PaidKind.ChildObjectId, 0) AS PaidKindId
              , MovementDate_ServiceDate.ValueData                                  AS ServiceDate
+             , CASE WHEN MovementFloat_TotalSummCard.ValueData       <> 0
+                      OR MovementFloat_TotalSummCardSecond.ValueData <> 0
+                      OR MovementFloat_TotalSummNalog.ValueData      <> 0
+                      OR MovementFloat_TotalSummChild.ValueData      <> 0
+                      OR MovementFloat_TotalSummMinusExt.ValueData   <> 0
+                      OR MovementFloat_TotalSummNalogRet.ValueData   <> 0
+                      OR MovementFloat_TotalSummAddOth.ValueData     <> 0
+                      OR MovementFloat_TotalSummFineOth.ValueData    <> 0
+                      OR MovementFloat_TotalSummHospOth.ValueData    <> 0
+                         THEN TRUE
+                    ELSE FALSE
+               END AS isRecalc
+
         FROM MovementDate AS MovementDate_ServiceDate
              INNER JOIN MovementDate AS MovementDate_ServiceDate_find
                                      ON MovementDate_ServiceDate_find.ValueData = MovementDate_ServiceDate.ValueData
@@ -51,12 +64,39 @@ BEGIN
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
              INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                          AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                          AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
                                   ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
+                                     ON MovementFloat_TotalSummCard.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
+                                     ON MovementFloat_TotalSummCardSecond.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalog
+                                     ON MovementFloat_TotalSummNalog.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummNalog.DescId = zc_MovementFloat_TotalSummNalog()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
+                                     ON MovementFloat_TotalSummChild.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinusExt
+                                     ON MovementFloat_TotalSummMinusExt.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummMinusExt.DescId     = zc_MovementFloat_TotalSummMinusExt()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalogRet
+                                     ON MovementFloat_TotalSummNalogRet.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummNalogRet.DescId = zc_MovementFloat_TotalSummNalogRet()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOth
+                                     ON MovementFloat_TotalSummAddOth.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummAddOth.DescId = zc_MovementFloat_TotalSummAddOth()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummFineOth
+                                     ON MovementFloat_TotalSummFineOth.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummFineOth.DescId     = zc_MovementFloat_TotalSummFineOth()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHospOth
+                                     ON MovementFloat_TotalSummHospOth.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummHospOth.DescId     = zc_MovementFloat_TotalSummHospOth()
         WHERE MovementDate_ServiceDate.MovementId = inMovementId
-          AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate();
+          AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate();
      -- !!!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpMovement_Recalc;
 
@@ -113,12 +153,12 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                                           ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummFineOthRecalc
-                                                         ON MIFloat_SummFineOthRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummHospOthRecalc
-                                                         ON MIFloat_SummHospOthRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummFineOthRecalc
+                                                          ON MIFloat_SummFineOthRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummHospOthRecalc
+                                                          ON MIFloat_SummHospOthRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -234,7 +274,7 @@ BEGIN
                                   , inUserId     := inUserId)
      FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE
           UNION
-           SELECT DISTINCT _tmpMovement_Recalc.MovementId AS MovementId_to FROM _tmpMovement_Recalc WHERE _tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete()
+           SELECT DISTINCT _tmpMovement_Recalc.MovementId AS MovementId_to FROM _tmpMovement_Recalc WHERE _tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete() AND _tmpMovement_Recalc.isRecalc = TRUE
           ) AS tmp;
 
 
@@ -416,7 +456,7 @@ BEGIN
                                                  )
      FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE
           UNION
-           SELECT DISTINCT _tmpMovement_Recalc.MovementId AS MovementId_to FROM _tmpMovement_Recalc WHERE _tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete()
+           SELECT DISTINCT _tmpMovement_Recalc.MovementId AS MovementId_to FROM _tmpMovement_Recalc WHERE _tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete() AND _tmpMovement_Recalc.isRecalc = TRUE
           ) AS tmp;
 
 

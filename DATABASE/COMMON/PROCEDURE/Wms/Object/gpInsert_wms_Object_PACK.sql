@@ -37,6 +37,10 @@ BEGIN
      END IF;
 
 
+     -- сформировали новые данные - если надо - wms_Object_Pack
+     PERFORM lpInsertUpdate_wms_Object_Pack();
+
+
      -- –езультат
      -- RETURN QUERY
      -- –езультат - сформировали новые данные - Ёлементы XML
@@ -54,6 +58,7 @@ BEGIN
                                , CASE WHEN tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.01 ELSE COALESCE (tmp.Width, 0)  END AS Width
                                  -- ящик (E2/E3)
                                , COALESCE (tmp.GoodsPropertyBoxId, 0) AS GoodsPropertyBoxId
+                               , COALESCE (tmp.GoodsTypeKindId, 0)    AS GoodsTypeKindId
                                , COALESCE (tmp.BoxId, 0) AS BoxId, COALESCE (tmp.BoxCode, 0) AS BoxCode, COALESCE (tmp.BoxName, '') AS BoxName
                                , COALESCE (tmp.WeightOnBox, 0)    AS WeightOnBox              --  ол-во кг. в €щ. (E2/E3)
                                , COALESCE (tmp.CountOnBox, 0)     AS CountOnBox               --  ол-во ед. в €щ. (E2/E3)
@@ -69,7 +74,7 @@ BEGIN
                          )
               --
             , tmpData AS (-- unit Ц единична€ упаковка
-                          SELECT tmpGoods.sku_id                 AS pack_id
+                          SELECT wms_Object_Pack.Id              AS pack_id
                                , tmpGoods.sku_id                 AS sku_id
                                -- ”никальное описание упаковки
                                , tmpGoods.name                   AS description
@@ -78,7 +83,7 @@ BEGIN
                                -- ѕризнак основной упаковки: t Ц €вл€етс€ основной упаковкой; f Ц не €вл€етс€ основной упаковкой «начение по умолчанию t
                                , 't'                 :: TVarChar AS is_main
                                -- “ип упаковки: единична€ упаковка
-                               , 'unit'              :: TVarChar AS ctn_type
+                               , wms_Object_Pack.ctn_type        AS ctn_type
                                -- Ёлемент упаковки (идентификатор упаковки из которой состоит данна€). ƒл€ единичных упаковок равен 0. 
                                , '0'                 :: TVarChar AS code_id
                                --  оличество элементов упаковки, т.е. количество вложенных элементов
@@ -100,11 +105,12 @@ BEGIN
                                --
                                , 1 AS GroupId
                           FROM tmpGoods
-                          --WHERE tmpGoods.sku_id IN (795292)
-
+                               INNER JOIN wms_Object_Pack ON wms_Object_Pack.GoodsPropertyBoxId = tmpGoods.GoodsPropertyBoxId
+                                                         AND wms_Object_Pack.GoodsTypeKindId    = tmpGoods.GoodsTypeKindId
+                                                         AND wms_Object_Pack.ctn_type           = 'unit' -- “ип упаковки: единична€ упаковка
                          UNION ALL
                           -- carton Ц коробочна€ упаковка
-                          SELECT tmpGoods.GoodsPropertyBoxId     AS pack_id
+                          SELECT wms_Object_Pack.Id              AS pack_id
                                , tmpGoods.sku_id                 AS sku_id
                                  -- ”никальное описание упаковки
                                , tmpGoods.name                   AS description
@@ -113,7 +119,7 @@ BEGIN
                                -- ѕризнак основной упаковки: t Ц €вл€етс€ основной упаковкой; f Ц не €вл€етс€ основной упаковкой «начение по умолчанию t
                                , 't'                 :: TVarChar AS is_main
                                -- “ип упаковки: коробочна€ упаковка
-                               , 'carton'            :: TVarChar AS ctn_type
+                               , wms_Object_Pack.ctn_type        AS ctn_type
                                -- Ёлемент упаковки (идентификатор упаковки из которой состоит данна€). ƒл€ единичных упаковок равен 0. 
                                , tmpGoods.sku_id     :: TVarChar AS code_id
                                --  оличество элементов упаковки, т.е. количество вложенных элементов
@@ -135,8 +141,10 @@ BEGIN
                                --
                                , 2 AS GroupId
                           FROM tmpGoods
-                          WHERE tmpGoods.BoxId > 0
-                          --AND tmpGoods.sku_id = 795292
+                               INNER JOIN wms_Object_Pack ON wms_Object_Pack.GoodsPropertyBoxId = tmpGoods.GoodsPropertyBoxId
+                                                         AND wms_Object_Pack.GoodsTypeKindId    = tmpGoods.GoodsTypeKindId
+                                                         AND wms_Object_Pack.ctn_type           = 'carton' -- “ип упаковки: коробочна€ упаковка
+                        --WHERE tmpGoods.BoxId > 0
                          ) 
         -- –езультат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -170,6 +178,7 @@ BEGIN
                    , tmpData.pack_id AS ObjectId
                    , tmpData.GroupId
               FROM tmpData
+           -- WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
               ORDER BY tmpData.GroupId, tmpData.sku_id
              ) AS tmp
       --WHERE tmp.RowNum BETWEEN 1 AND 1

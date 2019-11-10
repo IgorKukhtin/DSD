@@ -474,7 +474,7 @@ BEGIN
                                                 AND tmp.ContainerId = tmpResult_master.ContainerId
                         WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                        )*/
-          , tmpAll AS (-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
+          , tmpAll_all AS (-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                       UNION
                        SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,  0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
@@ -516,7 +516,23 @@ BEGIN
                                        ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
                                                AND tmp.ContainerId = tmpResult_master.ContainerId
                         WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                        /*SELECT DISTINCT tmpAll2.OperDate, tmpAll2.GoodsId, tmpAll2.GoodsId_child, tmpAll2.Koeff, tmpAll2.ContainerId
+                       )
+          , tmpAll AS (-- данные All
+                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId FROM tmpAll_all
+/*                      UNION
+                       -- + если делаются из одинакового, тогда могут и между собой
+                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_find.GoodsId, tmpAll_all.Koeff, tmpAll_all.ContainerId
+                       FROM tmpAll_all
+                            INNER JOIN tmpAll_all AS tmpAll_all_find ON tmpAll_all_find.GoodsId_child = tmpAll_all.GoodsId_child
+                                                                    AND tmpAll_all_find.Koeff         = tmpAll_all.Koeff
+                                                                    AND tmpAll_all_find.ContainerId   = tmpAll_all.ContainerId
+                                                                    AND tmpAll_all_find.GoodsId       <> tmpAll_all.GoodsId
+                       WHERE tmpAll_all.GoodsId     <> tmpAll_all.GoodsId_child
+                         AND tmpAll_all.ContainerId = 0
+                         AND tmpAll_all.Koeff       = 0*/
+                       -- 
+                       /*-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
+                       SELECT DISTINCT tmpAll2.OperDate, tmpAll2.GoodsId, tmpAll2.GoodsId_child, tmpAll2.Koeff, tmpAll2.ContainerId
                         FROM tmpAll2
                       UNION
                        -- данные zc_MI_Master, еще могут делаться из самих себя
@@ -1055,4 +1071,4 @@ END;$BODY$
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
 -- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate
--- select * from gpUpdate_Movement_ProductionUnion_Pack(inStartDate := ('03.12.2018')::TDateTime , inEndDate := ('03.12.2018')::TDateTime , inUnitId := 8451 ,  inSession := '5')
+-- select * from gpUpdate_Movement_ProductionUnion_Pack(inStartDate := ('30.10.2019')::TDateTime , inEndDate := ('30.10.2019')::TDateTime , inUnitId := 8451 ,  inSession := '5')

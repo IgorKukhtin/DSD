@@ -99,6 +99,7 @@ BEGIN
                      --
                    , tmpData.Id AS GroupId
               FROM tmpMI AS tmpData
+              WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
              UNION ALL
               -- Детали заказа на отгрузку
               SELECT vbProcName       AS ProcName
@@ -131,6 +132,7 @@ BEGIN
                      --
                    , tmpData.Id AS GroupId
               FROM tmpMI AS tmpData
+              WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
              ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY tmp.GroupId, 4

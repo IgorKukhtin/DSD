@@ -126,8 +126,8 @@ FROM pg_stat_activity as a where a.state = 'active' and a.query like '%gpGet_Mov
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') <> '0'
                                        THEN ' Расчет С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
-                                --ELSE ''
-                                  ELSE ' Расчет С/С = < 1 >'
+                                  ELSE ''
+                                --ELSE ' Расчет С/С = < 1 >'
                              END
                           -- || ' Расчет С/С = <1>'
 

@@ -754,6 +754,14 @@ BEGIN
 
 
      -- 3. формируются Проводки + !!!есть MovementItemId!!!
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В проводках сформирован пустой счет баланса с суммой = <%>', (SELECT _tmpItem.OperSumm FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0 LIMIT 1);
+     END IF;
+
+
+
+     -- 3. формируются Проводки + !!!есть MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
