@@ -11,6 +11,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbComent TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -22,6 +23,26 @@ BEGIN
       RAISE EXCEPTION 'Документ не созранен.';
     END IF;
 
+    SELECT Format('Перемещение %s от %s кол-во %s Сумма в ценах отправителя %s'      
+           , Movement_Send.InvNumber
+           , TO_CHAR (Movement_Send.OperDate, 'dd.mm.yyyy')
+           , MovementFloat_TotalCount.ValueData
+           , MovementFloat_TotalSummFrom.ValueData)
+    INTO  vbComent
+
+    FROM Movement AS Movement_Send
+              
+         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                 ON MovementFloat_TotalCount.MovementId = Movement_Send.Id
+                                AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+   
+         LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                 ON MovementFloat_TotalSummFrom.MovementId =  Movement_Send.Id
+                                AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+    WHERE Movement_Send.Id = inSendID;
+      
+    -- сохранили <Примечание>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, vbComent);
 
     PERFORM lpInsertUpdate_MovementItem_Loss (ioId                 := COALESCE(MovementItemLoos.Id,0)
                                             , inMovementId         := inMovementId

@@ -67,6 +67,14 @@ inherited ChoiceDeferredCheckForm: TChoiceDeferredCheckForm
             Options.Editing = False
             Width = 106
           end
+          object Bayer: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'Bayer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
         end
       end
     end

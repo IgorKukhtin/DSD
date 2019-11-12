@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer
              , MonthCount    Integer
              , DayCount      Integer
              , SummLimit     TFloat
+             , ChangePercent TFloat
+             , ServiceDate   TDateTime
              , InsertId      Integer
              , InsertName    TVarChar
              , InsertDate    TDateTime
@@ -55,6 +57,8 @@ BEGIN
           , MovementFloat_MonthCount.ValueData::Integer                    AS MonthCount
           , COALESCE(MovementFloat_DayCount.ValueData,0)::Integer          AS DayCount
           , COALESCE(MovementFloat_Limit.ValueData,0)::TFloat              AS SummLimit
+          , MovementFloat_ChangePercent.ValueData                          AS ChangePercent
+          , MovementDate_ServiceDate.ValueData                             AS ServiceDate
           , Object_Insert.Id                                               AS InsertId
           , Object_Insert.ValueData                                        AS InsertName
           , MovementDate_Insert.ValueData                                  AS InsertDate
@@ -78,6 +82,9 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_Limit
                                 ON MovementFloat_Limit.MovementId =  Movement.Id
                                AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -91,6 +98,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_EndSale
                                ON MovementDate_EndSale.MovementId = Movement.Id
                               AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+        LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                               ON MovementDate_ServiceDate.MovementId = Movement.Id
+                              AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id

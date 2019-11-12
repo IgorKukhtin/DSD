@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Tfloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
@@ -11,11 +11,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
     IN inEndPromo              TDateTime  , -- Дата окончания контракта
     IN inStartSale             TDateTime  , -- Дата начала погашения
     IN inEndSale               TDateTime  , -- Дата окончания погашения
-    IN inStartSummCash         Tfloat     , -- Вылавать от суммы чека
+    IN inStartSummCash         TFloat     , -- Вылавать от суммы чека
     IN inMonthCount            Integer    , -- Количество месяцев погашения
     IN inDayCount              Integer    , -- Промокодов в день для аптеки
-    IN inSummLimit             Tfloat     , -- Лимит суммы скидки в день для аптеки
+    IN inSummLimit             TFloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
+    IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -38,6 +39,7 @@ BEGIN
                                            , inDayCount      := inDayCount                                       
                                            , inSummLimit     := inSummLimit                                       
                                            , inComment       := inComment
+                                           , inChangePercent := inChangePercent
                                            , inUserId        := vbUserId
                                            );
 

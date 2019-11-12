@@ -1,36 +1,31 @@
 inherited LoyaltyForm: TLoyaltyForm
   Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
   ClientHeight = 565
-  ClientWidth = 1005
+  ClientWidth = 1125
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 1021
+  ExplicitWidth = 1141
   ExplicitHeight = 604
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 1005
+    Width = 1125
     Height = 442
     ExplicitTop = 123
-    ExplicitWidth = 1034
+    ExplicitWidth = 1125
     ExplicitHeight = 442
     ClientRectBottom = 442
-    ClientRectRight = 1005
+    ClientRectRight = 1125
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1034
+      ExplicitWidth = 1125
       ExplicitHeight = 418
       inherited cxGrid: TcxGrid
-        Width = 1005
+        Width = 1125
         Height = 200
-        ExplicitWidth = 1034
+        ExplicitWidth = 1125
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = SignDS
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -173,45 +168,41 @@ inherited LoyaltyForm: TLoyaltyForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 200
-        Width = 1005
+        Width = 1125
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 1034
       end
       object Panel1: TPanel
         Left = 0
         Top = 208
-        Width = 1005
+        Width = 1125
         Height = 210
         Align = alBottom
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 2
-        ExplicitWidth = 1034
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 646
+          Width = 704
           Height = 210
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Panel2'
           ShowCaption = False
           TabOrder = 0
-          ExplicitWidth = 675
           object cxGrid1: TcxGrid
             Left = 0
             Top = 109
-            Width = 646
+            Width = 704
             Height = 101
             Align = alBottom
             PopupMenu = PopupMenu
             TabOrder = 0
-            ExplicitWidth = 675
             object cxGridDBTableView1: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = DetailDS
@@ -307,12 +298,11 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxGrid2: TcxGrid
             Left = 0
             Top = 0
-            Width = 646
+            Width = 704
             Height = 101
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
-            ExplicitWidth = 675
             object cxGridDBTableView2: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = MasterDS
@@ -358,30 +348,28 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxSplitter2: TcxSplitter
             Left = 0
             Top = 101
-            Width = 646
+            Width = 704
             Height = 8
             Touch.ParentTabletOptions = False
             Touch.TabletOptions = [toPressAndHold]
             AlignSplitter = salBottom
             Control = cxGrid1
-            ExplicitWidth = 675
           end
         end
         object Panel3: TPanel
-          Left = 654
+          Left = 712
           Top = 0
-          Width = 351
+          Width = 413
           Height = 210
           Align = alRight
           BevelOuter = bvNone
           Caption = 'Panel3'
           ShowCaption = False
           TabOrder = 1
-          ExplicitLeft = 683
           object cxGrid3: TcxGrid
             Left = 0
             Top = 0
-            Width = 351
+            Width = 413
             Height = 210
             Align = alClient
             PopupMenu = PopupMenu
@@ -390,7 +378,22 @@ inherited LoyaltyForm: TLoyaltyForm
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = InfoDS
               DataController.Summary.DefaultGroupSummaryItems = <>
-              DataController.Summary.FooterSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <
+                item
+                  Format = ',0.##'
+                  Kind = skSum
+                  Column = InfoAmount
+                end
+                item
+                  Format = ',0.##'
+                  Kind = skSum
+                  Column = InfoAccrued
+                end
+                item
+                  Format = ',0.##'
+                  Kind = skSum
+                  Column = InfoSummChange
+                end>
               DataController.Summary.SummaryGroups = <>
               OptionsBehavior.IncSearch = True
               OptionsData.Deleting = False
@@ -398,6 +401,7 @@ inherited LoyaltyForm: TLoyaltyForm
               OptionsData.Editing = False
               OptionsData.Inserting = False
               OptionsView.ColumnAutoWidth = True
+              OptionsView.Footer = True
               OptionsView.GroupByBox = False
               Styles.Content = dmMain.cxContentStyle
               Styles.Inactive = dmMain.cxSelection
@@ -405,20 +409,45 @@ inherited LoyaltyForm: TLoyaltyForm
               Styles.Footer = dmMain.cxFooterStyle
               Styles.Header = dmMain.cxHeaderStyle
               Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-              object InfoName: TcxGridDBColumn
-                Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
-                DataBinding.FieldName = 'Name'
+              object InfoOperDate: TcxGridDBColumn
+                Caption = #1052#1077#1089#1103#1094
+                DataBinding.FieldName = 'OperDate'
+                PropertiesClassName = 'TcxDateEditProperties'
+                Properties.DisplayFormat = 'mmmm yyyy'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 241
+                Width = 151
               end
-              object InfoValue: TcxGridDBColumn
-                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-                DataBinding.FieldName = 'Value'
+              object InfoAmount: TcxGridDBColumn
+                Caption = #1051#1080#1084#1080#1090
+                DataBinding.FieldName = 'Amount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.##;-,0.##; ;'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                Width = 108
+                Options.Editing = False
+                Width = 93
+              end
+              object InfoAccrued: TcxGridDBColumn
+                Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+                DataBinding.FieldName = 'Accrued'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.##;-,0.##; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 85
+              end
+              object InfoSummChange: TcxGridDBColumn
+                Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086
+                DataBinding.FieldName = 'SummChange'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.##;-,0.##; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 82
               end
             end
             object cxGridLevel3: TcxGridLevel
@@ -427,7 +456,7 @@ inherited LoyaltyForm: TLoyaltyForm
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 646
+          Left = 704
           Top = 0
           Width = 8
           Height = 210
@@ -435,16 +464,15 @@ inherited LoyaltyForm: TLoyaltyForm
           Touch.TabletOptions = [toPressAndHold]
           AlignSplitter = salRight
           Control = Panel3
-          ExplicitLeft = 675
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1005
+    Width = 1125
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 1034
+    ExplicitWidth = 1125
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -487,12 +515,12 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 175
     end
     object cxLabel10: TcxLabel
-      Left = 750
+      Left = 862
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 750
+      Left = 862
       Top = 23
       Properties.Buttons = <
         item
@@ -505,12 +533,12 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 118
     end
     object cxLabel11: TcxLabel
-      Left = 750
+      Left = 862
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
-      Left = 750
+      Left = 862
       Top = 62
       Properties.Buttons = <
         item
@@ -523,12 +551,12 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 118
     end
     object cxLabel13: TcxLabel
-      Left = 874
+      Left = 986
       Top = 45
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
-      Left = 874
+      Left = 986
       Top = 62
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -604,7 +632,7 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 100
     end
     object edInsertdate: TcxDateEdit
-      Left = 874
+      Left = 986
       Top = 23
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -620,7 +648,7 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 100
     end
     object cxLabel12: TcxLabel
-      Left = 870
+      Left = 982
       Top = 5
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
@@ -652,6 +680,32 @@ inherited LoyaltyForm: TLoyaltyForm
       Left = 631
       Top = 45
       Caption = #1051#1080#1084#1080#1090' '#1074' '#1076#1077#1085#1100' '#1087#1086' '#1072#1087#1090'.'
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 754
+      Top = 23
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####; ;'
+      Properties.ReadOnly = False
+      TabOrder = 32
+      Width = 100
+    end
+    object cxLabel17: TcxLabel
+      Left = 754
+      Top = 5
+      Caption = #1054#1090' '#1087#1088#1086#1094'. '#1088#1077#1072#1083
+    end
+    object edServiceDate: TcxDateEdit
+      Left = 754
+      Top = 62
+      EditValue = 42485d
+      TabOrder = 34
+      Width = 100
+    end
+    object cxLabel18: TcxLabel
+      Left = 754
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
     end
   end
   inherited ActionList: TActionList
@@ -1515,6 +1569,20 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = 'NULL'
+        Component = edServiceDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'InsertId'
         Value = Null
         Component = GuidesInsert
@@ -1655,6 +1723,14 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = Null
         Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2254,7 +2330,7 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 786
+    Left = 890
     Top = 6
   end
   object GuidesUpdate: TdsdGuides
@@ -2289,7 +2365,7 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 786
+    Left = 890
     Top = 46
   end
   object spErasedMISign: TdsdStoredProc
@@ -2330,7 +2406,7 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 416
   end
   object spSelectLoyaltyInfo: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_LoyaltyInfo'
+    StoredProcName = 'gpSelect_MovementItem_LoyaltySecond'
     DataSet = InfoDSD
     DataSets = <
       item

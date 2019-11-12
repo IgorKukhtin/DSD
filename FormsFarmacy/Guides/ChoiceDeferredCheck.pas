@@ -34,6 +34,7 @@ type
     FormParams: TdsdFormParams;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
+    Bayer: TcxGridDBColumn;
   private
     { Private declarations }
   public

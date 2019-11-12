@@ -35,6 +35,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
     TotalSummTo: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

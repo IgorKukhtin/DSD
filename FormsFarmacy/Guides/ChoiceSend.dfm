@@ -9,14 +9,14 @@ inherited ChoiceSendForm: TChoiceSendForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 605
-    ExplicitWidth = 449
+    ExplicitWidth = 605
     ClientRectRight = 605
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 449
+      ExplicitWidth = 605
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 605
-        ExplicitWidth = 449
+        ExplicitWidth = 605
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
@@ -75,6 +75,14 @@ inherited ChoiceSendForm: TChoiceSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 138
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 197
           end
         end
       end

@@ -106,8 +106,8 @@ type
     cxSplitter3: TcxSplitter;
     cxGrid3: TcxGrid;
     cxGridDBTableView3: TcxGridDBTableView;
-    InfoName: TcxGridDBColumn;
-    InfoValue: TcxGridDBColumn;
+    InfoOperDate: TcxGridDBColumn;
+    InfoAmount: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     InfoDS: TDataSource;
     InfoDSD: TClientDataSet;
@@ -132,6 +132,12 @@ type
     cxLabel16: TcxLabel;
     chDayCount: TcxGridDBColumn;
     chSummLimit: TcxGridDBColumn;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edServiceDate: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    InfoAccrued: TcxGridDBColumn;
+    InfoSummChange: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Tfloat, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Tfloat, Integer, Integer, Tfloat, TVarChar, Tfloat, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
     IN inDayCount              Integer    , -- Промокодов в день для аптеки
     IN inSummLimit             Tfloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
+    IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -51,6 +52,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Limit(), ioId, inSummLimit);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

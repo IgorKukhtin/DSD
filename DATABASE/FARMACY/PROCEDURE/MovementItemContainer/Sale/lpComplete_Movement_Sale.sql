@@ -151,25 +151,29 @@ BEGIN
     ;
 
       -- Проводки если затронуты контейнера сроков в подразделении получателя "To"
-    IF EXISTS(SELECT 1 FROM Container WHERE Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
+    IF EXISTS(SELECT 1 FROM Container WHERE Container.WhereObjectId = vbUnitId
+                                        AND Container.Amount > 0
+                                        AND Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert
                                                                        WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_Count()
-                                                                         AND _tmpMIContainer_insert.Amount > 0.0))
+                                                                         AND _tmpMIContainer_insert.Amount < 0.0))
     THEN
 
       WITH DD AS (
          SELECT
             ROW_NUMBER()OVER(PARTITION BY Container.ParentId ORDER BY Container.Id DESC) as ORD
           , _tmpMIContainer_insert.MovementItemId
-          , _tmpMIContainer_insert.Amount
+          , -1 * _tmpMIContainer_insert.Amount                                           as Amount
           , Container.Amount AS ContainerAmount
-          , vbSendDate       AS OperDate
+          , vbSaleDate       AS OperDate
           , Container.Id     AS ContainerId
           , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id)
           FROM Container
                JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId
                                           AND _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
-          WHERE Container.DescId              = zc_Container_CountPartionDate()
-            AND _tmpMIContainer_insert.Amount > 0.0
+          WHERE Container.DescId         = zc_Container_CountPartionDate()
+            AND Container.WhereObjectId  = vbUnitId
+            AND Container.Amount > 0
+            AND _tmpMIContainer_insert.Amount < 0.0
          )
 
        , tmpItem AS (SELECT ContainerId     AS Id
@@ -187,7 +191,7 @@ BEGIN
                , tmpItem.MovementItemId
                , tmpItem.Id
                , Null
-               , Amount
+               , -1 * Amount
                , OperDate
             FROM tmpItem;
     END IF;

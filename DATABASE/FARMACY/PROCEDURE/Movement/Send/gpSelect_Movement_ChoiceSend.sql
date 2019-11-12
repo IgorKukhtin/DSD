@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceSend(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, 
-               TotalCount TFloat, TotalSummPVAT TFloat, TotalSummTo TFloat
+               TotalCount TFloat, TotalSummPVAT TFloat, TotalSummTo TFloat,
+               Comment TVarChar
               )
 AS
 $BODY$
@@ -26,6 +27,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , MovementFloat_TotalSummPVAT.ValueData              AS TotalSummPVAT
            , MovementFloat_TotalSummTo.ValueData                AS TotalSummTo
+           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
         FROM (SELECT Movement.*
               FROM  Movement 
@@ -50,6 +52,9 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummTo
                                      ON MovementFloat_TotalSummTo.MovementId =  Movement_Send.Id
                                     AND MovementFloat_TotalSummTo.DescId = zc_MovementFloat_TotalSummTo()
+             LEFT JOIN MovementString AS MovementString_Comment
+                                      ON MovementString_Comment.MovementId = Movement_Send.Id
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
       ;
 
 END;
