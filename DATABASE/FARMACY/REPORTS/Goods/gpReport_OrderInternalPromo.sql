@@ -115,24 +115,28 @@ BEGIN
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                      )
 
-      -- нужно найти код товара поставщика - берем из прайсов
-      , tmpGoodsParam AS (SELECT tmpMI_Master.*
-                                , COALESCE (LoadPriceListItem.GoodsCode , PriceList_GoodsLink.GoodsCode) AS GoodsCode_str  -- код поставщика
-                                --, PriceList_GoodsLink.GoodsId AS GoodsId_jur  -- товар поставщика
-                                --, Object_LinkGoods_View.GoodsMainId           -- главный товар
-                           FROM tmpMI_Master 
-                                JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = tmpMI_Master.GoodsId 
-                                LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-                                                                ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-                                                               AND PriceList_GoodsLink.ObjectId = tmpMI_Master.JuridicalId
-                                INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI_Master.JuridicalId
-                                                        AND LoadPriceList.ContractId  = COALESCE (tmpMI_Master.ContractId, 0)
-                                                        AND (   (COALESCE (LoadPriceList.AreaId, 0) = vbAreaId AND COALESCE (vbAreaId,0)<>0)
-                                                             OR (COALESCE (vbAreaId,0)=0 AND COALESCE (LoadPriceList.AreaId, 0) = zc_Area_basis())
-                                                             OR COALESCE (LoadPriceList.AreaId, 0) =0
-                                                             )
-                                inner JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                                                            AND LoadPriceListItem.GoodsId = Object_LinkGoods_View.GoodsMainId
+      -- нужно найти код товара поставщика - берем из прайсов c меньшей ценой и лучшим сроком
+      , tmpGoodsParam AS (SELECT *
+                          FROM (SELECT tmpMI_Master.*
+                                     , COALESCE (LoadPriceListItem.GoodsCode, PriceList_GoodsLink.GoodsCode) AS GoodsCode_str  -- код поставщика
+                                     , ROW_NUMBER () OVER (PARTITION BY LoadPriceListItem.GoodsId ORDER BY LoadPriceListItem.Price Asc, LoadPriceListItem.ExpirationDate Desc) AS Ord
+                                     --, PriceList_GoodsLink.GoodsId AS GoodsId_jur  -- товар поставщика
+                                     --, Object_LinkGoods_View.GoodsMainId           -- главный товар
+                                FROM tmpMI_Master 
+                                     JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = tmpMI_Master.GoodsId 
+                                     LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                                                     ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+                                                                    AND PriceList_GoodsLink.ObjectId = tmpMI_Master.JuridicalId
+                                     LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI_Master.JuridicalId
+                                                             AND LoadPriceList.ContractId  = COALESCE (tmpMI_Master.ContractId, 0)
+                                                             AND (   (COALESCE (LoadPriceList.AreaId, 0) = vbAreaId AND COALESCE (vbAreaId,0)<>0)
+                                                                  OR (COALESCE (vbAreaId,0)=0 AND COALESCE (LoadPriceList.AreaId, 0) = zc_Area_basis())
+                                                                  OR COALESCE (LoadPriceList.AreaId, 0) =0
+                                                                  )
+                                     LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                                                AND LoadPriceListItem.GoodsId = Object_LinkGoods_View.GoodsMainId
+                                ) AS tmp
+                          WHERE tmp.Ord = 1
                           )
 
      SELECT tmpMI_Master.GoodsId
@@ -182,15 +186,6 @@ BEGIN
           LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpMI_Master.GoodsId
                                  AND tmpGoodsParam.JuridicalId = tmpMI_Master.JuridicalId
                                  AND tmpGoodsParam.ContractId = tmpMI_Master.ContractId
-                                 
-         /* LEFT JOIN tmpGoodsParam AS tmpGoodsParam_0
-                                  ON tmpGoodsParam_0.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                 AND tmpGoodsParam_0.JuridicalId = tmpMI_Master.JuridicalId
-                                 AND COALESCE (tmpGoodsParam_0.AreaId,0) = 0
-          LEFT JOIN tmpGoodsParam AS tmpGoodsParam_basis
-                                  ON tmpGoodsParam_basis.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                 AND tmpGoodsParam_basis.JuridicalId = tmpMI_Master.JuridicalId
-                                 AND COALESCE (tmpGoodsParam_basis.AreaId,0) = zc_Area_Basis()      */                                          
           ;
 END;
 $BODY$
