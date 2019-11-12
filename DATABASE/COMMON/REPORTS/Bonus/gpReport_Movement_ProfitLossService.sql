@@ -1,8 +1,8 @@
 -- FunctiON: gpReport_Movement_ProfitLossService()
+DROP FUNCTION IF EXISTS gpReport_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,  Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-DROP FUNCTION IF EXISTS gpReport_Movement_ProfitLossService1 (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,  Boolean, Boolean, Boolean, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpReport_Movement_ProfitLossService1 (
+CREATE OR REPLACE FUNCTION gpReport_Movement_ProfitLossService (
     IN inStartDate           TDateTime ,
     IN inEndDate             TDateTime ,
     IN inBranchId            Integer   , -- ***Филиал
@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_ProfitLossService1 (
     IN inRetailId            Integer   , -- ***Торговая сеть (юр лица)
     IN inJuridicalId         Integer   , --
     IN inPaidKindId          Integer   , --
-    IN inTradeMarkId         Integer   , -- ***
-    IN inGoodsGroupId        Integer   , --
-    IN inInfoMoneyId         Integer   , -- Управленческая статья
+--    IN inTradeMarkId         Integer   , -- ***
+--    IN inGoodsGroupId        Integer   , --
+--    IN inInfoMoneyId         Integer   , -- Управленческая статья
     IN inIsPartner           Boolean   , --
-    IN inIsTradeMark         Boolean   , --
+--    IN inIsTradeMark         Boolean   , --
     IN inIsGoods             Boolean   , --
     IN inIsGoodsKind         Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -60,7 +60,7 @@ BEGIN
 
 
     -- Ограничения по товару
-    IF inGoodsGroupId <> 0
+  /*  IF inGoodsGroupId <> 0
     THEN
         -- устанавливается признак
         vbIsGoods_where:= TRUE;
@@ -101,10 +101,10 @@ BEGIN
             END IF;
         END IF;
     END IF;
-
+*/
     RETURN QUERY
       WITH 
-      tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
+ /*     tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
                         , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
                    FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
@@ -173,7 +173,7 @@ BEGIN
                                       AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
                                       AND COALESCE (inAreaId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0 -- !!!
                            )
-        , tmpContract_all AS (SELECT View_Contract.* FROM Object_Contract_View AS View_Contract
+        ,*/ tmpContract_all AS (SELECT View_Contract.* FROM Object_Contract_View AS View_Contract
                                WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                  AND (View_Contract.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
                               )
@@ -750,6 +750,8 @@ $BODY$
 -- тест
 --
 
- select * from gpReport_Movement_ProfitLossService1 (inStartDate:= '31.08.2019', inEndDate:= '31.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 15616 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin())
+/*
+select * from gpReport_Movement_ProfitLossService (inStartDate:= '31.08.2019', inEndDate:= '31.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 15616 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsPartner:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin())
 where ContractId_master = 3510226 and PartnerId = 18113
 order by PartnerName, GoodsName
+*/

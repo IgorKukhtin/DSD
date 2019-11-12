@@ -1064,6 +1064,8 @@ type
     miReport_Transport_Cost: TMenuItem;
     actSendOnPrice_reestr: TdsdOpenForm;
     miSendOnPrice_reestr: TMenuItem;
+    actReport_Movement_ProfitLossService: TdsdOpenForm;
+    miReport_Movement_ProfitLossService: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
