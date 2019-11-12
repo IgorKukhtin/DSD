@@ -103,6 +103,7 @@ type
     TotalWageKg: TcxGridDBColumn;
     TotalSum_one: TcxGridDBColumn;
     TotalSum_kg: TcxGridDBColumn;
+    TotalWeight_Doc: TcxGridDBColumn;
   private
   public
   end;
