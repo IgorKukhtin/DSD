@@ -88,9 +88,11 @@ BEGIN
                                  ON MI_Loyalty.MovementId = inMovementId
                                 AND MI_Loyalty.DescId = zc_MI_Child()
                                 AND MI_Loyalty.isErased = FALSE
+                                AND MI_Loyalty.Amount = 1
                                 AND MI_Loyalty.ObjectId = MovementLinkObject_Unit.ObjectId
 
      WHERE Movement.DescId = zc_Movement_Check()
+       AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.OperDate > vbDateStart
        AND Movement.OperDate < CURRENT_DATE;
 

@@ -1145,6 +1145,9 @@ begin
 
   // Ночные скидки
   SetTaxUnitNight;
+
+  if FormParams.ParamByName('Message').Value <> '' then ShowMessage(FormParams.ParamByName('Message').Value);
+  FormParams.ParamByName('Message').Value := '';
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -5330,6 +5333,7 @@ begin
   FormParams.ParamByName('LoyaltySignID').Value := 0;
   FormParams.ParamByName('LoyaltyText').Value := '';
   FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
+  FormParams.ParamByName('Message').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -5575,7 +5579,7 @@ var str_log_xml : String; Disc, nSumAll: Currency;
                                           FieldByName('Amount').asCurrency,
                                           FieldByName('PricePartionDate').asCurrency,
                                           FieldByName('NDS').asCurrency);
-                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency) - FieldByName('Summ').AsCurrency;
+                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency);
               end else
               begin
 
@@ -5584,7 +5588,7 @@ var str_log_xml : String; Disc, nSumAll: Currency;
                                           FieldByName('Amount').asCurrency,
                                           FieldByName('PriceSale').asCurrency,
                                           FieldByName('NDS').asCurrency);
-                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency) - FieldByName('Summ').AsCurrency;
+                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency);
               end;
               if nDisc <> 0 then Cash.DiscountGoods(nDisc);
             end else result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
@@ -6258,6 +6262,8 @@ begin
     spLoyaltyGUID.ParamByName('inMovementId').Value := UnitConfigCDS.FindField('LoyaltyID').AsCurrency;
     spLoyaltyGUID.ParamByName('outGUID').Value := '';
     spLoyaltyGUID.ParamByName('outAmount').Value := 0;
+    spLoyaltyGUID.ParamByName('outDateEnd').Value := '';
+    spLoyaltyGUID.ParamByName('outMessage').Value := '';
     spLoyaltyGUID.ParamByName('inComment').Value := '';
     spLoyaltyGUID.Execute;
 
@@ -6266,13 +6272,15 @@ begin
     begin
       FormParams.ParamByName('LoyaltySignID').Value := spLoyaltyGUID.ParamByName('ioId').Value;
       FormParams.ParamByName('LoyaltyText').Value := 'Промокод ' + spLoyaltyGUID.ParamByName('outGUID').Value +
-        ' на скидку ' + FormatCurr(',0.00', spLoyaltyGUID.ParamByName('outAmount').AsFloat) + ' грн';
+        ' на знижку ' + FormatCurr(',0.00', spLoyaltyGUID.ParamByName('outAmount').AsFloat) + ' грн. діє до ' +
+        spLoyaltyGUID.ParamByName('outDateEnd').Value;
     end else
     begin
       FormParams.ParamByName('LoyaltySignID').Value := 0;
       FormParams.ParamByName('LoyaltyText').Value := '';
       FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
     end;
+    FormParams.ParamByName('Message').Value := spLoyaltyGUID.ParamByName('outMessage').Value;
 
   except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);
   end;

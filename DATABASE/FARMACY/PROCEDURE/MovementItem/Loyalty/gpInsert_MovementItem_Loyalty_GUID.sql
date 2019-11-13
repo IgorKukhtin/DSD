@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsert_MovementItem_Loyalty_GUID(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
    OUT outGUID               TVarChar  , -- Ключ объекта <Документ>
    OUT outAmount             TFloat    , -- Сумма скидки
+   OUT outDateEnd            TVarChar  , -- Дата окончания действия
+   OUT outMessage            TVarChar  , -- Сообщение
     IN inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -18,6 +20,7 @@ $BODY$
    DECLARE vbInvNumber Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbStatusId Integer;
+   DECLARE vbMonthCount Integer;
    DECLARE vbComment TVarChar;
    DECLARE vbStartPromo TDateTime;
    DECLARE vbEndPromo TDateTime;
@@ -35,13 +38,15 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    outMessage :='';
 
     SELECT Movement.InvNumber::Integer, Movement.StatusId, 
            MovementDate_StartPromo.ValueData, 
            MovementDate_EndPromo.ValueData,
            COALESCE(MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent,
-           MovementDate_ServiceDate.ValueData                 AS ServiceDate
-    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate
+           MovementDate_ServiceDate.ValueData                 AS ServiceDate,
+           MovementFloat_MonthCount.ValueData::Integer  
+    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate, vbMonthCount
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartPromo
                                 ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -56,6 +61,9 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                  ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+         LEFT JOIN MovementFloat AS MovementFloat_MonthCount
+                                 ON MovementFloat_MonthCount.MovementId =  Movement.Id
+                                AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
     WHERE Movement.ID = inMovementId;
 
     IF COALESCE(vbChangePercent, 0) > 0 AND COALESCE(vbServiceDate, CURRENT_DATE - INTERVAL '1 DAY') <> CURRENT_DATE
@@ -82,6 +90,7 @@ BEGIN
                       WHERE MI_Loyalty.MovementId = inMovementId
                         AND MI_Loyalty.DescId = zc_MI_Child()
                         AND MI_Loyalty.isErased = FALSE
+                        AND MI_Loyalty.Amount = 1
                         AND MI_Loyalty.ObjectId = vbUnitId)
         THEN
           RETURN;
@@ -192,6 +201,7 @@ BEGIN
         -- Если месячный лимит
         IF COALESCE(vbChangePercent, 0) > 0 AND COALESCE(vbLimit, 0) < vbAmount
         THEN
+          outMessage := 'Лимит по программе лояльности исчерпан...';
           RETURN;
         END IF;
         
@@ -237,8 +247,11 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
     END IF;
 
-    SELECT MovementItem.Amount, MIString_GUID.ValueData, MIString_Comment.ValueData
-    INTO outAmount, outGUID, vbComment
+    SELECT MovementItem.Amount, 
+           MIString_GUID.ValueData, 
+           TO_CHAR(MIDate_OperDate.ValueData + (vbMonthCount||' MONTH' ) ::INTERVAL, 'DD.MM.YYYY') :: TVarChar,
+           MIString_Comment.ValueData
+    INTO outAmount, outGUID, outDateEnd, vbComment
     FROM MovementItem
          LEFT JOIN MovementItemString AS MIString_GUID
                                       ON MIString_GUID.MovementItemId = MovementItem.Id
@@ -246,6 +259,9 @@ BEGIN
          LEFT JOIN MovementItemString AS MIString_Comment
                                       ON MIString_Comment.MovementItemId = MovementItem.Id
                                      AND MIString_Comment.DescID = zc_MIString_Comment()
+         LEFT JOIN MovementItemDate AS MIDate_OperDate
+                                    ON MIDate_OperDate.MovementItemId = MovementItem.Id
+                                   AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
     WHERE MovementItem.Id = ioId;
 
     IF vbIsInsert = FALSE AND COALESCE(vbComment, '') <> COALESCE(inComment, '')
@@ -272,5 +288,4 @@ $BODY$
 
 -- zfCalc_FromHex
 
--- 
-SELECT * FROM gpInsert_MovementItem_Loyalty_GUID (0, 16406918, '', '3');
+-- SELECT * FROM gpInsert_MovementItem_Loyalty_GUID (0, 16406918, '', '3');

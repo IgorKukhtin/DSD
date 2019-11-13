@@ -5,9 +5,9 @@ inherited DiscountDialogForm: TDiscountDialogForm
   Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' - '#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
   ClientHeight = 117
   ClientWidth = 554
-  Position = poDesktopCenter
+  Position = poScreenCenter
   ExplicitWidth = 560
-  ExplicitHeight = 142
+  ExplicitHeight = 146
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
