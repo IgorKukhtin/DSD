@@ -636,8 +636,7 @@ end;
 
 procedure TLoadFormTest.LoadMargineCategory;
 begin
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TMarginCategoryItemHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemHistoryForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryForm'));
@@ -649,8 +648,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_CrossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_CrossForm');
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TMarginCategory_CrossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_CrossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_CrossDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_TotalForm'));
