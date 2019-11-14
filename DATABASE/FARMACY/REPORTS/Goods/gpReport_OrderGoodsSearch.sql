@@ -189,6 +189,12 @@ BEGIN
          , tmpMLObject AS (SELECT * FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id  FROM tmpMovement)
                          )
 
+         , tmpMILO_DiffKind AS (SELECT MovementItemLinkObject.*
+                                FROM MovementItemLinkObject
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_ListDiff())
+                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_DiffKind()
+                                )
+
       SELECT Movement.Id                              AS MovementId
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 'Продажи касс' ELSE MovementDesc.ItemName END   :: TVarChar AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
@@ -217,14 +223,17 @@ BEGIN
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
             ,Object_OrderKind.Id                      AS OrderKindId
             ,Object_OrderKind.ValueData               AS OrderKindName
-            ,CASE WHEN MIString_Comment.ValueData <> '' THEN MIString_Comment.ValueData WHEN MovementString_Comment.ValueData <> '' THEN MovementString_Comment.ValueData ELSE '' END :: TVarChar AS Comment
+            ,CASE WHEN MIString_Comment.ValueData <> '' THEN MIString_Comment.ValueData 
+                  WHEN MovementString_Comment.ValueData <> '' THEN MovementString_Comment.ValueData 
+                  WHEN Movement.DescId = zc_Movement_ListDiff() THEN COALESCE (Object_DiffKind.ValueData,'')
+                  ELSE '' END :: TVarChar AS Comment
             ,MIString_PartionGoods.ValueData          AS PartionGoods
             ,MIDate_ExpirationDate.ValueData          AS ExpirationDate
             ,MovementDate_Payment.ValueData           AS PaymentDate
             ,MovementString_InvNumberBranch.ValueData AS InvNumberBranch
             ,MovementDate_Branch.ValueData            AS BranchDate
 
-            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MIDate_Insert.ValueData ELSE MovementDate_Insert.ValueData END       AS InsertDate
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MIDate_Insert.ValueData ELSE MovementDate_Insert.ValueData END AS InsertDate
             ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MILO_Insert.ValueData ELSE Object_Insert.ValueData END AS InsertName
 
       FROM tmpMovement AS Movement
@@ -342,6 +351,10 @@ BEGIN
                                   AND MIDate_Insert.DescId = zc_MIDate_Insert()
                                   AND Movement.DescId = zc_Movement_ListDiff()
 
+        LEFT JOIN tmpMILO_DiffKind ON tmpMILO_DiffKind.MovementItemId = Movement.MovementItemId
+                                  AND Movement.DescId = zc_Movement_ListDiff()
+        LEFT JOIN Object AS Object_DiffKind ON Object_DiffKind.Id = tmpMILO_DiffKind.ObjectId
+
     WHERE (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
       -- AND Object.Id = inGoodsId
@@ -369,5 +382,4 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 */
 
 -- тест
---
-SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
+--SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
