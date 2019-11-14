@@ -195,12 +195,22 @@ BEGIN
                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_DiffKind()
                                 )
 
+         , tmpMIF_ListDiff AS (SELECT MovementItemFloat.*
+                               FROM MovementItemFloat
+                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_OrderInternal())
+                                  AND MovementItemFloat.DescId = zc_MIFloat_ListDiff()
+                               )
+
+      --
       SELECT Movement.Id                              AS MovementId
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 'Продажи касс' ELSE MovementDesc.ItemName END   :: TVarChar AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
                       Movement.Amount)            AS Amount
             ,CASE WHEN Movement.DescId = zc_Movement_OrderInternal() THEN Movement.Amount ELSE 0 END   :: TFloat AS Amount_SpecZakaz
-            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN Movement.Amount ELSE 0 END        :: TFloat AS Amount_ListFiff
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN Movement.Amount
+                  WHEN Movement.DescId = zc_Movement_OrderInternal() THEN COALESCE (tmpMIF_ListDiff.ValueData, 0)
+                  ELSE 0
+             END        :: TFloat AS Amount_ListFiff
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
             ,MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
@@ -354,6 +364,9 @@ BEGIN
         LEFT JOIN tmpMILO_DiffKind ON tmpMILO_DiffKind.MovementItemId = Movement.MovementItemId
                                   AND Movement.DescId = zc_Movement_ListDiff()
         LEFT JOIN Object AS Object_DiffKind ON Object_DiffKind.Id = tmpMILO_DiffKind.ObjectId
+
+        LEFT JOIN tmpMIF_ListDiff ON tmpMIF_ListDiff.MovementItemId = Movement.MovementItemId
+                                 AND Movement.DescId = zc_Movement_OrderInternal()        
 
     WHERE (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
