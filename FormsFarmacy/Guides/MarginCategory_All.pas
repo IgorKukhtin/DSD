@@ -27,11 +27,27 @@ type
     bbSetUnErased: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    ProtocolOpenForm: TdsdOpenForm;
+    ProtocolOpenForm1: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ProvinceCityName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    ProtocolOpenForm2: TdsdOpenForm;
+    ProtocolOpenForm7: TdsdOpenForm;
+    ProtocolOpenForm6: TdsdOpenForm;
+    ProtocolOpenForm3: TdsdOpenForm;
+    ProtocolOpenForm4: TdsdOpenForm;
+    ProtocolOpenForm5: TdsdOpenForm;
+    bbProtocolOpenForm2: TdxBarButton;
+    bbProtocolOpenForm3: TdxBarButton;
+    bbProtocolOpenForm4: TdxBarButton;
+    bbProtocolOpenForm5: TdxBarButton;
+    bbProtocolOpenForm6: TdxBarButton;
+    bbProtocolOpenForm7: TdxBarButton;
+    actUpdateParam: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
+    macUpdateParam: TMultiAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

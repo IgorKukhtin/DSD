@@ -2641,8 +2641,8 @@
 				<Form>Report_Send_RemainsSun_overForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategory_All.pas">
-				<Form>MarginCategory_AllForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas">
+				<Form>MarginCategoryAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

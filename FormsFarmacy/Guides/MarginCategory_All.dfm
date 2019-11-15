@@ -193,11 +193,11 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object ProtocolOpenForm7: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' > 1000'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' > 1000'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -208,20 +208,342 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MarginCategoryId'
+          ComponentItem = 'Id_7'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MarginCategoryName'
+          Value = '> 1000'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object ProtocolOpenForm6: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 300-1000'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 300-1000'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_6'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '300-1000'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm5: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 200-300'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 200-300'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_5'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '200-300'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm4: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 100-200'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 100-200'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_4'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '100-200'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm3: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 50-100'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 50-100'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_3'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '50-100'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 0-15'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 0-15'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '0-15'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm2: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 15-50'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' 15-50'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = '15-50'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdateParam: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      ImageIndex = 26
+      FormName = 'TMarginCategoryAllDialogForm'
+      FormNameParam.Value = 'TMarginCategoryAllDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isVal1'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'isVal1'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal2'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'isVal2'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal3'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'isVal3'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal4'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'isVal4'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal5'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'isVal5'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal6'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'isVal6'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isVal7'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'isVal7'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val1'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'Val1'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val2'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Val2'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val3'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Val3'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val4'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Val4'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Val5'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Val6'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Val7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Val7'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateParam: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog
+        end
+        item
+          Action = actUpdateParam
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      ImageIndex = 26
     end
   end
   inherited MasterDS: TDataSource
@@ -284,6 +606,54 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -304,7 +674,31 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       Category = 0
     end
     object bbProtocol: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = ProtocolOpenForm1
+      Category = 0
+    end
+    object bbProtocolOpenForm2: TdxBarButton
+      Action = ProtocolOpenForm2
+      Category = 0
+    end
+    object bbProtocolOpenForm3: TdxBarButton
+      Action = ProtocolOpenForm3
+      Category = 0
+    end
+    object bbProtocolOpenForm4: TdxBarButton
+      Action = ProtocolOpenForm4
+      Category = 0
+    end
+    object bbProtocolOpenForm5: TdxBarButton
+      Action = ProtocolOpenForm5
+      Category = 0
+    end
+    object bbProtocolOpenForm6: TdxBarButton
+      Action = ProtocolOpenForm6
+      Category = 0
+    end
+    object bbProtocolOpenForm7: TdxBarButton
+      Action = ProtocolOpenForm7
       Category = 0
     end
   end
@@ -501,6 +895,132 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVal7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Val7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal6'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVal7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVal7'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 728
@@ -522,5 +1042,10 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     PackSize = 1
     Left = 456
     Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 344
+    Top = 88
   end
 end
