@@ -32,7 +32,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+    PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

@@ -1022,7 +1022,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 240
-    Top = 192
+    Top = 224
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
