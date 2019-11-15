@@ -91,7 +91,7 @@ BEGIN
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
                           AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
-                        ORDER BY Movement.OperDate
+                        ORDER BY Movement.OperDate DESC
                         LIMIT 1
                         )
 
@@ -235,5 +235,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

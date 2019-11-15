@@ -23,11 +23,12 @@ BEGIN
       RAISE EXCEPTION 'Документ не созранен.';
     END IF;
 
-    SELECT Format('Перемещение %s от %s кол-во %s Сумма в ценах отправителя %s'      
+    SELECT Format('Перемещение %s от %s кол-во %s Сумма в ценах отправителя %s примечание %s'      
            , Movement_Send.InvNumber
            , TO_CHAR (Movement_Send.OperDate, 'dd.mm.yyyy')
            , MovementFloat_TotalCount.ValueData
-           , MovementFloat_TotalSummFrom.ValueData)
+           , MovementFloat_TotalSummFrom.ValueData
+           , COALESCE (MovementString_Comment.ValueData , ''))
     INTO  vbComent
 
     FROM Movement AS Movement_Send
@@ -39,6 +40,10 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
                                  ON MovementFloat_TotalSummFrom.MovementId =  Movement_Send.Id
                                 AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+
+         LEFT JOIN MovementString AS MovementString_Comment
+                                  ON MovementString_Comment.MovementId = Movement_Send.Id
+                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
     WHERE Movement_Send.Id = inSendID;
       
     -- сохранили <Примечание>

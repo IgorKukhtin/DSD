@@ -41,9 +41,6 @@ type
     UnloadMovementCDS: TClientDataSet;
     spSelectUnloadMovement: TdsdStoredProc;
     spUpdateUnload: TdsdStoredProc;
-    RESTResponse: TRESTResponse;
-    RESTRequest: TRESTRequest;
-    RESTClient: TRESTClient;
   private
     FMorionList: TMorionList;
     function GetMorionList: TMorionList;
@@ -95,7 +92,8 @@ var
   DiscountServiceForm: TDiscountServiceForm;
 
 implementation
-{$R *.dfm}                                                                                                             uses Soap.XSBuiltIns
+{$R *.dfm}
+uses Soap.XSBuiltIns
    , MainCash2, UtilConvert
    , XMLIntf, XMLDoc, OPToSOAPDomConv;
 
@@ -914,8 +912,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '')) and
-         (CheckCDS.FieldByName('Amount').AsFloat > 0)
+      if (lDiscountExternalId > 0) and (gCode = 1) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
         with spGet_BarCode do begin
@@ -927,8 +924,8 @@ begin
       else
           BarCode_find := '';
 
-      //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
-      if (BarCode_find <> '') and (gCode = 1) then
+      //если Штрих-код нашелся
+      if BarCode_find <> '' then
       begin
           try
             Item := CardCheckItem.Create;
@@ -971,59 +968,9 @@ begin
 
       end // if BarCode_find <> ''
 
-      //если Штрих-код нашелся и программа Abbott card
-      else if (BarCode_find <> '') and (gCode = 2) then
-      begin
-          try
-
-            RESTClient.BaseURL := gURL;
-            RESTClient.ContentType := 'application/x-www-form-urlencoded';
-
-            RESTRequest.ClearBody;
-            RESTRequest.Method := TRESTRequestMethod.rmPOST;
-            RESTRequest.Resource := '';
-
-            RESTRequest.Params.Clear;
-            RESTRequest.AddParameter('token', gUserName, TRESTRequestParameterKind.pkGETorPOST);
-            RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-            RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-            RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
-            RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
-                                             '<request><Operation>1</Operation>'+
-                                                     '<PharmCard>84109503</PharmCard>'+
-                                                     '<PatientCard>Pf6cx5YN</PatientCard>'+
-                                                     '<DrugCode>8002660024299</DrugCode>'+
-                                                     '<Distributor>1</Distributor>'+
-                                                     '<SessionId>42351</SessionId>'+
-                                                     '<PharmPrice>1085.70</PharmPrice>'+
-                                                     '<Amount>1</Amount>'+
-                                             '</request>', TRESTRequestParameterKind.pkGETorPOST);
-
-            try
-              RESTRequest.Execute;
-            except
-            end;
-
-            if RESTResponse.StatusCode = 200 then
-            begin
-              ShowMessage(RESTResponse.ContentType + #13#10 + RESTResponse.Content);
-            end;
-
-          except
-                ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
-                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-                //ошибка
-                lMsg:='Error';
-                exit;
-          end;
-          //finally
-
-      end // if BarCode_find <> ''
-
       // иначе - обнуляем скидку
       else
-      if (gCode <> 2) or (gUserName <> '') then
+      if (gCode <> 2) then
       begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
