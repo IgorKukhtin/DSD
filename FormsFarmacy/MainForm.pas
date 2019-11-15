@@ -564,6 +564,8 @@ type
     N196: TMenuItem;
     actReport_Send_RemainsSun_over: TdsdOpenForm;
     miReport_GoodsSendSUN_over: TMenuItem;
+    actMarginCategory_All: TdsdOpenForm;
+    miMarginCategory_All: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

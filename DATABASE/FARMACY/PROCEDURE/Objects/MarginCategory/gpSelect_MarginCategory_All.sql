@@ -1,13 +1,14 @@
-DROP FUNCTION IF EXISTS gpSelect_MarginCategory_AllUnit(TVarChar);
+--
+DROP FUNCTION IF EXISTS gpSelect_MarginCategory_All(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MarginCategory_AllUnit(
+CREATE OR REPLACE FUNCTION gpSelect_MarginCategory_All(
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE cur1 refcursor; 
+  DECLARE Cursor1 refcursor; 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
@@ -62,6 +63,7 @@ BEGIN
                        , tmpMarginCategoryItem.Id AS MarginCategoryItemId 
                        , tmpMarginCategoryItem.MarginPercent  AS Value 
                        ,  avg(tmpMarginCategoryItem.MarginPercent) OVER (ORDER BY  _tmpminPrice.num)  AS avgPercent
+                       , tmpMarginCategoryItem.minPrice
                   FROM _tmpMarginCategory 
                           LEFT JOIN  (SELECT MAX (Object_MarginCategoryItem.Id)      AS Id
                                            , Object_MarginCategoryItem.MarginCategoryId
@@ -126,6 +128,15 @@ BEGIN
                          , MAX (tmp.Value_5) AS Value_5
                          , MAX (tmp.Value_6) AS Value_6
                          , MAX (tmp.Value_7) AS Value_7
+
+                         , MAX (tmp.minPrice_1) AS minPrice_1
+                         , MAX (tmp.minPrice_2) AS minPrice_2
+                         , MAX (tmp.minPrice_3) AS minPrice_3
+                         , MAX (tmp.minPrice_4) AS minPrice_4
+                         , MAX (tmp.minPrice_5) AS minPrice_5
+                         , MAX (tmp.minPrice_6) AS minPrice_6
+                         , MAX (tmp.minPrice_7) AS minPrice_7
+                         
                          , MAX (tmp.avgPercent) AS avgPercent
                    FROM (SELECT tmpData.MarginCategoryId
                               , tmpParam.MarginCategoryName
@@ -148,6 +159,15 @@ BEGIN
                               , CASE WHEN tmpData.Num = 5 THEN tmpData.Value ELSE 0 END AS Value_5
                               , CASE WHEN tmpData.Num = 6 THEN tmpData.Value ELSE 0 END AS Value_6
                               , CASE WHEN tmpData.Num = 7 THEN tmpData.Value ELSE 0 END AS Value_7
+
+                              , CASE WHEN tmpData.Num = 1 THEN tmpData.minPrice ELSE 0 END AS minPrice_1
+                              , CASE WHEN tmpData.Num = 2 THEN tmpData.minPrice ELSE 0 END AS minPrice_2
+                              , CASE WHEN tmpData.Num = 3 THEN tmpData.minPrice ELSE 0 END AS minPrice_3
+                              , CASE WHEN tmpData.Num = 4 THEN tmpData.minPrice ELSE 0 END AS minPrice_4
+                              , CASE WHEN tmpData.Num = 5 THEN tmpData.minPrice ELSE 0 END AS minPrice_5
+                              , CASE WHEN tmpData.Num = 6 THEN tmpData.minPrice ELSE 0 END AS minPrice_6
+                              , CASE WHEN tmpData.Num = 7 THEN tmpData.minPrice ELSE 0 END AS minPrice_7
+                                                            
                               , CAST (avg(tmpData.Value) OVER (ORDER BY tmpParam.UnitId) AS NUMERIC (16,2)) AS avgPercent
                          FROM tmpData
                               LEFT JOIN tmpParam ON tmpParam.MarginCategoryId = tmpData.MarginCategoryId
@@ -182,9 +202,16 @@ BEGIN
               , tmpDataAll.Value_5
               , tmpDataAll.Value_6
               , tmpDataAll.Value_7
+              , tmpDataAll.minPrice_1
+              , tmpDataAll.minPrice_2
+              , tmpDataAll.minPrice_3
+              , tmpDataAll.minPrice_4
+              , tmpDataAll.minPrice_5
+              , tmpDataAll.minPrice_6
+              , tmpDataAll.minPrice_7
               , tmpDataAll.avgPercent
      FROM tmpDataAll
-                  
+     ORDER BY tmpDataAll.MarginCategoryName, tmpDataAll.ProvinceCityName , tmpDataAll.UnitName;
    
    
      RETURN NEXT Cursor1;
@@ -200,3 +227,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.11.19         * 
 */
+--SELECT * FROM gpSelect_MarginCategory_All(inSession := '3':: TVarChar);

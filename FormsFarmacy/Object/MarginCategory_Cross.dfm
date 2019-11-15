@@ -313,6 +313,9 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -497,10 +500,10 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inminPrice'
+        Name = 'inValue_1'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'minPrice'
+        ComponentItem = 'Value_1'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
