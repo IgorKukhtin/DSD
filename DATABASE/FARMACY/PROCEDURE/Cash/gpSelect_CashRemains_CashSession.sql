@@ -33,7 +33,6 @@ $BODY$
    DECLARE vbDate_0 TDateTime;
 
    DECLARE vbDividePartionDate   boolean;
-   DECLARE vbChangePercent TFloat;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -57,35 +56,6 @@ BEGIN
 
     -- для Теста
     -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
-    
-    SELECT COALESCE(MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
-    INTO vbChangePercent
-    FROM Movement
-         LEFT JOIN MovementDate AS MovementDate_StartPromo
-                                ON MovementDate_StartPromo.MovementId = Movement.Id
-                               AND MovementDate_StartPromo.DescID = zc_MovementDate_StartPromo()
-         LEFT JOIN MovementDate AS MovementDate_EndPromo
-                                ON MovementDate_EndPromo.MovementId = Movement.Id
-                               AND MovementDate_EndPromo.DescID = zc_MovementDate_EndPromo()
-
-         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                 ON MovementFloat_ChangePercent.MovementId =  Movement.Id
-                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-
-         INNER JOIN MovementItem AS MI_Loyalty
-                                 ON MI_Loyalty.MovementId = Movement.Id
-                                AND MI_Loyalty.DescId = zc_MI_Child()
-                                AND MI_Loyalty.isErased = FALSE
-                                AND MI_Loyalty.Amount = 1
-                                AND MI_Loyalty.ObjectId = vbUnitId
-
-    WHERE Movement.StatusId = zc_Enum_Status_Complete()
-      AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
-      AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
-    ORDER BY Movement.OperDate DESC
-    LIMIT 1;
-    
-    vbChangePercent := COALESCE (vbChangePercent, 0);
 
     -- сеть пользователя
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -644,12 +614,8 @@ BEGIN
                           )
        , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
-                                    THEN CASE WHEN vbChangePercent = 0 AND ObjectFloat_Goods_Price.ValueData > 2 
-                                              THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2) 
-                                              ELSE ROUND (ObjectFloat_Goods_Price.ValueData * (100 + vbChangePercent) / 100, 1) END
-                                    ELSE CASE WHEN vbChangePercent = 0 AND Price_Value.ValueData > 2 
-                                              THEN ROUND (Price_Value.ValueData, 2) 
-                                              ELSE ROUND (Price_Value.ValueData * (100 + vbChangePercent) / 100, 1) END
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE ROUND (Price_Value.ValueData, 2)
                                END :: TFloat                           AS Price
                              , MCS_Value.ValueData                     AS MCSValue
                              , Price_Goods.ChildObjectId               AS GoodsId
@@ -702,7 +668,6 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
- 14.11.19                                                                                                    * 0.5 % для программы лояльности
  15.07.19                                                                                                    *
  28.05.19                                                                                                    * PartionDateKindId
  13.05.19                                                                                                    *
@@ -728,6 +693,5 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 
 */
 
---тест 
-SELECT * FROM gpSelect_CashRemains_CashSession ('3')
+--тест SELECT * FROM gpSelect_CashRemains_CashSession ('3')
 

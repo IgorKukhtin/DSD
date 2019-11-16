@@ -8,10 +8,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_LoyaltySecond(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , OperDate   TDateTime
-             , Amount     TFloat
-             , Accrued    TFloat
-             , SummChange TFloat
+             , OperDate      TDateTime
+             , Amount        TFloat
+             , Accrued       TFloat
+             , AccruedCount  TFloat
+             , SummChange    TFloat
+             , ChangeCount   TFloat
+             , PercentUsed   TFloat
               )
 AS
 $BODY$
@@ -58,9 +61,11 @@ BEGIN
       , tmpSign  AS (SELECT
                             CASE WHEN date_part('DAY', MIDate_OperDate.ValueData )::Integer = 1
                             THEN DATE_TRUNC ('MONTH', MIDate_OperDate.ValueData - INTERVAL '2 DAY')
-                            ELSE DATE_TRUNC ('MONTH', MIDate_OperDate.ValueData) END                 AS OperDate
-                          , Sum(MI_Sign.Amount)                                                     AS Amount
+                            ELSE DATE_TRUNC ('MONTH', MIDate_OperDate.ValueData) END                AS OperDate
+                          , Sum(MI_Sign.Amount)                                                     AS Accrued
+                          , Count(*)                                                                AS AccruedCount
                           , Sum(tmpCheckSale.TotalSummChangePercent)                                AS SummChange
+                          , Sum(CASE WHEN COALESCE(tmpCheckSale.TotalSummChangePercent, 0) = 0 THEN 0 ELSE 1 END)  AS ChangeCount
 
                      FROM tmpMI AS MI_Sign
 
@@ -84,8 +89,11 @@ BEGIN
     SELECT MI_Loyalty.Id
          , MIDate_OperDate.ValueData                                AS OperDate
          , MI_Loyalty.Amount
-         , tmpSign.Amount::TFloat                                   AS Accrued
+         , tmpSign.Accrued::TFloat                                  AS Accrued
+         , tmpSign.AccruedCount::TFloat                             AS AccruedCount
          , tmpSign.SummChange::TFloat                               AS SummChange
+         , tmpSign.ChangeCount::TFloat                              AS ChangeCount
+         , (1.0*tmpSign.ChangeCount/tmpSign.AccruedCount*100)::TFloat   AS PercentUsed
     FROM MovementItem AS MI_Loyalty
 
        LEFT JOIN MovementItemDate AS MIDate_OperDate

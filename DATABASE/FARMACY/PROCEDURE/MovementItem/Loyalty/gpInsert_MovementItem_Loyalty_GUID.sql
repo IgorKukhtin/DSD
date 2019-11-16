@@ -146,14 +146,13 @@ BEGIN
                       AND MI_Loyalty.isErased = FALSE)
            , CC AS (SELECT Sum(Count) AS Options FROM DD)
            , SS AS (SELECT count(*)                         AS CountDay
-                         , COALESCE(SUM(MI_Sign.Amount), 0) AS SummDay
+                         , COALESCE(SUM(CASE WHEN MI_Sign.ObjectId = vbUnitId THEN MI_Sign.Amount ELSE 0 END), 0) AS SummDay
                     FROM MovementItem AS MI_Sign
                          INNER JOIN MovementItemDate AS MIDate_OperDate
                                                      ON MIDate_OperDate.MovementItemId = MI_Sign.Id
                                                     AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
                                                     AND MIDate_OperDate.ValueData  = CURRENT_DATE
                     WHERE MI_Sign.MovementId = inMovementId
-                      AND MI_Sign.ObjectId = vbUnitId
                       AND MI_Sign.DescId = zc_MI_Sign()
                       AND MI_Sign.isErased = FALSE)
            , MM AS (SELECT COALESCE(NULLIF(MIFloat_DayCount.ValueData, 0), MovementFloat_DayCount.ValueData, 0)::Integer  AS DayCount

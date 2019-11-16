@@ -188,7 +188,7 @@ inherited LoyaltyForm: TLoyaltyForm
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 704
+          Width = 656
           Height = 210
           Align = alClient
           BevelOuter = bvNone
@@ -198,7 +198,7 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxGrid1: TcxGrid
             Left = 0
             Top = 109
-            Width = 704
+            Width = 656
             Height = 101
             Align = alBottom
             PopupMenu = PopupMenu
@@ -298,7 +298,7 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxGrid2: TcxGrid
             Left = 0
             Top = 0
-            Width = 704
+            Width = 656
             Height = 101
             Align = alClient
             PopupMenu = PopupMenu
@@ -348,7 +348,7 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxSplitter2: TcxSplitter
             Left = 0
             Top = 101
-            Width = 704
+            Width = 656
             Height = 8
             Touch.ParentTabletOptions = False
             Touch.TabletOptions = [toPressAndHold]
@@ -357,9 +357,9 @@ inherited LoyaltyForm: TLoyaltyForm
           end
         end
         object Panel3: TPanel
-          Left = 712
+          Left = 664
           Top = 0
-          Width = 413
+          Width = 461
           Height = 210
           Align = alRight
           BevelOuter = bvNone
@@ -369,7 +369,7 @@ inherited LoyaltyForm: TLoyaltyForm
           object cxGrid3: TcxGrid
             Left = 0
             Top = 0
-            Width = 413
+            Width = 461
             Height = 210
             Align = alClient
             PopupMenu = PopupMenu
@@ -393,6 +393,16 @@ inherited LoyaltyForm: TLoyaltyForm
                   Format = ',0.##'
                   Kind = skSum
                   Column = InfoSummChange
+                end
+                item
+                  Format = ',0'
+                  Kind = skSum
+                  Column = InfoAccruedCount
+                end
+                item
+                  Format = ',0'
+                  Kind = skSum
+                  Column = InfoChangeCount
                 end>
               DataController.Summary.SummaryGroups = <>
               OptionsBehavior.IncSearch = True
@@ -403,6 +413,7 @@ inherited LoyaltyForm: TLoyaltyForm
               OptionsView.ColumnAutoWidth = True
               OptionsView.Footer = True
               OptionsView.GroupByBox = False
+              OptionsView.HeaderAutoHeight = True
               Styles.Content = dmMain.cxContentStyle
               Styles.Inactive = dmMain.cxSelection
               Styles.Selection = dmMain.cxSelection
@@ -417,7 +428,7 @@ inherited LoyaltyForm: TLoyaltyForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 151
+                Width = 87
               end
               object InfoAmount: TcxGridDBColumn
                 Caption = #1051#1080#1084#1080#1090
@@ -427,27 +438,60 @@ inherited LoyaltyForm: TLoyaltyForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 93
+                Width = 62
               end
               object InfoAccrued: TcxGridDBColumn
-                Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+                Caption = #1053#1072#1095#1080#1089#1083'. '#1089#1091#1084#1084#1072
                 DataBinding.FieldName = 'Accrued'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.##;-,0.##; ;'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 85
+                Width = 62
+              end
+              object InfoAccruedCount: TcxGridDBColumn
+                Caption = #1053#1072#1095#1080#1089#1083'. '#1082#1086#1083'-'#1074#1086
+                DataBinding.FieldName = 'AccruedCount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DecimalPlaces = 0
+                Properties.DisplayFormat = ',0;-,0; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 63
               end
               object InfoSummChange: TcxGridDBColumn
-                Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086
+                Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1089#1091#1084#1084#1072
                 DataBinding.FieldName = 'SummChange'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.##;-,0.##; ;'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 82
+                Width = 61
+              end
+              object InfoChangeCount: TcxGridDBColumn
+                Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1082#1086#1083'-'#1074#1086
+                DataBinding.FieldName = 'ChangeCount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DecimalPlaces = 0
+                Properties.DisplayFormat = ',0;-,0 ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 62
+              end
+              object InfoPercentUsed: TcxGridDBColumn
+                Caption = #1055#1088#1086#1094'. '#1074#1077#1088#1085#1091#1074'.'
+                DataBinding.FieldName = 'PercentUsed'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DecimalPlaces = 4
+                Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 62
               end
             end
             object cxGridLevel3: TcxGridLevel
@@ -456,7 +500,7 @@ inherited LoyaltyForm: TLoyaltyForm
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 704
+          Left = 656
           Top = 0
           Width = 8
           Height = 210
@@ -948,129 +992,6 @@ inherited LoyaltyForm: TLoyaltyForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
-    object actOpenReporCheck: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
-      ImageIndex = 24
-      FormName = 'TReport_Check_byLoyaltyForm'
-      FormNameParam.Value = 'TReport_Check_byLoyaltyForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementItemId'
-          Value = '0'
-          Component = SignDCS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inGUID'
-          Value = Null
-          Component = SignDCS
-          ComponentItem = 'GUID'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenReportMinPriceForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
-      ImageIndex = 26
-      FormName = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.Value = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42132d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenReportForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
-      ImageIndex = 25
-      FormName = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.Value = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42132d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1187,6 +1108,158 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actExportToXLSLoyaltyDay: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      BeforeAction = actExecLoyaltyDay
+      ItemsDataSet = PrintItemsCDS
+      Title = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
+      FileName = 'LoyaltyDay'
+      FileNameParam.Value = 'LoyaltyDay'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1044#1072#1090#1072
+          FieldName = 'OperDate'
+          DataType = ftDateTime
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1051#1080#1084#1080#1090
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1053#1072#1095#1080#1089#1083'. '#1089#1091#1084#1084#1072
+          FieldName = 'Accrued'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1053#1072#1095#1080#1089#1083'. '#1082#1086#1083'-'#1074#1086
+          FieldName = 'CountAccrued'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1089#1091#1084#1084#1072
+          FieldName = 'SummChange'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1089#1091#1084#1084#1072
+          FieldName = 'CountChange'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1055#1088#1086#1094'. '#1074#1077#1088#1085#1091#1074'.'
+          FieldName = 'PercentUsed'
+          DataType = ftCurrency
+          DecimalPlace = 4
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1088#1086#1076#1072#1078' '#1087#1086' '#1087#1088#1086#1084#1086#1082#1086#1076#1091' '#1089#1091#1084#1084#1072
+          FieldName = 'SummSale'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1055#1088#1086#1076#1072#1078' '#1087#1086' '#1087#1088#1086#1084#1086#1082#1086#1076#1091' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+          FieldName = 'CountSale'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          Kind = skSumma
+        end>
+      Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
+      Hint = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
+      ImageIndex = 24
+    end
+    object actExecLoyaltyDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintLoyaltyDay
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintLoyaltyDay
+        end>
+      Caption = 'actExecLoyaltyDay'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1321,8 +1394,11 @@ inherited LoyaltyForm: TLoyaltyForm
       ImageIndex = 0
     end
     object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
+      Visible = ivAlways
+      ImageIndex = 25
     end
     object bbInsertRecordPartner: TdxBarButton
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080'>'
@@ -1344,11 +1420,14 @@ inherited LoyaltyForm: TLoyaltyForm
       Category = 0
     end
     object bbReportMinPriceForm: TdxBarButton
-      Action = actOpenReportMinPriceForm
+      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
+      Visible = ivAlways
+      ImageIndex = 26
     end
     object bbOpenReportMinPrice_All: TdxBarButton
-      Action = actOpenReporCheck
+      Action = actExportToXLSLoyaltyDay
       Category = 0
     end
     object bbGoodsIsCheckedYes: TdxBarButton
@@ -1906,13 +1985,13 @@ inherited LoyaltyForm: TLoyaltyForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 476
-    Top = 206
+    Left = 404
+    Top = 262
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 412
+    Left = 404
     Top = 209
   end
   object DetailDCS: TClientDataSet
@@ -2424,5 +2503,45 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     Left = 848
     Top = 384
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_LoyaltySecond'
+    DataSet = InfoDSD
+    DataSets = <
+      item
+        DataSet = InfoDSD
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 384
+  end
+  object spSelectPrintLoyaltyDay: TdsdStoredProc
+    StoredProcName = 'gpReport_MovementItem_LoyaltySecondDay'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
+    Top = 208
   end
 end
