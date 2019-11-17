@@ -167,8 +167,8 @@ BEGIN
                               , CASE WHEN tmpData.Num = 5 THEN tmpData.minPrice ELSE 0 END AS minPrice_5
                               , CASE WHEN tmpData.Num = 6 THEN tmpData.minPrice ELSE 0 END AS minPrice_6
                               , CASE WHEN tmpData.Num = 7 THEN tmpData.minPrice ELSE 0 END AS minPrice_7
-                                                            
-                              , CAST (avg(tmpData.Value) OVER (ORDER BY tmpParam.UnitId) AS NUMERIC (16,2)) AS avgPercent
+
+                              , CAST (avg(tmpData.Value) OVER (PARTITION BY tmpData.MarginCategoryId) AS NUMERIC (16,2)) AS avgPercent
                          FROM tmpData
                               LEFT JOIN tmpParam ON tmpParam.MarginCategoryId = tmpData.MarginCategoryId
                          ORDER BY tmpData.MarginCategoryId, tmpParam.UnitName, tmpData.num

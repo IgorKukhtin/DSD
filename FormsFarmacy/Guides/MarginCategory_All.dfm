@@ -1,25 +1,26 @@
 inherited MarginCategory_AllForm: TMarginCategory_AllForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 338
-  ClientWidth = 1246
-  ExplicitWidth = 1262
+  ClientWidth = 1145
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1161
   ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1246
+    Width = 1145
     Height = 312
-    ExplicitWidth = 1246
+    ExplicitWidth = 1145
     ExplicitHeight = 312
     ClientRectBottom = 312
-    ClientRectRight = 1246
+    ClientRectRight = 1145
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1246
+      ExplicitWidth = 1145
       ExplicitHeight = 312
       inherited cxGrid: TcxGrid
-        Width = 1246
+        Width = 1145
         Height = 312
-        ExplicitWidth = 1246
+        ExplicitWidth = 1145
         ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -399,18 +400,19 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
-      ImageIndex = 26
+      ImageIndex = 76
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
-      ImageIndex = 26
+      ImageIndex = 76
       FormName = 'TMarginCategoryAllDialogForm'
       FormNameParam.Value = 'TMarginCategoryAllDialogForm'
       FormNameParam.DataType = ftString
@@ -418,74 +420,83 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       GuiParams = <
         item
           Name = 'isVal1'
-          Value = 42261d
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal1'
+          ComponentItem = 'isVal11'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal2'
-          Value = ''
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal2'
+          ComponentItem = 'isVal22'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal3'
-          Value = ''
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal3'
+          ComponentItem = 'isVal33'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal4'
-          Value = ''
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal4'
+          ComponentItem = 'isVal44'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal5'
-          Value = ''
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal5'
+          ComponentItem = 'isVal55'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal6'
-          Value = '0'
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal6'
+          ComponentItem = 'isVal66'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isVal7'
-          Value = ''
+          Value = 'false'
           Component = FormParams
-          ComponentItem = 'isVal7'
+          ComponentItem = 'isVal77'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val1'
-          Value = 42261d
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val1'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val2'
-          Value = ''
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val2'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -494,42 +505,59 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
           Component = FormParams
           ComponentItem = 'Val3'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val4'
-          Value = ''
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val4'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val5'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val5'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val6'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val6'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
           Name = 'Val7'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'Val7'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object macUpdateParam_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateParam
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      ImageIndex = 76
     end
     object macUpdateParam: TMultiAction
       Category = 'DSDLib'
@@ -539,11 +567,16 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
           Action = ExecuteDialog
         end
         item
-          Action = actUpdateParam
+          Action = macUpdateParam_list
+        end
+        item
+          Action = actRefresh
         end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1082#1072#1090#1077#1075#1086#1088#1080#1103#1084'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1077#1085#1099
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
-      ImageIndex = 26
+      ImageIndex = 76
     end
   end
   inherited MasterDS: TDataSource
@@ -654,6 +687,14 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -701,9 +742,13 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       Action = ProtocolOpenForm7
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = macUpdateParam
+      Category = 0
+    end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem_All'
+    StoredProcName = 'gpUpdate_Object_MarginCategory_auto'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -712,6 +757,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MarginCategoryId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -838,7 +884,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_1'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -847,7 +893,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_2'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -856,7 +902,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_3'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -865,7 +911,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_4'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -874,7 +920,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_5'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -883,7 +929,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_6'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -892,12 +938,12 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value_7'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal1'
+        Name = 'inVal_1'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val1'
@@ -906,7 +952,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal2'
+        Name = 'inVal_2'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val2'
@@ -915,7 +961,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal3'
+        Name = 'inVal_3'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val3'
@@ -924,7 +970,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal4'
+        Name = 'inVal_4'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val4'
@@ -933,7 +979,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal5'
+        Name = 'inVal_5'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val5'
@@ -942,7 +988,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal6'
+        Name = 'inVal_6'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val6'
@@ -951,7 +997,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVal7'
+        Name = 'inVal_7'
         Value = Null
         Component = FormParams
         ComponentItem = 'Val7'
@@ -960,64 +1006,64 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal1'
+        Name = 'inisVal_1'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal1'
+        ComponentItem = 'isVal11'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal2'
+        Name = 'inisVal_2'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal2'
+        ComponentItem = 'isVal22'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal3'
+        Name = 'inisVal_3'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal3'
+        ComponentItem = 'isVal33'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal4'
+        Name = 'inisVal_4'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal4'
+        ComponentItem = 'isVal44'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal5'
+        Name = 'inisVal_5'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal5'
+        ComponentItem = 'isVal55'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal6'
+        Name = 'inisVal_6'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal6'
+        ComponentItem = 'isVal66'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVal7'
+        Name = 'inisVal_7'
         Value = Null
         Component = FormParams
-        ComponentItem = 'isVal7'
+        ComponentItem = 'isVal77'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1044,7 +1090,56 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     Top = 144
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'isVal11'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal22'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal33'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal44'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal55'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal66'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVal77'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 344
     Top = 88
   end
