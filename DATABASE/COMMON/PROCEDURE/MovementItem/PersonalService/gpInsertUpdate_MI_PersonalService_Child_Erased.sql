@@ -229,4 +229,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MI_PersonalService_Child_Erased (inFromId := 183292 , inToId := 183290 , inOperDate := ('01.06.2016')::TDateTime , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PersonalService_Child_Erased (inUnitId := 183292, inPersonalServiceListId := 0, inStartDate := ('01.06.2016')::TDateTime, inEndDate := ('01.06.2016')::TDateTime, inPositionId := 0, inSession := '3');
