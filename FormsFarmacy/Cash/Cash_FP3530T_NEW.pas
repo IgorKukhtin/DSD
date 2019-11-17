@@ -197,6 +197,7 @@ var NDSType: char;
     CashCode: integer;
     I : Integer;
     L : string;
+    N : string;
     Res: TArray<string>;
 begin
   result := true;
@@ -211,7 +212,8 @@ begin
     begin
       if L <> '' then L := L + ' ';
       L := L + Res[i];
-      if (I < High(Res)) and (Length(L + Res[i]) > FLengNoFiscalText) then
+      if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
+      if Length(L + N) > FLengNoFiscalText then
       begin
         if not PrintNotFiscalText(L) then Exit;
         L := '';
@@ -312,7 +314,15 @@ begin
   begin
     FPrinter.DISCOUNT[ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
     result := СообщениеКА(FPrinter.GETERROR);
-  end else result := True;
+  end else
+  begin
+    if Summ > 0 then
+    begin
+      if not PrintNotFiscalText('Націнка' + StringOfChar(' ' , FLengNoFiscalText - Length('Націнка' + FormatCurr('0.00', Abs(Summ))) - 1) + FormatCurr('0.00', Abs(Summ))) then Exit;
+    end else if not PrintNotFiscalText('Знижка' + StringOfChar(' ' , FLengNoFiscalText - Length('Знижка' + FormatCurr('0.00', Abs(Summ))) - 1) + FormatCurr('0.00', Abs(Summ))) then Exit;
+    FSumma := FSumma + Summ;
+    result := True;
+  end;
 end;
 
 function TCashFP3530T_NEW.ClosureFiscal: boolean;
@@ -368,22 +378,24 @@ function TCashFP3530T_NEW.PrintFiscalText(
   const PrintText: WideString): boolean;
 var I : Integer;
     L : string;
+    N : string;
     Res: TArray<string>;
 begin
-  FPrinter.PRNCHECK[PrintText, Password];
+  Result := True;
   L := '';
   Res := TRegEx.Split(PrintText, ' ');
   for I := 0 to High(Res) do
   begin
     if L <> '' then L := L + ' ';
     L := L + Res[i];
-    if (I < High(Res)) and (Length(L + Res[i]) > FLengNoFiscalText) then
+    if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
+    if Length(L + N) > FLengNoFiscalText then
     begin
       if not PrintNotFiscalText(L) then Exit;
       L := '';
     end;
-    if L <> '' then if not PrintNotFiscalText(L) then Exit;
   end;
+  if L <> '' then PrintNotFiscalText(L);
 end;
 
 function TCashFP3530T_NEW.SubTotal(isPrint, isDisplay: WordBool; Percent,

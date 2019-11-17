@@ -416,6 +416,7 @@ type
     lblPromoCodeLoyalty: TLabel;
     Label27: TLabel;
     edPromoCodeLoyaltySumm: TcxCurrencyEdit;
+    spLoyaltyStatus: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -659,6 +660,7 @@ type
 
     // Проверка и генерация промокода по Программе лояльности
     procedure Check_Loyalty(ASumma : Currency);
+    procedure Check_LoyaltySumma(ASumma : Currency);
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -798,7 +800,7 @@ end;
 
 function GetPrice(Price, Discount:currency): currency;
 var
-  D, P, RI: Cardinal;
+  D, P, RI: Int64;
   S1: String;
 begin
   if (Price = 0) then
@@ -822,7 +824,7 @@ end;
 
 function GetSumm(Amount,Price:currency;Down:Boolean): currency;
 var
-  A, P, RI: Cardinal;
+  A, P, RI: Int64;
   S1: String;
 begin
   if (Amount = 0) or (Price = 0) then
@@ -856,7 +858,7 @@ end;
 
 function GetSummFull(Amount,Price:currency): currency;
 var
-  A, P, RI: Cardinal;
+  A, P, RI: Int64;
   S1: String;
 begin
   if (Amount = 0) or (Price = 0) then
@@ -1107,6 +1109,7 @@ begin
   FormParams.ParamByName('LoyaltySignID').Value := 0;
   FormParams.ParamByName('LoyaltyText').Value := '';
   FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
+  FormParams.ParamByName('LoyaltyShowMessage').Value := True;
 
   ClearFilterAll;
 
@@ -4479,7 +4482,8 @@ begin
     (Pos('инъекц', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) = 0) and
     (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1269) and
     (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 9496) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1336) then
+    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1336) and
+    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 20584) then
   begin
     ShowMessage('Деление медикамента c ценой менее ' + UnitConfigCDS.FieldByName('ShareFromPrice').AsString + ' грн. заблокировано!');
     exit;
@@ -5058,6 +5062,9 @@ Begin
     end;
   End;
   lblTotalSumm.Caption := FormatFloat(',0.00',FTotalSumm);
+
+  Check_LoyaltySumma(FTotalSumm);
+
 End;
 
 procedure TMainCashForm2.WM_KEYDOWN(var Msg: TWMKEYDOWN);
@@ -5329,6 +5336,7 @@ begin
   FormParams.ParamByName('LoyaltySignID').Value := 0;
   FormParams.ParamByName('LoyaltyText').Value := '';
   FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
+  FormParams.ParamByName('LoyaltyShowMessage').Value := True;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -5574,7 +5582,7 @@ var str_log_xml : String; Disc, nSumAll: Currency;
                                           FieldByName('Amount').asCurrency,
                                           FieldByName('PricePartionDate').asCurrency,
                                           FieldByName('NDS').asCurrency);
-                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency) - FieldByName('Summ').AsCurrency;
+                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency);
               end else
               begin
 
@@ -5583,7 +5591,7 @@ var str_log_xml : String; Disc, nSumAll: Currency;
                                           FieldByName('Amount').asCurrency,
                                           FieldByName('PriceSale').asCurrency,
                                           FieldByName('NDS').asCurrency);
-                nDisc := GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency) - FieldByName('Summ').AsCurrency;
+                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency);
               end;
               if nDisc <> 0 then Cash.DiscountGoods(nDisc);
             end else result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
@@ -5722,7 +5730,7 @@ begin
       if isFiscal then Add_Check_History;
       if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
 
-      Check_Loyalty(FTotalSumm);
+      if isFiscal and not actSpec.Checked and not actSpecCorr.Checked then Check_Loyalty(FTotalSumm);
 
       // Непосредственно печать чека
       str_log_xml:=''; i:=0;
@@ -6257,6 +6265,8 @@ begin
     spLoyaltyGUID.ParamByName('inMovementId').Value := UnitConfigCDS.FindField('LoyaltyID').AsCurrency;
     spLoyaltyGUID.ParamByName('outGUID').Value := '';
     spLoyaltyGUID.ParamByName('outAmount').Value := 0;
+    spLoyaltyGUID.ParamByName('outDateEnd').Value := '';
+    spLoyaltyGUID.ParamByName('outMessage').Value := '';
     spLoyaltyGUID.ParamByName('inComment').Value := '';
     spLoyaltyGUID.Execute;
 
@@ -6265,7 +6275,8 @@ begin
     begin
       FormParams.ParamByName('LoyaltySignID').Value := spLoyaltyGUID.ParamByName('ioId').Value;
       FormParams.ParamByName('LoyaltyText').Value := 'Промокод ' + spLoyaltyGUID.ParamByName('outGUID').Value +
-        ' на скидку ' + FormatCurr(',0.00', spLoyaltyGUID.ParamByName('outAmount').AsFloat) + ' грн';
+        ' на знижку ' + FormatCurr(',0.00', spLoyaltyGUID.ParamByName('outAmount').AsFloat) + ' грн. діє до ' +
+        spLoyaltyGUID.ParamByName('outDateEnd').Value;
     end else
     begin
       FormParams.ParamByName('LoyaltySignID').Value := 0;
@@ -6273,10 +6284,39 @@ begin
       FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
     end;
 
-  except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);
+  except ON E:Exception do Add_Log('Check_Loyalty err=' + E.Message);
   end;
 
 end;
+
+  // Проверка и генерация промокода по Программе лояльности
+procedure TMainCashForm2.Check_LoyaltySumma(ASumma : Currency);
+begin
+
+  // Если локально то ничего не делаем
+  if gc_User.Local then Exit;
+
+  // Если программы нет
+  if not UnitConfigCDS.Active or not Assigned(UnitConfigCDS.FindField('LoyaltyID')) then Exit;
+  if UnitConfigCDS.FindField('LoyaltyID').IsNull then Exit;
+  if UnitConfigCDS.FindField('LoyaltySummCash').AsCurrency > ASumma then Exit;
+  if not FormParams.ParamByName('LoyaltyShowMessage').Value then Exit;
+
+
+  // Получаем мнформацию
+  try
+    spLoyaltyStatus.ParamByName('inMovementId').Value := UnitConfigCDS.FindField('LoyaltyID').AsCurrency;
+    spLoyaltyStatus.ParamByName('outMessage').Value := '';
+    spLoyaltyStatus.Execute;
+
+    if spLoyaltyStatus.ParamByName('outMessage').Value <> '' then ShowMessage(spLoyaltyStatus.ParamByName('outMessage').Value);
+    FormParams.ParamByName('LoyaltyShowMessage').Value := False;
+
+  except ON E:Exception do Add_Log('Check_LoyaltySumma err=' + E.Message);
+  end;
+
+end;
+
 
 function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;

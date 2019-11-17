@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, cxCheckBox,
+  dsdExportToXLSAction;
 
 type
   TLoyaltyForm = class(TAncestorDocumentForm)
@@ -106,8 +107,8 @@ type
     cxSplitter3: TcxSplitter;
     cxGrid3: TcxGrid;
     cxGridDBTableView3: TcxGridDBTableView;
-    InfoName: TcxGridDBColumn;
-    InfoValue: TcxGridDBColumn;
+    InfoOperDate: TcxGridDBColumn;
+    InfoAmount: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     InfoDS: TDataSource;
     InfoDSD: TClientDataSet;
@@ -132,6 +133,19 @@ type
     cxLabel16: TcxLabel;
     chDayCount: TcxGridDBColumn;
     chSummLimit: TcxGridDBColumn;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edServiceDate: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    InfoAccrued: TcxGridDBColumn;
+    InfoSummChange: TcxGridDBColumn;
+    dsdStoredProc1: TdsdStoredProc;
+    InfoAccruedCount: TcxGridDBColumn;
+    InfoChangeCount: TcxGridDBColumn;
+    InfoPercentUsed: TcxGridDBColumn;
+    actExportToXLSLoyaltyDay: TdsdExportToXLS;
+    actExecLoyaltyDay: TdsdExecStoredProc;
+    spSelectPrintLoyaltyDay: TdsdStoredProc;
   private
     { Private declarations }
   public

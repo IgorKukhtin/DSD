@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_DeferredCheck(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, 
-               TotalCount TFloat, TotalSumm TFloat
+               TotalCount TFloat, TotalSumm TFloat,
+               Bayer TVarChar
               )
 AS
 $BODY$
@@ -25,6 +26,7 @@ BEGIN
            , Movement_Check.OperDate
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
+           , MovementString_Bayer.ValueData                     AS Bayer
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -49,6 +51,9 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+	     LEFT JOIN MovementString AS MovementString_Bayer
+                                      ON MovementString_Bayer.MovementId = Movement_Check.Id
+                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
         WHERE Movement_Check.UnitId = inUnitId
 
       ;

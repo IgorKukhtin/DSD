@@ -24,8 +24,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     Height = 280
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -8
-    ExplicitTop = 155
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -446,6 +444,13 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object TotalWeight_Doc: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1085#1072#1082#1083'. '#1050#1075
+        DataBinding.FieldName = 'TotalWeight_Doc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object TotalSumm_Sale: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076'.'
         DataBinding.FieldName = 'TotalSumm_Sale'
@@ -645,6 +650,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -655,6 +661,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -1015,7 +1022,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 240
-    Top = 192
+    Top = 224
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

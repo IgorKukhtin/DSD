@@ -1,4 +1,4 @@
-unit MarginCategory;
+unit MarginCategory_All;
 
 interface
 
@@ -14,23 +14,40 @@ uses
   dxSkinsdxBarPainter, cxCheckBox;
 
 type
-  TMarginCategoryForm = class(TAncestorEnumForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+  TMarginCategory_AllForm = class(TAncestorEnumForm)
+    MarginCategoryName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    colPercent: TcxGridDBColumn;
-    colisSite: TcxGridDBColumn;
+    Value_1: TcxGridDBColumn;
+    avgPercent: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdSetErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     dsdSetUnErased: TdsdUpdateErased;
     bbSetUnErased: TdxBarButton;
-    clErased: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    ProtocolOpenForm: TdsdOpenForm;
+    ProtocolOpenForm1: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    ProvinceCityName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ProtocolOpenForm2: TdsdOpenForm;
+    ProtocolOpenForm7: TdsdOpenForm;
+    ProtocolOpenForm6: TdsdOpenForm;
+    ProtocolOpenForm3: TdsdOpenForm;
+    ProtocolOpenForm4: TdsdOpenForm;
+    ProtocolOpenForm5: TdsdOpenForm;
+    bbProtocolOpenForm2: TdxBarButton;
+    bbProtocolOpenForm3: TdxBarButton;
+    bbProtocolOpenForm4: TdxBarButton;
+    bbProtocolOpenForm5: TdxBarButton;
+    bbProtocolOpenForm6: TdxBarButton;
+    bbProtocolOpenForm7: TdxBarButton;
+    actUpdateParam: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
+    macUpdateParam: TMultiAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -42,7 +59,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMarginCategoryForm)
+  RegisterClass(TMarginCategory_AllForm)
 
 
 end.

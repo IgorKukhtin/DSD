@@ -2,7 +2,7 @@ object DiscountServiceForm: TDiscountServiceForm
   Left = 0
   Top = 0
   Caption = 'DiscountService'
-  ClientHeight = 118
+  ClientHeight = 129
   ClientWidth = 601
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,9 +15,6 @@ object DiscountServiceForm: TDiscountServiceForm
   PixelsPerInch = 96
   TextHeight = 16
   object HTTPRIO: THTTPRIO
-    HTTPWebNode.UseUTF8InHeader = True
-    HTTPWebNode.InvokeOptions = [soIgnoreInvalidCerts, soAutoCheckAccessPointViaUDDI]
-    HTTPWebNode.WebNodeOptions = []
     Converter.Options = [soSendMultiRefObj, soTryAllSchema, soRootRefNodesToBody, soCacheMimeResponse, soUTF8EncodeXML]
     Left = 64
     Top = 16

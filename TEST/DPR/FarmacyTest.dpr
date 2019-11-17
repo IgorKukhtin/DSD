@@ -764,7 +764,8 @@ uses
   Loyalty in '..\..\FormsFarmacy\Document\Loyalty.pas' {LoyaltyForm: TParentForm},
   LoyaltyJournal in '..\..\FormsFarmacy\Document\LoyaltyJournal.pas' {LoyaltyJournalForm: TParentForm},
   GoodsRetailTab_Error in '..\..\FormsFarmacy\Guides\GoodsRetailTab_Error.pas' {GoodsRetailTab_ErrorForm: TParentForm},
-  Report_Send_RemainsSun_over in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_over.pas' {Report_Send_RemainsSun_overForm: TParentForm};
+  Report_Send_RemainsSun_over in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_over.pas' {Report_Send_RemainsSun_overForm: TParentForm},
+  MarginCategoryAllDialog in '..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas' {MarginCategoryAllDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

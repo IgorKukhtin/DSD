@@ -19,10 +19,12 @@ RETURNS TABLE (Id         Integer
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased   Boolean
              
+             , ID_Check            Integer
              , Invnumber_Check     Integer
              , OperDate_Check      TDateTime
              , UnitName_Check      TVarChar
 
+             , ID_CheckSale        Integer
              , Invnumber_CheckSale Integer
              , OperDate_CheckSale  TDateTime
              , UnitName_CheckSale  TVarChar
@@ -56,6 +58,7 @@ BEGIN
                     AND (MI_Sign.isErased = FALSE or inIsErased = TRUE)
                   )
       , tmpCheck AS (SELECT tmpMI.Id                   AS ID
+                          , Movement.ID                AS MovementID
                           , CASE WHEN Movement.ID = tmpMI.MovementId THEN True ELSE FALSE END AS isIssue
                           , Movement.OperDate          AS OperDate
                           , Movement.Invnumber         AS Invnumber
@@ -98,12 +101,14 @@ BEGIN
                 , MI_Sign.IsErased
                 
                 -- данные из чека создания
+                , tmpCheck.MovementID           ::Integer   AS ID_Check
                 , tmpCheck.Invnumber            ::Integer   AS Invnumber_Check
                 , tmpCheck.OperDate             ::TDateTime AS OperDate_Check 
                 , tmpCheck.UnitName             ::TVarChar  AS UnitName_Check
 
                 -- данные из чека погашения
-                , tmpCheckSale.Invnumber         ::Integer   AS Invnumber_CheckSale
+                , tmpCheckSale.MovementID       ::Integer   AS ID_CheckSale
+                , tmpCheckSale.Invnumber        ::Integer   AS Invnumber_CheckSale
                 , tmpCheckSale.OperDate         ::TDateTime AS OperDate_CheckSale 
                 , tmpCheckSale.UnitName         ::TVarChar  AS UnitName_CheckSale
                 
