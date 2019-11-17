@@ -14,19 +14,24 @@ $BODY$
   DECLARE vbOperSumm_Partner_byItem TFloat;
   DECLARE vbOperSumm_Partner TFloat;
 
-  DECLARE vbOperDatePartner TDateTime;
-  DECLARE vbPriceWithVAT Boolean;
-  DECLARE vbVATPercent TFloat;
-  DECLARE vbDiscountPercent TFloat;
+  DECLARE vbOperDatePartner     TDateTime;
+  DECLARE vbPriceWithVAT        Boolean;
+  DECLARE vbVATPercent          TFloat;
+  DECLARE vbDiscountPercent     TFloat;
   DECLARE vbExtraChargesPercent TFloat;
 
   DECLARE vbPartnerId        Integer;
   DECLARE vbUnitId_From      Integer;
   DECLARE vbArticleLoss_From Integer;
   DECLARE vbContractId       Integer;
+
+  DECLARE vbCriticalWeight   TFloat;
   DECLARE vbIsLessWeigth     Boolean;
 BEGIN
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := inUserId :: TVarChar);
+     
+     --
+     vbCriticalWeight:= (SELECT tmpGet.CriticalWeight FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin()) AS tmpGet);
 
      -- таблица - элементы документа
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -49,9 +54,11 @@ BEGIN
           
           , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
+                   OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
+                   OR COALESCE (vbCriticalWeight, 0) = 0
                       THEN TRUE
                  ELSE FALSE
-            END AS шsLessWeigth
+            END AS isLessWeigth
 
             INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbIsLessWeigth
@@ -78,6 +85,14 @@ BEGIN
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+          LEFT JOIN ObjectLink AS OL_Juridical
+                               ON OL_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                              AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+          -- Разрешен минимальный заказ - меньше 5 кг.
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+                                  ON ObjectBoolean_isOrderMin.ObjectId = OL_Juridical.ChildObjectId
+                                 AND ObjectBoolean_isOrderMin.DescId   = zc_ObjectBoolean_Juridical_isOrderMin()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                        ON MovementLinkObject_Route.MovementId = Movement.Id
@@ -219,13 +234,18 @@ BEGIN
              ) AS _tmp;
 
      -- проверка - если не разрешен вес < 5 и в документе < 5
-     /*IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < 5
+     IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < vbCriticalWeight
      THEN
-         RAISE EXCEPTION 'Ошибка.Разрешены заявки с общим весом >= 5 кг.%Проведение заявки с весом = % кг. невозможно.'
+       /*RAISE EXCEPTION 'Ошибка.Разрешены заявки с общим весом >= % кг.%Проведение заявки с весом = % кг. невозможно.'
+                        , zfConvert_FloatToString (vbCriticalWeight)
                         , CHR(13)
                         , zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))
-                         ;
-     END IF;*/
+                         ;*/
+         outMessageText:= 'Ошибка.Разрешены заявки с общим весом >= ' || zfConvert_FloatToString (vbCriticalWeight) || ' кг.'
+            || CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.'
+         -- !!! выход !!!
+         RETURN;
+      END IF;
 
 
      -- Расчеты сумм

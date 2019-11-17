@@ -1,8 +1,8 @@
--- Function: gpInsert_Movement_Send_RemainsSun
+-- Function: gpInsert_Movement_Send_RemainsSun_over
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Send_RemainsSun (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Send_RemainsSun_over (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_RemainsSun(
+CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_RemainsSun_over(
     IN inOperDate            TDateTime , -- Дата начала отчета
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -51,8 +51,6 @@ BEGIN
      -- все Подразделения для схемы SUN
      CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
-     -- все Подразделения для схемы SUN-OVER
-     CREATE TEMP TABLE _tmpUnit_SUN_over (UnitId Integer) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
@@ -63,9 +61,9 @@ BEGIN
      CREATE TEMP TABLE _tmpRemains   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
-     -- 2. вся статистика продаж
-     CREATE TEMP TABLE _tmpSale   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpSale_a (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
+     -- 2. вся статистика продаж - OVER
+     CREATE TEMP TABLE _tmpSale_over   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpSale_over_a (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -95,37 +93,18 @@ BEGIN
      CREATE TEMP TABLE _tmpResult_child_a (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
 
-     -- !!!OVER!!!
-     INSERT INTO _tmpUnit_SUN_over (UnitId)
-        SELECT ObjectBoolean_SUN.ObjectId
-        FROM Object
-        WHERE Object.Id IN (183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
-                          , 183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
-                          , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
-                          , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
-                          , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
-                          , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
-                          , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
-                          , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
-                          , 8698426 -- 70;"АП_1 пр.Героев_22";f;
-                          , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
-                          , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
-                          , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
-                          , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
-                           );
-
      -- !!!первый водитель!!!
-     vbDriverId_1 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
+   /*vbDriverId_1 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
                       FROM ObjectLink AS ObjectLink_Unit_Driver
                            JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Driver.ObjectId AND Object_Unit.isErased = FALSE
                       WHERE ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                     );
+                     );*/
      -- !!!1 - сформировали данные во временные табл!!!
-     PERFORM lpInsert_Movement_Send_RemainsSun (inOperDate:= inOperDate
-                                              , inDriverId:= vbDriverId_1
-                                              , inStep    := 1
-                                              , inUserId  := vbUserId
-                                               );
+     PERFORM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= inOperDate
+                                                   , inDriverId:= vbDriverId_1
+                                                   , inStep    := 1
+                                                   , inUserId  := vbUserId
+                                                    );
      -- !!!1 - перенесли данные
      INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
@@ -133,18 +112,18 @@ BEGIN
 
 
      -- !!!второй водитель!!!
-     vbDriverId_2 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
+   /*vbDriverId_2 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
                       FROM ObjectLink AS ObjectLink_Unit_Driver
                            JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Driver.ObjectId AND Object_Unit.isErased = FALSE
                       WHERE ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
                         AND ObjectLink_Unit_Driver.ChildObjectId <> vbDriverId_1
                      );
      -- !!!2 - сформировали данные во временные табл!!!
-     PERFORM lpInsert_Movement_Send_RemainsSun (inOperDate:= inOperDate
-                                              , inDriverId:= vbDriverId_2
-                                              , inStep    := 1
-                                              , inUserId  := vbUserId
-                                               );
+     PERFORM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= inOperDate
+                                                   , inDriverId:= vbDriverId_2
+                                                   , inStep    := 1
+                                                   , inUserId  := vbUserId
+                                                    );*/
      -- !!!2 - перенесли данные
      INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
@@ -161,19 +140,15 @@ BEGIN
                                               ON MovementLinkObject_To.MovementId = Movement.Id
                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                 -- !!!только для таких Аптек!!!
-                -- INNER JOIN
-                --
+                INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_From.ObjectId
                 --
                 INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData  = TRUE
-                -- !!!кроме таких Аптек!!!
-                LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
-             AND _tmpUnit_SUN_over.UnitId IS NULL
           ) AS tmp;
 
      -- !!!Удаляем предыдущие документы - DefSUN!!!
@@ -187,19 +162,15 @@ BEGIN
                                               ON MovementLinkObject_To.MovementId = Movement.Id
                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                 -- !!!только для таких Аптек!!!
-                -- INNER JOIN
-                --
+                INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_From.ObjectId
                 --
                 INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
                                            ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                           AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
                                           AND MovementBoolean_DefSUN.ValueData = TRUE
-                -- !!!кроме таких Аптек!!!
-                LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
-             AND _tmpUnit_SUN_over.UnitId IS NULL
           ) AS tmp;
 
 
@@ -315,7 +286,7 @@ BEGIN
 
 
 
-   --RAISE EXCEPTION '<ok>';
+  -- RAISE EXCEPTION '<ok>';
 
 
 END;
@@ -325,8 +296,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.07.19                                        *
+ 16.11.19                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

@@ -49,8 +49,9 @@ RETURNS TABLE (Id                   Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId      Integer;
-   DECLARE vbIsOperPrice Boolean;
+   DECLARE vbUserId           Integer;
+   DECLARE vbIsOperPrice      Boolean;
+   DECLARE vbPeriodYear_start Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
@@ -63,6 +64,8 @@ BEGIN
 
      -- Получили - показывать ЛИ цену ВХ.
      vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+     -- Получили - ...
+     vbPeriodYear_start:= EXTRACT (YEAR FROM CURRENT_DATE) - 5;
 
 
      -- Результат
@@ -197,6 +200,10 @@ BEGIN
            LEFT JOIN Movement ON Movement.Id = COALESCE (Object_PartionGoods.MovementId, Object_PartionGoods_er.MovementId)
 
            LEFT JOIN tmpDiscount ON tmpDiscount.GoodsId = tmpContainer.GoodsId
+
+       WHERE tmpContainer.Amount      <> 0 
+          OR tmpContainer.AmountDebt <> 0
+          OR (Object_PartionGoods.PeriodYear > vbPeriodYear_start AND inIsShowAll = TRUE)
           ;
 
 END;

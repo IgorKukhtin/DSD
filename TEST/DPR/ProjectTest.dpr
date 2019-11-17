@@ -1117,7 +1117,8 @@ uses
   Report_Transport_CostDialog in '..\..\Forms\Report\Report_Transport_CostDialog.pas' {Report_Transport_CostDialogForm: TParentForm},
   Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
   Route_Self in '..\..\Forms\Guides\Route_Self.pas' {Route_SelfForm: TParentForm},
-  SendOnPrice_ReestrJournal in '..\..\Forms\Document\SendOnPrice_ReestrJournal.pas' {SendOnPrice_ReestrJournalForm: TParentForm};
+  SendOnPrice_ReestrJournal in '..\..\Forms\Document\SendOnPrice_ReestrJournal.pas' {SendOnPrice_ReestrJournalForm: TParentForm},
+  EdiFozzyXML in '..\..\SOURCE\EDI\EdiFozzyXML.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

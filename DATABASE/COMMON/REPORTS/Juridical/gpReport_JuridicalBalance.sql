@@ -243,7 +243,7 @@ BEGIN
           , DATE (ObjectDate_Signing.ValueData) :: TDateTime AS ContractSigningDate
           , OHS_FullName_Basis.ValueData            AS JuridicalShortName_Basis
           , Object_Juridical_Basis.ValueData        AS JuridicalName_Basis
-          , 'Рудiк Н.В.' /*OHS_AccounterName_Basis.ValueData*/ :: TVarChar  AS AccounterName_Basis
+          , CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm() THEN 'Рудiк Н.В.' /*OHS_AccounterName_Basis.ValueData*/ ELSE '' END :: TVarChar  AS AccounterName_Basis
           , COALESCE (tmpObject_ReportCollation.Code, 0) :: Integer AS ReportCollationCode
             INTO outStartBalance, outStartBalanceCurrency
                , outJuridicalName, outJuridicalShortName, outPartnerName, outCurrencyName, outInternalCurrencyName, outAccounterName

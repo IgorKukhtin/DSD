@@ -202,7 +202,7 @@ BEGIN
                -- ‘илиал Ѕаланс: не используетс€
              , 0 AS BranchId_Balance
                -- ‘илиал ќѕи”: всегда по подразделению
-             , _tmpItem.BranchId_Balance AS BranchId_ProfitLoss
+             , _tmpItem.BranchId_ProfitLoss AS BranchId_ProfitLoss
 
                -- ћес€ц начислений: не используетс€
              , 0 AS ServiceDateId
