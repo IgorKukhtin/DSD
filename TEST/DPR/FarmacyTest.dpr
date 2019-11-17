@@ -766,7 +766,8 @@ uses
   GoodsRetailTab_Error in '..\..\FormsFarmacy\Guides\GoodsRetailTab_Error.pas' {GoodsRetailTab_ErrorForm: TParentForm},
   Report_Send_RemainsSun_over in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_over.pas' {Report_Send_RemainsSun_overForm: TParentForm},
   MarginCategory_All in '..\..\FormsFarmacy\Guides\MarginCategory_All.pas' {MarginCategory_AllForm: TParentForm},
-  MarginCategoryAllDialog in '..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas' {MarginCategoryAllDialogForm: TParentForm};
+  MarginCategoryAllDialog in '..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas' {MarginCategoryAllDialogForm: TParentForm},
+  ChoiceLoyaltyCheck in '..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas' {ChoiceLoyaltyCheckForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

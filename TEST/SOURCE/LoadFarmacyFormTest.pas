@@ -773,6 +773,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoyaltyForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceLoyaltyCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceLoyaltyCheckForm');
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;

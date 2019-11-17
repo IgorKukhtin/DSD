@@ -12,6 +12,7 @@ RETURNS TABLE (Id         Integer
              , GUID       TVarChar
              , OperDate   TDateTime
              , Amount     TFloat
+             , UnitID     Integer
              , UnitName   TVarChar
              , Comment    TVarChar
 
@@ -90,6 +91,7 @@ BEGIN
 
                 , MIDate_OperDate.ValueData                AS OperDate
                 , MI_Sign.Amount
+                , Object_Unit.ID                           AS UnitID
                 , Object_Unit.ValueData                    AS UnitName
                 , MIString_Comment.ValueData               AS Comment
                 
