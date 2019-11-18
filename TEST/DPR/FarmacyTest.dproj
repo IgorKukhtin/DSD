@@ -2649,6 +2649,14 @@
 				<Form>MarginCategoryAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas">
+				<Form>ChoiceLoyaltyCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_LoyaltyDialog.pas">
+				<Form>Report_LoyaltyDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

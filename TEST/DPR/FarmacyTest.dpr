@@ -767,7 +767,8 @@ uses
   Report_Send_RemainsSun_over in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_over.pas' {Report_Send_RemainsSun_overForm: TParentForm},
   MarginCategory_All in '..\..\FormsFarmacy\Guides\MarginCategory_All.pas' {MarginCategory_AllForm: TParentForm},
   MarginCategoryAllDialog in '..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas' {MarginCategoryAllDialogForm: TParentForm},
-  ChoiceLoyaltyCheck in '..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas' {ChoiceLoyaltyCheckForm: TParentForm};
+  ChoiceLoyaltyCheck in '..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas' {ChoiceLoyaltyCheckForm: TParentForm},
+  Report_LoyaltyDialog in '..\..\FormsFarmacy\Report\Report_LoyaltyDialog.pas' {Report_LoyaltyDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
