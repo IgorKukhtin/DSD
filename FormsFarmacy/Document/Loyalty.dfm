@@ -1261,6 +1261,86 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       Caption = 'actExecLoyaltyDay'
     end
+    object actLinkWithChecks: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceLoyaltyCheck
+        end
+        item
+          Action = actExecLoyaltyCheck
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
+      Hint = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
+      ImageIndex = 29
+    end
+    object actChoiceLoyaltyCheck: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceLoyaltyCheck'
+      FormName = 'TChoiceLoyaltyCheckForm'
+      FormNameParam.Value = 'TChoiceLoyaltyCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitID'
+          Value = ''
+          Component = SignDCS
+          ComponentItem = 'UnitID'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = SignDCS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartSummCash'
+          Value = Null
+          Component = edStartSummCash
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = SignDCS
+          ComponentItem = 'ID_Check'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'CheckID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecLoyaltyCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetLoyaltyCheck
+      StoredProcList = <
+        item
+          StoredProc = spSetLoyaltyCheck
+        end>
+      Caption = 'actExecLoyaltyCheck'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loyalty'
@@ -1333,6 +1413,10 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -1472,6 +1556,10 @@ inherited LoyaltyForm: TLoyaltyForm
       Visible = ivAlways
       ImageIndex = 76
     end
+    object dxBarButton1: TdxBarButton
+      Action = actLinkWithChecks
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1525,8 +1613,8 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'CheckID'
         Value = Null
-        DataType = ftFloat
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -2543,5 +2631,30 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     Left = 831
     Top = 208
+  end
+  object spSetLoyaltyCheck: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_LoyaltySign_LinkCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1046
+    Top = 200
   end
 end

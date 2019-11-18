@@ -36,167 +36,144 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
     ModalResult = 2
     TabOrder = 1
   end
-  object cbVal1: TcxCheckBox
-    Left = 22
-    Top = 20
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 2
-    Width = 51
-  end
-  object edVal1: TcxCurrencyEdit
-    Left = 153
-    Top = 20
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.###'
-    TabOrder = 3
-    Width = 80
-  end
   object cxLabel5: TcxLabel
-    Left = 79
+    Left = 84
     Top = 21
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
   end
-  object cbVal2: TcxCheckBox
-    Left = 22
-    Top = 50
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 5
-    Width = 51
-  end
   object cxLabel1: TcxLabel
-    Left = 77
+    Left = 84
     Top = 51
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
   end
+  object cxLabel2: TcxLabel
+    Left = 84
+    Top = 81
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  end
+  object cxLabel3: TcxLabel
+    Left = 84
+    Top = 111
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  end
+  object cxLabel4: TcxLabel
+    Left = 84
+    Top = 141
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  end
+  object cxLabel6: TcxLabel
+    Left = 84
+    Top = 171
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  end
+  object cxLabel7: TcxLabel
+    Left = 84
+    Top = 201
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  end
+  object edVal1: TcxCurrencyEdit
+    Left = 160
+    Top = 20
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 9
+    Width = 80
+  end
+  object cbVal1: TcxCheckBox
+    Left = 9
+    Top = 20
+    Hint = '0-15'
+    Caption = '0-15'
+    ParentColor = False
+    State = cbsChecked
+    TabOrder = 10
+    Width = 56
+  end
+  object cbVal2: TcxCheckBox
+    Left = 9
+    Top = 53
+    Caption = '15-50'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 11
+    Width = 63
+  end
+  object cbVal3: TcxCheckBox
+    Left = 9
+    Top = 80
+    Caption = '50-100'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 12
+    Width = 65
+  end
+  object cbVal4: TcxCheckBox
+    Left = 9
+    Top = 110
+    Caption = '100-200'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 13
+    Width = 66
+  end
+  object cbVal5: TcxCheckBox
+    Left = 9
+    Top = 140
+    Caption = '200-300'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 14
+    Width = 66
+  end
+  object cbVal6: TcxCheckBox
+    Left = 9
+    Top = 170
+    Caption = '300-1000'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 15
+    Width = 70
+  end
+  object cbVal7: TcxCheckBox
+    Left = 9
+    Top = 200
+    Caption = '> 1000'
+    ParentShowHint = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 16
+    Width = 63
+  end
   object edVal2: TcxCurrencyEdit
-    Left = 153
+    Left = 160
     Top = 50
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 7
+    TabOrder = 17
     Width = 80
-  end
-  object cbVal3: TcxCheckBox
-    Left = 22
-    Top = 80
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 8
-    Width = 51
-  end
-  object cxLabel2: TcxLabel
-    Left = 77
-    Top = 81
-    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
   end
   object edVal3: TcxCurrencyEdit
-    Left = 153
+    Left = 160
     Top = 80
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 10
+    TabOrder = 18
     Width = 80
-  end
-  object cbVal4: TcxCheckBox
-    Left = 22
-    Top = 110
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 11
-    Width = 51
-  end
-  object cxLabel3: TcxLabel
-    Left = 77
-    Top = 111
-    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
   end
   object edVal4: TcxCurrencyEdit
-    Left = 153
+    Left = 160
     Top = 110
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.###'
-    TabOrder = 13
-    Width = 80
-  end
-  object cbVal5: TcxCheckBox
-    Left = 22
-    Top = 140
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 14
-    Width = 51
-  end
-  object cxLabel4: TcxLabel
-    Left = 77
-    Top = 141
-    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
-  end
-  object edVal5: TcxCurrencyEdit
-    Left = 153
-    Top = 140
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.###'
-    TabOrder = 16
-    Width = 80
-  end
-  object cbVal6: TcxCheckBox
-    Left = 22
-    Top = 170
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 17
-    Width = 51
-  end
-  object cxLabel6: TcxLabel
-    Left = 77
-    Top = 171
-    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
-  end
-  object edVal6: TcxCurrencyEdit
-    Left = 153
-    Top = 170
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -204,26 +181,28 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
     TabOrder = 19
     Width = 80
   end
-  object cbVal7: TcxCheckBox
-    Left = 22
-    Top = 200
-    Hint = 
-      #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
-      #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-    Caption = '0-15'
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    ShowHint = True
+  object edVal5: TcxCurrencyEdit
+    Left = 160
+    Top = 140
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
     TabOrder = 20
-    Width = 51
+    Width = 80
   end
-  object cxLabel7: TcxLabel
-    Left = 77
-    Top = 201
-    Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1085#1072
+  object edVal6: TcxCurrencyEdit
+    Left = 160
+    Top = 170
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 21
+    Width = 80
   end
   object edVal7: TcxCurrencyEdit
-    Left = 153
+    Left = 160
     Top = 200
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -253,13 +232,13 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
     Params = <
       item
         Name = 'isVal1'
-        Value = 41579d
+        Value = Null
         Component = cbVal1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal2'
         Value = Null
         Component = cbVal2
@@ -267,7 +246,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal3'
         Value = Null
         Component = cbVal3
@@ -275,7 +254,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal4'
         Value = Null
         Component = cbVal4
@@ -283,7 +262,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal5'
         Value = Null
         Component = cbVal5
@@ -291,7 +270,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal6'
         Value = Null
         Component = cbVal6
@@ -299,7 +278,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      item
+            item
         Name = 'isVal7'
         Value = Null
         Component = cbVal7
@@ -312,7 +291,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal1
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -320,15 +299,15 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal2
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'Val3'
-        Value = 'NULL'
+        Value = Null
         Component = edVal3
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -336,7 +315,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal4
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -344,7 +323,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal5
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -352,7 +331,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal6
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -360,14 +339,10 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         Value = Null
         Component = edVal7
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 65535
-    Top = 162
-  end
-  object PeriodChoice: TPeriodChoice
-    Left = 210
-    Top = 20
+    Left = 111
+    Top = 202
   end
 end

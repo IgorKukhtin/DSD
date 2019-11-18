@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Child_Erased()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Erased (Integer, Integer, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Erased (Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Erased (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_Erased(
     IN inUnitId                Integer   , -- подразделение
     IN inPersonalServiceListId Integer   , -- ведомость начисления
     IN inStartDate             TDateTime , -- дата
     IN inEndDate               TDateTime , -- дата
+    IN inPositionId            Integer   , -- если = 0, тогда удалять все, иначе - только эту должность
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -18,6 +20,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
      vbUserId:= lpGetUserBySession (inSession);
+
+     inPositionId := COALESCE (inPositionId, 0);
 
      -- проверка
      IF COALESCE (inPersonalServiceListId, 0) = 0
@@ -120,6 +124,11 @@ end if;
                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
                                                 AND MILinkObject_Unit.ObjectId       = inUnitId
+                -- ограничиваем должностью, если <> 0
+               INNER JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
+                                               AND (MILinkObject_Position.ObjectId      = inPositionId OR inPositionId = 0)
 
                LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                              ON MIBoolean_Main.MovementItemId = MovementItem.Id
@@ -158,9 +167,6 @@ end if;
                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
 
-               LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                                ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                               AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
                LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                                 ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                                AND MILinkObject_Member.DescId         = zc_MILinkObject_Member()
@@ -187,6 +193,12 @@ end if;
                                                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
                                                                             AND MILinkObject_Unit.ObjectId       = inUnitId
+                                           -- удаляем только чайлды у которых в мастере тек. подразделение и выбранная должность , если =0 то все
+                                           INNER JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
+                                                                            AND (MILinkObject_Position.ObjectId      = inPositionId OR inPositionId = 0)
+
                                       WHERE MovementItem.MovementId = vbMovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
                                         AND MovementItem.isErased   = FALSE
@@ -209,6 +221,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.19         * ограничиваем должностью
  15.10.19         *
  10.01.19         * ограничиваем подразделением
  05.01.18         *
@@ -216,4 +229,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MI_PersonalService_Child_Erased (inFromId := 183292 , inToId := 183290 , inOperDate := ('01.06.2016')::TDateTime , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PersonalService_Child_Erased (inUnitId := 183292, inPersonalServiceListId := 0, inStartDate := ('01.06.2016')::TDateTime, inEndDate := ('01.06.2016')::TDateTime, inPositionId := 0, inSession := '3');

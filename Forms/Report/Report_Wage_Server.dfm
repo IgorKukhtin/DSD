@@ -4,25 +4,25 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
   ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 436
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 118
     Width = 991
-    Height = 286
+    Height = 283
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 991
     ExplicitHeight = 286
-    ClientRectBottom = 286
+    ClientRectBottom = 283
     ClientRectRight = 991
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 991
       ExplicitHeight = 286
       inherited cxGrid: TcxGrid
         Width = 991
-        Height = 286
+        Height = 283
         ExplicitWidth = 991
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -336,9 +336,9 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
   end
   inherited Panel: TPanel
     Width = 991
-    Height = 89
+    Height = 92
     ExplicitWidth = 991
-    ExplicitHeight = 89
+    ExplicitHeight = 92
     inherited deStart: TcxDateEdit
       Left = 10
       Top = 23
@@ -554,6 +554,9 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_1'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
@@ -597,6 +600,9 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_2'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1312,6 +1318,14 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
         Value = 42370d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

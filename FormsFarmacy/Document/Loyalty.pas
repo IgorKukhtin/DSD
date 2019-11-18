@@ -146,6 +146,11 @@ type
     actExportToXLSLoyaltyDay: TdsdExportToXLS;
     actExecLoyaltyDay: TdsdExecStoredProc;
     spSelectPrintLoyaltyDay: TdsdStoredProc;
+    actLinkWithChecks: TMultiAction;
+    actChoiceLoyaltyCheck: TOpenChoiceForm;
+    actExecLoyaltyCheck: TdsdExecStoredProc;
+    spSetLoyaltyCheck: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

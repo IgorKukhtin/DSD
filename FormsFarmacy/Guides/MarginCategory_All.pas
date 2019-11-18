@@ -48,6 +48,8 @@ type
     ExecuteDialog: TExecuteDialog;
     macUpdateParam: TMultiAction;
     FormParams: TdsdFormParams;
+    bb: TdxBarButton;
+    macUpdateParam_list: TMultiAction;
   private
     { Private declarations }
   public
