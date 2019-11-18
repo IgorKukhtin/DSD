@@ -13,6 +13,9 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbJuridicalId Integer;
+  DECLARE vbOKPO TVarChar;
+  DECLARE vbUnitCode Integer;
+
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -21,10 +24,15 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderExternal());
      vbUserId := inSession;
 
-   SELECT FromId INTO vbJuridicalId
-       FROM Movement_OrderExternal_View 
-       WHERE Movement_OrderExternal_View.Id = inMovementId;
-
+     SELECT Movement_OrderExternal_View.FromId
+          , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS OKPO  -- нашего юр.лица
+          , Movement_OrderExternal_View.ToCode
+   INTO vbJuridicalId, vbOKPO, vbUnitCode
+     FROM Movement_OrderExternal_View
+          LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                        ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = Movement_OrderExternal_View.JuridicalId
+                                       AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+     WHERE Movement_OrderExternal_View.Id = inMovementId;
 
 
 
@@ -165,6 +173,41 @@ BEGIN
         RETURN NEXT Cursor2;
         RETURN;
     END IF;
+
+
+   IF vbJuridicalId = 183317 THEN --- Дельта Медикел
+     OPEN Cursor1 FOR
+       SELECT 'PartnerCode'::TVarChar AS FieldName, 'Код покупателя'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Code'::TVarChar AS FieldName, 'Код'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'GoodsName'::TVarChar AS FieldName, 'Товар'::TVarChar AS DisplayName, 200 AS Width
+ UNION SELECT 'Amount'::TVarChar AS FieldName, 'Кол-во'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Price'::TVarChar AS FieldName, 'Цена без ндс'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Summ'::TVarChar AS FieldName, 'Cумма без ндс'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'PartionGoodsDate'::TVarChar AS FieldName, 'Cрок годности'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'OKPO'::TVarChar AS FieldName, 'ОКПО'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'UnitCode'::TVarChar AS FieldName, 'Код аптеки'::TVarChar AS DisplayName, 100 AS Width
+ ;
+     RETURN NEXT Cursor1;
+
+     OPEN Cursor2 FOR
+       SELECT            
+             MovementItem.PartnerGoodsCode::TVarChar AS PartnerCode
+           , MovementItem.GoodsCode::TVarChar        AS Code
+           , MovementItem.GoodsName                  AS GoodsName
+           , MovementItem.Amount                     AS Amount
+           , MovementItem.Price
+           , MovementItem.Summ
+           , MovementItem.PartionGoodsDate
+           , vbOKPO                                  AS OKPO
+           , vbUnitCode                              AS UnitCode
+       FROM MovementItem_OrderExternal_View AS MovementItem
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.isErased = false;
+
+     RETURN NEXT Cursor2;
+     RETURN;
+   END IF;
+   
    
    -- Во всех других случаях
      OPEN Cursor1 FOR

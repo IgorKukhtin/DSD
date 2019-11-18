@@ -11,9 +11,13 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
            , MovementLinkObject_From.ObjectId                   AS FromId
+           , Object_From.ObjectCode                             AS FromCode
            , Object_From.ValueData                              AS FromName
            , MovementLinkObject_To.ObjectId                     AS ToId
+           , Object_To.Code                                     AS ToCode
            , Object_To.Name                                     AS ToName
+           , Object_To.JuridicalId                              AS JuridicalId
+           , Object_To.JuridicalCode                            AS JuridicalCode
            , Object_To.JuridicalName                            AS JuridicalName
            , MovementLinkObject_Contract.ObjectId               AS ContractId
            , Object_Contract.ValueData                          AS ContractName
@@ -22,8 +26,7 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
            , Movement_Master.Id                                 AS MasterId
            , ('№ '||Movement_Master.InvNumber || ' от '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar   AS MasterInvNumber 
            , COALESCE(MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
-           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
-           
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred          
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

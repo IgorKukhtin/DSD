@@ -244,10 +244,10 @@ begin
   exit;
 
   LoadReportFromFile('Отчет по товару (продажа по покупателям)', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по товару (продажа по покупателям).fr3');
-  }
+
   LoadReportFromFile('Отчет по товару (приход от поставщика)', ReportPath + '\Отчеты (товарные)\Отчет по товару (приход от поставщика).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет по товару (внутренний)', ReportPath + '\Отчеты (товарные)\Отчет по товару (внутренний).fr3');
 
   LoadReportFromFile('Отчет по товару (статьи списания)', ReportPath + '\Отчеты (товарные)\Отчет по товару (статьи списания).fr3');
@@ -310,10 +310,10 @@ begin
   exit;
 
   LoadReportFromFile('Отчет по комплектовщикам', ReportPath + '\Отчеты (производство)\Отчет по комплектовщикам.fr3');
-  }
+
   LoadReportFromFile('Рецептуры с разворотом всех составляющих по ценам_1', ReportPath + '\Отчеты (производство)\Рецептуры с разворотом всех составляющих по ценам_1.fr3');
   exit;
-  {
+
   LoadReportFromFile('Акт обвалки', ReportPath + '\Производство\Акт обвалки.fr3');
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
@@ -405,9 +405,11 @@ begin
 
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
+
+  }
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
 

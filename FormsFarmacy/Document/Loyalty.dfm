@@ -1341,6 +1341,90 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       Caption = 'actExecLoyaltyCheck'
     end
+    object actExportCreaturesPromocode: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      BeforeAction = actCreaturesPromocode
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      FileName = 'CreaturesPromocode'
+      FileNameParam.Value = 'CreaturesPromocode'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      ColumnParams = <>
+      Caption = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
+      Hint = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
+      ImageIndex = 25
+    end
+    object actCreaturesPromocode: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteLoyaltyDialog
+        end
+        item
+          Action = actExecCreaturesPromocode
+        end>
+      Caption = 'actCreaturesPromocode'
+    end
+    object actExecuteLoyaltyDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteLoyaltyDialog'
+      FormName = 'TReport_LoyaltyDialogForm'
+      FormNameParam.Value = 'TReport_LoyaltyDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecCreaturesPromocode: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintCreaturesPromocode
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCreaturesPromocode
+        end>
+      Caption = 'actExecCreaturesPromocode'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loyalty'
@@ -1425,6 +1509,10 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'bbOpenReportMinPrice_All'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -1560,6 +1648,10 @@ inherited LoyaltyForm: TLoyaltyForm
       Action = actLinkWithChecks
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actExportCreaturesPromocode
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1616,6 +1708,23 @@ inherited LoyaltyForm: TLoyaltyForm
         Name = 'CheckID'
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2656,5 +2765,55 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     Left = 1046
     Top = 200
+  end
+  object spSelectPrintCreaturesPromocode: TdsdStoredProc
+    StoredProcName = 'gpReport_Loyalty_CreaturesPromocode'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
+    Top = 256
   end
 end
