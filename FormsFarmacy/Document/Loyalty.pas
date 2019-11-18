@@ -152,11 +152,10 @@ type
     spSetLoyaltyCheck: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
-    actExportCreaturesPromocode: TdsdExportToXLS;
-    actExecCreaturesPromocode: TdsdExecStoredProc;
-    actCreaturesPromocode: TMultiAction;
-    actExecuteLoyaltyDialog: TExecuteDialog;
-    spSelectPrintCreaturesPromocode: TdsdStoredProc;
+    PrintTitleCDS: TClientDataSet;
+    actExportCreaturesPromocode: TdsdOpenForm;
+    actExportUsedPromocode: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

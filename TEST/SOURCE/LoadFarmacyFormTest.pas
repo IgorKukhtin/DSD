@@ -779,6 +779,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LoyaltyDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LoyaltyDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Loyalty_CreaturesPromocodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_CreaturesPromocodeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Loyalty_UsedPromocodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_UsedPromocodeForm');
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;

@@ -768,7 +768,9 @@ uses
   MarginCategory_All in '..\..\FormsFarmacy\Guides\MarginCategory_All.pas' {MarginCategory_AllForm: TParentForm},
   MarginCategoryAllDialog in '..\..\FormsFarmacy\Guides\MarginCategoryAllDialog.pas' {MarginCategoryAllDialogForm: TParentForm},
   ChoiceLoyaltyCheck in '..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas' {ChoiceLoyaltyCheckForm: TParentForm},
-  Report_LoyaltyDialog in '..\..\FormsFarmacy\Report\Report_LoyaltyDialog.pas' {Report_LoyaltyDialogForm: TParentForm};
+  Report_LoyaltyDialog in '..\..\FormsFarmacy\Report\Report_LoyaltyDialog.pas' {Report_LoyaltyDialogForm: TParentForm},
+  Report_Loyalty_CreaturesPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_CreaturesPromocode.pas' {Report_Loyalty_CreaturesPromocodeForm: TParentForm},
+  Report_Loyalty_UsedPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_UsedPromocode.pas' {Report_Loyalty_UsedPromocodeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
