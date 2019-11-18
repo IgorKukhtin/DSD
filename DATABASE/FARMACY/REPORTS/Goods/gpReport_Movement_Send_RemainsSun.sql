@@ -264,7 +264,7 @@ BEGIN
                , tmp.Amount_next_res
                , tmp.Summ_next_res
           FROM lpInsert_Movement_Send_RemainsSun (inOperDate := inOperDate
-                                                , inDriverId := vbDriverId_1
+                                                , inDriverId := 0 -- vbDriverId_1
                                                 , inStep     := 1
                                                 , inUserId   := vbUserId
                                                  ) AS tmp
@@ -294,7 +294,7 @@ BEGIN
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
 
 
-
+/*
      -- Результат - ВТОРОЙ водитель
      INSERT INTO _tmpResult (DriverId, DriverName
                            , UnitId, UnitName
@@ -408,7 +408,7 @@ BEGIN
      INSERT INTO _tmpList_DefSUN_a SELECT * FROM _tmpList_DefSUN;
      -- 7.1. распределяем перемещения - по партиям со сроками
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
-
+*/
 
       -- добавили ВСЕ остатки
      /*INSERT INTO _tmpResult (UnitId, UnitName

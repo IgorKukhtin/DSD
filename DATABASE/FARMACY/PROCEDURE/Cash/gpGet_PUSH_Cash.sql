@@ -256,19 +256,37 @@ BEGIN
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
-                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                             AND MovementBoolean_SUN.ValueData = True
+                                             AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                             AND MovementBoolean_SUN.ValueData  = TRUE
                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                AND MovementLinkObject_From.ObjectId = vbUnitId
-             WHERE Movement.DescId = zc_Movement_Send()
+             WHERE Movement.DescId   = zc_Movement_Send()
                AND Movement.OperDate = CURRENT_DATE
-               AND Movement.StatusId = zc_Enum_Status_Erased()) AND
-     (date_part('HOUR',    CURRENT_TIME)::Integer <= 12
-      OR date_part('HOUR',    CURRENT_TIME)::Integer > 12
-     AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
-     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 16)
+               AND Movement.StatusId = zc_Enum_Status_Erased()
+            )
+      AND (DATE_PART('HOUR',    CURRENT_TIME)::Integer <= 12
+        OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
+        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00
+        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 16
+           ))
+      AND vbUnitId NOT IN (
+--                         183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
+                           183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
+                         , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
+                         , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
+--                       , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
+--                       , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
+--                       , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
+--                       , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
+                         , 8698426 -- 70;"АП_1 пр.Героев_22";f;
+                         , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
+--                       , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
+                         , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
+--                       , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
+                         , 12607257 -- 88;"Аптека 4 пр.Мира 14"
+                          )
    THEN
       IF (SELECT COUNT(*)
           FROM  Movement

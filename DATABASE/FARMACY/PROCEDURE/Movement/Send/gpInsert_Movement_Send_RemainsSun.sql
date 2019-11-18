@@ -124,7 +124,7 @@ BEGIN
                      );
      -- !!!1 - сформировали данные во временные табл!!!
      PERFORM lpInsert_Movement_Send_RemainsSun (inOperDate:= inOperDate
-                                              , inDriverId:= vbDriverId_1
+                                              , inDriverId:= 0 -- vbDriverId_1
                                               , inStep    := 1
                                               , inUserId  := vbUserId
                                                );
@@ -135,7 +135,7 @@ BEGIN
 
 
      -- !!!второй водитель!!!
-     vbDriverId_2 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
+     /*vbDriverId_2 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
                       FROM ObjectLink AS ObjectLink_Unit_Driver
                            JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Driver.ObjectId AND Object_Unit.isErased = FALSE
                       WHERE ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
@@ -149,7 +149,7 @@ BEGIN
                                                );
      -- !!!2 - перенесли данные
      INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
-     INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
+     INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;*/
       
 
      -- !!!Удаляем предыдущие документы - SUN !!!

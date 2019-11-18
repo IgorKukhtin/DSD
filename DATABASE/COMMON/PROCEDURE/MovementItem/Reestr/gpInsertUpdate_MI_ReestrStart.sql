@@ -141,6 +141,34 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не найден.', inBarCode;
          END IF;
 
+         -- Проверка
+         IF EXISTS (SELECT Object_Route.ValueData
+                    FROM MovementLinkMovement AS MLM_Order
+                         LEFT JOIN MovementLinkObject AS MLO_Route
+                                                      ON MLO_Route.MovementId = MLM_Order.MovementChildId
+                                                     AND MLO_Route.DescId     = zc_MovementLinkObject_Route()
+                         LEFT JOIN Object AS Object_Route ON Object_Route.Id = MLO_Route.ObjectId
+                    WHERE MLM_Order.MovementId = vbMovementId_sale
+                      AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                      AND Object_Route.ValueData ILIKE '%самовывоз%'
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> № <%> от <%> привязан к маршруту <%>.Добавление в реестр запрещено.'
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_sale)
+                           , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_sale))
+                           , (SELECT Object_Route.ValueData
+                              FROM MovementLinkMovement AS MLM_Order
+                                   LEFT JOIN MovementLinkObject AS MLO_Route
+                                                                ON MLO_Route.MovementId = MLM_Order.MovementChildId
+                                                               AND MLO_Route.DescId     = zc_MovementLinkObject_Route()
+                                   LEFT JOIN Object AS Object_Route ON Object_Route.Id = MLO_Route.ObjectId
+                              WHERE MLM_Order.MovementId = vbMovementId_sale
+                                AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                                AND Object_Route.ValueData ILIKE '%самовывоз%'
+                             )
+                           ;
+         END IF;
+
      END IF;
 
 

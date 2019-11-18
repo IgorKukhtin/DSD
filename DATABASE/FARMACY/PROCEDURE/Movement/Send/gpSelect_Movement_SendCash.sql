@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbIsSUN_over Boolean;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -54,6 +55,17 @@ BEGIN
      END IF;   
      vbUnitId := vbUnitKey::Integer;
 
+
+     -- Ограничение - если роль Кассир аптеки
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 308121 AND UserId = vbUserId)
+     THEN
+         vbIsSUN_over:= FALSE;
+     ELSE
+         vbIsSUN_over:= TRUE;
+     END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId WHERE inisSUN = FALSE
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE
@@ -81,6 +93,26 @@ BEGIN
                                 AND COALESCE (ObjectLink_Unit_ProvinceCity.ChildObjectId,0) <> 0
                               )
 
+        , tmpUnit_SUN_over AS (SELECT Object.Id AS UnitId
+                               FROM Object
+                               WHERE Object.Id IN (
+--                                                 183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
+                                                   183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
+                                                 , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
+                                                 , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
+--                                               , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
+--                                               , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
+--                                               , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
+--                                               , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
+                                                 , 8698426 -- 70;"АП_1 пр.Героев_22";f;
+                                                 , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
+--                                               , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
+                                                 , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
+--                                               , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
+                                                 , 12607257 -- 88;"Аптека 4 пр.Мира 14"
+                                                  )
+                              )
+       -- Результат
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
@@ -241,11 +273,16 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
+            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_From ON tmpUnit_SUN_over_From.UnitId = MovementLinkObject_From.ObjectId
+            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_To   ON tmpUnit_SUN_over_To.UnitId   = MovementLinkObject_To.ObjectId
+
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
          AND (inisSUN = FALSE OR inisSUN = TRUE AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE)
          AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased() 
-           OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased())
+           OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased()
+             )
+         AND (vbIsSUN_over = TRUE OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE OR tmpUnit_SUN_over_From.UnitId IS NULL OR tmpUnit_SUN_over_To.UnitId IS NULL OR Movement.StatusId <> zc_Enum_Status_Erased())
         
        ;
 
@@ -253,7 +290,7 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
+	
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -34,6 +34,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbIsSUN_over Boolean;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -58,6 +59,16 @@ BEGIN
      END IF;
      
 
+     -- Ограничение - если роль Кассир аптеки
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 308121 AND UserId = vbUserId)
+     THEN
+         vbIsSUN_over:= FALSE;
+     ELSE
+         vbIsSUN_over:= TRUE;
+     END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -274,7 +285,8 @@ BEGIN
             LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_To   ON tmpUnit_SUN_over_To.UnitId   = MovementLinkObject_To.ObjectId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
-         AND  (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (vbIsSUN_over = TRUE OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE OR tmpUnit_SUN_over_From.UnitId IS NULL OR tmpUnit_SUN_over_To.UnitId IS NULL OR Movement.StatusId <> zc_Enum_Status_Erased())
         
        ;
 
