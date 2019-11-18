@@ -78,6 +78,7 @@ type
     actUpdate_isDefSun: TdsdExecStoredProc;
     bbUpdate_isDefSun: TdxBarButton;
     bbUpdate_isSun: TdxBarButton;
+    isSUN_over: TcxGridDBColumn;
   private
     { Private declarations }
   public

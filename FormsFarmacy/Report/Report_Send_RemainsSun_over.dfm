@@ -4,7 +4,7 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 711
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,17 +14,17 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
     TabOrder = 2
     ExplicitTop = 59
     ExplicitWidth = 960
-    ExplicitHeight = 433
+    ExplicitHeight = 614
     ClientRectBottom = 614
     ClientRectRight = 960
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 960
-      ExplicitHeight = 433
+      ExplicitHeight = 614
       inherited cxGrid: TcxGrid
         Width = 960
         Height = 384
         ExplicitWidth = 960
-        ExplicitHeight = 223
+        ExplicitHeight = 384
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1408,7 +1408,6 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 223
       end
     end
   end
@@ -1847,7 +1846,7 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
     Top = 200
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Movement_Send_RemainsSun'
+    StoredProcName = 'gpReport_Movement_Send_RemainsSun_over'
     DataSets = <
       item
         DataSet = MasterCDS

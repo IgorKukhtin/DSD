@@ -127,34 +127,26 @@ BEGIN
      -- все Подразделения для схемы SUN
      -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer) ON COMMIT DROP;
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN)
-        SELECT ObjectBoolean_SUN.ObjectId
-             , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
-             , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
-        FROM ObjectBoolean AS ObjectBoolean_SUN
-             LEFT JOIN ObjectFloat AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = ObjectBoolean_SUN.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
-             LEFT JOIN ObjectFloat AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = ObjectBoolean_SUN.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
-             -- !!!только для этого водителя!!!
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
-                                  ON ObjectLink_Unit_Driver.ObjectId      = ObjectBoolean_SUN.ObjectId
-                                 AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                                 AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId
-        WHERE ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
-          AND ObjectBoolean_SUN.ObjectId IN (183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
-                                           , 183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
-                                           , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
-                                           , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
-                                           , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
-                                           , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
-                                           , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
-                                           , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
-                                           , 8698426 -- 70;"АП_1 пр.Героев_22";f;
-                                           , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
-                                           , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
-                                           , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
-                                           , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
-                                            )
-        --AND ObjectBoolean_SUN.ValueData = TRUE
-        ;
+        SELECT Object.Id
+             , 0 AS KoeffInSUN
+             , 0 AS KoeffOutSUN
+        FROM Object
+        WHERE Object.Id IN (
+--                          183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
+                            183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
+                          , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
+                          , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
+--                        , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
+--                        , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
+--                        , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
+--                        , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
+                          , 8698426 -- 70;"АП_1 пр.Героев_22";f;
+                          , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
+--                        , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
+                          , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
+--                        , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
+                          , 12607257 -- 88;"Аптека 4 пр.Мира 14"
+                           );
 
      IF inStep = 1 AND 1=0
      THEN

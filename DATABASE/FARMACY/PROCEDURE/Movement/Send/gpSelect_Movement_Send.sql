@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSUN_over Boolean
+             , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -74,6 +75,25 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
+        , tmpUnit_SUN_over AS (SELECT Object.Id AS UnitId
+                               FROM Object
+                               WHERE Object.Id IN (
+--                                                 183289 -- 2;"АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5";f;
+                                                   183290 -- 3;"АП 3, ул.Батумская 13 (Аптека N1, Шапиро ИА)";f;
+                                                 , 183291 -- 4;"АП_4 ул_Шевченко_6а КЗДЦПМСП_4";f;
+                                                 , 394426 -- 25;"Аптека_2 ж_м_Коммунар (Покровский)_5б";f;
+--                                               , 494882 -- 30;"Аптека_3 ул_Набережная заводская_73д";f;
+--                                               , 1781716 -- 34;"Аптека_2 ул_Шевченко_9_(АСНБ-2)";f;
+--                                               , 6309262 -- 57;"Аптека_3 ул_Боброва_1";f;
+--                                               , 8393158 -- 69;"Аптека_3 пер_Парусный_10";f;
+                                                 , 8698426 -- 70;"АП_1 пр.Героев_22";f;
+                                                 , 9771036 -- 74;"Аптека_4 пр.Героев_17";f;
+--                                               , 10779386 -- 82;"Аптека 3 ул.Ю.Кондратюка дом 1 (АСНБ-4)";f;
+                                                 , 11300059 -- 85;"АП 1 пр.А. Поля 141а (Medical Plaza)";f;
+--                                               , 11769526 -- 87;"Аптека 3 ул.Инженерная 1";f;
+                                                 , 12607257 -- 88;"Аптека 4 пр.Мира 14"
+                                                  )
+                              )
         , tmpProvinceCity AS (SELECT ObjectLink_Unit_ProvinceCity.ObjectId AS UnitId
                                    , Object_ProvinceCity.Id                AS ProvinceCityId
                                    , Object_ProvinceCity.ValueData         AS ProvinceCityName
@@ -83,7 +103,7 @@ BEGIN
                               WHERE ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
                                 AND COALESCE (ObjectLink_Unit_ProvinceCity.ChildObjectId,0) <> 0
                               )
-
+       -- Результат
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
@@ -112,6 +132,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
+           , CASE WHEN MovementBoolean_SUN.ValueData = TRUE AND tmpUnit_SUN_over_From.UnitId > 0 AND tmpUnit_SUN_over_To.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isSUN_over
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
@@ -172,7 +193,7 @@ BEGIN
             LEFT JOIN tmpUnit AS tmpUnit_From ON tmpUnit_From.UnitId = MovementLinkObject_From.ObjectId
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             LEFT JOIN tmpProvinceCity AS tmpProvinceCity_From ON tmpProvinceCity_From.UnitId = MovementLinkObject_From.ObjectId
-
+            
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -248,6 +269,9 @@ BEGIN
                                          ON MovementLinkObject_Driver.MovementId = Movement.Id
                                         AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
             LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
+
+            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_From ON tmpUnit_SUN_over_From.UnitId = MovementLinkObject_From.ObjectId
+            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_To   ON tmpUnit_SUN_over_To.UnitId   = MovementLinkObject_To.ObjectId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND  (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
