@@ -1,12 +1,15 @@
 -- Function: gpComplete_Movement_ReturnOut()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnOut (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnOut (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnOut (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnOut(
-    IN inMovementId        Integer              , -- ключ Документа
+    IN inMovementId        Integer               , -- ключ Документа
+    IN inIsCurrentData     Boolean               , -- дата документа текущая Да /Нет
+   OUT outOperDate         TDateTime             , --
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -18,12 +21,38 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
      vbUserId:= inSession;
+
+      -- параметры документа
+     SELECT
+          Movement.OperDate
+     INTO
+          outOperDate
+     FROM Movement
+     WHERE Movement.Id = inMovementId;
+
+     -- дата накладной перемещения должна совпадать с текущей датой.
+     -- Если пытаются провести док-т числом позже - выдаем предупреждение
+     IF (outOperDate <> CURRENT_DATE) AND (inIsCurrentData = TRUE)
+     THEN
+         --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        outOperDate:= CURRENT_DATE;
+        -- сохранили <Документ> c новой датой 
+        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_Send(), vbInvNumber, outOperDate, NULL);
+        
+/*     ELSE
+         IF ((outOperDate <> CURRENT_DATE) OR (outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH')) AND (inIsCurrentData = FALSE)
+         THEN
+             -- проверка прав на проведение задним числом
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Send());
+         END IF;*/
+     END IF;
+
      -- Проверили перед проведением на достаточность наличия, НДС и пр.
      PERFORM lpCheckComplete_Movement_ReturnOut (inMovementId);
      
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
+     
      -- собственно проводки
      PERFORM lpComplete_Movement_ReturnOut(inMovementId, -- ключ Документа
                                            vbUserId);    -- Пользователь                          

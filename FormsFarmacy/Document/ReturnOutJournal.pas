@@ -59,6 +59,7 @@ type
     ExecuteDialog: TExecuteDialog;
     AdjustingOurDate: TcxGridDBColumn;
     actPrintTTN: TdsdPrintAction;
+    BranchUser: TcxGridDBColumn;
   private
     { Private declarations }
   public
