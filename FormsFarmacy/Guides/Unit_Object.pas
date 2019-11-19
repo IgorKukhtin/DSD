@@ -96,6 +96,15 @@ type
     spUpdate_KoeffSUN: TdsdStoredProc;
     macUpdateKoeffSUN: TMultiAction;
     bbUpdateKoeffSUN: TdxBarButton;
+    spUpdate_Unit_isSUN_v2: TdsdStoredProc;
+    spUpdate_Unit_isSUN_in: TdsdStoredProc;
+    spUpdate_Unit_isSUN_out: TdsdStoredProc;
+    actUpdate_Unit_isSUN_v2: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_in: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_out: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN_in: TdxBarButton;
+    bbUpdate_Unit_isSUN_out: TdxBarButton;
+    bbUpdate_Unit_isSUN_v2: TdxBarButton;
   private
     { Private declarations }
   public

@@ -40,7 +40,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartTimeSP TDateTime
              , EndTimeSP   TDateTime
              , isSP        Boolean
-             , isSUN       Boolean
+             , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
              , isTopNo     Boolean
 ) AS
 $BODY$
@@ -132,12 +132,15 @@ BEGIN
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
       , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer     AS Num_byReportBadm
       
-      , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
-      , ObjectDate_StartSP.ValueData                  :: TDateTime AS StartTimeSP
-      , ObjectDate_EndSP.ValueData                    :: TDateTime AS EndTimeSP
-      , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
-      , COALESCE (ObjectBoolean_SUN.ValueData, FALSE) :: Boolean   AS isSUN
-      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
+      , ObjectDate_SP.ValueData                           :: TDateTime AS DateSP
+      , ObjectDate_StartSP.ValueData                      :: TDateTime AS StartTimeSP
+      , ObjectDate_EndSP.ValueData                        :: TDateTime AS EndTimeSP
+      , COALESCE (ObjectBoolean_SP.ValueData, FALSE)      :: Boolean   AS isSP
+      , COALESCE (ObjectBoolean_SUN.ValueData, FALSE)     :: Boolean   AS isSUN
+      , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
+      , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
+      , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
+      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)   :: Boolean   AS isTopNo
       
 
     FROM Object AS Object_Unit
@@ -248,6 +251,18 @@ BEGIN
                                 ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2
+                                ON ObjectBoolean_SUN_v2.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2.DescId = zc_ObjectBoolean_Unit_SUN_v2()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_in
+                                ON ObjectBoolean_SUN_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_in.DescId = zc_ObjectBoolean_Unit_SUN_in()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_out
+                                ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
@@ -341,6 +356,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.11.19         *
  23.09.19         * zc_ObjectLink_Unit_Driver
  04.09.19         * isTopNo
  11.07.19         *
