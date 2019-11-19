@@ -56,6 +56,7 @@ type
     procedure LoadGoodsInventoryFormTest;
     procedure LoadGoodsCategoryFormTest;
     procedure LoadGoodsSPMovementFormTest;
+    procedure LoadGoodsRepriceFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -1356,6 +1357,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupEditForm');
+end;
+
+ procedure TLoadFormTest.LoadGoodsRepriceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRepriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsRepriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRepriceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsRepriceEditForm');
 end;
 
 procedure TLoadFormTest.LoadTaxUnitFormTest;

@@ -770,7 +770,9 @@ uses
   ChoiceLoyaltyCheck in '..\..\FormsFarmacy\Guides\ChoiceLoyaltyCheck.pas' {ChoiceLoyaltyCheckForm: TParentForm},
   Report_LoyaltyDialog in '..\..\FormsFarmacy\Report\Report_LoyaltyDialog.pas' {Report_LoyaltyDialogForm: TParentForm},
   Report_Loyalty_CreaturesPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_CreaturesPromocode.pas' {Report_Loyalty_CreaturesPromocodeForm: TParentForm},
-  Report_Loyalty_UsedPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_UsedPromocode.pas' {Report_Loyalty_UsedPromocodeForm: TParentForm};
+  Report_Loyalty_UsedPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_UsedPromocode.pas' {Report_Loyalty_UsedPromocodeForm: TParentForm},
+  GoodsReprice in '..\..\FormsFarmacy\Guides\GoodsReprice.pas' {GoodsRepriceForm: TParentForm},
+  GoodsRepriceEdit in '..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas' {GoodsRepriceEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
