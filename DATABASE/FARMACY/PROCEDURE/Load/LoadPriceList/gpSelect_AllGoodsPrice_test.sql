@@ -1,8 +1,6 @@
 -- Function: gpSelect_AllGoodsPrice()
 -- Функция вызываеться из gpRun_Object_RepriceUnitSheduler_UnitReprice и gpRun_Object_RepriceUnitSheduler_UnitEqual если чтотоь глобально то и тпам править надо
 
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice_test (Integer, Integer, TFloat, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice_test(
@@ -512,6 +510,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.11.19         *
  31.10.19                                                                                      * isTopNo_Unit только для TOP сети
  04.09.19         * isTopNo_Unit
  11.02.19         * признак Товары соц-проект берем и документа
@@ -529,4 +528,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_AllGoodsPrice_test (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
