@@ -58,6 +58,20 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  14.05.19         *
 */
-
+/*
+SELECT *
+    , gpInsertUpdate_Object_BarCodeBox(
+     ioId          := 0
+    , inCode       := tmp.a
+    , inBarCode    := tmp.xxx
+    , inWeight     := 0
+    , inBoxId      := zc_Box_E3()
+    , inSession    := '5'
+)
+from (
+SELECT *, '1' || repeat ('0', 12 - LENGTH (tmp.a :: TVarChar) ) ||  tmp.a :: TVarChar as xxx
+from (SELECT GENERATE_SERIES (300, 499) as a) as tmp
+) as tmp
+*/
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_BarCodeBox()
