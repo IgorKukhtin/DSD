@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
              , isSUN Boolean, isDefSUN Boolean, isSUN_over Boolean
-             , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
+             , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -149,6 +149,7 @@ BEGIN
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                    AND Movement.OperDate < CURRENT_DATE
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
+           , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -242,6 +243,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+            LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                      ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                     AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

@@ -41,6 +41,10 @@ type
     UnloadMovementCDS: TClientDataSet;
     spSelectUnloadMovement: TdsdStoredProc;
     spUpdateUnload: TdsdStoredProc;
+    RESTResponse: TRESTResponse;
+    RESTRequest: TRESTRequest;
+    RESTClient: TRESTClient;
+    spGet_Goods_CodeRazom: TdsdStoredProc;
   private
     FMorionList: TMorionList;
     function GetMorionList: TMorionList;
@@ -412,6 +416,10 @@ var
   Session: IMCSession;
   CasualId: string;
   lQuantity, lPriceSale: Currency;
+  //
+  XML: IXMLDocument;
+  OperationResult : String;
+  CodeRazom : Integer;
 begin
   Result:=false;
   lMsg:='';
@@ -586,8 +594,128 @@ begin
         ResList := nil;
         ResItem := nil;
       end else
-      if gCode = 2 then
+      if (gCode = 2) and (gUserName <> '') then
+      begin
+        CheckCDS.First;
+        while not CheckCDS.Eof do
+        begin
+          //
+          //Start
+          //
+          if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
+          then
+            //поиск Штрих-код
+            with spGet_BarCode do begin
+               ParamByName('inObjectId').Value := lDiscountExternalId;
+               ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+               Execute;
+               BarCode_find := trim (ParamByName('outBarCode').Value);
+            end
+          else
+              BarCode_find := '';
+
+          //получение кода дистрибьюторов
+          with spGet_Goods_CodeRazom do begin
+             ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('outCodeRazom').Value := 0;
+             Execute;
+             CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);
+          end;
+
+          //если Штрих-код нашелся
+          if (BarCode_find <> '') and (CodeRazom <> 0) then
+          begin
+            try
+
+              RESTClient.BaseURL := gURL;
+              RESTClient.ContentType := 'application/x-www-form-urlencoded';
+
+              RESTRequest.ClearBody;
+              RESTRequest.Method := TRESTRequestMethod.rmPOST;
+              RESTRequest.Resource := '';
+
+              RESTRequest.Params.Clear;
+              RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
+                                               '<request><Operation>2</Operation>'+
+                                                       '<PharmCard>' + gUserName + '</PharmCard>'+
+                                                       '<PatientCard>' + gPassword + '</PatientCard>'+
+                                                       '<DrugCode>' + BarCode_find + '</DrugCode>'+
+                                                       '<Distributor>' + IntToStr(CodeRazom) + '</Distributor>'+
+                                                       '<SessionId>42351</SessionId>'+
+                                                       '<PharmPrice>' + StringReplace(CheckCDS.FieldByName('PriceSale').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</PharmPrice>'+
+                                                       '<Amount>' + StringReplace(CheckCDS.FieldByName('Amount').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</Amount>'+
+                                               '</request>', TRESTRequestParameterKind.pkGETorPOST);
+
+              try
+                RESTRequest.Execute;
+              except  on E: Exception do
+                begin
+                  ShowMessage('Ошибка фиксации факта продажи : ' + #13#10 + E.Message + #10+ #13
+                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                    //ошибка
+                  lMsg:='Error';
+                  exit;
+                end;
+              end;
+
+              if RESTResponse.StatusCode = 200 then
+              begin
+                // 50239534
+                XML := NewXMLDocument;
+                XML.XML.Text := RESTResponse.Content;
+                XML.Active := True;
+
+                OperationResult := XML.DocumentElement.ChildNodes[0].ChildNodes[0].Text;
+                if AnsiLowerCase(OperationResult) <> 'ok' then
+                begin
+                  if AnsiLowerCase(OperationResult) = 'pharm_not_active' then OperationResult := 'Аптека (карта аптеки) не активна.'
+                  else if AnsiLowerCase(OperationResult) = 'no_pharm_card' then OperationResult := 'Нет такой карты аптеки.'
+                  else if AnsiLowerCase(OperationResult) = 'no_patient_card' then OperationResult := 'Нет такой карты пациента.'
+                  else if AnsiLowerCase(OperationResult) = 'card_blocked' then OperationResult := 'Карта пациента заблокирована.'
+                  else if AnsiLowerCase(OperationResult) = 'not_patient_card' then OperationResult := 'Указанная карта не является картой пациента.'
+                  else if AnsiLowerCase(OperationResult) = 'drug_limit' then OperationResult := 'Превышен лимит покупок по карте.'
+                  else if AnsiLowerCase(OperationResult) = 'no_today_price' then OperationResult := 'Не установлена цена на препарат в личном кабинете аптеки.'
+                  else if AnsiLowerCase(OperationResult) = 'no_db_or_drug_link' then OperationResult := 'Дистрибьютор не назначен аптеке, либо препарат не назначен дистрибьютору. Продажа не возможна..';
+                  ShowMessage ('Ошибка фиксации факта продажи.' + #10+ #13
+                    + #10+ #13 + 'Ошибка <' + OperationResult + '>.'
+                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                    //ошибка
+                  lMsg:='Error';
+                  Exit;
+                end else Result:= True //!!!все ОК и Чек можно сохранить!!!;
+              end else
+              begin
+                ShowMessage ('Ошибка фиксации факта продажи.' + #10+ #13
+                  + #10+ #13 + 'Ошибка <' + IntToStr(RESTResponse.StatusCode) + ' - ' + RESTResponse.StatusText + '>.'
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              end;
+
+            except
+                  ShowMessage ('Ошибка фиксации факта продажи.' + #10+ #13
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                  //ошибка
+                  lMsg:='Error';
+                  exit;
+            end;
+            //finally
+
+          end; // if BarCode_find <> ''
+          //
+          CheckCDS.Next;
+
+        end; // while
+      end else if gCode = 2 then
+
         Result:= True //!!!все ОК и Чек можно сохранить!!!
+
       else
       if gCode = 3 then
       begin
@@ -882,6 +1010,10 @@ var
   MorionCode: Integer;
   CasualId: string;
   Session: IMCSession;
+  //
+  XML: IXMLDocument;
+  OperationResult : String;
+  CodeRazom : Integer;
 begin
   Result:= false;
   lMsg  := '';
@@ -912,7 +1044,8 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and (gCode = 1) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '')) and
+         (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
         with spGet_BarCode do begin
@@ -924,8 +1057,8 @@ begin
       else
           BarCode_find := '';
 
-      //если Штрих-код нашелся
-      if BarCode_find <> '' then
+      //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
+      if (BarCode_find <> '') and (gCode = 1) then
       begin
           try
             Item := CardCheckItem.Create;
@@ -968,9 +1101,127 @@ begin
 
       end // if BarCode_find <> ''
 
+      //если Штрих-код нашелся и программа Abbott card
+      else if (BarCode_find <> '') and (gCode = 2) then
+      begin
+
+          //получение кода дистрибьюторов
+          with spGet_Goods_CodeRazom do begin
+             ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('outCodeRazom').Value := 0;
+             Execute;
+             CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);
+          end;
+
+          if CodeRazom <> 0 then
+          begin
+            try
+
+              RESTClient.BaseURL := gURL;
+              RESTClient.ContentType := 'application/x-www-form-urlencoded';
+
+              RESTRequest.ClearBody;
+              RESTRequest.Method := TRESTRequestMethod.rmPOST;
+              RESTRequest.Resource := '';
+
+              RESTRequest.Params.Clear;
+              RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
+                                               '<request><Operation>1</Operation>'+
+                                                       '<PharmCard>' + gUserName + '</PharmCard>'+
+                                                       '<PatientCard>' + gPassword + '</PatientCard>'+
+                                                       '<DrugCode>' + BarCode_find + '</DrugCode>'+
+                                                       '<Distributor>' + IntToStr(CodeRazom) + '</Distributor>'+
+                                                       '<SessionId>42351</SessionId>'+
+                                                       '<PharmPrice>' + StringReplace(CheckCDS.FieldByName('PriceSale').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</PharmPrice>'+
+                                                       '<Amount>' + StringReplace(CheckCDS.FieldByName('Amount').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</Amount>'+
+                                               '</request>', TRESTRequestParameterKind.pkGETorPOST);
+
+              try
+                RESTRequest.Execute;
+              except  on E: Exception do
+                begin
+                  ShowMessage('Ошибка получения цены товара: ' + #13#10 + E.Message + #10+ #13
+                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                    //ошибка
+                  lMsg:='Error';
+                  exit;
+                end;
+              end;
+
+              if RESTResponse.StatusCode = 200 then
+              begin
+                // 50239534
+                XML := NewXMLDocument;
+                XML.XML.Text := RESTResponse.Content;
+                XML.Active := True;
+
+                OperationResult := XML.DocumentElement.ChildNodes[0].ChildNodes[0].Text;
+                if AnsiLowerCase(OperationResult) = 'ok' then
+                begin
+                  if TryStrToCurr(StringReplace(XML.DocumentElement.ChildNodes[0].ChildNodes[2].Text, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]), lPrice) then
+                  begin
+                     //Предполагаемое кол-во товара
+                     lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                     lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+                     //Update
+                     CheckCDS.Edit;
+                     CheckCDS.FieldByName('Price').asCurrency             :=lPrice;
+                     CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+                     //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                     CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+                     CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice, False);
+                     CheckCDS.Post;
+                  end else
+                  begin
+                    ShowMessage ('Ошибка получения цены.' + #10+ #13
+                      + #10+ #13 + 'Цена <' + XML.DocumentElement.ChildNodes[0].ChildNodes[2].Text + '>.'
+                      + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                      + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                      //ошибка
+                    lMsg:='Error';
+                    exit;
+                  end;
+                end else
+                begin
+                  if AnsiLowerCase(OperationResult) = 'pharm_not_active' then OperationResult := 'Аптека (карта аптеки) не активна.'
+                  else if AnsiLowerCase(OperationResult) = 'no_pharm_card' then OperationResult := 'Нет такой карты аптеки.'
+                  else if AnsiLowerCase(OperationResult) = 'no_patient_card' then OperationResult := 'Нет такой карты пациента.'
+                  else if AnsiLowerCase(OperationResult) = 'card_blocked' then OperationResult := 'Карта пациента заблокирована.'
+                  else if AnsiLowerCase(OperationResult) = 'not_patient_card' then OperationResult := 'Указанная карта не является картой пациента.'
+                  else if AnsiLowerCase(OperationResult) = 'drug_limit' then OperationResult := 'Превышен лимит покупок по карте.'
+                  else if AnsiLowerCase(OperationResult) = 'no_today_price' then OperationResult := 'Не установлена цена на препарат в личном кабинете аптеки.'
+                  else if AnsiLowerCase(OperationResult) = 'no_db_or_drug_link' then OperationResult := 'Дистрибьютор не назначен аптеке, либо препарат не назначен дистрибьютору. Продажа не возможна..';
+                  ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
+                    + #10+ #13 + 'Ошибка <' + OperationResult + '>.'
+                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                    //ошибка
+                  lMsg:='Error';
+                  exit;
+                end;
+              end;
+
+            except
+                  ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                  //ошибка
+                  lMsg:='Error';
+                  exit;
+            end;
+            //finally
+          end;
+
+      end // if BarCode_find <> ''
+
       // иначе - обнуляем скидку
       else
-      if (gCode <> 2) then
+      if (gCode <> 2) or (gUserName <> '') then
       begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0

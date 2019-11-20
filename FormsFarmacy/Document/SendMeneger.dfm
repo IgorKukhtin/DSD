@@ -137,9 +137,6 @@ inherited SendMenegerForm: TSendMenegerForm
           Styles.Header = nil
         end
       end
-      inherited cxSplitter1: TcxSplitter
-        Width = 1003
-      end
       inherited cxGrid1: TcxGrid
         TabOrder = 0
         inherited cxGridDBTableView1: TcxGridDBTableView
@@ -158,11 +155,11 @@ inherited SendMenegerForm: TSendMenegerForm
   inherited edComment: TcxTextEdit
     TabOrder = 4
   end
-  inherited edIsAuto: TcxCheckBox
-    TabOrder = 5
+  inherited cbNotDisplaySUN: TcxCheckBox
+    TabOrder = 7
   end
   inherited edPeriod: TcxCurrencyEdit
-    TabOrder = 7
+    TabOrder = 6
   end
   inherited edDay: TcxCurrencyEdit
     TabOrder = 9

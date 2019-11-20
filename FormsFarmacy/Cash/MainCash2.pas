@@ -661,6 +661,7 @@ type
     // Проверка и генерация промокода по Программе лояльности
     procedure Check_Loyalty(ASumma : Currency);
     procedure Check_LoyaltySumma(ASumma : Currency);
+    function CheckShareFromPrice(Amount, Price : Currency; GoodsCode : Integer; GoodsName : string) : boolean;
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -4431,6 +4432,40 @@ begin
   end;
 end;
 
+
+function TMainCashForm2.CheckShareFromPrice(Amount, Price : Currency; GoodsCode : Integer; GoodsName : string) : boolean;
+  var Res: TArray<string>; I : integer;
+begin
+  Result := True;
+  if UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency <= 0 then Exit;
+  if Price < UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency then Exit;
+  if frac(Amount) = 0 then Exit;
+
+    // Исключения по вхождению
+  if UnitConfigCDS.FieldByName('ShareFromPriceName').AsString <> '' then
+  begin
+    Res := TRegEx.Split(UnitConfigCDS.FieldByName('ShareFromPriceName').AsString, ';');
+    for I := 0 to High(Res) do if Res[I] <> '' then
+    begin
+      if Res[I][1] = '%' then
+      begin
+        if Pos(AnsiLowerCase(Copy(Res[I], 2, Length(Res[I]) - 1)), AnsiLowerCase(GoodsName)) > 0 then Exit;
+      end else if Pos(AnsiLowerCase(Res[I]), AnsiLowerCase(GoodsName)) = 1 then Exit;
+    end;
+  end;
+
+    // Исключения по коду
+  if UnitConfigCDS.FieldByName('ShareFromPriceCode').AsString <> '' then
+  begin
+    Res := TRegEx.Split(UnitConfigCDS.FieldByName('ShareFromPriceCode').AsString, ';');
+    for I := 0 to High(Res) do if Res[I] = IntToStr(GoodsCode) then Exit;
+  end;
+
+  ShowMessage('Деление медикамента c ценой менее ' + UnitConfigCDS.FieldByName('ShareFromPrice').AsString + ' грн. заблокировано!');
+  Result := False;
+end;
+
+
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
 var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent, nAmount : Currency;
     lMsg : String;
@@ -4474,20 +4509,8 @@ begin
     exit;
   end;
 
-  if (UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency > 0) and
-    (SourceClientDataSet.FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency) and
-    (frac(nAmount) <> 0) and
-    (Pos('пакет', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) <> 1) and
-    (Pos(' амп', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) = 0) and
-    (Pos('инъекц', AnsiLowerCase(SourceClientDataSet.FieldByName('GoodsName').AsString)) = 0) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1269) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 9496) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 1336) and
-    (SourceClientDataSet.FieldByName('GoodsCode').AsInteger <> 20584) then
-  begin
-    ShowMessage('Деление медикамента c ценой менее ' + UnitConfigCDS.FieldByName('ShareFromPrice').AsString + ' грн. заблокировано!');
-    exit;
-  end;
+  if not CheckShareFromPrice(nAmount, SourceClientDataSet.FieldByName('Price').AsCurrency,
+    SourceClientDataSet.FieldByName('GoodsCode').AsInteger, SourceClientDataSet.FieldByName('GoodsName').AsString) then Exit;
 
 //  if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
 //  begin

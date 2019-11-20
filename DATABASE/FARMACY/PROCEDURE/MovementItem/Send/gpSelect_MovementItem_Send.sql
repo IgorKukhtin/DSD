@@ -159,54 +159,58 @@ BEGIN
                          HAVING SUM (MI_Check.Amount) <> 0 
                         )
 
-         , tmpMIContainerAll AS (SELECT COALESCE(MISend.ParentID, MIContainer_Count.MovementItemId) AS MovementItemId
+         , tmpMIContainerSend AS (SELECT COALESCE(MISend.ParentID, MIContainer_Count.MovementItemId) AS MovementItemId
+                                       , MIContainer_Count.Amount                   AS Amount
+                                       , COALESCE (MI_Income_find.Id,MovementItem.Id) AS MIIncomeID
+                                  FROM MovementItemContainer AS MIContainer_Count
+                                 
+                                        -- элемент прихода
+                                        LEFT OUTER JOIN MovementItem AS MISend
+                                                                     ON MISend.Id = MIContainer_Count.MovementItemID
+                                                                      
+                                        LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                     ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                                    AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                        LEFT OUTER JOIN Object AS Object_PartionMovementItem 
+                                                     ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                        -- элемент прихода
+                                        LEFT OUTER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+
+                                        -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                        LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                               ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                        -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+       
+                                  WHERE MIContainer_Count.MovementId = inMovementId 
+                                    AND MIContainer_Count.DescId = zc_Container_Count()
+                                    AND MIContainer_Count.isActive = NOT vbisDeferred)   
+         , tmpMIContainerAll AS (SELECT MIContainer_Count.MovementItemId           AS MovementItemId
                                       , MIContainer_Count.Amount                   AS Amount
                                       , MIFloat_Price.ValueData                    AS Price
                                       , MIFloat_JuridicalPrice.ValueData           AS JuridicalPrice
                                       , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT 
                                       , COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd())::TDateTime AS MinExpirationDate -- Срок годности
-                                 FROM MovementItemContainer AS MIContainer_Count
-                                 
-                                       -- элемент прихода
-                                       LEFT OUTER JOIN MovementItem AS MISend
-                                                                    ON MISend.Id = MIContainer_Count.MovementItemID
-                                                                      
-                                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                    ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
-                                                   AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                       LEFT OUTER JOIN Object AS Object_PartionMovementItem 
-                                                    ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                       -- элемент прихода
-                                       LEFT OUTER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-
-                                       -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                              ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
-                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                       -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                       LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-
+                                 FROM tmpMIContainerSend AS MIContainer_Count
+                               
                                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                    ON MIFloat_Price.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                    ON MIFloat_Price.MovementItemId = MIContainer_Count.MIIncomeID
                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
        
                                        -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                                        LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                                  ON MIFloat_JuridicalPrice.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                  ON MIFloat_JuridicalPrice.MovementItemId = MIContainer_Count.MIIncomeID 
                                                  AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
                                        -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
                                        LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                                  ON MIFloat_PriceWithVAT.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                  ON MIFloat_PriceWithVAT.MovementItemId = MIContainer_Count.MIIncomeID
                                                  AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                                     
                                       LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                             ON MIDate_ExpirationDate.MovementItemId = MIContainer_Count.MIIncomeID 
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-       
-                                 WHERE MIContainer_Count.MovementId = inMovementId 
-                                   AND MIContainer_Count.DescId = zc_Container_Count()
-                                   AND MIContainer_Count.isActive = NOT vbisDeferred)
-   
+                                 )
          , MovementItem_Send AS (SELECT MovementItem_Send.Id
                                       , MovementItem_Send.ObjectId
                                       , MovementItem_Send.Amount
@@ -538,50 +542,58 @@ BEGIN
 
                           GROUP BY tmpContainer.GoodsId
                           )
+         , tmpMIContainerSend AS (SELECT COALESCE(MISend.ParentID, MIContainer_Count.MovementItemId) AS MovementItemId
+                                       , MIContainer_Count.Amount                   AS Amount
+                                       , COALESCE (MI_Income_find.Id,MovementItem.Id) AS MIIncomeID
+                                  FROM MovementItemContainer AS MIContainer_Count
+                                 
+                                        -- элемент прихода
+                                        LEFT OUTER JOIN MovementItem AS MISend
+                                                                     ON MISend.Id = MIContainer_Count.MovementItemID
+                                                                      
+                                        LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                     ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                                    AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                        LEFT OUTER JOIN Object AS Object_PartionMovementItem 
+                                                     ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                        -- элемент прихода
+                                        LEFT OUTER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+
+                                        -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                        LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                               ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                        -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+       
+                                  WHERE MIContainer_Count.MovementId = inMovementId 
+                                    AND MIContainer_Count.DescId = zc_Container_Count()
+                                    AND MIContainer_Count.isActive = NOT vbisDeferred)   
          , tmpMIContainerAll AS (SELECT MIContainer_Count.MovementItemId           AS MovementItemId
                                       , MIContainer_Count.Amount                   AS Amount
                                       , MIFloat_Price.ValueData                    AS Price
                                       , MIFloat_JuridicalPrice.ValueData           AS JuridicalPrice
                                       , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT 
                                       , COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd())::TDateTime AS MinExpirationDate -- Срок годности
-                                 FROM MovementItemContainer AS MIContainer_Count
+                                 FROM tmpMIContainerSend AS MIContainer_Count
                                
-                                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                    ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
-                                                   AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                       LEFT OUTER JOIN Object AS Object_PartionMovementItem 
-                                                    ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                       -- элемент прихода
-                                       LEFT OUTER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-
-                                       -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                              ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
-                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                       -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                       LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-
                                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                    ON MIFloat_Price.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                    ON MIFloat_Price.MovementItemId = MIContainer_Count.MIIncomeID
                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
        
                                        -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                                        LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                                  ON MIFloat_JuridicalPrice.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                  ON MIFloat_JuridicalPrice.MovementItemId = MIContainer_Count.MIIncomeID 
                                                  AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
                                        -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
                                        LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                                  ON MIFloat_PriceWithVAT.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                                  ON MIFloat_PriceWithVAT.MovementItemId = MIContainer_Count.MIIncomeID
                                                  AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                                     
                                       LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                             ON MIDate_ExpirationDate.MovementItemId = MIContainer_Count.MIIncomeID 
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-       
-                                 WHERE MIContainer_Count.MovementId = inMovementId 
-                                   AND MIContainer_Count.DescId = zc_Container_Count()
-                                   AND MIContainer_Count.isActive = NOT vbisDeferred)
-   
+                                 )
          , tmpMIContainer AS (SELECT COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)           AS Id
                                    , COALESCE(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)/SUM(MIContainer_Count.Amount), 0)                              AS PriceIn
                                    , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)), 0)                                                       AS SumPriceIn

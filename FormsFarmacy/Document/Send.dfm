@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 1001
     Height = 462
     ExplicitTop = 155
-    ExplicitWidth = 1003
+    ExplicitWidth = 1001
     ExplicitHeight = 462
     ClientRectBottom = 462
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1003
+      ExplicitWidth = 1001
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 318
-        ExplicitWidth = 1003
+        ExplicitWidth = 1001
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -492,7 +492,6 @@ inherited SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1003
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -502,7 +501,6 @@ inherited SendForm: TSendForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1003
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -640,7 +638,7 @@ inherited SendForm: TSendForm
     Width = 1001
     Height = 129
     TabOrder = 3
-    ExplicitWidth = 1003
+    ExplicitWidth = 1001
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -783,6 +781,15 @@ inherited SendForm: TSendForm
       TabOrder = 17
       Width = 103
     end
+    object cxCheckBox1: TcxCheckBox
+      Left = 477
+      Top = 63
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086'vfnbxtcrb'
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 188
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 195
@@ -796,11 +803,11 @@ inherited SendForm: TSendForm
     TabOrder = 7
     Width = 270
   end
-  object edIsAuto: TcxCheckBox [4]
+  object cbNotDisplaySUN: TcxCheckBox [4]
     Left = 477
-    Top = 63
+    Top = 88
     Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086'vfnbxtcrb'
-    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 188
@@ -838,7 +845,7 @@ inherited SendForm: TSendForm
   end
   object edisComplete: TcxCheckBox [9]
     Left = 693
-    Top = 87
+    Top = 88
     Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
     TabOrder = 13
     Visible = False
@@ -1377,6 +1384,21 @@ inherited SendForm: TSendForm
         end>
       Caption = 'actExecSetSent'
     end
+    object actSetNotDisplaySUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_NotDisplaySUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_NotDisplaySUN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      ImageIndex = 44
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1536,6 +1558,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1606,6 +1632,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton3: TdxBarButton
       Action = actSetReceived
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actSetNotDisplaySUN
       Category = 0
     end
   end
@@ -1784,7 +1814,7 @@ inherited SendForm: TSendForm
       item
         Name = 'isAuto'
         Value = Null
-        Component = edIsAuto
+        Component = cbNotDisplaySUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1879,6 +1909,13 @@ inherited SendForm: TSendForm
         Component = GuidesDriver
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotDisplaySUN'
+        Value = Null
+        Component = cbNotDisplaySUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -3120,7 +3157,39 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 403
+    Left = 744
+    Top = 419
+  end
+  object spUpdate_Movement_NotDisplaySUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_NotDisplaySUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotDisplaySUN'
+        Value = 'False'
+        Component = cbNotDisplaySUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotDisplaySUN'
+        Value = 'False'
+        Component = cbNotDisplaySUN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 491
   end
 end
