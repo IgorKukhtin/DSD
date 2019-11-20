@@ -1012,10 +1012,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_Longitude() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_Longitude', zc_object_Unit(), 'Географическая долгота' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Longitude');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_ListDaySUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_ListDaySUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_ListDaySUN', zc_object_Unit(), 'По каким дням недели по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_ListDaySUN');
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 20.11.19         * 
  29.09.19                                                                                                         * zc_ObjectString_Unit_Latitude zc_ObjectString_Unit_Longitude
  10.09.19                                                                                                         * zc_ObjectString_BankAccount_CBAccountб zc_ObjectString_BankAccount_CBAccountOld
  09.09.19         * zc_ObjectString_Member_CardIBAN

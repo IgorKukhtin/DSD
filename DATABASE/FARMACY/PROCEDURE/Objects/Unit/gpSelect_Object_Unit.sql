@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitRePriceId Integer, UnitRePriceName TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , DriverId Integer, DriverName TVarChar
+             , ListDaySUN TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
@@ -109,6 +110,8 @@ BEGIN
 
       , COALESCE (Object_Driver.Id,0)          ::Integer     AS DriverId
       , COALESCE (Object_Driver.ValueData, '') ::TVarChar    AS DriverName
+      
+      , COALESCE (ObjectString_ListDaySUN.ValueData, '') :: TVarChar AS ListDaySUN
                  
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -178,6 +181,10 @@ BEGIN
                              ON ObjectLink_Unit_Driver.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Driver.DescId = zc_ObjectLink_Unit_Driver()
         LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_ListDaySUN
+                               ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
+                              AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
 
         LEFT JOIN ObjectString AS ObjectString_EMail
                                ON ObjectString_EMail.ObjectId = Object_Member.Id 
@@ -356,6 +363,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.11.19         * ListDaySUN
  19.11.19         *
  23.09.19         * zc_ObjectLink_Unit_Driver
  04.09.19         * isTopNo
