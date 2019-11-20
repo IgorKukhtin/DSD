@@ -133,6 +133,8 @@ type
     ceSundayStart: TcxDateEdit;
     edLatitude: TcxTextEdit;
     edLongitude: TcxTextEdit;
+    cxLabel38: TcxLabel;
+    edListDaySUN: TcxTextEdit;
   private
     { Private declarations }
   public

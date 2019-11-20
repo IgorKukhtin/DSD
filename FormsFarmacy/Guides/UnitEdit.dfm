@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 687
+  ClientHeight = 732
   ClientWidth = 515
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 99
-    Top = 654
+    Top = 687
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 293
-    Top = 654
+    Top = 687
     Width = 75
     Height = 25
     Action = FormClose
@@ -159,16 +159,17 @@
     Left = 15
     Top = 152
     Width = 489
-    Height = 481
+    Height = 513
     TabOrder = 18
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 481
+    ClientRectBottom = 513
     ClientRectRight = 489
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitHeight = 500
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -557,7 +558,7 @@
         Properties.ReadOnly = True
         ShowHint = True
         TabOrder = 48
-        Width = 218
+        Width = 220
       end
       object edUnitRePrice: TcxButtonEdit
         Left = 8
@@ -611,6 +612,7 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
+      ExplicitHeight = 457
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
@@ -745,6 +747,20 @@
         Width = 129
       end
     end
+  end
+  object cxLabel38: TcxLabel
+    Left = 27
+    Top = 628
+    Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+  end
+  object edListDaySUN: TcxTextEdit
+    Left = 27
+    Top = 644
+    Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 20
+    Width = 217
   end
   object ActionList: TActionList
     Left = 356
@@ -1095,6 +1111,14 @@
         Value = Null
         Component = cbTopNo
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inListDaySUN'
+        Value = Null
+        Component = edListDaySUN
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1611,6 +1635,13 @@
         Value = 'NULL'
         Component = ceSundayEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ListDaySUN'
+        Value = Null
+        Component = edListDaySUN
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
