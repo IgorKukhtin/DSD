@@ -14,8 +14,9 @@ RETURNS TABLE (OperDate      TDateTime
              , SummChange    TFloat
              , CountChange   TFloat
              , PercentUsed   TFloat
-             , SummSale    TFloat
-             , CountSale   TFloat
+             , SummSale      TFloat
+             , CountSale     TFloat
+             , MaxTime       TVarChar
               )
 AS
 $BODY$
@@ -116,12 +117,17 @@ BEGIN
                           , Count(*)                                                                AS CountAccrued
                           , Sum(tmpCheckSale.TotalSummChangePercent)                                AS SummChange
                           , Sum(CASE WHEN COALESCE(tmpCheckSale.TotalSummChangePercent, 0) = 0 THEN 0 ELSE 1 END)  AS CountChange
+                          , MAX(MIDate_Insert.ValueData)                                            AS MaxTime
 
                      FROM tmpMI AS MI_Sign
 
                          LEFT JOIN MovementItemDate AS MIDate_OperDate
                                                     ON MIDate_OperDate.MovementItemId = MI_Sign.Id
                                                    AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+
+                         LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                    ON MIDate_Insert.MovementItemId = MI_Sign.Id
+                                                   AND MIDate_Insert.DescId = zc_MIDate_Insert()
 
                          LEFT JOIN tmpCheck ON tmpCheck.Id = MI_Sign.Id
                                            AND tmpCheck.isIssue = True
@@ -143,6 +149,7 @@ BEGIN
            ELSE (1.0*tmpSign.CountChange/tmpSign.CountAccrued*100) END::TFloat   AS PercentUsed
          , tmpCheckSale.SummSale::TFloat                                         AS SummSale
          , tmpCheckSale.CountSale::TFloat                                        AS CountSale
+         , TO_CHAR(tmpSign.MaxTime, 'HH24:MI:SS')::TVarChar                        AS MaxTime
 
     FROM tmpSign
          FULL JOIN tmpCheckSale ON tmpCheckSale.OperDate = tmpSign.OperDate

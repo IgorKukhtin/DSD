@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isLoadBarcode Boolean,
                isDeferred Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
+               CodeRazom Integer,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -43,6 +44,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS CBAccount
            , CAST ('' as TVarChar)   AS CBAccountOld
            , CAST ('' as TVarChar)   AS CBPurposePayment
+           , NULL::Integer           AS CodeRazom
 
            , CAST (NULL AS Boolean)  AS isErased;
    
@@ -68,6 +70,7 @@ BEGIN
            , ObjectString_CBAccount.ValueData          AS CBAccount
            , ObjectString_CBAccountOld.ValueData       AS CBAccountOld
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
+           , ObjectFloat_CodeRazom.ValueData::Integer  AS CodeRazom
            
            , Object_Juridical.isErased                 AS isErased
            
@@ -80,6 +83,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
                                  ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_CodeRazom
+                                 ON ObjectFloat_CodeRazom.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_CodeRazom.DescId = zc_ObjectFloat_Juridical_CodeRazom()
 
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id

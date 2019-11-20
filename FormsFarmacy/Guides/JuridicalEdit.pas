@@ -122,6 +122,8 @@ type
     edCBPurposePayment: TcxTextEdit;
     edCBAccountOld: TcxTextEdit;
     cxLabel24: TcxLabel;
+    cxLabel25: TcxLabel;
+    ceCodeRazom: TcxCurrencyEdit;
   private
     { Private declarations }
   public

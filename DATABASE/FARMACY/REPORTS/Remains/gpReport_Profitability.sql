@@ -13,6 +13,7 @@ RETURNS TABLE (UnitID          Integer
              , UnitName        TVarChar  --
              , SummaComing     TFloat    -- Сумма прихода сНДС
              , SummaSelling    TFloat    -- Сумма реализации
+             , SummChange      TFloat    -- Сумма компенсации
              , SummaIncome     TFloat    -- Сумма дохода
 
              , Remains         TFloat    -- Остатки количество
@@ -211,13 +212,45 @@ BEGIN
                                          AND MovementItem.isErased = FALSE
                                        GROUP BY MovementItem.ObjectId
                                        )
+           , tmpSPKind AS (SELECT MovementLinkObject_Unit.ObjectId                     AS UnitID
+                                , sum(CASE WHEN Movement.DescId = zc_Movement_Check() THEN MovementFloat_TotalSummChangePercent.ValueData
+                                  ELSE COALESCE(MovementFloat_TotalSummSale.ValueData, 0) - COALESCE(MovementFloat_TotalSumm.ValueData, 0) END)  AS SummChange
+                           FROM Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                              ON MovementLinkObject_SPKind.MovementID = Movement.ID
+                                                             AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()      
+                                                             AND MovementLinkObject_SPKind.ObjectId in (zc_Enum_SPKind_1303(), zc_Enum_SPKind_SP())
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementID = Movement.ID
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()      
+                                                              
+                                LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                         ON MovementFloat_TotalSummChangePercent.MovementID = Movement.ID
+                                                        AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+                                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                        ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                                LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                        ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                       AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+
+                           WHERE Movement.OperDate >= inDateStart                            
+                             AND Movement.OperDate < inDateFinal  
+                             AND Movement.DescId in (zc_Movement_Check(), zc_Movement_Sale()) 
+                             AND Movement.StatusId = zc_Enum_Status_Complete()  
+                           GROUP BY  MovementLinkObject_Unit.ObjectId )
 
         SELECT tmpUnit.UnitId
              , Object_Unit.ObjectCode
              , Object_Unit.ValueData
              , tmpRealization.AmountSumJuridical ::TFloat
              , tmpRealization.AmountSum ::TFloat
-             , (COALESCE(tmpRealization.AmountSum, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0)) ::TFloat
+             , tmpSPKind.SummChange ::TFloat
+             , (COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0)) ::TFloat
 
              , tmpRemains.Saldo::TFloat
              , tmpRemains.SaldoSum::TFloat
@@ -225,7 +258,7 @@ BEGIN
              , tmpWages.Amount::TFloat
              , tmpAdditionalExpenses.Amount::TFloat
              
-             , (COALESCE(tmpRealization.AmountSum, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0) - 
+             , (COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0) - 
                 COALESCE(tmpWages.Amount, 0) - COALESCE(tmpAdditionalExpenses.Amount, 0)) ::TFloat
         FROM tmpUnit
 
@@ -238,6 +271,8 @@ BEGIN
              LEFT JOIN tmpWages ON tmpWages.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpAdditionalExpenses ON tmpAdditionalExpenses.UnitID = Object_Unit.Id
+             
+             LEFT JOIN tmpSPKind ON tmpSPKind.UnitID = Object_Unit.Id
         WHERE tmpRealization.AmountSumJuridical <> 0
            OR tmpRealization.AmountSum <> 0
            OR tmpWages.Amount <> 0
@@ -256,5 +291,4 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpReport_Profitability (inDateStart:= '01.10.2019'::TDateTime, inDateFinal:= '31.10.2019'::TDateTime, inUnitID := 0/*377606*/, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Profitability (inDateStart:= '01.10.2019'::TDateTime, inDateFinal:= '31.10.2019'::TDateTime, inUnitID := 0/*377606*/, inSession:= zfCalc_UserAdmin())

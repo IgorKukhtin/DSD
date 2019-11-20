@@ -25,13 +25,11 @@ BEGIN
      vbUserId := inSession;
 
      SELECT Movement_OrderExternal_View.FromId
-          , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS OKPO  -- нашего юр.лица
+          , ObjectHistory_JuridicalDetails.OKPO -- нашего юр.лица
           , Movement_OrderExternal_View.ToCode
    INTO vbJuridicalId, vbOKPO, vbUnitCode
      FROM Movement_OrderExternal_View
-          LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-                                        ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = Movement_OrderExternal_View.JuridicalId
-                                       AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+          LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Movement_OrderExternal_View.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
      WHERE Movement_OrderExternal_View.Id = inMovementId;
 
 

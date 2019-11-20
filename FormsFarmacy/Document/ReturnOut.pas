@@ -86,6 +86,9 @@ type
     cxLabel17: TcxLabel;
     actPrintTTN: TdsdPrintAction;
     AmountOther: TcxGridDBColumn;
+    actComplete: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
   private
     { Private declarations }
   public

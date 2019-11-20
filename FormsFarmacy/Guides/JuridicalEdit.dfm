@@ -498,16 +498,29 @@
   end
   object chisLoadBarcode: TcxCheckBox [14]
     Left = 8
-    Top = 279
+    Top = 293
     Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
     TabOrder = 14
     Width = 270
   end
   object cbisDeferred: TcxCheckBox [15]
     Left = 8
-    Top = 306
+    Top = 320
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
     TabOrder = 15
+    Width = 270
+  end
+  object cxLabel25: TcxLabel [16]
+    Left = 8
+    Top = 250
+    Caption = #1050#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1077' "'#1056#1040#1047#1054#1052'":'
+  end
+  object ceCodeRazom: TcxCurrencyEdit [17]
+    Left = 8
+    Top = 267
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 21
     Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -871,6 +884,13 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeRazom'
+        Value = Null
+        Component = ceCodeRazom
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1005,6 +1025,12 @@
         Value = Null
         Component = edCBPurposePayment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CodeRazom'
+        Value = Null
+        Component = ceCodeRazom
         MultiSelectSeparator = ','
       end>
     PackSize = 1

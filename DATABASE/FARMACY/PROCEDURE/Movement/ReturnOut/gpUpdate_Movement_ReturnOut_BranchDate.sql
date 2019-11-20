@@ -24,6 +24,8 @@ BEGIN
     --Сохранили Корректировка нашей даты
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, inBranchDate);
     
+    -- сохранили связь с <Кто установил>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), inMovementId, vbUserId);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -31,6 +33,7 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 19.11.19                                                       * 
  29.05.19         * 
 */

@@ -197,6 +197,11 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = Profit
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummChange
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -265,6 +270,18 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
+          object SummChange: TcxGridDBBandedColumn
+            Caption = #1082#1086#1084#1087#1077#1085#1089#1072#1094#1103
+            DataBinding.FieldName = 'SummChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
           object SummaIncome: TcxGridDBBandedColumn
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaIncome'
@@ -274,7 +291,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 1
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object WagesAmount: TcxGridDBBandedColumn

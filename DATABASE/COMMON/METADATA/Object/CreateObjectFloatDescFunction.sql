@@ -1459,9 +1459,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Longitude() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Longitude', 'Географическая долгота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Longitude');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeRazom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeRazom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeRazom', 'Код в системе "РАЗОМ"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeRazom');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.1`.19                                                                                      * zc_ObjectFloat_Juridical_CodeRazom
  29.10.19         * zc_ObjectFloat_Car_KoeffHoursWork
  28.10.19                                                                                      * zc_ObjectFloat_Unit_Latitude, zc_ObjectFloat_Unit_Longitude
  25.10.19                                                                                      * zc_ObjectFloat_Retail_ShareFromPrice

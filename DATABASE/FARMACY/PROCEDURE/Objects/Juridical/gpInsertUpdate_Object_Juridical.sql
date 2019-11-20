@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inCBAccount               TVarChar  ,    -- Расчетный счет для клиент банка
     IN inCBAccountOld            TVarChar  ,    -- Расчетный счет стврый для клиент банка
     IN inCBPurposePayment        TVarChar  ,    -- Назначение платежа для клиент банка
+    IN inCodeRazom               Integer   ,    -- Код в системе "РАЗОМ"
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -58,6 +60,9 @@ BEGIN
    
    -- сохранили свойство <Очередь платежа>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);
+
+   -- сохранили свойство <Код в системе "РАЗОМ">
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_CodeRazom(), ioId, inCodeRazom);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_LoadBarcode(), ioId, inisLoadBarcode);

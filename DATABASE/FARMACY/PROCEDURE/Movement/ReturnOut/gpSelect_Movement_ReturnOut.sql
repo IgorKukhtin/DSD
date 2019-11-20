@@ -12,8 +12,8 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , InvNumberPartner TVarChar
              , OperDate TDateTime
-             , OperDatePartner TDateTime
-             , BranchDate TDateTime
+             , OperDatePartner TDateTime 
+             , BranchDate TDateTime, BranchUser TVarChar 
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
@@ -69,6 +69,7 @@ BEGIN
            , Movement_ReturnOut_View.OperDate
            , Movement_ReturnOut_View.OperDatePartner
            , MovementDate_Branch.ValueData          AS BranchDate
+           , Object_User.ValueData                  AS BranchUser
            , Movement_ReturnOut_View.StatusCode
            , Movement_ReturnOut_View.StatusName
            , Movement_ReturnOut_View.TotalCount
@@ -99,6 +100,11 @@ BEGIN
            LEFT JOIN MovementDate AS MovementDate_Branch
                                   ON MovementDate_Branch.MovementId = Movement_ReturnOut_View.Id
                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                        ON MovementLinkObject_User.MovementId = Movement_ReturnOut_View.Id
+                                       AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+           LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
   ;
 
 
@@ -111,6 +117,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 19.11.19                                                                     *
  29.05.19         * add BranchDate
  29.05.18                                                                     * 
  05.01.18         * add NDS

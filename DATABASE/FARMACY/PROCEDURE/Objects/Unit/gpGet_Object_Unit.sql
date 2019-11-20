@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NormOfManDays Integer,
                PharmacyItem Boolean,
                isGoodsCategory Boolean,
-               isSUN Boolean,
+               isSUN Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean,
                isTopNo Boolean,
                DateSP      TDateTime,
                StartTimeSP TDateTime,
@@ -112,6 +112,9 @@ BEGIN
            , False                 AS PharmacyItem
            , False                 AS isGoodsCategory
            , FALSE                 AS isSUN
+           , FALSE                 AS isSUN_v2
+           , FALSE                 AS isSUN_in
+           , FALSE                 AS isSUN_out
            , FALSE                 AS isTopNo
 
            , CAST (Null as TDateTime) AS DateSP
@@ -199,8 +202,11 @@ BEGIN
       , ObjectFloat_NormOfManDays.ValueData::Integer             AS NormOfManDays
       , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False)    AS PharmacyItem
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
-      , COALESCE(ObjectBoolean_SUN.ValueData, FALSE)             AS isSUN
-      , COALESCE(ObjectBoolean_TopNo.ValueData, FALSE)           AS isTopNo
+      , COALESCE(ObjectBoolean_SUN.ValueData, FALSE)      :: Boolean   AS isSUN
+      , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
+      , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
+      , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
+      , COALESCE(ObjectBoolean_TopNo.ValueData, FALSE)    :: Boolean   AS isTopNo
 
       , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
       , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
@@ -359,6 +365,18 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN 
                                 ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2
+                                ON ObjectBoolean_SUN_v2.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2.DescId = zc_ObjectBoolean_Unit_SUN_v2()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_in
+                                ON ObjectBoolean_SUN_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_in.DescId = zc_ObjectBoolean_Unit_SUN_in()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_out
+                                ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 

@@ -143,7 +143,9 @@ BEGIN
 
                     WHERE MI_Loyalty.MovementId = inMovementId
                       AND MI_Loyalty.DescId = zc_MI_Master()
-                      AND MI_Loyalty.isErased = FALSE)
+                      AND MI_Loyalty.isErased = FALSE
+                      AND MI_Loyalty.Amount > 0 
+                      AND COALESCE(MIFloat_Count.ValueData, 0) > 0)
            , CC AS (SELECT Sum(Count) AS Options FROM DD)
            , SS AS (SELECT count(*)                         AS CountDay
                          , COALESCE(SUM(CASE WHEN MI_Sign.ObjectId = vbUnitId THEN MI_Sign.Amount ELSE 0 END), 0) AS SummDay

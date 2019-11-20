@@ -5,7 +5,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -173,6 +173,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderHint = #1044#1072#1090#1072' '#1092#1072#1082#1090'. '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1087#1086#1089#1090'-'#1082#1072
             Options.Editing = False
             Width = 92
+          end
+          object BranchUser: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1087#1077#1088#1077#1076#1072#1083' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'BranchUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 112
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
