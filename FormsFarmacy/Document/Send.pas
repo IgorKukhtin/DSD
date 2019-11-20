@@ -149,7 +149,7 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     DateInsert: TcxGridDBColumn;
-    cxCheckBox1: TcxCheckBox;
+    edIsAuto: TcxCheckBox;
     actSetNotDisplaySUN: TdsdExecStoredProc;
     spUpdate_Movement_NotDisplaySUN: TdsdStoredProc;
     dxBarButton4: TdxBarButton;

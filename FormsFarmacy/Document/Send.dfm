@@ -781,10 +781,10 @@ inherited SendForm: TSendForm
       TabOrder = 17
       Width = 103
     end
-    object cxCheckBox1: TcxCheckBox
+    object edIsAuto: TcxCheckBox
       Left = 477
       Top = 63
-      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086'vfnbxtcrb'
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 18
@@ -806,7 +806,7 @@ inherited SendForm: TSendForm
   object cbNotDisplaySUN: TcxCheckBox [4]
     Left = 477
     Top = 88
-    Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086'vfnbxtcrb'
+    Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     Properties.ReadOnly = True
     TabOrder = 8
@@ -1814,7 +1814,7 @@ inherited SendForm: TSendForm
       item
         Name = 'isAuto'
         Value = Null
-        Component = cbNotDisplaySUN
+        Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
