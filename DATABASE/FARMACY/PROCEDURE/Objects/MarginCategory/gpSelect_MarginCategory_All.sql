@@ -15,38 +15,24 @@ BEGIN
 
      OPEN Cursor1 FOR
 
-    WITH
-     _tmpMarginCategoryList AS (SELECT Object_MarginCategory.Id         AS MarginCategoryId
-                                     , Object_MarginCategory.ValueData  AS MarginCategoryName
-                                FROM  Object AS Object_MarginCategory
-                                      Left JOIN ObjectFloat AS ObjectFloat_Percent 	
-                                             ON Object_MarginCategory.Id = ObjectFloat_Percent.ObjectId
-                                            AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
-                                WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory()
-                                  AND Object_MarginCategory.isErased = FALSE
-                                  AND COALESCE (ObjectFloat_Percent.ValueData ,0) = 0
-                             )
-
-   , _tmpMarginCategory AS (SELECT Object_MarginCategoryLink_View.MarginCategoryId
-                                 , _tmpMarginCategoryList.MarginCategoryName
-                                 , MAX (Object_Juridical.ValueData)       AS JuridicalName
-                            FROM Object_MarginCategoryLink_View 
-                                 INNER JOIN (SELECT ObjectBoolean_MarginCategory.ObjectId AS UnitId
-                                             FROM ObjectBoolean AS ObjectBoolean_MarginCategory
-                                             WHERE ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
-                                               AND ObjectBoolean_MarginCategory.ValueData = TRUE
-                                             ) AS tmpUnit ON tmpUnit.UnitId = Object_MarginCategoryLink_View.UnitId
-                                 INNER JOIN _tmpMarginCategoryList ON _tmpMarginCategoryList.MarginCategoryId = Object_MarginCategoryLink_View.MarginCategoryId
-              
-                                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                      ON ObjectLink_Unit_Juridical.ObjectId = tmpUnit.UnitId
-                                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                 LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-              
-                            WHERE Object_MarginCategoryLink_View.MarginCategoryId Not in (1327351, 1599495)   --"œ≈–≈Œ÷≈Õ ¿ œŒ ¬—≈… —≈“»", "ƒÎˇ —‡ÈÚ‡ ÔÓ ”Í‡ËÌÂ"
-                            GROUP BY Object_MarginCategoryLink_View.MarginCategoryId
-                                 , _tmpMarginCategoryList.MarginCategoryName
-                            ORDER BY 1)
+ WITH
+      _tmpMarginCategory AS (SELECT DISTINCT 
+                                    tmpMarginCategoryLink.MarginCategoryId
+                                  , tmpMarginCategoryLink.MarginCategoryName
+                                  , tmpMarginCategoryLink.JuridicalName_our AS JuridicalName
+                                  , tmpMarginCategoryLink.UnitId
+                                  , tmpMarginCategoryLink.UnitName
+                                  , tmpMarginCategoryLink.RetailName
+                                  , Object_ProvinceCity.ValueData  AS ProvinceCityName
+                            FROM gpSelect_Object_MarginCategoryLink (inShowAll := FALSE, inSession := '3') AS tmpMarginCategoryLink
+                                                      
+                                 LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                             ON ObjectLink_Unit_ProvinceCity.ObjectId = tmpMarginCategoryLink.UnitId
+                                            AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+                                 LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+                            
+                            WHERE tmpMarginCategoryLink.MarginCategoryId Not in (1327351, 1599495)   --"œ≈–≈Œ÷≈Õ ¿ œŒ ¬—≈… —≈“»", "ƒÎˇ —‡ÈÚ‡ ÔÓ ”Í‡ËÌÂ"
+                   )
 
    , _tmpminPrice AS (SELECT tmp.minPrice
                            , ROW_NUMBER() OVER (ORDER BY tmp.MinPrice)  ::integer      AS Num
@@ -57,15 +43,23 @@ BEGIN
                            ) AS tmp
                        )
 
+
+
      -- ‚ÒÂ ‰‡ÌÌ˚Â  
-   ,  tmpData AS (SELECT _tmpMarginCategory.MarginCategoryId 
+   ,  tmpData AS (SELECT _tmpMarginCategory.MarginCategoryId
+                       , _tmpMarginCategory.MarginCategoryName
+                       , _tmpMarginCategory.JuridicalName
+                       , _tmpMarginCategory.UnitId
+                       , _tmpMarginCategory.UnitName
+                       , _tmpMarginCategory.ProvinceCityName
+                       , _tmpMarginCategory.RetailName
                        , _tmpminPrice.num AS Num
                        , tmpMarginCategoryItem.Id AS MarginCategoryItemId 
                        , tmpMarginCategoryItem.MarginPercent  AS Value 
                        ,  avg(tmpMarginCategoryItem.MarginPercent) OVER (ORDER BY  _tmpminPrice.num)  AS avgPercent
                        , tmpMarginCategoryItem.minPrice
                   FROM _tmpMarginCategory 
-                          LEFT JOIN  (SELECT MAX (Object_MarginCategoryItem.Id)      AS Id
+                          LEFT JOIN  (SELECT MAX (Object_MarginCategoryItem.Id)  AS Id
                                            , Object_MarginCategoryItem.MarginCategoryId
                                            , CAST (Object_MarginCategoryItem.MarginPercent AS NUMERIC (16,2)) AS MarginPercent
                                            , Object_MarginCategoryItem.minPrice
@@ -81,38 +75,14 @@ BEGIN
                   ORDER BY _tmpMarginCategory.MarginCategoryId, _tmpminPrice.num
                  )
 
-   , tmpParam AS (SELECT tmp.MarginCategoryId
-                       , tmpMarginCategoryLink.MarginCategoryName
-                       , tmpMarginCategoryLink.UnitId
-                       , tmpMarginCategoryLink.UnitName
-                       , Object_ProvinceCity.ValueData  AS ProvinceCityName
-                       , Object_Juridical.ValueData     AS JuridicalName
-                  FROM (SELECT DISTINCT tmpData.MarginCategoryId FROM tmpData) AS tmp
-                        LEFT JOIN (SELECT DISTINCT Object_MarginCategoryLink_View.MarginCategoryId
-                                        , Object_MarginCategoryLink_View.MarginCategoryName
-                                        , Object_MarginCategoryLink_View.UnitId
-                                        , Object_MarginCategoryLink_View.UnitName 
-                                   FROM Object_MarginCategoryLink_View
-                                   ) AS tmpMarginCategoryLink ON tmpMarginCategoryLink.MarginCategoryId = tmp.MarginCategoryId
 
-                        LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
-                                             ON ObjectLink_Unit_ProvinceCity.ObjectId = tmpMarginCategoryLink.UnitId
-                                            AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
-                        LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
-
-                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                             ON ObjectLink_Unit_Juridical.ObjectId = tmpMarginCategoryLink.UnitId
-                                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-                  )
-   
-   
    , tmpDataAll AS (SELECT tmp.MarginCategoryId
                          , tmp.MarginCategoryName
                          , tmp.UnitId
                          , tmp.UnitName
                          , tmp.ProvinceCityName
                          , tmp.JuridicalName
+                         , tmp.RetailName
                          , MAX (tmp.Id_1) AS Id_1
                          , MAX (tmp.Id_2) AS Id_2
                          , MAX (tmp.Id_3) AS Id_3
@@ -139,11 +109,12 @@ BEGIN
                          
                          , MAX (tmp.avgPercent) AS avgPercent
                    FROM (SELECT tmpData.MarginCategoryId
-                              , tmpParam.MarginCategoryName
-                              , tmpParam.UnitId
-                              , tmpParam.UnitName
-                              , tmpParam.ProvinceCityName
-                              , tmpParam.JuridicalName
+                              , tmpData.MarginCategoryName
+                              , tmpData.UnitId
+                              , tmpData.UnitName
+                              , tmpData.ProvinceCityName
+                              , tmpData.JuridicalName
+                              , tmpData.RetailName
                               , CASE WHEN tmpData.Num = 1 THEN tmpData.MarginCategoryItemId ELSE 0 END AS Id_1
                               , CASE WHEN tmpData.Num = 2 THEN tmpData.MarginCategoryItemId ELSE 0 END AS Id_2
                               , CASE WHEN tmpData.Num = 3 THEN tmpData.MarginCategoryItemId ELSE 0 END AS Id_3
@@ -170,8 +141,7 @@ BEGIN
 
                               , CAST (avg(tmpData.Value) OVER (PARTITION BY tmpData.MarginCategoryId) AS NUMERIC (16,2)) AS avgPercent
                          FROM tmpData
-                              LEFT JOIN tmpParam ON tmpParam.MarginCategoryId = tmpData.MarginCategoryId
-                         ORDER BY tmpData.MarginCategoryId, tmpParam.UnitName, tmpData.num
+                         ORDER BY tmpData.MarginCategoryId, tmpData.UnitName, tmpData.num
                          ) AS tmp
                    GROUP BY tmp.MarginCategoryId
                           , tmp.MarginCategoryName
@@ -179,6 +149,7 @@ BEGIN
                           , tmp.UnitName
                           , tmp.ProvinceCityName
                           , tmp.JuridicalName
+                          , tmp.RetailName
                    )
 
          --ÂÁÛÎ¸Ú‡Ú
@@ -188,6 +159,7 @@ BEGIN
               , tmpDataAll.UnitName
               , tmpDataAll.ProvinceCityName
               , tmpDataAll.JuridicalName
+              , tmpDataAll.RetailName
               , tmpDataAll.Id_1
               , tmpDataAll.Id_2
               , tmpDataAll.Id_3
@@ -225,6 +197,7 @@ $BODY$
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.11.19         * ÔÂÂÔËÒ‡Î‡
  15.11.19         * 
 */
 --SELECT * FROM gpSelect_MarginCategory_All(inSession := '3':: TVarChar);
