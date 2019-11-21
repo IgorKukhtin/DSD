@@ -82,19 +82,24 @@ BEGIN
         RETURN;
       END IF;
 
+      WITH tmpMovement AS (SELECT Movement_Income.ID
+                                , Movement_Income.StatusId
+                                , MovementLinkObject_Juridical.ObjectId AS JuridicalID
+                           FROM Movement AS Movement_Income
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                             ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                                            AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                          WHERE Movement_Income.DescId = zc_Movement_Income()
+                            AND MovementLinkObject_Juridical.ObjectId = vbJuridical
+                            AND MovementLinkObject_From.ObjectId = inSupplierID
+                         )
+
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbX
-      FROM Movement AS Movement_Income
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                        ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                        ON MovementLinkObject_From.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                        ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+      FROM tmpMovement AS Movement_Income
 
            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                    ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
@@ -111,13 +116,10 @@ BEGIN
 
            LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                               AND Container.ObjectId = Object_Movement.Id
-                              AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                              AND Container.KeyValue like '%,'||Movement_Income.JuridicalID||';%'
 
       WHERE CASE WHEN Container.Amount > 0.01 OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
-            THEN MovementDate_Payment.ValueData END Is Not Null
-        AND Movement_Income.DescId = zc_Movement_Income()
-        AND MovementLinkObject_Juridical.ObjectId = vbJuridical
-        AND MovementLinkObject_From.ObjectId = inSupplierID;
+            THEN MovementDate_Payment.ValueData END Is Not Null;
 
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbY
@@ -180,4 +182,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
--- SELECT * FROM gpSelect_ShowPUSHError_OrderExternal(59610, 183292 , '3')
+-- SELECT * FROM gpSelect_ShowPUSHError_OrderExternal(inSupplierID := 59610 , inUnitID := 183292 ,  inSession := '3')
