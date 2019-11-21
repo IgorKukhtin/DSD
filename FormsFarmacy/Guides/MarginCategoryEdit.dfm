@@ -19,7 +19,7 @@
   object edName: TcxTextEdit
     Left = 21
     Top = 71
-    TabOrder = 0
+    TabOrder = 2
     Width = 296
   end
   object cxLabel1: TcxLabel
@@ -35,7 +35,7 @@
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 5
   end
   object cxButton2: TcxButton
     Left = 205
@@ -46,7 +46,7 @@
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 6
   end
   object Код: TcxLabel
     Left = 21
@@ -58,14 +58,15 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    Properties.ReadOnly = True
+    TabOrder = 8
     Width = 121
   end
   object cbisSite: TcxCheckBox
     Left = 169
     Top = 121
     Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072' '#1087#1086' '#1059#1082#1088#1072#1080#1085#1077
-    TabOrder = 6
+    TabOrder = 0
     Width = 148
   end
   object cePercent: TcxCurrencyEdit
@@ -73,7 +74,7 @@
     Top = 121
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
-    TabOrder = 7
+    TabOrder = 3
     Width = 109
   end
   object cxLabel4: TcxLabel
