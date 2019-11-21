@@ -738,10 +738,6 @@
 				<Form>SendOnPriceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MarginCategory.pas">
-				<Form>MarginCategoryForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MarginCategoryItem.pas">
 				<Form>MarginCategoryItemForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2671,6 +2667,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas">
 				<Form>GoodsRepriceEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategory.pas">
+				<Form>MarginCategoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas">
+				<Form>MarginCategoryEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
