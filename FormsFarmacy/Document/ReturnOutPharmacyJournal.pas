@@ -62,6 +62,9 @@ type
     BranchDate: TcxGridDBColumn;
     spUpdate_BranchDate: TdsdStoredProc;
     actUpdate_BranchDate: TdsdUpdateDataSet;
+    BranchUser: TcxGridDBColumn;
+    actPUSHMessage: TdsdShowPUSHMessage;
+    spPUSHInfo: TdsdStoredProc;
   private
     { Private declarations }
   public

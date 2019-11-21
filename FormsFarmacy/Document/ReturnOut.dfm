@@ -353,6 +353,7 @@ inherited ReturnOutForm: TReturnOutForm
       Left = 149
       Top = 59
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 130
     end
@@ -369,6 +370,7 @@ inherited ReturnOutForm: TReturnOutForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 86
     end
@@ -1819,6 +1821,7 @@ inherited ReturnOutForm: TReturnOutForm
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edNDSKind
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

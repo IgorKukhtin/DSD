@@ -481,6 +481,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Action = actReturnOutMovementInsert
         end
         item
+          Action = actPUSHMessage
+        end
+        item
           Action = actInsert
         end>
       ImageIndex = 0
@@ -682,6 +685,17 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPUSHMessage: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInfo
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInfo
+        end>
+      Caption = 'actPUSHMessage'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -1152,5 +1166,47 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PackSize = 1
     Left = 416
     Top = 400
+  end
+  object spPUSHInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 490
+    Top = 272
   end
 end
