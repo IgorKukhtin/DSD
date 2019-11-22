@@ -111,6 +111,8 @@ type
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     AmountDeferred: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

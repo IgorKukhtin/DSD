@@ -11,7 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SalePartion(
 RETURNS TABLE (GoodsId Integer
              , Remains TFloat
              , PriceWithVAT TFloat, SummWithVAT TFloat
-             , PriceWitOutVAT TFloat, SummWithOutVAT TFloat
+             , PriceWithOutVAT TFloat, SummWithOutVAT TFloat
+             , PriseSale TFloat
+             , SummSale TFloat
+             , ChargePersent TFloat
              , FromName TVarChar
              , SummOut TFloat, Margin TFloat, MarginPercent TFloat
              , NDS TFloat
@@ -146,6 +149,32 @@ BEGIN
                                                , tmpRemains.NDS
                                                , tmpRemains.MovementId
                                       )
+
+                  , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                              AND ObjectFloat_Goods_Price.ValueData > 0
+                                             THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                             ELSE ROUND (Price_Value.ValueData, 2)
+                                        END :: TFloat                           AS Price
+                                      , Price_Goods.ChildObjectId               AS GoodsId
+                                 FROM ObjectLink AS ObjectLink_Price_Unit
+                                    LEFT JOIN ObjectLink AS Price_Goods
+                                                         ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                        AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                    LEFT JOIN ObjectFloat AS Price_Value
+                                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                         AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                                    -- Фикс цена для всей Сети
+                                    LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                           ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                          AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                            ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                           AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                                 WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                   AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                                 )
+
                                       
                 SELECT
                      tmpRemainsInfo.GoodsId
@@ -154,6 +183,9 @@ BEGIN
                    , ROUND(tmpRemainsInfo.Amount * tmpRemainsInfo.PriceWithVAT,2)::TFloat AS SummWithVAT
                    , tmpRemainsInfo.PriceWithOutVAT
                    , ROUND(tmpRemainsInfo.Amount * tmpRemainsInfo.PriceWithOutVAT,2)::TFloat AS SummWithOutVAT
+                   , tmpPrice.Price :: TFloat AS PriseSale
+                   , (tmpRemainsInfo.Amount * tmpPrice.Price) :: TFloat AS SummSale
+                   , CASE WHEN COALESCE (tmpRemainsInfo.PriceWithVAT,0) <> 0 THEN (tmpPrice.Price - tmpRemainsInfo.PriceWithVAT) *100 / tmpRemainsInfo.PriceWithVAT ELSE 0 END :: TFloat AS ChargePersent
                    , Object_Juridical.ValueData
                    , NULL::TFloat AS SummOut
                    , NULL::TFloat AS Margin
@@ -167,6 +199,8 @@ BEGIN
                     LEFT OUTER JOIN Object AS Object_Juridical
                                            ON Object_Juridical.Id = tmpRemainsInfo.JuridicalId
                     LEFT JOIN Movement ON Movement.Id = tmpRemainsInfo.MovementId
+                    
+                    LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemainsInfo.GoodsId
                     ; 
         ELSE
             RETURN QUERY
@@ -251,8 +285,36 @@ BEGIN
                                           , MLO_From.ObjectId
                                           , ObjectFloat_NDSKind_NDS.ValueData
                                           , MI_Income.MovementId
-, COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE)
+                                          , COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE)
                                      )
+
+                  , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                              AND ObjectFloat_Goods_Price.ValueData > 0
+                                             THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                             ELSE ROUND (Price_Value.ValueData, 2)
+                                        END :: TFloat                           AS Price
+                                      , Price_Goods.ChildObjectId               AS GoodsId
+                                 FROM ObjectLink AS ObjectLink_Price_Unit
+                                    LEFT JOIN ObjectLink AS Price_Goods
+                                                         ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                        AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                    INNER JOIN tmpRemainsInfo ON tmpRemainsInfo.GoodsId = Price_Goods.ChildObjectId
+
+                                    LEFT JOIN ObjectFloat AS Price_Value
+                                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                         AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                                    -- Фикс цена для всей Сети
+                                    LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                           ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                          AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                            ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                           AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                                 WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                   AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                                 )
+
                 SELECT
                      tmpRemainsInfo.GoodsId
                    , tmpRemainsInfo.Amount
@@ -260,6 +322,11 @@ BEGIN
                    , ROUND(tmpRemainsInfo.Amount * tmpRemainsInfo.PriceWithVAT,2)::TFloat AS SummWithVAT
                    , tmpRemainsInfo.PriceWithOutVAT
                    , ROUND(tmpRemainsInfo.Amount * tmpRemainsInfo.PriceWithOutVAT,2)::TFloat AS SummWithOutVAT
+
+                   , tmpPrice.Price :: TFloat AS PriseSale
+                   , (tmpRemainsInfo.Amount * tmpPrice.Price) :: TFloat AS SummSale
+                   , CASE WHEN COALESCE (tmpRemainsInfo.PriceWithVAT,0) <> 0 THEN (tmpPrice.Price - tmpRemainsInfo.PriceWithVAT) *100 / tmpRemainsInfo.PriceWithVAT ELSE 0 END :: TFloat AS ChargePersent
+
                    , Object_Juridical.ValueData
                    , NULL::TFloat AS SummOut
                    , NULL::TFloat AS Margin
@@ -274,6 +341,8 @@ BEGIN
                                            ON Object_Juridical.Id = tmpRemainsInfo.JuridicalId
 
                     LEFT JOIN Movement ON Movement.Id = tmpRemainsInfo.MovementId
+
+                    LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemainsInfo.GoodsId
                 ;
         
         END IF;
@@ -314,7 +383,7 @@ BEGIN
                                 ,MLO_From.ObjectId                     AS JuridicalId
                                 ,ObjectFloat_NDSKind_NDS.ValueData     AS NDS
                                 ,MI_Income.MovementId                  AS MovementId
-                                 
+
                              FROM
                                  MIC
                                  LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
@@ -341,11 +410,39 @@ BEGIN
                                 , MIC.Amount
                                 , MI_Income.PriceWithVAT
                                 , MLO_From.ObjectId 
-                                , COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE)
+                                , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE)
                                 , ObjectFloat_NDSKind_NDS.ValueData
                                 , MI_Income.Price
                                 , MI_Income.MovementId
                              )
+
+              , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                          AND ObjectFloat_Goods_Price.ValueData > 0
+                                         THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                         ELSE ROUND (Price_Value.ValueData, 2)
+                                    END :: TFloat                           AS Price
+                                  , Price_Goods.ChildObjectId               AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+                                LEFT JOIN ObjectLink AS Price_Goods
+                                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                INNER JOIN MIC_Info ON MIC_Info.GoodsId = Price_Goods.ChildObjectId
+
+                                LEFT JOIN ObjectFloat AS Price_Value
+                                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                                -- Фикс цена для всей Сети
+                                LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                       ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                      AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                        ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                       AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                             WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                             )
+
             --
             SELECT
                  MIC_Info.GoodsId
@@ -354,7 +451,12 @@ BEGIN
                , MIC_Info.SummWithVAT
                , MIC_Info.PriceWithOutVAT
                , (MIC_Info. Amount * MIC_Info.PriceWithOutVAT):: TFloat AS SummWithOutVAT
-               
+
+               , tmpPrice.Price :: TFloat AS PriseSale
+               , (MIC_Info.Amount * tmpPrice.Price) :: TFloat AS SummSale
+               , CASE WHEN COALESCE (MIC_Info.PriceWithVAT,0) <> 0 THEN (tmpPrice.Price - MIC_Info.PriceWithVAT) *100 / MIC_Info.PriceWithVAT ELSE 0 END :: TFloat AS ChargePersent
+
+
                , Object_Juridical.ValueData
                , MIC_Info.SummOut
                , (MIC_Info.SummOut - MIC_Info.SummWithVAT)::TFloat                                AS Margin
@@ -371,6 +473,7 @@ BEGIN
                                        ON Object_Juridical.Id = MIC_Info.JuridicalId
 
                 LEFT JOIN Movement ON Movement.Id = MIC_Info.MovementId
+                LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MIC_Info.GoodsId
             ;
      END IF;
 END;
