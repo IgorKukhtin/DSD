@@ -26,6 +26,23 @@ BEGIN
       END IF;
     END IF;
 */
+
+    -- фармацевт может только создать и удалить документ Продажи Постановление 1303, но не может его распроизвести - 
+    -- распровести может только Колеуш И. И. (ID 235009)
+    IF (SELECT MovementLinkObject_SPKind.ObjectId AS SPKindId
+        FROM Movement 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                          ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+        WHERE Movement.Id = inMovementId) = zc_Enum_SPKind_1303()                    -- Постановление 1303
+    THEN
+      IF  (vbUserId <> 235009)
+      THEN
+        RAISE EXCEPTION 'Распроведение Продажи Постановление 1303 вам запрещено.';
+      END IF;
+    END IF;
+
+
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
         Movement_Sale.OperDate,

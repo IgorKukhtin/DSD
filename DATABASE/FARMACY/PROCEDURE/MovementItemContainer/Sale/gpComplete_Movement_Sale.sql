@@ -50,6 +50,20 @@ BEGIN
                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement_Sale.Id = inMovementId;
 
+
+    IF (SELECT MovementLinkObject_SPKind.ObjectId AS SPKindId
+        FROM Movement 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                          ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+        WHERE Movement.Id = inMovementId) = zc_Enum_SPKind_1303()                    -- Постановление 1303
+    THEN
+        IF (vbOperDate < CURRENT_DATE) AND (vbUserId <> 235009)  -- только Колеуш И. И. (ID 235009) можно проводить док. задним числом
+        THEN
+            RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        END IF;
+    END IF;
+
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
     IF (vbOperDate > CURRENT_DATE)
@@ -129,7 +143,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.';
     END IF;
 
-    -- Проверяем вдруг проведено больше чеа выписано
+    -- Проверяем вдруг проведено больше чем выписано
     IF vbIsDeferred = TRUE
     THEN
       WITH HeldBy AS(SELECT MovementItemContainer.MovementItemId   AS MovementItemId
