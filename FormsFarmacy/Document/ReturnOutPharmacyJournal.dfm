@@ -5,7 +5,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 508
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -279,6 +279,14 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
           end
         end
       end

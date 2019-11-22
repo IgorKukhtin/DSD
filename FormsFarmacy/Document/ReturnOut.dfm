@@ -3,24 +3,24 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 565
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 142
+    Top = 148
     Width = 1001
-    Height = 384
+    Height = 378
     ExplicitTop = 142
     ExplicitWidth = 1001
     ExplicitHeight = 384
-    ClientRectBottom = 384
+    ClientRectBottom = 378
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
       ExplicitHeight = 360
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 360
+        Height = 354
         ExplicitWidth = 1001
         ExplicitHeight = 360
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -272,10 +272,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited DataPanel: TPanel
     Width = 1001
-    Height = 116
+    Height = 122
     TabOrder = 3
     ExplicitWidth = 1001
-    ExplicitHeight = 116
+    ExplicitHeight = 122
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -536,40 +536,40 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 100
     end
     object edJuridicalLegalAddress: TcxButtonEdit
-      Left = 282
-      Top = 95
+      Left = 114
+      Top = 96
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 29
-      Width = 350
+      Width = 254
     end
     object cxLabel14: TcxLabel
-      Left = 285
-      Top = 78
+      Left = 114
+      Top = 80
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
     object edJuridicalActualAddress: TcxButtonEdit
-      Left = 638
-      Top = 95
+      Left = 374
+      Top = 96
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 31
-      Width = 337
+      Width = 258
     end
     object cxLabel16: TcxLabel
-      Left = 641
-      Top = 78
+      Left = 377
+      Top = 79
       Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
     object edAdjustingOurDate: TcxDateEdit
-      Left = 179
-      Top = 95
+      Left = 9
+      Top = 96
       EditValue = 43248d
       Properties.DateOnError = deNull
       Properties.ReadOnly = True
@@ -579,9 +579,21 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 100
     end
     object cxLabel17: TcxLabel
-      Left = 179
-      Top = 77
+      Left = 9
+      Top = 79
       Caption = #1050#1086#1088#1088'. '#1085#1072#1096#1077#1081' '#1076#1072#1090#1099
+    end
+    object edComment: TcxTextEdit
+      Left = 638
+      Top = 96
+      Properties.ReadOnly = False
+      TabOrder = 35
+      Width = 337
+    end
+    object cxLabel18: TcxLabel
+      Left = 638
+      Top = 80
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1166,13 +1178,13 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 48
-    Top = 56
+    Left = 64
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnOut'
-    Left = 16
-    Top = 56
+    Left = 24
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnOut'
@@ -1364,6 +1376,13 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edAdjustingOurDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1466,6 +1485,14 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1505,6 +1532,9 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Control = edJuridicalLegalAddress
+      end
+      item
+        Control = edComment
       end>
     Left = 200
     Top = 193

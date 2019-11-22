@@ -6,6 +6,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
+   (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
     IN inReturnTypeId        Integer   , -- Тип возврата
     IN inLegalAddressId      Integer   , -- Юридический адрес поставщика
     IN inActualAddressId     Integer   , -- Фактический адрес поставщика
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -58,6 +61,9 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+    
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -72,6 +78,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.11.19         *
  28.05.18                                                                     * 
  15.09.16         *
  06.02.15                         *

@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer
              , JuridicalName TVarChar
              , ReturnTypeName TVarChar
              , AdjustingOurDate TDateTime
+             , Comment TVarChar
               )
 
 AS
@@ -97,6 +98,7 @@ BEGIN
            , Movement_ReturnOut_View.JuridicalName
            , Movement_ReturnOut_View.ReturnTypeName
            , Movement_ReturnOut_View.AdjustingOurDate
+           , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
        FROM tmpUnit
            LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.FromId = tmpUnit.UnitId
                                             AND Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -114,6 +116,10 @@ BEGIN
                                         ON MovementLinkObject_User.MovementId = Movement_ReturnOut_View.Id
                                        AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+           LEFT JOIN MovementString AS MovementString_Comment
+                                    ON MovementString_Comment.MovementId = Movement_ReturnOut_View.Id
+                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
        ;
 END;
 $BODY$
@@ -123,6 +129,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.11.19         *
  21.11.19                                                                     * add BranchUser
  29.05.19         * add BranchDate
 */

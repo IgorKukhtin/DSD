@@ -89,6 +89,8 @@ type
     actComplete: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
+    edComment: TcxTextEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

@@ -6,6 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
+   (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
     IN inReturnTypeId        Integer   , -- Тип возврата
     IN inLegalAddressId      Integer   , -- Юридический адрес поставщика
     IN inActualAddressId     Integer   , -- Фактический адрес поставщика
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -45,6 +48,7 @@ BEGIN
                                              , inReturnTypeId
                                              , inLegalAddressId
                                              , inActualAddressId
+                                             , inComment
                                              , vbUserId);
 
 
@@ -56,6 +60,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.11.19         *
  28.05.18                                                                     * 
  15.09.16         *
  06.02.15                         *
