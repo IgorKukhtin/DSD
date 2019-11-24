@@ -138,6 +138,39 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
+          object MorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057', %'
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -148,8 +181,6 @@ inherited SaleForm: TSaleForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = -88
-        ExplicitTop = 207
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -1477,13 +1508,13 @@ inherited SaleForm: TSaleForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem_Sale'
-    Left = 550
-    Top = 248
+    Left = 526
+    Top = 288
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_Sale'
-    Left = 550
-    Top = 256
+    Left = 518
+    Top = 280
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
