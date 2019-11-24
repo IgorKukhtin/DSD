@@ -2174,6 +2174,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
+  Exit;
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');

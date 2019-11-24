@@ -8,7 +8,10 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization, Vcl.Menus, cxPropertiesStore, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
-  Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter;
+  Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter, cxStyles,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
+  cxTextEdit, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -568,6 +571,17 @@ type
     miMarginCategory_All: TMenuItem;
     actGoodsReprice: TdsdOpenForm;
     miGoodsReprice: TMenuItem;
+    DSGetInfo: TDataSource;
+    CDSGetInfo: TClientDataSet;
+    spGetInfo: TdsdStoredProc;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    colText: TcxGridDBColumn;
+    colData: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    actRefresh: TdsdExecStoredProc;
+    actCashSettings: TdsdOpenForm;
+    N197: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -591,9 +605,9 @@ implementation
 {$R *.dfm}
 
 uses
-  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, RepriceChangeRetail, ExportSalesForSupp,
-  Report_Analysis_Remains_Selling, Report_ImplementationPlanEmployee,
-  Report_IncomeConsumptionBalance;
+  UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,
+  RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling,
+  Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance;
 
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
@@ -644,6 +658,18 @@ begin
 
   actReport_Analysis_Remains_Selling.Visible := actReport_CheckPromo.Visible;
   actReport_IncomeConsumptionBalance.Visible := actReport_CheckPromo.Visible;
+
+  if gc_User.Session = '3' then
+  begin
+    cxGrid.Visible := True;
+    actRefresh.Execute;
+  end else
+  begin
+    cxGrid.Visible := False;
+    actRefresh.Enabled := False;
+    actRefresh.Timer.Enabled := False;
+  end;
+
 end;
 
 procedure TMainForm.actExportSalesForSuppClickExecute(Sender: TObject);

@@ -1174,7 +1174,7 @@ begin
                      CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
                      //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
                      CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
-                     CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice, False);
+                     CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
                      CheckCDS.Post;
                   end else
                   begin
@@ -1235,7 +1235,7 @@ begin
                CheckCDS.FieldByName('ChangePercent').asCurrency     :=0;
                //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
                CheckCDS.FieldByName('SummChangePercent').asCurrency :=0;
-               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,lPriceSale,False);
+               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, lPriceSale, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
                CheckCDS.Post;
            end;
       //
@@ -1354,7 +1354,7 @@ begin
            CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
            //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
            CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
-           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice, False);
+           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
            CheckCDS.Post;
 
           end; // for i := 0 to Length(ResList) - 1
@@ -1466,7 +1466,7 @@ begin
                   CheckCDS.FieldByName('ChangePercent').asCurrency     := lChangePercent;
                   //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
                   CheckCDS.FieldByName('SummChangePercent').asCurrency := lSummChangePercent;
-                  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, False);
+                  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
                   CheckCDS.Post;
                 end;
             except

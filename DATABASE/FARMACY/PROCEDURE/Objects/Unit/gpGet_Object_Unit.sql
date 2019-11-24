@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, Phone TVarChar,
-               ListDaySUN TVarChar
+               ListDaySUN TVarChar,
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
@@ -43,7 +43,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Latitude TVarChar, Longitude TVarChar,
                MondayStart TDateTime, MondayEnd TDateTime,
                SaturdayStart TDateTime, SaturdayEnd TDateTime,
-               SundayStart TDateTime, SundayEnd TDateTime
+               SundayStart TDateTime, SundayEnd TDateTime,
+               isNotCashMCS Boolean, isNotCashListDiff Boolean
                ) AS
 $BODY$
 BEGIN
@@ -138,6 +139,8 @@ BEGIN
            , CAST (Null as TDateTime) AS SaturdayEnd
            , CAST (Null as TDateTime) AS SundayStart
            , CAST (Null as TDateTime) AS SundayEnd
+           , FALSE                    AS isNotCashMCS
+           , FALSE                    AS isNotCashListDiff
 ;
    ELSE
        RETURN QUERY 
@@ -231,6 +234,8 @@ BEGIN
       , CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SundayStart.ValueData ELSE Null END ::TDateTime AS SundayStart
       , CASE WHEN COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SundayEnd.ValueData ELSE Null END ::TDateTime AS SundayEnd
       
+      , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
+      , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -452,6 +457,13 @@ BEGIN
                              ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashMCS
+                                ON ObjectBoolean_NotCashMCS.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashMCS.DescId = zc_ObjectBoolean_Unit_NotCashMCS()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
+                                ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -467,6 +479,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * ListDaySUN
  04.09.19         * isTopNo
  13.08.19                                                        * AutoMCS

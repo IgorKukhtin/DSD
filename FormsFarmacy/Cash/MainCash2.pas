@@ -4438,7 +4438,7 @@ function TMainCashForm2.CheckShareFromPrice(Amount, Price : Currency; GoodsCode 
 begin
   Result := True;
   if UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency <= 0 then Exit;
-  if Price < UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency then Exit;
+  if Price >= UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency then Exit;
   if frac(Amount) = 0 then Exit;
 
     // Исключения по вхождению

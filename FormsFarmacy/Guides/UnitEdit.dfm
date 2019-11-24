@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 732
+  ClientHeight = 702
   ClientWidth = 515
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 99
-    Top = 687
+    Left = 106
+    Top = 663
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 293
-    Top = 687
+    Left = 325
+    Top = 663
     Width = 75
     Height = 25
     Action = FormClose
@@ -157,19 +157,19 @@
   end
   object cxPageControl: TcxPageControl
     Left = 15
-    Top = 152
+    Top = 168
     Width = 489
-    Height = 513
+    Height = 481
     TabOrder = 18
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 513
+    ClientRectBottom = 481
     ClientRectRight = 489
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 500
+      ExplicitHeight = 489
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -321,14 +321,6 @@
         Top = 379
         Caption = #1054#1082#1086#1085'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
       end
-      object cxLabel25: TcxLabel
-        Left = 9
-        Top = 424
-        Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
-        Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095'. '#1090#1086#1074'.'
-        ParentShowHint = False
-        ShowHint = True
-      end
       object cxLabel26: TcxLabel
         Left = 247
         Top = 235
@@ -379,7 +371,7 @@
       object edAddress: TcxTextEdit
         Left = 7
         Top = 108
-        TabOrder = 33
+        TabOrder = 32
         Width = 217
       end
       object edArea: TcxButtonEdit
@@ -391,7 +383,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 34
+        TabOrder = 33
         Width = 217
       end
       object edCloseDate: TcxDateEdit
@@ -401,7 +393,7 @@
         Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
-        TabOrder = 35
+        TabOrder = 34
         Width = 92
       end
       object edCreateDate: TcxDateEdit
@@ -411,7 +403,7 @@
         Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
-        TabOrder = 36
+        TabOrder = 35
         Width = 90
       end
       object edDateSp: TcxDateEdit
@@ -421,7 +413,7 @@
         Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
-        TabOrder = 37
+        TabOrder = 36
         Width = 90
       end
       object edEndServiceNigth: TcxDateEdit
@@ -433,7 +425,7 @@
         Properties.DateButtons = [btnNow]
         Properties.DisplayFormat = 'HH:MM'
         Properties.Kind = ckDateTime
-        TabOrder = 38
+        TabOrder = 37
         Width = 100
       end
       object edEndSP: TcxDateEdit
@@ -445,7 +437,7 @@
         Properties.DateButtons = [btnNow]
         Properties.DisplayFormat = 'HH:MM'
         Properties.Kind = ckDateTime
-        TabOrder = 39
+        TabOrder = 38
         Width = 100
       end
       object edKoeffInSUN: TcxCurrencyEdit
@@ -456,7 +448,7 @@
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         ShowHint = True
-        TabOrder = 40
+        TabOrder = 39
         Width = 100
       end
       object edKoeffOutSUN: TcxCurrencyEdit
@@ -467,7 +459,7 @@
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         ShowHint = True
-        TabOrder = 41
+        TabOrder = 40
         Width = 100
       end
       object edPartnerMedical: TcxButtonEdit
@@ -479,13 +471,13 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 42
+        TabOrder = 41
         Width = 448
       end
       object edPhone: TcxTextEdit
         Left = 247
         Top = 108
-        TabOrder = 43
+        TabOrder = 42
         Width = 209
       end
       object edStartServiceNigth: TcxDateEdit
@@ -500,7 +492,7 @@
         Properties.Kind = ckDateTime
         Properties.Nullstring = ' '
         Properties.YearsInMonthList = False
-        TabOrder = 44
+        TabOrder = 43
         Width = 100
       end
       object edStartSP: TcxDateEdit
@@ -515,7 +507,7 @@
         Properties.Kind = ckDateTime
         Properties.Nullstring = ' '
         Properties.YearsInMonthList = False
-        TabOrder = 45
+        TabOrder = 44
         Width = 100
       end
       object edTaxUnitEnd: TcxDateEdit
@@ -527,7 +519,7 @@
         Properties.DateButtons = [btnNow]
         Properties.DisplayFormat = 'HH:MM'
         Properties.Kind = ckDateTime
-        TabOrder = 46
+        TabOrder = 45
         Width = 100
       end
       object edTaxUnitStart: TcxDateEdit
@@ -542,23 +534,8 @@
         Properties.Kind = ckDateTime
         Properties.Nullstring = ' '
         Properties.YearsInMonthList = False
-        TabOrder = 47
+        TabOrder = 46
         Width = 100
-      end
-      object edUnitOverdue: TcxButtonEdit
-        Left = 8
-        Top = 429
-        Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
-        ParentShowHint = False
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        ShowHint = True
-        TabOrder = 48
-        Width = 220
       end
       object edUnitRePrice: TcxButtonEdit
         Left = 8
@@ -569,7 +546,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 49
+        TabOrder = 47
         Width = 216
       end
       object edUserManager: TcxButtonEdit
@@ -581,7 +558,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 50
+        TabOrder = 48
         Width = 209
       end
       object edUserManager2: TcxButtonEdit
@@ -593,7 +570,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 51
+        TabOrder = 49
         Width = 209
       end
       object edUserManager3: TcxButtonEdit
@@ -605,14 +582,69 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 52
+        TabOrder = 50
         Width = 209
+      end
+    end
+    object cxTabSheet3: TcxTabSheet
+      Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ExplicitLeft = -104
+      ExplicitTop = 21
+      ExplicitHeight = 489
+      object edUnitOverdue: TcxButtonEdit
+        Left = 0
+        Top = 27
+        Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
+        ParentShowHint = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        ShowHint = True
+        TabOrder = 0
+        Width = 220
+      end
+      object cxLabel25: TcxLabel
+        Left = 0
+        Top = 6
+        Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
+        Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095'. '#1090#1086#1074'.'
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object edListDaySUN: TcxTextEdit
+        Left = 0
+        Top = 73
+        Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        Width = 220
+      end
+      object cbNotCashMCS: TcxCheckBox
+        Left = 240
+        Top = 27
+        Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1053#1058#1047' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+        TabOrder = 3
+        Width = 233
+      end
+      object cbNotCashListDiff: TcxCheckBox
+        Left = 240
+        Top = 54
+        Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1074' '#1083#1080#1089#1090#1099' '#1086#1090#1082#1072#1079#1086#1074
+        TabOrder = 4
+        Width = 246
       end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
-      ExplicitHeight = 457
+      ExplicitHeight = 489
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
@@ -749,18 +781,9 @@
     end
   end
   object cxLabel38: TcxLabel
-    Left = 27
-    Top = 628
+    Left = 15
+    Top = 243
     Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
-  end
-  object edListDaySUN: TcxTextEdit
-    Left = 27
-    Top = 644
-    Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 20
-    Width = 217
   end
   object ActionList: TActionList
     Left = 356
@@ -1183,6 +1206,22 @@
         Value = 'NULL'
         Component = ceSundayEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotCashMCS'
+        Value = Null
+        Component = cbNotCashMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotCashListDiff'
+        Value = Null
+        Component = cbNotCashListDiff
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1642,6 +1681,20 @@
         Value = Null
         Component = edListDaySUN
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotCashMCS'
+        Value = Null
+        Component = cbNotCashMCS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotCashListDiff'
+        Value = Null
+        Component = cbNotCashListDiff
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -68,6 +68,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
                                                    TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -120,6 +126,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inSaturdayEnd             TDateTime ,    -- Суббота конец работы
     IN inSundayStart             TDateTime ,    -- Воскресенье начало работы
     IN inSundayEnd               TDateTime ,    -- Воскресенье конец работы
+    IN inisNotCashMCS            Boolean   ,    -- Блокировать изменение НТЗ на кассах 
+    IN inisNotCashListDiff       Boolean   ,    -- Блокировать добавление в листы отказов на кассах
 
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -400,6 +408,11 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SundayEnd(), ioId, NULL);
    END IF;
+   
+   --сохранили <Блокировать изменение НТЗ на кассах>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_NotCashMCS(), ioId, inisNotCashMCS);
+   --сохранили <Блокировать добавление в листы отказов на кассах>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_NotCashListDiff(), ioId, inisNotCashListDiff);   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -414,6 +427,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * inListDaySUN
  28.10.19                                                        * Координаты и графики
  04.09.19         * inisTopNo

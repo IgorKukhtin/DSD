@@ -773,7 +773,8 @@ uses
   GoodsReprice in '..\..\FormsFarmacy\Guides\GoodsReprice.pas' {GoodsRepriceForm: TParentForm},
   GoodsRepriceEdit in '..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas' {GoodsRepriceEditForm: TParentForm},
   MarginCategory in '..\..\FormsFarmacy\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
-  MarginCategoryEdit in '..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas' {MarginCategoryEditForm: TParentForm};
+  MarginCategoryEdit in '..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas' {MarginCategoryEditForm: TParentForm},
+  CashSettingsEdit in '..\..\FormsFarmacy\Guides\CashSettingsEdit.pas' {CashSettingsEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,12 +1,63 @@
 inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
   ClientHeight = 171
-  ClientWidth = 666
+  ClientWidth = 644
   KeyPreview = True
-  ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitWidth = 660
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
+  object cxGrid: TcxGrid [0]
+    Left = 0
+    Top = 0
+    Width = 644
+    Height = 121
+    Align = alTop
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = cxcbsNone
+    Enabled = False
+    TabOrder = 0
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = True
+    object cxGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DSGetInfo
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.ColumnHeaderHints = False
+      OptionsCustomize.ColumnFiltering = False
+      OptionsCustomize.ColumnGrouping = False
+      OptionsCustomize.ColumnHidingOnGrouping = False
+      OptionsCustomize.ColumnMoving = False
+      OptionsCustomize.ColumnSorting = False
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GridLines = glNone
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      object colText: TcxGridDBColumn
+        DataBinding.FieldName = 'ValueText'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Options.Editing = False
+        Width = 498
+      end
+      object colData: TcxGridDBColumn
+        DataBinding.FieldName = 'OperDate'
+        Width = 146
+      end
+    end
+    object cxGridLevel: TcxGridLevel
+      GridView = cxGridDBTableView
+    end
+  end
   inherited ActionList: TActionList
     Left = 328
     object actReport_GoodsPartionDate: TdsdOpenForm [0]
@@ -3062,6 +3113,32 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actRefresh: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      EnabledTimer = True
+      Timer = actRefresh.Timer
+      StoredProc = spGetInfo
+      StoredProcList = <
+        item
+          StoredProc = spGetInfo
+        end>
+      Caption = 'actRefresh'
+      ShortCut = 116
+    end
+    object actCashSettings: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
+      Hint = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
+      FormName = 'TCashSettingsEditForm'
+      FormNameParam.Value = 'TCashSettingsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3896,6 +3973,9 @@ inherited MainForm: TMainForm
         object N191: TMenuItem
           Action = actPayrollType
         end
+        object N197: TMenuItem
+          Action = actCashSettings
+        end
       end
       object N44: TMenuItem [1]
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
@@ -4027,5 +4107,36 @@ inherited MainForm: TMainForm
         Action = actRecalcMCSSheduler
       end
     end
+  end
+  object DSGetInfo: TDataSource
+    DataSet = CDSGetInfo
+    Left = 592
+    Top = 112
+  end
+  object CDSGetInfo: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 592
+    Top = 64
+  end
+  object spGetInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GlobalConst'
+    DataSet = CDSGetInfo
+    DataSets = <
+      item
+        DataSet = CDSGetInfo
+      end>
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 16
   end
 end
