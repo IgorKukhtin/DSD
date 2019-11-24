@@ -66,7 +66,7 @@ BEGIN
 
    IF inisVal_1 = TRUE
    THEN
-    RAISE EXCEPTION 'inisVal_1';
+    --RAISE EXCEPTION 'inisVal_1';
        PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_1
                                                       , inMinPrice         := inMinPrice_1 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_1,0) + COALESCE (inVal_1,0)) ::TFloat 
@@ -77,7 +77,7 @@ BEGIN
       
    IF inisVal_2 = TRUE
    THEN
-   RAISE EXCEPTION 'inisVal_2';
+   --RAISE EXCEPTION 'inisVal_2';
        PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_2
                                                       , inMinPrice         := inMinPrice_2 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_2,0) + COALESCE (inVal_2,0)) ::TFloat 

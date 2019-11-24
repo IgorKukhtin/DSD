@@ -177,6 +177,13 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
             HeaderHint = #1044#1072#1090#1072' '#1092#1072#1082#1090'. '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1087#1086#1089#1090'-'#1082#1072
             Width = 92
           end
+          object BranchUser: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1087#1077#1088#1077#1076#1072#1083' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'BranchUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 97
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -272,6 +279,14 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
           end
         end
       end
@@ -483,6 +498,9 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Action = actReturnOutMovementInsert
+        end
+        item
+          Action = actPUSHMessage
         end
         item
           Action = actInsert
@@ -698,6 +716,17 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end>
       Caption = 'actUpdate_BranchDate'
       DataSource = MasterDS
+    end
+    object actPUSHMessage: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInfo
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInfo
+        end>
+      Caption = 'actPUSHMessage'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -1194,6 +1223,48 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       end>
     PackSize = 1
     Left = 520
+    Top = 280
+  end
+  object spPUSHInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 410
     Top = 280
   end
 end

@@ -2,7 +2,7 @@ object DiscountServiceForm: TDiscountServiceForm
   Left = 0
   Top = 0
   Caption = 'DiscountService'
-  ClientHeight = 129
+  ClientHeight = 187
   ClientWidth = 601
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -166,5 +166,48 @@ object DiscountServiceForm: TDiscountServiceForm
     PackSize = 1
     Left = 512
     Top = 24
+  end
+  object RESTResponse: TRESTResponse
+    Left = 552
+    Top = 128
+  end
+  object RESTRequest: TRESTRequest
+    Client = RESTClient
+    Params = <>
+    Response = RESTResponse
+    SynchronizedEvents = False
+    Left = 472
+    Top = 128
+  end
+  object RESTClient: TRESTClient
+    ContentType = 'application/xml'
+    Params = <>
+    Left = 376
+    Top = 128
+  end
+  object spGet_Goods_CodeRazom: TdsdStoredProc
+    StoredProcName = 'gpGet_Goods_Juridical_value'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outJuridicalID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCodeRazom'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 112
   end
 end

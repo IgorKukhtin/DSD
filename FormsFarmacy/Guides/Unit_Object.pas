@@ -105,6 +105,7 @@ type
     bbUpdate_Unit_isSUN_in: TdxBarButton;
     bbUpdate_Unit_isSUN_out: TdxBarButton;
     bbUpdate_Unit_isSUN_v2: TdxBarButton;
+    ListDaySUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

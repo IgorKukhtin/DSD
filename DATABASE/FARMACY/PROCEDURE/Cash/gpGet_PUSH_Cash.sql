@@ -258,6 +258,9 @@ BEGIN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
                                              AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                              AND MovementBoolean_SUN.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                             ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                            AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -265,6 +268,7 @@ BEGIN
              WHERE Movement.DescId   = zc_Movement_Send()
                AND Movement.OperDate = CURRENT_DATE
                AND Movement.StatusId = zc_Enum_Status_Erased()
+               AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
             )
       AND (DATE_PART('HOUR',    CURRENT_TIME)::Integer <= 12
         OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
@@ -279,13 +283,17 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData = True
+                LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                          ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                         AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                             AND MovementLinkObject_From.ObjectId = vbUnitId
           WHERE Movement.DescId = zc_Movement_Send()
             AND Movement.OperDate = CURRENT_DATE
-            AND Movement.StatusId = zc_Enum_Status_Erased()) = 1
+            AND Movement.StatusId = zc_Enum_Status_Erased()
+            AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE) = 1
       THEN
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
           SELECT 6, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
@@ -299,6 +307,9 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData = True
+                LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                          ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                         AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -306,6 +317,7 @@ BEGIN
           WHERE Movement.DescId = zc_Movement_Send()
             AND Movement.OperDate = CURRENT_DATE
             AND Movement.StatusId = zc_Enum_Status_Erased()
+            AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
           LIMIT 1;
       ELSE
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)

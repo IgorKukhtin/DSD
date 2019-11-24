@@ -27,25 +27,25 @@ BEGIN
                    WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitID
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
-    IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185', 
+    IF inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185',
                                          '8688630', '7670317', '11262719',
                                          '10642587', '10362758', '10642315',
                                          '8539679', '7670307', '9909730')  AND
       EXISTS(SELECT  1
              FROM Object AS Object_CreditLimitJuridical
-                                                                   
+
                   INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Provider
-                                        ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id 
+                                        ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id
                                        AND ObjectLink_CreditLimitJuridical_Provider.DescId = zc_ObjectLink_CreditLimitJuridical_Provider()
                                        AND ObjectLink_CreditLimitJuridical_Provider.ChildObjectId = inSupplierID
 
                   INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Juridical
-                                        ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id 
+                                        ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id
                                        AND ObjectLink_CreditLimitJuridical_Juridical.DescId = zc_ObjectLink_CreditLimitJuridical_Juridical()
                                        AND ObjectLink_CreditLimitJuridical_Juridical.ChildObjectId = vbJuridical
-                                       
+
                   INNER JOIN ObjectFloat AS ObjectFloat_CreditLimit
-                                         ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id 
+                                         ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id
                                         AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_CreditLimitJuridical_CreditLimit()
                                         AND COALESCE (ObjectFloat_CreditLimit.ValueData, 0) > 0
 
@@ -58,43 +58,48 @@ BEGIN
       INTO vbName
          , vbN
       FROM Object AS Object_CreditLimitJuridical
-                                                                   
+
            INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Provider
-                                 ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id 
+                                 ON ObjectLink_CreditLimitJuridical_Provider.ObjectId = Object_CreditLimitJuridical.Id
                                 AND ObjectLink_CreditLimitJuridical_Provider.DescId = zc_ObjectLink_CreditLimitJuridical_Provider()
                                 AND ObjectLink_CreditLimitJuridical_Provider.ChildObjectId = inSupplierID
            LEFT JOIN Object AS Object_Provider ON Object_Provider.Id = ObjectLink_CreditLimitJuridical_Provider.ChildObjectId
 
            INNER JOIN ObjectLink AS ObjectLink_CreditLimitJuridical_Juridical
-                                 ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id 
+                                 ON ObjectLink_CreditLimitJuridical_Juridical.ObjectId = Object_CreditLimitJuridical.Id
                                 AND ObjectLink_CreditLimitJuridical_Juridical.DescId = zc_ObjectLink_CreditLimitJuridical_Juridical()
                                 AND ObjectLink_CreditLimitJuridical_Juridical.ChildObjectId = vbJuridical
-                                       
+
            INNER JOIN ObjectFloat AS ObjectFloat_CreditLimit
-                                  ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id 
+                                  ON ObjectFloat_CreditLimit.ObjectId = Object_CreditLimitJuridical.Id
                                  AND ObjectFloat_CreditLimit.DescId = zc_ObjectFloat_CreditLimitJuridical_CreditLimit()
                                  AND COALESCE (ObjectFloat_CreditLimit.ValueData, 0) > 0
- 
+
       WHERE Object_CreditLimitJuridical.DescId = zc_Object_CreditLimitJuridical();
-                   
+
       IF COALESCE(vbN, 0) = 0
       THEN
         RETURN;
       END IF;
 
+      WITH tmpMovement AS (SELECT Movement_Income.ID
+                                , Movement_Income.StatusId
+                                , MovementLinkObject_Juridical.ObjectId AS JuridicalID
+                           FROM Movement AS Movement_Income
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                             ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                                            AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                          WHERE Movement_Income.DescId = zc_Movement_Income()
+                            AND MovementLinkObject_Juridical.ObjectId = vbJuridical
+                            AND MovementLinkObject_From.ObjectId = inSupplierID
+                         )
+
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbX
-      FROM Movement AS Movement_Income
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                        ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                        ON MovementLinkObject_From.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                        ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
-                                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+      FROM tmpMovement AS Movement_Income
 
            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                    ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
@@ -111,13 +116,10 @@ BEGIN
 
            LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                               AND Container.ObjectId = Object_Movement.Id
-                              AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                              AND Container.KeyValue like '%,'||Movement_Income.JuridicalID||';%'
 
       WHERE CASE WHEN Container.Amount > 0.01 OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
-            THEN MovementDate_Payment.ValueData END Is Not Null
-        AND Movement_Income.DescId = zc_Movement_Income()
-        AND MovementLinkObject_Juridical.ObjectId = vbJuridical
-        AND MovementLinkObject_From.ObjectId = inSupplierID;
+            THEN MovementDate_Payment.ValueData END Is Not Null;
 
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbY
@@ -153,6 +155,8 @@ BEGIN
       WHERE Movement_Payment.StatusId = zc_Enum_Status_UnComplete()
         AND MovementLinkObject_Juridical.ObjectId = vbJuridical
         AND MLO_From.ObjectId = inSupplierID;
+
+raise notice 'Out: %', timeofday();
 
       outShowMessage := True;
       outPUSHType := 3;

@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer
              , LegalAddressId Integer, LegalAddressName TVarChar 
              , ActualAddressId Integer, ActualAddressName TVarChar 
              , AdjustingOurDate TDateTime
+             , Comment TVarChar
 )
 AS
 $BODY$
@@ -65,6 +66,7 @@ BEGIN
              , 0                                                AS ActualAddressId
              , CAST('' as TVarChar)                             AS ActualAddressName
              , NULL::TDateTime                                  AS AdjustingOurDate
+             , CAST('' as TVarChar)                             AS Comment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -97,8 +99,12 @@ BEGIN
            , Movement_ReturnOut_View.ActualAddressId
            , Movement_ReturnOut_View.ActualAddressName
            , Movement_ReturnOut_View.AdjustingOurDate
+           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
        FROM Movement_ReturnOut_View       
+           LEFT JOIN MovementString AS MovementString_Comment
+                                    ON MovementString_Comment.MovementId = Movement_ReturnOut_View.Id
+                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
       WHERE Movement_ReturnOut_View.Id = inMovementId;
 
        END IF;
@@ -112,6 +118,7 @@ ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.11.19         *
  28.05.18                                                                     * 
  03.07.14                                                        *
 */

@@ -258,7 +258,6 @@ uses
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
   SendOnPrice in '..\..\FormsFarmacy\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
   SendOnPriceJournal in '..\..\FormsFarmacy\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
-  MarginCategory in '..\..\Forms\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
   MarginCategoryItem in '..\..\Forms\Guides\MarginCategoryItem.pas' {MarginCategoryItemForm: TParentForm},
   MarginCategoryLink in '..\..\Forms\Guides\MarginCategoryLink.pas' {MarginCategoryLinkForm: TParentForm},
   dsdException in '..\..\SOURCE\dsdException.pas',
@@ -772,7 +771,9 @@ uses
   Report_Loyalty_CreaturesPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_CreaturesPromocode.pas' {Report_Loyalty_CreaturesPromocodeForm: TParentForm},
   Report_Loyalty_UsedPromocode in '..\..\FormsFarmacy\Report\Report_Loyalty_UsedPromocode.pas' {Report_Loyalty_UsedPromocodeForm: TParentForm},
   GoodsReprice in '..\..\FormsFarmacy\Guides\GoodsReprice.pas' {GoodsRepriceForm: TParentForm},
-  GoodsRepriceEdit in '..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas' {GoodsRepriceEditForm: TParentForm};
+  GoodsRepriceEdit in '..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas' {GoodsRepriceEditForm: TParentForm},
+  MarginCategory in '..\..\FormsFarmacy\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
+  MarginCategoryEdit in '..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas' {MarginCategoryEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

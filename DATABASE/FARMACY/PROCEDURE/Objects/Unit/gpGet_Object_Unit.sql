@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, Phone TVarChar,
+               ListDaySUN TVarChar
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
@@ -58,6 +59,7 @@ BEGIN
            , CAST ('' as TVarChar) AS Name
            , CAST ('' as TVarChar) AS Address
            , CAST ('' as TVarChar) AS Phone
+           , CAST ('' as TVarChar) AS ListDaySUN
            
            , CAST (0 as Integer)   AS ProvinceCityId
            , CAST ('' as TVarChar) AS ProvinceCityName
@@ -146,6 +148,7 @@ BEGIN
       , Object_Unit.ValueData                              AS Name
       , ObjectString_Unit_Address.ValueData                AS Address
       , ObjectString_Unit_Phone.ValueData                  AS Phone
+      , COALESCE (ObjectString_ListDaySUN.ValueData, '') :: TVarChar AS ListDaySUN
 
       , Object_ProvinceCity.Id                             AS ProvinceCityId
       , Object_ProvinceCity.ValueData                      AS ProvinceCityName
@@ -316,6 +319,10 @@ BEGIN
                                ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
 
+        LEFT JOIN ObjectString AS ObjectString_ListDaySUN
+                               ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
+                              AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
@@ -460,6 +467,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 20.11.19         * ListDaySUN
  04.09.19         * isTopNo
  13.08.19                                                        * AutoMCS
  11.07.19         *

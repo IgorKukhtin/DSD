@@ -54,7 +54,8 @@ RETURNS TABLE (
     IsTop_Goods         Boolean ,   -- Топ сети
     isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
-    Reprice             Boolean     --
+    Reprice             Boolean ,   --
+    isGoodsReprice      Boolean
     )
 
 AS
@@ -455,7 +456,10 @@ BEGIN
                   THEN TRUE
 
              ELSE FALSE
-        END  AS Reprice
+        END  AS Reprice, 
+        
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+                
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId

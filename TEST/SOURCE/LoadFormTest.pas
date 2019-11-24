@@ -1609,10 +1609,10 @@ end;
 
 procedure TLoadFormTest.LoadReestrFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournal_byReportForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
 
@@ -2269,12 +2269,12 @@ end;
 
 procedure TLoadFormTest.LoadReportWageFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Wage_ServerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Wage_ServerForm');
 end;

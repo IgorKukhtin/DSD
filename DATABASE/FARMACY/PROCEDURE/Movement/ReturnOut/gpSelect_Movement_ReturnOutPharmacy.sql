@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , InvNumberPartner TVarChar
              , OperDate TDateTime
              , OperDatePartner TDateTime
-             , BranchDate TDateTime
+             , BranchDate TDateTime, BranchUser TVarChar 
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer
              , JuridicalName TVarChar
              , ReturnTypeName TVarChar
              , AdjustingOurDate TDateTime
+             , Comment TVarChar
               )
 
 AS
@@ -78,6 +79,7 @@ BEGIN
            , Movement_ReturnOut_View.OperDate
            , Movement_ReturnOut_View.OperDatePartner
            , MovementDate_Branch.ValueData          AS BranchDate
+           , Object_User.ValueData                  AS BranchUser
            , Movement_ReturnOut_View.StatusCode
            , Movement_ReturnOut_View.StatusName
            , Movement_ReturnOut_View.TotalCount
@@ -96,6 +98,7 @@ BEGIN
            , Movement_ReturnOut_View.JuridicalName
            , Movement_ReturnOut_View.ReturnTypeName
            , Movement_ReturnOut_View.AdjustingOurDate
+           , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
        FROM tmpUnit
            LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.FromId = tmpUnit.UnitId
                                             AND Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -108,6 +111,15 @@ BEGIN
            LEFT JOIN MovementDate AS MovementDate_Branch
                                   ON MovementDate_Branch.MovementId = Movement_ReturnOut_View.Id
                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                        ON MovementLinkObject_User.MovementId = Movement_ReturnOut_View.Id
+                                       AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+           LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+           LEFT JOIN MovementString AS MovementString_Comment
+                                    ON MovementString_Comment.MovementId = Movement_ReturnOut_View.Id
+                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
        ;
 END;
 $BODY$
@@ -117,6 +129,8 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ÿ‡·ÎËÈ Œ.¬.
+ 22.11.19         *
+ 21.11.19                                                                     * add BranchUser
  29.05.19         * add BranchDate
 */
 

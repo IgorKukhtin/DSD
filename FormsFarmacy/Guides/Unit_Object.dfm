@@ -198,6 +198,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object ListDaySUN: TcxGridDBColumn
+            Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'ListDaySUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086' '#1082#1072#1082#1080#1084' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 85
+          end
           object isRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'isRepriceAuto'

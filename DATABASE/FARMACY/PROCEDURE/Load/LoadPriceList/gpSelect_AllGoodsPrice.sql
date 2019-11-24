@@ -45,6 +45,7 @@ RETURNS TABLE (
     Juridical_Percent   TFloat,     -- % Корректировки наценки Поставщика
     Contract_Percent    TFloat,     -- % Корректировки наценки Договора
     SumReprice          TFloat,     -- сумма переоценки
+    MaxPriceIncome      TFloat,     -- макс цена партий
     MidPriceSale        TFloat,     -- средняя цена остатка
     MidPriceDiff        TFloat,     -- отклонение от средняя цена остатка
     MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
@@ -56,7 +57,8 @@ RETURNS TABLE (
     IsTop_Goods         Boolean ,   -- Топ сети
     isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
-    Reprice             Boolean     --
+    Reprice             Boolean ,    --
+    isGoodsReprice      Boolean
     )
 
 AS
@@ -294,6 +296,7 @@ BEGIN
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             RemainsTo.MinExpirationDate                      AS MinExpirationDate_to,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
+            SelectMinPrice_AllGoods.MaxPriceIncome           AS MaxPriceIncome,
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
@@ -356,6 +359,18 @@ BEGIN
         WHERE Object_Goods.isSp = FALSE
     )
 
+  , tmpGoodsRepriceAll AS (SELECT tmp.Name
+                           FROM gpSelect_Object_GoodsReprice (inSession) AS tmp
+                           WHERE tmp.isErased = FALSE
+                             AND tmp.isEnabled = TRUE
+                           )
+  , tmpGoodsReprice AS (SELECT DISTINCT ResultSet.Id_retail AS GoodsId
+                        FROM ResultSet
+                             INNER JOIN tmpGoodsRepriceAll ON UPPER (ResultSet.GoodsName) Like ('%'|| UPPER (tmpGoodsRepriceAll.Name) ||'%')
+                        )
+
+
+    ----
     SELECT
         ResultSet.Id_retail AS Id,
         ResultSet.Id        AS Id_retail,
@@ -396,6 +411,7 @@ BEGIN
                * ResultSet.RemainsCount
                )
            , 2) :: TFloat AS SumReprice,
+        ResultSet.MaxPriceIncome :: TFloat,
         ResultSet.MidPriceSale,
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff,
         ResultSet.MinExpirationDate,
@@ -439,7 +455,9 @@ BEGIN
                   THEN TRUE
 
              ELSE FALSE
-        END  AS Reprice
+        END  AS Reprice,
+
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
@@ -452,6 +470,8 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
                               ON ObjectFloat_Contract_Percent.ObjectId = ResultSet.ContractId
                              AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+
+        LEFT JOIN tmpGoodsReprice ON tmpGoodsReprice.GoodsId = ResultSet.Id_retail
 
     WHERE
        ((inUnitId_to > 0 AND ResultSet.NewPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
@@ -492,6 +512,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.11.19         *
  31.10.19                                                                                      * isTopNo_Unit только для TOP сети
  04.09.19         * isTopNo_Unit
  11.02.19         * признак Товары соц-проект берем и документа

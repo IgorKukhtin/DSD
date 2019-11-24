@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDefSUN Boolean
              , isSent Boolean
              , isReceived Boolean
+             , isNotDisplaySUN Boolean
               )
 AS
 $BODY$
@@ -61,6 +62,7 @@ BEGIN
              , FALSE                                            AS isDefSUN
              , FALSE                                            AS isSent
              , FALSE                                            AS isReceived
+             , FALSE                                            AS NotDisplaySUN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -92,6 +94,7 @@ BEGIN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
+           , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -151,6 +154,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+            LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                      ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                     AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

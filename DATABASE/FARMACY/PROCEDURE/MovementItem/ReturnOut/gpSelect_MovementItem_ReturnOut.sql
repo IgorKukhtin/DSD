@@ -112,6 +112,7 @@ BEGIN
                             , tmpIncome.PartionGoods
                             , tmpIncome.MakerName
                             , tmpContainer.Amount     AS AmountRemains
+                            , tmpContainer.MovementItemId
                        FROM tmpIncome
                               LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpIncome.Id
                        )
@@ -234,7 +235,7 @@ BEGIN
 
               LEFT JOIN tmpRemainsAll ON tmpRemainsAll.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
  
-              LEFT JOIN ReturnOther ON ReturnOther.ParentId = MovementItem_ReturnOut.ParentId
+              LEFT JOIN ReturnOther ON ReturnOther.ParentId = COALESCE(MovementItem_ReturnOut.ParentId, MovementItem_Income.MovementItemId)
 
 ;
 

@@ -16,8 +16,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
                isSpotter boolean,
-               LoyaltyID Integer, LoyaltySummCash TFloat
-
+               LoyaltyID Integer, LoyaltySummCash TFloat,
+               ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -137,6 +137,9 @@ BEGIN
          
        , tmpLoyalty.LoyaltyID
        , tmpLoyalty.LoyaltySummCash
+       , 'пакет;% амп;%инъекц'::TVarChar AS ShareFromPriceName
+       , '1269;9496;1336;20584;21051'::TVarChar AS ShareFromPriceCode
+
 
    FROM Object AS Object_Unit
 

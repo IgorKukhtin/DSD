@@ -698,6 +698,8 @@ BEGIN
            , vbWeighingCount AS WeighingCount
 
            , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
+
+           , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2  -- для договора Id = 4440485 + доп страничка
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id

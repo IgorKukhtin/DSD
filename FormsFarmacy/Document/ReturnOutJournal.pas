@@ -60,6 +60,8 @@ type
     AdjustingOurDate: TcxGridDBColumn;
     actPrintTTN: TdsdPrintAction;
     BranchUser: TcxGridDBColumn;
+    actPUSHMessage: TdsdShowPUSHMessage;
+    spPUSHInfo: TdsdStoredProc;
   private
     { Private declarations }
   public

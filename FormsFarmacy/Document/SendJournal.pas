@@ -79,6 +79,7 @@ type
     bbUpdate_isDefSun: TdxBarButton;
     bbUpdate_isSun: TdxBarButton;
     isSUN_over: TcxGridDBColumn;
+    isNotDisplaySUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

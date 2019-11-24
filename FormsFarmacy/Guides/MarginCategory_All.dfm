@@ -62,6 +62,13 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Options.Editing = False
             Width = 120
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 91
+          end
           object Value_1: TcxGridDBColumn
             Caption = '0-15'
             DataBinding.FieldName = 'Value_1'

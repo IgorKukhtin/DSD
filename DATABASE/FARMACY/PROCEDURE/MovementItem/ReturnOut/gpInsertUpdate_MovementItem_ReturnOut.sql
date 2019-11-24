@@ -18,12 +18,48 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementIncomeId Integer;
+   DECLARE vbAmountIncome TFloat;
+   DECLARE vbAmountOther TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnOut());
      
+     IF COALESCE(inAmount, 0) > 0
+     THEN
+
+        --Номер прихода
+       SELECT Movement.ParentId 
+       INTO vbMovementIncomeId
+       FROM Movement
+       WHERE Movement.Id = inMovementId;
+
+       SELECT SUM(MI_ReturnOut.Amount)::TFloat AS Amount
+       INTO vbAmountOther
+       FROM Movement AS Movement_ReturnOut
+            INNER JOIN MovementItem AS MI_ReturnOut
+                                    ON MI_ReturnOut.MovementId = Movement_ReturnOut.Id
+                                   AND MI_ReturnOut.isErased   = FALSE
+                                   AND MI_ReturnOut.DescId     = zc_MI_Master()
+       WHERE Movement_ReturnOut.Id <> inMovementId
+         AND Movement_ReturnOut.ParentId = vbMovementIncomeId
+         AND Movement_ReturnOut.StatusId <> zc_Enum_Status_Erased()
+         AND Movement_ReturnOut.DescId = zc_Movement_ReturnOut()
+         AND MI_ReturnOut.ParentId = inParentId;
+
+       SELECT MovementItem.Amount
+       INTO vbAmountIncome
+       FROM MovementItem 
+       WHERE MovementItem.Id = inParentId;
+                 
+       IF inAmount > (COALESCE(vbAmountIncome, 0) - COALESCE(vbAmountOther, 0)) 
+       THEN
+         RAISE EXCEPTION 'Ошибка.Вы возвращаете <%> в приходе <%> в других возвратах <%> можно вернуть не более <%>.', 
+           inAmount, COALESCE(vbAmountIncome, 0), COALESCE(vbAmountOther, 0), COALESCE(vbAmountIncome, 0) - COALESCE(vbAmountOther, 0);             
+       END IF;
+     END IF;
      
      outSumm := (inAmount*inPrice)::TFloat;
      

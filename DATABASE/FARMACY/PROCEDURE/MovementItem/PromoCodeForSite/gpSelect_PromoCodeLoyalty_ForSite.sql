@@ -1,23 +1,25 @@
--- Function: gpSelect_MovementItem_Loyalty_GUID()
+-- Function: gpSelect_PromoCodeLoyalty_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Loyalty_GUID (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_PromoCodeLoyalty_ForSite (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loyalty_GUID(
-    IN inGUID                TVarChar  , --
-   OUT outID                 Integer   , -- Ключ объекта <Документ>
-   OUT outAmount             TFloat    , -- Сумма скидки
-   OUT outError              TVarChar  , -- Ошибка
-    IN inSession             TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_PromoCodeLoyalty_ForSite(
+    IN inGUID          TVarChar,   -- Промо код
+    IN inUnitID        Integer,    -- Подразделение
+    IN inSession       TVarChar    -- сессия пользователя
 )
+RETURNS TABLE (
+               DiscountAmount  TFloat
+             , PromoCodeId     Integer
+             , DateValid       TDateTime
+             , Error           TVarChar
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
 
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
-   DECLARE vbAmount TFloat;
+   DECLARE vbDiscountAmount TFloat;
    DECLARE vbisErased Boolean;
    DECLARE vbParentId Integer;
    DECLARE vbOperDate TDateTime;
@@ -26,7 +28,6 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbStartSale TDateTime;
    DECLARE vbEndSale TDateTime;
-   DECLARE vbIsInsert Boolean;
    DECLARE vbMovementChackId Integer;
    DECLARE vbMonthCount Integer;
 BEGIN
@@ -34,15 +35,10 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' THEN
-       vbUnitKey := '0';
-    END IF;
-    vbUnitId := vbUnitKey::Integer;
 
 
     SELECT MovementItem.ID, MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MovementFloat_MovementItemId.MovementId, MIDate_OperDate.ValueData
-    INTO vbMovementItemId, vbMovementId, vbAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
+    INTO vbMovementItemId, vbMovementId, vbDiscountAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
     FROM MovementItemString
          INNER JOIN MovementItem ON MovementItem.ID = MovementItemString.MovementItemID
          LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
@@ -53,28 +49,32 @@ BEGIN
                                    AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
     WHERE MovementItemString.DescId = zc_MIString_GUID()
       AND MovementItemString.ValueData = inGUID;
-      
+
     IF COALESCE(vbMovementChackId, 0) <> 0
     THEN
-      outError := 'Ошибка. Продажа по промокоду '||COALESCE(inGUID, '')||' уже произведена.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Продажа по промокоду '||COALESCE(inGUID, '')||' уже произведена.')::TVarChar;
       RETURN;
     END IF;
 
     IF COALESCE(vbMovementItemId, 0) = 0
     THEN
-      outError := 'Ошибка. Промокод '||COALESCE(inGUID, '')||' не найден.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Промокод '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
       RETURN;
     END IF;
 
     IF vbisErased = TRUE
     THEN
-      outError := 'Ошибка. Промокод '||COALESCE(inGUID, '')||' удален.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Промокод '||COALESCE(inGUID, '')||' удален.')::TVarChar;
       RETURN;
     END IF;
 
     IF COALESCE(vbParentId, 0) = 0
     THEN
-      outError := 'Ошибка. По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.')::TVarChar;
       RETURN;
     END IF;
 
@@ -95,39 +95,42 @@ BEGIN
     -- Если документ неподписан
     IF COALESCE(vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
-      outError := 'Ошибка. Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
       RETURN;
     END IF;
 
     -- Если неподходят даты
     IF vbStartSale > CURRENT_DATE OR vbEndSale < CURRENT_DATE
     THEN
-      outError := 'Ошибка. Срок действия "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' закончен.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Срок действия "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
       RETURN;
     END IF;
 
     -- Если аптека невходит
-    IF NOT EXISTS(SELECT 1 FROM MovementItem AS MI_Loyalty
+    IF COALESCE(inUnitID, 0) <> 0 AND
+       NOT EXISTS(SELECT 1 FROM MovementItem AS MI_Loyalty
                   WHERE MI_Loyalty.MovementId = vbMovementId
                     AND MI_Loyalty.DescId = zc_MI_Child()
                     AND MI_Loyalty.isErased = FALSE
-                    AND MI_Loyalty.ObjectId = vbUnitId)
+                    AND MI_Loyalty.ObjectId = inUnitID)
     THEN
-      outError := 'Ошибка. "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' на аптеку не распространяеться.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('"Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' на аптеку не распространяеться.')::TVarChar;
       RETURN;
     END IF;
 
     -- Если просрочен даты
-    IF (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL) < CURRENT_DATE
+    IF (vbOperDate + (vbMonthCount||' MONTH')::INTERVAL) < CURRENT_DATE
     THEN
-      outError := 'Ошибка. Срок действия промокода '||COALESCE(inGUID, '')||' закончен.';
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Срок действия промокода '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
       RETURN;
     END IF;
 
-   outID := vbMovementItemId;
-   outAmount := vbAmount;
-   outError := '';
-
+    RETURN QUERY
+    SELECT vbDiscountAmount, vbMovementItemId, (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL)::TDateTime, ''::TVarChar;
 
 END;
 $BODY$
@@ -136,10 +139,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 08.11.19                                                       *
+ 21.11.19                                                       *
  */
 
 -- zfCalc_FromHex
 
--- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-A887-001F-A46F', '3');
--- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-2300-7A19-8EDC', '3');
+-- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('1119-A887-001F-A46F', '3');
+-- SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '1119-2300-7A19-8EDC', inUnitID := '0', inSession := zfCalc_UserSite());

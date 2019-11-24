@@ -57,7 +57,7 @@ type
     SumPriceIn: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
-    edIsAuto: TcxCheckBox;
+    cbNotDisplaySUN: TcxCheckBox;
     ActionList1: TActionList;
     dsdDataSetRefresh1: TdsdDataSetRefresh;
     dsdGridToExcel1: TdsdGridToExcel;
@@ -149,6 +149,10 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     DateInsert: TcxGridDBColumn;
+    edIsAuto: TcxCheckBox;
+    actSetNotDisplaySUN: TdsdExecStoredProc;
+    spUpdate_Movement_NotDisplaySUN: TdsdStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

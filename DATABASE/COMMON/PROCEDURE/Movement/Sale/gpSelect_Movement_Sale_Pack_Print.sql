@@ -157,7 +157,7 @@ BEGIN
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
-                         AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner(), zc_MIFloat_BoxCount(), zc_MIFloat_LevelNumber())
+                         AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner(), zc_MIFloat_BoxCount(), zc_MIFloat_LevelNumber(), zc_MIFloat_BoxNumber())
                         )
      , tmp_GoodsKind AS (SELECT MovementItemLinkObject.*
                          FROM MovementItemLinkObject
@@ -173,8 +173,9 @@ BEGIN
                                       ) AS AmountWeight
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
                                -- , tmpMI.GoodsKindId
-                                , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0)) AS LevelNumber
-                                , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))    AS BoxCount
+                                , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0))   AS LevelNumber
+                                , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))      AS BoxCount
+                                , SUM (COALESCE (MIFloat_BoxNumber.ValueData, 0))     AS BoxNumber
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
                                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerSh
@@ -188,6 +189,9 @@ BEGIN
                                 LEFT JOIN tmpMI_Float AS MIFloat_BoxCount
                                                       ON MIFloat_BoxCount.MovementItemId = tmpMI.MI_Id
                                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                                LEFT JOIN tmpMI_Float AS MIFloat_BoxNumber
+                                                     ON MIFloat_BoxNumber.MovementItemId = tmpMI.MI_Id
+                                                    AND MIFloat_BoxNumber.DescId = zc_MIFloat_BoxNumber()
                                 LEFT JOIN tmpMI_Float AS MIFloat_LevelNumber
                                                       ON MIFloat_LevelNumber.MovementItemId = tmpMI.MI_Id
                                                      AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
@@ -259,6 +263,7 @@ BEGIN
 
                                  , OH_JuridicalDetails_From.FullName                                      AS JuridicalName_From
                                  , OH_JuridicalDetails_From.JuridicalAddress                              AS JuridicalAddress_From
+                                 , OH_JuridicalDetails_From.OKPO                                          AS OKPO_From
                       
                                  , OH_JuridicalDetails_To.FullName                                        AS JuridicalName_To
                                  , OH_JuridicalDetails_To.JuridicalAddress                                AS JuridicalAddress_To
@@ -362,6 +367,7 @@ BEGIN
 
            , tmpMovementParam.JuridicalName_From
            , tmpMovementParam.JuridicalAddress_From
+           , tmpMovementParam.OKPO_From
 
            , tmpMovementParam.JuridicalName_To
            , tmpMovementParam.JuridicalAddress_To
@@ -384,6 +390,7 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, '')) AS BarCode_Juridical
            , tmpMovementItem.LevelNumber                                            AS LevelNumber
            , tmpMovementItem.BoxCount                                               AS BoxCount
+           , tmpMovementItem.BoxNumber
            , (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
 
            , tmpMovementItem.Amount                                       :: TFloat AS Amount
@@ -493,6 +500,7 @@ BEGIN
              ) :: TVarChar AS BarCode_128_str
              
            , tmpStickerProperty.Value5 :: Integer AS Value5_termin
+           , MAX (tmpStickerProperty.Value5) OVER () :: Integer AS max_termin
 
 
            , CASE WHEN tmpMovementParam.ContractId > 0
@@ -511,7 +519,12 @@ BEGIN
                       THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isFozzi
-             
+
+           , CASE WHEN tmpMovementParam.ContractId = 4440485 -- Фоззі для договора Id = 4440485 + доп страничка
+                      THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isFozzyPage5
+                     
            , vbIsContract_30201 :: Boolean AS isContract_30201
 
        FROM tmpMovementData AS tmpMovementItem

@@ -14,6 +14,7 @@ RETURNS TABLE (
     GoodsCode          Integer,
     GoodsName          TVarChar,
     Remains            TFloat,
+    MaxPriceIncome     TFloat,
     MidPriceSale       TFloat,
     MinExpirationDate  TDateTime,
     PartionGoodsDate   TDateTime,
@@ -74,32 +75,56 @@ BEGIN
 
     -- Остатки - оптимизация
     CREATE TEMP TABLE _tmpMinPrice_Remains ON COMMIT DROP AS
-       (WITH tmpRemains AS
-       (SELECT
-            Container.ObjectId           AS ObjectId_retail -- здесь товар "сети"
-          , SUM (Container.Amount)       AS Amount
-          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- Срок годности
-          , SUM (Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM (Container.Amount) AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
+       (WITH 
+       tmp AS
+           (SELECT Container.ObjectId
+             , Container.Id
+             , Container.Amount
         FROM
             Container
+        WHERE Container.DescId = zc_Container_Count()
+          AND Container.WhereObjectId = inUnitId
+          AND Container.Amount <> 0
+            )
+     ,  tmpContainer AS 
+       (SELECT Container.ObjectId AS ObjectId_retail -- здесь товар "сети"
+             , Container.Amount
+             , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Partion
+        FROM tmp AS Container
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
                                                 ON CLO_PartionMovementItem.ContainerId = Container.Id
                                                AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem
                                    ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
-            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
+        )
+     , tmpMI_Float AS (SELECT *
+                       FROM MovementItemFloat
+                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpContainer.MI_Partion FROM tmpContainer)
+                         AND MovementItemFloat.DescId IN (zc_MIFloat_PriceSale(), zc_MIFloat_Price())
+                       )
+     , tmpRemains AS
+       (SELECT
+            Container.ObjectId_retail -- здесь товар "сети"
+          , SUM (Container.Amount)       AS Amount
+          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- Срок годности
+          , SUM (Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM (Container.Amount) AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
+          , MAX (COALESCE (MIFloat_Income_Price.ValueData, 0)) AS MaxPriceIncome
+        FROM tmpContainer AS Container
+             LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                              ON MIDate_ExpirationDate.MovementItemId = Container.MI_Partion
                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-            -- Цена реал. с НДС
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-        WHERE Container.DescId = zc_Container_Count()
-          AND Container.WhereObjectId = inUnitId
-          AND Container.Amount <> 0
-        GROUP BY Container.ObjectId
+             -- Цена реал. с НДС
+             LEFT JOIN tmpMI_Float AS MIFloat_PriceSale
+                                         ON MIFloat_PriceSale.MovementItemId = Container.MI_Partion
+                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+             LEFT OUTER JOIN tmpMI_Float AS MIFloat_Income_Price
+                                               ON MIFloat_Income_Price.MovementItemId = Container.MI_Partion
+                                              AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+        GROUP BY Container.ObjectId_retail
         HAVING SUM (Container.Amount) > 0
        )
+
         --
         SELECT
             ObjectLink_Child_NB.ChildObjectId         AS ObjectID           -- !!!временно захардкодил, будет всегда товар НеБолей!!!
@@ -107,6 +132,7 @@ BEGIN
           , tmpRemains.Amount ::TFloat                AS Amount
           , tmpRemains.MinExpirationDate :: TDateTime AS MinExpirationDate  -- Срок годности
           , tmpRemains.MidPriceSale       -- !!! средняя Цена реал. с НДС!!!
+          , tmpRemains.MaxPriceIncome     -- !!! максимальная цена прихода         
         FROM tmpRemains
                                     -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
                                     INNER JOIN ObjectLink AS ObjectLink_Child
@@ -142,7 +168,8 @@ BEGIN
             PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
             _tmpMinPrice_Remains.Amount,
             _tmpMinPrice_Remains.MinExpirationDate,
-            _tmpMinPrice_Remains.MidPriceSale
+            _tmpMinPrice_Remains.MidPriceSale,
+            _tmpMinPrice_Remains.MaxPriceIncome
         FROM _tmpMinPrice_Remains
             INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = _tmpMinPrice_Remains.objectid -- Связь товара сети с общим
             LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
@@ -251,6 +278,7 @@ BEGIN
           , _tmpMinPrice_RemainsList.Amount                   AS Remains
           , _tmpMinPrice_RemainsList.MinExpirationDate        AS MinExpirationDate
           , _tmpMinPrice_RemainsList.MidPriceSale             AS MidPriceSale
+          , _tmpMinPrice_RemainsList.MaxPriceIncome           AS MaxPriceIncome
             -- просто цена поставщика
           , PriceList.Amount                   AS Price
             -- минимальная цена поставщика - для товара "сети"
@@ -364,6 +392,7 @@ BEGIN
       , ddd.Remains
       , ddd.MinExpirationDate
       , ddd.MidPriceSale
+      , ddd.MaxPriceIncome
       , ddd.Price
       , ddd.PartionGoodsDate
       , ddd.Partner_GoodsId
@@ -417,6 +446,7 @@ BEGIN
           , tmpMinPrice_RemainsPrice.Remains
           , tmpMinPrice_RemainsPrice.MinExpirationDate
           , tmpMinPrice_RemainsPrice.MidPriceSale
+          , tmpMinPrice_RemainsPrice.MaxPriceIncome
             -- просто цена поставщика
           , tmpMinPrice_RemainsPrice.Price
             -- минимальная цена поставщика - для товара "сети"
@@ -469,6 +499,7 @@ BEGIN
         MinPriceList.GoodsCode,
         MinPriceList.GoodsName,
         MinPriceList.Remains,
+        MinPriceList.MaxPriceIncome ::TFloat,
         MinPriceList.MidPriceSale ::TFloat,
         MinPriceList.MinExpirationDate,
         MinPriceList.PartionGoodsDate,
@@ -513,3 +544,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 2140932, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
 -- SELECT * FROM lpSelectMinPrice_AllGoods (1781716 , 4, 3) WHERE GoodsCode = 8969 -- "Аптека_"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
+--SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
