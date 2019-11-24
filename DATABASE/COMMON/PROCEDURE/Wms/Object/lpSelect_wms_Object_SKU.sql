@@ -202,4 +202,3 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM lpSelect_wms_Object_SKU() where sku_id = 7065093 ORDER BY sku_code
-

@@ -126,10 +126,11 @@ BEGIN
                                                               ON MIF_AmountSecond.MovementItemId = MovementItem.Id
                                                              AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                   LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerTagId = OL_Partner_PartnerTag.ChildObjectId
-                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '0 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
+                               AND Movement.InvNumber IN ('941124')
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT

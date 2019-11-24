@@ -467,6 +467,12 @@ BEGIN
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
         FROM tmpObject_Price
+             -- Работают по СУН - только отправка
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
+                                     ON OB_Unit_SUN_out.ObjectId  = tmpObject_Price.UnitId
+                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_out()
+                                    AND OB_Unit_SUN_out.ValueData = TRUE
+
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
@@ -491,6 +497,8 @@ BEGIN
                                   ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
                                  AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+
+        WHERE OB_Unit_SUN_out.ObjectId IS NULL
         /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
            AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
               )
@@ -806,15 +814,22 @@ BEGIN
              , 0                 AS Amount_notSold
         FROM tmpRes_SUN
              -- если он есть в tmpNotSold, тогда распределяем только ВСЕ кол-во из tmpNotSold
-             LEFT JOIN tmpNotSold ON tmpNotSold.UnitId  = tmpRes_SUN.UnitId
+             LEFT JOIN tmpNotSold ON tmpNotSold.UnitId = tmpRes_SUN.UnitId
                                 AND tmpNotSold.GoodsId = tmpRes_SUN.GoodsId
              -- баланс по Аптекам отправителям - если не соответствует, соотв расход блокируется
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = tmpRes_SUN.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = tmpRes_SUN.UnitId
+
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
+                                     ON OB_Unit_SUN_in.ObjectId  = tmpRes_SUN.UnitId
+                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
+                                    AND OB_Unit_SUN_in.ValueData = TRUE
+
         WHERE -- !!!
               tmpNotSold.GoodsId IS NULL
               -- !!!
          AND (_tmpUnit_SUN.KoeffOutSUN = 0 OR _tmpUnit_SUN_balance.KoeffOutSUN < _tmpUnit_SUN.KoeffOutSUN)
+         AND OB_Unit_SUN_in.ObjectId IS NULL
 
        UNION ALL
         -- 
@@ -837,6 +852,11 @@ BEGIN
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = tmpNotSold.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = tmpNotSold.UnitId
 
+             -- Работают по СУН - только прием
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
+                                     ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
+                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
+                                    AND OB_Unit_SUN_in.ValueData = TRUE
              -- если он есть в сроковых, тогда распределяем только сроковое кол-во
           -- LEFT JOIN tmpRes_SUN ON tmpRes_SUN.UnitId  = tmpNotSold.UnitId
           --                     AND tmpRes_SUN.GoodsId = tmpNotSold.GoodsId
@@ -845,6 +865,7 @@ BEGIN
               -- !!!
          AND (_tmpUnit_SUN.KoeffOutSUN = 0 OR _tmpUnit_SUN_balance.KoeffOutSUN < _tmpUnit_SUN.KoeffOutSUN)
              -- !!!
+         AND OB_Unit_SUN_in.ObjectId IS NULL
        -- AND tmpRes_SUN.GoodsId IS NULL
               
        ;

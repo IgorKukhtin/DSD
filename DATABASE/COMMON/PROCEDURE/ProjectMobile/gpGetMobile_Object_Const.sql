@@ -195,7 +195,7 @@ BEGIN
             , getMobileConst.CriticalDebtSum
             , zc_Google_APIKey() AS APIKey
 
-            , 0::TFloat   AS CriticalWeight
+            , 5::TFloat   AS CriticalWeight
 
        FROM tmpPersonal
             LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1

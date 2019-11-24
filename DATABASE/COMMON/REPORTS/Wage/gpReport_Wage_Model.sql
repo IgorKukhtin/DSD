@@ -1647,8 +1647,8 @@ AS  (SELECT
          -- HoursWork
        , tmpMovement_PersonalComplete.HoursWork :: TFloat AS Gross
        , tmpMovement_PersonalComplete.HoursWork :: TFloat AS GrossOnOneMember
-       , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price) :: TFloat AS Amount
-       , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+       , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS Amount
+       , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS AmountOnOneMember
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Transport AS tmpMovement_PersonalComplete
                                           ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId

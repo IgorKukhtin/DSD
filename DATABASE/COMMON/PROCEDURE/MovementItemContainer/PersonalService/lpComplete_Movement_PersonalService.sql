@@ -375,7 +375,7 @@ BEGIN
                -- ‘илиал Ѕаланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
                -- ‘илиал ќѕи”: не используетс€ !!!в кассе и р/счете - делать аналогично!!!
-             , 0 AS BranchId_ProfitLoss
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
 
                -- ћес€ц начислений - есть
              , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- «аработна€ плата
@@ -575,7 +575,7 @@ BEGIN
                -- ‘илиал Ѕаланс: не используетс€
              , 0 AS BranchId_Balance
                -- ‘илиал ќѕи”: всегда по подразделению
-             , _tmpItem.BranchId_Balance AS BranchId_ProfitLoss
+             , _tmpItem.BranchId_ProfitLoss AS BranchId_ProfitLoss
 
                -- ћес€ц начислений: не используетс€
              , 0 AS ServiceDateId
@@ -771,7 +771,7 @@ BEGIN
                -- ‘илиал Ѕаланс: не используетс€
              , 0 AS BranchId_Balance
                -- ‘илиал ќѕи”: всегда по подразделению
-             , _tmpItem.BranchId_Balance AS BranchId_ProfitLoss
+             , _tmpItem.BranchId_ProfitLoss AS BranchId_ProfitLoss
 
                -- ћес€ц начислений: не используетс€
              , 0 AS ServiceDateId
