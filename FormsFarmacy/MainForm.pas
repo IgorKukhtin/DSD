@@ -584,6 +584,8 @@ type
     N197: TMenuItem;
     actReport_GoodsPartionDate0: TdsdOpenForm;
     N198: TMenuItem;
+    actReport_Movement_ReturnOut: TdsdOpenForm;
+    miReport_Movement_ReturnOut: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

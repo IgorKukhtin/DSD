@@ -775,7 +775,9 @@ uses
   MarginCategory in '..\..\FormsFarmacy\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
   MarginCategoryEdit in '..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas' {MarginCategoryEditForm: TParentForm},
   CashSettingsEdit in '..\..\FormsFarmacy\Guides\CashSettingsEdit.pas' {CashSettingsEditForm: TParentForm},
-  Report_GoodsPartionDate0 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate0.pas';
+  Report_GoodsPartionDate0 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate0.pas',
+  Report_Movement_ReturnOut in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOut.pas' {Report_Movement_ReturnOutForm: TParentForm},
+  Report_Movement_ReturnOutDialog in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOutDialog.pas' {Report_Movement_ReturnOutDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
