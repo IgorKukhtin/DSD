@@ -3139,6 +3139,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsPartionDate0: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      FormName = 'TReport_GoodsPartionDate0Form'
+      FormNameParam.Value = 'TReport_GoodsPartionDate0Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3640,6 +3652,9 @@ inherited MainForm: TMainForm
       end
       object N510: TMenuItem
         Action = actReport_GoodsPartionDate5
+      end
+      object N198: TMenuItem
+        Action = actReport_GoodsPartionDate0
       end
       object N146: TMenuItem
         Action = actReport_Check_Assortment

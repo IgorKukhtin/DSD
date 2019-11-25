@@ -774,7 +774,8 @@ uses
   GoodsRepriceEdit in '..\..\FormsFarmacy\Guides\GoodsRepriceEdit.pas' {GoodsRepriceEditForm: TParentForm},
   MarginCategory in '..\..\FormsFarmacy\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
   MarginCategoryEdit in '..\..\FormsFarmacy\Guides\MarginCategoryEdit.pas' {MarginCategoryEditForm: TParentForm},
-  CashSettingsEdit in '..\..\FormsFarmacy\Guides\CashSettingsEdit.pas' {CashSettingsEditForm: TParentForm};
+  CashSettingsEdit in '..\..\FormsFarmacy\Guides\CashSettingsEdit.pas' {CashSettingsEditForm: TParentForm},
+  Report_GoodsPartionDate0 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate0.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

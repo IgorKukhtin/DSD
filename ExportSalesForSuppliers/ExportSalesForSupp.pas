@@ -776,18 +776,17 @@ begin
   Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]);
 end;
 
-function DateTimeToXML(Q : TZQuery; F : String) : String;
+function DateTimeToXML(D : TDateTime) : String; overload;
+var
+  MyTimeZoneInformation: TTimeZoneInformation;
 begin
-  if not Q.FieldByName(F).IsNull then
-    with TXSDateTime.Create() do
-    try
-      AsDateTime := Q.FieldByName(F).AsDateTime; // convert from TDateTime
-      Result := NativeToXS; // convert to WideString
-    finally
-      Free;
-    end
-  else Result := ''
-//  else Result := FormatDateTime('YYYY-MM-DDTHH:NN:SS', Q.FieldByName(F).AsDateTime);
+  GetTimeZoneInformation (MyTimeZoneInformation);
+  Result := IntToStr(Round(D - EncodeDate(1970, 1, 1) + ((MyTimeZoneInformation.Bias) / (24 * 60))) * (24 * 3600));
+end;
+
+function DateTimeToXML(Q : TZQuery; F : String) : String; overload;
+begin
+  Result := DateTimeToXML(Q.FieldByName(F).AsDateTime);
 end;
 
 function DateToXML(Q : TZQuery; F : String) : String;
@@ -819,8 +818,8 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
     sl.Add('<?xml version="1.0" encoding="UTF-8"?>');
     sl.Add('<pack>');
     sl.Add('    <meta type_id="' + IntToStr(FYuriFarmType) + '"' +
-                    ' data_start="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '"' +
-                    ' data_end="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '" />');
+                    ' data_start="' + DateTimeToXML(YuriFarmDate.Date) + '"' +
+                    ' data_end="' + DateTimeToXML(YuriFarmDate.Date) + '" />');
     sl.Add('    <body>');
   end;
 
@@ -906,8 +905,8 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
            ' quant_num="' + IntToStr(Trunc(qryReport_Upload_YuriFarm.FieldByName('Remains').AsCurrency * 1000)) + '"' +
            ' quant_div="' + '1000' + '"' +
 
-           ' stock_start="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '"' +
-           ' stock_close="' + FormatDateTime('YYYY-MM-DD', YuriFarmDate.Date) + '"' +
+           ' stock_start="' + DateTimeToXML(YuriFarmDate.Date) + '"' +
+           ' stock_close="' + DateTimeToXML(YuriFarmDate.Date) + '"' +
            ' amount_buy="' + CurrToXML(qryReport_Upload_YuriFarm, 'SummaWithVAT') + '"' +
            ' deleted="0"' +
 

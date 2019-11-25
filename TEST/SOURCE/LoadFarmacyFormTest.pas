@@ -851,17 +851,19 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
     exit;
-
+    }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate0Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate0Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate5Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5DialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate5DialogForm');
     exit;
-    }
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_overForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_overForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSendSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNDialogForm'));

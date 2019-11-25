@@ -582,6 +582,8 @@ type
     actRefresh: TdsdExecStoredProc;
     actCashSettings: TdsdOpenForm;
     N197: TMenuItem;
+    actReport_GoodsPartionDate0: TdsdOpenForm;
+    N198: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
