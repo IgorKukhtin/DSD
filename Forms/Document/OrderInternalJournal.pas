@@ -45,6 +45,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrintScan: TdsdPrintAction;
+    bbPrintScan: TdxBarButton;
   private
     { Private declarations }
   public

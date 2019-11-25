@@ -51,6 +51,7 @@ BEGIN
      --
      OPEN Cursor1 FOR
       SELECT Movement.Id                                AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
@@ -91,6 +92,7 @@ BEGIN
            , Object_Goods.ValueData          AS GoodsName
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
+           , zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
 
            , tmpMI.Amount
            , tmpMI.AmountSecond
@@ -181,6 +183,9 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                                                           AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
 
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        ;

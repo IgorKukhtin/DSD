@@ -903,7 +903,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackJournalForm'));
@@ -913,7 +913,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisJournalForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
