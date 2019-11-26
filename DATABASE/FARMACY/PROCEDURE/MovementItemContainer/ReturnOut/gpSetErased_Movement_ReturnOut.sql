@@ -14,6 +14,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
 
+     -- проверка
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ отложен, удаление запрещено!';
+     END IF;
+
      -- проверка - если <Master> Проведен, то <Ошибка>
      -- PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 

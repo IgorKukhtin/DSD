@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
+             , isDeferred Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
@@ -48,6 +49,7 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (False as Boolean)                          AS PriceWithVAT
+             , CAST (False as Boolean)                          AS isDeferred
              , 0                                                AS FromId
              , CAST ('' AS TVarChar)                            AS FromName
              , 0                                                AS ToId
@@ -81,6 +83,7 @@ BEGIN
            , Movement_ReturnOut_View.StatusCode
            , Movement_ReturnOut_View.StatusName
            , Movement_ReturnOut_View.PriceWithVAT
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , Movement_ReturnOut_View.FromId
            , Movement_ReturnOut_View.FromName
            , Movement_ReturnOut_View.ToId
@@ -105,6 +108,9 @@ BEGIN
            LEFT JOIN MovementString AS MovementString_Comment
                                     ON MovementString_Comment.MovementId = Movement_ReturnOut_View.Id
                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                     ON MovementBoolean_Deferred.MovementId = Movement_ReturnOut_View.Id
+                                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
       WHERE Movement_ReturnOut_View.Id = inMovementId;
 
        END IF;
@@ -118,6 +124,7 @@ ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 26.11.19                                                                     *
  22.11.19         *
  28.05.18                                                                     * 
  03.07.14                                                        *

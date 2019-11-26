@@ -3,26 +3,26 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 564
+  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 148
     Width = 1001
     Height = 378
-    ExplicitTop = 142
+    ExplicitTop = 148
     ExplicitWidth = 1001
-    ExplicitHeight = 384
+    ExplicitHeight = 378
     ClientRectBottom = 378
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 360
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 354
         ExplicitWidth = 1001
-        ExplicitHeight = 360
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -266,6 +266,28 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 78
           end
+          object DeferredSend: TcxGridDBColumn
+            Caption = #1042' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093
+            DataBinding.FieldName = 'DeferredSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object DeferredOut: TcxGridDBColumn
+            Caption = #1042' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1074#1086#1079#1074#1088#1072#1090#1072#1093' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            DataBinding.FieldName = 'DeferredOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
     end
@@ -351,7 +373,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 149
-      Top = 59
+      Top = 47
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 10
@@ -594,6 +616,14 @@ inherited ReturnOutForm: TReturnOutForm
       Left = 638
       Top = 80
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object cbisDeferred: TcxCheckBox
+      Left = 149
+      Top = 63
+      Caption = #1054#1090#1083#1086#1078#1077#1085
+      Properties.ReadOnly = True
+      TabOrder = 37
+      Width = 69
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -877,9 +907,32 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       ImageIndex = 12
-      QuestionBeforeExecute = 
-        #1042#1053#1048#1052#1040#1053#1048#1045'! '#1042' '#1050#1040#1057#1057#1059' '#1041#1059#1044#1059#1058' '#1047#1040#1043#1056#1059#1046#1045#1053#1067' '#1082#1086#1083'-'#1074#1072' '#1080#1079' '#1082#1086#1083#1086#1085#1082#1080' "'#1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091 +
-        #1095#1072#1090#1077#1083#1103'". '#1055#1056#1054#1042#1045#1056#1068#1058#1045' '#1048#1061'.'
+    end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 79
+    end
+    object spUpdateisDeferredNo: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -1025,6 +1078,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1078,6 +1139,14 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object dxBarButton2: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = spUpdateisDeferredYes
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = spUpdateisDeferredNo
       Category = 0
     end
   end
@@ -1230,6 +1299,13 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -2173,5 +2249,67 @@ inherited ReturnOutForm: TReturnOutForm
     PackSize = 1
     Left = 256
     Top = 352
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 283
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 219
   end
 end

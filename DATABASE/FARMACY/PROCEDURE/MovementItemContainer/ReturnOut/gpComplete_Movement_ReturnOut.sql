@@ -17,16 +17,23 @@ $BODY$
   DECLARE vbUnit Integer;
   DECLARE vbOperDate  TDateTime;
   DECLARE vbChangeIncomePaymentId Integer;
+  DECLARE vbInvNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
      vbUserId:= inSession;
 
+      -- проверка
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
+     END IF;
+
       -- параметры документа
      SELECT
-          Movement.OperDate
+          Movement.OperDate, Movement.InvNumber
      INTO
-          outOperDate
+          outOperDate, vbInvNumber
      FROM Movement
      WHERE Movement.Id = inMovementId;
 
@@ -37,13 +44,13 @@ BEGIN
          --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
         outOperDate:= CURRENT_DATE;
         -- сохранили <Документ> c новой датой 
-        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_Send(), vbInvNumber, outOperDate, NULL);
+        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_ReturnOut(), vbInvNumber, outOperDate, NULL);
         
 /*     ELSE
          IF ((outOperDate <> CURRENT_DATE) OR (outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH')) AND (inIsCurrentData = FALSE)
          THEN
              -- проверка прав на проведение задним числом
-             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Send());
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_ReturnOut());
          END IF;*/
      END IF;
 

@@ -91,6 +91,15 @@ type
     spMovementComplete: TdsdStoredProc;
     edComment: TcxTextEdit;
     cxLabel18: TcxLabel;
+    cbisDeferred: TcxCheckBox;
+    spUpdate_isDeferred_No: TdsdStoredProc;
+    spUpdate_isDeferred_Yes: TdsdStoredProc;
+    spUpdateisDeferredYes: TdsdExecStoredProc;
+    spUpdateisDeferredNo: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    DeferredSend: TcxGridDBColumn;
+    DeferredOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

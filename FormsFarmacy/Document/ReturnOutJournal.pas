@@ -62,6 +62,11 @@ type
     BranchUser: TcxGridDBColumn;
     actPUSHMessage: TdsdShowPUSHMessage;
     spPUSHInfo: TdsdStoredProc;
+    InsertName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    isDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

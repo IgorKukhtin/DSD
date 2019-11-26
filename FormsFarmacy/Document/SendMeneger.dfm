@@ -8,128 +8,6 @@ inherited SendMenegerForm: TSendMenegerForm
       inherited cxGrid: TcxGrid
         TabOrder = 2
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountManual
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SumPriceIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaWithVAT
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorage
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = PartionDateKindName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitFrom
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitTo
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorageDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colIsErased
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountManual
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SumPriceIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaWithVAT
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorage
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountCheck
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitFrom
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitTo
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorageDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorage
-            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -151,15 +29,11 @@ inherited SendMenegerForm: TSendMenegerForm
   end
   inherited DataPanel: TPanel
     TabOrder = 1
-    inherited edIsAuto: TcxCheckBox
-      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
-    end
   end
   inherited edComment: TcxTextEdit
     TabOrder = 4
   end
   inherited cbNotDisplaySUN: TcxCheckBox
-    Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     TabOrder = 7
   end
   inherited edPeriod: TcxCurrencyEdit
