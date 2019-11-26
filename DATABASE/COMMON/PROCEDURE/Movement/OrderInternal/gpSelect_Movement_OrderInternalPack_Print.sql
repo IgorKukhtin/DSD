@@ -36,7 +36,7 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
-/*
+
      -- очень важная проверка
      IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
      THEN
@@ -52,7 +52,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
      END IF;
 
-*/
+
      --
      OPEN Cursor1 FOR
       SELECT Movement.Id                                AS Id
@@ -150,6 +150,8 @@ BEGIN
            , tmpMI.Amount       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount
            , tmpMI.AmountSecond * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSecond
            , tmpMI.AmountSend   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend
+           
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsId_basis

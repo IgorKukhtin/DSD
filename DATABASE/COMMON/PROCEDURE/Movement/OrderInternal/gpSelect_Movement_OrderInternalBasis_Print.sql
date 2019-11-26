@@ -159,6 +159,8 @@ BEGIN
            , tmpMI.Amount_calc          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
            , tmpMI.AmountRemains        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
 
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
+
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , MAX (tmpMI.ReceiptId)     AS ReceiptId
