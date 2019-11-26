@@ -19,13 +19,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
 RETURNS record
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbIsDeferred  Boolean;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUserId    Integer;
+   DECLARE vbIsInsert  Boolean;
+   DECLARE vbIsDeferred Boolean;
+   DECLARE vbUnitId    Integer;
+   DECLARE vbSPKindId  Integer;
    DECLARE vbAmount    TFloat;
-   DECLARE vbGoodsName  TVarChar;
-   DECLARE vbSaldo      TFloat;
+   DECLARE vbGoodsName TVarChar;
+   DECLARE vbSaldo     TFloat;
+   DECLARE vbPriceCalc TFloat;
+   DECLARE vbPersent   TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -34,14 +37,69 @@ BEGIN
     -- Получили признак отложен
     SELECT COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
          , Movement_Sale.UnitId
+         , Movement_Sale.SPKindId
     INTO vbIsDeferred
        , vbUnitId
+       , vbSPKindId
     FROM Movement_Sale_View AS Movement_Sale
          LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                    ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement_Sale.Id = inMovementId;
     
+    -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
+    IF vbSPKindId = zc_Enum_SPKind_1303() 
+            -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
+       THEN IF EXISTS (SELECT 1
+                       FROM ObjectLink
+                            INNER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink.ChildObjectId 
+                                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                                  AND ObjectFloat_NDSKind_NDS.ValueData = 20
+                       WHERE ObjectLink.ObjectId = inGoodsId
+                         AND ObjectLink.DescId = zc_ObjectLink_Goods_NDSKind())
+               THEN
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20%';
+            END IF;
+            (SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 0.25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 0.2
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 0.15
+                         WHEN tt.Price >= 1000 THEN tt.Price * 0.1
+                    END :: TFloat AS PriceCalc
+                  , CASE WHEN tt.Price < 100 THEN 25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 20
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 15
+                         WHEN tt.Price >= 1000 THEN 10
+                    END :: TFloat AS Persent
+            INTO vbPriceCalc, vbPersent
+             FROM (SELECT MIFloat_Price.ValueData AS Price
+                        , ROW_NUMBER() OVER (ORDER BY Container.Id) AS ord
+                   FROM Container 
+                      LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                          ON CLI_MI.ContainerId = Container.Id
+                                                         AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                      LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+
+                      LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+                      LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                   WHERE Container.ObjectId = inGoodsId
+                     AND Container.DescId = zc_Container_Count()
+                     AND Container.WhereObjectId = vbUnitId
+                     AND COALESCE (Container.Amount,0 ) > 0
+                   ) AS tt
+             WHERE tt.Ord = 1);
+
+            -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
+            IF COALESCE (vbPriceCalc,0) < inPriceSale
+               THEN
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%>%', vbPersent;
+            END IF;
+
+    END IF;
+
     -- Сохранили начальное количество для отложеных чеков
     IF vbIsDeferred = TRUE AND COALESCE (ioId, 0) <> 0
     THEN
@@ -62,7 +120,8 @@ BEGIN
                     AND MLM_Child.descId = zc_MovementLinkMovement_Child())
     THEN
       RAISE EXCEPTION 'Ошибка. По документу выписан <Счет (пост.1303)> изменение документа запрещено.';            
-    END IF;        
+    END IF; 
+           
 
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
@@ -175,6 +234,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.  Шаблий О.В.
+ 26.11.19         *
  01.08.19                                                                                      *
  05.06.18         *
  09.02.17         *
