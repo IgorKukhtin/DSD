@@ -171,6 +171,28 @@ begin
 end;
 
  function TMedocComAction.LocalExecute: boolean;
+          procedure AddToLog(S: string);
+          var
+            LogStr: string;
+            LogFileName: string;
+            LogFile: TextFile;
+          begin
+              Application.ProcessMessages;
+              LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+              LogFileName := ChangeFileExt(Application.ExeName, '') + '_' + FormatDateTime('yyyymmdd', Date) + '.log';
+
+              AssignFile(LogFile, LogFileName);
+
+              if FileExists(LogFileName) then
+                Append(LogFile)
+              else
+                Rewrite(LogFile);
+
+              Writeln(LogFile, LogStr);
+              CloseFile(LogFile);
+              Application.ProcessMessages;
+          end;
+
 var DocumentList: IZDataset;
     s_err, SEND_DPA: string;
     ii, MovementId, MedocCode, FormCode: integer;
@@ -192,10 +214,14 @@ begin
          try
            while not DocumentList.Eof do begin
                MedocCode := DocumentList.Fields['CODE'].Value;
+               //AddToLog('------------');
+               //AddToLog('MedocCode: ' + IntToStr(MedocCode));
                //сначала проверяем, а не зарегистрировали мы ее УЖЕ
                if FTaxBill.Locate('MedocCode', MedocCode, []) then
                   if (FTaxBill.FieldByName('InvNumberRegistered').AsString <> '') then begin
                      Application.ProcessMessages;
+                     //AddToLog('inInvNumberRegistered: ' + FTaxBill.FieldByName('InvNumberRegistered').AsString);
+                     //AddToLog(' !!! next 1');
                      DocumentList.Next;
                      IncProgress;
                      Continue;
@@ -205,9 +231,52 @@ begin
 
                HeaderDataSet := MedocDocument.DataSets('', 0);
                SEND_DPA := HeaderDataSet.Fields['SEND_DPA'].Value;
+               //
+               //log
+               {try
+                 FormCode := DocumentList.Fields['FORM'].Value;
+                 if  (FormCode <> 12943)
+                   //and (FormCode <> 14025)
+                   and (FormCode <> 14027)
+                 then
+                     //
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325)
+                     then
+                       DocKind := 'Tax'
+                     else
+                       DocKind := 'TaxCorrective'
+                  else DocKind := '???';
+                 //
+                 AddToLog('Open: SEND_DPA : ' + SEND_DPA);
+                 AddToLog('FormCode : ' + IntToStr(FormCode) + ' - ' + DocKind);
+                 AddToLog('inInvNumberRegistered - SEND_DPA_RN: ' + HeaderDataSet.Fields['SEND_DPA_RN'].Value);
+                 AddToLog('inFromINN - FIRM_INN : ' + HeaderDataSet.Fields['FIRM_INN'].Value);
+                 AddToLog('inToINN - N4 : ' + HeaderDataSet.Fields['N4'].Value);
+                 if DocKind = 'Tax' then begin
+                     AddToLog('inInvNumber - N2_11 : ' + HeaderDataSet.Fields['N2_11'].Value);
+                     AddToLog('inOperDate - N11 : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N11'].Value)));
+                     AddToLog('inBranchNumber - N2_13 : ' + HeaderDataSet.Fields['N2_13'].Value);
+                     AddToLog('inContract - N81 : ' + HeaderDataSet.Fields['N81'].Value);
+                     AddToLog('inTotalSumm - A7_11 :' + FloatToStr(HeaderDataSet.Fields['A7_11'].Value));
+                 end
+                 else
+                 if DocKind = 'TaxCorrective'
+                 then begin
+                     AddToLog('inInvNumber - N1_11 : ' + HeaderDataSet.Fields['N1_11'].Value);
+                     AddToLog('inOperDate - N15 : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N15'].Value)));
+                     AddToLog('inBranchNumber - N1_13 : ' + HeaderDataSet.Fields['N1_13'].Value);
+                     AddToLog('inContract - N2_3 : ' + HeaderDataSet.Fields['N2_3'].Value);
+                     AddToLog('inTotalSumm - A2_92 :' + FloatToStr(HeaderDataSet.Fields['A2_92'].Value));
+                 end;
+               except
+                 on E: Exception do
+                   AddToLog(' !!! err AddToLog : ' + E.Message);
+               end;}
+               //
                // Вставлена, но не зарегистрирована. Крутим цикл дальше
                if FTaxBill.Locate('MedocCode', MedocCode, []) and (SEND_DPA <> '12') then begin
                   Application.ProcessMessages;
+                  //AddToLog(' !!! next 2');
                   DocumentList.Next;
                   IncProgress;
                   Continue;
@@ -237,87 +306,88 @@ end;
                   if  (FormCode <> 12943)
                    //and (FormCode <> 14025)
                    and (FormCode <> 14027)
-                  then
-                  begin
-                   if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) then
-                     DocKind := 'Tax'
-                  else
-                     DocKind := 'TaxCorrective';
+                  then begin
+                     //
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325)
+                     then
+                       DocKind := 'Tax'
+                     else
+                       DocKind := 'TaxCorrective';
 
-                  with FspUpdate_IsElectronFromMedoc do begin
+                    with FspUpdate_IsElectronFromMedoc do begin
 
-                    try s_err:='inMedocCODE - MedocCode'; ParamByName('inMedocCODE').Value := MedocCode; s_err:=''; except raise end;
-                    try s_err:='inFromINN - FIRM_INN'; ParamByName('inFromINN').Value := HeaderDataSet.Fields['FIRM_INN'].Value; s_err:=''; except raise end;
-                    try s_err:='inToINN - N4'; ParamByName('inToINN').Value := HeaderDataSet.Fields['N4'].Value; s_err:=''; except raise end;
+                      try s_err:='inMedocCODE - MedocCode'; ParamByName('inMedocCODE').Value := MedocCode; s_err:=''; except raise end;
+                      try s_err:='inFromINN - FIRM_INN'; ParamByName('inFromINN').Value := HeaderDataSet.Fields['FIRM_INN'].Value; s_err:=''; except raise end;
+                      try s_err:='inToINN - N4'; ParamByName('inToINN').Value := HeaderDataSet.Fields['N4'].Value; s_err:=''; except raise end;
 
-                    if DocKind = 'Tax' then begin
-                       try s_err:='inInvNumber - N2_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value; s_err:=''; except raise end;
-                       try s_err:='inOperDate - N11'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N11'].Value); s_err:=''; except raise end;
-                       try s_err:='inBranchNumber - N2_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value; s_err:=''; except raise end;
-                       try s_err:='inContract - N81'; ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value; s_err:=''; except raise end;
-                       try s_err:='inTotalSumm - A7_11'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_11'].Value; s_err:=''; except raise end;
-                                                          {HeaderDataSet.Fields['A7_7'].Value +
-                                                           HeaderDataSet.Fields['A7_8'].Value +
-                                                           HeaderDataSet.Fields['A7_9'].Value;}
-                    end
-                    else begin
-                       try s_err:='inInvNumber - N1_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N1_11'].Value; s_err:=''; except raise end;
-                       try s_err:='inOperDate - N15'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value); s_err:=''; except raise end;
-                       try s_err:='inBranchNumber - N1_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value; s_err:=''; except raise end;
-                       try s_err:='inContract - N2_3'; ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value; s_err:=''; except raise end;
-                       try s_err:='inTotalSumm - A2_92 + A1_9'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_92'].Value +
-                                                                                                  + HeaderDataSet.Fields['A1_9'].Value; s_err:=''; except raise end;
-                                                           {HeaderDataSet.Fields['A1_9'].Value +
-                                                           HeaderDataSet.Fields['A1_10'].Value +
-                                                           HeaderDataSet.Fields['A1_11'].Value +
-                                                           HeaderDataSet.Fields['A2_9'].Value;}
+                      if DocKind = 'Tax' then begin
+                         try s_err:='inInvNumber - N2_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value; s_err:=''; except raise end;
+                         try s_err:='inOperDate - N11'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N11'].Value); s_err:=''; except raise end;
+                         try s_err:='inBranchNumber - N2_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value; s_err:=''; except raise end;
+                         try s_err:='inContract - N81'; ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value; s_err:=''; except raise end;
+                         try s_err:='inTotalSumm - A7_11'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_11'].Value; s_err:=''; except raise end;
+                                                            {HeaderDataSet.Fields['A7_7'].Value +
+                                                             HeaderDataSet.Fields['A7_8'].Value +
+                                                             HeaderDataSet.Fields['A7_9'].Value;}
+                      end
+                      else begin
+                         try s_err:='inInvNumber - N1_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N1_11'].Value; s_err:=''; except raise end;
+                         try s_err:='inOperDate - N15'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value); s_err:=''; except raise end;
+                         try s_err:='inBranchNumber - N1_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value; s_err:=''; except raise end;
+                         try s_err:='inContract - N2_3'; ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value; s_err:=''; except raise end;
+                         try s_err:='inTotalSumm - A2_92 + A1_9'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_92'].Value +
+                                                                                                    + HeaderDataSet.Fields['A1_9'].Value; s_err:=''; except raise end;
+                                                             {HeaderDataSet.Fields['A1_9'].Value +
+                                                             HeaderDataSet.Fields['A1_10'].Value +
+                                                             HeaderDataSet.Fields['A1_11'].Value +
+                                                             HeaderDataSet.Fields['A2_9'].Value;}
+                      end;
+
+                      try s_err:='inInvNumberRegistered - SEND_DPA_RN'; ParamByName('inInvNumberRegistered').Value := HeaderDataSet.Fields['SEND_DPA_RN'].Value; s_err:=''; except raise end;
+                      try s_err:='SEND_DPA_DATE - SEND_DPA_DATE'; SEND_DPA_DATE := HeaderDataSet.Fields['SEND_DPA_DATE'].Value; s_err:=''; except raise end;
+                      if SEND_DPA_DATE <> '' then
+                         try s_err:='inDateRegistered:= '+ SEND_DPA_DATE; ParamByName('inDateRegistered').Value := VarToDateTime(SEND_DPA_DATE); s_err:=''; except raise end
+                      else
+                         ParamByName('inDateRegistered').Value := Date;
+                      ParamByName('inDocKind').Value := DocKind;
+
+                      //try s_err:='Execute'; Execute; s_err:=''; except raise;end;
+
+                      try s_err:='Execute ';
+                          Execute;
+                          s_err:='';
+                      except ON E:Exception do
+                      Begin
+                           s_err:=s_err + E.Message;
+                           raise;
+                      end;
+                      end;
+
                     end;
 
-                    try s_err:='inInvNumberRegistered - SEND_DPA_RN'; ParamByName('inInvNumberRegistered').Value := HeaderDataSet.Fields['SEND_DPA_RN'].Value; s_err:=''; except raise end;
-                    try s_err:='SEND_DPA_DATE - SEND_DPA_DATE'; SEND_DPA_DATE := HeaderDataSet.Fields['SEND_DPA_DATE'].Value; s_err:=''; except raise end;
-                    if SEND_DPA_DATE <> '' then
-                       try s_err:='inDateRegistered:= '+ SEND_DPA_DATE; ParamByName('inDateRegistered').Value := VarToDateTime(SEND_DPA_DATE); s_err:=''; except raise end
-                    else
-                       ParamByName('inDateRegistered').Value := Date;
-                    ParamByName('inDocKind').Value := DocKind;
-
-                    //try s_err:='Execute'; Execute; s_err:=''; except raise;end;
-
-                    try s_err:='Execute ';
-                        Execute;
-                        s_err:='';
-                    except ON E:Exception do
-                    Begin
-                         s_err:=s_err + E.Message;
-                         raise;
-                    end;
-                    end;
-
-                  end;
-
-                  if FspUpdate_IsElectronFromMedoc.ParamByName('outId').AsString <> '0' then
-                  begin
-                     MovementId := FspUpdate_IsElectronFromMedoc.ParamByName('outId').Value;
-                     try s_err:='LineDataSet - TAB1'; LineDataSet := MedocDocument.DataSets('TAB1', 0); s_err:=''; except raise end;
-                     while not LineDataSet.EOF do
-                       with FspInsertUpdate_MovementItem_TaxFromMedoc do begin
-                         ParamByName('inMovementId').Value := MovementId;
-                         if DocKind = 'Tax' then begin
-                            try s_err:='inGoodsName - TAB1_A13'; ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A13'].Value; s_err:=''; except raise end;
-                            try s_err:='inMeasureName - TAB1_A14'; ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A14'].Value; s_err:=''; except raise end;
-                            try s_err:='inAmount - TAB1_A15'; ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A15'].Value; s_err:=''; except raise end;
-                            try s_err:='inPrice - TAB1_A16'; ParamByName('inPrice').Value := LineDataSet.Fields['TAB1_A16'].Value; s_err:=''; except raise end;
-                         end
-                         else begin
-                            try s_err:='inGoodsName - TAB1_A3'; ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A3'].Value; s_err:=''; except raise end;
-                            try s_err:='inMeasureName - TAB1_A4'; ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A4'].Value; s_err:=''; except raise end;
-                            try s_err:='inAmount - TAB1_A5'; ParamByName('inAmount').Value := - (LineDataSet.Fields['TAB1_A5'].Value + LineDataSet.Fields['TAB1_A8'].Value); s_err:=''; except raise end;
-                            try s_err:='inPrice - TAB1_A6'; ParamByName('inPrice').Value := (LineDataSet.Fields['TAB1_A6'].Value + LineDataSet.Fields['TAB1_A7'].Value); s_err:=''; except raise end;
+                    if FspUpdate_IsElectronFromMedoc.ParamByName('outId').AsString <> '0' then
+                    begin
+                       MovementId := FspUpdate_IsElectronFromMedoc.ParamByName('outId').Value;
+                       try s_err:='LineDataSet - TAB1'; LineDataSet := MedocDocument.DataSets('TAB1', 0); s_err:=''; except raise end;
+                       while not LineDataSet.EOF do
+                         with FspInsertUpdate_MovementItem_TaxFromMedoc do begin
+                           ParamByName('inMovementId').Value := MovementId;
+                           if DocKind = 'Tax' then begin
+                              try s_err:='inGoodsName - TAB1_A13'; ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A13'].Value; s_err:=''; except raise end;
+                              try s_err:='inMeasureName - TAB1_A14'; ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A14'].Value; s_err:=''; except raise end;
+                              try s_err:='inAmount - TAB1_A15'; ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A15'].Value; s_err:=''; except raise end;
+                              try s_err:='inPrice - TAB1_A16'; ParamByName('inPrice').Value := LineDataSet.Fields['TAB1_A16'].Value; s_err:=''; except raise end;
+                           end
+                           else begin
+                              try s_err:='inGoodsName - TAB1_A3'; ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A3'].Value; s_err:=''; except raise end;
+                              try s_err:='inMeasureName - TAB1_A4'; ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A4'].Value; s_err:=''; except raise end;
+                              try s_err:='inAmount - TAB1_A5'; ParamByName('inAmount').Value := - (LineDataSet.Fields['TAB1_A5'].Value + LineDataSet.Fields['TAB1_A8'].Value); s_err:=''; except raise end;
+                              try s_err:='inPrice - TAB1_A6'; ParamByName('inPrice').Value := (LineDataSet.Fields['TAB1_A6'].Value + LineDataSet.Fields['TAB1_A7'].Value); s_err:=''; except raise end;
+                           end;
+                           try s_err:='Execute - 2'; Execute; s_err:=''; except raise end;
+                           try s_err:='LineDataSet.Next'; LineDataSet.Next; s_err:=''; except raise end;
                          end;
-                         try s_err:='Execute - 2'; Execute; s_err:=''; except raise end;
-                         try s_err:='LineDataSet.Next'; LineDataSet.Next; s_err:=''; except raise end;
-                       end;
-                  end;
+                    end;
                   end; // if FormCode <> 0
                except
                      raise Exception.Create('FormCode  ' + IntToStr(FormCode) + #10 + #13 + 's_err  ' + s_err + #10 + #13 + str1);
