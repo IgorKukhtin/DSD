@@ -3371,6 +3371,12 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 120
       OnExecute = actSetPromoCodeLoyaltyExecute
     end
+    object actOpenMCS: TAction
+      Category = 'DSDLib'
+      Caption = #1053#1058#1047
+      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      OnExecute = actOpenMCSExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3621,7 +3627,7 @@ inherited MainCashForm2: TMainCashForm2
       Caption = '-'
     end
     object N13: TMenuItem
-      Action = actOpenMCSForm
+      Action = actOpenMCS
     end
     object actOpenCheckVIPError1: TMenuItem
       Action = actOpenCheckVIP_Error

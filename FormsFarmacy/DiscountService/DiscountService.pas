@@ -642,7 +642,7 @@ begin
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>2</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
-                                                       '<PatientCard>' + gPassword + '</PatientCard>'+
+                                                       '<PatientCard>' + gCardNumber + '</PatientCard>'+
                                                        '<DrugCode>' + BarCode_find + '</DrugCode>'+
                                                        '<Distributor>' + IntToStr(CodeRazom) + '</Distributor>'+
                                                        '<SessionId>42351</SessionId>'+
@@ -1132,7 +1132,7 @@ begin
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>1</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
-                                                       '<PatientCard>' + gPassword + '</PatientCard>'+
+                                                       '<PatientCard>' + gCardNumber + '</PatientCard>'+
                                                        '<DrugCode>' + BarCode_find + '</DrugCode>'+
                                                        '<Distributor>' + IntToStr(CodeRazom) + '</Distributor>'+
                                                        '<SessionId>42351</SessionId>'+

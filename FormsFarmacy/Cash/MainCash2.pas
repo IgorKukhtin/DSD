@@ -417,6 +417,7 @@ type
     Label27: TLabel;
     edPromoCodeLoyaltySumm: TcxCurrencyEdit;
     spLoyaltyStatus: TdsdStoredProc;
+    actOpenMCS: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -539,6 +540,7 @@ type
     procedure actNotTransferTimeExecute(Sender: TObject);
     procedure N22Click(Sender: TObject);
     procedure actSetPromoCodeLoyaltyExecute(Sender: TObject);
+    procedure actOpenMCSExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -1770,6 +1772,12 @@ begin
   if not RemainsCDS.Active  then Exit;
   if RemainsCDS.RecordCount < 1  then Exit;
 
+  if UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
+  begin
+    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
+    Exit;
+  end;
+
   with TListDiffAddGoodsForm.Create(nil) do
   try
     GoodsCDS := RemainsCDS;
@@ -1945,6 +1953,14 @@ begin
     finally
        freeAndNil(dsdSave);
     end;
+end;
+
+procedure TMainCashForm2.actOpenMCSExecute(Sender: TObject);
+begin
+  if UnitConfigCDS.FieldByName('isNotCashMCS').AsBoolean then
+  begin
+    ShowMessage('Уважаемые коллеги. Изменение <НТЗ> заблокировано.');
+  end else actOpenMCSForm.Execute;
 end;
 
 //проверили что есть остаток
@@ -4243,6 +4259,7 @@ begin
   PanelMCSAuto.Visible:= not PanelMCSAuto.Visible;
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= PanelMCSAuto.Visible;
 end;
+
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
 var CheckNumber: string;
 begin

@@ -52,6 +52,12 @@ procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
 begin
   if ModalResult <> mrOk then Exit;
 
+  if MainCashForm.UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
+  begin
+    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
+    Exit;
+  end;
+
   nAmount := ceAmount.Value;
 
   if nAmount = 0 then
