@@ -94,6 +94,7 @@ type
     value5_6: TcxGridDBColumn;
     valueprice_kg: TcxGridDBColumn;
     valuepricewithvat_kg: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

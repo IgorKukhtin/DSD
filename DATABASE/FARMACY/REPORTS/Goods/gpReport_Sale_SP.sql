@@ -557,8 +557,8 @@ BEGIN
                                                   END) ::TFloat AS SumWithOutVAT
 
                            , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
-                           , string_agg (Object_From.ValueData, ';') AS JuridicalName_in
-                           , string_agg ('№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
+                           , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
+                           , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
                       FROM tmpMIC
                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                ON CLI_MI.ContainerId = tmpMIC.ContainerId
@@ -583,12 +583,12 @@ BEGIN
                            LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
                         GROUP BY MI_Income.GoodsId
                                , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE)
-                              -- , ObjectFloat_NDSKind_NDS.ValueData
                                , tmpMIC.MovementId
                                , tmpMIC.UnitId
                         )
 
-    , tmpPrice AS (SELECT distinct CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+    , tmpPrice AS (SELECT DISTINCT
+                          CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                 AND ObjectFloat_Goods_Price.ValueData > 0
                                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                ELSE ROUND (Price_Value.ValueData, 2)
