@@ -3606,6 +3606,12 @@ inherited MainForm: TMainForm
         Caption = #1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
         Hint = ' '#1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
       end
+      object N199: TMenuItem
+        Caption = '-'
+      end
+      object miReport_JuridicalSold: TMenuItem
+        Action = actReport_JuridicalSold
+      end
     end
     object miReports: TMenuItem [5]
       Caption = #1054#1090#1095#1077#1090#1099
@@ -3627,9 +3633,6 @@ inherited MainForm: TMainForm
       end
       object N39: TMenuItem
         Caption = '-'
-      end
-      object miReport_JuridicalSold: TMenuItem
-        Action = actReport_JuridicalSold
       end
       object miReport_JuridicalCollation: TMenuItem
         Action = actReport_JuridicalCollation
@@ -3715,21 +3718,6 @@ inherited MainForm: TMainForm
       object miOverSettings: TMenuItem
         Action = actOverSettings
       end
-      object miReport_Movement_Send_RemainsSun: TMenuItem
-        Action = actReport_Movement_Send_RemainsSun
-      end
-      object miReport_CheckSendSUN_InOut: TMenuItem
-        Action = actReport_CheckSendSUN_InOut
-      end
-      object miReport_GoodsSendSUN_over: TMenuItem
-        Action = actReport_Send_RemainsSun_over
-      end
-      object N189: TMenuItem
-        Action = actReport_BalanceGoodsSUN
-      end
-      object miReport_CheckSUN: TMenuItem
-        Action = actReport_CheckSUN
-      end
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
       end
@@ -3752,7 +3740,25 @@ inherited MainForm: TMainForm
         Action = actReport_PriceProtocol
       end
     end
-    object N40: TMenuItem [6]
+    object N200: TMenuItem [6]
+      Caption = #1057#1059#1053
+      object N189: TMenuItem
+        Action = actReport_BalanceGoodsSUN
+      end
+      object miReport_CheckSUN: TMenuItem
+        Action = actReport_CheckSUN
+      end
+      object miReport_Movement_Send_RemainsSun: TMenuItem
+        Action = actReport_Movement_Send_RemainsSun
+      end
+      object miReport_GoodsSendSUN_over: TMenuItem
+        Action = actReport_Send_RemainsSun_over
+      end
+      object miReport_CheckSendSUN_InOut: TMenuItem
+        Action = actReport_CheckSendSUN_InOut
+      end
+    end
+    object N40: TMenuItem [7]
       Caption = #1041#1040#1048
       Hint = #1041#1083#1086#1082' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1093' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1081
       object miReport_ProfitForm: TMenuItem
@@ -3804,7 +3810,7 @@ inherited MainForm: TMainForm
         Action = actMarginCategoryJournal2
       end
     end
-    object N131: TMenuItem [7]
+    object N131: TMenuItem [8]
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       object miReport_MovementCheck_Cross: TMenuItem
         Action = actReport_MovementCheck_Cross

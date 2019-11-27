@@ -59,7 +59,7 @@ BEGIN
                        WHERE ObjectLink.ObjectId = inGoodsId
                          AND ObjectLink.DescId = zc_ObjectLink_Goods_NDSKind())
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20%';
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20';
             END IF;
             (SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 0.25
                          WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 0.2
@@ -72,7 +72,9 @@ BEGIN
                          WHEN tt.Price >= 1000 THEN 10
                     END :: TFloat AS Persent
             INTO vbPriceCalc, vbPersent
-             FROM (SELECT MIFloat_Price.ValueData AS Price
+             FROM (SELECT CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
+                               ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                          END AS Price   -- цена c НДС
                         , ROW_NUMBER() OVER (ORDER BY Container.Id) AS ord
                    FROM Container 
                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
@@ -85,6 +87,16 @@ BEGIN
                                                   ON MIFloat_Price.MovementItemId = MI_Income.Id
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
+                      LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                   ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                  AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                            ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                           AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
                    WHERE Container.ObjectId = inGoodsId
                      AND Container.DescId = zc_Container_Count()
                      AND Container.WhereObjectId = vbUnitId
@@ -95,7 +107,7 @@ BEGIN
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
             IF COALESCE (vbPriceCalc,0) < inPriceSale
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%>%', vbPersent;
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%> процентов', vbPersent;
             END IF;
 
     END IF;

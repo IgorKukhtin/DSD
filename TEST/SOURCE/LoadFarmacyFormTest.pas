@@ -2182,11 +2182,12 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
   Exit;
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));
@@ -2211,13 +2212,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');  }
+    TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
-    {TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
     exit;
 
@@ -2232,11 +2233,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
      exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 
