@@ -94,8 +94,7 @@ uses
   LabMarkEdit in '..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm},
   LabMark in '..\Forms\Guides\LabMark.pas' {LabMarkForm: TParentForm},
   LabProduct in '..\Forms\Guides\LabProduct.pas' {LabProductForm: TParentForm},
-  LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
-  EdiFozzyXML in '..\SOURCE\EDI\EdiFozzyXML.pas';
+  LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -122,7 +121,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainFormInstance, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do
