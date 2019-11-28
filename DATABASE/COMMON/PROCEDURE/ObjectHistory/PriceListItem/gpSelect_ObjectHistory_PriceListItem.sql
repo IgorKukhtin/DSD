@@ -127,11 +127,11 @@ BEGIN
                         , tmp.GoodsKindId      AS GoodsKindId
                         , MIN (tmp.ValuePrice) AS ValuePrice_min
                         , MAX (tmp.ValuePrice) AS ValuePrice_max
-                   FROM (SELECT tmpItem_all.GoodsId, COALESCE (tmpItem_all.GoodsKindId,0), tmpItem_all.ValuePrice
+                   FROM (SELECT tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice
                          FROM tmpItem_all
                          WHERE tmpItem_all.StartDate >= vbStartDate
                         UNION ALL
-                         SELECT tmpItem_all.GoodsId, COALESCE (tmpItem_all.GoodsKindId,0), tmpItem_all.ValuePrice
+                         SELECT tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice
                          FROM tmpItem_all
                               LEFT JOIN tmpItem_all AS tmpItem_all_check ON tmpItem_all_check.GoodsId   = tmpItem_all.GoodsId
                                                                         AND tmpItem_all_check.GoodsKindId = tmpItem_all.GoodsKindId

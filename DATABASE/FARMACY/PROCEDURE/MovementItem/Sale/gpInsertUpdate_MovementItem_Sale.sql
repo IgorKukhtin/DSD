@@ -61,10 +61,10 @@ BEGIN
                THEN
                    RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20';
             END IF;
-            (SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 0.25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 0.2
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 0.15
-                         WHEN tt.Price >= 1000 THEN tt.Price * 0.1
+            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.2
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.15
+                         WHEN tt.Price >= 1000 THEN tt.Price * 1.1
                     END :: TFloat AS PriceCalc
                   , CASE WHEN tt.Price < 100 THEN 25
                          WHEN tt.Price >= 100 AND tt.Price < 500 THEN 20
@@ -102,7 +102,7 @@ BEGIN
                      AND Container.WhereObjectId = vbUnitId
                      AND COALESCE (Container.Amount,0 ) > 0
                    ) AS tt
-             WHERE tt.Ord = 1);
+             WHERE tt.Ord = 1;
 
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
             IF COALESCE (vbPriceCalc,0) < inPriceSale

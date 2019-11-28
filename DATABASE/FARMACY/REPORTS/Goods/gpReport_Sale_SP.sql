@@ -378,6 +378,27 @@ BEGIN
                                                      ON ObjectString_MFO.ObjectId = Object_Bank.Id
                                                     AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
                            WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                           UNION
+                           SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                , Object_BankAccount.Id
+                                , OS_BankAccount_CBAccount.ValueData AS BankAccount
+                                , Object_Bank.ValueData AS BankName
+                                , ObjectString_MFO.ValueData AS MFO
+                           FROM Object AS Object_BankAccount
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                   ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                              LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                              LEFT JOIN ObjectString AS ObjectString_MFO
+                                                     ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                                    AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                              LEFT JOIN ObjectString AS OS_BankAccount_CBAccount
+                                                     ON OS_BankAccount_CBAccount.ObjectId = Object_BankAccount_View.Id
+                                                    AND OS_BankAccount_CBAccount.DescId = zc_ObjectString_BankAccount_CBAccount()
+                           WHERE Object_BankAccount.DescId = zc_object_BankAccount()
                            )
        -- договора мед учреждений
        , tmpContract AS (SELECT ObjectLink_PartnerMedical_Juridical.ObjectId                  AS PartnerMedicalId
