@@ -24,67 +24,6 @@ inherited SendForm: TSendForm
         ExplicitWidth = 1001
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountRemains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SumPriceIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaWithVAT
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountManual
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountCheck
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitFrom
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitTo
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorage
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorageDiff
-            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
@@ -114,7 +53,6 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountManual
             end
             item
               Format = ',0.####'
@@ -139,12 +77,17 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountStorageDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = AmountStorage
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountStorageDiff
+              Column = AmountManual
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -284,7 +227,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086', '#1079#1072#1075#1088#1091#1078#1072#1077#1084#1086#1077' '#1074' '#1090#1086#1095#1082#1091'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
-            Width = 107
+            Width = 99
           end
           object AmountManual: TcxGridDBColumn [13]
             Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
@@ -671,7 +614,6 @@ inherited SendForm: TSendForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 181
-      ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
@@ -1643,11 +1585,8 @@ inherited SendForm: TSendForm
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
     Left = 454
@@ -2949,11 +2888,8 @@ inherited SendForm: TSendForm
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
     Left = 318

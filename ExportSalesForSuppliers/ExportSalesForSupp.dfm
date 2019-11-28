@@ -1812,4 +1812,23 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Value = 42773d
       end>
   end
+  object pmExecute: TPopupMenu
+    Left = 832
+    Top = 136
+    object N1: TMenuItem
+      Tag = 51
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      OnClick = YuriFarmExecuteClick
+    end
+    object N2: TMenuItem
+      Tag = 1
+      Caption = #1055#1088#1080#1093#1086#1076#1099
+      OnClick = YuriFarmExecuteClick
+    end
+    object N3: TMenuItem
+      Tag = 3
+      Caption = #1056#1072#1089#1093#1086#1076#1099
+      OnClick = YuriFarmExecuteClick
+    end
+  end
 end

@@ -2256,6 +2256,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.11.19         * zc_ObjectLink_PriceListItem_GoodsKind
  18.10.19                                                                                      * zc_ObjectLink_RecalcMCSSheduler_UserRun
  17.10.19         * zc_ObjectLink_LabMark_LabProduct
  16.10.19         * zc_ObjectLink_LabReceiptChild_LabMark

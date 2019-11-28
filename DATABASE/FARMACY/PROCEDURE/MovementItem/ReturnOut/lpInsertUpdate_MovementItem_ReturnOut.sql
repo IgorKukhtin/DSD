@@ -1,3 +1,4 @@
+	
 -- Function: gpInsertUpdate_MovementItem_Income()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnOut(Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
@@ -14,7 +15,20 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnOut(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
+
+     -- определ€ютс€ данные из MovementItem
+     SELECT MI.Amount 
+     INTO vbAmount
+     FROM MovementItem AS MI 
+     WHERE MI.Id = ioId;
+
+     -- проверка
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId) AND (inAmount <> vbAmount)
+     THEN
+          RAISE EXCEPTION 'ќшибка.ƒокумент отложен, корректировка запрещена!';
+     END IF;
 
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, inParentId);

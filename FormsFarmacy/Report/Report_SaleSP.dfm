@@ -70,6 +70,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaComp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithOutVAT_in
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -125,6 +130,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = UnitName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithOutVAT_in
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -693,6 +703,56 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 40
+          end
+          object InvNumber_in: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1087#1088#1080#1093'.'
+            DataBinding.FieldName = 'InvNumber_in'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object JuridicalName_in: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName_in'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object NDS_in: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1087#1088'.'
+            DataBinding.FieldName = 'NDS_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1044#1057' '#1074' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceWithOutVAT_in: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088'. '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithOutVAT_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummWithOutVAT_in: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088'. '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'SummWithOutVAT_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ChargePersent_in: TcxGridDBColumn
+            Caption = #1053#1072#1094'.'
+            DataBinding.FieldName = 'ChargePersent_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1094#1077#1085#1082#1072' '#1084#1077#1078#1076#1091' '#1087#1088#1080#1093'. '#1094#1077#1085#1086#1081' '#1080'  '#1090#1077#1082'. '#1094#1077#1085#1086#1081' '#1088#1077#1072#1083'.'
+            Options.Editing = False
+            Width = 70
           end
         end
       end

@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 515
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -485,6 +485,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
             Options.Editing = False
             Width = 85
+          end
+          object isNotCashMCS: TcxGridDBColumn
+            Caption = #1041#1083#1086#1082'. '#1053#1058#1047' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            DataBinding.FieldName = 'isNotCashMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object isNotCashListDiff: TcxGridDBColumn
+            Caption = #1041#1083#1086#1082'.  '#1083#1080#1089#1090#1099' '#1086#1090#1082#1072#1079#1086#1074
+            DataBinding.FieldName = 'isNotCashListDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
           end
         end
       end

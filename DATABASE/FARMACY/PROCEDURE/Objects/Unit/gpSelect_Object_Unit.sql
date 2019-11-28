@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSP        Boolean
              , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
              , isTopNo     Boolean
+             , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
 ) AS
 $BODY$
 BEGIN
@@ -144,6 +145,9 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)   :: Boolean   AS isTopNo
+      , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
+      , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
+
       
 
     FROM Object AS Object_Unit
@@ -313,6 +317,13 @@ BEGIN
                                 ON ObjectBoolean_Report.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
                                
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashMCS
+                                ON ObjectBoolean_NotCashMCS.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashMCS.DescId = zc_ObjectBoolean_Unit_NotCashMCS()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
+                                ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
@@ -359,10 +370,11 @@ $BODY$
 LANGUAGE plpgsql VOLATILE;
 --ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В. 
+ 24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * ListDaySUN
  19.11.19         *
  23.09.19         * zc_ObjectLink_Unit_Driver

@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inIsShowErased   Boolean,       -- показать удаденные Да/Нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
+RETURNS TABLE (Id Integer, Name TVarChar,
+               RetailId Integer, RetailName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar, 
                isBonusVirtual Boolean,
                isPriceClose Boolean, isPriceCloseOrder Boolean,
                isSite Boolean,  isBonusClose Boolean, 
@@ -92,6 +94,8 @@ BEGIN
        SELECT 
              JuridicalSettings.JuridicalSettingsId              AS Id
            , Object_JuridicalSettings.ValueData                 AS Name 
+           , Object_Retail.Id                                   AS RetailId
+           , Object_Retail.ValueData                            AS RetailName
            , Object_Juridical.Id                                AS JuridicalId
            , Object_Juridical.ValueData                         AS JuridicalName
            , COALESCE (JuridicalSettings.isBonusVirtual, FALSE) AS isBonusVirtual
@@ -157,6 +161,7 @@ BEGIN
                       , tmpJuridicalSettingsItem.Bonus
                       , tmpJuridicalSettingsItem.PriceLimit
                       , ObjectLink_JuridicalSettings_Retail.ObjectId              AS JuridicalSettingsId
+                      , ObjectLink_JuridicalSettings_Retail.ChildObjectId         AS RetailId
 
                       , ObjectDate_StartDate.ValueData AS StartDate
                       , ObjectDate_EndDate.ValueData   AS EndDate
@@ -222,6 +227,7 @@ BEGIN
                                      AND JuridicalSettings.ContractId = COALESCE (LastPriceList_View.ContractId, 0)
 
             LEFT JOIN Object AS Object_JuridicalSettings ON Object_JuridicalSettings.Id = JuridicalSettings.JuridicalSettingsId
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = JuridicalSettings.RetailId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
                                   ON ObjectFloat_ConditionalPercent.ObjectId = LastPriceList_View.JuridicalId

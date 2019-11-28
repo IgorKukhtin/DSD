@@ -250,7 +250,7 @@ BEGIN
                                           , MI_Income.MovementId                  AS MovementId
                                        FROM
                                            tmpRemains
-                                           LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                           LEFT OUTER JOIN ContainerLinkObject AS CLI_MI
                                                                                ON CLI_MI.ContainerId = tmpRemains.Id
                                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
                                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId

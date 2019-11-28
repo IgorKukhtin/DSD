@@ -2,7 +2,7 @@ object Report_GoodsPartionDate5DialogForm: TReport_GoodsPartionDate5DialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1099' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1080')>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
   ClientHeight = 146
   ClientWidth = 324
   Color = clBtnFace

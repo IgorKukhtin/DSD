@@ -45,7 +45,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
+    bbPrintScan: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
@@ -153,6 +153,7 @@ type
     ceComment: TcxTextEdit;
     Color_production_old: TcxGridDBColumn;
     Color_production_next: TcxGridDBColumn;
+    actPrintScan: TdsdPrintAction;
   private
     { Private declarations }
   public

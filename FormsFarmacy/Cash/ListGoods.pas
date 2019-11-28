@@ -192,6 +192,12 @@ begin
   if not ListGoodsCDS.Active  then Exit;
   if ListGoodsCDS.RecordCount < 1  then Exit;
 
+  if MainCashForm.UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
+  begin
+    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
+    Exit;
+  end;
+
   with TListDiffAddGoodsForm.Create(nil) do
   try
     GoodsCDS := Self.ListGoodsCDS;

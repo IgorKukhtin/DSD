@@ -21,7 +21,7 @@ BEGIN
     IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND
       8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
     THEN
-      RAISE EXCEPTION '»зменение <банка POS терминала> вам запрещено.';
+      RAISE EXCEPTION '»зменение <типа галки вам запрещено> вам запрещено.';
     END IF;
 
     SELECT

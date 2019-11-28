@@ -32,7 +32,7 @@ BEGIN
                                              , NULL
                                              , NULL
                                              , NULL
-                                             , inComment := NULL :: TVarChar
+                                             , NULL :: TVarChar
                                              , vbUserId)
    INTO outId
      FROM  Movement_Income_View AS Movement_Income 

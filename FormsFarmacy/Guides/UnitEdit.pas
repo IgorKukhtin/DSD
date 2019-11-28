@@ -135,6 +135,9 @@ type
     edLongitude: TcxTextEdit;
     cxLabel38: TcxLabel;
     edListDaySUN: TcxTextEdit;
+    cxTabSheet3: TcxTabSheet;
+    cbNotCashMCS: TcxCheckBox;
+    cbNotCashListDiff: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -89,6 +89,14 @@ RETURNS TABLE (MovementId     Integer
              , InvNumber_Invoice_Full TVarChar
              
              , isPrintLast       Boolean
+             
+             --, OperDate_in TDateTime
+             , InvNumber_in TVarChar
+             , JuridicalName_in TVarChar
+             , NDS_in TFloat
+             , PriceWithOutVAT_in TFloat
+             , SummWithOutVAT_in TFloat
+             , ChargePersent_in TFloat
              )
 AS
 $BODY$
@@ -280,7 +288,6 @@ BEGIN
                                 )
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                         )
-
 
             -- выбираем продажи по товарам соц.проекта
             ,  tmpMI AS (SELECT Movement_Sale.Id   AS MovementId
@@ -530,7 +537,99 @@ BEGIN
                                                       , zc_ObjectString_MemberSP_INN()
                                                       , zc_ObjectString_MemberSP_Passport())
                           )
+    -- информация из партий
+    , tmpMIC AS (SELECT MovementItemContainer.ContainerId
+                     , (-MovementItemContainer.Amount)::TFloat AS Amount
+                     , MovementItemContainer.MovementId
+                     , tmp.UnitId
+                 FROM (SELECT DISTINCT tmpSaleAll.Id, tmpSaleAll.UnitId FROM tmpSaleAll) AS tmp
+                       JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmp.Id
+                                                 AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                )
+    , tmpMIC_Info AS (SELECT tmpMIC.MovementId
+                           , tmpMIC.UnitId
+                           , MI_Income.GoodsId
+                           , SUM (tmpMIC.Amount) AS Amount
+                           , SUM (tmpMIC.Amount * MI_Income.PriceWithVAT) AS SumWithVAT
+                           , SUM (tmpMIC.Amount * CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = FALSE
+                                                       THEN  MI_Income.Price
+                                                       ELSE (MI_Income.Price / (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                                                  END) ::TFloat AS SumWithOutVAT
 
+                           , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
+                           , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
+                           , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
+                      FROM tmpMIC
+                           LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                               ON CLI_MI.ContainerId = tmpMIC.ContainerId
+                                                              AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                           LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                           LEFT OUTER JOIN MovementItem_Income_View AS MI_Income
+                                                                    ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                           LEFT OUTER JOIN MovementLinkObject AS MLO_From
+                                                              ON MLO_From.MovementId = MI_Income.MovementId
+                                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
+
+                           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                     ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                        ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                           LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId 
+                           LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+                        GROUP BY MI_Income.GoodsId
+                               , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                               , tmpMIC.MovementId
+                               , tmpMIC.UnitId
+                        )
+
+    , tmpPrice AS (SELECT DISTINCT
+                          CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                AND ObjectFloat_Goods_Price.ValueData > 0
+                               THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                               ELSE ROUND (Price_Value.ValueData, 2)
+                          END :: TFloat                           AS Price
+                        , Price_Goods.ChildObjectId               AS GoodsId
+                        , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                   FROM ObjectLink AS ObjectLink_Price_Unit
+                      LEFT JOIN ObjectLink AS Price_Goods
+                                           ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                      INNER JOIN tmpMIC_Info ON tmpMIC_Info.GoodsId = Price_Goods.ChildObjectId
+
+                      LEFT JOIN ObjectFloat AS Price_Value
+                                            ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                           AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                      -- Фикс цена для всей Сети
+                      LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                             ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                            AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                              ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                             AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                   WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                     AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                   )
+
+    , tmpPartionParam AS (SELECT tmpMIC_Info.MovementId
+                               , tmpMIC_Info.UnitId
+                               , tmpMIC_Info.GoodsId
+                               , CASE WHEN tmpMIC_Info.Amount <> 0 THEN tmpMIC_Info.SumWithOutVAT / tmpMIC_Info.Amount ELSE 0 END PriceWithOutVAT
+                               , tmpMIC_Info.JuridicalName_in
+                               , tmpMIC_Info.NDS
+                               , tmpMIC_Info.InvNumber_in
+                               , CASE WHEN tmpMIC_Info.Amount <> 0 AND COALESCE (tmpMIC_Info.SumWithVAT,0) <> 0 THEN (tmpPrice.Price - (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ) *100 / (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ELSE 0 END :: TFloat AS ChargePersent
+                          FROM tmpMIC_Info
+                                JOIN tmpPrice ON tmpPrice.GoodsId = tmpMIC_Info.GoodsId
+                                                 AND tmpPrice.UnitId = tmpMIC_Info.UnitId
+                         )
+
+                   
         -- результат
         SELECT tmpData.MovementId
              , Object_Unit.ValueData               AS UnitName
@@ -604,6 +703,13 @@ BEGIN
            , tmpData.InvNumber_Invoice_Full
            
            , FALSE                                             AS isPrintLast
+           
+           , tmpPartionParam.InvNumber_in     ::TVarChar  AS InvNumber_in
+           , tmpPartionParam.JuridicalName_in ::TVarChar  AS JuridicalName_in
+           , tmpPartionParam.NDS              ::TFloat    AS NDS_in
+           , tmpPartionParam.PriceWithOutVAT  ::TFloat    AS PriceWithOutVAT_in
+           , (tmpPartionParam.PriceWithOutVAT * tmpData.Amount) ::TFloat AS SummWithOutVAT_in
+           , tmpPartionParam.ChargePersent    ::TFloat    AS ChargePersent_in
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
                                   --  AND tmpData.ChangePercent = tmpMovDetails.PercentSP
@@ -638,8 +744,10 @@ BEGIN
              LEFT JOIN tmpObjectString AS ObjectString_Passport
                                        ON ObjectString_Passport.ObjectId = tmpData.MemberSPId
                                       AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
-                                   
-         ORDER BY Object_Unit.ValueData
+
+             LEFT JOIN tmpPartionParam ON tmpPartionParam.MovementId = tmpData.MovementId
+                                      AND tmpPartionParam.GoodsId = tmpData.GoodsId
+         ORDER BY Object_Unit.ValueData 
                 , Object_PartnerMedical.ValueData
                 , ContractName
                 , Object_Goods.ValueData
@@ -652,6 +760,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 26.11.19         *
  11.01.19         *
  05.06.18         *
  14.02.18         * add SigningDate_Contract
@@ -660,4 +769,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());

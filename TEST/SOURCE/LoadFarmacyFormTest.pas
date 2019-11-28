@@ -809,6 +809,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutDialogForm');
+    exit;
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityForm');
@@ -851,17 +857,19 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
     exit;
-
+    }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate0Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate0Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate5Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5DialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate5DialogForm');
     exit;
-    }
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_overForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_overForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSendSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSendSUNDialogForm'));
@@ -2128,7 +2136,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-
+  }
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
@@ -2136,7 +2144,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
-
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
@@ -2174,7 +2182,12 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-  {
+{
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
+  Exit;
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));
@@ -2199,13 +2212,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');  }
+    TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
-    {TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
     exit;
 
@@ -2220,11 +2233,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
      exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 

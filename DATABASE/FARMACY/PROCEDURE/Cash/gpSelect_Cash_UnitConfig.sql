@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
+               isNotCashMCS Boolean, isNotCashListDiff Boolean,
                ParentName TVarChar, ShareFromPrice TFloat,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
@@ -94,11 +95,28 @@ BEGIN
                         ORDER BY Movement.OperDate DESC
                         LIMIT 1
                         )
+       , tmpCashSettings AS (SELECT Object_CashSettings.Id                     AS Id
+                                  , Object_CashSettings.ObjectCode             AS Code
+                                  , Object_CashSettings.ValueData              AS Name
+                                  , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
+                                  , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
+                             FROM Object AS Object_CashSettings
+                                  LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
+                                                         ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
+                                                        AND ObjectString_CashSettings_ShareFromPriceName.DescId = zc_ObjectString_CashSettings_ShareFromPriceName()
+                                  LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceCode
+                                                         ON ObjectString_CashSettings_ShareFromPriceCode.ObjectId = Object_CashSettings.Id 
+                                                        AND ObjectString_CashSettings_ShareFromPriceCode.DescId = zc_ObjectString_CashSettings_ShareFromPriceCode()
+                             WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                             LIMIT 1)
 
    SELECT
          Object_Unit.Id                                      AS Id
        , Object_Unit.ObjectCode                              AS Code
        , Object_Unit.ValueData                               AS Name
+
+       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
+       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
 
        , Object_Parent.ValueData                             AS ParentName
        , ObjectFloat_ShareFromPrice.ValueData                AS ShareFromPrice
@@ -137,11 +155,17 @@ BEGIN
          
        , tmpLoyalty.LoyaltyID
        , tmpLoyalty.LoyaltySummCash
-       , 'пакет;% амп;%инъекц'::TVarChar AS ShareFromPriceName
-       , '1269;9496;1336;20584;21051'::TVarChar AS ShareFromPriceCode
-
+       , tmpCashSettings.ShareFromPriceName
+       , tmpCashSettings.ShareFromPriceCode
 
    FROM Object AS Object_Unit
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashMCS
+                                ON ObjectBoolean_NotCashMCS.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashMCS.DescId = zc_ObjectBoolean_Unit_NotCashMCS()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
+                                ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -213,6 +237,8 @@ BEGIN
                                AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
                                
         LEFT JOIN tmpLoyalty ON 1 = 1
+        
+        LEFT JOIN tmpCashSettings ON 1 = 1
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
@@ -228,6 +254,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 24.11.19                                                       *
  25.10.19                                                       *
  14.06.19                                                       *
  21.04.19                                                       *

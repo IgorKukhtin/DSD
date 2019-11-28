@@ -14,7 +14,11 @@ $BODY$
    DECLARE vbOperSumm_Partner_byItem TFloat;
    DECLARE vbInvNumberPartner TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbIsDeferred      Boolean;
 BEGIN
+
+     -- Отложен
+     vbIsDeferred := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Deferred()), FALSE);
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -265,7 +269,8 @@ BEGIN
                 JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.MovementItemId = _tmpItem.MovementItemId
                 LEFT JOIN MovementItem_ReturnOut_View ON MovementItem_ReturnOut_View.Id = _tmpItem.MovementItemId
                 LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.Id = MovementItem_ReturnOut_View.MovementId
-           WHERE vbInvNumberPartner <> '';
+           WHERE vbInvNumberPartner <> ''
+             AND vbIsDeferred = FALSE;
 
      
      SELECT -SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
@@ -329,11 +334,14 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
     
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_LossDebt()
-                                , inUserId     := inUserId
-                                 );
+     IF vbIsDeferred = FALSE
+     THEN
+         -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+         PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                    , inDescId     := zc_Movement_ReturnOut()
+                                    , inUserId     := inUserId
+                                     );
+     END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

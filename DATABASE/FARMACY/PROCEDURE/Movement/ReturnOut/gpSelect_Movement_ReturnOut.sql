@@ -25,6 +25,9 @@ RETURNS TABLE (Id Integer
              , ReturnTypeName TVarChar
              , AdjustingOurDate TDateTime
              , Comment TVarChar
+             , isDeferred Boolean
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 
 AS
@@ -90,6 +93,11 @@ BEGIN
            , Movement_ReturnOut_View.ReturnTypeName
            , Movement_ReturnOut_View.AdjustingOurDate
            , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
+           , Object_Insert.ValueData              AS InsertName
+           , MovementDate_Insert.ValueData        AS InsertDate
+           , Object_Update.ValueData              AS UpdateName
+           , MovementDate_Update.ValueData        AS UpdateDate
        FROM tmpUnit
            LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.FromId = tmpUnit.UnitId
                                             AND Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -111,6 +119,26 @@ BEGIN
            LEFT JOIN MovementString AS MovementString_Comment
                                     ON MovementString_Comment.MovementId = Movement_ReturnOut_View.Id
                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+           LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                     ON MovementBoolean_Deferred.MovementId = Movement_ReturnOut_View.Id
+                                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+           LEFT JOIN MovementDate AS MovementDate_Insert
+                                  ON MovementDate_Insert.MovementId = Movement_ReturnOut_View.Id
+                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+           LEFT JOIN MovementLinkObject AS MLO_Insert
+                                        ON MLO_Insert.MovementId = Movement_ReturnOut_View.Id
+                                       AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+           LEFT JOIN MovementDate AS MovementDate_Update
+                                  ON MovementDate_Update.MovementId = Movement_ReturnOut_View.Id
+                                 AND MovementDate_Update.DescId = zc_MovementDate_Update()
+           LEFT JOIN MovementLinkObject AS MLO_Update
+                                        ON MLO_Update.MovementId = Movement_ReturnOut_View.Id
+                                       AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+           LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
   ;
 
 
