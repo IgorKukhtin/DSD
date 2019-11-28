@@ -28,7 +28,6 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -88,6 +87,11 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -614,6 +618,7 @@ inherited SendForm: TSendForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 181
+      ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel

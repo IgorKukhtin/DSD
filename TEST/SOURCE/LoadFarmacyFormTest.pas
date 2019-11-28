@@ -810,6 +810,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanListForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanListForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutDialogForm'));

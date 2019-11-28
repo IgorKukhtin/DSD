@@ -588,6 +588,8 @@ type
     miReport_Movement_ReturnOut: TMenuItem;
     N199: TMenuItem;
     N200: TMenuItem;
+    actReport_IlliquidReductionPlanAll: TdsdOpenForm;
+    N201: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
