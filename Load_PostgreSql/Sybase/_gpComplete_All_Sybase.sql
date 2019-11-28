@@ -49,12 +49,14 @@ BEGIN
      -- !!!выход!!!
      -- IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
      -- IF vbMovementDescId IN (zc_Movement_Sale()) THEN RETURN; END IF;
+     -- IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN RETURN; END IF;
 
      -- !!!проверка!!!
      IF COALESCE (vbMovementDescId, 0) = 0
      THEN
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
+
 
 /*
      -- !!!выход - Инвентаризация!!!

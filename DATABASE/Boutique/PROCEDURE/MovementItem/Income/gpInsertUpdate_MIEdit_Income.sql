@@ -38,6 +38,9 @@ $BODY$
    DECLARE vbOperDate  TDateTime;
    DECLARE vbPartnerId Integer;
 
+   DECLARE vbId_min Integer;
+   DECLARE vbId_max Integer;
+
    DECLARE vbOperPriceList_old TFloat;
    DECLARE vbOperPrice TFloat;
    DECLARE vbChangePercent TFloat;
@@ -214,18 +217,28 @@ BEGIN
          END IF;
 
          -- Поиск
-         vbGoodsId:= (SELECT DISTINCT Object.Id
-                      FROM Object
-                           -- обязательно условие из партии
-                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
-                                                         AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
-                           INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                 ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
-                                                AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                                AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
-                      WHERE Object.DescId    = zc_Object_Goods()
-                        AND Object.ValueData = inGoodsName
-                     );
+         SELECT MIN (Object.Id), MAX (Object.Id)
+                INTO vbId_min, vbId_max
+         FROM Object
+              -- обязательно условие из партии
+              INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                                            AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
+              INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                    ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                   AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                   AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+         WHERE Object.DescId    = zc_Object_Goods()
+           AND Object.ValueData = inGoodsName
+         ;
+
+         -- проверка
+         IF vbId_min <> vbId_max
+         THEN
+             RAISE EXCEPTION 'Ошибка.Артикул <%> уже существует в данной группе.', inGoodsName;
+         END IF;
+         
+         -- нашли
+         vbGoodsId:= vbId_max;
 
          -- Если НЕ нашли - продолжаем Поиск "свободных"
          IF COALESCE (vbGoodsId, 0) = 0

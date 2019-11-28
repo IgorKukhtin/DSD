@@ -313,7 +313,7 @@ BEGIN
                    , vbActionName     AS ActionName
                    , ROW_NUMBER() OVER (ORDER BY tmpData.order_id, tmpData.line) :: Integer AS RowNum
                      -- еще раз Заказ на отгрузку
-                   , ('<' || vbTagName
+                   , (/*'<' || vbTagName
                          ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')    :: TVarChar ||'"' -- уникальный идентификатор сообщения
                           ||' action="' || vbActionName                               ||'"' -- ???
                         ||' order_id="' || tmpData.order_id               :: TVarChar ||'"' -- Номер документа
@@ -326,7 +326,7 @@ BEGIN
                     ELSE  -- обязательно ПРОБЕЛЫ МЕЖДУ ""
                          ' comments=" ' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.comments, CHR(39), '`'), '"', '`')  ||' "' -- Комментарии к документу
                     END
-                                        ||'>'
+                                        ||'>'*/
                      -- Детали заказа на отгрузку
                    || '<' || vbTagName_detail
                          ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')    :: TVarChar ||'"' -- уникальный идентификатор сообщения
