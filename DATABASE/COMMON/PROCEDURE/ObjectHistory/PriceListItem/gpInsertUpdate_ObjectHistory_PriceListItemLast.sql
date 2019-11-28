@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
     IN inPriceListId            Integer,    -- Прайс-лист
     IN inGoodsId                Integer,    -- Товар
+    IN inGoodsKindId            Integer,    -- Вид Товара
     IN inOperDate               TDateTime,  -- Дата действия цены
    OUT outStartDate             TDateTime,  -- Дата действия цены
    OUT outEndDate               TDateTime,  -- Дата действия цены
@@ -68,7 +70,7 @@ BEGIN
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 
    -- Получаем ссылку на объект цен
-   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, vbUserId);
+   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, inGoodsKindId, vbUserId);
  
    -- Вставляем или меняем объект историю цен
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
@@ -134,6 +136,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.11.19         * add inGoodsKindId
  24.07.19         *
  20.08.15         * lpInsert_ObjectHistoryProtocol
  09.12.14                                        *

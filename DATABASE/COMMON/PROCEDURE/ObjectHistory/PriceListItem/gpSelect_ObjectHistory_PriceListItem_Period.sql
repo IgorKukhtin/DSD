@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem_Period(
     IN inOperDate           TDateTime , -- 
     IN inSession            TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )                              
-RETURNS TABLE (GoodsId Integer, StartDate TDateTime, ValuePrice TFloat
+RETURNS TABLE (GoodsId Integer, GoodsKindId Integer, StartDate TDateTime, ValuePrice TFloat
 )
 AS
 $BODY$
@@ -35,6 +35,7 @@ BEGIN
      RETURN QUERY 
      WITH
      tmpItem_all AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                          , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                           , ObjectHistory_PriceListItem.StartDate
                           , ObjectHistory_PriceListItem.EndDate
@@ -42,6 +43,9 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                               AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+                          LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                               ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                              AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                  AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
@@ -56,16 +60,18 @@ BEGIN
                     )
        -- Ðåçóëüòàò
        SELECT tmp.GoodsId
+            , tmp.GoodsKindId
             , tmp.StartDate
             , tmp.ValuePrice
 
-       FROM (SELECT tmpItem_all.GoodsId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
+       FROM (SELECT tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
              FROM tmpItem_all
              WHERE tmpItem_all.StartDate >= vbStartDate
             UNION ALL
-             SELECT tmpItem_all.GoodsId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
+             SELECT tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
              FROM tmpItem_all
                   LEFT JOIN tmpItem_all AS tmpItem_all_check ON tmpItem_all_check.GoodsId   = tmpItem_all.GoodsId
+                                                            AND COALESCE (tmpItem_all_check.GoodsKindId,0) = COALESCE (tmpItem_all.GoodsKindId,0)
                                                             AND tmpItem_all_check.StartDate = vbStartDate
              WHERE tmpItem_all.StartDate < vbStartDate
                AND tmpItem_all_check.GoodsId IS NULL
@@ -79,6 +85,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 28.11.19         * GoodsKind
  16.10.18         *
 */
 

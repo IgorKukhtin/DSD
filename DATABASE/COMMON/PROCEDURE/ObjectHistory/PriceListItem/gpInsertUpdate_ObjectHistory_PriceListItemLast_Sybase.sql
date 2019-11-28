@@ -2,10 +2,14 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast_Sybase();
 
+--DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast_Sybase(Integer, Integer, Integer, TDateTime, TDateTime, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast_Sybase(Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast_Sybase(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
     IN inPriceListId            Integer,    -- Прайс-лист
     IN inGoodsId                Integer,    -- Товар
+    IN inGoodsKindId            Integer,    -- Вид Товара
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
     IN inEndDate                TDateTime,  -- Дата
     IN inValue                  TFloat,     -- Значение цены
@@ -22,7 +26,7 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
    -- Получаем ссылку на объект цен
-   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
+   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, inGoodsKindId, vbUserId);
  
    -- Вставляем или меняем объект историю цен
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
@@ -94,5 +98,6 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.11.19         * inGoodsKindId
  09.12.14                                        *
 */

@@ -48,7 +48,7 @@ BEGIN
     WHERE Movement_Sale.Id = inMovementId;
     
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
-    IF vbSPKindId = zc_Enum_SPKind_1303() 
+    IF vbSPKindId = zc_Enum_SPKind_1303() AND vbUserId <> 235009    --  Колеуш И. И.
             -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
        THEN IF EXISTS (SELECT 1
                        FROM ObjectLink
@@ -133,7 +133,6 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. По документу выписан <Счет (пост.1303)> изменение документа запрещено.';            
     END IF; 
-           
 
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
@@ -220,8 +219,8 @@ BEGIN
              , MI_Sale.GoodsName
              , MI_Sale.Amount
       HAVING COALESCE (MI_Sale.Amount, 0) > (COALESCE (SUM (Container.Amount) ,0) + vbAmount);
-    
-      IF (COALESCE(vbGoodsName,'') <> '') 
+
+      IF (COALESCE(vbGoodsName,'') <> '')
       THEN
          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, inAmount, vbSaldo;
       END IF;
@@ -233,10 +232,10 @@ BEGIN
                                                  , inMovementItemId := ioId);
       END IF;
       
-       -- собственно проводки
+      -- собственно проводки
       PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
                                        ioId,         -- ключ содержимое Документа
-                                       vbUserId);    -- Пользователь       
+                                       vbUserId);    -- Пользователь
     END IF;
 
 END;

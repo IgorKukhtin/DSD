@@ -3,7 +3,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 497
+  ClientWidth = 643
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 63
-    Width = 497
+    Width = 643
     Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 497
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,13 +50,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 206
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 188
       end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -65,7 +66,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Properties.DisplayFormat = ',0.00##;-,0.00##'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 235
       end
       object isErased: TcxGridDBColumn
         DataBinding.FieldName = 'isErased'
@@ -81,11 +82,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 497
+    Width = 643
     Height = 37
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 497
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -118,6 +120,22 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       TabOrder = 3
       Width = 182
     end
+  end
+  object cxLabel2: TcxLabel
+    Left = 500
+    Top = 36
+    Caption = #1042#1080#1076':'
+  end
+  object edGoodsKind: TcxButtonEdit
+    Left = 532
+    Top = 36
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 101
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -369,6 +387,21 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = GuidesGoodsKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = GuidesGoodsKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'PriceListId'
           Value = Null
           Component = PriceListGuides
@@ -453,6 +486,14 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Value = ''
         Component = FormParams
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -571,6 +612,23 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 88
@@ -591,5 +649,34 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     PackSize = 1
     Left = 344
     Top = 240
+  end
+  object GuidesGoodsKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKind_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKind_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 568
+    Top = 16
   end
 end

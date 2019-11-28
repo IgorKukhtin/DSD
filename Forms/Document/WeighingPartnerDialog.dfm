@@ -432,6 +432,7 @@ object WeighingPartnerDialogForm: TWeighingPartnerDialogForm
       item
         Name = 'inPersonalId1_stick'
         Value = Null
+        Component = GuidesPersona1_Stick
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -439,6 +440,7 @@ object WeighingPartnerDialogForm: TWeighingPartnerDialogForm
       item
         Name = 'inPersonalName1_stick'
         Value = Null
+        Component = GuidesPersona1_Stick
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

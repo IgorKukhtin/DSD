@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lfSelect_ObjectHistory_PriceListItem(
     IN inPriceListId        Integer   , -- ключ 
     IN inOperDate           TDateTime   -- Дата действия
 )                              
-RETURNS TABLE (Id Integer, GoodsId Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsKindId Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
 AS
 $BODY$
 BEGIN
@@ -16,6 +16,7 @@ BEGIN
        SELECT
              ObjectHistory_PriceListItem.Id
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+           , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
 
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
@@ -25,6 +26,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                 ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -47,6 +51,7 @@ ALTER FUNCTION lfSelect_ObjectHistory_PriceListItem (Integer, TDateTime) OWNER T
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.19         *
  26.08.13                                        * !!!а даты то пересекаются!!!
  21.07.13                                        *
 */
