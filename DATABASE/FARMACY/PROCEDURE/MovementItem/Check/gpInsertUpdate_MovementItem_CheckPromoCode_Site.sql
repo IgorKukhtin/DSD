@@ -104,7 +104,7 @@ BEGIN
 
       -- сохранили свойство <Сумма Скидки>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, CASE WHEN inAmount = 0 OR inPrice = inPriceSale THEN 0 
-          ELSE ROUND(ROUND(inAmount, 3) * inPrice, 2) - ROUND(ROUND(inAmount, 3) * inPriceSale, 2)  END);
+          ELSE ROUND(ROUND(inAmount, 3) * inPriceSale, 2) - ROUND(ROUND(inAmount, 3) * inPrice, 2)  END);
     ELSE
     
       SELECT ObjectFloat_Price_Value.ValueData AS Price
@@ -140,7 +140,7 @@ BEGIN
 
       -- сохранили свойство <Сумма Скидки>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, CASE WHEN inAmount = 0 OR inPrice = vbPriceSale THEN 0 
-          ELSE ROUND(ROUND(inAmount, 3) * inPrice, 2) - ROUND(ROUND(inAmount, 3) * vbPriceSale, 2)  END);
+          ELSE  ROUND(ROUND(inAmount, 3) * vbPriceSale, 2) - ROUND(ROUND(inAmount, 3) * inPrice, 2)  END);
     
     END IF;
 

@@ -64,7 +64,7 @@ BEGIN
     END IF;
 
    -- свойство не меняем у проведенных документов
-   IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+   IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete()
    THEN
        -- определили признак
        outisDeferred:=  inisDeferred;
@@ -81,6 +81,8 @@ BEGIN
            PERFORM lpUnComplete_Movement (inMovementId
                                         , vbUserId);
        END IF;
+   ELSE
+       RAISE EXCEPTION 'Ошибка. Отлаживать документ в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
    END IF;
    
    outisDeferred := COALESCE (outisDeferred, COALESCE (vbisDeferred, FALSE));

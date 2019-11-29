@@ -347,6 +347,10 @@ begin
   inherited;
   DataSetList := TList.Create;
   try
+    // Выводим PUSH сообщение
+    if Assigned(AddOnFormData.СlosePUSHMessage) then
+      AddOnFormData.СlosePUSHMessage.Execute;
+
     // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет
     // Если не единственная, то сделать ей Free
     if AddOnFormData.isFreeAtClosing then Action := caFree
