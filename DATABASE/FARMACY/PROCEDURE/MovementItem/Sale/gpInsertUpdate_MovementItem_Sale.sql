@@ -73,9 +73,9 @@ BEGIN
                     END :: TFloat AS Persent
             INTO vbPriceCalc, vbPersent
              FROM (SELECT CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
-                               ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                               ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
                           END AS Price   -- цена c НДС
-                        , ROW_NUMBER() OVER (ORDER BY Container.Id) AS ord
+                        , ROW_NUMBER() OVER (ORDER BY Container.Id DESC) AS ord   -- Люба сказала смотреть по последней партии
                    FROM Container 
                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                           ON CLI_MI.ContainerId = Container.Id
@@ -101,11 +101,12 @@ BEGIN
                      AND Container.DescId = zc_Container_Count()
                      AND Container.WhereObjectId = vbUnitId
                      AND COALESCE (Container.Amount,0 ) > 0
+                     AND COALESCE (MIFloat_Price.ValueData ,0) > 0
                    ) AS tt
              WHERE tt.Ord = 1;
 
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
-            IF COALESCE (vbPriceCalc,0) < inPriceSale
+            IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (vbPriceCalc,0) <> 0)
                THEN
                    RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%> процентов', vbPersent;
             END IF;
