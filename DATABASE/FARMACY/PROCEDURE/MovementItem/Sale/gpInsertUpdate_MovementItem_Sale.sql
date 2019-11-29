@@ -50,7 +50,9 @@ BEGIN
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
     IF vbSPKindId = zc_Enum_SPKind_1303() AND vbUserId <> 235009    --  Колеуш И. И.
             -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
-       THEN IF EXISTS (SELECT 1
+       THEN 
+            /* --Люба попросила пока убрать
+            IF EXISTS (SELECT 1 
                        FROM ObjectLink
                             INNER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink.ChildObjectId 
@@ -61,6 +63,7 @@ BEGIN
                THEN
                    RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20';
             END IF;
+            */
             SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.25
                          WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.2
                          WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.15
