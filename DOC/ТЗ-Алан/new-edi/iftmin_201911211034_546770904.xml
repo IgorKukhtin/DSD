@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><IFTMIN>
+    <NUMBER>1_1</NUMBER>
+    <DATE>2019-11-18</DATE>
+    <DELIVERYDATE>2019-11-19</DELIVERYDATE>    <DELIVERYTIME>18:00</DELIVERYTIME>    <DOCTYPE>O</DOCTYPE>
+	        <DOCUMENT>
+            <DOCITEM>
+                <DOCTYPE>ON</DOCTYPE>
+				<DOCNUMBER>PO001EALPH</DOCNUMBER>
+            </DOCITEM>
+        </DOCUMENT>
+            <HEAD>
+        <CONSIGNOR>4823036500001</CONSIGNOR>
+        <DELIVERYPLACE>4824034999989</DELIVERYPLACE>
+        <SENDER>4823036500001</SENDER>
+        <RECIPIENT>9991027100105</RECIPIENT>
+        <POSITIONS>
+            <POSITIONNUMBER>1</POSITIONNUMBER>
+                       		<PACKAGEQUANTITY>2</PACKAGEQUANTITY>
+                                    	<PACKAGETYPE>201</PACKAGETYPE>
+                                    	<PACKAGEWIGHT>500</PACKAGEWIGHT>
+                                    	<MAXPACKAGEQUANTITY>4</MAXPACKAGEQUANTITY>
+                    </POSITIONS>
+    </HEAD>
+</IFTMIN>

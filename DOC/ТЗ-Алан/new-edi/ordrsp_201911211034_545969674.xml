@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><ORDRSP>
+    <NUMBER>PO001EALPH</NUMBER>
+    <DATE>2019-11-15</DATE>
+    <TIME>11:14</TIME>    <ORDERNUMBER>PO001EALPH</ORDERNUMBER>
+    <ORDERDATE>2019-11-14</ORDERDATE>    <DELIVERYDATE>2019-11-19</DELIVERYDATE>    <DELIVERYTIME>18:00</DELIVERYTIME>        <CURRENCY>UAH</CURRENCY>                                        <ACTION>29</ACTION>                                <INFO>Старт проекта MI с 10.07.2019</INFO>            <CAMPAIGNNUMBER>6983Р</CAMPAIGNNUMBER>    <HEAD>
+        <BUYER>9991027100105</BUYER>
+                        <SUPPLIER>4823036500001</SUPPLIER>        <DELIVERYPLACE>4824034999989</DELIVERYPLACE>                <INVOICEPARTNER>9991027100105</INVOICEPARTNER>                <SENDER>4823036500001</SENDER>
+        <RECIPIENT>9991027100105</RECIPIENT>
+                    <POSITION>
+                <POSITIONNUMBER>1</POSITIONNUMBER>
+                <PRODUCT>4820204111111</PRODUCT>
+                <PRODUCTIDBUYER>731111</PRODUCTIDBUYER>                                                                <MINIMUMORDERQUANTITY>4.000</MINIMUMORDERQUANTITY>                <DESCRIPTION>testposition1</DESCRIPTION>                                                                                                                                <PRODUCTTYPE>1</PRODUCTTYPE>
+                <ORDEREDQUANTITY>112.000</ORDEREDQUANTITY>
+                <ACCEPTEDQUANTITY>112</ACCEPTEDQUANTITY>
+                                                                                                                                                                                                                                                                                                                                </POSITION>
+                    <POSITION>
+                <POSITIONNUMBER>2</POSITIONNUMBER>
+                <PRODUCT>4820204222222</PRODUCT>
+                <PRODUCTIDBUYER>732222</PRODUCTIDBUYER>                                                                <MINIMUMORDERQUANTITY>4.000</MINIMUMORDERQUANTITY>                <DESCRIPTION>testposition2</DESCRIPTION>                                                                                                                                <PRODUCTTYPE>1</PRODUCTTYPE>
+                <ORDEREDQUANTITY>112.000</ORDEREDQUANTITY>
+                <ACCEPTEDQUANTITY>112</ACCEPTEDQUANTITY>
+                                                                                                                                                                                                                                                                                                                                </POSITION>
+            </HEAD>
+</ORDRSP>
+
+

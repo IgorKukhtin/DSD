@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><DESADV>
+    <NUMBER>PO001EALPH</NUMBER>
+    <DATE>2019-11-18</DATE>
+                    <DELIVERYDATE>2019-11-19</DELIVERYDATE>            <DELIVERYTIME>18:00</DELIVERYTIME>    <ORDERNUMBER>PO001EALPH</ORDERNUMBER>
+            <ORDERDATE>2019-11-14</ORDERDATE>            <ORDRSPNUMBER>PO001EALPH</ORDRSPNUMBER>            <ORDRSPDATE>2019-11-15</ORDRSPDATE>                                                    <DELIVERYNOTENUMBER>4885</DELIVERYNOTENUMBER>                    <DELIVERYNOTEDATE>2019-11-18</DELIVERYNOTEDATE>                            <TRANSPORTTYPE>30</TRANSPORTTYPE>                <TRANSPORTERTYPE>31</TRANSPORTERTYPE>                    <TRANSPORTID>1</TRANSPORTID>                                                        <CAMPAIGNNUMBER>6983Р</CAMPAIGNNUMBER>                <TRANSPORTQUANTITY>1</TRANSPORTQUANTITY>                                    <HEAD>
+                    <SUPPLIER>4823036500001</SUPPLIER>                <BUYER>9991027100105</BUYER>
+                            <DELIVERYPLACE>4824034999989</DELIVERYPLACE>                    <FINALRECIPIENT>4824034999989</FINALRECIPIENT>                                <SENDER>4823036500001</SENDER>
+                                        <RECIPIENT>9991027100105</RECIPIENT>
+        <EDIINTERCHANGEID>PO001EALPH</EDIINTERCHANGEID>
+                                <PACKINGSEQUENCE>
+            <HIERARCHICALID>1</HIERARCHICALID>
+                            <POSITION>
+                    <POSITIONNUMBER>1</POSITIONNUMBER>
+                    <PRODUCT>4820204111111</PRODUCT>
+                                                                <PRODUCTIDBUYER>731111</PRODUCTIDBUYER>                    <DELIVEREDQUANTITY>112</DELIVEREDQUANTITY>
+                                                                <ORDEREDQUANTITY>112.000</ORDEREDQUANTITY>                                                                                                                                                        <AMOUNT>4200.00</AMOUNT>                                                                                                        <PRICE>37.50</PRICE>                                                                                                                            <TAXRATE>20</TAXRATE>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                        </POSITION>
+                            <POSITION>
+                    <POSITIONNUMBER>2</POSITIONNUMBER>
+                    <PRODUCT>4820204222222</PRODUCT>
+                                                                <PRODUCTIDBUYER>732222</PRODUCTIDBUYER>                    <DELIVEREDQUANTITY>112</DELIVEREDQUANTITY>
+                                                                <ORDEREDQUANTITY>112.000</ORDEREDQUANTITY>                                                                                                                                                        <AMOUNT>4200.00</AMOUNT>                                                                                                        <PRICE>37.50</PRICE>                                                                                                                            <TAXRATE>20</TAXRATE>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                        </POSITION>
+                    </PACKINGSEQUENCE>
+    </HEAD>
+</DESADV>
+
+
