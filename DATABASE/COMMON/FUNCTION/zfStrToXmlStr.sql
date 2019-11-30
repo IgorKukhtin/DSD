@@ -1,11 +1,12 @@
--- Function: zfConvert_StringToNumber
+-- Function: zfStrToXmlStr
 
--- DROP FUNCTION IF EXISTS zfConvert_StringToNumber (TVarChar);
+DROP FUNCTION IF EXISTS zfStrToXmlStr (TVarChar);
+DROP FUNCTION IF EXISTS zfStrToXmlStr (Text);
 
-CREATE OR REPLACE FUNCTION zfStrToXmlStr(inStr TVarChar)
-RETURNS TVarChar AS
+CREATE OR REPLACE FUNCTION zfStrToXmlStr(inStr Text)
+RETURNS Text AS
 $BODY$
-  DECLARE Res TVarChar;
+  DECLARE Res Text;
 BEGIN
   Res := replace(inStr, '&', '&amp;');
   Res := replace(Res, '''', '&apos;');
@@ -16,7 +17,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfStrToXmlStr (TVarChar) OWNER TO postgres;
+-- ALTER FUNCTION zfStrToXmlStr (Text) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -27,5 +28,5 @@ ALTER FUNCTION zfStrToXmlStr (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM zfConvert_StringToNumber ('TVarChar')
--- SELECT * FROM zfConvert_StringToNumber ('10')
+-- SELECT * FROM zfStrToXmlStr ('TVarChar')
+-- SELECT * FROM zfStrToXmlStr ('10')

@@ -224,7 +224,15 @@ BEGIN
      --
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
-
+       WITH tmpTransport AS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_TransportGoods())
+          , tmpTransportGoods AS (SELECT * 
+                                  FROM gpGet_Movement_TransportGoods (inMovementId       := (SELECT MovementChildId FROM tmpTransport)
+                                                                    , inMovementId_Sale  := inMovementId
+                                                                    , inOperDate         := NULL
+                                                                    , inSession          := inSession
+                                                                     )
+                                  WHERE EXISTS (SELECT MovementChildId FROM tmpTransport)
+                                 )
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -387,10 +395,15 @@ BEGIN
            , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
                         THEN ' та знижкой'
                   ELSE ''
-             END AS Price_info
+             END :: TVarChar AS Price_info
 
+             -- 14781 - № 7183Р
+           , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isSchema_fozz  -- для договора Id = 4440485 + доп страничка
+           , tmpTransportGoods.CarName
+           , tmpTransportGoods.CarModelName
 
        FROM Movement
+            LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
@@ -918,4 +931,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 8467386, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 15114787, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
