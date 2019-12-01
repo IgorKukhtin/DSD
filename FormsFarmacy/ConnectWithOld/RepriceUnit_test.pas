@@ -146,6 +146,8 @@ type
     actChoiceJuridical: TOpenChoiceForm;
     edProvinceCity: TcxButtonEdit;
     GuidesProvinceCity: TdsdGuides;
+    cdsResultisGoodsReprice: TBooleanField;
+    colisGoodsReprice: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -493,6 +495,7 @@ begin
           cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;
           cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
           cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
+          cdsResult.FieldByName('isGoodsReprice').AsBoolean := AllGoodsPriceCDS.FieldByName('isGoodsReprice').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;
