@@ -243,6 +243,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
 				<Form>PUSHMessageForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas">
+				<Form>RepriceUnit_testForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

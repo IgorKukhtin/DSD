@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 644
   KeyPreview = True
   ExplicitWidth = 660
-  ExplicitHeight = 230
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4147,13 +4147,17 @@ inherited MainForm: TMainForm
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [33]
+      object miReprice_test: TMenuItem [33]
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
+        OnClick = miReprice_testClick
+      end
+      object miExportSalesForSupp: TMenuItem [34]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [34]
+      object N173: TMenuItem [35]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [35]
+      object miRecalcMCSSheduler: TMenuItem [36]
         Action = actRecalcMCSSheduler
       end
     end
