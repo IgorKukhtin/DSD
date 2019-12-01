@@ -191,6 +191,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -208,6 +212,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -1363,7 +1369,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
         end
         object btnYuriFarmExecute: TButton
-          Left = 440
+          Left = 584
           Top = 0
           Width = 113
           Height = 25
@@ -1381,13 +1387,22 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           OnClick = btnYuriFarmSendClick
         end
         object btnYuriFarmUnitExecute: TButton
-          Left = 256
+          Left = 400
           Top = 0
           Width = 113
           Height = 25
           Caption = #1057#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082
           TabOrder = 4
           OnClick = btnYuriFarmUnitExecuteClick
+        end
+        object btnYuriFarmAll: TButton
+          Left = 208
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1042#1089#1077
+          TabOrder = 5
+          OnClick = btnYuriFarmAllClick
         end
       end
       object grYuriFarmUnit: TcxGrid
@@ -1606,7 +1621,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     ProxySettings.Port = 0
     ServerHOST = 'ftp:\\ooobadm.dp.ua'
     Left = 768
-    Top = 128
+    Top = 104
   end
   object qryReport_Upload_BaDM_byUnit: TZQuery
     Connection = ZConnection1
@@ -1830,5 +1845,33 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       Caption = #1056#1072#1089#1093#1086#1076#1099
       OnClick = YuriFarmExecuteClick
     end
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 768
+    Top = 224
+  end
+  object IdHTTP: TIdHTTP
+    IOHandler = IdSSLIOHandlerSocketOpenSSL1
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html, */*'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 768
+    Top = 160
   end
 end

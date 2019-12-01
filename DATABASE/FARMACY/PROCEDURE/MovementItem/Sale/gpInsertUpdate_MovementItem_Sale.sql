@@ -48,9 +48,11 @@ BEGIN
     WHERE Movement_Sale.Id = inMovementId;
     
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
-    IF vbSPKindId = zc_Enum_SPKind_1303() 
+    IF vbSPKindId = zc_Enum_SPKind_1303() AND vbUserId <> 235009    --  Колеуш И. И.
             -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
-       THEN IF EXISTS (SELECT 1
+       THEN 
+            --
+            IF EXISTS (SELECT 1 
                        FROM ObjectLink
                             INNER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink.ChildObjectId 
@@ -59,12 +61,13 @@ BEGIN
                        WHERE ObjectLink.ObjectId = inGoodsId
                          AND ObjectLink.DescId = zc_ObjectLink_Goods_NDSKind())
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20';
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 со ставкой НДС=20 проц. (ТОВАР БЕЗ РЕГИСТРАЦИИ !!!)';
             END IF;
-            (SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 0.25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 0.2
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 0.15
-                         WHEN tt.Price >= 1000 THEN tt.Price * 0.1
+            
+            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.2
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.15
+                         WHEN tt.Price >= 1000 THEN tt.Price * 1.1
                     END :: TFloat AS PriceCalc
                   , CASE WHEN tt.Price < 100 THEN 25
                          WHEN tt.Price >= 100 AND tt.Price < 500 THEN 20
@@ -73,9 +76,9 @@ BEGIN
                     END :: TFloat AS Persent
             INTO vbPriceCalc, vbPersent
              FROM (SELECT CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
-                               ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                               ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
                           END AS Price   -- цена c НДС
-                        , ROW_NUMBER() OVER (ORDER BY Container.Id) AS ord
+                        , ROW_NUMBER() OVER (ORDER BY Container.Id DESC) AS ord   -- Люба сказала смотреть по последней партии
                    FROM Container 
                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                           ON CLI_MI.ContainerId = Container.Id
@@ -101,13 +104,17 @@ BEGIN
                      AND Container.DescId = zc_Container_Count()
                      AND Container.WhereObjectId = vbUnitId
                      AND COALESCE (Container.Amount,0 ) > 0
+                     AND COALESCE (MIFloat_Price.ValueData ,0) > 0
                    ) AS tt
-             WHERE tt.Ord = 1);
+             WHERE tt.Ord = 1;
 
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
-            IF COALESCE (vbPriceCalc,0) < inPriceSale
+            IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (vbPriceCalc,0) <> 0)
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%> процентов', vbPersent;
+                   IF vbPersent = 25 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 25 процентов (для товара с приходной ценой до 100грн)'; END IF;
+                   IF vbPersent = 20 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 20 процентов (для товара с приходной ценой от 100грн до 500грн)'; END IF;
+                   IF vbPersent = 15 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов (для товара с приходной ценой от 500грн до 1000грн)'; END IF;
+                   IF vbPersent = 10 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов (для товара с приходной ценой свыше 1000грн)'; END IF;
             END IF;
 
     END IF;
@@ -133,7 +140,6 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. По документу выписан <Счет (пост.1303)> изменение документа запрещено.';            
     END IF; 
-           
 
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
@@ -220,8 +226,8 @@ BEGIN
              , MI_Sale.GoodsName
              , MI_Sale.Amount
       HAVING COALESCE (MI_Sale.Amount, 0) > (COALESCE (SUM (Container.Amount) ,0) + vbAmount);
-    
-      IF (COALESCE(vbGoodsName,'') <> '') 
+
+      IF (COALESCE(vbGoodsName,'') <> '')
       THEN
          RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, inAmount, vbSaldo;
       END IF;
@@ -233,10 +239,10 @@ BEGIN
                                                  , inMovementItemId := ioId);
       END IF;
       
-       -- собственно проводки
+      -- собственно проводки
       PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
                                        ioId,         -- ключ содержимое Документа
-                                       vbUserId);    -- Пользователь       
+                                       vbUserId);    -- Пользователь
     END IF;
 
 END;

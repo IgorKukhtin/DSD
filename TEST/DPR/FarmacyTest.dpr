@@ -777,7 +777,10 @@ uses
   CashSettingsEdit in '..\..\FormsFarmacy\Guides\CashSettingsEdit.pas' {CashSettingsEditForm: TParentForm},
   Report_GoodsPartionDate0 in '..\..\FormsFarmacy\Report\Report_GoodsPartionDate0.pas',
   Report_Movement_ReturnOut in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOut.pas' {Report_Movement_ReturnOutForm: TParentForm},
-  Report_Movement_ReturnOutDialog in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOutDialog.pas' {Report_Movement_ReturnOutDialogForm: TParentForm};
+  Report_Movement_ReturnOutDialog in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOutDialog.pas' {Report_Movement_ReturnOutDialogForm: TParentForm},
+  Report_IlliquidReductionPlanAll in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAll.pas' {Report_IlliquidReductionPlanAllForm: TParentForm},
+  Report_IlliquidReductionPlanList in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanList.pas' {Report_IlliquidReductionPlanListForm: TParentForm},
+  RepriceUnit_test in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

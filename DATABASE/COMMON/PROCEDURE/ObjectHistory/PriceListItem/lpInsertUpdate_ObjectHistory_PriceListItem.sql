@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_ObjectHistory_PriceListItem()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,TDateTime,TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,Integer,TDateTime,TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory_PriceListItem(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
     IN inPriceListId            Integer,    -- Прайс-лист
     IN inGoodsId                Integer,    -- Товар
+    IN inGoodsKindId            Integer,    -- Вид Товара
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
     IN inValue                  TFloat,     -- Значение цены
     IN inUserId                 Integer    -- сессия пользователя
@@ -26,7 +28,7 @@ BEGIN
    END IF;
 
    -- Получаем ссылку на объект цен
-   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, inUserId);
+   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, inGoodsKindId, inUserId);
  
    -- Вставляем или меняем объект историю цен
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, inUserId);
@@ -44,6 +46,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 28.11.19         * inGoodsKindId
  21.08.15         *
 */

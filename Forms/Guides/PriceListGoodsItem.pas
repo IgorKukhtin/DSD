@@ -66,6 +66,9 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     isErased: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    edGoodsKind: TcxButtonEdit;
+    GuidesGoodsKind: TdsdGuides;
   private
     { Private declarations }
   public

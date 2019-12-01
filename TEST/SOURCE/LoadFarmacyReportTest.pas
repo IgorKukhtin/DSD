@@ -102,9 +102,9 @@ begin
 
   LoadReportFromFile('—чет постановление 1303', ReportPath + '\—чет постановление 1303.fr3');
   exit;
-
-  LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   }
+  LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
+  exit;
   LoadReportFromFile('Pеестр по постановлению 1303(счет)', ReportPath + '\Pеестр по постановлению 1303(счет).fr3');
   exit;
   LoadReportFromFile('Pеестр по постановлению 1303(накладна€)', ReportPath + '\Pеестр по постановлению 1303(накладна€).fr3');

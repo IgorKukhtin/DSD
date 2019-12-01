@@ -84,8 +84,8 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
-  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
-
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  RepriceUnit_test in '..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm};
 {$R *.res}
 
 begin

@@ -45,6 +45,9 @@ type
     GoodsGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     cePrice: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edGoodsKind: TcxButtonEdit;
+    GuidesGoodsKind: TdsdGuides;
   private
     { Private declarations }
   public

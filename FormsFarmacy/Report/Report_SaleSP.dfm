@@ -188,8 +188,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'OperDate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -330,8 +328,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           object OperDateSP: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
             DataBinding.FieldName = 'OperDateSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

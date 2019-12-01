@@ -16,7 +16,8 @@ uses
   IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
-  IdFTP, cxCurrencyEdit, Vcl.Menus;
+  IdFTP, cxCurrencyEdit, Vcl.Menus, IdHTTP, IdIOHandler, IdIOHandlerSocket,
+  IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf;
 
 type
   TExportSalesForSuppForm = class(TForm)
@@ -170,6 +171,9 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    IdHTTP: TIdHTTP;
+    btnYuriFarmAll: TButton;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -191,6 +195,7 @@ type
     procedure btnYuriFarmUnitExecuteClick(Sender: TObject);
     procedure btnYuriFarmExecuteClick(Sender: TObject);
     procedure YuriFarmExecuteClick(Sender: TObject);
+    procedure btnYuriFarmAllClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -220,7 +225,14 @@ type
     glFTPUserADV,
     glFTPPasswordADV: String;
 
+    FAccessKeyYF: String;
+    FURLYF: String;
+    FTokenYF : string;
+    FIDYF : string;
+    FUnitYF : Integer;
+
     FYuriFarmType : Integer;
+
 
     function SendMail(const Host: String; const Port: integer; const Password,
       Username: String; const Recipients: array of String; const FromAdres,
@@ -241,6 +253,8 @@ implementation
 
 {$R *.dfm}
 
+var XML: IXMLDocument;
+
 procedure TExportSalesForSuppForm.Add_Log(AMessage: String);
 var
   F: TextFile;
@@ -260,6 +274,53 @@ begin
   except
   end;
 end;
+
+function EncodeBase64(const Input: TBytes): string;
+const
+  Base64: array[0..63] of Char =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+  function Encode3Bytes(const Byte1, Byte2, Byte3: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[((Byte2 shl 2) or (Byte3 shr 6)) and $3F]
+      + Base64[Byte3 and $3F];
+  end;
+
+  function EncodeLast2Bytes(const Byte1, Byte2: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[(Byte2 shl 2) and $3F] + '=';
+  end;
+
+  function EncodeLast1Byte(const Byte1: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[(Byte1 shl 4) and $3F] + '==';
+  end;
+
+var
+  i, iLength: Integer;
+begin
+  Result := '';
+  iLength := Length(Input);
+  i := 0;
+  while i < iLength do
+  begin
+    case iLength - i of
+      3..MaxInt:
+        Result := Result + Encode3Bytes(Input[i], Input[i+1], Input[i+2]);
+      2:
+        Result := Result + EncodeLast2Bytes(Input[i], Input[i+1]);
+      1:
+        Result := Result + EncodeLast1Byte(Input[i]);
+    end;
+    Inc(i, 3);
+  end;
+end;
+
 
 procedure TExportSalesForSuppForm.OpenAndFormatSQL(qryReport : TZQuery; grtView : TcxGridDBTableView);
   var I, W : integer;
@@ -773,7 +834,14 @@ end;
 function CurrToXML(Q : TZQuery; F : String) : String;
 begin
   Result := Q.FieldByName(F).AsString;
+  if Result = '' then Result := '0';
   Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+function IntToXML(Q : TZQuery; F : String) : String;
+begin
+  Result := Q.FieldByName(F).AsString;
+  if Result = '' then Result := '0';
 end;
 
 function DateTimeToXML(D : TDateTime) : String; overload;
@@ -795,12 +863,29 @@ begin
   else Result := FormatDateTime('YYYY-MM-DD', Q.FieldByName(F).AsDateTime);
 end;
 
+procedure TExportSalesForSuppForm.btnYuriFarmAllClick(Sender: TObject);
+begin
+  btnYuriFarmUnitExecuteClick(Sender);
+  qryReport_Upload_YuriFarm_Unit.First;
+  while not qryReport_Upload_YuriFarm_Unit.Eof do
+  begin
+    Add_Log('Цикл отправки Юрия-Фарм по подразделению ' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString);
+    YuriFarmExecute(1);
+    btnYuriFarmSendClick(Sender);
+    YuriFarmExecute(3);
+    btnYuriFarmSendClick(Sender);
+    YuriFarmExecute(51);
+    btnYuriFarmSendClick(Sender);
+    qryReport_Upload_YuriFarm_Unit.Next;
+  end;
+end;
+
 procedure TExportSalesForSuppForm.btnYuriFarmExecuteClick(Sender: TObject);
   var APoint : TPoint;
 begin
   inherited;
 
-   FYuriFarmType := 0;
+  FYuriFarmType := 0;
   if qryReport_Upload_YuriFarm.Active then qryReport_Upload_YuriFarm.Close;
   if grYuriFarmDBTableView.ColumnCount > 0 then grYuriFarmDBTableView.ClearItems;
 
@@ -811,7 +896,6 @@ end;
 procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   var cFileNameYuriFarm : string; nID : Integer;
       sl : TStringList;
-      id_storage : string;
 
   procedure StartXML;
   begin
@@ -826,8 +910,8 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   function GetDocName : string;
   begin
     case FYuriFarmType of
-      1  : Result := 'd_buy';
-      3  : Result := 'd_receipt';
+      1  : Result := 'doc'; //'d_buy';
+      3  : Result := 'doc'; //'d_receipt';
       51 : Result := '';
     end;
   end;
@@ -835,9 +919,9 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   function GetItemName : string;
   begin
     case FYuriFarmType of
-      1  : Result := 'd_buy_item';
-      3  : Result := 'd_receipt_item';
-      51 : Result := 'd_stock';
+      1  : Result := 'item'; //'d_buy_item';
+      3  : Result := 'item'; //'d_receipt_item';
+      51 : Result := 'doc'; //'d_stock';
     end;
   end;
 
@@ -845,7 +929,7 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   begin
     sl.Add('        <' +  GetDocName +
            ' id="' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '"' +
-           ' id_storage="' + id_storage + '"' +
+           ' id_storage="' +  qryReport_Upload_YuriFarm_Unit.FieldByName('UnitCode').AsString + '"' +
            ' name="' + StrToXML(qryReport_Upload_YuriFarm, 'InvNumber') + '"' +
            ' date="' + DateTimeToXML(qryReport_Upload_YuriFarm, 'OperDate') + '"' +
            ' owner="' + StrToXML(qryReport_Upload_YuriFarm, 'InsertName') + '"' +
@@ -863,7 +947,7 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
            ' id_item="' + StrToXML(qryReport_Upload_YuriFarm, 'MovementItemId') + '"' +
            ' id_parsel="' + StrToXML(qryReport_Upload_YuriFarm, 'id_parsel') + '"' +
            ' id_drug="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsId') + '"' +
-           ' id_morion="' + StrToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
+           ' id_morion="' + IntToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
            ' drug_name="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsName') + '"' +
            ' drug_form=""' +
            ' drug_number="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsCode') + '"' +
@@ -885,13 +969,47 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
            ' />');
   end;
 
+  procedure DocIncome;
+  begin
+    sl.Add('        <' +  GetDocName +
+           ' id="' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '"' +
+           ' id_storage="' +  qryReport_Upload_YuriFarm_Unit.FieldByName('UnitCode').AsString + '"' +
+           ' name="' + StrToXML(qryReport_Upload_YuriFarm, 'InvNumber') + '"' +
+           ' date="' + DateTimeToXML(qryReport_Upload_YuriFarm, 'OperDate') + '"' +
+           ' supplier="' + StrToXML(qryReport_Upload_YuriFarm, 'Supplier') + '"' +
+           ' okpo="' + StrToXML(qryReport_Upload_YuriFarm, 'OKPO') + '"' +
+           ' deleted="0"' +
+           ' >');
+  end;
+
+  procedure DocIncomeList;
+  begin
+    sl.Add('            <' + GetItemName +
+           ' id_item="' + StrToXML(qryReport_Upload_YuriFarm, 'MovementItemId') + '"' +
+           ' id_drug="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsId') + '"' +
+           ' id_parsel="' + StrToXML(qryReport_Upload_YuriFarm, 'id_parsel') + '"' +
+           ' id_morion="' + IntToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
+           ' drug_name="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsName') + '"' +
+           ' drug_form=""' +
+           ' drug_number="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsCode') + '"' +
+           ' drug_maker="' + StrToXML(qryReport_Upload_YuriFarm, 'MakerName') + '"' +
+           ' date_expire="' + DateTimeToXML(qryReport_Upload_YuriFarm, 'ExpirationDate') + '"' +
+           ' series="' + StrToXML(qryReport_Upload_YuriFarm, 'PartionGoods') + '"' +
+           ' vat="' + StrToXML(qryReport_Upload_YuriFarm, 'NDS') + '"' +
+           ' quant_div="' + '1000' + '"' +
+           ' quant_num="' + IntToStr(Trunc(qryReport_Upload_YuriFarm.FieldByName('Amount').AsCurrency * 1000)) + '"' +
+           ' amount_buy="' + CurrToXML(qryReport_Upload_YuriFarm, 'SummaWithVAT') + '"' +
+
+           ' />');
+  end;
+
   procedure DocRemainsList;
   begin
     sl.Add('            <' + GetItemName +
            ' id="' + StrToXML(qryReport_Upload_YuriFarm, 'Id') + '"' +
            ' id_parsel="' + StrToXML(qryReport_Upload_YuriFarm, 'id_parsel') + '"' +
            ' id_drug="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsId') + '"' +
-           ' id_morion="' + StrToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
+           ' id_morion="' + IntToXML(qryReport_Upload_YuriFarm, 'MorionCode') + '"' +
            ' drug_name="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsName') + '"' +
            ' drug_form=""' +
            ' drug_number="' + StrToXML(qryReport_Upload_YuriFarm, 'GoodsCode') + '"' +
@@ -921,10 +1039,135 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
   end;
 
   procedure SendXML;
+    var S : UnicodeString; mStream: TMemoryStream; XMLToSend: TStringList; sResponse : string;
   begin
     EndXML;
-    sl.SaveToFile(SavePathYuriFarm + cFileNameYuriFarm, TEncoding.UTF8);
+
+    XML.Active := False;
+    XML.XML.Text := sl.Text;
+    XML.Active := True;
+    XML.SaveToFile(SavePathYuriFarm + cFileNameYuriFarm);
+    XML.Active := False;
+//    sl.SaveToFile(SavePathYuriFarm + cFileNameYuriFarm, TEncoding.UTF8);
     sl.Clear;
+
+      // Получение токена
+    if FTokenYF = '' then
+    begin
+      mStream := TMemoryStream.Create;
+      try
+        IdHTTP.Request.ContentType := 'application/xml';
+        IdHTTP.Request.CustomHeaders.Clear;
+        IdHTTP.Request.CustomHeaders.FoldLines := False;
+        IdHTTP.Request.CustomHeaders.Values['AccessKey'] := FAccessKeyYF;
+
+        try
+          IdHTTP.Get(FURLYF + '/spauth/verify', mStream);
+        except   ON E: Exception DO
+          Begin
+            Add_Log(E.Message);
+            exit;
+          End;
+        end;
+
+        if IdHTTP.ResponseCode = 200 then
+        begin
+          XML.Active := False;
+          XML.LoadFromStream(mStream);
+          XML.Active := True;
+          FTokenYF := XML.DocumentElement.Attributes['token'];
+        end;
+      finally
+        mStream.Free;
+      end;
+    end;
+
+      // Получение ID аптеки
+    if (FIDYF = '') or (FUnitYF <> qryReport_Upload_YuriFarm_Unit.FieldByName('id').AsInteger) then
+    begin
+
+        // Заполнение структуры для получение ID аптеки
+      XMLToSend := TStringList.Create;
+      try
+        XMLToSend.Add('<?xml version="1.0" encoding="UTF-8"?> ');
+        XMLToSend.Add('<body ' +
+                      '  head="' + qryReport_Upload_YuriFarm_Unit.FieldByName('JuridicalName').AsString + '" ' +
+                      '  name="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString + '" ' +
+                      '  code="' + qryReport_Upload_YuriFarm_Unit.FieldByName('OKPO').AsString + '" ' +
+                      '  addr="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitAddress').AsString + '" ' +
+                      '  id_local="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitCode').AsString + '" ' +
+                      '  local_name="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString + '" ' +
+                      '  br_nick="" ' +
+                      '  access_key="' + FAccessKeyYF + '" ' +
+                      '/>');
+        XMLToSend.SaveToFile(SavePathYuriFarm + 'TempXML.xml', TEncoding.UTF8);
+      finally
+        XMLToSend.Clear;
+        XMLToSend.Free;
+      end;
+
+        // Получение ID аптеки
+      try
+        IdHTTP.Request.ContentType := 'application/xml';
+        IdHTTP.Request.CustomHeaders.Clear;
+        IdHTTP.Request.CustomHeaders.FoldLines := False;
+        IdHTTP.Request.CustomHeaders.Values['Token'] := Trim(FTokenYF);
+
+        try
+           sResponse := IdHTTP.Post(FURLYF + '/admin/reg-customer', SavePathYuriFarm + 'TempXML.xml');
+        except ON E: Exception DO
+          Begin
+            Add_Log(E.Message);
+            exit;
+          End;
+        end;
+
+        if IdHTTP.ResponseCode = 200 then
+        begin
+          XML.Active := False;
+          XML.XML.Text := sResponse;
+          XML.Active := True;
+          FIDYF := XML.DocumentElement.Attributes['id'];
+          FUnitYF := qryReport_Upload_YuriFarm_Unit.FieldByName('id').AsInteger;
+        end;
+      finally
+        DeleteFile(SavePathYuriFarm + 'TempXML.xml');
+      end;
+    end;
+
+      // Отправка данных
+
+
+    try
+      S := '<?xml version="1.0" encoding="UTF-8"?> <body id_entity="' + IntToStr(FYuriFarmType) + '" id_customer="' + FIDYF + '" />';
+
+      IdHTTP.Request.ContentType := 'application/xml';
+      IdHTTP.Request.CustomHeaders.Clear;
+      IdHTTP.Request.CustomHeaders.FoldLines := False;
+      IdHTTP.Request.CustomHeaders.Values['Token'] := Trim(FTokenYF);
+      IdHTTP.Request.CustomHeaders.Values['Charset'] := 'utf-8';
+      IdHTTP.Request.CustomHeaders.Values['Content-Encoding'] := '';
+      IdHTTP.Request.CustomHeaders.Values['Content-Meta'] :=  EncodeBase64(BytesOf(S));
+
+      try
+         sResponse := IdHTTP.Post(FURLYF + '/api/post-docs', SavePathYuriFarm + cFileNameYuriFarm);
+      except ON E: Exception DO
+          Begin
+            Add_Log(E.Message);
+            exit;
+          End;
+      end;
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+//        XML.Active := False;
+//        XML.XML.Text := sResponse;
+//        XML.Active := True;
+        DeleteFile(SavePathYuriFarm + cFileNameYuriFarm);
+        Add_Log('Отчет Юрия-Фарм ' + IntToStr(FYuriFarmType) + ' отправлен');
+      end;
+    finally
+    end;
   end;
 
 begin
@@ -958,11 +1201,13 @@ begin
         cFileNameYuriFarm := 'YuriFarm_' + qryReport_Upload_YuriFarm.FieldByName('id').AsString + '.xml';
         StartXML;
         case FYuriFarmType of
+          1 : DocIncome;
           3 : DocCheck;
         end;
       end;
 
       case FYuriFarmType of
+        1  : DocIncomeList;
         3  : DocCheckList;
         51 : DocRemainsList;
       end;
@@ -1143,6 +1388,12 @@ begin
     glFTPPasswordADV := Ini.ReadString('FTP','PasswordADV','MXps3yZWudD0');
     Ini.WriteString('FTP','Password',glFTPPassword);
 
+    FAccessKeyYF := Ini.ReadString('HTTP','AccessKeyYF','2c43ca2f579aff6477dfee03c893be17');
+    Ini.WriteString('HTTP','AccessKeyYF',FAccessKeyYF);
+
+    FURLYF := Ini.ReadString('HTTP','URLYF','http://test-spho.pharmbase.com.ua');
+    Ini.WriteString('HTTP','URLYF',FURLYF);
+
   finally
     Ini.free;
   end;
@@ -1220,10 +1471,18 @@ begin
       btnADVExecute.Enabled := false;
       btnADVExport.Enabled := false;
       btnADVSend.Enabled := false;
+      btnYuriFarmUnitExecute.Enabled := false;
+      btnYuriFarmExecute.Enabled := false;
+      btnYuriFarmSend.Enabled := false;
+      btnYuriFarmAll.Enabled := false;
 
       Timer1.Enabled := true;
     end;
   end;
+
+  FTokenYF := '';
+  FIDYF := '';
+  FUnitYF := 0;
   FYuriFarmType := 0;
 
   FormatSettings.DecimalSeparator:=',';
@@ -1339,5 +1598,9 @@ begin
     FreeAndNil(FIdSMTP);
   end;
 end;
+
+initialization
+
+  XML := TXMLDocument.Create(nil);
 
 end.

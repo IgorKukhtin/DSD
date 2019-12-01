@@ -570,6 +570,21 @@ object PriceListItemForm: TPriceListItemForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -917,6 +932,14 @@ object PriceListItemForm: TPriceListItemForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

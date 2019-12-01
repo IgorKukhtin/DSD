@@ -1,4 +1,4 @@
-inherited CheckVIPForm: TCheckVIPForm
+﻿inherited CheckVIPForm: TCheckVIPForm
   Caption = 'VIP '#1095#1077#1082#1080
   ClientHeight = 382
   ClientWidth = 668
@@ -696,6 +696,22 @@ inherited CheckVIPForm: TCheckVIPForm
         end>
       isShowModal = False
     end
+    object actSmashСheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spSmashСheck
+      StoredProcList = <
+        item
+          StoredProc = spSmashСheck
+        end>
+      Caption = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
+      Hint = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
+      ImageIndex = 27
+      QuestionBeforeExecute = #1056#1072#1079#1073#1080#1090#1100' '#1095#1077#1082' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -791,6 +807,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -825,6 +849,10 @@ inherited CheckVIPForm: TCheckVIPForm
       Action = actCheckCash
       Category = 0
       ImageIndex = 1
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actSmashСheck
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1038,5 +1066,22 @@ inherited CheckVIPForm: TCheckVIPForm
     ParamKeyField = 'inId'
     Left = 440
     Top = 112
+  end
+  object spSmashСheck: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Smash'#1057'heck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 176
   end
 end

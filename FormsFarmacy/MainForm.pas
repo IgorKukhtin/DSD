@@ -588,6 +588,9 @@ type
     miReport_Movement_ReturnOut: TMenuItem;
     N199: TMenuItem;
     N200: TMenuItem;
+    actReport_IlliquidReductionPlanAll: TdsdOpenForm;
+    N201: TMenuItem;
+    miReprice_test: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -597,6 +600,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
     procedure miRepriceChangeClick(Sender: TObject);
+    procedure miReprice_testClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -611,7 +615,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,
+  UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,  RepriceUnit_test,
   RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling,
   Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance;
 
@@ -686,6 +690,16 @@ end;
 procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
   with TRepriceUnitForm.Create(nil) do
+  try
+     Show;
+  finally
+     //Free;
+  end;
+end;
+
+procedure TMainForm.miReprice_testClick(Sender: TObject);
+begin
+  with TRepriceUnit_testForm.Create(nil) do
   try
      Show;
   finally

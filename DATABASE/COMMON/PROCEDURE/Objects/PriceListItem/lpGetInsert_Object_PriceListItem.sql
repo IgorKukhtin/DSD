@@ -1,11 +1,13 @@
 -- Function: lpGetInsert_Object_PriceListItem(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer);
-DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetInsert_Object_PriceListItem(
     IN inPriceListId         Integer,      -- Прайс-лист
     IN inGoodsId             Integer,      -- Товар
+    IN inGoodsKindId         Integer,      -- Вид Товар
     IN inUserId              Integer
 )
 RETURNS Integer
@@ -14,20 +16,37 @@ $BODY$
 DECLARE vbId Integer;
 BEGIN
 
-   -- поиск
-   SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
-   FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-        JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                        ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                       AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                       AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-        JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
-                        ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                       AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
-                       AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL -- = inGoodsKindId
-   WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
-     AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId
-  ;
+
+   IF COALESCE (inGoodsKindId,0) > 0
+   THEN  
+       -- поиск
+       SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
+       FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+            JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                            ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                           AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+            JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                            ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                           AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                           AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId = inGoodsKindId
+       WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
+         AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
+   ELSE
+        -- поиск
+       SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
+       FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+            JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                            ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                           AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+            JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                            ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                           AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                           AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL -- = inGoodsKindId
+       WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
+         AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
+   END IF;
 
 
   -- поиск
@@ -38,7 +57,7 @@ BEGIN
      --
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PriceListItem_PriceList(), vbId, inPriceListId);
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PriceListItem_Goods()    , vbId, inGoodsId);
-     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PriceListItem_GoodsKind(), vbId, 0 /*inGoodsKindId*/);
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PriceListItem_GoodsKind(), vbId, inGoodsKindId);
 
      -- сохранили свойство <Дата создания> - убрал т.к. сохраняется в протоколе истории
      -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbId, CURRENT_TIMESTAMP);
@@ -57,6 +76,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.19         *
  26.11.19                                        *
  06.06.13                        *
 */

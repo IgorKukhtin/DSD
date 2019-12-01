@@ -3162,6 +3162,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_IlliquidReductionPlanAll: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072
+      Hint = #1054#1090#1095#1077#1090' '#1087#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072
+      FormName = 'TReport_IlliquidReductionPlanAllForm'
+      FormNameParam.Value = 'TReport_IlliquidReductionPlanAllForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3842,6 +3854,9 @@ inherited MainForm: TMainForm
       object N3: TMenuItem
         Action = actReport_ImplementationPlanEmployee
       end
+      object N201: TMenuItem
+        Action = actReport_IlliquidReductionPlanAll
+      end
       object miReport_IncomeSample: TMenuItem
         Action = actReport_IncomeSample
       end
@@ -4132,13 +4147,17 @@ inherited MainForm: TMainForm
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [33]
+      object miReprice_test: TMenuItem [33]
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
+        OnClick = miReprice_testClick
+      end
+      object miExportSalesForSupp: TMenuItem [34]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [34]
+      object N173: TMenuItem [35]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [35]
+      object miRecalcMCSSheduler: TMenuItem [36]
         Action = actRecalcMCSSheduler
       end
     end

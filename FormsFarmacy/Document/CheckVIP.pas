@@ -73,6 +73,9 @@ type
     PartionDateKindName: TcxGridDBColumn;
     DateDelay: TcxGridDBColumn;
     ListPartionDateKindName: TcxGridDBColumn;
+    actSmash—heck: TdsdExecStoredProc;
+    spSmash—heck: TdsdStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public
