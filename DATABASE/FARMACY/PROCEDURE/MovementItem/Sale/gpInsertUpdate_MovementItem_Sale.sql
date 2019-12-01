@@ -51,7 +51,7 @@ BEGIN
     IF vbSPKindId = zc_Enum_SPKind_1303() AND vbUserId <> 235009    --  Колеуш И. И.
             -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
        THEN 
-            /* --Люба попросила пока убрать
+            --
             IF EXISTS (SELECT 1 
                        FROM ObjectLink
                             INNER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
@@ -61,9 +61,9 @@ BEGIN
                        WHERE ObjectLink.ObjectId = inGoodsId
                          AND ObjectLink.DescId = zc_ObjectLink_Goods_NDSKind())
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с НДС = 20';
+                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 со ставкой НДС=20 проц. (ТОВАР БЕЗ РЕГИСТРАЦИИ !!!)';
             END IF;
-            */
+            
             SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.25
                          WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.2
                          WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.15
@@ -111,7 +111,10 @@ BEGIN
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
             IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (vbPriceCalc,0) <> 0)
                THEN
-                   RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара с наценкой более <%> процентов', vbPersent;
+                   IF vbPersent = 25 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 25 процентов (для товара с приходной ценой до 100грн)'; END IF;
+                   IF vbPersent = 20 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 20 процентов (для товара с приходной ценой от 100грн до 500грн)'; END IF;
+                   IF vbPersent = 15 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов (для товара с приходной ценой от 500грн до 1000грн)'; END IF;
+                   IF vbPersent = 10 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов (для товара с приходной ценой свыше 1000грн)'; END IF;
             END IF;
 
     END IF;
