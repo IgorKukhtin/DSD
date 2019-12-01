@@ -148,7 +148,8 @@ implementation
 
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
-  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML;
+  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
+  , DesadvFozzXML, OrderSpFozzXML;
 
 procedure Register;
 begin
@@ -2433,80 +2434,207 @@ end;
 
 procedure TEDI.DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
-  DESADV: IXMLDESADVType;
+  DESADV: DesadvXML.IXMLDESADVType;
+  DESADV_fozz: DesadvFozzXML.IXMLDESADVType;
   Stream: TStream;
   i: integer;
   FileName: string;
+  lNumber: string;
 begin
-  DESADV := NewDESADV;
-  // Создать XML
-  DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  DESADV.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  then begin
+            // Создать XML
+            DESADV_fozz := DesadvFozzXML.NewDESADV;
+            // Номер повідомлення про відвантаження
+            DESADV_fozz.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+            // Дата документа
+            DESADV_fozz.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Дата поставки
+            DESADV_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Час поставки
+            DESADV_fozz.DELIVERYTIME := FormatDateTime('hh:mm',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Номер замовлення
+            DESADV_fozz.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+            // Дата замовлення
+            DESADV_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Номер підтвердження замовлення
+            //DESADV_fozz.ORDRSPNUMBER := ;
+            // Дата підтвердження замовлення
+            //DESADV_fozz.ORDRSPDATE := ;
+            // Номер накладної
+            DESADV_fozz.DELIVERYNOTENUMBER := StrToInt(HeaderDataSet.FieldByName('InvNumber').asString);
+            // Дата накладної
+            DESADV_fozz.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Номер договору на поставку
+            DESADV_fozz.CAMPAIGNNUMBER := HeaderDataSet.FieldByName('ContractName').asString;
+            // Кількість машин
+            DESADV_fozz.TRANSPORTQUANTITY := 1;
+            // Номер транспортного засобу
+            // ??? DESADV_fozz.TRANSPORTID := HeaderDataSet.FieldByName('CarName').asString;
+            // Тип транспорту
+            // ??? DESADV_fozz.TRANSPORTERTYPE := HeaderDataSet.FieldByName('CarModelName').asString;
+            // Тип транспортування: 20 - залізничний, 30 - дорожній, 40 - повітряний, 60 - спарений, 100 - кур’єрська служба
+            DESADV_fozz.TRANSPORTTYPE := 30;
+            //
+            // GLN постачальника
+            if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+            then DESADV_fozz.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+            // GLN покупця
+            DESADV_fozz.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+            // GLN місця доставки
+            DESADV_fozz.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+            // GLN кінцевого консигнатора
+            DESADV_fozz.HEAD.FINALRECIPIENT:= HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+            // GLN відправника повідомлення
+            DESADV_fozz.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+            // GLN одержувача повідомлення
+            DESADV_fozz.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
 
-  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
-  then
-      DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
-  DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
-  DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
-    ('DELIVERYPLACEGLNCode').asString;
-  DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
-    ('SenderGLNCode').asString;
-  DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
-    ('RecipientGLNCode').asString;
-  DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+            // Номер транзакції
+            DESADV_fozz.HEAD.EDIINTERCHANGEID:= '1';
 
-  with ItemsDataSet do
-  begin
-    First;
-    i := 1;
-    while not Eof do
-    begin
-      with DESADV.HEAD.PACKINGSEQUENCE.POSITION.Add do
-      begin
-        POSITIONNUMBER := i;
-        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
-        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
-        PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
-        DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
-        DELIVEREDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
-        ORDEREDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountOrder').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+            // Номер ієрархії упаковки
+            DESADV_fozz.HEAD.PACKINGSEQUENCE.HIERARCHICALID := 1;
 
-        COUNTRYORIGIN := 'UA';
-        PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-      end;
-      inc(i);
-      Next;
-    end;
+            with ItemsDataSet do
+            begin
+              First;
+              i := 1;
+              while not Eof do
+              begin
+                with DESADV_fozz.HEAD.PACKINGSEQUENCE.POSITION.Add do
+                begin
+                  // Номер товарної позиції
+                  POSITIONNUMBER := IntToStr(i);
+                  // Штрихкод продукту
+                  PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                  // Артикул в БД покупця
+                  PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+                  // кількість, що поставляється
+                  DELIVEREDQUANTITY :=
+                    StringReplace(FormatFloat('0.00##',
+                    ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // Одиниці виміру
+                  // ??? DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+                  // Замовлена кількість
+                  ORDEREDQUANTITY :=
+                    StringReplace(FormatFloat('0.00##',
+                    ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+                  // Сума товару без ПДВ
+                  AMOUNT :=
+                    StringReplace(FormatFloat('0.00##',
+                    ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // Ціна продукту без ПДВ
+                  PRICE :=
+                    StringReplace(FormatFloat('0.00##',
+                    ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // Ставка податку (ПДВ,%)
+                  TAXRATE :=
+                    StringReplace(FormatFloat('0.0###',
+                    HeaderDataSet.FieldByName('VATPercent').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+                end;
+                inc(i);
+                Next;
+              end;
+            end;
+  end
+  else begin
+            // Создать XML
+            DESADV := DesadvXML.NewDESADV;
+            //
+            DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+            DESADV.Date := FormatDateTime('yyyy-mm-dd',
+              HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+              HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+            DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+              HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+            DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
+              HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+
+            if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+            then
+                DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+            DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+            DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+              ('DELIVERYPLACEGLNCode').asString;
+            DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
+              ('SenderGLNCode').asString;
+            DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
+              ('RecipientGLNCode').asString;
+            DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+
+            with ItemsDataSet do
+            begin
+              First;
+              i := 1;
+              while not Eof do
+              begin
+                with DESADV.HEAD.PACKINGSEQUENCE.POSITION.Add do
+                begin
+                  POSITIONNUMBER := i;
+                  PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                  PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+                  PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+                  DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
+                  DELIVEREDQUANTITY :=
+                    StringReplace(FormatFloat('0.000',
+                    ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+                  ORDEREDQUANTITY :=
+                    StringReplace(FormatFloat('0.000',
+                    ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+                  COUNTRYORIGIN := 'UA';
+                  PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                end;
+                inc(i);
+                Next;
+              end;
+            end;
+
   end;
-
+  //
+  //
   Stream := TMemoryStream.Create;
   try
-    DESADV.OwnerDocument.SaveToStream(Stream);
-    FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + DESADV.NUMBER + '.xml';
-    if FisEDISaveLocal then
+    if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+    then begin
+              DESADV_fozz.OwnerDocument.SaveToStream(Stream);
+              lNumber:= DESADV_fozz.NUMBER
+         end
+    else begin DESADV.OwnerDocument.SaveToStream(Stream);
+              lNumber:= DESADV.NUMBER
+         end;
+    //
+    FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+    // !временно!
+    if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+    then
        try
-         DESADV.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+         if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+         then DESADV_fozz.OwnerDocument.SaveToFile(FileName)
+         else DESADV     .OwnerDocument.SaveToFile(FDirectoryError + FileName);
        except
-         DESADV.OwnerDocument.SaveToFile(FileName);
+         if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+         then DESADV_fozz.OwnerDocument.SaveToFile(FileName)
+         else DESADV     .OwnerDocument.SaveToFile(FileName);
        end;
+    // здесь созранили на ftp
     PutStreamToFTP(Stream, FileName, '/outbox');
+    //
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -3096,98 +3224,198 @@ end;
 
 procedure TEDI.ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
-  ORDRSP: IXMLORDRSPType;
+  ORDRSP: ORDRSPXML.IXMLORDRSPType;
+  ORDRSP_fozz: OrderSpFozzXML.IXMLORDRSPType;
   Stream: TStream;
   i: integer;
   FileName: string;
+  lNumber: string;
 begin
 
-  ORDRSP := NewORDRSP;
-  // Создать XML
-  ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  then begin
+          // Создать XML
+          ORDRSP_fozz := OrderSpFozzXML.NewOrderSp;
+          // Номер підтвердження замовлення
+          ORDRSP_fozz.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+          // Дата документа
+          ORDRSP_fozz.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          // Час створення документа
+          // Номер замовлення
+          ORDRSP_fozz.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+          // Дата замовлення
+          ORDRSP_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          // Дата доставки
+          ORDRSP_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          // Час поставки
+          // Код валюти
+          // ORDRSP_fozz.CURRENCY := ;
+          // Номер договору на поставку
+          ORDRSP_fozz.CAMPAIGNNUMBER := HeaderDataSet.FieldByName('ContractName').asString;
+          // 4 - поставка змінена, 5 - заміна документа, 29 - поставка прийнята, 27 - поставка не прийнята
+          ORDRSP_fozz.ACTION := 29;
+          //
+          // GLN постачальника
+          if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+          then ORDRSP_fozz.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+          // GLN покупця
+          ORDRSP_fozz.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+          // GLN місця доставки
+          ORDRSP_fozz.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+          // GLN платника
+          ORDRSP_fozz.HEAD.INVOICEPARTNER:= HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+          // GLN відправника повідомлення
+          ORDRSP_fozz.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+          // GLN одержувача повідомлення
+          ORDRSP_fozz.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
 
-  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
-  then
-      ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
-  ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
-  ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
-    ('DELIVERYPLACEGLNCode').asString;
-  ORDRSP.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
-  ORDRSP.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
+          with ItemsDataSet do
+          begin
+            First;
+            i := 1;
+            while not Eof do
+            begin
+              with ORDRSP_fozz.HEAD.POSITION.Add do
+              begin
+                // Номер товарної позиції
+                POSITIONNUMBER := IntToStr(i);
+                // Штрих-код продукту
+                PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                // Артикул в БД покупця
+                PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+                // Опис продукту
+                DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
+                // 1 - товар буде поставлений без змін, 2 - зміна замовленої кількості ,,, 3 - відмовлено в постачанні ,,,
+                if ItemsDataSet.FieldByName('AmountOrder').AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat
+                then PRODUCTTYPE := '1';
+                if ItemsDataSet.FieldByName('AmountOrder').AsFloat <> ItemsDataSet.FieldByName('AmountPartner').AsFloat
+                then PRODUCTTYPE := '2';
+                if ItemsDataSet.FieldByName('AmountOrder').AsFloat = 0
+                then PRODUCTTYPE := '3';
+                // Замовлена кількість
+                ORDEREDQUANTITY :=
+                  StringReplace(FormatFloat('0.00###',
+                  ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                // Наявна кількість
+                ACCEPTEDQUANTITY :=
+                  StringReplace(FormatFloat('0.000',
+                  ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-  with ItemsDataSet do
-  begin
-    First;
-    i := 1;
-    while not Eof do
-    begin
-      with ORDRSP.HEAD.POSITION.Add do
-      begin
-        POSITIONNUMBER := IntToStr(i);
-        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
-        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
-        PRODUCTIDBUYER := ItemsDataSet.FieldByName
-          ('ArticleGLN_Juridical').asString;
-        ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
-        if ItemsDataSet.FieldByName('AmountOrder')
-          .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
-          PRODUCTTYPE := '1';
+              end;
+              inc(i);
+              Next;
+            end;
+          end;
+       end
+  else begin
+          // Создать XML
+          ORDRSP := ORDRSPXML.NewORDRSP;
+          //
+          ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+          ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
+            HeaderDataSet.FieldByName('OperDate').asDateTime);
+          ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+            HeaderDataSet.FieldByName('OperDate').asDateTime);
+          ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+          ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+            HeaderDataSet.FieldByName('OperDate').asDateTime);
 
-        if ItemsDataSet.FieldByName('AmountOrder').AsFloat <>
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat then
-          PRODUCTTYPE := '2';
+          if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+          then
+              ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+          ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+          ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+            ('DELIVERYPLACEGLNCode').asString;
+          ORDRSP.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+          ORDRSP.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
 
-        if ItemsDataSet.FieldByName('AmountOrder').AsFloat = 0 then
-          PRODUCTTYPE := '3';
+          with ItemsDataSet do
+          begin
+            First;
+            i := 1;
+            while not Eof do
+            begin
+              with ORDRSP.HEAD.POSITION.Add do
+              begin
+                POSITIONNUMBER := IntToStr(i);
+                PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+                PRODUCTIDBUYER := ItemsDataSet.FieldByName
+                  ('ArticleGLN_Juridical').asString;
+                ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+                if ItemsDataSet.FieldByName('AmountOrder')
+                  .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+                  PRODUCTTYPE := '1';
 
-        ORDEREDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountOrder').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        ACCEPTEDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                if ItemsDataSet.FieldByName('AmountOrder').AsFloat <>
+                  ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+                  PRODUCTTYPE := '2';
 
-        PRICE :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                if ItemsDataSet.FieldByName('AmountOrder').AsFloat = 0 then
+                  PRODUCTTYPE := '3';
 
-        PRICEWITHVAT :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                ORDEREDQUANTITY :=
+                  StringReplace(FormatFloat('0.000',
+                  ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                ACCEPTEDQUANTITY :=
+                  StringReplace(FormatFloat('0.000',
+                  ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-        VAT :=
-          StringReplace(FormatFloat('0.00',
-          HeaderDataSet.FieldByName('VATPercent').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                PRICE :=
+                  StringReplace(FormatFloat('0.00',
+                  ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-      end;
-      inc(i);
-      Next;
-    end;
-  end;
+                PRICEWITHVAT :=
+                  StringReplace(FormatFloat('0.00',
+                  ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
+                VAT :=
+                  StringReplace(FormatFloat('0.00',
+                  HeaderDataSet.FieldByName('VATPercent').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+              end;
+              inc(i);
+              Next;
+            end;
+          end;
+       end;
+  //
+  //
   Stream := TMemoryStream.Create;
   try
-    ORDRSP.OwnerDocument.SaveToStream(Stream);
-    FileName := 'ORDRSP_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + ORDRSP.NUMBER + '.xml';
-    if FisEDISaveLocal then
+    if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+    then begin
+              ORDRSP_fozz.OwnerDocument.SaveToStream(Stream);
+              lNumber:= ORDRSP_fozz.NUMBER
+    end
+    else begin
+              ORDRSP.OwnerDocument.SaveToStream(Stream);
+              lNumber:= ORDRSP.NUMBER
+    end;
+    //
+    FileName := 'ORDRSP_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+    // !временно!
+    if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+    then
        try
-         ORDRSP.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+         if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+         then ORDRSP_fozz.OwnerDocument.SaveToFile(FileName)
+         else ORDRSP     .OwnerDocument.SaveToFile(FDirectoryError + FileName);
        except
-         ORDRSP.OwnerDocument.SaveToFile(FileName);
+         if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+         then ORDRSP_fozz.OwnerDocument.SaveToFile(FileName)
+         else ORDRSP     .OwnerDocument.SaveToFile(FileName);
        end;
+    // здесь созранили на ftp
     PutStreamToFTP(Stream, FileName, '/outbox');
+    //
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
