@@ -94,7 +94,9 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
-  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 

@@ -94,7 +94,9 @@ uses
   LabMarkEdit in '..\Forms\Guides\LabMarkEdit.pas' {LabMarkEditForm: TParentForm},
   LabMark in '..\Forms\Guides\LabMark.pas' {LabMarkForm: TParentForm},
   LabProduct in '..\Forms\Guides\LabProduct.pas' {LabProductForm: TParentForm},
-  LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm};
+  LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
