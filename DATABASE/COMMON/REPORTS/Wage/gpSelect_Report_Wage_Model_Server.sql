@@ -978,6 +978,11 @@ BEGIN
                             WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
                               AND Setting_Wage_1.UnitId > 0
                            )
+  , tmpUnit_Reestr_from AS (SELECT DISTINCT Setting_Wage_1.UnitId, COALESCE (Setting_Wage_1.FromId, 0) AS FromId
+                            FROM Setting_Wage_1
+                            WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
+                              AND Setting_Wage_1.UnitId > 0
+                           )
          -- Данные для - Transport
        , tmpMovement_Transport AS
        (SELECT Movement.Id                              AS MovementId
@@ -1010,6 +1015,7 @@ BEGIN
                                    ON ObjectFloat_KoeffHoursWork.ObjectId = MovementLinkObject_Car.ObjectId
                                   AND ObjectFloat_KoeffHoursWork.DescId   = zc_ObjectFloat_Car_KoeffHoursWork()
 
+             -- для атомобилей только такого подразделения
              INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = OL_Car_Unit.ChildObjectId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
@@ -1057,6 +1063,7 @@ BEGIN
          -- Данные для - Реестр Документов - из zc_Movement_Transport
        , tmpMovement_Reestr AS
        (SELECT Movement.OperDate
+             , tmpUnit_Reestr.FromId
              , DATE_PART ('ISODOW', Movement.OperDate)  AS OperDate_num
                -- Подразделение - Сотрудник
              , Object_Unit.Id AS UnitId, Object_Unit.ObjectCode AS UnitCode
@@ -1121,9 +1128,31 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_0
+                                  ON OL_Unit_Parent_0.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND OL_Unit_Parent_0.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_1
+                                  ON OL_Unit_Parent_1.ObjectId = OL_Unit_Parent_0.ChildObjectId
+                                 AND OL_Unit_Parent_1.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_2
+                                  ON OL_Unit_Parent_2.ObjectId = OL_Unit_Parent_1.ChildObjectId
+                                 AND OL_Unit_Parent_2.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_3
+                                  ON OL_Unit_Parent_3.ObjectId = OL_Unit_Parent_2.ChildObjectId
+                                 AND OL_Unit_Parent_3.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_4
+                                  ON OL_Unit_Parent_4.ObjectId = OL_Unit_Parent_3.ChildObjectId
+                                 AND OL_Unit_Parent_4.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_5
+                                  ON OL_Unit_Parent_5.ObjectId = OL_Unit_Parent_4.ChildObjectId
+                                 AND OL_Unit_Parent_5.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS OL_Unit_Parent_6
+                                  ON OL_Unit_Parent_6.ObjectId = OL_Unit_Parent_5.ChildObjectId
+                                 AND OL_Unit_Parent_6.DescId   = zc_ObjectLink_Unit_Parent()
 
+             -- для атомобилей только такого подразделения
+             INNER JOIN tmpUnit_Reestr_from AS tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = OL_Car_Unit.ChildObjectId
              -- INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = MovementLinkObject_From.ObjectId
-             INNER JOIN tmpUnit_Reestr ON tmpUnit_Reestr.UnitId = OL_Car_Unit.ChildObjectId
 
              -- Нет оплаты водителю за вес
              LEFT JOIN tmpMovement_Reestr_notWeight ON tmpMovement_Reestr_notWeight.MovementId = Movement.Id
@@ -1133,7 +1162,17 @@ BEGIN
           AND Movement.StatusId = zc_Enum_Status_Complete()
           -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
           AND EXISTS (SELECT 1 FROM tmpUnit_Reestr)
+          -- 
+          AND (tmpUnit_Reestr.FromId = OL_Unit_Parent_0.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_1.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_2.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_3.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_4.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_5.ChildObjectId
+            OR tmpUnit_Reestr.FromId = OL_Unit_Parent_6.ChildObjectId
+            OR tmpUnit_Reestr.FromId = 0)
         GROUP BY Movement.OperDate
+               , tmpUnit_Reestr.FromId
                , Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
                , Object_PersonalDriver.Id, Object_PersonalDriver.ObjectCode, Object_PersonalDriver.ValueData
                , Object_Position.Id, Object_Position.ObjectCode, Object_Position.ValueData
@@ -1573,6 +1612,7 @@ BEGIN
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Reestr AS tmpMovement_PersonalComplete
                                        ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId
+                                      AND tmpMovement_PersonalComplete.FromId     = COALESCE (Setting.FromId, 0)
                                       AND (tmpMovement_PersonalComplete.TotalCountKg  <> 0
                                         OR tmpMovement_PersonalComplete.CountMovement <> 0
                                           )
