@@ -100,7 +100,7 @@ BEGIN
      RETURN QUERY
      WITH
      tmpItem_all AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                          , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+                          , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                           , ObjectHistory_PriceListItem.StartDate
                           , ObjectHistory_PriceListItem.EndDate
@@ -144,17 +144,17 @@ BEGIN
                   )
 
    , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                  , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                  , Object_GoodsByGoodsKind_View.GoodsKindId
                              FROM ObjectBoolean AS ObjectBoolean_Order
                                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                              WHERE ObjectBoolean_Order.ValueData = TRUE
                                AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                             )
 
-   , tmpPrice AS (SELECT ObjectHistory_PriceListItem.Id               AS PriceListItemId
-                       , ObjectHistory_PriceListItem.ObjectId         AS PriceListItemObjectId
-                       , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-                       , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+   , tmpPrice AS (SELECT ObjectHistory_PriceListItem.Id                   AS PriceListItemId
+                       , ObjectHistory_PriceListItem.ObjectId             AS PriceListItemObjectId
+                       , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                       , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
 
                        , ObjectHistory_PriceListItem.StartDate
                        , ObjectHistory_PriceListItem.EndDate
@@ -183,25 +183,28 @@ BEGIN
                     )
 
    , tmpData AS (-- сохраненные данные
-                 SELECT tmpPrice.PriceListItemId
-                      , tmpPrice.PriceListItemObjectId
-                      , tmpPrice.GoodsId
-                      , COALESCE (tmpPrice.GoodsKindId,0) AS GoodsKindId
-                      , tmpPrice.StartDate
-                      , tmpPrice.EndDate
-                      , tmpPrice.ValuePrice
-                 FROM tmpPrice
-                UNION
                  SELECT COALESCE (tmpPrice.PriceListItemId,0)       AS PriceListItemId
                       , COALESCE (tmpPrice.PriceListItemObjectId,0) AS PriceListItemObjectId
                       , tmpGoodsByGoodsKind.GoodsId                         AS GoodsId
-                      , COALESCE (tmpGoodsByGoodsKind.GoodsKindId,0)        AS GoodsKindId
+                      , COALESCE (tmpGoodsByGoodsKind.GoodsKindId,Null)     AS GoodsKindId
                       , COALESCE (tmpPrice.StartDate, NULL)  :: TDateTime AS StartDate
                       , COALESCE (tmpPrice.EndDate, NULL)    :: TDateTime AS EndDate
                       , COALESCE (tmpPrice.ValuePrice, 0)    :: TFloat    AS ValuePrice
                  FROM tmpGoodsByGoodsKind
                       LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoodsByGoodsKind.GoodsId
                                         AND COALESCE (tmpPrice.GoodsKindId,0) = COALESCE (tmpGoodsByGoodsKind.GoodsKindId,0)
+                UNION
+                 SELECT COALESCE (tmpPrice.PriceListItemId,0)       AS PriceListItemId
+                      , COALESCE (tmpPrice.PriceListItemObjectId,0) AS PriceListItemObjectId
+                      , Object_Goods.Id                             AS GoodsId
+                      , NULL                                        AS GoodsKindId
+                      , COALESCE (tmpPrice.StartDate, NULL)  :: TDateTime AS StartDate
+                      , COALESCE (tmpPrice.EndDate, NULL)    :: TDateTime AS EndDate
+                      , COALESCE (tmpPrice.ValuePrice, 0)    :: TFloat    AS ValuePrice
+                 FROM Object AS Object_Goods
+                      LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods.Id
+                                        AND tmpPrice.GoodsKindId IS NULL
+                 WHERE Object_Goods.DescId = zc_Object_Goods()
                )
 
        -- Результат
@@ -557,4 +560,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 -- тест
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparateHist() , CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparateHist() , CURRENT_TIMESTAMP, true, inSession:= zfCalc_UserAdmin())
+--where goodsid =  2131
+
+
