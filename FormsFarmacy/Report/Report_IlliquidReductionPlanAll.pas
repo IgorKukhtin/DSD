@@ -27,6 +27,12 @@ type
     AmountSale: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
+    ceNotSalePastDay: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceProcGoods: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    ceProcUnit: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

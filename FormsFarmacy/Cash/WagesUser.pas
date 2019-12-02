@@ -46,6 +46,14 @@ type
     cxLabel6: TcxLabel;
     ceDirector: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    cxLabel16: TcxLabel;
+    edAttempts: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edStatus: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    edDateTimeTest: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    ceResult: TcxCurrencyEdit;
   private
     { Private declarations }
   public

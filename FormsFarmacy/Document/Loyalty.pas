@@ -156,6 +156,7 @@ type
     actExportCreaturesPromocode: TdsdOpenForm;
     actExportUsedPromocode: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
+    dsdDBViewAddOn3: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

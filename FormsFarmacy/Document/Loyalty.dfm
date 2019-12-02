@@ -403,6 +403,11 @@ inherited LoyaltyForm: TLoyaltyForm
                   Format = ',0'
                   Kind = skSum
                   Column = InfoChangeCount
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                  Column = InfoPercentUsed
                 end>
               DataController.Summary.SummaryGroups = <>
               OptionsBehavior.IncSearch = True
@@ -1701,6 +1706,12 @@ inherited LoyaltyForm: TLoyaltyForm
         Name = 'UnitId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentUsed'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -1875,6 +1886,14 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = 'NULL'
         Component = edUpdateDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentUsed'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentUsed'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -2234,8 +2253,8 @@ inherited LoyaltyForm: TLoyaltyForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
-    Left = 750
-    Top = 489
+    Left = 278
+    Top = 497
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_LoyaltyChild'
@@ -2320,7 +2339,7 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 766
+    Left = 822
     Top = 384
   end
   object spUnErasedMIChild: TdsdStoredProc
@@ -2546,8 +2565,8 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 676
-    Top = 504
+    Left = 788
+    Top = 480
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
@@ -2642,7 +2661,7 @@ inherited LoyaltyForm: TLoyaltyForm
       end>
     PackSize = 1
     Left = 680
-    Top = 480
+    Top = 448
   end
   object InfoDS: TDataSource
     DataSet = InfoDSD
@@ -2673,8 +2692,8 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 848
-    Top = 384
+    Left = 976
+    Top = 368
   end
   object dsdStoredProc1: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_LoyaltySecond'
@@ -2693,8 +2712,8 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 848
-    Top = 384
+    Left = 1008
+    Top = 416
   end
   object spSelectPrintLoyaltyDay: TdsdStoredProc
     StoredProcName = 'gpReport_MovementItem_LoyaltySecondDay'
@@ -2746,5 +2765,26 @@ inherited LoyaltyForm: TLoyaltyForm
     Params = <>
     Left = 396
     Top = 201
+  end
+  object dsdDBViewAddOn3: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView3
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'PercentUsed'
+        Param.DataType = ftFloat
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    Left = 392
+    Top = 56
   end
 end

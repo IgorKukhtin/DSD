@@ -8,11 +8,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 77
     Width = 824
-    Height = 447
+    Height = 427
     ExplicitWidth = 824
     ExplicitHeight = 447
-    ClientRectBottom = 447
+    ClientRectBottom = 427
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
@@ -20,8 +21,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       inherited cxGrid: TcxGrid
         Top = 41
         Width = 824
-        Height = 406
-        ExplicitTop = 47
+        Height = 386
+        ExplicitTop = 41
         ExplicitWidth = 824
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -194,7 +195,9 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
   end
   inherited Panel: TPanel
     Width = 824
+    Height = 51
     ExplicitWidth = 824
+    ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -225,14 +228,14 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       ExplicitTop = 31
     end
     object edUserName: TcxTextEdit
-      Left = 351
+      Left = 348
       Top = 5
       Properties.ReadOnly = True
       TabOrder = 4
       Width = 242
     end
     object edUserCode: TcxTextEdit
-      Left = 298
+      Left = 289
       Top = 5
       ParentColor = True
       Properties.ReadOnly = True
@@ -241,9 +244,54 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 47
     end
     object cxLabel3: TcxLabel
-      Left = 234
+      Left = 222
       Top = 6
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+    end
+    object ceProcUnit: TcxCurrencyEdit
+      Left = 711
+      Top = 28
+      EditValue = 20.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 45
+    end
+    object cxLabel4: TcxLabel
+      Left = 609
+      Top = 29
+      Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
+    end
+    object ceProcGoods: TcxCurrencyEdit
+      Left = 556
+      Top = 28
+      EditValue = 20.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 45
+    end
+    object cxLabel5: TcxLabel
+      Left = 446
+      Top = 29
+      Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
+    end
+    object ceNotSalePastDay: TcxCurrencyEdit
+      Left = 386
+      Top = 28
+      EditValue = 60.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 47
+    end
+    object cxLabel6: TcxLabel
+      Left = 222
+      Top = 29
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078':'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -364,6 +412,29 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNotSalePastDay'
+        Value = Null
+        Component = ceNotSalePastDay
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 88
@@ -459,6 +530,26 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         Value = Null
         Component = edUserName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NotSalePastDay'
+        Value = Null
+        Component = ceNotSalePastDay
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 48

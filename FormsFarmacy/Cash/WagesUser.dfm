@@ -1,32 +1,32 @@
 inherited WagesUserForm: TWagesUserForm
   Caption = #1047#1072#1088#1087#1083#1072#1090#1072
-  ClientHeight = 454
+  ClientHeight = 449
   ClientWidth = 655
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = actDataDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 671
-  ExplicitHeight = 493
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
+    Top = 79
     Width = 655
-    Height = 379
-    TabOrder = 5
+    Height = 370
+    TabOrder = 0
     ExplicitTop = 75
     ExplicitWidth = 655
     ExplicitHeight = 379
-    ClientRectBottom = 379
+    ClientRectBottom = 370
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
       ExplicitHeight = 379
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 264
+        Height = 255
         ExplicitWidth = 655
-        ExplicitHeight = 304
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,12 +79,13 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 264
+        Top = 255
         Width = 655
         Height = 115
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 264
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -254,13 +255,13 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 655
-    Height = 49
+    Height = 53
     Align = alTop
     ShowCaption = False
-    TabOrder = 0
+    TabOrder = 1
     object edOperDate: TcxDateEdit
-      Left = 111
-      Top = 15
+      Left = 99
+      Top = 5
       TabStop = False
       EditValue = 42132d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -270,9 +271,62 @@ inherited WagesUserForm: TWagesUserForm
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 26
-      Top = 16
+      Left = 14
+      Top = 6
       Caption = #1047#1072#1088#1087#1083#1072#1090#1072' '#1079#1072
+    end
+    object cxLabel16: TcxLabel
+      Left = 221
+      Top = 6
+      Caption = #1069#1082#1079#1072#1084#1077#1085'. '#1055#1088#1072#1074#1077#1083#1100#1085#1099#1093' '#1086#1090#1074#1077#1090#1086#1074
+    end
+    object edAttempts: TcxTextEdit
+      Left = 514
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 41
+    end
+    object cxLabel8: TcxLabel
+      Left = 446
+      Top = 6
+      Caption = '%  '#1055#1086#1087#1099#1090#1086#1082
+    end
+    object edStatus: TcxTextEdit
+      Left = 385
+      Top = 27
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 57
+    end
+    object cxLabel9: TcxLabel
+      Left = 322
+      Top = 28
+      Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090
+    end
+    object edDateTimeTest: TcxDateEdit
+      Left = 514
+      Top = 27
+      TabStop = False
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
+      Properties.EditFormat = 'dd.mm.yyyy hh:nn'
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 120
+    end
+    object cxLabel10: TcxLabel
+      Left = 446
+      Top = 28
+      Caption = #1076#1072#1090#1072' '#1087#1088#1086#1074'.'
+    end
+    object ceResult: TcxCurrencyEdit
+      Left = 385
+      Top = 5
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 9
+      Width = 57
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -488,6 +542,33 @@ inherited WagesUserForm: TWagesUserForm
         Value = Null
         Component = ceOnHand
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Result'
+        Value = Null
+        Component = ceResult
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Attempts'
+        Value = Null
+        Component = edAttempts
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Status'
+        Value = Null
+        Component = edStatus
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateTimeTest'
+        Value = 'NULL'
+        Component = edDateTimeTest
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

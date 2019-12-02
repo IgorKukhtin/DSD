@@ -126,20 +126,66 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Width = 115
     end
     inherited deEnd: TcxDateEdit
-      Left = 334
+      Left = 131
+      Top = 30
       EditValue = 42491d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 334
+      ExplicitLeft = 131
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
       Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
       ExplicitWidth = 83
     end
     inherited cxLabel2: TcxLabel
-      Left = 218
+      Left = 15
+      Top = 31
       Visible = False
-      ExplicitLeft = 218
+      ExplicitLeft = 15
+      ExplicitTop = 31
+    end
+    object ceNotSalePastDay: TcxCurrencyEdit
+      Left = 386
+      Top = 5
+      EditValue = 60.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 4
+      Width = 47
+    end
+    object cxLabel6: TcxLabel
+      Left = 222
+      Top = 6
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078':'
+    end
+    object ceProcGoods: TcxCurrencyEdit
+      Left = 556
+      Top = 5
+      EditValue = 20.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 6
+      Width = 45
+    end
+    object cxLabel3: TcxLabel
+      Left = 446
+      Top = 6
+      Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
+    end
+    object ceProcUnit: TcxCurrencyEdit
+      Left = 711
+      Top = 5
+      EditValue = 20.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 8
+      Width = 45
+    end
+    object cxLabel4: TcxLabel
+      Left = 609
+      Top = 6
+      Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -197,6 +243,26 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           ComponentItem = 'UserName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NotSalePastDay'
+          Value = Null
+          Component = ceNotSalePastDay
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProcGoods'
+          Value = Null
+          Component = ceProcGoods
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProcUnit'
+          Value = Null
+          Component = ceProcUnit
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -215,8 +281,8 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
+      FormName = 'TReport_IlliquidReductionPlanAllDialogForm'
+      FormNameParam.Value = 'TReport_IlliquidReductionPlanAllDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -226,6 +292,27 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NotSalePastDay'
+          Value = Null
+          Component = ceNotSalePastDay
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProcGoods'
+          Value = Null
+          Component = ceProcGoods
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProcUnit'
+          Value = Null
+          Component = ceProcUnit
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -249,6 +336,29 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNotSalePastDay'
+        Value = Null
+        Component = ceNotSalePastDay
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

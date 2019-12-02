@@ -41,6 +41,12 @@ type
     DetalsCDS: TClientDataSet;
     DBViewAddOnDetals: TdsdDBViewAddOn;
     D_AmountSale: TcxGridDBColumn;
+    ceProcUnit: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceProcGoods: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    ceNotSalePastDay: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

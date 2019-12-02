@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
+             , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
               )
 AS
 $BODY$
@@ -61,6 +62,25 @@ BEGIN
                                           INNER JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                                      WHERE Object_User.DescId = zc_Object_User())
+              ,  tmpResult AS (SELECT MovementItem.Amount                                            AS Result
+                                    , MovementItemFloat.ValueData::Integer                           AS Attempts
+                                    , MovementItemDate.ValueData                                     AS DateTimeTest
+                               FROM Movement
+
+                                    LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
+                                                            AND MovementFloat.DescId = zc_MovementFloat_TestingUser_Question()
+                                    LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId = zc_MI_Master()
+
+                                    LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
+                                                               AND MovementItemDate.DescId = zc_MIDate_TestingUser()
+
+                                    LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
+
+                               WHERE Movement.DescId = zc_Movement_TestingUser()
+                                 AND Movement.OperDate = inOperDate
+                                 AND MovementItem.ObjectId = vbUserId) 
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -84,6 +104,13 @@ BEGIN
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
                  , inOperDate::TDateTime              AS OperDate
+                 , tmpResult.Result                             AS Result
+                 , tmpResult.Attempts                           AS Attempts
+                 , CASE WHEN COALESCE (tmpResult.Attempts, 0) = 0
+                   THEN NULL ELSE
+                   CASE WHEN tmpResult.Result >= 85
+                   THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS Status
+                 , tmpResult.DateTimeTest                       AS DateTimeTest
             FROM  MovementItem
             
                   LEFT JOIN MovementItem AS MIAmount
@@ -120,6 +147,8 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+                                             
+                  LEFT JOIN tmpResult ON 1 = 1
 
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId
@@ -138,4 +167,5 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- select * from gpGet_MovementItem_WagesUser(inOperDate := '01.08.2019',  inSession := '3');
+-- 
+select * from gpGet_MovementItem_WagesUser(inOperDate := '01.11.2019',  inSession := '3');

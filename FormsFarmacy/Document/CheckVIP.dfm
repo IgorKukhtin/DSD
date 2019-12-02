@@ -1,4 +1,4 @@
-﻿inherited CheckVIPForm: TCheckVIPForm
+inherited CheckVIPForm: TCheckVIPForm
   Caption = 'VIP '#1095#1077#1082#1080
   ClientHeight = 382
   ClientWidth = 668
@@ -696,15 +696,15 @@
         end>
       isShowModal = False
     end
-    object actSmashСheck: TdsdExecStoredProc
+    object actSmashCheck: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
       PostDataSetBeforeExecute = False
-      StoredProc = spSmashСheck
+      StoredProc = spSmashCheck
       StoredProcList = <
         item
-          StoredProc = spSmashСheck
+          StoredProc = spSmashCheck
         end>
       Caption = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
       Hint = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
@@ -851,7 +851,7 @@
       ImageIndex = 1
     end
     object dxBarButton5: TdxBarButton
-      Action = actSmashСheck
+      Action = actSmashCheck
       Category = 0
     end
   end
@@ -1067,8 +1067,8 @@
     Left = 440
     Top = 112
   end
-  object spSmashСheck: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Smash'#1057'heck'
+  object spSmashCheck: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SmashCheck'
     DataSets = <>
     OutputType = otResult
     Params = <

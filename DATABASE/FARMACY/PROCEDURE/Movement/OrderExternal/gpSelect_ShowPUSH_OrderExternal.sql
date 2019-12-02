@@ -121,17 +121,22 @@ BEGIN
       WHERE CASE WHEN Container.Amount > 0.01 OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
             THEN MovementDate_Payment.ValueData END Is Not Null;
 
+      WITH tmpMovement AS (SELECT Movement_Payment.ID
+                                , MI_Payment.ID             AS PaymentID
+                           FROM Movement_Payment_View AS Movement_Payment
+                                INNER JOIN MovementItem AS MI_Payment
+                                                        ON MI_Payment.MovementId = Movement_Payment.Id
+                                                       AND MI_Payment.DescId     = zc_MI_Master()
+                                                       AND MI_Payment.isErased = FALSE
+                           WHERE Movement_Payment.StatusId = zc_Enum_Status_UnComplete()
+                          )
+
       SELECT SUM(MovementFloat_TotalSumm.ValueData)
       INTO vbY
-      FROM Movement_Payment_View AS Movement_Payment
-
-          INNER JOIN MovementItem AS MI_Payment
-                                  ON MI_Payment.MovementId = Movement_Payment.Id
-                                 AND MI_Payment.DescId     = zc_MI_Master()
-                                 AND MI_Payment.isErased = FALSE
+      FROM tmpMovement AS Movement_Payment
 
           LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
-                                            ON MIFloat_IncomeId.MovementItemId = MI_Payment.ID
+                                            ON MIFloat_IncomeId.MovementItemId = Movement_Payment.PaymentID
                                            AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
           LEFT OUTER JOIN Movement AS Movement_Income ON Movement_Income.Id = MIFloat_IncomeId.ValueData :: Integer
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
@@ -152,11 +157,8 @@ BEGIN
                                   ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-      WHERE Movement_Payment.StatusId = zc_Enum_Status_UnComplete()
-        AND MovementLinkObject_Juridical.ObjectId = vbJuridical
+      WHERE MovementLinkObject_Juridical.ObjectId = vbJuridical
         AND MLO_From.ObjectId = inSupplierID;
-
-raise notice 'Out: %', timeofday();
 
       outShowMessage := True;
       outPUSHType := 3;
@@ -176,9 +178,11 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 02.12.19                                                       *
  07.06.19                                                       *
  28.05.19                                                       *
 
 */
 
 -- SELECT * FROM gpSelect_ShowPUSH_OrderExternal(59610, 183292 , '3')
+

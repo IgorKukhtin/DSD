@@ -780,7 +780,8 @@ uses
   Report_Movement_ReturnOutDialog in '..\..\FormsFarmacy\Report\Report_Movement_ReturnOutDialog.pas' {Report_Movement_ReturnOutDialogForm: TParentForm},
   Report_IlliquidReductionPlanAll in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAll.pas' {Report_IlliquidReductionPlanAllForm: TParentForm},
   Report_IlliquidReductionPlanList in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanList.pas' {Report_IlliquidReductionPlanListForm: TParentForm},
-  RepriceUnit_test in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm};
+  RepriceUnit_test in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm},
+  Report_IlliquidReductionPlanAllDialog in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas' {Report_IlliquidReductionPlanAllDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

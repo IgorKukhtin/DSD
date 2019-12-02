@@ -28,7 +28,8 @@ RETURNS TABLE (Id Integer
              , UpdateId      Integer
              , UpdateName    TVarChar
              , UpdateDate    TDateTime
-             , Comment       TVarChar)
+             , Comment       TVarChar
+             , PercentUsed   TFloat)
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -64,12 +65,65 @@ BEGIN
           , NULL  ::TVarChar            AS UpdateName
           , Null  :: TDateTime          AS UpdateDate
           , NULL  ::TVarChar            AS Comment
+          , 0     ::TFloat              AS PercentUsed
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
    ELSE
  
   RETURN QUERY
+        WITH
+        tmpMIF AS (SELECT * FROM MovementFloat AS MovementFloat_MovementItemId
+                   WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                  )
+      , tmpMI AS (SELECT MI_Sign.Id
+                       , MI_Sign.Amount
+                       , MI_Sign.ObjectId
+                       , MI_Sign.ParentId                                      AS MovementId
+                       , MovementFloat_MovementItemId.MovementId               AS MovementSaleId
+
+                  FROM MovementItem AS MI_Sign
+                       LEFT JOIN tmpMIF AS MovementFloat_MovementItemId
+                                        ON MovementFloat_MovementItemId.ValueData = MI_Sign.Id
+                  WHERE MI_Sign.MovementId = inMovementId
+                    AND MI_Sign.DescId = zc_MI_Sign()
+                    AND MI_Sign.isErased = FALSE
+                  )
+      , tmpCheck AS (SELECT tmpMI.Id                   AS ID
+                          , CASE WHEN Movement.ID = tmpMI.MovementId THEN True ELSE FALSE END AS isIssue
+                          , Movement.OperDate          AS OperDate
+                          , Movement.Invnumber         AS Invnumber
+                          , CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) > tmpMI.Amount THEN tmpMI.Amount
+                            ELSE COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) END AS TotalSummChangePercent
+                     FROM tmpMI
+
+                          LEFT JOIN Movement ON Movement.ID IN (tmpMI.MovementId, tmpMI.MovementSaleId)
+
+                          LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                  ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.ID
+                                                 AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+                     )
+
+      , tmpSign  AS (SELECT Sum(MI_Sign.Amount)                                                     AS Accrued
+                          , Count(*)                                                                AS AccruedCount
+                          , Sum(tmpCheckSale.TotalSummChangePercent)                                AS SummChange
+                          , Sum(CASE WHEN COALESCE(tmpCheckSale.TotalSummChangePercent, 0) = 0 THEN 0 ELSE 1 END)  AS ChangeCount
+
+                     FROM tmpMI AS MI_Sign
+
+                         LEFT JOIN tmpCheck ON tmpCheck.Id = MI_Sign.Id
+                                           AND tmpCheck.isIssue = True
+
+                         LEFT JOIN tmpCheck AS tmpCheckSale
+                                            ON tmpCheckSale.Id = MI_Sign.Id
+                                           AND tmpCheckSale.isIssue = False
+                     )
+
+
+
+      , tmpPercentUsed AS (SELECT (1.0*tmpSign.ChangeCount/tmpSign.AccruedCount*100)::TFloat   AS PercentUsed
+                           FROM tmpSign)
+
      SELECT Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
@@ -92,6 +146,7 @@ BEGIN
           , Object_Update.ValueData                                        AS UpdateName
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
+          , tmpPercentUsed.PercentUsed::TFloat                             AS PercentUsed
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -147,6 +202,8 @@ BEGIN
                                      ON MovementLinkObject_Update.MovementId = Movement.Id
                                     AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId  
+
+        LEFT JOIN tmpPercentUsed ON 1 = 1
         
      WHERE Movement.Id =  inMovementId;
 
