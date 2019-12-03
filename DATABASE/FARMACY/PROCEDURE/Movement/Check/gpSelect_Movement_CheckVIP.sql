@@ -46,7 +46,8 @@ RETURNS TABLE (
   PartionDateKindId Integer,
   PartionDateKindName TVarChar, 
   AmountMonth TFloat,
-  DateDelay TDateTime
+  DateDelay TDateTime,
+  LoyaltyChangeSumma TFloat
  )
 AS
 $BODY$
@@ -163,7 +164,8 @@ BEGIN
             , MI_PromoCode.Id AS PromoCodeID
             , Object_PromoCode.ValueData AS PromoName
             , MIString_GUID.ValueData AS PromoCodeGUID
-            , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
+            , CASE WHEN Movement_PromoCode.DescId <> zc_Movement_Loyalty() THEN 
+                   COALESCE(MovementFloat_ChangePercent.ValueData,0) END::TFloat AS PromoCodeChangePercent
             , Object_MemberSP.Id                                        AS MemberSPId
             , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
 
@@ -171,6 +173,9 @@ BEGIN
             , Object_PartionDateKind.ValueData                  AS PartionDateKindName
             , ObjectFloat_Month.ValueData                       AS AmountMonth
             , MovementDate_Delay.ValueData                      AS DateDelay
+            , CASE WHEN Movement_PromoCode.DescId = zc_Movement_Loyalty() THEN 
+                   CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) < MI_PromoCode.Amount THEN
+                      COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE MI_PromoCode.Amount END ELSE NULL END::TFloat AS LoyaltyChangeSumma
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -195,6 +200,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                    ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id

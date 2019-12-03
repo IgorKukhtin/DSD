@@ -1342,11 +1342,17 @@ begin
   if (FormParams.ParamByName('DiscountExternalId').Value = 0) and (FormParams.ParamByName('DiscountCardNumber').Value = '') then
   begin
     if FormParams.ParamByName('PromoCodeId').Value <> 0 then
-      SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
+    begin
+      if Length(FormParams.ParamByName('PromoCodeGUID').AsString) > 10 then
+        SetPromoCodeLoyalty(FormParams.ParamByName('PromoCodeId').Value,
+          FormParams.ParamByName('PromoCodeGUID').AsString,
+          FormParams.ParamByName('LoyaltyChangeSumma').Value)
+      else SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
         FormParams.ParamByName('PromoName').AsString,
         FormParams.ParamByName('PromoCodeGUID').AsString,
         FormParams.ParamByName('BayerName').AsString,
-        FormParams.ParamByName('PromoCodeChangePercent').Value);
+        FormParams.ParamByName('PromoCodeChangePercent').Value)
+    end;
 
 
     //***30.06.18
@@ -1772,12 +1778,6 @@ begin
   if not RemainsCDS.Active  then Exit;
   if RemainsCDS.RecordCount < 1  then Exit;
 
-  if UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
-  begin
-    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
-    Exit;
-  end;
-
   with TListDiffAddGoodsForm.Create(nil) do
   try
     GoodsCDS := RemainsCDS;
@@ -2102,8 +2102,8 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+      if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,FormParams.ParamByName('RoundingDown').Value)
       else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
       CheckCDS.Next;
     end;
@@ -2449,7 +2449,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant := VipList.FieldByName('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant := VipList.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant := VipList.FieldByName('AmountMonth').AsVariant;
-        checkCDS.FieldByName('PriceDiscount').AsVariant := VipList.FieldByName('Price').AsFloat;
+        if VipList.FieldByName('PricePartionDate').AsCurrency <> 0 then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := VipList.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := VipList.FieldByName('Price').AsFloat;
         //***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').asInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -2731,6 +2733,7 @@ procedure TMainCashForm2.PromoCodeLoyaltyCalc;
 var
   nRecNo : Integer; nSumAll, nPrice : Currency;
 begin
+
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
   nSumAll := 0;
@@ -4812,7 +4815,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
-        checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
+        if SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0 then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then
         begin
           RemainsCDS.DisableControls;
@@ -4884,7 +4889,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
-        checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
+        if SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0 then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then
         begin
           RemainsCDS.DisableControls;

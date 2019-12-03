@@ -2546,6 +2546,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'PartionDateKindId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LoyaltyChangeSumma'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LoyaltyChangeSumma'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -3062,6 +3070,21 @@ inherited MainCashForm2: TMainCashForm2
           Value = Null
           Component = FormParams
           ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LoyaltyChangeSumma'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LoyaltyChangeSumma'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

@@ -10,6 +10,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMovementId Integer;
+  DECLARE vbMovementESID  Integer;
 BEGIN
 
    CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -21,7 +22,20 @@ BEGIN
    WHERE Movement.DescId = zc_Movement_TestingUser()
    ORDER BY Movement.OperDate DESC
    LIMIT 1;
-    
+   
+   IF EXISTS(SELECT 1 FROM Movement
+             WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+             AND Movement.DescId = zc_Movement_EmployeeSchedule())
+   THEN
+      SELECT Movement.ID
+      INTO vbMovementESID
+      FROM Movement
+      WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+        AND Movement.DescId = zc_Movement_EmployeeSchedule();
+   ELSE
+      vbMovementESID := 0;
+   END IF;
+       
     --ÿ‡ÔÍ‡
    INSERT INTO _Result(RowData) Values ('<?xml version="1.0" encoding="utf-8"?>');
 
@@ -30,10 +44,38 @@ BEGIN
     --“ÂÎÓ
 
    INSERT INTO _Result(RowData)
+   (WITH
+     tmpEmployeeSchedule AS (SELECT MIMaster.ObjectId  AS UserID 
+                             FROM MovementItem AS MIMaster
+
+                                 INNER JOIN MovementItem AS MIChild
+                                                         ON MIChild.MovementId = vbMovementESID
+                                                        AND MIChild.DescId = zc_MI_Child()
+                                                        AND MIChild.ParentId = MIMaster.ID
+                                                        AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+
+                                 LEFT JOIN MovementItemDate AS MIDate_Start
+                                                             ON MIDate_Start.MovementItemId = MIChild.Id
+                                                            AND MIDate_Start.DescId = zc_MIDate_Start()
+
+                                 LEFT JOIN MovementItemDate AS MIDate_End
+                                                            ON MIDate_End.MovementItemId = MIChild.Id
+                                                           AND MIDate_End.DescId = zc_MIDate_End()
+
+                                 LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                                               ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                                              AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
+
+                             WHERE MIMaster.MovementId = vbMovementESID
+                               AND MIMaster.DescId = zc_MI_Master()
+                               AND (COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE
+                                OR MIBoolean_ServiceExit.ValueData IS NOT NULL AND MIDate_End.ValueData IS NOT NULL))
+                   
    SELECT
         '<Offer Code="'||CAST(Object_User.ObjectCode AS TVarChar)||
              '" Name="'||replace(replace(replace(Object_User.ValueData, '"', ''),'&','&amp;'),'''','')||
-             '" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||'" />'
+             '" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||
+             '" AtWork="'||CASE WHEN COALESCE(tmpEmployeeSchedule.UserID, 0) = Object_User.ID THEN 'True' ELSE 'False' END||'" />'
 
    FROM Object AS Object_User
 
@@ -48,11 +90,13 @@ BEGIN
         INNER JOIN ObjectLink AS ObjectLink_Member_Position
                               ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
                              AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                             
+        LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserID = Object_User.ID
                                                          
    WHERE Object_User.DescId = zc_Object_User()
      AND ObjectLink_Member_Position.ChildObjectId = 1672498
      AND ObjectString_User_.ValueData <> ''
-   ORDER BY Object_User.ObjectCode;
+   ORDER BY Object_User.ObjectCode);
 
    --ÔÓ‰‚‡Î
    INSERT INTO _Result(RowData) Values ('</Offers>');
@@ -71,9 +115,9 @@ ALTER FUNCTION gpSelect_Object_ExportPharmacists (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 03.12.19         *
  15.10.18         *
  07.09.18         *
 */
 
--- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_ExportPharmacists ('3')
+-- ÚÂÒÚ select * from gpSelect_Object_ExportPharmacists('3')-- SELECT * FROM gpSelect_Object_ExportPharmacists ('3')

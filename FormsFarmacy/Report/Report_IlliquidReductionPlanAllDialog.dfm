@@ -37,7 +37,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     TabOrder = 1
   end
   object ceNotSalePastDay: TcxCurrencyEdit
-    Left = 175
+    Left = 188
     Top = 61
     EditValue = 60.000000000000000000
     Properties.DecimalPlaces = 0
@@ -48,10 +48,10 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   object cxLabel6: TcxLabel
     Left = 11
     Top = 62
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078':'
+    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
   end
   object deOperDate: TcxDateEdit
-    Left = 175
+    Left = 188
     Top = 21
     EditValue = 42705d
     Properties.ShowTime = False
@@ -64,7 +64,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072
   end
   object ceProcUnit: TcxCurrencyEdit
-    Left = 175
+    Left = 188
     Top = 141
     EditValue = 20.000000000000000000
     Properties.DecimalPlaces = 2
@@ -78,7 +78,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
   end
   object ceProcGoods: TcxCurrencyEdit
-    Left = 175
+    Left = 188
     Top = 101
     EditValue = 20.000000000000000000
     Properties.DecimalPlaces = 2
