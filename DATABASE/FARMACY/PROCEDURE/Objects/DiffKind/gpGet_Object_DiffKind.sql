@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiffKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
              , isErased Boolean
-             , MaxOrderAmount TFloat) AS
+             , MaxOrderAmount TFloat
+             , MaxOrderAmountSecond TFloat) AS
 $BODY$
 BEGIN
 
@@ -25,15 +26,17 @@ BEGIN
            , CAST ('' AS TVarChar)  AS NAME
            , FALSE                  AS isClose
            , FALSE                  AS isErased
-           , NULL::TFloat           AS MaxOrderAmount;
+           , NULL::TFloat           AS MaxOrderAmount
+           , NULL::TFloat           AS MaxOrderAmountSecond;
    ELSE
        RETURN QUERY 
-       SELECT Object_DiffKind.Id                            AS Id
-            , Object_DiffKind.ObjectCode                    AS Code
-            , Object_DiffKind.ValueData                     AS Name
-            , ObjectBoolean_DiffKind_Close.ValueData        AS isClose
-            , Object_DiffKind.isErased                      AS isErased
-            , ObjectFloat_DiffKind_MaxOrderAmount.ValueData AS MaxOrderAmount
+       SELECT Object_DiffKind.Id                                   AS Id
+            , Object_DiffKind.ObjectCode                           AS Code
+            , Object_DiffKind.ValueData                            AS Name
+            , ObjectBoolean_DiffKind_Close.ValueData               AS isClose
+            , Object_DiffKind.isErased                             AS isErased
+            , ObjectFloat_DiffKind_MaxOrderAmount.ValueData        AS MaxOrderAmount
+            , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData  AS MaxOrderAmount
        FROM Object AS Object_DiffKind
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                     ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id 
@@ -41,6 +44,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                   ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
                                  AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmountSecond
+                                  ON ObjectFloat_DiffKind_MaxOrderAmountSecond.ObjectId = Object_DiffKind.Id 
+                                 AND ObjectFloat_DiffKind_MaxOrderAmountSecond.DescId = zc_ObjectFloat_MaxOrderAmountSecond() 
        WHERE Object_DiffKind.Id = inId;
    END IF;
    
@@ -51,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 03.12.19                                                       * 
  05.06.19                                                       * 
  11.12.18         *
 */

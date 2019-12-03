@@ -1431,6 +1431,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MaxOrderAmount() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_MaxOrderAmount', 'Максимальная сумма заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MaxOrderAmountSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmountSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_MaxOrderAmountSecond', 'Максимальная сумма заказа вторая шкала' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MaxOrderAmountSecond');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_CreditLimitJuridical_CreditLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CreditLimitJuridical(), 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit', 'Кредитный лимит' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CreditLimitJuridical_CreditLimit');
@@ -1466,7 +1470,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 19.1`.19                                                                                      * zc_ObjectFloat_Juridical_CodeRazom
+ 03.12.19                                                                                      * zc_ObjectFloat_MaxOrderAmountSecond
+ 19.11.19                                                                                      * zc_ObjectFloat_Juridical_CodeRazom
  29.10.19         * zc_ObjectFloat_Car_KoeffHoursWork
  28.10.19                                                                                      * zc_ObjectFloat_Unit_Latitude, zc_ObjectFloat_Unit_Longitude
  25.10.19                                                                                      * zc_ObjectFloat_Retail_ShareFromPrice
