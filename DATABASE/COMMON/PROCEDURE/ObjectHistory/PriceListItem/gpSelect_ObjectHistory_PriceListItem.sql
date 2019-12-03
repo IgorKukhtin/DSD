@@ -185,8 +185,8 @@ BEGIN
    , tmpData AS (-- сохраненные данные
                  SELECT COALESCE (tmpPrice.PriceListItemId,0)       AS PriceListItemId
                       , COALESCE (tmpPrice.PriceListItemObjectId,0) AS PriceListItemObjectId
-                      , tmpGoodsByGoodsKind.GoodsId                         AS GoodsId
-                      , COALESCE (tmpGoodsByGoodsKind.GoodsKindId,Null)     AS GoodsKindId
+                      , tmpGoodsByGoodsKind.GoodsId                       AS GoodsId
+                      , tmpGoodsByGoodsKind.GoodsKindId                   AS GoodsKindId
                       , COALESCE (tmpPrice.StartDate, NULL)  :: TDateTime AS StartDate
                       , COALESCE (tmpPrice.EndDate, NULL)    :: TDateTime AS EndDate
                       , COALESCE (tmpPrice.ValuePrice, 0)    :: TFloat    AS ValuePrice
@@ -346,7 +346,7 @@ BEGIN
      RETURN QUERY
      WITH
      tmpItem_all AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                          , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+                          , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                           , ObjectHistory_PriceListItem.StartDate
                           , ObjectHistory_PriceListItem.EndDate

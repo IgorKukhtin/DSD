@@ -3624,6 +3624,9 @@ inherited MainForm: TMainForm
       object miReport_JuridicalSold: TMenuItem
         Action = actReport_JuridicalSold
       end
+      object miReport_JuridicalCollation: TMenuItem
+        Action = actReport_JuridicalCollation
+      end
     end
     object miReports: TMenuItem [5]
       Caption = #1054#1090#1095#1077#1090#1099
@@ -3645,9 +3648,6 @@ inherited MainForm: TMainForm
       end
       object N39: TMenuItem
         Caption = '-'
-      end
-      object miReport_JuridicalCollation: TMenuItem
-        Action = actReport_JuridicalCollation
       end
       object miReport_GoodRemains: TMenuItem
         Action = actReport_GoodRemains
@@ -3672,15 +3672,6 @@ inherited MainForm: TMainForm
       end
       object N143: TMenuItem
         Action = actReportMovementCheckLight
-      end
-      object miReport_CheckPartionDate: TMenuItem
-        Action = actReport_CheckPartionDate
-      end
-      object N510: TMenuItem
-        Action = actReport_GoodsPartionDate5
-      end
-      object N198: TMenuItem
-        Action = actReport_GoodsPartionDate0
       end
       object N146: TMenuItem
         Action = actReport_Check_Assortment
@@ -3714,21 +3705,6 @@ inherited MainForm: TMainForm
       end
       object miReport_LiquidForm: TMenuItem
         Action = actReport_LiquidForm
-      end
-      object N104: TMenuItem
-        Action = actReport_MovementCheckUnLiquid
-      end
-      object actReportGoodsNotSalePast1: TMenuItem
-        Action = actReport_GoodsNotSalePast
-      end
-      object miReport_RemainsOverGoods: TMenuItem
-        Action = actReport_RemainsOverGoods
-      end
-      object N130: TMenuItem
-        Action = actReport_RemainsOverGoods_To
-      end
-      object miOverSettings: TMenuItem
-        Action = actOverSettings
       end
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
@@ -3768,6 +3744,36 @@ inherited MainForm: TMainForm
       end
       object miReport_CheckSendSUN_InOut: TMenuItem
         Action = actReport_CheckSendSUN_InOut
+      end
+      object N202: TMenuItem
+        Caption = '-'
+      end
+      object miReport_CheckPartionDate: TMenuItem
+        Action = actReport_CheckPartionDate
+      end
+      object N510: TMenuItem
+        Action = actReport_GoodsPartionDate5
+      end
+      object N198: TMenuItem
+        Action = actReport_GoodsPartionDate0
+      end
+      object N203: TMenuItem
+        Caption = '-'
+      end
+      object N104: TMenuItem
+        Action = actReport_MovementCheckUnLiquid
+      end
+      object actReportGoodsNotSalePast1: TMenuItem
+        Action = actReport_GoodsNotSalePast
+      end
+      object miReport_RemainsOverGoods: TMenuItem
+        Action = actReport_RemainsOverGoods
+      end
+      object N130: TMenuItem
+        Action = actReport_RemainsOverGoods_To
+      end
+      object miOverSettings: TMenuItem
+        Action = actOverSettings
       end
     end
     object N40: TMenuItem [7]

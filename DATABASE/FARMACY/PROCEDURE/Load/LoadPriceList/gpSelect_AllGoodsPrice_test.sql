@@ -55,7 +55,8 @@ RETURNS TABLE (
     isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
     Reprice             Boolean ,   --
-    isGoodsReprice      Boolean
+    isGoodsReprice      Boolean ,   --
+    isUnder             Boolean     -- нова цена ниже старой
     )
 
 AS
@@ -458,7 +459,8 @@ BEGIN
              ELSE FALSE
         END  AS Reprice, 
         
-        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
+        CASE WHEN COALESCE (ResultSet.NewPrice,0) < COALESCE (ResultSet.LastPrice,0) THEN TRUE ELSE FALSE END AS isUnder -- Новая цена ниже старой
                 
     FROM
         ResultSet

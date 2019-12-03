@@ -18,7 +18,7 @@ $BODY$
 BEGIN
 
      -- Выбираем данные
-   IF inGoodsKindId > 0
+   IF COALESCE (inGoodsKindId,0) > 0
    THEN
      RETURN QUERY 
        SELECT
@@ -26,7 +26,7 @@ BEGIN
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode    AS GoodsCode
            , Object_Goods.ValueData     AS GoodsName
-           , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+           , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , ObjectHistory_PriceListItem.StartDate
@@ -63,7 +63,7 @@ BEGIN
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode    AS GoodsCode
            , Object_Goods.ValueData     AS GoodsName
-           , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+           , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , ObjectHistory_PriceListItem.StartDate
@@ -103,6 +103,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.11.19         *
  27.01.15                                        *
 */
 

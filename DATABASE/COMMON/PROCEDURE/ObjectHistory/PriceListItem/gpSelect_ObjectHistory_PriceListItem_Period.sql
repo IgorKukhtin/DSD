@@ -35,7 +35,7 @@ BEGIN
      RETURN QUERY 
      WITH
      tmpItem_all AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                          , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+                          , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                           , ObjectHistory_PriceListItem.StartDate
                           , ObjectHistory_PriceListItem.EndDate

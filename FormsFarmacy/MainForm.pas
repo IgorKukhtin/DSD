@@ -591,6 +591,8 @@ type
     actReport_IlliquidReductionPlanAll: TdsdOpenForm;
     N201: TMenuItem;
     miReprice_test: TMenuItem;
+    N202: TMenuItem;
+    N203: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

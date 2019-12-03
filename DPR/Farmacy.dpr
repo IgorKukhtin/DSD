@@ -85,7 +85,10 @@ uses
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
-  RepriceUnit_test in '..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm};
+  RepriceUnit_test in '..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm},
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas';
+
 {$R *.res}
 
 begin

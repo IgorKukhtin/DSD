@@ -15,8 +15,8 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
-           , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-           , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId,0) AS GoodsKindId
+           , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+           , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
 
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate

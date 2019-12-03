@@ -453,7 +453,6 @@
 			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\InvoiceXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
@@ -2701,10 +2700,9 @@
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas">
 				<Form>RepriceUnit_testForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas">
-				<Form>Report_IlliquidReductionPlanAllDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

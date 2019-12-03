@@ -38,7 +38,7 @@ BEGIN
 
      -- Выбираем данные
      
-     IF inGoodsKindId > 0 
+     IF COALESCE (inGoodsKindId,0) > 0 
      THEN 
        RETURN QUERY 
        SELECT

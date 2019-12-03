@@ -160,7 +160,6 @@ uses
   ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
-  EDI in '..\..\SOURCE\EDI\EDI.pas',
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
@@ -781,7 +780,9 @@ uses
   Report_IlliquidReductionPlanAll in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAll.pas' {Report_IlliquidReductionPlanAllForm: TParentForm},
   Report_IlliquidReductionPlanList in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanList.pas' {Report_IlliquidReductionPlanListForm: TParentForm},
   RepriceUnit_test in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm},
-  Report_IlliquidReductionPlanAllDialog in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas' {Report_IlliquidReductionPlanAllDialogForm: TParentForm};
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

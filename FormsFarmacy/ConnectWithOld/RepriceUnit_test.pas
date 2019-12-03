@@ -148,6 +148,10 @@ type
     GuidesProvinceCity: TdsdGuides;
     cdsResultisGoodsReprice: TBooleanField;
     colisGoodsReprice: TcxGridDBColumn;
+    actOpenReportPartionHistoryForm: TdsdOpenForm;
+    Button1: TButton;
+    cdsResultisUnder: TBooleanField;
+    colisUnder: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -496,6 +500,7 @@ begin
           cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
           cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
           cdsResult.FieldByName('isGoodsReprice').AsBoolean := AllGoodsPriceCDS.FieldByName('isGoodsReprice').AsBoolean;
+          cdsResult.FieldByName('isUnder').AsBoolean := AllGoodsPriceCDS.FieldByName('isUnder').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

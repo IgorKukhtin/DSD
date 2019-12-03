@@ -246,6 +246,8 @@
 			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas">
 				<Form>RepriceUnit_testForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
