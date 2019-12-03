@@ -4130,6 +4130,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'AmountMonth'
         DataType = ftFloat
+      end
+      item
+        Name = 'PriceDiscount'
+        DataType = ftFloat
       end>
     IndexDefs = <>
     Params = <>
