@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TFloat,TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION  gpReport_Profit(
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Profit(
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inJuridical1Id     Integer,    -- поставщик оптима 
     IN inJuridical2Id     Integer,    -- поставщик фармпланета
+    IN inJuridicalOurId   Integer,    -- наше юр.лицо
+    IN inUnitId           Integer,    -- Подразделение
  --   IN inTax1             TFloat ,
  --   IN inTax2             TFloat ,
     IN inSession          TVarChar    -- сессия пользователя
@@ -39,14 +42,36 @@ BEGIN
     OPEN Cursor1 FOR
           
     WITH
-          tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+          /*tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                       )
+                       )*/
+
+        -- список подразделений
+          tmpUnit AS (SELECT inUnitId                                  AS UnitId
+                      WHERE COALESCE (inUnitId, 0) <> 0 
+                     UNION 
+                      SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
+                      FROM ObjectLink AS ObjectLink_Unit_Juridical
+                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalOurId)
+                        AND COALESCE (inUnitId, 0) = 0
+                        AND COALESCE (inJuridicalOurId, 0) <> 0
+                     UNION
+                      SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                      FROM ObjectLink AS ObjectLink_Unit_Juridical
+                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                              AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        AND COALESCE (inUnitId, 0) = 0
+                        AND COALESCE (inJuridicalOurId, 0) = 0  
+                     )
 
         , tmpGoodsPromoAll AS (SELECT DISTINCT
                                    MI_Goods.ObjectId  AS GoodsId        -- здесь товар
@@ -123,12 +148,12 @@ BEGIN
         , tmpContainer AS (SELECT Container.Id            AS ContainerId
                                 , Container.ObjectId      AS GoodsId
                                 , Container.WhereObjectId AS UnitId
-                                , Container.Amount        AS Amount
+                                , COALESCE (Container.Amount,0) AS Amount
                            FROM Container 
                          --       INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
                            WHERE Container.DescId = zc_Container_Count()
                              AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
-                            AND Container.Amount <> 0
+                            --AND Container.Amount <> 0
                            GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
                            )
         , tmpRemains_All AS (SELECT tmp.GoodsId
@@ -604,7 +629,7 @@ BEGIN
     -- Результат 2
     OPEN Cursor2 FOR
     WITH
-          tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+ /*         tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -612,6 +637,30 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
+                       */
+
+        -- список подразделений
+          tmpUnit AS (SELECT inUnitId                                  AS UnitId
+                      WHERE COALESCE (inUnitId, 0) <> 0 
+                     UNION 
+                      SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
+                      FROM ObjectLink AS ObjectLink_Unit_Juridical
+                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalOurId)
+                        AND COALESCE (inUnitId, 0) = 0
+                        AND COALESCE (inJuridicalOurId, 0) <> 0
+                     UNION
+                      SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                      FROM ObjectLink AS ObjectLink_Unit_Juridical
+                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                              AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        AND COALESCE (inUnitId, 0) = 0
+                        AND COALESCE (inJuridicalOurId, 0) = 0  
+                     )
+
         -- данные из проводок
         , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId                      AS MI_Id
                                         , DATE_TRUNC('Month', MIContainer.OperDate)       AS OperDate

@@ -29,6 +29,12 @@ type
     ceJuridical2: TcxButtonEdit;
     Juridical1Guides: TdsdGuides;
     Juridical2Guides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

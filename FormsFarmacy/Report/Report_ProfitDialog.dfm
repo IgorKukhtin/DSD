@@ -3,8 +3,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080'>'
-  ClientHeight = 173
-  ClientWidth = 441
+  ClientHeight = 248
+  ClientWidth = 392
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 92
-    Top = 134
+    Left = 78
+    Top = 213
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 266
-    Top = 134
+    Left = 252
+    Top = 213
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -104,6 +104,40 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
     Width = 280
   end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 126
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 8
+    Top = 144
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 354
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 179
+    Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 104
+    Top = 178
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 258
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -111,8 +145,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     Top = 112
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 191
-    Top = 110
+    Left = 215
+    Top = 54
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -124,8 +158,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 116
+    Left = 56
+    Top = 52
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -135,6 +169,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -142,6 +177,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Juridical1Id'
@@ -149,6 +185,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = Juridical1Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Juridical1Name'
@@ -157,6 +194,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Juridical2Id'
@@ -164,6 +202,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = Juridical2Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Juridical2Name'
@@ -172,15 +211,51 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalOurId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalOurName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 31
-    Top = 126
+    Left = 343
+    Top = 30
   end
   object Juridical1Guides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical1
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -190,6 +265,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = Juridical1Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -198,6 +274,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 48
@@ -207,6 +284,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     LookupControl = ceJuridical2
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -216,6 +294,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = Juridical2Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -224,8 +303,67 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 80
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 130
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 280
+    Top = 138
   end
 end
