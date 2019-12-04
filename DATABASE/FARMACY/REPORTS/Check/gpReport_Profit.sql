@@ -137,8 +137,10 @@ BEGIN
                                    )
          -- продажасроковых товаров
         , tmpReport_CheckPartionDate AS (SELECT tmp.UnitId
-                                              , SUM (COALESCE (tmp.Summ,0))   AS Summ
-                                              , SUM (COALESCE (tmp.Amount,0)) AS Amount
+                                              , SUM (COALESCE (tmp.Summ,0))    AS Summ
+                                              , SUM (COALESCE (tmp.SumSale,0)) AS SumSale
+                                              , SUM (COALESCE (tmp.SummSaleDiff,0)) AS SummSaleDiff
+                                              , SUM (COALESCE (tmp.Amount,0))  AS Amount
                                          FROM gpReport_CheckPartionDate (inUnitId :=0, inRetailId:= vbObjectId, inJuridicalId:=0, inStartDate := inStartDate, inEndDate := inEndDate, inIsExpirationDate:= FALSE, inIsPartionDateKind:=FALSE, inisUnitList := FALSE, inSession := inSession) AS tmp
                                          GROUP BY tmp.UnitId
                                          HAVING  SUM (COALESCE (tmp.Amount,0)) <> 0
@@ -481,6 +483,8 @@ BEGIN
                                      
                                      , COALESCE (tmpPriceChange.SummaChange,0)                AS SummaChange
                                      , COALESCE (tmpCheckPartionDate.Summ,0)                  AS SummaPartionDate
+                                     , COALESCE (tmpCheckPartionDate.SumSale,0)               AS SumSale_PartionDate
+                                     , COALESCE (tmpCheckPartionDate.SummSaleDiff,0)          AS SummSaleDiff_PartionDate
                    
                                 FROM tmpData
                                      LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
@@ -496,6 +500,8 @@ BEGIN
                                        , COALESCE (tmpSP.SummChangePercent_SP1303, 0)
                                        , COALESCE (tmpPriceChange.SummaChange,0)
                                        , COALESCE (tmpCheckPartionDate.Summ,0)
+                                       , COALESCE (tmpCheckPartionDate.SumSale,0)
+                                       , COALESCE (tmpCheckPartionDate.SummSaleDiff,0)
                                )
 
        , tmpData_Full AS (SELECT tmpData.UnitId
@@ -522,7 +528,9 @@ BEGIN
                                , tmpData.SummPrimeCost_1303
                                , tmpData.SummaChange
                                , tmpData.SummaPartionDate
-                               
+                               , tmpData.SumSale_PartionDate
+                               , tmpData.SummSaleDiff_PartionDate
+                                     
                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0))                  AS SummaSaleWithSP
                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) - tmpData.Summa)  AS SummaProfitWithSP
                     
@@ -592,6 +600,8 @@ BEGIN
            , tmp.SummPrimeCost_1303    :: TFloat
            , tmp.SummaChange           :: TFloat
            , tmp.SummaPartionDate      :: TFloat
+           , tmp.SumSale_PartionDate      :: TFloat
+           , tmp.SummSaleDiff_PartionDate :: TFloat
 
            , tmp.SummaSaleWithSP       :: TFloat
            , tmp.SummaProfitWithSP     :: TFloat

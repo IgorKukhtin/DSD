@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromo(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , GoodsId Integer, GoodsCode Integer, CodeStr_partner TVarChar, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
              , AmountManual TFloat
              , Price TFloat, Summ TFloat
@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsGroupPromoId Integer, GoodsGroupPromoName TVarChar
+             , MinExpirationDate TDateTime
              , isReport Boolean
              , isErased Boolean
               )
@@ -31,6 +32,7 @@ $BODY$
     DECLARE vbUserId   Integer;
     DECLARE vbObjectId Integer;
     DECLARE vbDays     TFloat;
+    DECLARE vbAreaId   Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternalPromo());
@@ -38,6 +40,14 @@ BEGIN
 
     -- поиск <Торговой сети>
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+    -- проверяем регион пользователя
+    vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser (inSession::TVarChar));
+    --
+    IF COALESCE (vbAreaId, 0) = 0
+    THEN
+        vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId (inSession::TVarChar));
+    END IF;
 
      SELECT DATE_PART ( 'day', ((Movement.OperDate - MovementDate_StartSale.ValueData)+ INTERVAL '1 DAY'))
     INTO vbDays
@@ -74,23 +84,24 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
                                                          ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
-   
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId = zc_MI_Child()
                           AND MovementItem.isErased = FALSE
                         )
-                     
+
       , tmpMI_Master AS (SELECT MovementItem.Id
                               , MovementItem.ObjectId
-                              , MovementItem.Amount             ::TFloat AS Amount
+                              , MovementItem.Amount                                       ::TFloat AS Amount
                               , COALESCE (tmpChild_AmountManual.AmountManual,0)           ::TFloat AS AmountManual
                               , (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0)) AS AmountTotal
                               , CASE WHEN COALESCE (vbDays, 0) <> 0 THEN (COALESCE (tmpChild.AmountOut,0) / vbDays) ELSE 0 END AS AmountOut_avg
                               , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                      ELSE 0
-                                END AS RemainsDay
-                              , MovementItem.IsErased       AS IsErased
+                                END                             AS RemainsDay
+                              , MILinkObject_Juridical.ObjectId AS JuridicalId
+                              , MILinkObject_Contract.ObjectId  AS ContractId
+                              , MovementItem.IsErased           AS IsErased
                          FROM MovementItem
                               LEFT JOIN (SELECT MovementItem.ParentId
                                               , SUM (COALESCE (MovementItem.Remains,0))      AS Remains
@@ -106,6 +117,13 @@ BEGIN
                                          WHERE COALESCE (MovementItem.AmountManual,0) <> 0
                                          GROUP BY MovementItem.ParentId
                                          ) AS tmpChild_AmountManual ON tmpChild_AmountManual.ParentId = MovementItem.Id
+
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
+                                                               ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
 
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Master()
@@ -129,13 +147,14 @@ BEGIN
                                  END AS RemainsDay
                           FROM tmpMI_Master AS MovementItem
                                LEFT JOIN (SELECT MovementItem.ParentId
-                                               , SUM (COALESCE (MovementItem.Remains,0))      AS Remains
-                                               , SUM (COALESCE (MovementItem.AmountOut,0))    AS AmountOut
+                                               , SUM (COALESCE (MovementItem.Remains,0))   AS Remains
+                                               , SUM (COALESCE (MovementItem.AmountOut,0)) AS AmountOut
                                           FROM tmpMI_Child_Calc AS MovementItem
                                           WHERE COALESCE (MovementItem.Koeff,0) > 0
                                           GROUP BY MovementItem.ParentId
                                           ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
-                        )
+                          )
+
       , tmpMI_Float_Price AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
@@ -149,13 +168,13 @@ BEGIN
                                        AND MovementItemFloat.DescId = zc_MIFloat_PromoMovementId()
                                      )
 
-      , tmpMILO AS (SELECT MovementItemLinkObject.*
+      /*, tmpMILO AS (SELECT MovementItemLinkObject.*
                               FROM MovementItemLinkObject
                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
                                 AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Juridical()
                                                                     , zc_MILinkObject_Contract()
                                                                     )
-                              )
+                              )*/
 
       , tmpMLO_Maker AS (SELECT MovementLinkObject.*
                          FROM MovementLinkObject
@@ -181,14 +200,34 @@ BEGIN
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                       )
 
+      , tmpMinExpirationDate AS (SELECT tmpMI_Master.Id
+                                      , tmpMI_Master.ObjectId
+                                      , tmpMI_Master.JuridicalId
+                                      , tmpMI_Master.ContractId
+                                      , MIN (LoadPriceListItem.ExpirationDate)  AS MinExpirationDate
+                                FROM tmpMI_Master
+                                     JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = tmpMI_Master.ObjectId 
+                                     LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                                                     ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+                                                                    AND PriceList_GoodsLink.ObjectId = tmpMI_Master.JuridicalId
+                                     LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI_Master.JuridicalId
+                                                             AND LoadPriceList.ContractId  = COALESCE (tmpMI_Master.ContractId, 0)
+                                                             AND (   (COALESCE (LoadPriceList.AreaId, 0) = vbAreaId AND COALESCE (vbAreaId,0)<>0)
+                                                                  OR (COALESCE (vbAreaId,0)=0 AND COALESCE (LoadPriceList.AreaId, 0) = zc_Area_basis())
+                                                                  OR COALESCE (LoadPriceList.AreaId, 0) =0
+                                                                  )
+                                     LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                                                AND LoadPriceListItem.GoodsId = Object_LinkGoods_View.GoodsMainId
+                                GROUP BY tmpMI_Master.Id
+                                       , tmpMI_Master.ObjectId
+                                       , tmpMI_Master.JuridicalId
+                                       , tmpMI_Master.ContractId
+                                )
 
-                     
-                     
            ----
            SELECT MovementItem.Id
                 , MovementItem.ObjectId                    AS GoodsId
                 , Object_Goods.ObjectCode                  AS GoodsCode
-                , tmpGoodsParam.CodeStr                    AS CodeStr_partner
                 , Object_Goods.ValueData                   AS GoodsName
                 , MovementItem.Amount             ::TFloat AS Amount
                 , MovementItem.AmountManual       ::TFloat AS AmountManual
@@ -217,6 +256,8 @@ BEGIN
 
                 , Object_GoodsGroupPromo.Id              AS GoodsGroupPromoId
                 , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
+                
+                , tmpMinExpirationDate.MinExpirationDate :: TDateTime AS MinExpirationDate
 
                 , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
                 , MovementItem.IsErased       AS IsErased
@@ -237,17 +278,10 @@ BEGIN
                                    -- AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
               LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MovementLinkObject_Maker.ObjectId
 
-              LEFT JOIN tmpMILO AS MILinkObject_Juridical
-                                ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
-                               AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
+              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.JuridicalId
+              LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = MovementItem.ContractId
 
-              LEFT JOIN tmpMILO AS MILinkObject_Contract
-                                ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                               AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
-
-              LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MILinkObject_Juridical.ObjectId
+              LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MovementItem.JuridicalId
 
               LEFT JOIN tmpMI_Master2 ON tmpMI_Master2.Id = MovementItem.Id
 
@@ -264,7 +298,7 @@ BEGIN
                                   AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
               LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
               
-
+              LEFT JOIN tmpMinExpirationDate ON tmpMinExpirationDate.Id = MovementItem.Id
 
               ;
 END;
@@ -273,6 +307,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.12.19         *
  09.05.19         * AmountManual
  15.04.19         *
 */

@@ -227,6 +227,16 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaPromo
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SumSale_PartionDate
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSaleDiff_PartionDate
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -417,6 +427,16 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaPromo
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SumSale_PartionDate
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSaleDiff_PartionDate
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -610,6 +630,30 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
+          end
+          object SumSale_PartionDate: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080'  ('#1089#1088#1086#1082#1086#1074#1099#1077') '#1080#1085#1092'.'
+            DataBinding.FieldName = 'SumSale_PartionDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object SummSaleDiff_PartionDate: TcxGridDBColumn
+            Caption = 
+              #1057#1091#1084#1084#1072' '#1087#1086#1090#1077#1088#1080': '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1089#1086' '#1089#1082#1080#1076'. ('#1095#1077#1082') - '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076'. '#1073#1077#1079' '#1089#1082#1080#1076#1082 +
+              #1080', '#1075#1088#1085' ('#1089#1088#1086#1082#1086#1074#1099#1077') '#1080#1085#1092'.'
+            DataBinding.FieldName = 'SummSaleDiff_PartionDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
           end
           object SummaPromo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1072#1088#1082#1077#1090'.) '#1080#1085#1092'.'
@@ -1325,6 +1369,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
