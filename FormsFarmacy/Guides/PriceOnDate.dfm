@@ -898,7 +898,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inStartDate'
         Value = 'NULL'
         Component = deOperDate
         DataType = ftDateTime
