@@ -1294,6 +1294,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_FixPercent() RETURNS Integ
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_FixPercent', 'фиксированный % скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixPercent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_FixDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_FixDiscount', 'фиксированпая сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixDiscount');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_Multiplicity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_Multiplicity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_Multiplicity', 'Кратность отпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_Multiplicity');
@@ -1470,6 +1474,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.12.19                                                                                      * zc_ObjectFloat_PriceChange_FixDiscount
  03.12.19                                                                                      * zc_ObjectFloat_MaxOrderAmountSecond
  19.11.19                                                                                      * zc_ObjectFloat_Juridical_CodeRazom
  29.10.19         * zc_ObjectFloat_Car_KoeffHoursWork

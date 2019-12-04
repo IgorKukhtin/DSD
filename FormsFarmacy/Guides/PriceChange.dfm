@@ -5,7 +5,7 @@ inherited PriceChangeForm: TPriceChangeForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 783
-  ExplicitHeight = 451
+  ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -233,6 +233,15 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080
             Width = 53
+          end
+          object FixDiscount: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1089#1082')'
+            DataBinding.FieldName = 'FixDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
           end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'

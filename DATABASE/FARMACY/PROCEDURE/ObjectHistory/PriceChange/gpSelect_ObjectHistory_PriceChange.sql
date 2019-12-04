@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceChange(
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                PriceChange TFloat, FixValue TFloat,
                FixPercent TFloat,
+               FixDiscount TFloat,
                PercentMarkup TFloat
                )
 AS
@@ -33,6 +34,7 @@ BEGIN
           , ObjectHistoryFloat_PriceChange_Value.ValueData                 AS PriceChange
           , ObjectHistoryFloat_PriceChange_FixValue.ValueData              AS FixValue
           , ObjectHistoryFloat_PriceChange_FixPercent.ValueData            AS FixPercent
+          , ObjectHistoryFloat_PriceChange_FixDiscount.ValueData           AS FixDiscount
           , ObjectHistoryFloat_PriceChange_PercentMarkup.ValueData         AS PercentMarkup
         FROM 
             ObjectHistory_PriceChange
@@ -50,6 +52,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_FixPercent
                                          ON ObjectHistoryFloat_PriceChange_FixPercent.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                         AND ObjectHistoryFloat_PriceChange_FixPercent.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_FixDiscount
+                                         ON ObjectHistoryFloat_PriceChange_FixDiscount.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                        AND ObjectHistoryFloat_PriceChange_FixDiscount.DescId = zc_ObjectHistoryFloat_PriceChange_FixDiscount()
 
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_Value
                                          ON ObjectHistoryFloat_PriceChange_Value.ObjectHistoryId = ObjectHistory_PriceChange.Id
@@ -70,7 +76,8 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceChange (Integer, TVarChar) OWNER TO p
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 04.12.19                                                                                     * FixDiscount
  08.02.19         * FixPercent
  24.02.16         *
  24.12.15                                                                        *

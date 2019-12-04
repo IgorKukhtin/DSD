@@ -87,6 +87,7 @@ type
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    FixDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

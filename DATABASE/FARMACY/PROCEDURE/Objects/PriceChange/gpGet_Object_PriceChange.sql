@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateChange tdatetime
-             , PriceChange TFloat, FixValue TFloat, FixPercent TFloat, PercentMarkup TFloat
+             , PriceChange TFloat, FixValue TFloat, FixPercent TFloat, FixDiscount TFloat, PercentMarkup TFloat
              , isErased boolean
              ) AS
 $BODY$
@@ -41,6 +41,7 @@ BEGIN
           , CAST (0 as TFloat)       AS PriceChange
           , CAST (0 as TFloat)       AS FixValue
           , CAST (0 as TFloat)       AS FixPercent
+          , CAST (0 as TFloat)       AS FixDiscount
           , CAST (0 as TFloat)       AS PercentMarkup
 
           , CAST (NULL AS Boolean)   AS isErased;
@@ -65,6 +66,7 @@ BEGIN
              , ROUND(ObjectFloat_Value.ValueData,2)::TFloat  AS PriceChange
              , ObjectFloat_FixValue.ValueData                AS FixValue
              , ObjectFloat_FixPercent.ValueData              AS FixPercent
+             , ObjectFloat_FixDiscount.ValueData              AS FixDiscount
              , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
       
              , Object_Goods.isErased                   AS isErased
@@ -96,6 +98,9 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
                                      ON ObjectFloat_FixPercent.ObjectId = Object_PriceChange.Id
                                     AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+               LEFT JOIN ObjectFloat AS ObjectFloat_FixDiscount
+                                     ON ObjectFloat_FixDiscount.ObjectId = Object_PriceChange.Id
+                                    AND ObjectFloat_FixDiscount.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
 
                LEFT JOIN ObjectDate AS ObjectDate_DateChange
                                     ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
@@ -111,7 +116,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 04.12.19                                                      * FixDiscount
  08.02.19         * FixPercent
  28.09.18         * add zc_ObjectLink_PriceChange_Unit
  16.08.18         *

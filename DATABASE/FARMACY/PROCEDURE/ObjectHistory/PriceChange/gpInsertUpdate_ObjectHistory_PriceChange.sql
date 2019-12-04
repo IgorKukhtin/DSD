@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceChange (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceChange (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceChange (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceChange(
  INOUT ioId                 Integer,    -- ключ объекта <Элемент истории прайса>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceChange(
     IN inPriceChange        TFloat,     -- Цена
     IN inFixValue           TFloat,     -- 
     IN inFixPercent         TFloat,     --
+    IN inFixDiscount        TFloat,     --
     IN inPercentMarkup      TFloat,     -- 
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -37,6 +39,8 @@ BEGIN
    -- 
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_FixPercent(), ioId, inFixPercent);
    -- 
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_FixDiscount(), ioId, inFixDiscount);
+   -- 
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
 
 
@@ -44,10 +48,10 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 04.12.19                                                      * FixDiscount
  08.02.19         * inFixPercent
  17.08.18         *
 */
