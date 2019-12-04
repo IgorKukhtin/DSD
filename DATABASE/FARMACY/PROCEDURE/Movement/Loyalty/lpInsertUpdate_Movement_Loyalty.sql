@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
+    IN inRetailID              Integer    , -- Торговая сеть
     IN inStartPromo            TDateTime  , -- Дата начала контракта
     IN inEndPromo              TDateTime  , -- Дата окончания контракта
     IN inStartSale             TDateTime  , -- Дата начала погашения
@@ -57,6 +58,9 @@ BEGIN
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailID);
 
     IF vbIsInsert = True
     THEN

@@ -418,6 +418,10 @@ type
     edPromoCodeLoyaltySumm: TcxCurrencyEdit;
     spLoyaltyStatus: TdsdStoredProc;
     actOpenMCS: TAction;
+    actReport_IlliquidReductionPlanAll: TdsdOpenForm;
+    actReport_ImplementationPlanEmployee: TAction;
+    N37: TMenuItem;
+    N38: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -541,6 +545,7 @@ type
     procedure N22Click(Sender: TObject);
     procedure actSetPromoCodeLoyaltyExecute(Sender: TObject);
     procedure actOpenMCSExecute(Sender: TObject);
+    procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -708,7 +713,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
-     EnterLoyaltyNumber;
+     EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash;
 
 const
   StatusUnCompleteCode = 1;
@@ -2380,8 +2385,19 @@ end;
 
 procedure TMainCashForm2.actRefreshRemainsExecute(Sender: TObject);
 begin
- // StartRefreshDiffThread; // оставлено для коректной синхронизации двух форм
+ // StartRefreshDiffThread; // оставлено для кор|ектной синхронизации двух форм
 end;
+
+procedure TMainCashForm2.actReport_ImplementationPlanEmployeeExecute(
+  Sender: TObject);
+begin
+  with TReport_ImplementationPlanEmployeeCashForm.Create(nil) do
+  try
+     Show;
+  finally
+  end;
+end;
+
 { synh1 } // для коректной синхронизации двух форм
 
 procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);  // только 2 форма
@@ -4653,8 +4669,11 @@ begin
 
                          nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
                          if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                         begin
                            ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
                              'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+                           if Trunc(Abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0 then Exit;
+                         end;
 
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, 0,
@@ -4681,8 +4700,11 @@ begin
 
                          nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
                          if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                         begin
                            ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
                              'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+                           if Trunc(Abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0 then Exit;
+                         end;
 
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
@@ -4815,7 +4837,7 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
-        if SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0 then
+        if (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0) and (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency < lPrice) then
           checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
         else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then
@@ -4889,7 +4911,7 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
-        if SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0 then
+        if (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0) and (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency < lPrice) then
           checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
         else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then

@@ -171,6 +171,8 @@
         <DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
         <DCCReference Include="..\SOURCE\LoginForm.pas">
@@ -307,11 +309,13 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EmployeeScheduleCash.pas">
             <Form>EmployeeScheduleCashForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas">
             <Form>EnterLoyaltyNumberForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas">
+            <Form>Report_ImplementationPlanEmployeeCashForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

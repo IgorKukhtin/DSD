@@ -2707,6 +2707,10 @@
 				<Form>Report_IlliquidReductionPlanAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanUser.pas">
+				<Form>Report_IlliquidReductionPlanUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

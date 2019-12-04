@@ -64,6 +64,13 @@ inherited LoyaltyJournalForm: TLoyaltyJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 62
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
           object StartPromo: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'StartPromo'

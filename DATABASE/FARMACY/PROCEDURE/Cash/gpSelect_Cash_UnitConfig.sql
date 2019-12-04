@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbRetailId Integer;
    DECLARE vbCashRegisterId Integer;
 BEGIN
 
@@ -36,6 +37,13 @@ BEGIN
    END IF;
    vbUnitId := vbUnitKey::Integer;
 
+   vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                  FROM ObjectLink AS ObjectLink_Unit_Juridical
+                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                  WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
    if EXISTS(SELECT Object_CashRegister.Id
              FROM Object AS Object_CashRegister
@@ -74,6 +82,10 @@ BEGIN
                              INNER JOIN MovementFloat AS MovementFloat_StartSummCash
                                                       ON MovementFloat_StartSummCash.MovementId =  Movement.Id
                                                      AND MovementFloat_StartSummCash.DescId = zc_MovementFloat_StartSummCash()
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                           ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                                          AND MovementLinkObject_Retail.ObjectId = vbRetailId
 
                              INNER JOIN MovementDate AS MovementDate_StartPromo
                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -254,6 +266,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 04.12.19                                                       *
  24.11.19                                                       *
  25.10.19                                                       *
  14.06.19                                                       *

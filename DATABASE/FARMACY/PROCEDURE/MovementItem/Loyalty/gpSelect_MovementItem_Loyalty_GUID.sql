@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbRetailId Integer;
 
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
@@ -40,6 +41,13 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
+    vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
     SELECT MovementItem.ID, MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MovementFloat_MovementItemId.MovementId, MIDate_OperDate.ValueData
     INTO vbMovementItemId, vbMovementId, vbAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
@@ -98,6 +106,15 @@ BEGIN
       outError := 'Ошибка. Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.';
       RETURN;
     END IF;
+    
+    IF COALESCE((SELECT MovementLinkObject_Retail.ObjectId FROM MovementLinkObject AS MovementLinkObject_Retail
+                 WHERE MovementLinkObject_Retail.MovementId = vbMovementId
+                   AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()), 0) <> COALESCE (vbRetailId, 0)
+    THEN
+      outError := 'Ошибка. Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' для другой сети.';
+      RETURN;
+    END IF;
+    
 
     -- Если неподходят даты
     IF vbStartSale > CURRENT_DATE OR vbEndSale < CURRENT_DATE

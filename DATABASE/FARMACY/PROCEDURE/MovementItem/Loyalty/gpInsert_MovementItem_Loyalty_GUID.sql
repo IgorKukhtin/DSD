@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbRetailId Integer;
    DECLARE vbInvNumber Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbStatusId Integer;
@@ -39,6 +40,14 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
     outMessage :='';
+
+    vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
     SELECT Movement.InvNumber::Integer, Movement.StatusId, 
            MovementDate_StartPromo.ValueData, 
@@ -81,6 +90,13 @@ BEGIN
         IF vbStatusId <> zc_Enum_Status_Complete() OR
            vbStartPromo > CURRENT_DATE OR
            vbEndPromo < CURRENT_DATE
+        THEN
+          RETURN;
+        END IF;
+        
+        IF COALESCE((SELECT MovementLinkObject_Retail.ObjectId FROM MovementLinkObject AS MovementLinkObject_Retail
+                     WHERE MovementLinkObject_Retail.MovementId = inMovementId
+                       AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()), 0) <> COALESCE (vbRetailId, 0)
         THEN
           RETURN;
         END IF;
@@ -276,7 +292,12 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
     END IF;
-
+    
+/*    IF inSession = '3'
+    THEN
+      RAISE EXCEPTION 'Ошибка. Прошло...';
+    END IF;
+*/
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

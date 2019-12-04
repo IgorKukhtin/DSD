@@ -50,6 +50,8 @@ uses
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
@@ -115,7 +117,8 @@ uses
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   PUSHMessageCash in '..\FormsFarmacy\Cash\PUSHMessageCash.pas' {PUSHMessageCashForm},
   EmployeeScheduleCash in '..\FormsFarmacy\Cash\EmployeeScheduleCash.pas' {EmployeeScheduleCashForm: TParentForm},
-  EnterLoyaltyNumber in '..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas' {EnterLoyaltyNumberForm};
+  EnterLoyaltyNumber in '..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas' {EnterLoyaltyNumberForm},
+  Report_ImplementationPlanEmployeeCash in '..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas' {Report_ImplementationPlanEmployeeCashForm};
 
 {$R *.res}
 

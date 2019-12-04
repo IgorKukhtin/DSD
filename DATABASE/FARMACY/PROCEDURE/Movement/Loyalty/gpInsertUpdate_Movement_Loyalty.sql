@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
+    IN inRetailID              Integer    , -- Торговая сеть
     IN inStartPromo            TDateTime  , -- Дата начала контракта
     IN inEndPromo              TDateTime  , -- Дата окончания контракта
     IN inStartSale             TDateTime  , -- Дата начала погашения
@@ -30,6 +31,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement_Loyalty (ioId            := ioId
                                            , inInvNumber     := inInvNumber
                                            , inOperDate      := inOperDate
+                                           , inRetailID      := inRetailID
                                            , inStartPromo    := inStartPromo
                                            , inEndPromo      := inEndPromo
                                            , inStartSale     := inStartSale
