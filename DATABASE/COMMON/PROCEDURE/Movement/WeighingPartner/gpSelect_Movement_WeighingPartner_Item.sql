@@ -106,7 +106,7 @@ BEGIN
         , tmpMovement AS (SELECT Movement.*
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
-                                                  AND Movement.OperDate BETWEEN '05.11.2019' AND '06.11.2019'  --inStartDate AND inEndDate
+                                                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                   AND Movement.StatusId = tmpStatus.StatusId
                              --  INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                          )
