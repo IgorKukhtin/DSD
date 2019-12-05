@@ -782,7 +782,11 @@ uses
   RepriceUnit_test in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm},
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
-  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
+  Report_IlliquidReductionPlanAllDialog in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas' {Report_IlliquidReductionPlanAllDialogForm: TParentForm},
+  Report_IlliquidReductionPlanUser in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanUser.pas' {Report_IlliquidReductionPlanUserForm: TParentForm},
+  Report_PercentageOverdueSUN in '..\..\FormsFarmacy\Report\Report_PercentageOverdueSUN.pas' {Report_PercentageOverdueSUNForm: TParentForm},
+  PUSHMessageFarmacy in '..\..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

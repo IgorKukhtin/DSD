@@ -87,7 +87,8 @@ uses
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   RepriceUnit_test in '..\FormsFarmacy\ConnectWithOld\RepriceUnit_test.pas' {RepriceUnit_testForm},
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas';
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  PUSHMessageFarmacy in '..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm};
 
 {$R *.res}
 
@@ -110,7 +111,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
 

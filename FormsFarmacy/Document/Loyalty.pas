@@ -157,6 +157,9 @@ type
     actExportUsedPromocode: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
     dsdDBViewAddOn3: TdsdDBViewAddOn;
+    cxLabel19: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public

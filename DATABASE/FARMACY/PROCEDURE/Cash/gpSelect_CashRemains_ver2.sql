@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
-               PriceChange TFloat, FixPercent TFloat, Multiplicity TFloat,
+               PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar, GoodsAnalog TVarChar,
                CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
@@ -369,6 +369,7 @@ BEGIN
               , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                             AS GoodsId
                                         , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData) AS PriceChange
                                         , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat           AS FixPercent
+                                        , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat           AS FixDiscount
                                         , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
                                    FROM Object AS Object_PriceChange
                                         -- скидка по подразд
@@ -386,6 +387,11 @@ BEGIN
                                                               ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                              AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
                                                              AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
+                                        -- сумма скидки по подразд.
+                                        LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Unit
+                                                              ON PriceChange_FixDiscount_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                             AND PriceChange_FixDiscount_Unit.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                                             AND COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0
                                         -- Кратность отпуска
                                         LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Unit
                                                               ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
@@ -406,6 +412,11 @@ BEGIN
                                                               ON PriceChange_FixPercent_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                              AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
                                                              AND COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0
+                                        -- сумма скидки по сети.
+                                        LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Retail
+                                                              ON PriceChange_FixDiscount_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                             AND PriceChange_FixDiscount_Retail.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                                             AND COALESCE (PriceChange_FixDiscount_Retail.ValueData, 0) <> 0
                                         -- Кратность отпуска по сети.
                                         LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Retail
                                                               ON PriceChange_Multiplicity_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
@@ -419,7 +430,8 @@ BEGIN
                                    WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
                                      AND Object_PriceChange.isErased = FALSE
                                      AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR
-                                         COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
+                                         COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
+                                         COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
                                   )
               , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
                                             , Object_PartionDateKind.ObjectCode   AS Code
@@ -737,6 +749,7 @@ BEGIN
           , Object_Accommodation.ValueData AS AccommodationName
           , tmpPriceChange.PriceChange
           , tmpPriceChange.FixPercent
+          , tmpPriceChange.FixDiscount
           , tmpPriceChange.Multiplicity
           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
           , NULL::Integer                                          AS GoodsAnalogId
@@ -885,6 +898,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 04.12.19                                                                                                    * FixDiscount
  23.09.19                                                                                                    * NotTransferTime
  15.07.19                                                                                                    *
  28.05.19                                                                                                    * PartionDateKindId

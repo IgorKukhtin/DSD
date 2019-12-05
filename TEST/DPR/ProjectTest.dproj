@@ -3813,6 +3813,8 @@
 				<Form>Report_Movement_ProfitLossServiceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

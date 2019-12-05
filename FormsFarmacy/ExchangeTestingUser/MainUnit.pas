@@ -205,7 +205,7 @@ begin
   try
     timer1.Enabled := False;
     if not LoadResult then Exit;
-    if HourOf(Now) = 1 then ExportUser;
+    ExportUser;
   finally
     Close;
   end;

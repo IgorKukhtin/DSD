@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbPrice TFloat;
    DECLARE vbUnitId Integer;
+   DECLARE vbId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -79,7 +80,21 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не найдена отпускная цена товара.';
     END IF;
 
-    PERFORM gpInsertUpdate_MovementItem_CheckCash(0, inMovementId, inGoodsId, inAmount, vbPrice, inSession);
+-- сохранили <Элемент документа>
+    vbId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+
+    -- сохранили свойство <Цена>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbId, vbPrice);
+
+    -- сохранили свойство <Цена без скидки>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), vbId, vbPrice);
+
+
+    -- пересчитали Итоговые суммы
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, True);
 
 END;
 $BODY$

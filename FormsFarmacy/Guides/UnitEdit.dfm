@@ -169,7 +169,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 489
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -589,9 +588,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ExplicitLeft = -104
-      ExplicitTop = 21
-      ExplicitHeight = 489
       object edUnitOverdue: TcxButtonEdit
         Left = 0
         Top = 27
@@ -636,15 +632,19 @@
         Left = 240
         Top = 54
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
-        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1074' '#1083#1080#1089#1090#1099' '#1086#1090#1082#1072#1079#1086#1074
+        Caption = #1042#1090#1086#1088#1072#1103' '#1096#1082#1072#1083#1072' '#1076#1083#1103' '#1083#1080#1089#1090#1086#1074' '#1086#1090#1082#1072#1079#1086#1074
         TabOrder = 4
         Width = 246
+      end
+      object cxLabel38: TcxLabel
+        Left = 0
+        Top = 51
+        Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
       end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
-      ExplicitHeight = 489
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
@@ -779,11 +779,6 @@
         Width = 129
       end
     end
-  end
-  object cxLabel38: TcxLabel
-    Left = 15
-    Top = 243
-    Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
   end
   object ActionList: TActionList
     Left = 356

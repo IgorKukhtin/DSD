@@ -574,15 +574,11 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'GoodsKindId'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindName'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

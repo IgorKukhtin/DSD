@@ -2,14 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
- INOUT ioId	                 Integer   ,    -- ключ объекта <> 
-    IN inCode                Integer   ,    -- код объекта 
-    IN inName                TVarChar  ,    -- Название объекта <>
-    IN inIsClose             Boolean   ,    -- закрыт для заказа
-    IN inMaxOrderAmount      TFloat    ,    -- Максимальная сумма заказа 
-    IN inSession             TVarChar       -- сессия пользователя
+ INOUT ioId	                  Integer   ,    -- ключ объекта <> 
+    IN inCode                 Integer   ,    -- код объекта 
+    IN inName                 TVarChar  ,    -- Название объекта <>
+    IN inIsClose              Boolean   ,    -- закрыт для заказа
+    IN inMaxOrderAmount       TFloat    ,    -- Максимальная сумма заказа 
+    IN inMaxOrderAmountSecond TFloat    ,    -- Максимальная сумма заказа вторая шкала
+    IN inSession              TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -39,6 +41,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_Close(), ioId, inIsClose);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MaxOrderAmount(), ioId, inMaxOrderAmount);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MaxOrderAmountSecond(), ioId, inMaxOrderAmountSecond);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -51,6 +55,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.12.19                                                       * 
  05.06.19                                                       * 
  11.12.18         * 
 */

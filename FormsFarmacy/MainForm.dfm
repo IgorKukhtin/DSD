@@ -1,16 +1,16 @@
 inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
-  ClientHeight = 171
-  ClientWidth = 644
+  ClientHeight = 160
+  ClientWidth = 730
   KeyPreview = True
-  ExplicitWidth = 660
-  ExplicitHeight = 229
+  ExplicitWidth = 746
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 644
+    Width = 730
     Height = 121
     Align = alTop
     BevelInner = bvNone
@@ -20,6 +20,7 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitWidth = 644
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetInfo
@@ -3174,6 +3175,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPercentageOverdueSUN: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
+      Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
+      FormName = 'TReport_PercentageOverdueSUNForm'
+      FormNameParam.Value = 'TReport_PercentageOverdueSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3197,6 +3210,7 @@ inherited MainForm: TMainForm
           'Width')
       end>
     Left = 200
+    Top = 72
   end
   inherited MainMenu: TMainMenu
     Left = 488
@@ -3757,6 +3771,9 @@ inherited MainForm: TMainForm
       object N198: TMenuItem
         Action = actReport_GoodsPartionDate0
       end
+      object N204: TMenuItem
+        Action = actPercentageOverdueSUN
+      end
       object N203: TMenuItem
         Caption = '-'
       end
@@ -4198,5 +4215,35 @@ inherited MainForm: TMainForm
     PackSize = 1
     Left = 592
     Top = 16
+  end
+  object TimerPUSH: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = TimerPUSHTimer
+    Left = 40
+    Top = 8
+  end
+  object spGet_PUSH_Farmacy: TdsdStoredProc
+    StoredProcName = 'gpGet_PUSH_Farmacy'
+    DataSet = PUSHDS
+    DataSets = <
+      item
+        DataSet = PUSHDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 128
+    Top = 8
+  end
+  object PUSHDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    StoreDefs = True
+    Left = 216
+    Top = 8
   end
 end

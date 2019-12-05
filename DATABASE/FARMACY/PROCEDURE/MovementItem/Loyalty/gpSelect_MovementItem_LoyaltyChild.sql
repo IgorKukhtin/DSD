@@ -43,7 +43,10 @@ BEGIN
                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = 4                            
+                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = 
+                                                     (SELECT MovementLinkObject_Retail.ObjectId FROM MovementLinkObject AS MovementLinkObject_Retail
+                                                      WHERE MovementLinkObject_Retail.MovementId = inMovementId
+                                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail())                            
                        WHERE Object_Unit.DescId = zc_Object_Unit()
                          AND Object_Unit.isErased = inIsErased OR inIsErased = TRUE
                        )

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , StatusId      Integer
              , StatusCode    Integer
              , StatusName    TVarChar
+             , RetailName    TVarChar
              , StartPromo    TDateTime
              , EndPromo      TDateTime
              , StartSale     TDateTime
@@ -49,6 +50,7 @@ BEGIN
           , Movement.StatusId
           , Object_Status.ObjectCode                                       AS StatusCode
           , Object_Status.ValueData                                        AS StatusName
+          , Object_Retail.ValueData                                        AS RetailName
           , MovementDate_StartPromo.ValueData                              AS StartPromo
           , MovementDate_EndPromo.ValueData                                AS EndPromo
           , MovementDate_StartSale.ValueData                               AS StartSale
@@ -113,6 +115,11 @@ BEGIN
                                ON MovementDate_Update.MovementId = Movement.Id
                               AND MovementDate_Update.DescId = zc_MovementDate_Update()
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                     ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                    AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                      ON MovementLinkObject_Insert.MovementId = Movement.Id
                                     AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -139,3 +146,4 @@ $BODY$
  04.10.19                                                       *
 */
 -- select * from gpSelect_Movement_Loyalty(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2020')::TDateTime , inIsErased:= true, inSession := '3');
+

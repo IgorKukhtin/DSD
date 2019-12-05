@@ -42,30 +42,38 @@ BEGIN
                               , Price TFloat, CountForPrice TFloat
                                ) ON COMMIT DROP;
 
-       WITH tmp AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
-                         , MovementItem.ObjectId                         AS GoodsId
-                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                    FROM MovementItem 
-                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                    WHERE MovementItem.MovementId =  inMovementId
-                      AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.isErased = FALSE
-                    GROUP BY MovementItem.ObjectId
-                           , MILinkObject_GoodsKind.ObjectId 
-                   )
 
       INSERT INTO tmpMI  (MovementItemId, GoodsId, GoodsKindId, AmountPartner
                         , Price, CountForPrice
                         )
+
+         WITH 
+          tmp AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
+                       , MovementItem.ObjectId                         AS GoodsId
+                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  FROM MovementItem 
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  WHERE MovementItem.MovementId =  inMovementId
+                    AND MovementItem.DescId = zc_MI_Master()
+                    AND MovementItem.isErased = FALSE
+                  GROUP BY MovementItem.ObjectId
+                         , MILinkObject_GoodsKind.ObjectId 
+                 )
+        , tmpObjectHistory_PriceListItem AS (SELECT lfSelect.GoodsId
+                                                  , lfSelect.GoodsKindId
+                                                  , COALESCE (lfSelect.ValuePrice, 0) AS Price
+                                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate) AS lfSelect
+                                             )
+
         SELECT COALESCE (tmp.MovementItemId, 0)              AS MovementItemId
              , Object_Goods.Id                               AS GoodsId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
          
              , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
 
-             , COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0) AS Price
+             , COALESCE (lfObjectHistory_PriceListItem_Kind.Price, lfObjectHistory_PriceListItem.Price, 0) AS Price
              , 1 AS CountForPrice
        FROM MovementItem 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -82,9 +90,14 @@ BEGIN
             LEFT JOIN tmp ON tmp.GoodsId     = MovementItem.ObjectId
                          AND tmp.GoodsKindId =  COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
-                 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = Object_Goods.Id 
-                                     
+            LEFT JOIN tmpObjectHistory_PriceListItem AS lfObjectHistory_PriceListItem 
+                                                     ON lfObjectHistory_PriceListItem.GoodsId = Object_Goods.Id
+                                                    AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
+
+            LEFT JOIN tmpObjectHistory_PriceListItem AS lfObjectHistory_PriceListItem_Kind
+                                                     ON lfObjectHistory_PriceListItem_Kind.GoodsId = Object_Goods.Id 
+                                                    AND COALESCE (lfObjectHistory_PriceListItem_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
+
       WHERE MovementItem.MovementId = inMovementMaskId
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased   = False

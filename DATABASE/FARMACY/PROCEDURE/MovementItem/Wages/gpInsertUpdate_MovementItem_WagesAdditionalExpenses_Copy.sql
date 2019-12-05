@@ -63,6 +63,7 @@ BEGIN
                                                                , inSummaCleaning       := COALESCE(MIFloat_SummaCleaning.ValueData, 0) -- Уборка
                                                                , inSummaSP             := 0                                            -- СП
                                                                , inSummaOther          := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
+                                                               , inValidationResults   := 0                                            -- Результаты проверки
                                                                , inisIssuedBy          := False                                        -- Выдано
                                                                , inComment             := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
                                                                , inUserId              := vbUserId                                     -- пользователь

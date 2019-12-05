@@ -16,7 +16,8 @@ uses
   IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
-  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ;
+  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
+  IdHTTP, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL;
 
 type
   TMainForm = class(TForm)
@@ -47,6 +48,8 @@ type
     Price: TcxGridDBColumn;
     Quant: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    IdHTTP: TIdHTTP;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
@@ -62,7 +65,8 @@ type
     SavePath: String;
     Subject: String;
 
-
+    FURL : String;
+    FAccessKey : String;
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
@@ -233,15 +237,37 @@ begin
 end;
 
 procedure TMainForm.btnSendHTTPSClick(Sender: TObject);
+  var sResponse : string;
 begin
 
-  if not FileExists(SavePath + UnitFile) then Exit;
+  if not FileExists(UnitFile) then Exit;
 
-  Add_Log('Начало отправки прайса: ' + SavePath + UnitFile);
+  Add_Log('Начало отправки прайса: ' + UnitFile);
 
   begin
     try
-      DeleteFile(SavePath + UnitFile);
+
+        IdHTTP.Request.ContentType := 'application/json';
+        IdHTTP.Request.CustomHeaders.Clear;
+        IdHTTP.Request.CustomHeaders.FoldLines := False;
+        IdHTTP.Request.CustomHeaders.Values['X-Morion-Skynet-Tag'] := 'data.geoapt.ua';
+        IdHTTP.Request.CustomHeaders.Values['X-Morion-Skynet-Key'] := FAccessKey;
+
+        try
+           sResponse := IdHTTP.Post(FURL, UnitFile);
+        except ON E: Exception DO
+          Begin
+            Add_Log(E.Message);
+            exit;
+          End;
+        end;
+
+        if IdHTTP.ResponseCode <> 200 then
+        begin
+            Add_Log(IntToStr(IdHTTP.ResponseCode) + ' ' + IdHTTP.ResponseText + '. ' + sResponse);
+        end;
+
+      DeleteFile(UnitFile);
     except
       on E: Exception do
       begin
@@ -281,6 +307,11 @@ begin
 
     UnitFile := SavePath + 'data.json';
 
+    FURL := Ini.ReadString('HTTP','URL', 'https://skynet.morion.ua/data/add');
+    Ini.WriteString('HTTP','URL',FURL);
+
+    FAccessKey := Ini.ReadString('HTTP','AccessKey','90de624965f010447e663517922a42bed1446a99');
+    Ini.WriteString('HTTP','AccessKey',FAccessKey);
 
   finally
     Ini.free;

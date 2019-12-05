@@ -418,6 +418,11 @@ type
     edPromoCodeLoyaltySumm: TcxCurrencyEdit;
     spLoyaltyStatus: TdsdStoredProc;
     actOpenMCS: TAction;
+    actReport_IlliquidReductionPlanAll: TdsdOpenForm;
+    actReport_ImplementationPlanEmployee: TAction;
+    N37: TMenuItem;
+    N38: TMenuItem;
+    MainFixDiscount: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -541,6 +546,7 @@ type
     procedure N22Click(Sender: TObject);
     procedure actSetPromoCodeLoyaltyExecute(Sender: TObject);
     procedure actOpenMCSExecute(Sender: TObject);
+    procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -708,7 +714,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
-     EnterLoyaltyNumber;
+     EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash;
 
 const
   StatusUnCompleteCode = 1;
@@ -1342,11 +1348,17 @@ begin
   if (FormParams.ParamByName('DiscountExternalId').Value = 0) and (FormParams.ParamByName('DiscountCardNumber').Value = '') then
   begin
     if FormParams.ParamByName('PromoCodeId').Value <> 0 then
-      SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
+    begin
+      if Length(FormParams.ParamByName('PromoCodeGUID').AsString) > 10 then
+        SetPromoCodeLoyalty(FormParams.ParamByName('PromoCodeId').Value,
+          FormParams.ParamByName('PromoCodeGUID').AsString,
+          FormParams.ParamByName('LoyaltyChangeSumma').Value)
+      else SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
         FormParams.ParamByName('PromoName').AsString,
         FormParams.ParamByName('PromoCodeGUID').AsString,
         FormParams.ParamByName('BayerName').AsString,
-        FormParams.ParamByName('PromoCodeChangePercent').Value);
+        FormParams.ParamByName('PromoCodeChangePercent').Value)
+    end;
 
 
     //***30.06.18
@@ -1772,12 +1784,6 @@ begin
   if not RemainsCDS.Active  then Exit;
   if RemainsCDS.RecordCount < 1  then Exit;
 
-  if UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
-  begin
-    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
-    Exit;
-  end;
-
   with TListDiffAddGoodsForm.Create(nil) do
   try
     GoodsCDS := RemainsCDS;
@@ -2102,8 +2108,8 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+      if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,FormParams.ParamByName('RoundingDown').Value)
       else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
       CheckCDS.Next;
     end;
@@ -2380,8 +2386,19 @@ end;
 
 procedure TMainCashForm2.actRefreshRemainsExecute(Sender: TObject);
 begin
- // StartRefreshDiffThread; // оставлено для коректной синхронизации двух форм
+ // StartRefreshDiffThread; // оставлено для кор|ектной синхронизации двух форм
 end;
+
+procedure TMainCashForm2.actReport_ImplementationPlanEmployeeExecute(
+  Sender: TObject);
+begin
+  with TReport_ImplementationPlanEmployeeCashForm.Create(nil) do
+  try
+     Show;
+  finally
+  end;
+end;
+
 { synh1 } // для коректной синхронизации двух форм
 
 procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);  // только 2 форма
@@ -2449,6 +2466,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant := VipList.FieldByName('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant := VipList.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant := VipList.FieldByName('AmountMonth').AsVariant;
+        if VipList.FieldByName('PricePartionDate').AsCurrency <> 0 then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := VipList.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := VipList.FieldByName('Price').AsFloat;
         //***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').asInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -2654,7 +2674,7 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+      if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, checkCDS.FieldByName('GoodsId').AsInteger) then
       begin
         checkCDS.Edit;
@@ -2730,6 +2750,7 @@ procedure TMainCashForm2.PromoCodeLoyaltyCalc;
 var
   nRecNo : Integer; nSumAll, nPrice : Currency;
 begin
+
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
   nSumAll := 0;
@@ -2741,8 +2762,8 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value)
+        if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,FormParams.ParamByName('RoundingDown').Value)
         else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         CheckCDS.Next;
       end;
@@ -2758,8 +2779,8 @@ begin
         begin
           if FormParams.ParamByName('LoyaltyChangeSumma').Value < nSumAll then
           begin
-            if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-              nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
+            if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+              nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
                          (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0)
             else nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
                            (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0);
@@ -2791,6 +2812,14 @@ begin
       begin
         checkCDS.Edit;
         checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PricePartionDate').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceDiscount').asCurrency;
         CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
@@ -2878,7 +2907,7 @@ begin
 
   if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
   begin
-    ShowMessage('Установлен промокод.'#13#10'Для променениея изменения обнулите промокод..');
+    ShowMessage('Установлен промокод.'#13#10'Для применениея изменения обнулите промокод..');
     Exit;
   end;
 
@@ -3350,7 +3379,7 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+      if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, checkCDS.FieldByName('GoodsId').AsInteger) then
       begin
         checkCDS.Edit;
@@ -4599,7 +4628,7 @@ begin
                // цена СО скидкой
                lPrice_bySoldRegim := edPrice.Value;
              end else
-             if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+             if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
                  CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, SourceClientDataSet.FieldByName('Id').asInteger)
              then
              begin
@@ -4641,8 +4670,11 @@ begin
 
                          nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
                          if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                         begin
                            ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
                              'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+                           if Trunc(Abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0 then Exit;
+                         end;
 
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, 0,
@@ -4669,8 +4701,11 @@ begin
 
                          nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
                          if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                         begin
                            ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
                              'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+                           if Trunc(Abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0 then Exit;
+                         end;
 
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
@@ -4728,7 +4763,8 @@ begin
                  lChangePercent     := Self.FormParams.ParamByName('SPTax').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
               end
-         else if (Self.FormParams.ParamByName('PromoCodeID').Value > 0)
+         else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+           CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, SourceClientDataSet.FieldByName('Id').asInteger)
          then begin
                  lChangePercent     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
@@ -4802,6 +4838,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
+        if (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0) and (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency < lPrice) then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then
         begin
           RemainsCDS.DisableControls;
@@ -4873,6 +4912,9 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant:=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant:=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
+        if (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency <> 0) and (SourceClientDataSet.FieldByName('PricePartionDate').AsCurrency < lPrice) then
+          checkCDS.FieldByName('PriceDiscount').AsVariant := SourceClientDataSet.FieldByName('PricePartionDate').AsVariant
+        else checkCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         if RemainsCDS <> SourceClientDataSet then
         begin
           RemainsCDS.DisableControls;
@@ -6083,7 +6125,7 @@ begin
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
         end else
-        if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+        if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
            CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, SourceClientDataSet.FieldByName('Id').asInteger)
         then
         begin

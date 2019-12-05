@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChange(
 RETURNS TABLE (Id Integer
              , PriceChange TFloat, FixValue TFloat, PercentMarkup TFloat
              , FixPercent TFloat
+             , FixDiscount TFloat
              , Multiplicity TFloat
              , DateChange TDateTime, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer
@@ -89,6 +90,7 @@ BEGIN
                ,NULL::TFloat                     AS FixValue
                ,NULL::TFloat                     AS PercentMarkup
                ,NULL::TFloat                     AS FixPercent
+               ,NULL::TFloat                     AS FixDiscount
                ,NULL::TFloat                     AS Multiplicity
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS StartDate
@@ -229,6 +231,7 @@ BEGIN
                                 , ObjectFloat_FixValue.ValueData                     AS FixValue
                                 , COALESCE (PriceChange_PercentMarkup.ValueData, 0) :: TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_FixPercent.ValueData, 0)    :: TFloat AS FixPercent
+                                , COALESCE (PriceChange_FixDiscount.ValueData, 0)   :: TFloat AS FixDiscount
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0)  :: TFloat AS Multiplicity
                                 , PriceChange_DateChange.ValueData                   AS DateChange
                            FROM ObjectLink AS ObjectLink_PriceChange_Retail
@@ -253,6 +256,9 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_FixPercent
                                                       ON PriceChange_FixPercent.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                      AND PriceChange_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                LEFT JOIN ObjectFloat AS PriceChange_FixDiscount
+                                                      ON PriceChange_FixDiscount.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                     AND PriceChange_FixDiscount.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
@@ -266,6 +272,7 @@ BEGIN
                                 , ObjectFloat_FixValue.ValueData                     AS FixValue
                                 , COALESCE (PriceChange_PercentMarkup.ValueData, 0) :: TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_FixPercent.ValueData, 0)    :: TFloat AS FixPercent
+                                , COALESCE (PriceChange_FixDiscount.ValueData, 0)   :: TFloat AS FixDiscount
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0)  :: TFloat AS Multiplicity
                                 , PriceChange_DateChange.ValueData                   AS DateChange
                            FROM ObjectLink AS ObjectLink_PriceChange_Unit
@@ -290,6 +297,9 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_FixPercent
                                                       ON PriceChange_FixPercent.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                      AND PriceChange_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                LEFT JOIN ObjectFloat AS PriceChange_FixDiscount
+                                                      ON PriceChange_FixDiscount.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND PriceChange_FixDiscount.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
@@ -371,6 +381,7 @@ BEGIN
                , COALESCE (tmpPriceChange.FixValue,0)      :: TFloat AS FixValue
                , COALESCE (tmpPriceChange.PercentMarkup,0) :: TFloat AS PercentMarkup
                , COALESCE (tmpPriceChange.FixPercent,0)    :: TFloat AS FixPercent
+               , COALESCE (tmpPriceChange.FixDiscount,0)   :: TFloat AS FixDiscount
                , COALESCE (tmpPriceChange.Multiplicity,0)  :: TFloat AS Multiplicity
 
                , tmpPriceChange.DateChange                                          AS DateChange
@@ -458,6 +469,7 @@ BEGIN
                                 , ObjectFloat_FixValue.ValueData                AS FixValue
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) :: TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_FixPercent.ValueData, 0)   :: TFloat AS FixPercent
+                                , COALESCE (PriceChange_FixDiscount.ValueData, 0)  :: TFloat AS FixDiscount
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) :: TFloat AS Multiplicity
                                 , PriceChange_datechange.valuedata              AS DateChange
                            FROM tmpPriceChange1 AS tmpPriceChange
@@ -477,6 +489,9 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_FixPercent
                                                       ON PriceChange_FixPercent.ObjectId = tmpPriceChange.Id
                                                      AND PriceChange_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                LEFT JOIN ObjectFloat AS PriceChange_FixDiscount
+                                                      ON PriceChange_FixDiscount.ObjectId = tmpPriceChange.Id
+                                                     AND PriceChange_FixDiscount.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = tmpPriceChange.Id
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
@@ -560,6 +575,7 @@ BEGIN
                                     , tmpPriceChange.DateChange
                                     , tmpPriceChange.PercentMarkup
                                     , tmpPriceChange.FixPercent
+                                    , tmpPriceChange.FixDiscount
                                     , tmpPriceChange.Multiplicity
                                     , tmpRemains.Remains
                                     , tmpRemains.MinExpirationDate
@@ -664,6 +680,7 @@ BEGIN
                  , COALESCE (tmpPriceChange_All.FixValue,0)        :: TFloat    AS FixValue
                  , COALESCE (tmpPriceChange_All.PercentMarkup, 0)  :: TFloat    AS PercentMarkup
                  , COALESCE (tmpPriceChange_All.FixPercent, 0)     :: TFloat    AS FixPercent
+                 , COALESCE (tmpPriceChange_All.FixDiscount, 0)    :: TFloat    AS FixDiscount
                  , COALESCE (tmpPriceChange_All.Multiplicity, 0)   :: TFloat    AS Multiplicity
                  , tmpPriceChange_All.DateChange                                AS DateChange
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL) :: TDateTime AS StartDate
@@ -722,6 +739,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿.  ÿ‡·ÎËÈ Œ.¬.
+ 04.12.19                                                                      * FixDiscount
  13.03.19         * Multiplicity
  07.02.19         *
  27.09.18         * add inUnitId

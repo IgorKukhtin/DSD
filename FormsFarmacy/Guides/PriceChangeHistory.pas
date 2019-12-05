@@ -29,6 +29,7 @@ type
     StartDate: TcxGridDBColumn;
     PriceChange: TcxGridDBColumn;
     PercentMarkup: TcxGridDBColumn;
+    FixDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

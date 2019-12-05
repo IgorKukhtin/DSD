@@ -15,10 +15,12 @@ AS
 $BODY$
 DECLARE vbId Integer;
 BEGIN
-
+   
 
    IF COALESCE (inGoodsKindId,0) > 0
    THEN  
+       -- пока ставим запрет на сохранение цены с видом
+        RAISE EXCEPTION 'Ошибка.Запрещено сохранение цены по виду товара.';
        -- поиск
        SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
        FROM ObjectLink AS ObjectLink_PriceListItem_Goods

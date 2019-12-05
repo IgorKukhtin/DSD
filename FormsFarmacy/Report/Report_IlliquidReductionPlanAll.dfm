@@ -146,7 +146,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       ExplicitTop = 31
     end
     object ceNotSalePastDay: TcxCurrencyEdit
-      Left = 386
+      Left = 397
       Top = 5
       EditValue = 60.000000000000000000
       Properties.DecimalPlaces = 0
@@ -157,10 +157,10 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
     object cxLabel6: TcxLabel
       Left = 222
       Top = 6
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078':'
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
     end
     object ceProcGoods: TcxCurrencyEdit
-      Left = 556
+      Left = 559
       Top = 5
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
@@ -169,7 +169,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Width = 45
     end
     object cxLabel3: TcxLabel
-      Left = 446
+      Left = 449
       Top = 6
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end

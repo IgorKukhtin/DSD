@@ -44,9 +44,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PriceChange_FixPercent() RETURN
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
  SELECT zc_ObjectHistory_PriceChange(), 'zc_ObjectHistoryFloat_PriceChange_FixPercent','ффиксированный % скидки' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PriceChange_FixPercent());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PriceChange_FixDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_PriceChange_FixDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+ SELECT zc_ObjectHistory_PriceChange(), 'zc_ObjectHistoryFloat_PriceChange_FixDiscount','фиксированная сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PriceChange_FixDiscount());
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 04.12.19                                                                        * zc_ObjectHistoryFloat_PriceChange_FixDiscount
  07.02.19         * zc_ObjectHistoryFloat_PriceChange_FixPercent
  16.08.18         * zc_ObjectHistoryFloat_PriceChange_Value
                     zc_ObjectHistoryFloat_PriceChange_PercentMarkup

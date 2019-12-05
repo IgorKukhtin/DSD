@@ -33,6 +33,8 @@ type
     cbIsClose: TcxCheckBox;
     ceMaxOrderAmount: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    ceMaxOrderAmountSecond: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

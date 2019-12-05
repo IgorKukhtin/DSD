@@ -25,7 +25,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 497
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -87,7 +86,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 497
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -132,6 +130,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     TabOrder = 7

@@ -48,15 +48,13 @@ uses CommonData, LocalWorkUnit, MainCash2, ListDiff;
 
 procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-  var nAmount, nAmountDiffKind : Currency; bSend : boolean;
+  var nAmount, nAmountDiffKind, nMaxOrderAmount : Currency; bSend : boolean;
 begin
   if ModalResult <> mrOk then Exit;
 
   if MainCashForm.UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
-  begin
-    ShowMessage('Уважаемые коллеги. Добавление товаров в листы заказов заблокировано.');
-    Exit;
-  end;
+    nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderAmountSecond').AsCurrency
+  else nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency;
 
   nAmount := ceAmount.Value;
 
@@ -94,7 +92,7 @@ begin
     Exit;
   end;
 
-  if (nAmount > 0) and (DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency > 0) then
+  if (nAmount > 0) and (nMaxOrderAmount > 0) then
   begin
 
     nAmountDiffKind := 0;
@@ -138,12 +136,12 @@ begin
       end;
     end;
 
-    if ((nAmountDiffKind + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency then
+    if ((nAmountDiffKind + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > nMaxOrderAmount then
     begin
       Action := TCloseAction.caNone;
       ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
         #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
-        '" превисит ' + DiffKindCDS.FieldByName('MaxOrderAmount').AsString + ' грн. ...');
+        '" превисит ' + CurrToStr(nMaxOrderAmount) + ' грн. ...');
       lcbDiffKind.SetFocus;
       Exit;
     end;

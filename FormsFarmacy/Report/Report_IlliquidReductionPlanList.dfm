@@ -11,20 +11,21 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     Top = 77
     Width = 824
     Height = 427
+    ExplicitTop = 77
     ExplicitWidth = 824
-    ExplicitHeight = 447
+    ExplicitHeight = 427
     ClientRectBottom = 427
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
-      ExplicitHeight = 447
+      ExplicitHeight = 427
       inherited cxGrid: TcxGrid
         Top = 41
         Width = 824
         Height = 386
         ExplicitTop = 41
         ExplicitWidth = 824
-        ExplicitHeight = 406
+        ExplicitHeight = 386
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -249,7 +250,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
     end
     object ceProcUnit: TcxCurrencyEdit
-      Left = 711
+      Left = 720
       Top = 28
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
@@ -259,12 +260,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 45
     end
     object cxLabel4: TcxLabel
-      Left = 609
+      Left = 618
       Top = 29
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
     object ceProcGoods: TcxCurrencyEdit
-      Left = 556
+      Left = 565
       Top = 28
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
@@ -274,12 +275,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 45
     end
     object cxLabel5: TcxLabel
-      Left = 446
+      Left = 455
       Top = 29
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object ceNotSalePastDay: TcxCurrencyEdit
-      Left = 386
+      Left = 399
       Top = 28
       EditValue = 60.000000000000000000
       Properties.DecimalPlaces = 0
@@ -291,7 +292,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     object cxLabel6: TcxLabel
       Left = 222
       Top = 29
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078':'
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

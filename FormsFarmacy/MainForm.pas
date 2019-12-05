@@ -5,13 +5,13 @@ interface
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
-  DataModul, dxSkinsCore, dxSkinsDefaultPainters,
+  DataModul, dxSkinsCore, dxSkinsDefaultPainters, DateUtils,
   cxLocalization, Vcl.Menus, cxPropertiesStore, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter, cxStyles,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxTextEdit, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridDBTableView, cxGridCustomView, cxGrid, Vcl.ExtCtrls;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -593,6 +593,11 @@ type
     miReprice_test: TMenuItem;
     N202: TMenuItem;
     N203: TMenuItem;
+    actPercentageOverdueSUN: TdsdOpenForm;
+    N204: TMenuItem;
+    TimerPUSH: TTimer;
+    spGet_PUSH_Farmacy: TdsdStoredProc;
+    PUSHDS: TClientDataSet;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -603,8 +608,10 @@ type
     procedure actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
     procedure miRepriceChangeClick(Sender: TObject);
     procedure miReprice_testClick(Sender: TObject);
+    procedure TimerPUSHTimer(Sender: TObject);
   private
     { Private declarations }
+    FLoadPUSH: Integer;
   public
     { Public declarations }
   end;
@@ -619,7 +626,7 @@ implementation
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,  RepriceUnit_test,
   RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling,
-  Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance;
+  Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance, PUSHMessageFarmacy;
 
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
@@ -682,6 +689,8 @@ begin
     actRefresh.Timer.Enabled := False;
   end;
 
+  FLoadPUSH := 16;
+  TimerPUSH.Enabled := True;
 end;
 
 procedure TMainForm.actExportSalesForSuppClickExecute(Sender: TObject);
@@ -706,6 +715,46 @@ begin
      Show;
   finally
      //Free;
+  end;
+end;
+
+procedure TMainForm.TimerPUSHTimer(Sender: TObject);
+
+  procedure Load_PUSH;
+  begin
+    if FLoadPUSH > 15 then
+    begin
+      FLoadPUSH := 0;
+
+      if not gc_User.Local then
+      try
+        spGet_PUSH_Farmacy.Execute;
+        TimerPUSH.Interval := 1000;
+      except
+      end;
+    end else Inc(FLoadPUSH);
+  end;
+
+begin
+  TimerPUSH.Enabled := False;
+  TimerPUSH.Interval := 60 * 1000;
+
+  try
+    Load_PUSH;
+
+    if PUSHDS.Active and (PUSHDS.RecordCount > 0) then
+    begin
+      PUSHDS.First;
+      try
+        TimerPUSH.Interval := 1000;
+        if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') then ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString);
+      finally
+         PUSHDS.Delete;
+      end;
+    end;
+  finally
+    TimerPUSH.Enabled := True;
+    PUSHDS.Close;
   end;
 end;
 

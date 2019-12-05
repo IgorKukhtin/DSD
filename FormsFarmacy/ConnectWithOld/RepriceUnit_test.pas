@@ -501,6 +501,8 @@ begin
           cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
           cdsResult.FieldByName('isGoodsReprice').AsBoolean := AllGoodsPriceCDS.FieldByName('isGoodsReprice').AsBoolean;
           cdsResult.FieldByName('isUnder').AsBoolean := AllGoodsPriceCDS.FieldByName('isUnder').AsBoolean;
+          //cdsResult.FieldByName('UnitId').AsInteger := AllGoodsPriceCDS.FieldByName('UnitId').AsInteger;
+          //cdsResult.FieldByName('UnitName').AsString := AllGoodsPriceCDS.FieldByName('UnitName').AsString;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

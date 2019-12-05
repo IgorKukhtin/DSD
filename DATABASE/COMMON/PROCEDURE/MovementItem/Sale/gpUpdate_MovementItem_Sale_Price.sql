@@ -72,10 +72,22 @@ BEGIN
 
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, COALESCE (lfObjectHistory_PriceListItem_kind.ValuePrice, lfObjectHistory_PriceListItem.ValuePrice, 0))
      FROM MovementItem
+          -- вид товара
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+          -- привязываем 2 раза по виду товара и с пустым видом
           LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
                  AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+                                                 AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
+                                                 
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
+                 AS lfObjectHistory_PriceListItem_kind 
+                 ON lfObjectHistory_PriceListItem_kind.GoodsId = MovementItem.ObjectId
+                AND COALESCE (lfObjectHistory_PriceListItem_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
      WHERE MovementId = inMovementId;
 
 
@@ -98,6 +110,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 22.08.15         *  
+ 02.12.19         *
+ 22.08.15         *
 
 */

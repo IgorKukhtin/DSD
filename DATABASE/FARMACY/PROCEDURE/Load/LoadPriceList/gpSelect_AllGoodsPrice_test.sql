@@ -56,7 +56,9 @@ RETURNS TABLE (
     IsPromo             Boolean ,   -- Акция
     Reprice             Boolean ,   --
     isGoodsReprice      Boolean ,   --
-    isUnder             Boolean     -- нова цена ниже старой
+    isUnder             Boolean ,    -- нова цена ниже старой
+    UnitId              Integer ,
+    UnitName            TVarChar
     )
 
 AS
@@ -67,6 +69,7 @@ $BODY$
   DECLARE vbMarginPercent_ExpirationDate TFloat;
   DECLARE vbInterval_ExpirationDate      Interval;
   DECLARE vbisTopNo_Unit     Boolean;
+  DECLARE vbUnitName         TVarChar;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -86,6 +89,8 @@ BEGIN
                                  ON ObjectBoolean_TopNo.ObjectId = inUnitId
                                 AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
     WHERE Object_Unit_View.Id = inUnitId;
+
+    vbUnitName := (SELECT Object.ValueData FROM Object WHERE Object.Id = inUnitId);
 
   RETURN QUERY
     WITH DD
@@ -460,7 +465,9 @@ BEGIN
         END  AS Reprice, 
         
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
-        CASE WHEN COALESCE (ResultSet.NewPrice,0) < COALESCE (ResultSet.LastPrice,0) THEN TRUE ELSE FALSE END AS isUnder -- Новая цена ниже старой
+        CASE WHEN COALESCE (ResultSet.NewPrice,0) < COALESCE (ResultSet.LastPrice,0) THEN TRUE ELSE FALSE END AS isUnder, -- Новая цена ниже старой
+        inUnitId   AS UnitId,
+        vbUnitName AS UnitName
                 
     FROM
         ResultSet

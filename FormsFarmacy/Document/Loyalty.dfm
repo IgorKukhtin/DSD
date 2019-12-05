@@ -1,27 +1,27 @@
 inherited LoyaltyForm: TLoyaltyForm
   Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
-  ClientHeight = 565
+  ClientHeight = 658
   ClientWidth = 1125
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 1141
-  ExplicitHeight = 604
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 153
     Width = 1125
-    Height = 442
+    Height = 505
     ExplicitTop = 123
     ExplicitWidth = 1125
     ExplicitHeight = 442
-    ClientRectBottom = 442
+    ClientRectBottom = 505
     ClientRectRight = 1125
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1125
       ExplicitHeight = 418
       inherited cxGrid: TcxGrid
         Width = 1125
-        Height = 200
+        Height = 263
         ExplicitWidth = 1125
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -167,17 +167,18 @@ inherited LoyaltyForm: TLoyaltyForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 200
+        Top = 263
         Width = 1125
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitTop = 200
       end
       object Panel1: TPanel
         Left = 0
-        Top = 208
+        Top = 271
         Width = 1125
         Height = 210
         Align = alBottom
@@ -185,6 +186,7 @@ inherited LoyaltyForm: TLoyaltyForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 2
+        ExplicitTop = 208
         object Panel2: TPanel
           Left = 0
           Top = 0
@@ -519,10 +521,10 @@ inherited LoyaltyForm: TLoyaltyForm
   end
   inherited DataPanel: TPanel
     Width = 1125
-    Height = 97
+    Height = 127
     TabOrder = 3
     ExplicitWidth = 1125
-    ExplicitHeight = 97
+    ExplicitHeight = 127
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -552,16 +554,16 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 200
     end
     object cxLabel7: TcxLabel
-      Left = 447
+      Left = 225
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 447
+      Left = 225
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 7
-      Width = 175
+      Width = 397
     end
     object cxLabel10: TcxLabel
       Left = 862
@@ -614,27 +616,27 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 120
     end
     object edEndSale: TcxDateEdit
-      Left = 341
-      Top = 62
+      Left = 561
+      Top = 102
       EditValue = 42485d
       TabOrder = 14
       Width = 100
     end
     object cxLabel4: TcxLabel
-      Left = 339
-      Top = 5
+      Left = 335
+      Top = 85
       Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1085#1072#1095'.'
     end
     object edStartSale: TcxDateEdit
-      Left = 225
-      Top = 62
+      Left = 449
+      Top = 102
       EditValue = 42485d
       TabOrder = 16
       Width = 100
     end
     object cxLabel5: TcxLabel
       Left = 223
-      Top = 5
+      Top = 85
       Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1085#1072#1095'.'
     end
     object edStartSummCash: TcxCurrencyEdit
@@ -674,8 +676,8 @@ inherited LoyaltyForm: TLoyaltyForm
       Width = 113
     end
     object edEndPromo: TcxDateEdit
-      Left = 341
-      Top = 23
+      Left = 337
+      Top = 102
       EditValue = 42485d
       TabOrder = 23
       Width = 100
@@ -691,7 +693,7 @@ inherited LoyaltyForm: TLoyaltyForm
     end
     object edStartPromo: TcxDateEdit
       Left = 225
-      Top = 23
+      Top = 102
       EditValue = 42485d
       TabOrder = 25
       Width = 100
@@ -702,13 +704,13 @@ inherited LoyaltyForm: TLoyaltyForm
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
     object cxLabel3: TcxLabel
-      Left = 225
-      Top = 45
+      Left = 449
+      Top = 85
       Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1086#1075
     end
     object cxLabel6: TcxLabel
-      Left = 341
-      Top = 45
+      Left = 561
+      Top = 85
       Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1087#1086#1075'.'
     end
     object cxLabel9: TcxLabel
@@ -755,6 +757,26 @@ inherited LoyaltyForm: TLoyaltyForm
       Left = 754
       Top = 45
       Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+    end
+    object cxLabel19: TcxLabel
+      Left = 225
+      Top = 5
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+    end
+    object edRetail: TcxButtonEdit
+      Left = 225
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 37
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1089#1077#1090#1100'>'
+      Width = 196
     end
   end
   inherited ActionList: TActionList
@@ -1770,6 +1792,21 @@ inherited LoyaltyForm: TLoyaltyForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = Null
         Component = edComment
@@ -1923,6 +1960,14 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = 42132d
         Component = edOperDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailID'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2786,5 +2831,34 @@ inherited LoyaltyForm: TLoyaltyForm
       end>
     Left = 392
     Top = 56
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 16
   end
 end

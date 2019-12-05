@@ -58,6 +58,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     MaxOrderAmount: TcxGridDBColumn;
+    MaxOrderAmountSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

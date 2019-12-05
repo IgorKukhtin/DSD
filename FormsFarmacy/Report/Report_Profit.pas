@@ -97,6 +97,12 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     actGridToExcel1: TdsdGridToExcel;
     bbGridToExcel1: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridicalOur: TdsdGuides;
   private
     { Private declarations }
   public

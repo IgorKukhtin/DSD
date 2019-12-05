@@ -5,7 +5,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1077
-  ExplicitHeight = 457
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel
@@ -91,8 +91,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
             VisibleForCustomization = False
           end
           inherited Remains: TcxGridDBColumn [31]
-            Visible = False
-            VisibleForCustomization = False
+            Properties.DecimalPlaces = 3
           end
           inherited SummaRemains: TcxGridDBColumn [32]
             Visible = False
@@ -139,6 +138,10 @@ inherited MCS_LiteForm: TMCS_LiteForm
           inherited CheckPriceDate: TcxGridDBColumn [51]
           end
           inherited isCorrectMCS: TcxGridDBColumn [52]
+          end
+          inherited isMCSValue_dif: TcxGridDBColumn [53]
+          end
+          inherited DeferredSend: TcxGridDBColumn [54]
           end
         end
       end
