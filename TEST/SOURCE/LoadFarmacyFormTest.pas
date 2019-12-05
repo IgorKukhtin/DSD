@@ -810,6 +810,10 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanListForm'));

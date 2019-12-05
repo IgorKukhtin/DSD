@@ -2711,6 +2711,13 @@
 				<Form>Report_IlliquidReductionPlanUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PercentageOverdueSUN.pas">
+				<Form>Report_PercentageOverdueSUNForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\PUSHMessageFarmacy.pas">
+				<Form>PUSHMessageFarmacyForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

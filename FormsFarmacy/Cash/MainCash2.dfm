@@ -424,6 +424,14 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 57
         end
+        object MainFixDiscount: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'FixDiscount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          Width = 57
+        end
         object Multiplicity: TcxGridDBColumn
           Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
           DataBinding.FieldName = 'Multiplicity'
