@@ -60,10 +60,13 @@ BEGIN
                                                                              THEN inFromId 
                                                                         ELSE 8457 -- Склады База + Реализации
                                                                    END
-               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inIsPack = TRUE
+               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inToId = 0
+                                                                     AND inFromId  > 0
+                                                                         THEN inFromId
+                                                                    WHEN inIsPack = TRUE
                                                                          THEN 8451 -- Цех Упаковки
                                                                     ELSE CASE WHEN inToId <> 0 
-                                                                                   THEN IntoId
+                                                                                   THEN inToId
                                                                               ELSE 8446 -- ЦЕХ колбаса+дел-сы
                                                                          END
                                                                END

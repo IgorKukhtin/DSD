@@ -132,58 +132,34 @@ BEGIN
              , 0           AS KoeffOutSUN
         FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2();
 
-     IF inStep = 1 AND 1=0
-     THEN
-         -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
-         WITH -- SUN - за 30 дней
-              tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId_from
-                              , MovementLinkObject_To.ObjectId   AS UnitId_to
-                              , SUM (MovementItem.Amount * COALESCE (MIF_PriceFrom.ValueData, 0)) AS Summ_out
-                              , SUM (MovementItem.Amount * COALESCE (MIF_PriceTo.ValueData, 0))   AS Summ_in
-                         FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                            ON MovementLinkObject_To.MovementId = Movement.Id
-                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                              INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                         ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                        AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-                                                        AND MovementBoolean_SUN.ValueData  = TRUE
-                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
-                                                     AND MovementItem.Amount     > 0
-                              LEFT JOIN MovementItemFloat AS MIF_PriceFrom
-                                                          ON MIF_PriceFrom.MovementItemId = MovementItem.Id
-                                                         AND MIF_PriceFrom.DescId         = zc_MIFloat_PriceFrom()
-                              LEFT JOIN MovementItemFloat AS MIF_PriceTo
-                                                          ON MIF_PriceTo.MovementItemId = MovementItem.Id
-                                                         AND MIF_PriceTo.DescId         = zc_MIFloat_PriceTo()
-                         WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '30 DAY' AND inOperDate - INTERVAL '1 DAY'
-                           AND Movement.DescId   = zc_Movement_Send()
-                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                         GROUP BY MovementLinkObject_From.ObjectId
-                                , MovementLinkObject_To.ObjectId
-                        )
-         -- Результат
-         INSERT INTO _tmpUnit_SUN_balance (UnitId, Summ_out, Summ_in, KoeffInSUN, KoeffOutSUN)
-            SELECT _tmpUnit_SUN.UnitId
-                  , COALESCE (tmpSumm_out.Summ_out) AS Summ_out
-                  , COALESCE (tmpSumm_in.Summ_in)   AS Summ_in
-                  , CASE WHEN tmpSumm_out.Summ_out > 0 AND tmpSumm_in.Summ_in > 0 THEN tmpSumm_in.Summ_in   / tmpSumm_out.Summ_out ELSE 0 END AS KoeffInSUN
-                  , CASE WHEN tmpSumm_out.Summ_out > 0 AND tmpSumm_in.Summ_in > 0 THEN tmpSumm_out.Summ_out / tmpSumm_in.Summ_in   ELSE 0 END AS KoeffOutSUN
-            FROM _tmpUnit_SUN
-                 LEFT JOIN (SELECT tmpSUN.UnitId_from, SUM (tmpSUN.Summ_out) AS Summ_out FROM tmpSUN GROUP BY tmpSUN.UnitId_from
-                           ) AS tmpSumm_out ON tmpSumm_out.UnitId_from = _tmpUnit_SUN.UnitId
-                 LEFT JOIN (SELECT tmpSUN.UnitId_to, SUM (tmpSUN.Summ_in) AS Summ_in FROM tmpSUN GROUP BY tmpSUN.UnitId_to
-                           ) AS tmpSumm_in ON tmpSumm_in.UnitId_to = _tmpUnit_SUN.UnitId
-                ;
-     END IF;
-        
+       
+     -- 1.1. вся статистика продаж: 1) у отправителя в разрезе T1=60 дней 2) у получателя в разрезе T2=45
+     -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
+     --
+     INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
+        SELECT tmp.UnitId
+             , tmp.GoodsId
+             , tmp.Amount_t1, tmp.Summ_t1
+             , tmp.Amount_t2, tmp.Summ_t2
+        FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
+                   , MIContainer.ObjectId_analyzer               AS GoodsId
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t22
+              FROM MovementItemContainer AS MIContainer
+                   INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
+              WHERE MIContainer.DescId         = zc_MIContainer_Count()
+                AND MIContainer.MovementDescId = zc_Movement_Check()
+                AND MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY' AND CURRENT_DATE
+              GROUP BY MIContainer.ObjectId_analyzer
+                     , MIContainer.WhereObjectId_analyzer
+              HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+             ) AS tmp
+       ;
 
-     -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
+
+     -- 1.2. все остатки, продажи => получаем кол-ва у получателя
      -- CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      -- CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      --
@@ -342,15 +318,10 @@ BEGIN
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
-          -- цены
-        , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
+   -- цены
+ , tmpObject_Price AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                             , OL_Price_Goods.ChildObjectId      AS GoodsId
                             , ROUND (Price_Value.ValueData, 2)  AS Price
-                            , MCS_Value.ValueData               AS MCSValue
-                            , CASE WHEN Price_MCSValueMin.ValueData IS NOT NULL
-                                   THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
-                                   ELSE 0
-                              END AS MCSValue_min
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
@@ -366,88 +337,30 @@ BEGIN
                             LEFT JOIN ObjecTFloat AS Price_Value
                                                   ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_Value.DescId = zc_ObjecTFloat_Price_Value()
-                            LEFT JOIN ObjecTFloat AS MCS_Value
-                                                  ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND MCS_Value.DescId = zc_ObjecTFloat_Price_MCSValue()
-                            LEFT JOIN ObjecTFloat AS Price_MCSValueMin
-                                                  ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND Price_MCSValueMin.DescId = zc_ObjecTFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                       )
-          -- данные из ассорт. матрицы
-        , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
-                                    , ObjectLink_Child_retail.ChildObjectId       AS GoodsId
-                                    , ObjecTFloat_Value.ValueData                 AS Value
-                               FROM Object AS Object_GoodsCategory
-                                   INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
-                                                         ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
-                                                        AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
-                                   -- !!!только для таких Аптек!!!
-                                   INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
-
-                                   INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
-                                                         ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
-                                                        AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                   INNER JOIN ObjecTFloat AS ObjecTFloat_Value
-                                                          ON ObjecTFloat_Value.ObjectId = Object_GoodsCategory.Id
-                                                         AND ObjecTFloat_Value.DescId = zc_ObjecTFloat_GoodsCategory_Value()
-                                                         AND COALESCE (ObjecTFloat_Value.ValueData,0) <> 0
-                                   -- выходим на товар сети
-                                   INNER JOIN ObjectLink AS ObjectLink_Main_retail
-                                                         ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
-                                                        AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                   INNER JOIN ObjectLink AS ObjectLink_Child_retail
-                                                         ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                        AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                   INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                         ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                        AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                        AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                               WHERE Object_GoodsCategory.DescId   = zc_Object_GoodsCategory()
-                                 AND Object_GoodsCategory.isErased = FALSE
-                               )
-          -- подменяем НТЗ на значение из ассорт. матрицы, если в ассотр. матрице значение больше
-        , tmpObject_Price AS (SELECT COALESCE (tmpPrice.UnitId,  tmpGoodsCategory.UnitId)  AS UnitId
-                                   , COALESCE (tmpPrice.GoodsId, tmpGoodsCategory.GoodsId) AS GoodsId
-                                   , COALESCE (tmpPrice.Price, 0)                :: TFloat AS Price
-                                   , CASE WHEN COALESCE (tmpGoodsCategory.Value, 0.0) <= COALESCE (tmpPrice.MCSValue, 0.0)
-                                          THEN COALESCE (tmpPrice.MCSValue, 0.0)
-                                          ELSE tmpGoodsCategory.Value
-                                     END                                         :: TFloat AS MCSValue
-                                   , COALESCE (tmpPrice.MCSValue_min, 0.0)       :: TFloat AS MCSValue_min
-                              FROM tmpPrice
-                                   FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
-                                                             AND tmpGoodsCategory.UnitId  = tmpPrice.UnitId
-                              WHERE COALESCE (tmpGoodsCategory.Value, 0) <> 0
-                                 OR COALESCE (tmpPrice.MCSValue, 0) <> 0
-                                 OR COALESCE (tmpPrice.Price, 0) <> 0
-                             )
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
-             , tmpObject_Price.MCSValue
-             , CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
-                    WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
-                         THEN CASE -- для такого НТЗ
-                                   WHEN tmpObject_Price.MCSValue >= 0.1 AND tmpObject_Price.MCSValue < 10
-                                   -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                    AND 1 >= ROUND (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                        THEN -- округляем ВВЕРХ
-                                             CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-
-                                   -- для такого НТЗ
-                                   WHEN tmpObject_Price.MCSValue >= 10
-                                   -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                    AND 1 >= CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                        THEN -- округляем
-                                             ROUND  (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-
-                                   ELSE -- округляем ВВНИЗ
-                                        FLOOR (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                              END
+             , 0 AS MCSValue
+             , CASE -- для такого
+                    WHEN 1 < FLOOR ((COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
+                                   + COALESCE (tmpMI_Send_in.Amount, 0)
+                                   + COALESCE (tmpMI_Income.Amount, 0)
+                                   + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                   - COALESCE (_tmpSale_over.Amount_t1, 0)
+                                    )
+                         THEN -- округляем ВВНИЗ
+                              FLOOR ((COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
+                                   + COALESCE (tmpMI_Send_in.Amount, 0)
+                                   + COALESCE (tmpMI_Income.Amount, 0)
+                                   + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                     -- продажи у отправителя в разрезе T1=60 дней
+                                   - COALESCE (_tmpSale_over.Amount_t1, 0)
+                                    )
                     ELSE 0
                END AS AmountResult
                -- остаток
@@ -457,7 +370,7 @@ BEGIN
                -- Перемещение - приход - UnComplete - за последние +/-30 дней
              , COALESCE (tmpMI_Send_in.Amount, 0)       AS AmountSend_In
                -- Перемещение - приход - UnComplete - за последние +/-30 дней
-             , COALESCE (tmpMI_Send_out.Amount, 0)       AS AmountSend_out
+             , COALESCE (tmpMI_Send_out.Amount, 0)      AS AmountSend_out
                -- заказы - UnComplete - !ВСЕ! Deferred
              , COALESCE (tmpMI_OrderExternal.Amount,0)  AS AmountOrderExternal
                -- отложенные Чеки + не проведенные с CommentError
@@ -476,6 +389,8 @@ BEGIN
                                                 AND tmpMI_OrderExternal.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Reserve ON tmpMI_Reserve.UnitId  = tmpObject_Price.UnitId
                                     AND tmpMI_Reserve.GoodsId = tmpObject_Price.GoodsId
+             LEFT JOIN _tmpSale_over ON _tmpSale_over.UnitId  = tmpObject_Price.UnitId
+                                    AND _tmpSale_over.GoodsId = tmpObject_Price.GoodsId
              -- отбросили !!закрытые!!
              INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
                                          AND Object_Goods_View.IsClose = FALSE
@@ -483,40 +398,17 @@ BEGIN
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
              -- НЕ отбросили !!холод!!
-             LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
+             /*LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                   ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
                                  AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
-              )
-           OR Object_ConditionsKeep.ValueData IS NULL
-        */
-
-        -- !!!только с таким НТЗ!!!
-        -- WHERE tmpObject_Price.MCSValue >= 0.5
-        -- !!!отключил, взяли все!!!
-        /*WHERE CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
-                   WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
-                        THEN CASE -- для такого НТЗ
-                                  WHEN tmpObject_Price.MCSValue >= 0.1 AND tmpObject_Price.MCSValue < 10
-                                  -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                   AND 1 >= ROUND (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                       THEN -- округляем ВВЕРХ
-                                            CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-
-                                  -- для такого НТЗ
-                                  WHEN tmpObject_Price.MCSValue >= 10
-                                  -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                   AND 1 >= CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                       THEN -- округляем
-                                            ROUND  (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-
-                                  ELSE -- округляем ВВНИЗ
-                                       FLOOR (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)) - COALESCE (tmpMI_Send_in.Amount, 0) - COALESCE (tmpMI_Income.Amount, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                             END
-                   ELSE 0
-              END > 0*/
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId*/
+        WHERE 1 < FLOOR ((COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
+                       + COALESCE (tmpMI_Send_in.Amount, 0)
+                       + COALESCE (tmpMI_Income.Amount, 0)
+                       + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                         -- продажи у отправителя в разрезе T1=60 дней
+                       - COALESCE (_tmpSale_over.Amount_t1, 0)
+                        )
        ;
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
@@ -530,61 +422,6 @@ BEGIN
          --AND (COALESCE (_tmpUnit_SUN.KoeffInSUN, 0) = 0 OR _tmpUnit_SUN_balance.KoeffInSUN < _tmpUnit_SUN.KoeffInSUN)
        ;
 
-
-     -- 2. вся статистика продаж - 180 дней
-     -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
-     --
-     INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount, Summ, Amount1, Summ1, Amount2, Summ2, Amount3, Summ3, Amount4, Summ4, Amount5, Summ5, Amount6, Summ6)
-        SELECT tmp.UnitId
-             , tmp.GoodsId
-             , CASE WHEN tmp.Amount1 <> 0 THEN tmp.Amount1
-                    WHEN tmp.Amount2 <> 0 THEN tmp.Amount2
-                    WHEN tmp.Amount3 <> 0 THEN tmp.Amount3
-                    WHEN tmp.Amount4 <> 0 THEN tmp.Amount4
-                    WHEN tmp.Amount5 <> 0 THEN tmp.Amount5
-                    WHEN tmp.Amount6 <> 0 THEN tmp.Amount6
-                    ELSE 0
-               END AS Amount
-             , CASE WHEN tmp.Amount1 <> 0 THEN tmp.Summ1
-                    WHEN tmp.Amount2 <> 0 THEN tmp.Summ2
-                    WHEN tmp.Amount3 <> 0 THEN tmp.Summ3
-                    WHEN tmp.Amount4 <> 0 THEN tmp.Summ4
-                    WHEN tmp.Amount5 <> 0 THEN tmp.Summ5
-                    WHEN tmp.Amount6 <> 0 THEN tmp.Summ6
-                    ELSE 0
-               END AS Summ
-             , tmp.Amount1, tmp.Summ1
-             , tmp.Amount2, tmp.Summ2
-             , tmp.Amount3, tmp.Summ3
-             , tmp.Amount4, tmp.Summ4
-             , tmp.Amount5, tmp.Summ5
-             , tmp.Amount6, tmp.Summ6
-        FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
-                   , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '30 DAY'  AND CURRENT_DATE                      THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '30 DAY'  AND CURRENT_DATE                      THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE - INTERVAL '30 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE - INTERVAL '30 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '90 DAY'  AND CURRENT_DATE - INTERVAL '60 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount3
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '90 DAY'  AND CURRENT_DATE - INTERVAL '60 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ3
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '120 DAY' AND CURRENT_DATE - INTERVAL '90 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount4
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '120 DAY' AND CURRENT_DATE - INTERVAL '90 DAY'  THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ4
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '150 DAY' AND CURRENT_DATE - INTERVAL '120 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount5
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '150 DAY' AND CURRENT_DATE - INTERVAL '120 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ5
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '180 DAY' AND CURRENT_DATE - INTERVAL '150 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount6
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '180 DAY' AND CURRENT_DATE - INTERVAL '150 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ6
-              FROM MovementItemContainer AS MIContainer
-                   INNER JOIN _tmpRemains ON _tmpRemains.UnitId       = MIContainer.WhereObjectId_analyzer
-                                         AND _tmpRemains.GoodsId      = MIContainer.ObjectId_analyzer
-                                         AND _tmpRemains.AmountResult <= 0 -- !!!нужна только когда нет Автозаказа!!!
-              WHERE MIContainer.DescId         = zc_MIContainer_Count()
-                AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '180 DAY' AND CURRENT_DATE
-              GROUP BY MIContainer.ObjectId_analyzer
-                     , MIContainer.WhereObjectId_analyzer
-              HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-             ) AS tmp
-       ;
 
 
     -- дата + 6 месяцев

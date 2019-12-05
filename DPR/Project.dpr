@@ -96,7 +96,8 @@ uses
   LabProduct in '..\Forms\Guides\LabProduct.pas' {LabProductForm: TParentForm},
   LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
-  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

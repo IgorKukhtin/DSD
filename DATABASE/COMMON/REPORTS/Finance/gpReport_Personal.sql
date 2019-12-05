@@ -62,10 +62,10 @@ BEGIN
 
 
      -- таблица - элементы
-     CREATE TEMP TABLE _tmpList (PersonalServiceListId Integer) ON COMMIT DROP;
+     -- CREATE TEMP TABLE _tmpList (PersonalServiceListId Integer) ON COMMIT DROP;
 
      -- таблица - элементы
-     INSERT INTO _tmpList (PersonalServiceListId)
+     /*INSERT INTO _tmpList (PersonalServiceListId)
         SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
         FROM ObjectLink AS ObjectLink_User_Member
              INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
@@ -89,15 +89,65 @@ BEGIN
                                   AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
         WHERE ObjectLink_User_Member.ObjectId = vbUserId
           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-       ;
+       ;*/
      --
-     vbIsList_all:= NOT EXISTS (SELECT 1 FROM _tmpList) OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
-
+   --vbIsList_all:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+   --            OR NOT EXISTS (SELECT 1 FROM _tmpList)
+   --              ;
+     vbIsList_all:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+                 OR NOT EXISTS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                FROM ObjectLink AS ObjectLink_User_Member
+                                     INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                           ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                          AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                     LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                            AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                                     LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                          ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                         AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                                     LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                                   AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                                     OR ObjectBoolean.ValueData          = TRUE)
+                                WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                  AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                               UNION
+                                SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
+                                FROM ObjectLink AS ObjectLink_User_Member
+                                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                           ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                          AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                                WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                  AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                               )
+                   ;
 
      -- Результат
      RETURN QUERY
-     WITH
-     tmpContainer AS (SELECT CLO_Personal.ContainerId         AS ContainerId
+     WITH _tmpList AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                       FROM ObjectLink AS ObjectLink_User_Member
+                            INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                  ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                 AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                            LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                   AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                 ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                          AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                            OR ObjectBoolean.ValueData          = TRUE)
+                       WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                         AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                      UNION
+                       SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
+                       FROM ObjectLink AS ObjectLink_User_Member
+                            INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                  ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                 AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                       WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                         AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                      )
+   , tmpContainer AS (SELECT CLO_Personal.ContainerId         AS ContainerId
                            , Container.ObjectId               AS AccountId
                            , Container.Amount
                            , CLO_Personal.ObjectId            AS PersonalId
@@ -140,6 +190,12 @@ BEGIN
                         AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
                       )
 
+   , tmpMIContainer AS (SELECT MIContainer.*
+                        FROM tmpContainer
+                             INNER JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                       )
    , tmpMIFloat_SummService AS (SELECT tmp.ContainerId
                                      , SUM (COALESCE (MIFloat_SummService.ValueData,0)) AS  SummService_inf
                                      , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0)) AS  SummHoliday_inf
@@ -147,14 +203,9 @@ BEGIN
                                      , SUM (COALESCE (MIFloat_SummHosp.ValueData,0))    AS  SummHosp
                                 FROM (SELECT DISTINCT MIContainer.ContainerId
                                            , MIContainer.MovementItemId
-                                           , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
-                                     FROM tmpContainer
-                                          LEFT JOIN MovementItemContainer AS MIContainer
-                                                                          ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                         AND MIContainer.OperDate >= inStartDate
-                                                                         AND MIContainer.OperDate <= inEndDate 
-                                          INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                                             AND Movement.DescId = zc_Movement_PersonalService()
+                                           , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, MIContainer.ContainerId) AS Ord
+                                      FROM tmpMIContainer AS MIContainer
+                                      WHERE MIContainer.MovementDescId = zc_Movement_PersonalService()
                                      ) AS tmp
                                       LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                                                   ON MIFloat_SummService.MovementItemId = tmp.MovementItemId
@@ -171,7 +222,7 @@ BEGIN
                                 WHERE tmp.Ord = 1
                                 GROUP BY tmp.ContainerId
                                 )
-   , Operation_all AS (SELECT tmpContainer.ContainerId
+, tmpOperation_all AS (SELECT tmpContainer.ContainerId
                             , tmpContainer.AccountId
                             , tmpContainer.PersonalId
                             , tmpContainer.InfoMoneyId
@@ -183,14 +234,14 @@ BEGIN
                             , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)                                                                                   AS StartAmount
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)          AS DebetSumm
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
 
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCard
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCard
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
 
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet()) THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND Movement.DescId        = zc_Movement_Income()                          THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet()) THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.MovementDescId        = zc_Movement_Income()                          THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()            THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong()        THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()           THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
@@ -203,25 +254,107 @@ BEGIN
                             --, MIN (MIContainer.MovementItemId) AS MovementItemId
                             -- , MIContainer.MovementItemId
                             -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
-                        FROM tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                             AND MIContainer.OperDate >= inStartDate
-                              LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                       FROM tmpContainer
+                            LEFT JOIN tmpMIContainer AS MIContainer
+                                                     ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          --LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
 
-                        GROUP BY tmpContainer.ContainerId
-                               , tmpContainer.AccountId
-                               , tmpContainer.PersonalId
-                               , tmpContainer.InfoMoneyId
-                               , tmpContainer.UnitId
-                               , tmpContainer.PositionId
-                               , tmpContainer.PersonalServiceListId
-                               , tmpContainer.BranchId
-                               , tmpContainer.ServiceDate
-                               , tmpContainer.Amount
+                       GROUP BY tmpContainer.ContainerId
+                              , tmpContainer.AccountId
+                              , tmpContainer.PersonalId
+                              , tmpContainer.InfoMoneyId
+                              , tmpContainer.UnitId
+                              , tmpContainer.PositionId
+                              , tmpContainer.PersonalServiceListId
+                              , tmpContainer.BranchId
+                              , tmpContainer.ServiceDate
+                              , tmpContainer.Amount
+                           -- , MIContainer.MovementItemId
+                       HAVING 0 <> tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)
+                           OR 0 <> SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                           OR 0 <> SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
+                           OR 0 <> tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)
+                      UNION ALL
+                       SELECT tmpContainer.ContainerId
+                            , tmpContainer.AccountId
+                            , tmpContainer.PersonalId
+                            , tmpContainer.InfoMoneyId
+                            , tmpContainer.UnitId
+                            , tmpContainer.PositionId
+                            , tmpContainer.PersonalServiceListId
+                            , tmpContainer.BranchId
+                            , tmpContainer.ServiceDate
+                            , 0 - SUM (MIContainer.Amount) AS StartAmount
+                            , 0 AS DebetSumm
+                            , 0 AS KreditSumm
+                            , 0 AS MoneySumm
+
+                            , 0 AS MoneySummCard
+                            , 0 AS MoneySummCardSecond
+                            , 0 AS MoneySummCash
+
+                            , 0 AS ServiceSumm
+                            , 0 AS IncomeSumm
+                            , 0 AS SummTransportAdd
+                            , 0 AS SummTransportAddLong
+                            , 0 AS SummTransportTaxi
+                            , 0 AS SummNalog
+                            , 0 AS SummNalogRet
+                            , 0 AS SummPhone
+
+                            , 0 - SUM (MIContainer.Amount) AS EndAmount
+                            --
+                            --, MIN (MIContainer.MovementItemId) AS MovementItemId
                             -- , MIContainer.MovementItemId
-                       )
-
+                            -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
+                       FROM tmpContainer
+                            INNER JOIN MovementItemContainer AS MIContainer
+                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                            AND MIContainer.OperDate    > inEndDate
+                       GROUP BY tmpContainer.ContainerId
+                              , tmpContainer.AccountId
+                              , tmpContainer.PersonalId
+                              , tmpContainer.InfoMoneyId
+                              , tmpContainer.UnitId
+                              , tmpContainer.PositionId
+                              , tmpContainer.PersonalServiceListId
+                              , tmpContainer.BranchId
+                              , tmpContainer.ServiceDate
+                              , tmpContainer.Amount
+                       HAVING 0 <> SUM (MIContainer.Amount)
+                      )
+   , Operation_all AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId
+                           , Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
+                           , Operation_all.PersonalServiceListId
+                           , Operation_all.BranchId, Operation_all.ServiceDate
+                           , SUM (Operation_all.StartAmount) AS StartAmount
+                           , SUM (Operation_all.DebetSumm)   AS DebetSumm
+                           , SUM (Operation_all.KreditSumm)  AS KreditSumm
+                           , SUM (Operation_all.MoneySumm)   AS MoneySumm
+                           , SUM (Operation_all.MoneySummCard)       AS MoneySummCard
+                           , SUM (Operation_all.MoneySummCardSecond) AS MoneySummCardSecond
+                           , SUM (Operation_all.MoneySummCash)       AS MoneySummCash
+                           , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
+                           , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
+                           , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
+                           , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
+                           , SUM (Operation_all.SummTransportTaxi)     AS SummTransportTaxi
+                           , SUM (Operation_all.SummPhone)             AS SummPhone
+                           , SUM (Operation_all.SummNalog)             AS SummNalog
+                           , SUM (Operation_all.SummNalogRet)          AS SummNalogRet
+                           , SUM (Operation_all.EndAmount)   AS EndAmount
+                       FROM tmpOperation_all AS Operation_all
+                       GROUP BY Operation_all.ContainerId
+                              , Operation_all.AccountId
+                              , Operation_all.PersonalId
+                              , Operation_all.InfoMoneyId
+                              , Operation_all.UnitId
+                              , Operation_all.PositionId
+                              , Operation_all.BranchId
+                              , Operation_all.ServiceDate
+                              , Operation_all.PersonalServiceListId
+                     )
    , tmpOperation AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId
                            , Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
                            , Operation_all.PersonalServiceListId

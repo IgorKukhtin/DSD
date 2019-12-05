@@ -30,6 +30,10 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
+    
+    DECLARE vbWeighingCount TFloat;
+
+    DECLARE vbOperDate_insert TDateTime;
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
@@ -40,6 +44,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- параметры
+     vbOperDate_insert:= (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1);
      -- параметры из Взвешивания
      vbStoreKeeperName:= (SELECT Object_User.ValueData
                           FROM Movement
@@ -51,6 +57,13 @@ BEGIN
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                           LIMIT 1
                          );
+     -- параметры из Взвешивания
+     vbWeighingCount:= (SELECT Count(*) AS WeighingCount
+                        FROM Movement
+                        WHERE Movement.ParentId = inMovementId
+                          AND Movement.DescId = zc_Movement_WeighingPartner()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -401,6 +414,9 @@ BEGIN
            , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isSchema_fozz  -- для договора Id = 4440485 + доп страничка
            , tmpTransportGoods.CarName
            , tmpTransportGoods.CarModelName
+
+           , vbOperDate_insert AS OperDate_insert
+           , CASE WHEN vbWeighingCount > 0 THEN vbWeighingCount ELSE 1 END :: Integer AS WeighingCount
 
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id

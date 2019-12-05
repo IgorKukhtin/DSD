@@ -67,6 +67,22 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Для <Админ> нет прав создания документа.';
           END IF;
      ELSE*/
+
+
+     -- проверка
+     IF NOT EXISTS (SELECT ObjectLink_User_Member.ObjectId
+                    FROM ObjectLink
+                         INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                               ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                              AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+                                              AND ObjectLink_User_Member.ObjectId      > 0
+                    WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                      AND ObjectLink.ObjectId = inPersonalServiceListId
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В справочнике <Ведомости начисления> для <%> не установлено значение Физ.лицо (пользователь).', lfGet_Object_ValueData_sh (inPersonalServiceListId);
+     END IF;
+
          -- определяем ключ доступа
          -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
          vbAccessKeyId:= CASE WHEN vbIsAll = TRUE
