@@ -33,7 +33,9 @@ BEGIN
     vbUserId:= inSession;
 
      -- проверка
-    IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+    IF COALESCE ((SELECT MIC.Id FROM MovementBoolean  AS MovementBoolean_Deferred
+                  WHERE MovementBoolean_Deferred.MovementId = inMovementId
+                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
     THEN
          RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
     END IF;

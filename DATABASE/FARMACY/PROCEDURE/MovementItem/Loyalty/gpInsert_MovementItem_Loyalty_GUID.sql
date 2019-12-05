@@ -251,6 +251,7 @@ BEGIN
 
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, outGUID);
+        PERFORM lpInsertUpdate_MovementItem_Loyalty_GUID (ioId, outGUID, vbUserId);
 
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, CURRENT_DATE);

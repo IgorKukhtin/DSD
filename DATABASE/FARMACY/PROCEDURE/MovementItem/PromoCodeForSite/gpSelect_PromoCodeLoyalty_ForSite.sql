@@ -39,16 +39,15 @@ BEGIN
 
     SELECT MovementItem.ID, MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MovementFloat_MovementItemId.MovementId, MIDate_OperDate.ValueData
     INTO vbMovementItemId, vbMovementId, vbDiscountAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
-    FROM MovementItemString
-         INNER JOIN MovementItem ON MovementItem.ID = MovementItemString.MovementItemID
+    FROM MovementItem_Loyalty_GUID
+         INNER JOIN MovementItem ON MovementItem.ID = MovementItem_Loyalty_GUID.MovementItemID
          LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                  ON MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                                 AND MovementFloat_MovementItemId.ValueData = MovementItem.ID
          LEFT JOIN MovementItemDate AS MIDate_OperDate
                                     ON MIDate_OperDate.MovementItemId = MovementItem.ID
                                    AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
-    WHERE MovementItemString.DescId = zc_MIString_GUID()
-      AND MovementItemString.ValueData = inGUID;
+    WHERE MovementItem_Loyalty_GUID.GUID = inGUID;
 
     IF COALESCE(vbMovementChackId, 0) <> 0
     THEN
@@ -144,5 +143,5 @@ $BODY$
 
 -- zfCalc_FromHex
 
--- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('1119-A887-001F-A46F', '3');
+-- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('1119-A887-001F-A46F', 0, '3');
 -- SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '1119-2300-7A19-8EDC', inUnitID := '0', inSession := zfCalc_UserSite());

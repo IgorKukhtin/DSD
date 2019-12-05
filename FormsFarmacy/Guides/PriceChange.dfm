@@ -352,7 +352,7 @@ inherited PriceChangeForm: TPriceChangeForm
     end
   end
   object edRetail: TcxButtonEdit [2]
-    Left = 94
+    Left = 96
     Top = 5
     Properties.Buttons = <
       item
@@ -1245,6 +1245,15 @@ inherited PriceChangeForm: TPriceChangeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'FixPercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixDiscount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FixDiscount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

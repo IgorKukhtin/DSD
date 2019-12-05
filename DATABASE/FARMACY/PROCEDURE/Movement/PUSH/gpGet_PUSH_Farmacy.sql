@@ -219,5 +219,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_PUSH_Farmacy('4127945')
+-- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 -- SELECT * FROM gpGet_PUSH_Farmacy('3')
