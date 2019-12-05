@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat, MCSValue_min TFloat
              , MCSValueOld TFloat
              , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
              , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
+             , Remains TFloat
              ) AS
 $BODY$
 DECLARE
@@ -83,6 +84,7 @@ BEGIN
                ,NULL::TDateTime                  AS EndDateMCSAuto
                ,NULL::Boolean                    AS isMCSAuto
                ,NULL::Boolean                    AS isMCSNotRecalcOld
+               ,NULL::TFloat                     AS Remains
 
            WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -241,6 +243,14 @@ BEGIN
                                              AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
+      , tmpContainerCount AS (SELECT Container.ObjectId              AS GoodsId
+                                   , Sum(Container.Amount)::TFloat   AS Remains
+                              FROM Container
+                              WHERE Container.DescId = zc_Container_count()
+                                AND Container.WhereObjectId = inUnitId
+                                AND Container.Amount <> 0
+                              GROUP BY Container.ObjectId
+                              )      
 
             SELECT tmpPrice.Id                            AS Id
                  , COALESCE (tmpPrice.Price,0)   ::TFloat AS Price
@@ -276,8 +286,10 @@ BEGIN
                  , tmpPrice.EndDateMCSAuto
                  , tmpPrice.isMCSAuto
                  , tmpPrice.isMCSNotRecalcOld       
+                 , tmpContainerCount.Remains 
               FROM tmpGoods
                 LEFT OUTER JOIN tmpPrice ON  tmpPrice.goodsid = tmpGoods.GoodsId
+                LEFT JOIN tmpContainerCount ON tmpContainerCount.goodsid = tmpPrice.goodsid
             ORDER BY GoodsGroupName, GoodsName;
     ELSE
         RETURN QUERY
@@ -432,7 +444,14 @@ BEGIN
                                              AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
-      
+      , tmpContainerCount AS (SELECT Container.ObjectId              AS GoodsId
+                                   , Sum(Container.Amount)::TFloat   AS Remains
+                              FROM Container
+                              WHERE Container.DescId = zc_Container_count()
+                                AND Container.WhereObjectId = inUnitId
+                                AND Container.Amount <> 0
+                              GROUP BY Container.ObjectId
+                              )      
             SELECT tmpPrice.Id
                  , COALESCE (tmpPrice.Price,0)    :: TFloat AS Price
                  , COALESCE (tmpPrice.MCSValue,0) :: TFloat AS MCSValue
@@ -467,8 +486,10 @@ BEGIN
                  , tmpPrice.EndDateMCSAuto
                  , tmpPrice.isMCSAuto
                  , tmpPrice.isMCSNotRecalcOld
+                 , tmpContainerCount.Remains 
             FROM tmpPrice
                 JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
+                LEFT JOIN tmpContainerCount ON tmpContainerCount.goodsid = tmpPrice.goodsid
             ORDER BY GoodsGroupName, GoodsName;
 
     END IF;
@@ -489,4 +510,4 @@ $BODY$
 
 -- тест
 --select * from gpSelect_Object_Price_Lite(inUnitId := 183292 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
---select * from gpSelect_Object_Price(inUnitId := 183292 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+--select * from gpSelect_Object_Price_Lite(inUnitId := 183292 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

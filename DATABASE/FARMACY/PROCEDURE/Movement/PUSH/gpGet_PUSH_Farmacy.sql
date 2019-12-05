@@ -135,7 +135,8 @@ BEGIN
    END IF;
 
      -- Коллеги, ожидайте, на вас следует перемещение по СУН!. после отправлено
-   IF EXISTS(SELECT 1
+   IF COALESCE(vbPositionID, 0) = 1690028 AND
+      EXISTS(SELECT 1
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
@@ -164,7 +165,8 @@ BEGIN
    END IF;
 
      -- Коллеги, ожидайте, на вас следует перемещение по СУН!. в 16:00
-   IF date_part('HOUR',    CURRENT_TIME)::Integer = 16
+   IF COALESCE(vbPositionID, 0) = 1690028 AND
+      date_part('HOUR',    CURRENT_TIME)::Integer = 16
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
    THEN
