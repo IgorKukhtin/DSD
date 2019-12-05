@@ -110,3 +110,7 @@ $BODY$
 -- тест
 -- SELECT * FROM gpGet_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP)
 -- SELECT * FROM gpGet_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP)
+    IN inOperDate           TDateTime , -- Дата действия
+    IN inPriceListId        Integer   , -- ключ 
+    IN inGoodsId            Integer   , -- Товар
+    IN inGoodsKindId        Integer   , -- Вид товара

@@ -37,7 +37,10 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-       WITH tmpPrice AS (SELECT tmp.GoodsId, tmp.ValuePrice FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
+       WITH tmpPrice AS (SELECT tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , tmp.ValuePrice 
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -48,7 +51,7 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , tmpPrice.ValuePrice        AS Price
+           , COALESCE (tmpPrice_kind.ValueData, tmpPrice.ValuePrice) :: TFloat AS Price
            , 1      :: TFloat           AS CountForPrice
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -93,7 +96,12 @@ BEGIN
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
+            -- привязываем цены 2 раза по виду и без
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_kind
+                               ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
+                               ON COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
@@ -106,7 +114,7 @@ BEGIN
 
   
        WHERE tmpMI.GoodsId IS NULL
-         AND (tmpPrice.ValuePrice <> 0 OR vbPriceListId IS NULL)
+         AND (COALESCE (tmpPrice_kind.ValueData, tmpPrice.ValuePrice) <> 0 OR vbPriceListId IS NULL)
       UNION ALL
        SELECT
              MovementItem.Id				 AS Id
@@ -116,18 +124,18 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
-           , MovementItem.Amount				AS Amount
+           , MovementItem.Amount		AS Amount
            , MIFloat_AmountPartner.ValueData    AS AmountPartner
-           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_Price.ValueData 		AS Price
            , MIFloat_CountForPrice.ValueData 	AS CountForPrice
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
+           , MIFloat_HeadCount.ValueData 	AS HeadCount
 
            , MIString_PartionGoods.ValueData 	AS PartionGoods
-           , Object_GoodsKind.Id        		AS GoodsKindId
-           , Object_GoodsKind.ValueData 		AS GoodsKindName
+           , Object_GoodsKind.Id        	AS GoodsKindId
+           , Object_GoodsKind.ValueData 	AS GoodsKindName
 
-           , Object_Asset.Id         			AS AssetId
-           , Object_Asset.ValueData  			AS AssetName
+           , Object_Asset.Id         		AS AssetId
+           , Object_Asset.ValueData  		AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                         THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -184,28 +192,28 @@ BEGIN
      -- Результат другой
      RETURN QUERY
        SELECT
-             MovementItem.Id					AS Id
+             MovementItem.Id                             AS Id
            , Object_Goods.Id          			 AS GoodsId
            , Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
-           , MovementItem.Amount				AS Amount
-           , MIFloat_AmountPartner.ValueData   	AS AmountPartner
-           , MIFloat_Price.ValueData 			AS Price
-           , MIFloat_CountForPrice.ValueData 	AS CountForPrice
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
-           , MIString_PartionGoods.ValueData 	AS PartionGoods
-           , Object_GoodsKind.Id        		AS GoodsKindId
-           , Object_GoodsKind.ValueData 		AS GoodsKindName
-           , Object_Asset.Id         			AS AssetId
-           , Object_Asset.ValueData  			AS AssetName
+           , MovementItem.Amount		         AS Amount
+           , MIFloat_AmountPartner.ValueData   	         AS AmountPartner
+           , MIFloat_Price.ValueData 		         AS Price
+           , MIFloat_CountForPrice.ValueData             AS CountForPrice
+           , MIFloat_HeadCount.ValueData                 AS HeadCount
+           , MIString_PartionGoods.ValueData             AS PartionGoods
+           , Object_GoodsKind.Id                         AS GoodsKindId
+           , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_Asset.Id         	                 AS AssetId
+           , Object_Asset.ValueData                      AS AssetName
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat)			    AS AmountSumm
-           , MovementItem.isErased              AS isErased
+                   END AS TFloat)                        AS AmountSumm
+           , MovementItem.isErased                       AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -265,6 +273,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.12.19         *
  31.03.15         * add GoodsGroupNameFull
  14.02.14                                                       *
  10.02.14                                                       *

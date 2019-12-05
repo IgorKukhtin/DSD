@@ -124,6 +124,16 @@ BEGIN
                                          AND tmp.GoodsKindId = tmpAll.GoodsKindId
                      ;
 
+
+       -- таблица -  Цены из прайса
+      CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
+             SELECT lfSelect.GoodsId     AS GoodsId
+                  , lfSelect.GoodsKindId AS GoodsKindId
+                  , lfSelect.ValuePrice  AS ValuePrice
+             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate) AS lfSelect;
+
+
        -- сохранили
        PERFORM lpUpdate_MovementItem_OrderExternal_Property (inId                 := tmpAll.MovementItemId
                                                            , inMovementId         := inMovementId
@@ -133,13 +143,16 @@ BEGIN
                                                            , inDescId_Param       := zc_MIFloat_AmountForecast()
                                                            , inAmount_ParamOrder  := tmpAll.AmountForecastOrder
                                                            , inDescId_ParamOrder  := zc_MIFloat_AmountForecastOrder()
-                                                           , inPrice              := COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0)
+                                                           , inPrice              := COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) :: TFloat
                                                            , inCountForPrice      := 1
                                                            , inUserId             := vbUserId
                                                             ) 
        FROM tmpAll
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpAll.GoodsId
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpAll.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                   ON tmpPriceList_kind.GoodsId = tmpAll.GoodsId
+                                  AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (tmpAll.GoodsKindId, 0)
       ;
 
 
@@ -150,6 +163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.12.19         *
  16.02.15         *
 */
 

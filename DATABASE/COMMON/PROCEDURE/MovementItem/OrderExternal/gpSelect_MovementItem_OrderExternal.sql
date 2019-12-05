@@ -115,8 +115,9 @@ BEGIN
                                                           ) AS tmp
                        )
             -- Цены из прайса
-          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                                  , lfSelect.ValuePrice AS Price_PriceList
+          , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                  , lfSelect.GoodsKindId AS GoodsKindId
+                                  , lfSelect.ValuePrice  AS Price_PriceList
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
                             )
            -- Ограничение - какие товары показать
@@ -400,6 +401,7 @@ BEGIN
           , tmpPriceList_EDI AS (-- цены из прайса напрямую, (т.к. теперь в EDI.zc_MIFloat_Price - хранится "их" цена
                                  SELECT DISTINCT
                                         tmpMI_EDI.GoodsId
+                                      , ObjectLink_PriceListItem_GoodsKind.ChildObjectId               AS GoodsKindId
                                       , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
                                  FROM tmpMI_EDI
                                       INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -409,6 +411,11 @@ BEGIN
                                                             ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
                                                            AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                                                            AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                           ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                          AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+
                                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                              AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -422,11 +429,18 @@ BEGIN
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
                                     , tmpMI_EDI.PriceEDI
-                                    , tmpPriceList_EDI.PriceListPrice
+                                    , COALESCE (tmpPriceList_EDI_Kind.PriceListPrice, tmpPriceList_EDI.PriceListPrice) AS PriceListPrice
                                     , tmpMI_EDI.CountForPrice
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
+                                    -- привязываем цены 2 раза с видом товара и без
                                     LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
+                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
+                                    LEFT JOIN tmpPriceList_EDI AS tmpPriceList_EDI_Kind
+                                                               ON tmpPriceList_EDI_Kind.GoodsId = tmpMI_EDI.GoodsId
+                                                              AND (COALESCE (tmpPriceList_EDI_Kind.GoodsKindId,0) = COALESCE (tmpMI_EDI.GoodsKindId,0))
+
+
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                                                     , tmpMI.GoodsId
                                                     , tmpMI.GoodsKindId
@@ -543,7 +557,7 @@ BEGIN
            , Object_Measure.ValueData   AS MeasureName
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE tmpPriceList.Price_Pricelist
+                  ELSE COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist)
              END :: TFloat              AS Price
            , 0 :: TFloat                AS PriceEDI
            , 1 :: TFloat                AS CountForPrice
@@ -588,7 +602,14 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
+            -- привязываем 2 раза по виду товара и без
+            LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
+                                   ON tmpPriceList_Kind.GoodsId = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
+
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpGoods.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpGoods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
@@ -936,15 +957,22 @@ BEGIN
           , tmpPriceList_EDI AS (-- цены из прайса напрямую, (т.к. теперь в EDI.zc_MIFloat_Price - хранится "их" цена
                                  SELECT DISTINCT
                                         tmpMI_EDI.GoodsId
+                                      , ObjectLink_PriceListItem_GoodsKind.ChildObjectId               AS GoodsKindId
                                       , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
                                  FROM tmpMI_EDI
                                       INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                             ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpMI_EDI.GoodsId
                                                            AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+            
                                       INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                             ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
                                                            AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                                                            AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                           ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                          AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+
                                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                              AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -958,11 +986,17 @@ BEGIN
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
                                     , tmpMI_EDI.PriceEDI
-                                    , tmpPriceList_EDI.PriceListPrice
+                                    , COALESCE (tmpPriceList_EDI_Kind.PriceListPrice, tmpPriceList_EDI.PriceListPrice) AS PriceListPrice
                                     , tmpMI_EDI.CountForPrice
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
+                                    -- привязываем цены 2 раза с видом товара и без
                                     LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
+                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
+                                    LEFT JOIN tmpPriceList_EDI AS tmpPriceList_EDI_Kind
+                                                               ON tmpPriceList_EDI_Kind.GoodsId = tmpMI_EDI.GoodsId
+                                                              AND COALESCE (tmpPriceList_EDI_Kind.GoodsKindId,0) = COALESCE (tmpMI_EDI.GoodsKindId,0)
+
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                                                     , tmpMI.GoodsId
                                                     , tmpMI.GoodsKindId
@@ -1116,6 +1150,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.12.19         * цена с учетом вида товара
  02.05.19         *
  27.03.18         *
  28.07.16         * add PriceEDI, isPriceEDIDiff

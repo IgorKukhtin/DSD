@@ -46,8 +46,16 @@ BEGIN
          ioPrice:= COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_pl
                                                                                           , inPriceListId:= vbPriceListId
                                                                                           , inGoodsId    := inGoodsId
+                                                                                          , inGoodsKindId:= inGoodsKindId
                                                                                           , inSession    := inUserId :: TVarChar
-                                                                                           ) AS tmp), 0);
+                                                                                           ) AS tmp)
+                            ,(SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_pl
+                                                                                          , inPriceListId:= vbPriceListId
+                                                                                          , inGoodsId    := inGoodsId
+                                                                                          , inGoodsKindId:= NULL
+                                                                                          , inSession    := inUserId :: TVarChar
+                                                                                           ) AS tmp)
+                            , 0);
                                                                                                                                                                                                                              
      END IF;
 
@@ -168,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.12.19         *
  19.10.14                                        * set lp
  25.08.14                                        * add сохранили протокол
  18.08.14                                                        *

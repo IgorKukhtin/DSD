@@ -74,6 +74,14 @@ BEGIN
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                       -- AND vbIsOrderDnepr = TRUE
                                    )
+
+            -- ÷ены из прайса
+          , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                  , lfSelect.GoodsKindId AS GoodsKindId
+                                  , lfSelect.ValuePrice  AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
+                             )
+
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -95,7 +103,7 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
            
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) AS Price
            
            , CAST (1 AS TFloat)         AS CountForPrice 
            , CAST (NULL AS TFloat)      AS AmountSumm
@@ -140,8 +148,14 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+
+            -- прив€зываем 2 раза по виду товара и без
+            LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
+                                   ON tmpPriceList_Kind.GoodsId = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId

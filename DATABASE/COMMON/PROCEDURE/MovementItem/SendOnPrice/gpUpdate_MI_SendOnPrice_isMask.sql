@@ -89,7 +89,8 @@ BEGIN
                                 
             LEFT JOIN tmp ON tmp.GoodsId     = MovementItem.ObjectId
                          AND tmp.GoodsKindId =  COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-
+            
+            --привязываем 2 раза с видом и без
             LEFT JOIN tmpObjectHistory_PriceListItem AS lfObjectHistory_PriceListItem 
                                                      ON lfObjectHistory_PriceListItem.GoodsId = Object_Goods.Id
                                                     AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL

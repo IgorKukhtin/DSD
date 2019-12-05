@@ -75,12 +75,26 @@ BEGIN
     -- поиск цены по базовому прайсу
     IF COALESCE (ioPrice, 0) = 0 OR COALESCE (ioId, 0) = 0
     THEN
-        SELECT Price.ValuePrice
+        
+         -- таблица -  Цены из прайса
+         CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
+             SELECT lfSelect.GoodsId     AS GoodsId
+                  , lfSelect.GoodsKindId AS GoodsKindId
+                  , lfSelect.ValuePrice  AS ValuePrice
+             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList, inOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId)) AS lfSelect;
+
+       ioPrice := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = inGoodsKindId)
+                          , (SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId IS NULL)
+                          ,0);
+        
+        /*SELECT Price.ValuePrice
                INTO ioPrice
         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList
                                                  , inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
                                                   ) AS Price
         WHERE Price.GoodsId = inGoodsId;
+        */
     
         -- Если необходимо - привести цену к цене с НДС
         IF vbPriceWithWAT = TRUE

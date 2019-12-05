@@ -44,20 +44,22 @@ BEGIN
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                    )
-           , tmpMI AS (SELECT MovementItem.ObjectId                         AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      )
-     , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                             , lfSelect.ValuePrice AS Price_PriceList
-                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
-                       )
+          , tmpMI AS (SELECT MovementItem.ObjectId                         AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = tmpIsErased.isErased
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     )
+          , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                  , lfSelect.GoodsKindId AS GoodsKindId
+                                  , lfSelect.ValuePrice  AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
+                            )
+
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -69,8 +71,8 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountChangePercent
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS ChangePercentAmount
-           , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price_Pricelist
-           , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price
+           , CAST (COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) AS Price_Pricelist
+           , CAST (COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -127,7 +129,13 @@ BEGIN
             ) AS tmpGoods
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                            AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+
+            -- привязываем 2 раза с видом товара и без
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                   ON tmpPriceList_kind.GoodsId = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -369,6 +377,7 @@ ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Integer, TDateTime, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.12.19         * 
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  08.09.13                                        * add AmountChangePercent
  05.09.13                                        * add ChangePercentAmount
@@ -378,5 +387,5 @@ ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Integer, TDateTime, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_SendOnPrice (inMovementId:= 25173, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_SendOnPrice (inMovementId:= 25173, inPriceListId:=zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItem_SendOnPrice (inMovementId:= 25173, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= TRUE, inSession:= '2')

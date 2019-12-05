@@ -89,7 +89,10 @@ BEGIN
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
-          , tmpPrice AS (SELECT tmp.GoodsId, tmp.ValuePrice FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
+          , tmpPrice AS (SELECT tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , tmp.ValuePrice 
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
 
           , tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
@@ -227,7 +230,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
 
-           , tmpPrice.ValuePrice  AS Price
+           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price
            , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
@@ -281,7 +284,12 @@ BEGIN
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                            AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
+            -- привязываем 2 раза по виду товара и без
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_Kind 
+                               ON tmpPrice_Kind.GoodsId = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
@@ -299,7 +307,7 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE tmpMI.GoodsId IS NULL
-         AND (tmpPrice.ValuePrice <> 0 OR vbPriceListId IS NULL)
+         AND (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice, 0) <> 0 OR vbPriceListId IS NULL)
          AND COALESCE(inInvoiceId,0) = 0
 
       UNION ALL
@@ -346,7 +354,10 @@ BEGIN
            , MovementItem.isErased
      
            , MI_Invoice.Id              AS MIId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId
+                                       , MovementDesc_Invoice.ItemName
+                                       , COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber
+                                       , Movement_Invoice.OperDate) AS InvNumber_Invoice
            , tmpMI.Amount_parent   ::TFloat
            , tmpMI.Price_parent    ::TFloat
 
@@ -429,7 +440,10 @@ BEGIN
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
-          , tmpPrice AS (SELECT tmp.GoodsId, tmp.ValuePrice FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
+          , tmpPrice AS (SELECT tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , tmp.ValuePrice 
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
 
           , tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
@@ -556,7 +570,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
 
-           , tmpPrice.ValuePrice  AS Price
+           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price
            , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
@@ -609,7 +623,12 @@ BEGIN
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                            AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
+            -- привязываем 2 раза по виду товара и без
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_Kind 
+                               ON tmpPrice_Kind.GoodsId = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
@@ -627,7 +646,7 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE tmpMI.GoodsId IS NULL
-         AND (tmpPrice.ValuePrice <> 0 OR vbPriceListId IS NULL)
+         AND (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice, 0) <> 0 OR vbPriceListId IS NULL)
          AND COALESCE(inInvoiceId,0) = 0
 
       UNION ALL
@@ -909,6 +928,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.12.19         *
  18.04.17         *
  21.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName

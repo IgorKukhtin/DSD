@@ -236,7 +236,8 @@ BEGIN
                                AND vbIsSummIn             = TRUE
                              GROUP BY MIContainer.MovementItemId
                              )
-          , tmpPriceSeparateHist AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)))
+          , tmpPriceSeparateHist AS (SELECT * 
+                                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)))
        SELECT
              MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -257,7 +258,7 @@ BEGIN
            , MovementItem.Amount			 AS Amount
            , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
            , tmpSummIn.SummIn :: TFloat                  AS SummIn
-           , COALESCE (tmpPriceSeparateHist.ValuePrice, 0)  :: TFloat AS PriceIn_hist
+           , COALESCE (tmpPriceSeparateHist_kind.ValuePrice, tmpPriceSeparateHist.ValuePrice, 0)  :: TFloat AS PriceIn_hist
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
@@ -300,8 +301,13 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                           ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
-                                         
-            LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId   = MovementItem.ObjectId 
+
+            -- привязываем цены 2 раза по виду товара и без                            
+            LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId   = MovementItem.ObjectId
+                                          AND tmpPriceSeparateHist.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceSeparateHist AS tmpPriceSeparateHist_kind
+                                           ON tmpPriceSeparateHist_kind.GoodsId   = MovementItem.ObjectId 
+                                          AND COALESCE (tmpPriceSeparateHist_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
 
        ORDER BY MovementItem.Id
             ;
@@ -315,6 +321,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.12.19         *
  07.10.18         * add isCalculated
  25.01.18         * StorageLineId_old
  26.05.17         * add StorageLine
