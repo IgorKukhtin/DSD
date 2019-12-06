@@ -741,10 +741,11 @@ BEGIN
                 , tmpIncome AS (SELECT DISTINCT
                                        MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
-                                FROM MovementDate AS MovementDate_Branch
-                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
-                                                        AND Movement.DescId   = zc_Movement_Income()
-                                                        AND Movement.StatusId IN (zc_Enum_Status_Complete())
+                                FROM Movement
+                                     INNER JOIN MovementDate AS MovementDate_Branch
+                                                             ON MovementDate_Branch.MovementId = Movement.Id
+                                                            AND MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                                                            AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -755,8 +756,9 @@ BEGIN
                                      -- !!!только для таких!!!
                                      INNER JOIN tmpNotSold_list ON tmpNotSold_list.UnitId  = MovementLinkObject_To.ObjectId
                                                                AND tmpNotSold_list.GoodsId = MovementItem.ObjectId
-                                WHERE MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
-                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '70 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                                  AND Movement.DescId   = zc_Movement_Income()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                )
                  -- все что остается для NotSold
                , tmpNotSold AS (SELECT tmpNotSold_all.ContainerDescId
@@ -823,10 +825,11 @@ BEGIN
              , tmpIncomeSUN AS (SELECT DISTINCT
                                        MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
-                                FROM MovementDate AS MovementDate_Branch
-                                     INNER JOIN Movement ON Movement.Id = MovementDate_Branch.MovementId
-                                                        AND Movement.DescId   = zc_Movement_Income()
-                                                        AND Movement.StatusId IN (zc_Enum_Status_Complete())
+                                FROM Movement
+                                     INNER JOIN MovementDate AS MovementDate_Branch
+                                                             ON MovementDate_Branch.MovementId = Movement.Id
+                                                            AND MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                                                            AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -837,8 +840,9 @@ BEGIN
                                      -- !!!только для таких!!!
                                      INNER JOIN tmpIncomeSUN_list ON tmpIncomeSUN_list.UnitId  = MovementLinkObject_To.ObjectId
                                                                  AND tmpIncomeSUN_list.GoodsId = MovementItem.ObjectId
-                                WHERE MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
-                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '70 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                                  AND Movement.DescId   = zc_Movement_Income()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                )
         -- Результат
         SELECT tmpRes_SUN.ContainerDescId

@@ -130,7 +130,7 @@ BEGIN
       --INSERT INTO _tmpResult (NPP, RowData) VALUES (-45, 'PAYER_COMMISSION_BANK_MFO=307123');
 	-- найменування обслуговуючого банку, в якому вiдкрито зазначений в полi PAYER_COMMISSION_ACCOUNT рахунок
       --INSERT INTO _tmpResult (NPP, RowData) VALUES (-44, 'PAYER_COMMISSION_BANK_NAME=ПАТ "БАНК ВОСТОК"');
-	
+
 	-- Тип документа импорта
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-41, 'ONFLOW_TYPE=Виплата заробітної плати');
 
@@ -143,7 +143,7 @@ BEGIN
 	-- Период начисления
      -- INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD=0' || EXTRACT (MONTH FROM CURRENT_DATE) :: TVarChar || ',' || EXTRACT (YEAR FROM CURRENT_DATE) :: TVarChar);
-	
+
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
@@ -195,13 +195,25 @@ BEGIN
          -- Шапка
          INSERT INTO _tmpResult(NPP, RowData)
             SELECT -20
-                 , '<SCHEDULEINFO SHEDULE_DATE="' || TO_CHAR (NOW(), 'dd/mm/yyyy') || '"'   -- Дата зарплатной ведомости в формате ДД/ММ/ГГГГ
-                     ||       ' SHEDULE_NUMBER="' || inInvNumber || '"'                     -- Номер зарплатной ведомости
-                     ||  ' PAYER_BANK_BRANCHID="' || '300528' || '"'                        -- МФО банка, в котором открыт счёт плательщика
-                  -- || ' PAYER_BANK_ACCOUNTNO="' || '00002' || '"'                         -- Счёт плательщика в банке (транзитный). Примечание. Если администратор выполнил настройку системы таким образом, что транзитный счет будет определяться автоматически, то данное поле будет необязательным для заполнения
-                     ||      ' PAYER_ACCOUNTNO="' || '26000301367079' || '"'                -- Счёт для списания средств
-                     || ' TOTAL_SHEDULE_AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Общая сумма зарплатной ведомости в формате ГРН,КОП
-                     ||   ' CONTRAGENT_CODEZKP="' || '1011442' || '"'                       -- Код зарплатного проекта. Обязательно указывается только для банков, использующих ЗКП
+                 , '<SCHEDULEINFO'
+                     -- Дата зарплатной ведомости в формате ДД/ММ/ГГГГ
+                     ||       ' SHEDULE_DATE="' || TO_CHAR (NOW(), 'dd/mm/yyyy') || '"'   
+                     -- Номер зарплатной ведомости
+                     ||       ' SHEDULE_NUMBER="' || inInvNumber || '"'                     
+                     -- Название предприятия плательщика
+                     ||          ' CLIENT_NAME="' || 'ТОВ АЛАН' || '"'
+                     -- МФО банка, в котором открыт счёт плательщика
+                     ||  ' PAYER_BANK_BRANCHID="' || '300528' || '"'                        
+       
+                     -- Транзитный счет предприятия. Определяется по ЗКП ведомости из доп. параметра привязки ЗКП к предприятию; если для привязки определено несколько счетов, то надо подставить счет с минимальным ID; если для привязки не определено ни одного счета, то при импорте система выдаст ошибку
+                     || ' PAYER_BANK_ACCOUNTNO="' || '29241009900000' || '"'                         
+       
+                     -- Счёт для списания средств
+                     ||      ' PAYER_ACCOUNTNO="' || '26000301367079' || '"'                
+                     -- Общая сумма зарплатной ведомости в формате ГРН,КОП
+                     || ' TOTAL_SHEDULE_AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' 
+                     -- Код зарплатного проекта. Обязательно указывается только для банков, использующих ЗКП
+                     ||   ' CONTRAGENT_CODEZKP="' || '1011442' || '"'                       
                      || '>'
                     ;
 
@@ -211,9 +223,23 @@ BEGIN
            --
            INSERT INTO _tmpResult (NPP, RowData)
                    SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
-                        , '<EMPLOYEE IDENTIFYCODE="' || gpSelect.inn || '"'                              -- Идентификационный код сотрудника
-                               || ' CARDACCOUNTNO="' || gpSelect.card || '"'                             -- Номер карточного (или другого) счёта
-                               ||        ' AMOUNT="' || REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0)  + COALESCE (gpSelect.SummHosp, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+                        , '<EMPLOYEE'
+                               -- Табельный номер сотрудника
+                               ||  ' IDENTIFYCODE="' || gpSelect.INN || '"'
+
+                               -- Табельный номер сотрудника
+                               -- ||         ' TABNO="' || gpSelect.MemberId || '"'
+
+                               -- Номер карточного (или другого) счёта
+                               || ' CARDACCOUNTNO="' || gpSelect.card || '"'
+                               -- Фамилия сотрудника - Прізвище співробітника
+                               ||      ' LASTNAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 1) || '"'
+                               -- Имя сотрудника - Ім’я співробітника
+                               ||     ' FIRSTNAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 2) || '"'
+                               -- Отчество сотрудника - По батькові співробітника
+                               ||    ' MIDDLENAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 3) || '"'
+                               -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+                               ||        ' AMOUNT="' || REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0)  + COALESCE (gpSelect.SummHosp, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"'
                                || '/>'
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE
@@ -256,4 +282,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_export (14377537, '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_export (15240373, '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());

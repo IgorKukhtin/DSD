@@ -99,7 +99,7 @@ BEGIN
                                -- Высота упаковки (см)
                                , tmpGoods.Height     :: TFloat   AS height
                                -- Вес упаковки (кг)
-                               , 0                   :: TFloat   AS weight
+                               , tmpGoods.WeightAvg  :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
                                , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
                                --
@@ -137,7 +137,7 @@ BEGIN
                                -- Вес упаковки (кг)
                                , tmpGoods.BoxWeight  :: TFloat   AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
-                               , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
+                               , (tmpGoods.WeightAvgNet + tmpGoods.BoxWeight) :: TFloat   AS weight_brutto
                                --
                                , 2 AS GroupId
                           FROM tmpGoods

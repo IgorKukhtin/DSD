@@ -78,7 +78,8 @@ BEGIN
                                    , MovementItem.ObjectId                             AS GoodsId
                                    , MILO_GoodsKind.ObjectId                           AS GoodsKindId
                                    , OL_Goods_Measure.ChildObjectId                    AS MeasureId
-                                   , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                -- , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                   , 1 AS Amount
                                      -- расчетная Категорию -некоторым ставим лучшую 
                                    , CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                            AND tmpPartnerTag.PartnerTagId > 0
@@ -126,11 +127,11 @@ BEGIN
                                                               ON MIF_AmountSecond.MovementItemId = MovementItem.Id
                                                              AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                   LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerTagId = OL_Partner_PartnerTag.ChildObjectId
-                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '0 DAY'
+                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('941124')
+                               AND Movement.InvNumber IN ('947324')
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT
@@ -229,7 +230,7 @@ BEGIN
                                         || ' Товар: (' || Object_Goods.ObjectCode :: TVarChar || ')'
                                         || zfCalc_Text_replace (zfCalc_Text_replace (Object_Goods.ValueData, CHR(39), '`'), '"', '`')
                                  || ' ' || zfCalc_Text_replace (zfCalc_Text_replace (COALESCE (Object_GoodsKind.ValueData, ''), CHR(39), '`'), '"', '`')
-                                         , tmpMI_all.sku_code :: TVarChar) AS sku_code
+                                         , 38391802sku_code :: TVarChar) AS sku_code
                                  -- Количество WMS
                                , (zfCalc_QTY_toWMS (inGoodsTypeKindId:= tmpMI_all.GoodsTypeKindId
                                                   , inMeasureId      := tmpMI_all.MeasureId
@@ -239,7 +240,8 @@ BEGIN
                                                   , inWeightMin      := tmpMI_all.WeightMin
                                                   , inWeightMax      := tmpMI_all.WeightMax
                                                    )) AS qty
-                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_all.MovementId ORDER BY tmpMI_all.MovementItemId) :: Integer AS line
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_all.MovementId ORDER BY tmpMI_all.MovementItemId ASC)  :: Integer AS line
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_all.MovementId ORDER BY tmpMI_all.MovementItemId DESC) :: Integer AS line_desc
                                , tmpMI_all.WeightMin
                                , tmpMI_all.WeightMax
                                , tmpMI_all.GoodsId
@@ -252,6 +254,7 @@ BEGIN
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_all.GoodsKindId
                                                                    AND tmpMI_all.sku_id    = 0
                        -- WHERE Object_Goods.Id > 0
+                          WHERE tmpMI_all.sku_id = 38391802
                          )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -276,35 +279,14 @@ BEGIN
                     ELSE  -- обязательно ПРОБЕЛЫ МЕЖДУ ""
                          ' comments=" ' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.comments, CHR(39), '`'), '"', '`')  ||' "' -- Комментарии к документу
                     END
-                                        ||'></' || vbTagName || '>'
-                                      --||'>'
-                                      --|| tmpMI.RowData
-                                      --||'</' || vbTagName || '>'
+                                      --||'></' || vbTagName || '>'
+                                        ||'>'
                      ) :: Text AS RowData
                      -- ObjectId
                    , tmpData.order_id AS ObjectId
                      --
                    , tmpData.order_id AS GroupId
               FROM tmpMovement AS tmpData
-                   /*LEFT JOIN (-- Детали заказа на отгрузку
-                              SELECT tmpMI.order_id
-                                     -- XML
-                                   , STRING_AGG (('<' || vbTagName_detail
-                                       ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')    :: TVarChar ||'"' -- уникальный идентификатор сообщения
-                                        ||' action="' || vbActionName                               ||'"' -- ???
-                                      ||' order_id="' || tmpMI.order_id                 :: TVarChar ||'"' -- Номер документа
-                                          ||' line="' || tmpMI.line                     :: TVarChar ||'"' -- Номер строки товарной позиции документа
-                                        ||' sku_id="' || tmpMI.sku_id                   :: TVarChar ||'"' -- Уникальный идентификатор товара
-                                        ||' status="' || 'А'                                          ||'"' -- Категория груза: Доступен (для типа заказа «Доставка») - А; Некондиция (Для типа заказа «Отоварка») - В; Брак (Для типа заказа «Списание брака») - С;
-                                           ||' qty="' || tmpMI.qty                      :: TVarChar ||'"' -- Количество товара в базовых единицах ГС
-                                      ||' comments="' || ''                             :: TVarChar ||'"' -- Комментарии к строке документа
-                                                      ||'></' || vbTagName_detail || '>'
-                                     ) :: Text, '') AS RowData
-                              FROM tmpMI
-                            --WHERE tmpMI.order_id= 14231580
-                              GROUP BY tmpMI.order_id
-                             ) AS tmpMI ON tmpMI.order_id = tmpData.order_id*/
-            --WHERE tmpData.order_id= 14231580
 
              UNION ALL
               -- Детали заказа на отгрузку
@@ -312,23 +294,8 @@ BEGIN
                    , vbTagName_detail AS TagName
                    , vbActionName     AS ActionName
                    , ROW_NUMBER() OVER (ORDER BY tmpData.order_id, tmpData.line) :: Integer AS RowNum
-                     -- еще раз Заказ на отгрузку
-                   , (/*'<' || vbTagName
-                         ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')    :: TVarChar ||'"' -- уникальный идентификатор сообщения
-                          ||' action="' || vbActionName                               ||'"' -- ???
-                        ||' order_id="' || tmpData.order_id               :: TVarChar ||'"' -- Номер документа
-                       ||' client_id="' || tmpData.client_id              :: TVarChar ||'"' -- Код заказчика в справочнике предприятия.
-                            ||' type="' || tmpData.type                               ||'"' -- Тип заказа: Доставка - А; Списание брака - В; Отоварка - С;
-               ||' processing_method="' || tmpData.processing_method                  ||'"' -- Способ обработки заказа (может быть пустое): Оптовый - А; Мелкий - В; Без маркировки - С;
-                    ||' date_to_ship="' || zfConvert_Date_toWMS (tmpData.date_to_ship) ||'"' -- Предполагаемая дата отгрузки заказа
-                 || CASE WHEN TRIM (tmpData.comments) = ''
-                    THEN ' comments=""'
-                    ELSE  -- обязательно ПРОБЕЛЫ МЕЖДУ ""
-                         ' comments=" ' || zfCalc_Text_replace (zfCalc_Text_replace (tmpData.comments, CHR(39), '`'), '"', '`')  ||' "' -- Комментарии к документу
-                    END
-                                        ||'>'*/
                      -- Детали заказа на отгрузку
-                   || '<' || vbTagName_detail
+                   , ('<' || vbTagName_detail
                          ||' sync_id="' || NEXTVAL ('wms_sync_id_seq')    :: TVarChar ||'"' -- уникальный идентификатор сообщения
                           ||' action="' || vbActionName                               ||'"' -- ???
                         ||' order_id="' || tmpData.order_id               :: TVarChar ||'"' -- Номер документа
@@ -338,14 +305,13 @@ BEGIN
                              ||' qty="' || tmpData.qty                    :: TVarChar ||'"' -- Количество товара в базовых единицах ГС
                         ||' comments="' || ''                             :: TVarChar ||'"' -- Комментарии к строке документа
                                         ||'></' || vbTagName_detail || '>'
-                                        ||'></' || vbTagName || '>'
+                                        || CASE WHEN tmpData.line_desc = 1 THEN '</' || vbTagName || '>' ELSE '' END
                      ) :: Text AS RowData
                      -- Id
                    , tmpData.order_id AS ObjectId
                      --
                    , tmpData.order_id AS GroupId
               FROM tmpMI AS tmpData
-            --WHERE tmpData.order_id= 14231580
               ) AS tmp
      -- WHERE tmp.RowNum = 1
      -- WHERE tmp.GroupId = 14227925

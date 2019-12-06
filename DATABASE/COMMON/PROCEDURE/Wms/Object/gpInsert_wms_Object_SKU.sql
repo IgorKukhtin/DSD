@@ -99,7 +99,7 @@ $BODY$
 */
 -- 956-16 - select * from wms_Object_GoodsByGoodsKind where '38391802' in (sku_id_sh, sku_id_nom, sku_id_ves)
 -- 39-3   - select * from wms_Object_GoodsByGoodsKind where sku_id_nom = '795292'
--- select * FROM wms_Message WHERE RowData ILIKE '%sync_id=1%
+-- select * FROM wms_Message WHERE RowData ILIKE '%sku_id=945179%
 -- select * FROM wms_Message WHERE GUID = '1' ORDER BY Id
 -- тест
 -- SELECT * FROM gpInsert_wms_Object_SKU ('1', zfCalc_UserAdmin())
