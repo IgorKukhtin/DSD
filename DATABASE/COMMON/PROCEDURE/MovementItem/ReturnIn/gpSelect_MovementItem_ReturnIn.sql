@@ -232,7 +232,8 @@ BEGIN
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
      -- Цены из прайса
-   , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
+   , tmpPrice AS (SELECT lfSelect.GoodsId     AS GoodsId
+                       , lfSelect.GoodsKindId AS GoodsKindId
                        , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
@@ -312,15 +313,15 @@ BEGIN
 
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  WHEN vbPriceWithVAT = FALSE THEN tmpPrice.Price_Pricelist
-                  WHEN vbPriceWithVAT = TRUE  THEN tmpPrice.Price_Pricelist_vat
+                  WHEN vbPriceWithVAT = FALSE THEN COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist)
+                  WHEN vbPriceWithVAT = TRUE  THEN COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat)
              END :: TFloat              AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
 
            , CASE WHEN COALESCE (tmpPromo.isChangePercent, TRUE) = TRUE THEN vbChangePercent ELSE 0 END :: TFloat AS ChangePercent
 
-           , CAST (tmpPrice.Price_Pricelist AS TFloat)     AS Price_Pricelist
-           , CAST (tmpPrice.Price_Pricelist_vat AS TFloat) AS Price_Pricelist_vat
+           , CAST (COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist) AS TFloat)         AS Price_Pricelist
+           , CAST (COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat) AS TFloat) AS Price_Pricelist_vat
 
            , FALSE                      AS isCheck_Pricelist
 
@@ -358,7 +359,13 @@ BEGIN
                               
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+            
+            -- привязываем цены 2 раза по виду товара и без 
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_kind
+                               ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -385,15 +392,15 @@ BEGIN
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
 
-           , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
-           , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
+           , COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist)         :: TFloat AS Price_Pricelist
+           , COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpResult.Price
                        THEN FALSE
                   WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpResult.Price
                        THEN FALSE
-                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist, 0) AND vbPriceWithVAT = FALSE)
+                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
@@ -467,7 +474,12 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            -- привязываем цены 2 раза по виду товара и без 
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpResult.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_kind
+                               ON tmpPrice_kind.GoodsId = tmpResult.GoodsId
+                              AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpResult.MovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
@@ -620,28 +632,29 @@ BEGIN
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
      -- Цены из прайса
-   , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
+   , tmpPrice AS (SELECT lfSelect.GoodsId     AS GoodsId
+                       , lfSelect.GoodsKindId AS GoodsKindId
                        , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
-     , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
-                           , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
-                           , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
-                           , SUM (MovementItem.Amount) AS Amount
-                      FROM MovementItem
-                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
-                           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                       ON MIFloat_PromoMovement.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
-                                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Child()
-                        AND MovementItem.isErased   = FALSE
-                        AND MovementItem.Amount     <> 0
-                      GROUP BY MovementItem.ParentId
-                     )
+   , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
+                         , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
+                         , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
+                         , SUM (MovementItem.Amount) AS Amount
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                     ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                         LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                     ON MIFloat_PromoMovement.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                    AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Child()
+                      AND MovementItem.isErased   = FALSE
+                      AND MovementItem.Amount     <> 0
+                    GROUP BY MovementItem.ParentId
+                   )
 
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
@@ -657,15 +670,15 @@ BEGIN
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
 
-           , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
-           , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
+           , COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist)         :: TFloat AS Price_Pricelist
+           , COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpResult.Price
                        THEN FALSE
                   WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpResult.Price
                        THEN FALSE
-                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice_kind.Price_Pricelist, tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
@@ -737,7 +750,12 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            -- привязываем цены 2 раза по виду товара и без 
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpResult.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_kind
+                               ON tmpPrice_kind.GoodsId = tmpResult.GoodsId
+                              AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpResult.MovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
@@ -760,6 +778,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.12.19         *
  10.10.16         * add tmpGoods из GoodsListSale
  05.02.16         * 
  31.03.15         * add GoodsGroupNameFull
