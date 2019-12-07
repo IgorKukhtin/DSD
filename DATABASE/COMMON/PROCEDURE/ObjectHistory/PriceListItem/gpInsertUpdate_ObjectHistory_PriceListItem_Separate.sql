@@ -90,7 +90,7 @@ BEGIN
                 , CAST (tmp.Summ / tmp.Amount AS NUMERIC (16, 2)) :: TFloat  AS Price   -- средняя цена на дату
            FROM tmpMIContainer AS tmp;
            
-
+/*         
       -- временно !!!отладка!!!
       WITH tmpMovement AS (SELECT Movement.Id        AS MovementId
                                 , Movement.OperDate  AS OperDate
@@ -147,7 +147,7 @@ BEGIN
                  , 0 AS calcSumm_external
                  , 0 AS OutCount
                  , 0 AS OutSumm
-            FROM tmpMIContainer AS tmp;
+            FROM tmpMIContainer AS tmp;*/
 
          -- записываем значения 
          PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
