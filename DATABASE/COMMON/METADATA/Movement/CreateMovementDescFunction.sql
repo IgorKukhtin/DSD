@@ -352,10 +352,17 @@ CREATE OR REPLACE FUNCTION zc_Movement_Loyalty() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Loyalty', 'Программа лояльности' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Loyalty');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PermanentDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PermanentDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PermanentDiscount', 'Постоянная скидка по сети' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PermanentDiscount');
+
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 06.12.19                                                                                     * zc_Movement_PermanentDiscount
  04.11.19                                                                                     * zc_Movement_Loyalty
  20.09.19         * zc_Movement_PersonalRate
  21.08.19                                                                                     * zc_Movement_Wages

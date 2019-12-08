@@ -93,6 +93,7 @@ type
     procedure LoadPartnerMedicalFormTest;
     procedure LoadPartionDateKindFormTest;
     procedure LoadPaymentFormTest;
+    procedure LoadPermanentDiscountFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupFormTest;
     procedure LoadPositionEducationFormTest;
@@ -1926,6 +1927,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPaymentJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaymentForm');
+end;
+
+procedure TLoadFormTest.LoadPermanentDiscountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPermanentDiscountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPermanentDiscountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPermanentDiscountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPermanentDiscountForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

@@ -18,7 +18,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
                isSpotter boolean,
                LoyaltyID Integer, LoyaltySummCash TFloat,
-               ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar
+               ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar, 
+               PermanentDiscountID Integer, PermanentDiscountPercent TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -107,6 +108,33 @@ BEGIN
                         ORDER BY Movement.OperDate DESC
                         LIMIT 1
                         )
+       , tmpPermanentDiscount AS (SELECT Movement.Id                              AS PermanentDiscountID
+                                       , MovementFloat_ChangePercent.ValueData    AS PermanentDiscountPercent
+                                  FROM Movement
+
+                                       INNER JOIN MovementFloat AS MovementFloat_ChangePercent
+                                                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                               
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                                     ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                                                    AND MovementLinkObject_Retail.ObjectId = vbRetailId
+
+                                       INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                               ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                              AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                       INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                               ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                              AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                                                                                            
+                                  WHERE Movement.DescId = zc_Movement_PermanentDiscount()
+                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                    AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+                                    AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
+                                  ORDER BY Movement.OperDate DESC
+                                  LIMIT 1
+                                  )
        , tmpCashSettings AS (SELECT Object_CashSettings.Id                     AS Id
                                   , Object_CashSettings.ObjectCode             AS Code
                                   , Object_CashSettings.ValueData              AS Name
@@ -169,6 +197,10 @@ BEGIN
        , tmpLoyalty.LoyaltySummCash
        , tmpCashSettings.ShareFromPriceName
        , tmpCashSettings.ShareFromPriceCode
+       
+       , tmpPermanentDiscount.PermanentDiscountID          AS PermanentDiscountID
+       , tmpPermanentDiscount.PermanentDiscountPercent     AS PermanentDiscountPercent
+
 
    FROM Object AS Object_Unit
 
@@ -251,6 +283,8 @@ BEGIN
         LEFT JOIN tmpLoyalty ON 1 = 1
         
         LEFT JOIN tmpCashSettings ON 1 = 1
+        
+        LEFT JOIN tmpPermanentDiscount ON 1 = 1
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
@@ -266,6 +300,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 08.12.19                                                       *
  04.12.19                                                       *
  24.11.19                                                       *
  25.10.19                                                       *
@@ -278,4 +313,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '8290853')

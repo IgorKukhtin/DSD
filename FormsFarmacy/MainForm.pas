@@ -598,6 +598,8 @@ type
     TimerPUSH: TTimer;
     spGet_PUSH_Farmacy: TdsdStoredProc;
     PUSHDS: TClientDataSet;
+    actPermanentDiscount: TdsdOpenForm;
+    N205: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

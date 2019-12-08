@@ -786,7 +786,9 @@ uses
   Report_IlliquidReductionPlanAllDialog in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas' {Report_IlliquidReductionPlanAllDialogForm: TParentForm},
   Report_IlliquidReductionPlanUser in '..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanUser.pas' {Report_IlliquidReductionPlanUserForm: TParentForm},
   Report_PercentageOverdueSUN in '..\..\FormsFarmacy\Report\Report_PercentageOverdueSUN.pas' {Report_PercentageOverdueSUNForm: TParentForm},
-  PUSHMessageFarmacy in '..\..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm};
+  PUSHMessageFarmacy in '..\..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm},
+  PermanentDiscount in '..\..\FormsFarmacy\Document\PermanentDiscount.pas' {PermanentDiscountForm: TParentForm},
+  PermanentDiscountJournal in '..\..\FormsFarmacy\Document\PermanentDiscountJournal.pas' {PermanentDiscountJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
