@@ -48,6 +48,15 @@ BEGIN
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId IN (SELECT tmpPersonal.PersonalId FROM tmpPersonal)
                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                                 UNION
+                                 -- если inSession = testm
+                                 SELECT * FROM
+                                (SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId = 344877 -- Альфа 641 ТОВ
+                                   AND OL.DescId        = zc_ObjectLink_Partner_Juridical()
+                                   AND inSession        IN ('1123966', '5')
+                                 LIMIT 1) AS tmp
                                 )
                 , tmpIsErased AS (SELECT FALSE AS isErased UNION SELECT inIsErased AS isErased)
 

@@ -35,6 +35,13 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
       vbUserId:= lpGetUserBySession (inSession);
       
+      -- testm
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
+
+
       -- определение идентификатора заявки по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
            , Movement_OrderExternal.StatusId

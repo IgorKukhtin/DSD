@@ -35,6 +35,10 @@ BEGIN
 
 
       -- RAISE EXCEPTION 'Ошибка.Нет Прав проводить расчеты с покупателем.';
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
 
 
       -- получаем Id документа по GUID

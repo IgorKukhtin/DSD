@@ -30,6 +30,13 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+      -- testm
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
+
+
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId
            , Movement_Visit.StatusId

@@ -25,6 +25,13 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
 
+      -- testm
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
+
+
 -- IF inGUID = '?13' AND inSession = '1156045' THEN RETURN 0; END IF;
  IF inSession = '1156045' THEN RETURN 0; END IF;
 

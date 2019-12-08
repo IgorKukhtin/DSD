@@ -28,10 +28,17 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-      
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
+
+
+      -- testm
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
+
 
       -- Проверка - установлено ли юр.лицо
       IF COALESCE (inJuridicalId, 0) = 0  

@@ -21,6 +21,13 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+      -- testm
+      IF inSession = '1123966' -- testm
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав.';
+      END IF;
+
+
       IF COALESCE (inGUID, '') = ''
       THEN
            RAISE EXCEPTION 'Ошибка. Не задан глобальный уникальный идентификатор';
