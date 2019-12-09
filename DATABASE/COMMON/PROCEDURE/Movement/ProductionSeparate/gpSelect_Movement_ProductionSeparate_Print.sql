@@ -348,6 +348,12 @@ BEGIN
                             GROUP BY MIContainer.MovementItemId
                            )
 
+      , tmpPrice AS (SELECT lfSelect.GoodsId     AS GoodsId
+                          , lfSelect.GoodsKindId AS GoodsKindId
+                          , lfSelect.ValuePrice
+                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate) AS lfSelect
+                    )
+                 
       SELECT Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
            , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
@@ -359,7 +365,7 @@ BEGIN
            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
            , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
            , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
-           , lfObjectHistory_PriceListItem.ValuePrice :: TFloat AS PricePlan
+           , COALESCE (tmpPriceList.ValuePrice, 0) :: TFloat AS PricePlan
 
            , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
                                                                    , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
@@ -391,8 +397,17 @@ BEGIN
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
 
             -- ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+            /*LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate)
+                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId*/
+            
+            -- пока привязала только без вида товара
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
+                                  ANd tmpPriceList.GoodsKindId IS NULL
+         /*   LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                   ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                  ANd COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+                                 - ? как здесь правильно привязывать сучетом GoodsKindId -
+                                  */
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

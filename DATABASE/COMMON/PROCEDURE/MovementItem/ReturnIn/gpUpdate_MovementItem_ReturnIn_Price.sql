@@ -41,12 +41,31 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Прайс лист> должно быть установлено.';
      END IF;
    
+      
+      -- таблица -  Цены из прайса
+      CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
+             SELECT lfSelect.GoodsId     AS GoodsId
+                  , lfSelect.GoodsKindId AS GoodsKindId
+                  , lfSelect.ValuePrice  AS ValuePrice
+             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate) AS lfSelect;
+
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price()
+                                             , MovementItem.Id
+                                             , COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0)
+                                             )
      FROM MovementItem
-          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
-                 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+         -- привязываем 2 раза по виду товара и без
+          LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
+                                AND tmpPriceList.GoodsKindId IS NULL
+          LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                 ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          
      WHERE MovementId = inMovementId;
 
 
@@ -69,6 +88,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 27.08.15         *  
-
+ 06.12.19         *
+ 27.08.15         *
 */

@@ -45,6 +45,13 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                       GROUP BY MovementItem.ParentId
                       )
+
+     , tmpPrice AS (SELECT tmp.GoodsId
+                         , tmp.GoodsKindId
+                         , tmp.ValuePrice 
+                    FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS tmp
+                    )
+
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -52,7 +59,7 @@ BEGIN
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (COALESCE (tmpPrice_kind.ValuePrice, tmpPrice.ValuePrice) AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -105,8 +112,13 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            
+            -- приязываем 2 раза по виду товара и без
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId,0) IS NULL
+            LEFT JOIN tmpPrice AS tmpPrice_kind 
+                               ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -233,6 +245,7 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.12.19         *
  13.06.14                                        * add zc_Enum_InfoMoneyDestination_10100
  07.05.14                                        * add tmpParams
  24.04.14         *
