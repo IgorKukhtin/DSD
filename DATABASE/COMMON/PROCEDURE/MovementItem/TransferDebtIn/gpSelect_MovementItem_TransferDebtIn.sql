@@ -115,7 +115,7 @@ BEGIN
             
             -- приязываем 2 раза по виду товара и без
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
-                              AND tmpPrice.GoodsKindId,0) IS NULL
+                              AND tmpPrice.GoodsKindId IS NULL
             LEFT JOIN tmpPrice AS tmpPrice_kind 
                                ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
                               AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
