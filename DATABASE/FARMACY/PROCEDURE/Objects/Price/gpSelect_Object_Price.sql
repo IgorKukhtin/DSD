@@ -55,6 +55,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MarginPercentNew   TFloat
              , isChecked          Boolean
              , isError_MarginPercent Boolean
+             , isNotSold Boolean
              ) AS
 $BODY$
 DECLARE
@@ -158,7 +159,7 @@ BEGIN
     THEN
         RETURN QUERY
         With 
-       -- Отложенные перемещения
+         -- Отложенные перемещения
         tmpDeferredSendAll AS (SELECT Container.Id
                                     , Container.ParentId
                                     , SUM(- MovementItemContainer.Amount) AS Amount
@@ -230,7 +231,7 @@ BEGIN
                                 GROUP BY Container.ObjectId, Container.Id
                                 HAVING SUM(COALESCE (Container.Amount, 0)) <> 0
                                 )
-      , tmpRemeins AS (SELECT tmp.Objectid
+      , tmpRemeins AS (SELECT tmp.ObjectId
                             , SUM (tmp.Remains)      ::TFloat AS Remains
                             , SUM (tmp.DeferredSend) ::TFloat AS DeferredSend
                             , MIN(COALESCE(ContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
@@ -258,6 +259,22 @@ BEGIN
                        GROUP BY tmp.Objectid
                        )
            
+       --определяем товары которые не продавались 100 дней
+      , tmpMovementItemContainer AS (SELECT MovementItemContainer.ObjectId_Analyzer         AS GoodsID
+                                          , SUM(MovementItemContainer.Amount)               AS Amount
+                                          , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                                     FROM MovementItemContainer
+                                     WHERE MovementItemContainer.WhereObjectId_Analyzer = inUnitId
+                                       AND MovementItemContainer.OperDate >= CURRENT_DATE -  ('100 DAY')::INTERVAL
+                                     GROUP BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer
+                                     )
+      , tmpNotSold AS (SELECT tmpRemeins.ObjectId AS GoodsId
+                       FROM tmpRemeins
+                            LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
+                                                               ON MovementItemContainer.GoodsId = tmpRemeins.ObjectId
+                       WHERE (tmpRemeins.Remains > COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
+                       )
+
         -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                          --   , tmp.ChangePercent
@@ -748,6 +765,8 @@ BEGIN
                , COALESCE (tmpMarginCategory.isChecked, FALSE)  :: Boolean AS isChecked
                , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_View.PercentMarkup AND tmpPrice_View.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
 
+               , COALESCE(tmpNotSold.GoodsId, 0) <> 0 AS isNotSold
+
             FROM tmpGoodsAll AS Object_Goods_View
                 /*INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId*/
@@ -791,7 +810,10 @@ BEGIN
 
                -- кол-во отложенные чеки
                LEFT JOIN tmpReserve ON tmpReserve.GoodsId = Object_Goods_View.Id
-               
+
+               -- Продажи за последнии 100 дней
+               LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Object_Goods_View.Id
+
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -1374,6 +1396,23 @@ BEGIN
                     GROUP BY MovementItem.ObjectId
                     )
 
+       --определяем товары которые не продавались 100 дней
+      , tmpMovementItemContainer AS (SELECT MovementItemContainer.ObjectId_Analyzer         AS GoodsId
+                                          , SUM(MovementItemContainer.Amount)               AS Amount
+                                          , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                                     FROM MovementItemContainer
+                                     WHERE MovementItemContainer.WhereObjectId_Analyzer = inUnitId
+                                       AND MovementItemContainer.OperDate >= CURRENT_DATE -  ('100 DAY')::INTERVAL
+                                     GROUP BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer
+                                     )
+      , tmpNotSold AS (SELECT tmpPrice_All.GoodsId
+                       FROM tmpPrice_All
+                            LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
+                                                               ON MovementItemContainer.GoodsId = tmpPrice_All.GoodsId
+                       WHERE (tmpPrice_All.Remains > COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
+                       )
+
+
             -- Результат     
             SELECT tmpPrice_All.Id                                                       AS Id
                , COALESCE (tmpPrice_All.Price,0)                          :: TFloat    AS Price
@@ -1385,7 +1424,7 @@ BEGIN
                , Object_Goods_View.id                      AS GoodsId
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_All.Id) ::TVarChar AS IdBarCode
-               , tmpGoodsMainParam.BarCode  :: TVarChar AS BarCode
+               , tmpGoodsMainParam.BarCode     :: TVarChar AS BarCode
                , Object_Goods_View.GoodsName               AS GoodsName
                , tmpGoodsMainParam.IntenalSPName           AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
@@ -1580,8 +1619,10 @@ BEGIN
                , tmpMarginCategory.MarginPercentNew   :: TFloat
                , COALESCE (tmpMarginCategory.isChecked, FALSE)  :: Boolean AS isChecked
                , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_All.PercentMarkup AND tmpPrice_All.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
+
+               , COALESCE(tmpNotSold.GoodsId, 0) <> 0 AS isNotSold
             FROM tmpPrice_All
-               LEFT JOIN tmpGoods_All AS Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
+               LEFT JOIN tmpGoods_All AS Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.GoodsId
 
                LEFT JOIN tmpOH_Price AS ObjectHistory_Price
                                        ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
@@ -1605,7 +1646,10 @@ BEGIN
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
                -- кол-во отложенные чеки
                LEFT JOIN tmpReserve ON tmpReserve.GoodsId = Object_Goods_View.Id
-               
+
+               -- Продажи за последнии 100 дней
+               LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = tmpPrice_All.GoodsId
+
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -1618,6 +1662,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 09.12.19         *
  26.09.19         * немножко ускорила
  11.02.19         * признак Товары соц-проект берем и документа
  29.11.18         *
