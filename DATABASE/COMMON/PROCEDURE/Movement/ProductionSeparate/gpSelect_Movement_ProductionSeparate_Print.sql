@@ -365,7 +365,7 @@ BEGIN
            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
            , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
            , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
-           , COALESCE (tmpPriceList.ValuePrice, 0) :: TFloat AS PricePlan
+           , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
 
            , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
                                                                    , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
@@ -397,17 +397,9 @@ BEGIN
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
 
             -- ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
-            /*LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId*/
-            
-            -- пока привязала только без вида товара
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
-                                  ANd tmpPriceList.GoodsKindId IS NULL
-         /*   LEFT JOIN tmpPriceList AS tmpPriceList_kind
-                                   ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
-                                  ANd COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
-                                 - ? как здесь правильно привязывать сучетом GoodsKindId -
-                                  */
+            -- привязка без вида товара
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+                              ANd tmpPrice.GoodsKindId IS NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -424,7 +416,7 @@ BEGIN
            , Object_GoodsGroup.ValueData
            , ObjectString_Goods_GoodsGroupFull.ValueData
            , Object_Measure.ValueData
-           , lfObjectHistory_PriceListItem.ValuePrice
+           , COALESCE (tmpPrice.ValuePrice, 0)
            , ObjectLink_Goods_GoodsGroup.ChildObjectId
        ;
     RETURN NEXT Cursor2;
@@ -437,6 +429,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.12.19         *
  18.10.17         *
  24.03.17         *
  03.04.15         *
