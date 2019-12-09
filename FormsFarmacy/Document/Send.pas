@@ -153,6 +153,7 @@ type
     actSetNotDisplaySUN: TdsdExecStoredProc;
     spUpdate_Movement_NotDisplaySUN: TdsdStoredProc;
     dxBarButton4: TdxBarButton;
+    cbSun_v2: TcxCheckBox;
   private
     { Private declarations }
   public

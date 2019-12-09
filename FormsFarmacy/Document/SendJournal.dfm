@@ -4,7 +4,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -314,9 +314,9 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 60
           end
-          object isSUN_over: TcxGridDBColumn
+          object isSUN_v2: TcxGridDBColumn
             Caption = #1057#1059#1053' v.2'
-            DataBinding.FieldName = 'isSUN_over'
+            DataBinding.FieldName = 'isSUN_v2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
