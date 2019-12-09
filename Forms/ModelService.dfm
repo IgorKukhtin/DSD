@@ -91,6 +91,15 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object isTrainee: TcxGridDBColumn
+        Caption = #1047#1055' '#1089#1090#1072#1078#1077#1088#1086#1074
+        DataBinding.FieldName = 'isTrainee'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1055' '#1089#1090#1072#1078#1077#1088#1086#1074' '#1074' '#1086#1073#1097#1077#1084' '#1092#1086#1085#1076#1077
+        Options.Editing = False
+        Width = 80
+      end
       object clmsComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'

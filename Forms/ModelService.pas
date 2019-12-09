@@ -130,6 +130,7 @@ type
     bbProtocolChild: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    isTrainee: TcxGridDBColumn;
   private
     { Private declarations }
   public

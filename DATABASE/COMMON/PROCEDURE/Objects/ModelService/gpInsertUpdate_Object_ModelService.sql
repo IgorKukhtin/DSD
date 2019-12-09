@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ModelService(Integer,Integer,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_ModelService(Integer,Integer,TVarChar,TVarChar,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_ModelService(Integer,Integer,TVarChar,TVarChar,Integer,Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelService(
  INOUT ioId                   Integer   ,    -- ключ объекта <Модели начисления> 
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelService(
     IN inComment              TVarChar  ,    -- Примечание
     IN inUnitId               Integer   ,    -- Подразделение
     IN inModelServiceKindId   Integer   ,    -- Типы модели начисления
+    IN inisTrainee            Boolean   ,    -- ЗП стажеров в общем фонде(да/нет - значит идут как доплата) 	
     IN inSession              TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -44,16 +46,20 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ModelService_ModelServiceKind(), ioId, inModelServiceKindId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ModelService_Trainee(), ioId, inisTrainee);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_ModelService (Integer,Integer,TVarChar,TVarChar,Integer,Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ModelService (Integer,Integer,TVarChar,TVarChar,Integer,Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.19         * inisTrainee
  19.10.13         *
 */
 
