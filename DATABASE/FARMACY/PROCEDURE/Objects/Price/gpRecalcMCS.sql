@@ -33,6 +33,12 @@ BEGIN
     
     vbUserId := inSession; 
     
+/*    IF vbUserId = 3
+    THEN
+      raise notice 'Value 01: % % %', inUnitId, inPeriod, inDay;
+      Return;
+    END IF;
+*/    
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_AllDayCount'))

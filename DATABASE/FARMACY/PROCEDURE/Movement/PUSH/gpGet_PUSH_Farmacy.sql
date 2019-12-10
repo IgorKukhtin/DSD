@@ -43,7 +43,7 @@ BEGIN
                            , TypeParams TVarChar
                            , ValueParams TVarChar) ON COMMIT DROP;
 
-    SELECT ObjectLink_Member_Position.ObjectId
+    SELECT ObjectLink_Member_Position.ChildObjectId
     INTO vbPositionID
     FROM ObjectLink AS ObjectLink_User_Member
 

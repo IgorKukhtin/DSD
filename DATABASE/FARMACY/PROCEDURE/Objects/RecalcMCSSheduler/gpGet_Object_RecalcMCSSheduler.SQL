@@ -31,6 +31,21 @@ RETURNS TABLE (Id Integer
              , Day6 Integer
              , Day7 Integer
 
+             , PeriodSun1 Integer
+             , PeriodSun2 Integer
+             , PeriodSun3 Integer
+             , PeriodSun4 Integer
+             , PeriodSun5 Integer
+             , PeriodSun6 Integer
+             , PeriodSun7 Integer
+             , DaySun1 Integer
+             , DaySun2 Integer
+             , DaySun3 Integer
+             , DaySun4 Integer
+             , DaySun5 Integer
+             , DaySun6 Integer
+             , DaySun7 Integer
+
              , UserId Integer
              , UserCode Integer
              , UserName TVarChar
@@ -86,6 +101,22 @@ BEGIN
                , ObjectFloat_Day5.ValueData          :: Integer     AS Day5
                , ObjectFloat_Day6.ValueData          :: Integer     AS Day6
                , ObjectFloat_Day7.ValueData          :: Integer     AS Day7
+
+               , ObjectFloat_PeriodSun1.ValueData    :: Integer     AS PeriodSun1
+               , ObjectFloat_PeriodSun2.ValueData    :: Integer     AS PeriodSun2
+               , ObjectFloat_PeriodSun3.ValueData    :: Integer     AS PeriodSun3
+               , ObjectFloat_PeriodSun4.ValueData    :: Integer     AS PeriodSun4
+               , ObjectFloat_PeriodSun5.ValueData    :: Integer     AS PeriodSun5
+               , ObjectFloat_PeriodSun6.ValueData    :: Integer     AS PeriodSun6
+               , ObjectFloat_PeriodSun7.ValueData    :: Integer     AS PeriodSun7
+
+               , ObjectFloat_DaySun1.ValueData       :: Integer     AS DaySun1
+               , ObjectFloat_DaySun2.ValueData       :: Integer     AS DaySun2
+               , ObjectFloat_DaySun3.ValueData       :: Integer     AS DaySun3
+               , ObjectFloat_DaySun4.ValueData       :: Integer     AS DaySun4
+               , ObjectFloat_DaySun5.ValueData       :: Integer     AS DaySun5
+               , ObjectFloat_DaySun6.ValueData       :: Integer     AS DaySun6
+               , ObjectFloat_DaySun7.ValueData       :: Integer     AS DaySun7
 
                ,NULL::Integer    AS UserId
                ,NULL::Integer    AS UserCode
@@ -147,6 +178,50 @@ BEGIN
                                        ON ObjectFloat_Day7.ObjectId = Object_Unit.Id
                                       AND ObjectFloat_Day7.DescId = zc_ObjectFloat_Unit_Day7()
 
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun1
+                                       ON ObjectFloat_PeriodSun1.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun1.DescId = zc_ObjectFloat_Unit_PeriodSun1()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun2
+                                       ON ObjectFloat_PeriodSun2.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun2.DescId = zc_ObjectFloat_Unit_PeriodSun2()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun3
+                                       ON ObjectFloat_PeriodSun3.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun3.DescId = zc_ObjectFloat_Unit_PeriodSun3()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun4
+                                       ON ObjectFloat_PeriodSun4.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun4.DescId = zc_ObjectFloat_Unit_PeriodSun4()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun5
+                                       ON ObjectFloat_PeriodSun5.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun5.DescId = zc_ObjectFloat_Unit_PeriodSun5()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun6
+                                       ON ObjectFloat_PeriodSun6.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun6.DescId = zc_ObjectFloat_Unit_PeriodSun6()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun7
+                                       ON ObjectFloat_PeriodSun7.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun7.DescId = zc_ObjectFloat_Unit_PeriodSun7()
+
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun1
+                                       ON ObjectFloat_DaySun1.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun1.DescId = zc_ObjectFloat_Unit_DaySun1()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun2
+                                       ON ObjectFloat_DaySun2.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun2.DescId = zc_ObjectFloat_Unit_DaySun2()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun3
+                                       ON ObjectFloat_DaySun3.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun3.DescId = zc_ObjectFloat_Unit_DaySun3()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun4
+                                       ON ObjectFloat_DaySun4.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun4.DescId = zc_ObjectFloat_Unit_DaySun4()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun5
+                                       ON ObjectFloat_DaySun5.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun5.DescId = zc_ObjectFloat_Unit_DaySun5()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun6
+                                       ON ObjectFloat_DaySun6.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun6.DescId = zc_ObjectFloat_Unit_DaySun6()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun7
+                                       ON ObjectFloat_DaySun7.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun7.DescId = zc_ObjectFloat_Unit_DaySun7()
+
             WHERE Object_Unit.Id = inUnitId
             ;
     ELSE
@@ -178,6 +253,22 @@ BEGIN
                , ObjectFloat_Day5.ValueData          :: Integer     AS Day5
                , ObjectFloat_Day6.ValueData          :: Integer     AS Day6
                , ObjectFloat_Day7.ValueData          :: Integer     AS Day7
+
+               , ObjectFloat_PeriodSun1.ValueData    :: Integer     AS PeriodSun1
+               , ObjectFloat_PeriodSun2.ValueData    :: Integer     AS PeriodSun2
+               , ObjectFloat_PeriodSun3.ValueData    :: Integer     AS PeriodSun3
+               , ObjectFloat_PeriodSun4.ValueData    :: Integer     AS PeriodSun4
+               , ObjectFloat_PeriodSun5.ValueData    :: Integer     AS PeriodSun5
+               , ObjectFloat_PeriodSun6.ValueData    :: Integer     AS PeriodSun6
+               , ObjectFloat_PeriodSun7.ValueData    :: Integer     AS PeriodSun7
+
+               , ObjectFloat_DaySun1.ValueData       :: Integer     AS DaySun1
+               , ObjectFloat_DaySun2.ValueData       :: Integer     AS DaySun2
+               , ObjectFloat_DaySun3.ValueData       :: Integer     AS DaySun3
+               , ObjectFloat_DaySun4.ValueData       :: Integer     AS DaySun4
+               , ObjectFloat_DaySun5.ValueData       :: Integer     AS DaySun5
+               , ObjectFloat_DaySun6.ValueData       :: Integer     AS DaySun6
+               , ObjectFloat_DaySun7.ValueData       :: Integer     AS DaySun7
 
                ,Object_User.Id                      AS UserId
                ,Object_User.ObjectCode              AS UserCode
@@ -249,6 +340,49 @@ BEGIN
                                        ON ObjectFloat_Day7.ObjectId = Object_Unit.Id
                                       AND ObjectFloat_Day7.DescId = zc_ObjectFloat_Unit_Day7()
 
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun1
+                                       ON ObjectFloat_PeriodSun1.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun1.DescId = zc_ObjectFloat_Unit_PeriodSun1()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun2
+                                       ON ObjectFloat_PeriodSun2.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun2.DescId = zc_ObjectFloat_Unit_PeriodSun2()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun3
+                                       ON ObjectFloat_PeriodSun3.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun3.DescId = zc_ObjectFloat_Unit_PeriodSun3()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun4
+                                       ON ObjectFloat_PeriodSun4.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun4.DescId = zc_ObjectFloat_Unit_PeriodSun4()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun5
+                                       ON ObjectFloat_PeriodSun5.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun5.DescId = zc_ObjectFloat_Unit_PeriodSun5()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun6
+                                       ON ObjectFloat_PeriodSun6.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun6.DescId = zc_ObjectFloat_Unit_PeriodSun6()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun7
+                                       ON ObjectFloat_PeriodSun7.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_PeriodSun7.DescId = zc_ObjectFloat_Unit_PeriodSun7()
+
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun1
+                                       ON ObjectFloat_DaySun1.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun1.DescId = zc_ObjectFloat_Unit_DaySun1()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun2
+                                       ON ObjectFloat_DaySun2.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun2.DescId = zc_ObjectFloat_Unit_DaySun2()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun3
+                                       ON ObjectFloat_DaySun3.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun3.DescId = zc_ObjectFloat_Unit_DaySun3()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun4
+                                       ON ObjectFloat_DaySun4.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun4.DescId = zc_ObjectFloat_Unit_DaySun4()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun5
+                                       ON ObjectFloat_DaySun5.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun5.DescId = zc_ObjectFloat_Unit_DaySun5()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun6
+                                       ON ObjectFloat_DaySun6.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun6.DescId = zc_ObjectFloat_Unit_DaySun6()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DaySun7
+                                       ON ObjectFloat_DaySun7.ObjectId = Object_Unit.Id
+                                      AND ObjectFloat_DaySun7.DescId = zc_ObjectFloat_Unit_DaySun7()
 
                  LEFT JOIN ObjectLink AS ObjectLink_User
                                       ON ObjectLink_User.ObjectId = Object_RecalcMCSSheduler.Id
@@ -264,9 +398,10 @@ $BODY$
 ALTER FUNCTION gpGet_Object_RecalcMCSSheduler(Integer, Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий. О.В.
- 09.02.19                                                                       *
-*21.12.18                                                                       *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий. О.В.
+ 10.12.19                                                       *
+ 09.02.19                                                       *
+ 21.12.18                                                       *
 */
 
 -- тест

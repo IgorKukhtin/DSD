@@ -331,10 +331,10 @@ BEGIN
                                   WHEN COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) > vbDate_1   AND COALESCE (ObjectDate_Value.ValueData, zc_DateEnd()) <= vbDate_6 THEN zc_Enum_PartionDateKind_6()
                                   ELSE 0
                              END                                                       AS PartionDateKindId
-                           , COALESCE (ObjectDate_Value.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())     AS ExpirationDateIn
+--                           , COALESCE (ObjectDate_Value.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())     AS ExpirationDateIn
                       FROM (SELECT tmpMIFloat_ContainerId.ContainerId FROM tmpMIFloat_ContainerId
-                            UNION
-                            SELECT tmpMIContainer.ContainerId FROM tmpMIContainer) AS tmp
+                            /*UNION
+                            SELECT tmpMIContainer.ContainerId FROM tmpMIContainer*/) AS tmp
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = tmp.ContainerId
                                                         AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -355,9 +355,9 @@ BEGIN
                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
 
-                           LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+/*                           LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                              ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()*/
                      )
     --
    , tmpPartion AS (SELECT Movement.Id
@@ -412,7 +412,7 @@ BEGIN
             LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
                                               ON MIDate_Insert.MovementItemId = MovementItem.Id
                                              AND MIDate_Insert.DescId = zc_MIDate_Insert()
-       UNION ALL
+       /*UNION ALL
        SELECT
              - 1
            , MovementItem.Id
@@ -437,8 +437,9 @@ BEGIN
 
             LEFT JOIN tmpContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
             LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
-            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainer.PartionDateKindId
+            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainer.PartionDateKindId*/
        ;
+       
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -452,4 +453,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send_Child(inMovementId := 3959328 ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 15390729 ,  inSession := '3');
--- select * from gpSelect_MovementItem_Send_Child(inMovementId := 15390743 ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16804677 ,  inSession := '3');

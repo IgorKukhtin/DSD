@@ -59,6 +59,7 @@ type
     spRecalcMCSShedulerSelect: TdsdStoredProc;
     spUpdate_SelectRun: TdsdStoredProc;
     dxBarButton7: TdxBarButton;
+    DateRunSun: TcxGridDBColumn;
   private
     { Private declarations }
   public

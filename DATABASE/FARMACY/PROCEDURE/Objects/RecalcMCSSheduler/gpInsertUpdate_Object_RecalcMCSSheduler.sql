@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                                Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+                                                                Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
                                                                 Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(
@@ -28,6 +30,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(
     IN inDay5                    Integer,
     IN inDay6                    Integer,
     IN inDay7                    Integer,
+    
+    IN inPeriodSun1              Integer,
+    IN inPeriodSun2              Integer,
+    IN inPeriodSun3              Integer,
+    IN inPeriodSun4              Integer,
+    IN inPeriodSun5              Integer,
+    IN inPeriodSun6              Integer,
+    IN inPeriodSun7              Integer,
+    IN inDaySun1                 Integer,
+    IN inDaySun2                 Integer,
+    IN inDaySun3                 Integer,
+    IN inDaySun4                 Integer,
+    IN inDaySun5                 Integer,
+    IN inDaySun6                 Integer,
+    IN inDaySun7                 Integer,
 
     IN inUserId                  Integer,
     IN inAllRetail               Boolean,
@@ -153,6 +170,23 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Day6(), ioUnitId, inDay6);
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Day7(), ioUnitId, inDay7);
 
+   -- сохранили <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun1(), ioUnitId, inPeriodSun1);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun2(), ioUnitId, inPeriodSun2);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun3(), ioUnitId, inPeriodSun3);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun4(), ioUnitId, inPeriodSun4);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun5(), ioUnitId, inPeriodSun5);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun6(), ioUnitId, inPeriodSun6);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PeriodSun7(), ioUnitId, inPeriodSun7);
+
+   -- сохранили <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun1(), ioUnitId, inDaySun1);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun2(), ioUnitId, inDaySun2);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun3(), ioUnitId, inDaySun3);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun4(), ioUnitId, inDaySun4);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun5(), ioUnitId, inDaySun5);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun6(), ioUnitId, inDaySun6);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_DaySun7(), ioUnitId, inDaySun7);
 
    -- сохранили связь с <Сотрудником>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RecalcMCSSheduler_User(), ioId, inUserId);
@@ -168,6 +202,8 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
                                                        Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
@@ -175,6 +211,7 @@ ALTER FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 10.12.19                                                       *
  09.02.19                                                       *
  21.12.18                                                       *
 

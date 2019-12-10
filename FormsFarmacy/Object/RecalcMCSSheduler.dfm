@@ -140,10 +140,28 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 93
           end
-          object Color_cal: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_cal'
-            Visible = False
+          object UserRun: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1083
+            DataBinding.FieldName = 'UserRun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 97
+          end
+          object DateRunSun: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1057#1059#1053
+            DataBinding.FieldName = 'DateRunSun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object SelectRun: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100
+            DataBinding.FieldName = 'SelectRun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 52
           end
           object isErased: TcxGridDBColumn
             DataBinding.FieldName = 'isErased'
@@ -153,20 +171,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 52
           end
-          object UserRun: TcxGridDBColumn
-            Caption = #1050#1090#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1083
-            DataBinding.FieldName = 'UserRun'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+          object Color_cal: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_cal'
+            Visible = False
             Options.Editing = False
-            Width = 97
-          end
-          object SelectRun: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100
-            DataBinding.FieldName = 'SelectRun'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 52
           end
         end
       end

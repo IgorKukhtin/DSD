@@ -339,7 +339,12 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_DateRun() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_DateRun'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_DateRun', 'Последний день праздников' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_DateRun');
+  SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_DateRun', 'Дата проведения пересчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_DateRun');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_DateRunSun() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_DateRunSun'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_DateRunSun', 'Дата проведения пересчета по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_DateRunSun');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_SendPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
@@ -396,6 +401,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 10.12.19                                                                                     * zc_ObjectFloat_RecalcMCSSheduler_DateRunSun 
  28.10.19                                                                                     * График работы
  14.08.19                                                                                     * zc_ObjectDate_PartionGoods_Cat_5
  06.04.19         * zc_ObjectDate_Route_StartRunPlan
