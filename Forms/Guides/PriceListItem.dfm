@@ -934,8 +934,6 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inGoodsKindId'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
