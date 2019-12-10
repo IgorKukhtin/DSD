@@ -222,8 +222,8 @@ begin
       sl.Add('    {');
       sl.Add('      "id": "' + qryReport_Upload.FieldByName('GoodsCode').AsString + '",');
       sl.Add('      "name": "' + StrToJSON(qryReport_Upload.FieldByName('GoodsName').AsString) + '",');
-      sl.Add('      "quant": "' + CurrToJSON(qryReport_Upload.FieldByName('Quant').AsCurrency) + '",');
-      sl.Add('      "price": "' + CurrToJSON(qryReport_Upload.FieldByName('Price').AsCurrency) + '"');
+      sl.Add('      "quant": ' + CurrToJSON(qryReport_Upload.FieldByName('Quant').AsCurrency) + ',');
+      sl.Add('      "price": ' + CurrToJSON(qryReport_Upload.FieldByName('Price').AsCurrency) + '');
       qryReport_Upload.Next;
       if qryReport_Upload.Eof then sl.Add('    }') else sl.Add('    },');
     end;

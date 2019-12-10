@@ -27,9 +27,12 @@ type
     DiffKindDS: TDataSource;
     Label5: TLabel;
     ListGoodsCDS: TClientDataSet;
+    ceMaxOrderUnitAmount: TcxCurrencyEdit;
+    Label6: TLabel;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure lcbDiffKindPropertiesChange(Sender: TObject);
   private
     FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
@@ -51,10 +54,6 @@ procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
   var nAmount, nAmountDiffKind, nMaxOrderAmount : Currency; bSend : boolean;
 begin
   if ModalResult <> mrOk then Exit;
-
-  if MainCashForm.UnitConfigCDS.FieldByName('isNotCashListDiff').AsBoolean then
-    nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderAmountSecond').AsCurrency
-  else nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderAmount').AsCurrency;
 
   nAmount := ceAmount.Value;
 
@@ -91,6 +90,8 @@ begin
     lcbDiffKind.SetFocus;
     Exit;
   end;
+
+  nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency;
 
   if (nAmount > 0) and (nMaxOrderAmount > 0) then
   begin
@@ -141,7 +142,7 @@ begin
       Action := TCloseAction.caNone;
       ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
         #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
-        '" превисит ' + CurrToStr(nMaxOrderAmount) + ' грн. ...');
+        '" превышает ' + CurrToStr(nMaxOrderAmount) + ' грн. ...');
       lcbDiffKind.SetFocus;
       Exit;
     end;
@@ -304,6 +305,17 @@ begin
   finally
     ReleaseMutex(MutexDiffCDS);
   end;
+end;
+
+procedure TListDiffAddGoodsForm.lcbDiffKindPropertiesChange(Sender: TObject);
+begin
+  if (lcbDiffKind.EditValue <> Null) and DiffKindCDS.Locate('Id', lcbDiffKind.EditValue, []) then
+  begin
+    ceMaxOrderUnitAmount.Value := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency;
+    Label6.Visible := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency <> 0;
+  end else Label6.Visible := False;
+
+  ceMaxOrderUnitAmount.Visible := Label6.Visible
 end;
 
 end.

@@ -32,8 +32,8 @@ BEGIN
                                  AND Container.ObjectId = inGoodsId
                               )
        , tmpContainer AS (SELECT Container.id
-                               , MovementLinkObject_From.ObjectId          AS JuridicalID
-                               , ObjectFloat_CodeRazom.ValueData::Integer  AS CodeRazom
+                               , MovementLinkObject_From.ObjectId                       AS JuridicalID
+                               , COALESCE(ObjectFloat_CodeRazom.ValueData, 1)::Integer  AS CodeRazom
                                  FROM tmpContainerAll AS Container
                                       LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                     ON ContainerLinkObject_MovementItem.Containerid = Container.Id
@@ -76,4 +76,5 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, TVarChar) OWNER TO postgres
 */
 
 -- тест
--- SELECT * from gpGet_Goods_Juridical_value (inGoodsId:= 5925280, inSession:= zfCalc_UserAdmin())
+-- SELECT * from gpGet_Goods_Juridical_value (inGoodsId:= 5925154, inSession:= zfCalc_UserAdmin())
+

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSUN_over Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean --, isSUN_over Boolean
              , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -125,8 +125,9 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
-           , CASE WHEN MovementBoolean_SUN.ValueData = TRUE AND tmpUnit_SUN_over_From.UnitId > 0 AND tmpUnit_SUN_over_To.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isSUN_over
-           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
+           --, CASE WHEN MovementBoolean_SUN.ValueData = TRUE AND tmpUnit_SUN_over_From.UnitId > 0 AND tmpUnit_SUN_over_To.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isSUN_over
+           , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2 
+           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean  AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                    AND Movement.OperDate < CURRENT_DATE
@@ -214,6 +215,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                       ON MovementBoolean_SUN.MovementId = Movement.Id
                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                      ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                     AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
@@ -285,6 +289,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.   Øàáëèé Î.Â.
+ 09.12.19         * isSUN_v2 âìåñòî isSUN_over 
  23.09.19         * zc_MovementLinkObject_Driver
  06.08.19                                                                                      * zc_MovementBoolean_Received
  24.07.19         * zc_MovementBoolean_DefSUN

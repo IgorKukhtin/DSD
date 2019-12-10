@@ -46,6 +46,7 @@ type
     cxLabel4: TcxLabel;
     edModelServiceKind: TcxButtonEdit;
     ModelServiceKindGuides: TdsdGuides;
+    cbTrainee: TcxCheckBox;
   private
     { Private declarations }
   public

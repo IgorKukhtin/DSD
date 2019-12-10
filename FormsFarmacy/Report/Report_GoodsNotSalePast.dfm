@@ -1,30 +1,30 @@
 inherited Report_GoodsNotSalePastForm: TReport_GoodsNotSalePastForm
   Caption = #1058#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
   ClientHeight = 375
-  ClientWidth = 686
+  ClientWidth = 690
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 702
+  ExplicitWidth = 706
   ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 67
-    Width = 686
+    Width = 690
     Height = 308
     TabOrder = 3
     ExplicitTop = 67
-    ExplicitWidth = 753
+    ExplicitWidth = 686
     ExplicitHeight = 308
     ClientRectBottom = 308
-    ClientRectRight = 686
+    ClientRectRight = 690
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 753
+      ExplicitWidth = 686
       ExplicitHeight = 308
       inherited cxGrid: TcxGrid
-        Width = 686
+        Width = 690
         Height = 308
-        ExplicitWidth = 753
+        ExplicitWidth = 686
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -53,7 +53,7 @@ inherited Report_GoodsNotSalePastForm: TReport_GoodsNotSalePastForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 218
+            Width = 182
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -71,7 +71,7 @@ inherited Report_GoodsNotSalePastForm: TReport_GoodsNotSalePastForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 278
+            Width = 142
           end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -85,14 +85,55 @@ inherited Report_GoodsNotSalePastForm: TReport_GoodsNotSalePastForm
             Options.Editing = False
             Width = 87
           end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 67
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SumWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'SumWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 686
+    Width = 690
     Height = 41
-    ExplicitWidth = 753
+    ExplicitWidth = 686
     ExplicitHeight = 41
     inherited deStart: TcxDateEdit
       Left = 459

@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer
              , PricePartionDate TFloat
              , PartionDateDiscount TFloat
              , AmountMonth TFloat
+             , TypeDiscount Integer
              , PriceDiscount TFloat
               )
 AS
@@ -135,6 +136,7 @@ BEGIN
            , MIFloat_MovementItem.ValueData                                      AS PricePartionDate
            , Null::TFloat                                                        AS PartionDateDiscount
            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
+           , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
        FROM tmpMI AS MovementItem
 

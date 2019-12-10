@@ -597,6 +597,13 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 70
           end
+          object isNotSold: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1088#1086#1076#1072#1074#1072#1083#1089#1103' 100 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'isNotSold'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 78
+          end
           object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'

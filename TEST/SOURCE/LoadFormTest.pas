@@ -3118,20 +3118,24 @@ begin
 end;
 procedure TLoadFormTest.LoadModelServiceFormTest;
 begin
+{
  //Типы модели начисления
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
+  }
   //Типы выбора данных
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
+   {
   //Типы выбора данных
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelectKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSelectKindForm');
   //Типы документов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadMovementFormTest;

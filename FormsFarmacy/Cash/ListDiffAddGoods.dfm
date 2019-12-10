@@ -2,7 +2,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   Left = 367
   Top = 319
   Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1077#1087#1072#1088#1072#1090#1072' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
-  ClientHeight = 267
+  ClientHeight = 270
   ClientWidth = 482
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   OnShow = FormShow
   DesignSize = (
     482
-    267)
+    270)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -67,6 +67,14 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label6: TLabel
+    Left = 227
+    Top = 139
+    Width = 105
+    Height = 13
+    Caption = #1052#1072#1082#1089'. '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
+    Visible = False
+  end
   object bbOk: TcxButton
     Left = 291
     Top = 231
@@ -99,25 +107,49 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Properties.DisplayFormat = ',0.000'
     TabOrder = 0
     Height = 21
-    Width = 121
+    Width = 108
   end
   object meComent: TcxMaskEdit
-    Left = 90
+    Left = 93
     Top = 194
     TabOrder = 4
-    Width = 375
+    Width = 372
   end
   object lcbDiffKind: TcxLookupComboBox
     Left = 93
     Top = 167
+    Properties.DropDownRows = 14
     Properties.KeyFieldNames = 'Id'
     Properties.ListColumns = <
       item
+        Width = 60
         FieldName = 'Name'
+      end
+      item
+        Caption = #1052#1072#1082#1089'. '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
+        Width = 25
+        FieldName = 'MaxOrderUnitAmount'
       end>
+    Properties.ListOptions.AnsiSort = True
     Properties.ListSource = DiffKindDS
+    Properties.OnChange = lcbDiffKindPropertiesChange
     TabOrder = 1
     Width = 372
+  end
+  object ceMaxOrderUnitAmount: TcxCurrencyEdit
+    Left = 344
+    Top = 136
+    Margins.Left = 1
+    Margins.Top = 1
+    TabStop = False
+    AutoSize = False
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 5
+    Visible = False
+    Height = 21
+    Width = 121
   end
   object ListDiffCDS: TClientDataSet
     Aggregates = <>

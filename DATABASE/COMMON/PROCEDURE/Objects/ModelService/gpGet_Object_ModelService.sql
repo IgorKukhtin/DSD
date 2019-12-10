@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar
              , ModelServiceKindId Integer, ModelServiceKindName TVarChar
-             , isErased boolean
+             , isTrainee Boolean
+             , isErased Boolean
              ) AS
 $BODY$BEGIN
 
@@ -33,6 +34,7 @@ $BODY$BEGIN
            , CAST (0 as Integer)   AS ModelServiceKindId
            , CAST ('' as TVarChar) AS ModelServiceKindName
 
+           , CAST (NULL AS Boolean) AS isTrainee
            , CAST (NULL AS Boolean) AS isErased
            
        FROM Object 
@@ -52,20 +54,28 @@ $BODY$BEGIN
            , Object_ModelServiceKind.Id          AS ModelServiceKindId
            , Object_ModelServiceKind.ValueData   AS ModelServiceKindName
            
-           , Object_ModelService.isErased AS isErased
+           , COALESCE (ObjectBoolean_Trainee.ValueData, FALSE) :: Boolean AS isTrainee
+           , Object_ModelService.isErased        AS isErased
            
        FROM Object AS Object_ModelService
        
-            LEFT JOIN ObjectString AS ObjectString_Comment ON ObjectString_Comment.ObjectId = Object_ModelService.Id 
-                                                          AND ObjectString_Comment.DescId = zc_ObjectString_ModelService_Comment()
+            LEFT JOIN ObjectString AS ObjectString_Comment 
+                                   ON ObjectString_Comment.ObjectId = Object_ModelService.Id 
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_ModelService_Comment()
      
-            LEFT JOIN ObjectLink AS ObjectLink_ModelService_Unit ON ObjectLink_ModelService_Unit.ObjectId = Object_ModelService.Id
-                                                                AND ObjectLink_ModelService_Unit.DescId = zc_ObjectLink_ModelService_Unit()
+            LEFT JOIN ObjectLink AS ObjectLink_ModelService_Unit 
+                                 ON ObjectLink_ModelService_Unit.ObjectId = Object_ModelService.Id
+                                AND ObjectLink_ModelService_Unit.DescId = zc_ObjectLink_ModelService_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_ModelService_Unit.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_ModelService_ModelServiceKind ON ObjectLink_ModelService_ModelServiceKind.ObjectId = Object_ModelService.Id
-                                                                            AND ObjectLink_ModelService_ModelServiceKind.DescId = zc_ObjectLink_ModelService_ModelServiceKind()
+            LEFT JOIN ObjectLink AS ObjectLink_ModelService_ModelServiceKind
+                                 ON ObjectLink_ModelService_ModelServiceKind.ObjectId = Object_ModelService.Id
+                                AND ObjectLink_ModelService_ModelServiceKind.DescId = zc_ObjectLink_ModelService_ModelServiceKind()
             LEFT JOIN Object AS Object_ModelServiceKind ON Object_ModelServiceKind.Id = ObjectLink_ModelService_ModelServiceKind.ChildObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Trainee
+                                    ON ObjectBoolean_Trainee.ObjectId = Object_ModelService.Id
+                                   AND ObjectBoolean_Trainee.DescId = zc_ObjectBoolean_ModelService_Trainee()
 
        WHERE Object_ModelService.Id = inId;
    END IF;
@@ -81,6 +91,7 @@ ALTER FUNCTION gpGet_Object_ModelService(integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+  09.12.19        * Trainee
   22.10.13        *
    
   

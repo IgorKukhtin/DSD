@@ -20,7 +20,6 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitWidth = 644
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetInfo
@@ -3187,6 +3186,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPermanentDiscount: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1089#1090#1086#1103#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1087#1086' '#1089#1077#1090#1080
+      Hint = #1055#1086#1089#1090#1086#1103#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1087#1086' '#1089#1077#1090#1080
+      FormName = 'TPermanentDiscountJournalForm'
+      FormNameParam.Value = 'TPermanentDiscountJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3443,6 +3454,9 @@ inherited MainForm: TMainForm
       end
       object N195: TMenuItem
         Action = actLoyaltyJournal
+      end
+      object N205: TMenuItem
+        Action = actPermanentDiscount
       end
     end
     object miPersonal: TMenuItem [1]

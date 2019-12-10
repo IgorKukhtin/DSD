@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 84
   end
   object cxLabel3: TcxLabel
     Left = 40
@@ -106,9 +106,16 @@
     TabOrder = 11
     Width = 273
   end
+  object cbTrainee: TcxCheckBox
+    Left = 143
+    Top = 26
+    Caption = #1047#1055' '#1089#1090#1072#1078#1077#1088#1086#1074' '#1074' '#1086#1073#1097#1077#1084' '#1092#1086#1085#1076#1077
+    TabOrder = 12
+    Width = 170
+  end
   object ActionList: TActionList
-    Left = 304
-    Top = 56
+    Left = 280
+    Top = 120
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -150,12 +157,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -163,6 +172,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -170,18 +180,29 @@
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId '
         Value = ''
         Component = UnitGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inModelServiceKindId'
         Value = ''
         Component = ModelServiceKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTrainee'
+        Value = Null
+        Component = cbTrainee
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224
@@ -193,9 +214,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 8
+    Left = 80
+    Top = 88
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ModelService'
@@ -208,29 +230,34 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -238,12 +265,14 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ModelServiceKindId'
         Value = ''
         Component = ModelServiceKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ModelServiceKindName'
@@ -251,6 +280,14 @@
         Component = ModelServiceKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTrainee'
+        Value = Null
+        Component = cbTrainee
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -261,6 +298,7 @@
     LookupControl = edUnitName
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -270,6 +308,7 @@
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -277,6 +316,7 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 165
@@ -305,6 +345,7 @@
     LookupControl = edModelServiceKind
     FormNameParam.Value = 'TModelServiceKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TModelServiceKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -314,6 +355,7 @@
         Component = ModelServiceKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -321,6 +363,7 @@
         Component = ModelServiceKindGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 229

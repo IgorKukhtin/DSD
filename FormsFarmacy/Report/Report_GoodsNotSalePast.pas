@@ -30,6 +30,11 @@ type
     bbExecuteDialog: TdxBarButton;
     ceNotSalePastDay: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    SumWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -38,13 +38,20 @@ BEGIN
                               WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
                              )
+
+              , tmpPrice AS (SELECT tmp.GoodsId
+                                  , tmp.GoodsKindId
+                                  , tmp.ValuePrice 
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS tmp
+                             )
+
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (COALESCE (tmpPrice_kind.ValuePrice, tmpPrice.ValuePrice) AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
            , CAST (NULL AS TFloat)      AS BoxCount
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -97,9 +104,14 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
+            -- приязываем 2 раза по виду товара и без
+            LEFT JOIN tmpPrice AS tmpPrice_kind 
+                               ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_kind.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
+                              
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -233,6 +245,7 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTim
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.12.19         *
  22.01.15         * add MIFloat_BoxCount
                         MILinkObject_Box
  13.06.14                                        * add zc_Enum_InfoMoneyDestination_10100

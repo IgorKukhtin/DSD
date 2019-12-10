@@ -1200,8 +1200,9 @@ BEGIN
                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                      )
         -- Цены из прайса
-      , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                              , lfSelect.ValuePrice AS Price_basis
+      , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                              , lfSelect.GoodsKindId AS GoodsKindId
+                              , lfSelect.ValuePrice  AS Price_basis
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                   , inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                    ) AS lfSelect
@@ -1335,7 +1336,7 @@ BEGIN
               END :: TVarChar AS GoodsCodeUKTZED
 
               -- Залоговая цена без НДС, грн
-            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() AND tmpPriceList.Price_basis > 0 THEN tmpPriceList.Price_basis
+            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() AND COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis,0) > 0 THEN COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis)
                    WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() THEN 60
                    ELSE 0
               END :: TFloat AS Price_Pledge
@@ -1384,7 +1385,12 @@ BEGIN
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
+            -- 2 раза по виду товара и без
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
+                                  ANd tmpPriceList.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                   ON tmpPriceList_kind.GoodsId = tmpMI.GoodsId
+                                  ANd COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
 
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
@@ -1511,6 +1517,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.12.19         *
  11.08.19         *
  26.11.15         *
  17.09.15         *
