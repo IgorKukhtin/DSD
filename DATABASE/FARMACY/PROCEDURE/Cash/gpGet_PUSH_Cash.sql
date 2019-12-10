@@ -273,7 +273,10 @@ BEGIN
       AND (DATE_PART('HOUR',    CURRENT_TIME)::Integer <= 12
         OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
         AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00
-        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 16
+        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
+        OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
+        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 30
+        AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 50
            ))
       AND vbUnitId NOT IN (SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2())
    THEN
