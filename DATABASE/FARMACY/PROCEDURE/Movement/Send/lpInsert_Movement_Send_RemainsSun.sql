@@ -377,22 +377,22 @@ BEGIN
                             INNER JOIN Object AS Object_Goods
                                               ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
                                              AND Object_Goods.isErased = FALSE
-                            LEFT JOIN ObjecTFloat AS Price_Value
+                            LEFT JOIN ObjectFloat AS Price_Value
                                                   ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND Price_Value.DescId = zc_ObjecTFloat_Price_Value()
-                            LEFT JOIN ObjecTFloat AS MCS_Value
+                                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                            LEFT JOIN ObjectFloat AS MCS_Value
                                                   ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND MCS_Value.DescId = zc_ObjecTFloat_Price_MCSValue()
-                            LEFT JOIN ObjecTFloat AS Price_MCSValueMin
+                                                 AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                            LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND Price_MCSValueMin.DescId = zc_ObjecTFloat_Price_MCSValueMin()
+                                                 AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
                                     , ObjectLink_Child_retail.ChildObjectId       AS GoodsId
-                                    , ObjecTFloat_Value.ValueData                 AS Value
+                                    , ObjectFloat_Value.ValueData                 AS Value
                                FROM Object AS Object_GoodsCategory
                                    INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                                          ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
@@ -403,10 +403,10 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                          ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                         AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                   INNER JOIN ObjecTFloat AS ObjecTFloat_Value
-                                                          ON ObjecTFloat_Value.ObjectId = Object_GoodsCategory.Id
-                                                         AND ObjecTFloat_Value.DescId = zc_ObjecTFloat_GoodsCategory_Value()
-                                                         AND COALESCE (ObjecTFloat_Value.ValueData,0) <> 0
+                                   INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                          ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                         AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
                                    -- выходим на товар сети
                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail
                                                          ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
@@ -470,7 +470,7 @@ BEGIN
              , COALESCE (tmpMI_Income.Amount, 0)        AS AmountIncome
                -- ѕеремещение - приход - UnComplete - за последние +/-30 дней
              , COALESCE (tmpMI_Send_in.Amount, 0)       AS AmountSend_In
-               -- ѕеремещение - приход - UnComplete - за последние +/-30 дней
+               -- ѕеремещение - расход - UnComplete - за последние +/-30 дней
              , COALESCE (tmpMI_Send_out.Amount, 0)      AS AmountSend_out
                -- заказы - UnComplete - !¬—≈! Deferred
              , COALESCE (tmpMI_OrderExternal.Amount,0)  AS AmountOrderExternal
@@ -576,30 +576,30 @@ BEGIN
 
     -- дата + 6 мес€цев
     vbDate_6:= CURRENT_DATE
-             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
-                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+             + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
-                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
-                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                        ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                        ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
                              WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
                             )
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
                );
     -- дата + 1 мес€ц
     vbDate_1:= CURRENT_DATE
-             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
-                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+             + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
-                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
-                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                        ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                        ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
                              WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1()
                             )
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
@@ -609,15 +609,15 @@ BEGIN
              ;
     -- дата + 0 мес€цев
     vbDate_0:= CURRENT_DATE
-             + (WITH tmp AS (SELECT CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN ObjecTFloat_Day.ValueData ELSE COALESCE (ObjecTFloat_Month.ValueData, 0) END AS Value
-                                  , CASE WHEN ObjecTFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+             + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Month
-                                                        ON ObjecTFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Month.DescId = zc_ObjecTFloat_PartionDateKind_Month()
-                                  LEFT JOIN ObjecTFloat AS ObjecTFloat_Day
-                                                        ON ObjecTFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                                       AND ObjecTFloat_Day.DescId = zc_ObjecTFloat_PartionDateKind_Day()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                        ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                        ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
                              WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0()
                             )
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
@@ -960,7 +960,7 @@ BEGIN
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
                                     , ObjectLink_Child_retail.ChildObjectId       AS GoodsId
-                                    , ObjecTFloat_Value.ValueData                 AS Value
+                                    , ObjectFloat_Value.ValueData                 AS Value
                                FROM Object AS Object_GoodsCategory
                                    INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                                          ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
@@ -971,10 +971,10 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                          ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                         AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
-                                   INNER JOIN ObjecTFloat AS ObjecTFloat_Value
-                                                          ON ObjecTFloat_Value.ObjectId = Object_GoodsCategory.Id
-                                                         AND ObjecTFloat_Value.DescId = zc_ObjecTFloat_GoodsCategory_Value()
-                                                         AND COALESCE (ObjecTFloat_Value.ValueData,0) <> 0
+                                   INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                          ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                         AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
                                    -- выходим на товар сети
                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail
                                                          ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
@@ -1008,15 +1008,15 @@ BEGIN
                                INNER JOIN Object AS Object_Goods
                                                  ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
                                                 AND Object_Goods.isErased = FALSE
-                               LEFT JOIN ObjecTFloat AS Price_Value
+                               LEFT JOIN ObjectFloat AS Price_Value
                                                      ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                    AND Price_Value.DescId = zc_ObjecTFloat_Price_Value()
-                               LEFT JOIN ObjecTFloat AS MCS_Value
+                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               LEFT JOIN ObjectFloat AS MCS_Value
                                                      ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                    AND MCS_Value.DescId = zc_ObjecTFloat_Price_MCSValue()
-                               LEFT JOIN ObjecTFloat AS Price_MCSValueMin
+                                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                      ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
-                                                    AND Price_MCSValueMin.DescId = zc_ObjecTFloat_Price_MCSValueMin()
+                                                    AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                                -- !!!только дл€ таких!!!
                                INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId

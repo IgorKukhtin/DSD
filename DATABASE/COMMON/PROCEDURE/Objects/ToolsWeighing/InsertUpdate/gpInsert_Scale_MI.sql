@@ -57,6 +57,7 @@ $BODY$
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
+   DECLARE vbCountForWeight_goods      TFloat;
    DECLARE vbAmount_byWeightTare_goods TFloat;
 
    DECLARE vbOperDate_StartBegin TDateTime;
@@ -118,11 +119,14 @@ BEGIN
          --
          IF vbWeight_goods > 0
          THEN
+             -- Кол. для Веса
+             vbCountForWeight_goods:= (SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_CountForWeight());
+             IF COALESCE (vbCountForWeight_goods, 0) = 0 THEN vbCountForWeight_goods:= 1; END IF;
              -- вес втулки
              vbWeightTare_goods:= COALESCE ((SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_WeightTare()), 0);
 
              -- Проверка
-             IF vbWeightTare_goods > 0 AND COALESCE (inCount, 0) = 0
+             IF 1=0 AND vbWeightTare_goods > 0 AND COALESCE (inCount, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не введено кол-во втулок с весом <%>', zfConvert_FloatToString (vbWeightTare_goods);
              END IF;
@@ -134,10 +138,10 @@ BEGIN
                    )
              THEN
                  -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
-                 vbAmount_byWeightTare_goods:= ROUND (inRealWeight / vbWeight_goods - vbWeightTare_goods * inCount);
+                 vbAmount_byWeightTare_goods:= ROUND (vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods);
              ELSE
                  -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
-                 vbAmount_byWeightTare_goods:= inRealWeight / vbWeight_goods - vbWeightTare_goods * inCount;
+                 vbAmount_byWeightTare_goods:= vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods;
              END IF;
 
              -- Проверка

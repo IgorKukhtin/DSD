@@ -39,6 +39,10 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbDocumentKindId Integer;
 
+   DECLARE vbWeight_goods              TFloat;
+   DECLARE vbWeightTare_goods          TFloat;
+   DECLARE vbCountForWeight_goods      TFloat;
+
    DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -58,13 +62,49 @@ BEGIN
 
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
-     IF EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
+     IF 1=1 AND EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
      THEN
-         inOperCount:= (WITH tmpWeight AS (SELECT OF_Weight.ValueData FROM ObjectFloat AS OF_Weight WHERE OF_Weight.ObjectId = inGoodsId AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight())
-                        SELECT CASE WHEN tmpWeight.ValueData > 0 THEN CAST (tmp.OperCount / tmpWeight.ValueData AS NUMERIC (16, 2)) ELSE tmp.OperCount END
-                        FROM (SELECT inOperCount AS OperCount) AS tmp
-                             CROSS JOIN tmpWeight
-                       );
+         -- вес для перевода из веса в метры или что-то еще
+         vbWeight_goods:= (SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_Weight());
+         --
+         IF vbWeight_goods > 0
+         THEN
+             -- Кол. для Веса
+             vbCountForWeight_goods:= (SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_CountForWeight());
+             IF COALESCE (vbCountForWeight_goods, 0) = 0 THEN vbCountForWeight_goods:= 1; END IF;
+             -- вес втулки
+             vbWeightTare_goods:= COALESCE ((SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_WeightTare()), 0);
+
+             -- Проверка
+             IF 1=0 AND vbWeightTare_goods > 0 AND COALESCE (inCount, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не введено кол-во втулок с весом <%>', zfConvert_FloatToString (vbWeightTare_goods);
+             END IF;
+             -- если все-таки втулки нет
+             IF inCount < 0 THEN inCount:= 0; END IF;
+             
+             IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
+                IN (zc_Measure_Sht() -- шт.
+                   )
+             THEN
+                 -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
+                 inOperCount:= ROUND (vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods);
+             ELSE
+                 -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
+                 inOperCount:= vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods;
+             END IF;
+
+             -- Проверка
+             IF inOperCount <= 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Расчетное кол-во за вычетом веса втулок = <%> Не может быть <= 0.', zfConvert_FloatToString (inOperCount);
+             END IF;
+
+         ELSE
+             -- обнулили Кол-во втулок
+             inCount:= 0;
+         END IF;
+
      END IF;
 
 

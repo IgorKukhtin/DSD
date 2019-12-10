@@ -131,7 +131,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('947324')
+                               AND Movement.InvNumber IN ('950858')
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT
@@ -230,7 +230,7 @@ BEGIN
                                         || ' Товар: (' || Object_Goods.ObjectCode :: TVarChar || ')'
                                         || zfCalc_Text_replace (zfCalc_Text_replace (Object_Goods.ValueData, CHR(39), '`'), '"', '`')
                                  || ' ' || zfCalc_Text_replace (zfCalc_Text_replace (COALESCE (Object_GoodsKind.ValueData, ''), CHR(39), '`'), '"', '`')
-                                         , 38391802sku_code :: TVarChar) AS sku_code
+                                         , sku_code :: TVarChar) AS sku_code
                                  -- Количество WMS
                                , (zfCalc_QTY_toWMS (inGoodsTypeKindId:= tmpMI_all.GoodsTypeKindId
                                                   , inMeasureId      := tmpMI_all.MeasureId
