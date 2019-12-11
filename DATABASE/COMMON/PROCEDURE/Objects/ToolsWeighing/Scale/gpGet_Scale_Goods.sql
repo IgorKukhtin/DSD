@@ -21,6 +21,7 @@ RETURNS TABLE (GoodsId    Integer
              , MeasureId    Integer
              , MeasureCode  Integer
              , MeasureName  TVarChar
+             , Weight_gd TFloat, WeightTare_gd TFloat, CountForWeight_gd TFloat
               )
 AS
 $BODY$
@@ -140,6 +141,10 @@ BEGIN
             , Object_Measure.ObjectCode   AS MeasureCode
             , Object_Measure.ValueData    AS MeasureName
 
+            , ObjectFloat_Weight.ValueData         AS Weight_gd
+            , ObjectFloat_WeightTare.ValueData     AS WeightTare_gd
+            , ObjectFloat_CountForWeight.ValueData AS CountForWeight_gd
+
        FROM Object_Goods
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_Goods.GoodsKindId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -150,6 +155,16 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind_max ON Object_GoodsKind_max.Id = tmpGoods_ScaleCeh.GoodsKindId_max
             LEFT JOIN tmpGoods_wms ON tmpGoods_wms.GoodsId     = Object_Goods.GoodsId
                                   AND tmpGoods_wms.GoodsKindId = Object_Goods.GoodsKindId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
+                                  ON ObjectFloat_WeightTare.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+            LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                  ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectFloat_CountForWeight.DescId   = zc_ObjectFloat_Goods_CountForWeight()
        WHERE inBranchCode <> 104
              -- для SORT.ini - ограничиваем
           OR tmpGoods_ScaleCeh.GoodsId > 0

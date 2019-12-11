@@ -40,7 +40,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , isPromo               Boolean
              , isTare                Boolean
              , tmpDate               TDateTime
-             , Weight TFloat, WeightTare TFloat
+             , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
               )
 AS
 $BODY$
@@ -252,7 +252,7 @@ BEGIN
                                            WHERE inBranchCode BETWEEN 301 AND 310
                                              AND TRIM (inGoodsName)  <> ''
                                              AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
-                                             AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
+                                             AND Object.ValueData ILIKE ('%' || TRIM (inGoodsName) || '%')
                                           )
                      , tmpMI AS (SELECT tmpMI.GoodsId
                                       , tmpMI.GoodsKindId
@@ -406,8 +406,9 @@ BEGIN
 
                  , CURRENT_DATE :: TDateTime AS tmpDate
 
-                 , ObjectFloat_Weight.ValueData     AS Weight
-                 , ObjectFloat_WeightTare.ValueData AS WeightTare
+                 , ObjectFloat_Weight.ValueData         AS Weight
+                 , ObjectFloat_WeightTare.ValueData     AS WeightTare
+                 , ObjectFloat_CountForWeight.ValueData AS CountForWeight
 
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
@@ -438,9 +439,13 @@ BEGIN
                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                        ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                       AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
-                LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
-                                      ON ObjectFloat_WeightTare.ObjectId = tmpMI.GoodsId
-                                     AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
+                                       ON ObjectFloat_WeightTare.ObjectId = tmpMI.GoodsId
+                                      AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                       ON ObjectFloat_CountForWeight.ObjectId = tmpMI.GoodsId
+                                      AND ObjectFloat_CountForWeight.DescId   = zc_ObjectFloat_Goods_CountForWeight()
+                                     
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                       ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -484,7 +489,7 @@ BEGIN
                                 WHERE inBranchCode BETWEEN 301 AND 310
                                   AND TRIM (inGoodsName)  <> ''
                                   AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
-                                  AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
+                                  AND Object.ValueData ILIKE ('%' || TRIM (inGoodsName) || '%')
                                )
             -- Результат
             SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
@@ -575,6 +580,25 @@ BEGIN
               AND inBranchCode                  BETWEEN 301 AND 310
               AND inMovementId                  = 0
            UNION ALL
+            -- Цех Упаковки + ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ копчения - втулки
+            SELECT DISTINCT Object_Goods.Id AS GoodsId
+                 , 0   AS GoodsKindId_max
+                 , ''  AS WordList
+            FROM Object AS Object_Goods
+                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                 AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                               )
+                                                  AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10202() -- Оболочка
+                                                                                   , zc_Enum_InfoMoney_10203() -- Упаковка
+                                                                                    )
+                                                     )
+            WHERE Object_Goods.DescId = zc_Object_Goods()
+              AND inBranchCode IN (1, 102)
+           UNION ALL
             -- По коду - Склад Специй
             SELECT vbGoodsId AS GoodsId
                  , 0   AS GoodsKindId_max
@@ -656,6 +680,17 @@ BEGIN
                                      OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                      , zc_Enum_InfoMoney_10106() -- Сыр
                                                                        )
+                                       )
+                                UNION
+                                 SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                 FROM Object_InfoMoney_View AS View_InfoMoney
+                                 -- Цех Упаковки + ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ копчения - втулки
+                                 WHERE inBranchCode IN (1, 102)
+                                   AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                 )
+                                    AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10202() -- Оболочка
+                                                                     , zc_Enum_InfoMoney_10203() -- Упаковка
+                                                                      )
                                        )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
@@ -827,8 +862,9 @@ BEGIN
     
                 , CURRENT_DATE :: TDateTime   AS tmpDate
     
-                , ObjectFloat_Weight.ValueData     AS Weight
-                , ObjectFloat_WeightTare.ValueData AS WeightTare
+                , ObjectFloat_Weight.ValueData         AS Weight
+                , ObjectFloat_WeightTare.ValueData     AS WeightTare
+                , ObjectFloat_CountForWeight.ValueData AS CountForWeight
 
            FROM tmpGoods
     
@@ -838,6 +874,9 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
                                       ON ObjectFloat_WeightTare.ObjectId = tmpGoods.GoodsId
                                      AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+                LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                      ON ObjectFloat_CountForWeight.ObjectId = tmpGoods.GoodsId
+                                     AND ObjectFloat_CountForWeight.DescId   = zc_ObjectFloat_Goods_CountForWeight()
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId

@@ -81,9 +81,9 @@ BEGIN
                                        , Movement.StatusId
                                   FROM Movement
                                   WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
-                                   AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                 --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                 -- AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по Ш/К - Приход, т.к. период 80 дней
                                   SELECT Movement.Id
