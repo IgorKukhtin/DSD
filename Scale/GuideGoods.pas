@@ -82,6 +82,9 @@ type
     GoodsKindId_list: TcxGridDBColumn;
     gbPrice: TGroupBox;
     EditPrice: TcxCurrencyEdit;
+    Weight: TcxGridDBColumn;
+    WeightTare: TcxGridDBColumn;
+    CountForWeight: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -242,11 +245,15 @@ begin
 
   InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
   InitializePriceList(ParamsMovement);
-
+  //
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= rgGoodsKind.Items.Count > 1; // (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)or(execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
-
+  //
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible                        := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].VisibleForCustomization    := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].VisibleForCustomization:= ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  //
   if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then
   begin
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible:= false;
@@ -285,7 +292,7 @@ begin
             EditPrice.Text:='0';
 
             if (CDS.RecordCount=1)
-             and((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) 
+             and((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
               or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                 )
             then EditTareCount.Text:= '0'
@@ -307,10 +314,18 @@ begin
             end;}
 
             if (CDS.RecordCount<>1) then ActiveControl:=EditGoodsCode
-            else if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                 or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                 then ActiveControl:=EditWeightValue
-                 else ActiveControl:=EditTareCount
+            else if  (ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+                  and(CDS.FieldByName('Weight').AsFloat > 0)
+                  and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                 then ActiveControl:=EditTareCount
+                 else
+                      if ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                     //or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                       or (SettingMain.isCalc_sht = FALSE)
+                       or (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)
+                         )
+                      then ActiveControl:=EditWeightValue
+                      else ActiveControl:=EditTareCount
   end
   else begin
             EditGoodsCode.Text:='';
@@ -392,28 +407,47 @@ begin
       end;
 
       if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
-      then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-           then ActiveControl:=EditWeightValue
-           else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+      then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+           and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+           and(CDS.FieldByName('Weight').AsFloat > 0)
+           and(SettingMain.isCalc_sht = TRUE)
+           then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+           else
+                if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                 and(SettingMain.isCalc_sht = FALSE))
+                then ActiveControl:=EditWeightValue
+                else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else
       if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
       then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
            then ActiveControl:=EditPrice
            else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+
       else if (ActiveControl=EditGoodsCode)
            then if (Length(trim(EditGoodsCode.Text))>0)and(CDS.RecordCount>=1)
-                then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                     or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                     then ActiveControl:=EditWeightValue
-                     else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                     and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+                     and(CDS.FieldByName('Weight').AsFloat > 0)
+                     then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                     else
+                          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                          then ActiveControl:=EditWeightValue
+                          else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
                 else ActiveControl:=EditGoodsName
 
            else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
-                then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                     or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                     then ActiveControl:=EditWeightValue
-                     else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                     and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+                     and(CDS.FieldByName('Weight').AsFloat > 0)
+                     then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                     else
+                          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                           and(SettingMain.isCalc_sht = FALSE))
+                          then ActiveControl:=EditWeightValue
+                          else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
 
                 else if (ActiveControl=EditGoodsName)
                      then if CDS.RecordCount>1 then ActiveControl:=cxDBGrid else ActiveControl:=EditGoodsCode
@@ -791,8 +825,14 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
 begin
-     if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) 
-    and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
+     if ((CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg)
+     and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
+        )
+      or((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+      and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+      and(CDS.FieldByName('Weight').AsFloat > 0)
+      and(CDS.RecordCount = 1)
+        )
      then exit;
 
      try StrToFloat(EditWeightValue.Text)
@@ -877,10 +917,15 @@ begin
                   end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001
              then
-                  if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                  or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                  then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
-                  else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
+                  if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                  and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+                  and(CDS.FieldByName('Weight').AsFloat > 0)
+                  then begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end
+                  else
+                       if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                         or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                       then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
+                       else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 
       //
       if   (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
@@ -1159,10 +1204,17 @@ end;
 procedure TGuideGoodsForm.DSDataChange(Sender: TObject; Field: TField);
 begin
      with ParamsMI do begin
-        if CDS.RecordCount=1 then
-         if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-         then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
-         else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
+        if CDS.RecordCount=1
+        then
+            if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+            and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+            and(CDS.FieldByName('Weight').AsFloat > 0)
+            and(SettingMain.isCalc_sht = TRUE)
+            then ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
+            else
+                 if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                 then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
+                 else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else
             ParamByName('RealWeight').AsFloat:=0;
      end;
@@ -1228,11 +1280,18 @@ begin
                EditGoodsKindCodeChange(EditGoodsKindCode);
           end;
      //
-     if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-     then ActiveControl:=EditWeightValue
-     else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
+     if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+     and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
+     and(CDS.FieldByName('Weight').AsFloat > 0)
+     then if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
           then ActiveControl:=EditGoodsKindCode
-          else ActiveControl:=EditTareCount;
+          else ActiveControl:=EditTareCount
+     else
+          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+          then ActiveControl:=EditWeightValue
+          else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
+               then ActiveControl:=EditGoodsKindCode
+               else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actExitExecute(Sender: TObject);
