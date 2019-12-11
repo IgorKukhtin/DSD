@@ -64,6 +64,7 @@ type
     actChoicePersonalTrade: TOpenChoiceForm;
     spUpdate_SummSUN: TdsdStoredProc;
     ShareFromPrice: TcxGridDBColumn;
+    LimitSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

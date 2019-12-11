@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MarginPercent TFloat
              , SummSUN TFloat
+             , LimitSUN TFloat
              , ShareFromPrice TFloat
              , isErased Boolean) AS
 $BODY$
@@ -23,6 +24,7 @@ BEGIN
 
            , COALESCE (ObjectFloat_MarginPercent.ValueData, 0) :: TFloat AS MarginPercent
            , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
+           , COALESCE (ObjectFloat_LimitSUN.ValueData, 0)      :: TFloat AS LimitSUN
            , COALESCE (ObjectFloat_ShareFromPrice.ValueData, 0):: TFloat AS ShareFromPrice
 
            , Object_Retail.isErased   AS isErased
@@ -35,6 +37,10 @@ BEGIN
                                   ON ObjectFloat_SummSUN.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_SummSUN.DescId = zc_ObjectFloat_Retail_SummSUN()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN
+                                  ON ObjectFloat_LimitSUN.ObjectId = Object_Retail.Id 
+                                 AND ObjectFloat_LimitSUN.DescId = zc_ObjectFloat_Retail_LimitSUN()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
                                   ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
@@ -46,7 +52,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.12.19                                                       * LimitSUN
  23.07.19         * SummSUN
  25.03.19         *
 */

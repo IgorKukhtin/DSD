@@ -24,13 +24,13 @@ BEGIN
   IF CURRENT_TIME < '07:30'::TIME
   THEN
     vbCalcType := 1;
-  ELSEIF CURRENT_TIME >= '08:30'
+  ELSEIF CURRENT_TIME <= '08:30'
   THEN
     vbCalcType := 2;
   ELSE
     vbCalcType := 3;  
   END IF;
-
+  
   IF EXISTS(SELECT
                  TRUE       AS Holidays
             FROM
@@ -178,8 +178,8 @@ BEGIN
                                               WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
                                                 AND Object_RecalcMCSSheduler.isErased = False
                                                 AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False)
-    AND (vbCalcType = 1 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
-                        AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0
+    AND (vbCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
+                         OR COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0)
      OR  vbCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
                         AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) <> 0
      OR  vbCalcType = 3);
@@ -274,8 +274,8 @@ BEGIN
     AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False
-    AND (vbCalcType = 1 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
-                        AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0
+    AND (vbCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
+                         OR COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0)
      OR  vbCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
                         AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) <> 0
      OR  vbCalcType = 3);
