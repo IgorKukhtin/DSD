@@ -61,9 +61,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
-    procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure IFTMINSave(HeaderDataSet, ItemsDataSet: TDataSet); // інструкції з транспортування IFTMIN
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
       Directory: String; DebugMode: boolean);
     // квитанция
@@ -149,7 +150,7 @@ implementation
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
-  , DesadvFozzXML, OrderSpFozzXML;
+  , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML;
 
 procedure Register;
 begin
@@ -2448,31 +2449,31 @@ begin
             // Номер повідомлення про відвантаження
             DESADV_fozz.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
             // Дата документа
-            DESADV_fozz.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             // Дата поставки
-            DESADV_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             // Час поставки
-            DESADV_fozz.DELIVERYTIME := FormatDateTime('hh:mm',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.DELIVERYTIME := '00:00';
             // Номер замовлення
             DESADV_fozz.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
             // Дата замовлення
-            DESADV_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
             // Номер підтвердження замовлення
-            //DESADV_fozz.ORDRSPNUMBER := ;
+            DESADV_fozz.ORDRSPNUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
             // Дата підтвердження замовлення
-            //DESADV_fozz.ORDRSPDATE := ;
+            DESADV_fozz.ORDRSPDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
             // Номер накладної
             DESADV_fozz.DELIVERYNOTENUMBER := StrToInt(HeaderDataSet.FieldByName('InvNumber').asString);
             // Дата накладної
-            DESADV_fozz.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             // Номер договору на поставку
             DESADV_fozz.CAMPAIGNNUMBER := HeaderDataSet.FieldByName('ContractName').asString;
             // Кількість машин
             DESADV_fozz.TRANSPORTQUANTITY := 1;
             // Номер транспортного засобу
-            // ??? DESADV_fozz.TRANSPORTID := HeaderDataSet.FieldByName('CarName').asString;
-            // Тип транспорту
-            // ??? DESADV_fozz.TRANSPORTERTYPE := HeaderDataSet.FieldByName('CarModelName').asString;
+            //DESADV_fozz.TRANSPORTID := 1; //HeaderDataSet.FieldByName('CarName').asString;
+            // Тип транспорту:  "31"  Грузовой  или "48"  Легковой
+            DESADV_fozz.TRANSPORTERTYPE := 31; //HeaderDataSet.FieldByName('CarModelName').asString;
             // Тип транспортування: 20 - залізничний, 30 - дорожній, 40 - повітряний, 60 - спарений, 100 - кур’єрська служба
             DESADV_fozz.TRANSPORTTYPE := 30;
             //
@@ -2925,6 +2926,115 @@ begin
   end;
 end;
 
+procedure TEDI.IFTMINSave(HeaderDataSet, ItemsDataSet: TDataSet);
+var
+  IFTMIN_fozz: IftminFozzXML.IXMLIFTMINType;
+  Stream: TStream;
+  i: integer;
+  FileName: string;
+  lNumber: string;
+begin
+  //
+  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = FALSE
+  then exit;
+  //
+            // Создать XML
+            IFTMIN_fozz := IFTMINFozzXML.NewIFTMIN;
+            // Номер документа повинен бути наступного формату X_Y, де Х — це порядковий номер машини, яка їде по замовленню Y — це загальна кількість машин, яка поїде по замовленню (мінімальна к-ть - 1, максимальна - 99). Х повинен бути менше або дорівнювати Y. Наприклад 2_5.
+            IFTMIN_fozz.NUMBER := '1_1';
+            // Дата документа
+            IFTMIN_fozz.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            // Дата поставки
+            IFTMIN_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            // Час доставки
+            IFTMIN_fozz.DELIVERYTIME := '00:00';
+            // Тип документа: O — оригинал, R — замена, D — удаление, F — фиктивность заказа, PO — предзаказ, OS — заказ на услугу/маркетинг
+            IFTMIN_fozz.DOCTYPE := 'O';
+            //Допустиме значення - «ON»
+            IFTMIN_fozz.DOCUMENT.DOCITEM.DOCTYPE:='ON';
+            // Номер замовлення
+            IFTMIN_fozz.DOCUMENT.DOCITEM.DOCNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+            //
+            // GLN вантажовідправника
+            if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+            then IFTMIN_fozz.HEAD.CONSIGNOR := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+            // GLN місця доставки
+            IFTMIN_fozz.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+            // GLN відправника повідомлення
+            IFTMIN_fozz.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+            // GLN одержувача повідомлення
+            IFTMIN_fozz.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
+            //
+            //
+            with ItemsDataSet do
+            begin
+              First;
+              i := 1;
+              //while not Eof do
+              //begin
+                with IFTMIN_fozz.HEAD.POSITIONS do
+                begin
+                  // Номер позиції - Можлива тільки одна позиція
+                  POSITIONNUMBER := IntToStr(i);
+                  // Тип упаковки
+                  PACKAGETYPE := '201';
+                  // Кількість упаковок
+                  PACKAGEQUANTITY :=
+                    StringReplace(FormatFloat('0.####',
+                    HeaderDataSet.FieldByName('WeighingCount').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // Вага - Грузоподьемность
+                  PACKAGEWIGHT :=
+                    StringReplace(FormatFloat('0.00##',
+                    24000),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  //Максимальна кількість упаковок
+                  MAXPACKAGEQUANTITY :='32';
+
+                end;
+                inc(i);
+                Next;
+              //end;
+            end;
+  //
+  //
+  Stream := TMemoryStream.Create;
+  try
+    if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+    then begin
+              IFTMIN_fozz.OwnerDocument.SaveToStream(Stream);
+              lNumber:= HeaderDataSet.FieldByName('InvNumber').asString;
+         end;
+    //
+    FileName := 'Iftmin_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+    // !временно!
+    if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+    then
+       try
+         IFTMIN_fozz.OwnerDocument.SaveToFile(FileName)
+       except
+         IFTMIN_fozz.OwnerDocument.SaveToFile(FDirectoryError + FileName)
+       end;
+    // здесь созранили на ftp
+    PutStreamToFTP(Stream, FileName, '/outbox');
+    //
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+  end;
+end;
+
 procedure TEDI.InitializeComSigner (DebugMode: boolean; UserSign, UserSeal, UserKey : string);
 var
   privateKey: string;
@@ -3241,15 +3351,17 @@ begin
           // Дата документа
           ORDRSP_fozz.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
           // Час створення документа
+          ORDRSP_fozz.Time := FormatDateTime('hh:mm',HeaderDataSet.FieldByName('OperDate_insert').asDateTime);
           // Номер замовлення
           ORDRSP_fozz.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
           // Дата замовлення
-          ORDRSP_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          ORDRSP_fozz.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
           // Дата доставки
-          ORDRSP_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          ORDRSP_fozz.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
           // Час поставки
+          ORDRSP_fozz.DELIVERYTIME := '00:00';
           // Код валюти
-          // ORDRSP_fozz.CURRENCY := ;
+          ORDRSP_fozz.CURRENCY := 'UAH';
           // Номер договору на поставку
           ORDRSP_fozz.CAMPAIGNNUMBER := HeaderDataSet.FieldByName('ContractName').asString;
           // 4 - поставка змінена, 5 - заміна документа, 29 - поставка прийнята, 27 - поставка не прийнята
@@ -3294,13 +3406,18 @@ begin
                 then PRODUCTTYPE := '3';
                 // Замовлена кількість
                 ORDEREDQUANTITY :=
-                  StringReplace(FormatFloat('0.00###',
+                  StringReplace(FormatFloat('0.00##',
                   ItemsDataSet.FieldByName('AmountOrder').AsFloat),
                   FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
                 // Наявна кількість
                 ACCEPTEDQUANTITY :=
-                  StringReplace(FormatFloat('0.000',
+                  StringReplace(FormatFloat('0.00##',
                   ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                  FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                // Мінімальна замовлена кількість
+                MINIMUMORDERQUANTITY :=
+                  StringReplace(FormatFloat('0.00##',
+                  14{ItemsDataSet.FieldByName('AmountOrder').AsFloat}),
                   FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
               end;
@@ -3825,8 +3942,10 @@ begin
       EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory, ShiftDown);
     ediDeclarReturn:
       EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, spHeader, Directory, ShiftDown);
-    ediDesadv:
+    ediDesadv: begin
       EDI.DESADVSave(HeaderDataSet, ListDataSet);
+      EDI.IFTMINSave(HeaderDataSet, ListDataSet);
+    end;
     ediOrdrsp:
       EDI.ORDRSPSave(HeaderDataSet, ListDataSet);
     ediInvoice:
