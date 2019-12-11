@@ -15,6 +15,7 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , UserId Integer
              , UserName TVarChar
              , DateRun TDateTime
+             , DateRunSun TDateTime
              , Color_cal Integer
              , AllRetail boolean
              , UserRun TVarChar
@@ -47,6 +48,7 @@ BEGIN
            , Object_User.Id                                   AS UnitId
            , Object_User.ValueData                            AS UnitName
            , ObjectDate_DateRun.ValueData                     AS DateRun
+           , ObjectDate_DateRunSun.ValueData                  AS DateRunSun
            , CASE WHEN COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
              THEN
                42495
@@ -70,6 +72,9 @@ BEGIN
            LEFT JOIN ObjectDate AS ObjectDate_DateRun
                                 ON ObjectDate_DateRun.ObjectId = Object_RecalcMCSSheduler.Id
                                AND ObjectDate_DateRun.DescId = zc_ObjectFloat_RecalcMCSSheduler_DateRun()
+           LEFT JOIN ObjectDate AS ObjectDate_DateRunSun
+                                ON ObjectDate_DateRunSun.ObjectId = Object_RecalcMCSSheduler.Id
+                               AND ObjectDate_DateRunSun.DescId = zc_ObjectFloat_RecalcMCSSheduler_DateRunSun()
 
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
@@ -172,6 +177,7 @@ ALTER FUNCTION gpSelect_Object_RecalcMCSSheduler (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 10.12.19                                                       *
  09.02.19                                                       *
  21.12.18                                                       *
 */

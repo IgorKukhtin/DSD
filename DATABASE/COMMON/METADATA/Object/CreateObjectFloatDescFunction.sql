@@ -1167,6 +1167,66 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Period7() RETURNS Integer AS $BOD
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_Period7', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ вс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Period7');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_WeekId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_WeekId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_WeekId', zc_Object_Unit(), 'День недели для запуска пересчата по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_WeekId');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun1', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  пн' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun2', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  вт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun3', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  ср' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun4', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  чт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun5', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  пт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun5');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun6', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  сб' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun6');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodSun7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodSun7', zc_Object_Unit(), 'Кол-во дней для анализа НТЗ для СУН  вс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodSun7');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun1', zc_Object_Unit(), 'Страховой запас НТЗ для СУН  Х дней пн' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun2', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х дней вт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun3', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х дней ср' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun4', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х днейчт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun5', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х дней пт' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun5');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun6', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х дней сб' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun6');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DaySun7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_DaySun7', zc_Object_Unit(), 'Страховой запас НТЗ для СУН Х дней вс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DaySun7');
+
  CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Day() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Day'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_Day', zc_Object_Unit(), 'Страховой запас НТЗ для Х дней вых. день' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Day');
@@ -1474,6 +1534,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.12.19                                                                                      * zc_ObjectFloat_Unit_... for Sun
  04.12.19                                                                                      * zc_ObjectFloat_PriceChange_FixDiscount
  03.12.19                                                                                      * zc_ObjectFloat_MaxOrderAmountSecond
  19.11.19                                                                                      * zc_ObjectFloat_Juridical_CodeRazom

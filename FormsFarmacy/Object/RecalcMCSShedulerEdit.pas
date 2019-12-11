@@ -71,6 +71,23 @@ type
     cxLabel12: TcxLabel;
     cbPharmacyItem: TcxCheckBox;
     cbAllRetail: TcxCheckBox;
+    ceDaySun3: TcxCurrencyEdit;
+    ceDaySun7: TcxCurrencyEdit;
+    cePeriodSun7: TcxCurrencyEdit;
+    ceDaySun6: TcxCurrencyEdit;
+    cePeriodSun6: TcxCurrencyEdit;
+    ceDaySun5: TcxCurrencyEdit;
+    cePeriodSun5: TcxCurrencyEdit;
+    ceDaySun4: TcxCurrencyEdit;
+    cePeriodSun4: TcxCurrencyEdit;
+    cePeriodSun3: TcxCurrencyEdit;
+    ceDaySun2: TcxCurrencyEdit;
+    cePeriodSun2: TcxCurrencyEdit;
+    ceDaySun1: TcxCurrencyEdit;
+    cePeriodSun1: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
   private
     { Private declarations }
   public

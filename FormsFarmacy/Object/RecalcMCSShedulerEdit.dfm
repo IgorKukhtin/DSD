@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047'>'
   ClientHeight = 376
-  ClientWidth = 441
+  ClientWidth = 578
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -77,8 +77,8 @@
     Width = 377
   end
   object cbIsClose: TcxCheckBox
-    Left = 256
-    Top = 13
+    Left = 416
+    Top = 8
     Caption = #1053#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1097#1077#1090
     TabOrder = 1
     Width = 158
@@ -87,10 +87,10 @@
     Left = 40
     Top = 76
     TabOrder = 3
-    Width = 377
+    Width = 353
   end
   object cxLabel1: TcxLabel
-    Left = 294
+    Left = 230
     Top = 103
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047
   end
@@ -108,7 +108,7 @@
     Width = 84
   end
   object ceDay: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 126
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -116,7 +116,7 @@
     Width = 84
   end
   object ceDay1: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 146
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -137,7 +137,7 @@
     Caption = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
   end
   object ceDay2: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 166
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -158,7 +158,7 @@
     Caption = #1042#1090#1086#1088#1085#1080#1082
   end
   object ceDay3: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 186
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -179,7 +179,7 @@
     Caption = #1057#1088#1077#1076#1072
   end
   object ceDay4: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 206
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -200,7 +200,7 @@
     Caption = #1063#1077#1090#1074#1077#1088#1075
   end
   object ceDay5: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 226
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -221,7 +221,7 @@
     Caption = #1055#1103#1090#1085#1080#1094#1072
   end
   object ceDay6: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 246
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -242,7 +242,7 @@
     Caption = #1057#1091#1073#1073#1086#1090#1072
   end
   object ceDay7: TcxCurrencyEdit
-    Left = 294
+    Left = 230
     Top = 266
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -263,18 +263,145 @@
     Caption = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077
   end
   object cbPharmacyItem: TcxCheckBox
-    Left = 256
-    Top = 30
+    Left = 416
+    Top = 25
     Caption = #1040#1087#1090#1077#1095#1085#1099#1081' '#1087#1091#1085#1082#1090
     TabOrder = 2
     Width = 158
   end
   object cbAllRetail: TcxCheckBox
-    Left = 256
-    Top = 48
+    Left = 416
+    Top = 43
     Caption = #1044#1083#1103' '#1074#1089#1077#1081' '#1089#1077#1090#1080
     TabOrder = 36
     Width = 158
+  end
+  object ceDaySun3: TcxCurrencyEdit
+    Left = 478
+    Top = 186
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 37
+    Width = 84
+  end
+  object ceDaySun7: TcxCurrencyEdit
+    Left = 478
+    Top = 266
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 38
+    Width = 84
+  end
+  object cePeriodSun7: TcxCurrencyEdit
+    Left = 376
+    Top = 266
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 39
+    Width = 84
+  end
+  object ceDaySun6: TcxCurrencyEdit
+    Left = 478
+    Top = 246
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 40
+    Width = 84
+  end
+  object cePeriodSun6: TcxCurrencyEdit
+    Left = 376
+    Top = 246
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 41
+    Width = 84
+  end
+  object ceDaySun5: TcxCurrencyEdit
+    Left = 478
+    Top = 226
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 42
+    Width = 84
+  end
+  object cePeriodSun5: TcxCurrencyEdit
+    Left = 376
+    Top = 226
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 43
+    Width = 84
+  end
+  object ceDaySun4: TcxCurrencyEdit
+    Left = 478
+    Top = 206
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 44
+    Width = 84
+  end
+  object cePeriodSun4: TcxCurrencyEdit
+    Left = 376
+    Top = 206
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 45
+    Width = 84
+  end
+  object cePeriodSun3: TcxCurrencyEdit
+    Left = 376
+    Top = 186
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 46
+    Width = 84
+  end
+  object ceDaySun2: TcxCurrencyEdit
+    Left = 478
+    Top = 166
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 47
+    Width = 84
+  end
+  object cePeriodSun2: TcxCurrencyEdit
+    Left = 376
+    Top = 166
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 48
+    Width = 84
+  end
+  object ceDaySun1: TcxCurrencyEdit
+    Left = 478
+    Top = 146
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 49
+    Width = 84
+  end
+  object cePeriodSun1: TcxCurrencyEdit
+    Left = 376
+    Top = 146
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 50
+    Width = 84
+  end
+  object cxLabel13: TcxLabel
+    Left = 478
+    Top = 103
+    Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047
+  end
+  object cxLabel14: TcxLabel
+    Left = 367
+    Top = 103
+    Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072
+  end
+  object cxLabel15: TcxLabel
+    Left = 408
+    Top = 84
+    Caption = #1044#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
   end
   object ActionList: TActionList
     Left = 16
@@ -459,6 +586,104 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPeriodSun1'
+        Value = Null
+        Component = cePeriodSun1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun2'
+        Value = Null
+        Component = cePeriodSun2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun3'
+        Value = Null
+        Component = cePeriodSun3
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun4'
+        Value = Null
+        Component = cePeriodSun4
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun5'
+        Value = Null
+        Component = cePeriodSun5
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun6'
+        Value = Null
+        Component = cePeriodSun6
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun7'
+        Value = Null
+        Component = cePeriodSun7
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun1'
+        Value = Null
+        Component = ceDaySun1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun2'
+        Value = Null
+        Component = ceDaySun2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun3'
+        Value = Null
+        Component = ceDaySun3
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun4'
+        Value = Null
+        Component = ceDaySun4
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun5'
+        Value = Null
+        Component = ceDaySun5
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun6'
+        Value = Null
+        Component = ceDaySun6
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun7'
+        Value = Null
+        Component = ceDaySun7
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUserId'
         Value = ''
         Component = UserGuides
@@ -483,7 +708,7 @@
       end>
     PackSize = 1
     Left = 216
-    Top = 72
+    Top = 64
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -640,6 +865,90 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PeriodSun1'
+        Value = Null
+        Component = cePeriodSun1
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun2'
+        Value = Null
+        Component = cePeriodSun2
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun3'
+        Value = Null
+        Component = cePeriodSun3
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun4'
+        Value = Null
+        Component = cePeriodSun4
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun5'
+        Value = Null
+        Component = cePeriodSun5
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun6'
+        Value = Null
+        Component = cePeriodSun6
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun7'
+        Value = Null
+        Component = cePeriodSun7
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun1'
+        Value = Null
+        Component = ceDaySun1
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun2'
+        Value = Null
+        Component = ceDaySun2
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun3'
+        Value = Null
+        Component = ceDaySun3
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun4'
+        Value = Null
+        Component = ceDaySun4
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun5'
+        Value = Null
+        Component = ceDaySun5
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun6'
+        Value = Null
+        Component = ceDaySun6
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun7'
+        Value = Null
+        Component = ceDaySun7
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UserId'
         Value = ''
         Component = UserGuides
@@ -717,7 +1026,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 173
+    Left = 208
+    Top = 309
   end
 end
