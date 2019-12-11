@@ -138,6 +138,17 @@ BEGIN
                                 ) AS tmp
                           WHERE tmp.Ord = 1
                           )
+      , tmpSort AS (SELECT tmp.UnitId
+                         , tmp.UnitName
+                         , (tmp.UnitName ||' ('|| Object_Juridical.ValueData||', '|| ObjectHistory_JuridicalDetails_View.OKPO ||')' ):: TVarChar AS UnitName_full
+                         , ROW_NUMBER() OVER (ORDER BY Object_Juridical.ValueData, tmp.UnitName) AS ORD
+                    FROM (SELECT DISTINCT tmpMI_Child.UnitId, tmpMI_Child.UnitName FROM tmpMI_Child) AS tmp
+                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                               ON ObjectLink_Unit_Juridical.ObjectId = tmp.UnitId
+                                              AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+                   )
 
      SELECT tmpMI_Master.GoodsId
           , tmpMI_Master.GoodsCode
@@ -150,7 +161,7 @@ BEGIN
           , Object_NDSKind.ValueData         AS NDSKindName
           , tmpMI_Child.UnitId
           , tmpMI_Child.UnitCode
-          , (tmpMI_Child.UnitName ||' ('|| Object_Juridical.ValueData||', '|| ObjectHistory_JuridicalDetails_View.OKPO ||')' ):: TVarChar AS UnitName
+          , ((tmpSort.ord+100) ||'. '|| tmpSort.UnitName_full ):: TVarChar AS UnitName   -- +100 для правильной сортировки, если по порядку то после 1 идет 10 потом 11-19 , 2, 20 
           , tmpMI_Master.Price
           , tmpMI_Child.Amount                        :: TFloat AS Amount
           , (tmpMI_Child.Amount * tmpMI_Master.Price) :: TFloat AS Summ
@@ -177,15 +188,18 @@ BEGIN
                               AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
           LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+         /* LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                ON ObjectLink_Unit_Juridical.ObjectId = tmpMI_Child.UnitId
                               AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+          */
+          LEFT JOIN tmpSort ON tmpSort.UnitId = tmpMI_Child.UnitId
           
           LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpMI_Master.GoodsId
                                  AND tmpGoodsParam.JuridicalId = tmpMI_Master.JuridicalId
                                  AND tmpGoodsParam.ContractId = tmpMI_Master.ContractId
+     --ORDER BY Object_Juridical.ValueData, tmpMI_Child.UnitName
           ;
 END;
 $BODY$
