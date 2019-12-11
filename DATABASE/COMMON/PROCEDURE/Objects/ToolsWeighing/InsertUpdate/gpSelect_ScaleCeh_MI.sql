@@ -12,6 +12,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, Goods
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat, AmountOneWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
+             , RealWeight_gd TFloat
              , WeightTare TFloat
              , WeightOther TFloat
              , CountSkewer1_k TFloat, CountSkewer1 TFloat, CountSkewer2 TFloat
@@ -157,6 +158,13 @@ BEGIN
 
            , tmpMI.RealWeight  :: TFloat      AS RealWeight
            , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
+             -- Вес за минусом втулок и тары
+           , CASE WHEN Object_Measure.Id NOT IN (zc_Measure_Kg(), zc_Measure_Sh())
+                   AND ObjectFloat_Weight.ValueData > 0
+                       THEN tmpMI.RealWeight /*- COALESCE (tmpMI.WeightTare, 0)*/ - COALESCE (ObjectFloat_WeightTare.ValueData, 0) * COALESCE (tmpMI.Count, 0) - tmpMI.WeightTare
+                  ELSE 0
+             END :: TFloat AS RealWeight_gd
+             --
            , tmpMI.WeightTare  :: TFloat      AS WeightTare
            , tmpMI.WeightOther :: TFloat      AS WeightOther
 
@@ -205,6 +213,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
+                                  ON ObjectFloat_WeightTare.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
