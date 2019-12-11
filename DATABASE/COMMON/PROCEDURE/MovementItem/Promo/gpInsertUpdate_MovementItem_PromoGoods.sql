@@ -75,9 +75,15 @@ BEGIN
     -- поиск цены по базовому прайсу
     IF COALESCE (ioPrice, 0) = 0 OR COALESCE (ioId, 0) = 0
     THEN
-        
-         -- таблица -  Цены из прайса
-         CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         --
+         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPriceList'))
+         THEN
+             DELETE FROM tmpPriceList;
+         ELSE
+             -- таблица -  Цены из прайса
+             CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         END IF;
+         --
          INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
              SELECT lfSelect.GoodsId     AS GoodsId
                   , lfSelect.GoodsKindId AS GoodsKindId
