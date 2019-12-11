@@ -2217,6 +2217,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitOverdue() RETURNS Integer AS $
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_UnitOverdue', 'Подразделение для перемещения просроченного товара', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOverdue');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitOld() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOld'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_UnitOld', 'Старое подразделениие (закрытое)', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitOld');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroupPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Goods_GoodsGroupPromo', 'Связь товаров с группой товаров маркетинга', zc_Object_Goods(), zc_Object_GoodsGroupPromo() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupPromo');
@@ -2256,6 +2260,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.12.19                                                                                      * zc_ObjectLink_Unit_UnitOld
  27.11.19         * zc_ObjectLink_PriceListItem_GoodsKind
  18.10.19                                                                                      * zc_ObjectLink_RecalcMCSSheduler_UserRun
  17.10.19         * zc_ObjectLink_LabMark_LabProduct

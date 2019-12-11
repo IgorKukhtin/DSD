@@ -26,7 +26,8 @@ $BODY$
    DECLARE vbSummaNew    TFloat;
    DECLARE vbUnitId_from Integer;
    DECLARE vbUnitId_to   Integer;
-   DECLARE vbisReceived Boolean;
+   DECLARE vbisReceived  Boolean;
+   DECLARE vbLimitSUN    TFloat;
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -37,11 +38,13 @@ BEGIN
           , (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR COALESCE (MovementBoolean_DefSUN.ValueData, FALSE) = TRUE) :: Boolean
           , COALESCE (MovementFloat_TotalSummFrom.ValueData, 0)
           , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
+          , COALESCE (ObjectFloat_LimitSUN.ValueData, 0)
             INTO vbUnitId_from
                , vbUnitId_to 
                , vbIsSUN
                , vbSumma
                , vbisReceived
+               , vbLimitSUN
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.ID
@@ -61,6 +64,15 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                     ON MovementBoolean_Received.MovementId = Movement.Id
                                    AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                               ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN
+                                ON ObjectFloat_LimitSUN.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                               AND ObjectFloat_LimitSUN.DescId = zc_ObjectFloat_Retail_LimitSUN()
      WHERE Movement.Id = inMovementId;
 
      -- определяются данные из MovementItem
@@ -135,9 +147,9 @@ BEGIN
        WHERE MovementFloat_TotalSummFrom.MovementId = inMovementId
          AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom();
      
-       IF vbSummaNew < 1000 AND vbSummaNew < vbSumma
+       IF COALESCE(vbLimitSUN, 0) > 0 AND vbSummaNew < COALESCE(vbLimitSUN, 0) AND vbSummaNew < vbSumma
        THEN
-         RAISE EXCEPTION 'Ошибка. Коллеги, уменьшать сумму перемещения по СУН менее 1000 грню запрещено.';
+         RAISE EXCEPTION 'Ошибка. Коллеги, уменьшать сумму перемещения по СУН менее % грню запрещено.', COALESCE(vbLimitSUN, 0);
        END IF;
      END IF;
      

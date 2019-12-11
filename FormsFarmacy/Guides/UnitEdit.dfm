@@ -641,6 +641,29 @@
         Top = 51
         Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
       end
+      object edUnitOld: TcxButtonEdit
+        Left = -1
+        Top = 123
+        Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
+        ParentShowHint = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        ShowHint = True
+        TabOrder = 6
+        Width = 220
+      end
+      object cxLabel39: TcxLabel
+        Left = -1
+        Top = 102
+        Hint = #1057#1090#1072#1088#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080#1077' ('#1079#1072#1082#1088#1099#1090#1086#1077')'
+        Caption = #1057#1090#1072#1088#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080#1077' ('#1079#1072#1082#1088#1099#1090#1086#1077')'
+        ParentShowHint = False
+        ShowHint = True
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
@@ -1219,6 +1242,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitOldId'
+        Value = Null
+        Component = GuidesUnitOld
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 148
@@ -1691,6 +1722,21 @@
         Component = cbNotCashListDiff
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitOldId'
+        Value = Null
+        Component = GuidesUnitOld
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitOldName'
+        Value = Null
+        Component = GuidesUnitOld
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -1984,7 +2030,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 153
-    Top = 579
+    Top = 211
   end
   object GuidesUserManager2: TdsdGuides
     KeyField = 'Id'
@@ -2043,5 +2089,34 @@
       end>
     Left = 356
     Top = 432
+  end
+  object GuidesUnitOld: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitOld
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitOld
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitOld
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 153
+    Top = 259
   end
 end

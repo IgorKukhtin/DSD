@@ -1455,6 +1455,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_SummSUN() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_SummSUN', 'сумма, при которой включается СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_SummSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_LimitSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_LimitSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_LimitSUN', 'Лимит для Отложен (перемещения СУН)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_LimitSUN');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_ShareFromPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_ShareFromPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_ShareFromPrice', 'Делить медикамент от цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_ShareFromPrice');
@@ -1534,6 +1539,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.12.19                                                                                      * zc_ObjectFloat_Retail_LimitSUN
  10.12.19                                                                                      * zc_ObjectFloat_Unit_... for Sun
  04.12.19                                                                                      * zc_ObjectFloat_PriceChange_FixDiscount
  03.12.19                                                                                      * zc_ObjectFloat_MaxOrderAmountSecond

@@ -138,6 +138,9 @@ type
     cxTabSheet3: TcxTabSheet;
     cbNotCashMCS: TcxCheckBox;
     cbNotCashListDiff: TcxCheckBox;
+    edUnitOld: TcxButtonEdit;
+    cxLabel39: TcxLabel;
+    GuidesUnitOld: TdsdGuides;
   private
     { Private declarations }
   public

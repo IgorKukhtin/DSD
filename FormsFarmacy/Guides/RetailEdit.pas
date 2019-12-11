@@ -44,6 +44,8 @@ type
     edSummSUN: TcxCurrencyEdit;
     edShareFromPrice: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    edLimitSUN: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
