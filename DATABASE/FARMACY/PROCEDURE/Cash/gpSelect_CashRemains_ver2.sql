@@ -458,11 +458,35 @@ BEGIN
                                                 AND MovementItemContainer.OperDate >= CURRENT_DATE -  ('100 DAY')::INTERVAL
                                               GROUP BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer
                                               )
+               , tmpMovementItemContainerOld AS (SELECT Object_Goods_Retail_New.ID                      AS GoodsID
+                                                      , SUM(MovementItemContainer.Amount)               AS Amount
+                                                      , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                                                 FROM MovementItemContainer
+                                                      INNER JOIN ObjectLink AS ObjectLink_Unit_UnitOld
+                                                                            ON ObjectLink_Unit_UnitOld.ChildObjectId = MovementItemContainer.WhereObjectId_Analyzer
+                                                                           AND ObjectLink_Unit_UnitOld.DescId = zc_ObjectLink_Unit_UnitOld()
+                                                                           AND ObjectLink_Unit_UnitOld.ObjectId = vbUnitId
+                                                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                                           ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit_UnitOld.ObjectId
+                                                                          AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                      LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail_Old
+                                                                                    ON Object_Goods_Retail_Old.ID = MovementItemContainer.ObjectId_Analyzer
+                                                      LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail_New
+                                                                                    ON Object_Goods_Retail_New.GoodsMainId = Object_Goods_Retail_Old.GoodsMainId
+                                                                                   AND Object_Goods_Retail_New.RetailId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                 WHERE  MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
+                                                 GROUP BY ObjectLink_Unit_UnitOld.ObjectId, Object_Goods_Retail_New.ID)
                , tmpNotSold AS (SELECT Container.GoodsID
                                 FROM tmpContainer AS Container
                                      LEFT JOIN tmpMovementItemContainer AS MovementItemContainer
                                                                         ON MovementItemContainer.GoodsID = Container.GoodsID
-                                WHERE (Container.Amount > COALESCE(MovementItemContainer.Amount, 0)) AND COALESCE(MovementItemContainer.Check, 0) = 0
+                                     LEFT JOIN tmpMovementItemContainerOld AS MovementItemContainerOld
+                                                                           ON MovementItemContainerOld.GoodsID = Container.GoodsID
+                                WHERE (Container.Amount > (COALESCE(MovementItemContainer.Amount, 0) + COALESCE(MovementItemContainerOld.Amount, 0)))
+                                  AND (COALESCE(MovementItemContainer.Check, 0) + COALESCE(MovementItemContainerOld.Check, 0)) = 0
                                 )
                  -- Все перемещения по СУН
                 ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
@@ -928,4 +952,5 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+--
+ SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') where NotSold = True

@@ -56,7 +56,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   end
   object Label5: TLabel
     Left = 24
-    Top = 113
+    Top = 92
     Width = 48
     Height = 16
     Caption = 'Label5'
@@ -74,6 +74,19 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Height = 13
     Caption = #1052#1072#1082#1089'. '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
     Visible = False
+  end
+  object Label7: TLabel
+    Left = 24
+    Top = 113
+    Width = 48
+    Height = 16
+    Caption = 'Label7'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object bbOk: TcxButton
     Left = 291

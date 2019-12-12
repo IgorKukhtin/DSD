@@ -221,19 +221,26 @@ BEGIN
                                , Container.Amount
                                , Container.ObjectId
                        )
+      -- содержимое документа + сохранение остатка
+    , tmpDiffRemains AS (SELECT MovementItem.Id       AS Id
+                              , MovementItem.ObjectId AS ObjectId
+                              , COALESCE (MovementItem.Amount, 0.0) - COALESCE (Saldo.Amount, 0.0) AS Amount
+                              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), MovementItem.Id, COALESCE (Saldo.Amount, 0.0))
+                         FROM MovementItem
+                              LEFT OUTER JOIN (SELECT T0.ObjectId, SUM (T0.Amount) as Amount FROM tmpRemains AS T0 GROUP BY ObjectId
+                                              ) AS Saldo ON Saldo.ObjectId = MovementItem.ObjectId
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.IsErased = FALSE
+                        )
       -- разница в остатке = переучет(факт) - расчет : (-)недостача, (+)Излишек
     , DiffRemains AS (SELECT MovementItem.Id       AS MovementItemId
                            , MovementItem.ObjectId AS ObjectId
-                           , COALESCE (MovementItem.Amount, 0.0) - COALESCE (Saldo.Amount, 0.0) AS Amount
-                      FROM MovementItem
-                           LEFT OUTER JOIN (SELECT T0.ObjectId, SUM (T0.Amount) as Amount FROM tmpRemains AS T0 GROUP BY ObjectId
-                                           ) AS Saldo ON Saldo.ObjectId = MovementItem.ObjectId
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId = zc_MI_Master()
-                        AND MovementItem.IsErased = FALSE
-                        AND COALESCE(MovementItem.Amount, 0.0) <> COALESCE(Saldo.Amount, 0.0)
+                           , MovementItem.Amount
+                      FROM tmpDiffRemains AS MovementItem
+                      WHERE MovementItem.Amount <> 0
                      )
-, DD AS (-- для "недостачи" - поиск партий
+     , DD AS (-- для "недостачи" - поиск партий
          SELECT
             DiffRemains.MovementItemId
           , DiffRemains.Amount
@@ -302,7 +309,9 @@ BEGIN
            FROM tmpItem;
 
       -- Проводки если затронуты контейнера сроков
-    IF EXISTS(SELECT 1 FROM Container WHERE Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert))
+    IF EXISTS(SELECT 1 FROM Container WHERE Container.WhereObjectId = vbUnitId
+                                        AND Container.DescId = zc_Container_CountPartionDate()
+                                        AND Container.ParentId in (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert))
     THEN
 
       WITH DD AS (

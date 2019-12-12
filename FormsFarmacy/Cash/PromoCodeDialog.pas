@@ -53,7 +53,7 @@ end;
 procedure TPromoCodeDialogForm.bbOkClick(Sender: TObject);
 var lMsg:String;
 begin
-  if Length(trim(edPromoCode.Text)) = 8 then
+  if (Length(trim(edPromoCode.Text)) = 8) or (Length(trim(edPromoCode.Text)) = 6) then
   begin
     spGet_PromoCode_by_GUID.Execute;
     ModalResult := mrOk;
@@ -63,7 +63,7 @@ begin
     if Length(trim(edPromoCode.Text)) <> 0 then
     begin
       ActiveControl := edPromoCode;
-      ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
+      ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 6 или 8 символов');
     end else ModalResult := mrOk;
   end;
 end;

@@ -29,6 +29,7 @@ type
     ListGoodsCDS: TClientDataSet;
     ceMaxOrderUnitAmount: TcxCurrencyEdit;
     Label6: TLabel;
+    Label7: TLabel;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
@@ -137,7 +138,8 @@ begin
       end;
     end;
 
-    if ((nAmountDiffKind + nAmount - 1) * GoodsCDS.FieldByName('Price').AsCurrency) > nMaxOrderAmount then
+    if ((nAmountDiffKind + nAmount) > 1) and
+      (((nAmountDiffKind + nAmount) * GoodsCDS.FieldByName('Price').AsCurrency) > nMaxOrderAmount) then
     begin
       Action := TCloseAction.caNone;
       ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
@@ -263,7 +265,6 @@ begin
 
       S := '';
       if AmountDiff <> 0 Then S := S +  #13#10'Отказы сегодня: ' + FormatCurr(',0.000', AmountDiff);
-      if AmountDiffUser <> 0 Then S := S +  #13#10'  в том числе вами: ' + FormatCurr(',0.000', AmountDiffUser);
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + FormatCurr(',0.000', AmountDiffPrev);
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
       if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + FormatCurr(',0.000', AmountIncome) + ' Цена (в пути): ' + FormatCurr(',0.000', PriceSaleIncome);
@@ -271,6 +272,10 @@ begin
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
       S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
       Label1.Caption := S;
+
+      if AmountDiffUser <> 0 Then Label7.Caption := 'ВЫ УЖЕ ПОСТАВИЛИ РАНЕЕ - ' + FormatCurr(',0.000', AmountDiffUser)
+      else Label7.Caption := '';
+      Label7.Visible := Label7.Caption <> '';
 
       WaitForSingleObject(MutexGoods, INFINITE);
       try
