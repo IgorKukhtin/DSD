@@ -96,10 +96,12 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
     end
     object UnitName: TcxDBPivotGridField
       Area = faColumn
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1040#1087#1090#1077#1082#1072
       DataBinding.FieldName = 'UnitName'
+      SortBySummaryInfo.Field = ord
+      SortOrder = soAscending
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
@@ -258,6 +260,15 @@ object Report_OrderInternalPromoOLAPForm: TReport_OrderInternalPromoOLAPForm
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
       DataBinding.FieldName = 'Amount_Master'
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
+    end
+    object ord: TcxDBPivotGridField
+      Area = faColumn
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #8470' '#1087'/'#1087
+      DataBinding.FieldName = 'ord'
+      Visible = True
+      UniqueName = #8470' '#1087'/'#1087
     end
   end
   object DataSource: TDataSource
