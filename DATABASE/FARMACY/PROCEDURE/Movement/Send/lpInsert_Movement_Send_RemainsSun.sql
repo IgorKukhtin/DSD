@@ -503,11 +503,12 @@ BEGIN
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
              -- НЕ отбросили !!холод!!
+             /* -- закоментила т.к. не используется WHERE закоменчено уже было
              LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                   ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
                                  AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-
+             */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
         /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
            AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
@@ -557,17 +558,25 @@ BEGIN
      -- CREATE TEMP TABLE _tmpSale (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSale (UnitId, GoodsId, Amount, Summ)
+      WITH
+      tmp AS (SELECT MIContainer.*
+              FROM MovementItemContainer AS MIContainer
+              WHERE MIContainer.DescId         = zc_MIContainer_Count()
+                AND MIContainer.MovementDescId = zc_Movement_Check()
+                AND MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '1 MONTH' AND CURRENT_DATE + INTERVAL '1 DAY'
+                AND MIContainer.WhereObjectId_analyzer IN (SELECT DISTINCT _tmpRemains.UnitId FROM _tmpRemains WHERE _tmpRemains.AmountResult <= 0)
+                AND MIContainer.ObjectId_analyzer IN (SELECT DISTINCT _tmpRemains.GoodsId FROM _tmpRemains WHERE _tmpRemains.AmountResult <= 0)
+              AND (COALESCE (MIContainer.Amount, 0)) <> 0
+              )
+
         SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
              , MIContainer.ObjectId_analyzer               AS GoodsId
              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS Summ
-        FROM MovementItemContainer AS MIContainer
+        FROM tmp AS MIContainer
              INNER JOIN _tmpRemains ON _tmpRemains.UnitId       = MIContainer.WhereObjectId_analyzer
                                    AND _tmpRemains.GoodsId      = MIContainer.ObjectId_analyzer
                                    AND _tmpRemains.AmountResult <= 0 -- !!!нужна только когда нет Автозаказа!!!
-        WHERE MIContainer.DescId         = zc_MIContainer_Count()
-          AND MIContainer.MovementDescId = zc_Movement_Check()
-          AND MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '1 MONTH' AND CURRENT_DATE + INTERVAL '1 DAY'
         GROUP BY MIContainer.ObjectId_analyzer
                , MIContainer.WhereObjectId_analyzer
         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
@@ -749,6 +758,9 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                     -- отсечем ненужные подразделения
+                                     INNER JOIN (SELECT DISTINCT tmpNotSold_list.UnitId FROM tmpNotSold_list) AS tmp ON tmp.UnitId  = MovementLinkObject_To.ObjectId
+
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
                                                             AND MovementItem.isErased   = FALSE
@@ -774,7 +786,8 @@ BEGIN
                                   AND tmpIncome.GoodsID IS NULL
                                )
              -- Результат по сроковым
-           , tmpRes_SUN AS (SELECT Container.DescId                                           AS ContainerDescId
+             /*   -- было так - немного оптимизировала
+                        , tmpRes_SUN AS (SELECT Container.DescId                                           AS ContainerDescId
                                  , CLO_Unit.ObjectId                                          AS UnitId
                                  , Container.ParentId                                         AS ContainerId_Parent
                                  , Container.Id                                               AS ContainerId
@@ -815,6 +828,64 @@ BEGIN
                               AND ObjectDate_PartionGoods_Value.ValueData <= vbDate_6
                               -- !!!оставили только эту категорию
                            )
+             */
+
+           , tmpRes_SUN_1 AS (SELECT Container.DescId                                           AS ContainerDescId
+                                 , CLO_Unit.ObjectId                                          AS UnitId
+                                 , Container.ParentId                                         AS ContainerId_Parent
+                                 , Container.Id                                               AS ContainerId
+                                 , Container.ObjectId                                         AS GoodsId
+                                 , Container.Amount                                           AS Amount
+                            FROM Container
+                                 INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                ON CLO_Unit.ContainerId = Container.Id
+                                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                 -- !!!только для таких Аптек!!!
+                                 INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = CLO_Unit.ObjectId
+                                 -- !!!SUN - за 30 дней - если приходило, уходить уже не может!!!
+                                 LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = CLO_Unit.ObjectId
+                                                      AND tmpSUN_Send.GoodsId   = Container.ObjectId
+
+                            WHERE Container.DescId = zc_Container_CountPartionDate()
+                              AND Container.Amount <> 0
+                              -- !!!
+                              AND tmpSUN_Send.GoodsId IS NULL
+                           )
+           , tmpCLO_PartionGoods AS (SELECT *
+                                     FROM ContainerLinkObject
+                                     WHERE ContainerLinkObject.ContainerId IN  (SELECT  DISTINCT tmpRes_SUN_1.ContainerId FROM tmpRes_SUN_1)
+                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                      )
+           , tmpOD_PartionGoods_Value AS (SELECT *
+                                     FROM ObjectDate
+                                     WHERE ObjectDate.ObjectId IN  (SELECT  DISTINCT tmpCLO_PartionGoods.ObjectId FROM tmpCLO_PartionGoods)
+                                       AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                       AND ObjectDate.ValueData >  vbDate_1
+                                       AND ObjectDate.ValueData <= vbDate_6
+                                      )
+
+           , tmpRes_SUN AS (SELECT Container.ContainerDescId
+                                 , Container.UnitId
+                                 , Container.ContainerId_Parent
+                                 , Container.ContainerId
+                                 , Container.GoodsId
+                                 , Container.Amount
+                                 , CASE WHEN COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) <= vbDate_0
+                                             THEN zc_Enum_PartionDateKind_0()
+                                        WHEN COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) > vbDate_0 AND COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) <= vbDate_1
+                                             THEN zc_Enum_PartionDateKind_1()
+                                        WHEN COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) > vbDate_1 AND COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) <= vbDate_6
+                                             THEN zc_Enum_PartionDateKind_6()
+                                        ELSE 0
+                                   END                                                        AS PartionDateKindId
+                                 , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) AS ExpirationDate
+                            FROM tmpRes_SUN_1 AS Container              
+                                 LEFT JOIN tmpCLO_PartionGoods AS CLO_PartionGoods
+                                                               ON CLO_PartionGoods.ContainerId = Container.ContainerId
+                                 LEFT JOIN tmpOD_PartionGoods_Value AS ObjectDate_PartionGoods_Value
+                                                                    ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                           )
+
             -- для SUN - находим list
        , tmpIncomeSUN_list AS (SELECT DISTINCT
                                        tmpRes_SUN.UnitID
@@ -833,6 +904,9 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                     -- отсечем ненужные подразделения
+                                     INNER JOIN (SELECT DISTINCT tmpIncomeSUN_list.UnitId FROM tmpIncomeSUN_list) AS tmp ON tmp.UnitId  = MovementLinkObject_To.ObjectId
+
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
                                                             AND MovementItem.isErased   = FALSE
@@ -944,19 +1018,25 @@ BEGIN
           , tmpRemains_gr AS (SELECT DISTINCT tmpRemains.UnitId, tmpRemains.GoodsId, tmpRemains.ContainerId_Parent FROM tmpRemains
                              )
             -- получили реальные остатки по партиям Сроковых (для проверки)
+          , tmpContainer_real AS (SELECT Container.Id
+                                       , Container.Amount
+                                  FROM Container
+                                  WHERE Container.Id IN (SELECT DISTINCT tmpRemains_gr.ContainerId_Parent FROM tmpRemains_gr)
+                                  AND Container.Amount <> 0
+                                  )
           , tmpRemains_real AS (SELECT tmpRemains_gr.UnitId, tmpRemains_gr.GoodsId, SUM (Container.Amount) AS Amount
                                 FROM tmpRemains_gr
-                                     JOIN Container ON Container.Id = tmpRemains_gr.ContainerId_Parent
+                                     JOIN tmpContainer_real AS Container ON Container.Id = tmpRemains_gr.ContainerId_Parent
                                 GROUP BY tmpRemains_gr.UnitId, tmpRemains_gr.GoodsId
                                )
               -- Goods_sum
-            , tmpGoods_sum AS (SELECT tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
-                                    , SUM (tmpRemains.Amount)         AS Amount
-                                    , SUM (tmpRemains.Amount_sun)     AS Amount_sun
-                                    , SUM (tmpRemains.Amount_notSold) AS Amount_notSold
-                               FROM tmpRemains
-                               GROUP BY tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
-                              )
+          , tmpGoods_sum AS (SELECT tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
+                                  , SUM (tmpRemains.Amount)         AS Amount
+                                  , SUM (tmpRemains.Amount_sun)     AS Amount_sun
+                                  , SUM (tmpRemains.Amount_notSold) AS Amount_notSold
+                             FROM tmpRemains
+                             GROUP BY tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
+                            )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
                                     , ObjectLink_Child_retail.ChildObjectId       AS GoodsId
@@ -1193,6 +1273,14 @@ BEGIN
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
+        WITH
+        tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
+                                   , Object_ConditionsKeep.ValueData 
+                              FROM ObjectLink AS OL_Goods_ConditionsKeep
+                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_calc.GoodsId FROM _tmpRemains_calc)
+                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+                              )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
                -- если сроковых больше чем в Автозаказе
@@ -1209,14 +1297,13 @@ BEGIN
              -- все остатки, СРОК
              INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains_calc.GoodsId
              -- а здесь, отбросили !!холод!!
-             LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
-                                  ON OL_Goods_ConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
-                                 AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
+                                -- AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+             --LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+        WHERE (tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
+           AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
               )
-           OR Object_ConditionsKeep.ValueData IS NULL
+           OR tmpConditionsKeep.ValueData IS NULL
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
@@ -1936,6 +2023,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.19         *
  18.07.19                                        *
 */
 /*

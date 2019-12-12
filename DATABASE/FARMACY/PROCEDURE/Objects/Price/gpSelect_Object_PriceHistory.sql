@@ -379,7 +379,6 @@ BEGIN
                             LEFT JOIN ObjectFloat AS MCS_Value
                                                   ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                  AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                                                 AND 1 = 0
                             LEFT JOIN ObjectDate AS MCS_DateChange
                                                  ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
@@ -387,7 +386,6 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS MCS_isClose
                                                     ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                    AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-                                                   AND 1 = 0
                             LEFT JOIN ObjectDate AS MCSIsClose_DateChange
                                                  ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
@@ -395,7 +393,6 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS MCS_NotRecalc
                                                     ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                    AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                                                   AND 1 = 0
                             LEFT JOIN ObjectDate AS MCSNotRecalc_DateChange
                                                  ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
@@ -410,7 +407,6 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS Price_Top
                                                     ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                    AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                                                   AND 1 = 0
                             LEFT JOIN ObjectDate AS Price_TOPDateChange
                                                  ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()
@@ -469,12 +465,12 @@ BEGIN
                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                                ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
                                               AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-                                              AND 1 = 0
+                                              --AND 1 = 0
                
                        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
                                               ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods.Id 
                                              AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
-                                             AND 1 = 0
+                                             --AND 1 = 0
                   )
 
  , tmpObjectHistory_Price AS (SELECT *
@@ -599,7 +595,7 @@ BEGIN
                 LEFT JOIN tmpObjectHistoryFloat_MCSValue AS ObjectHistoryFloat_MCSValue
                                              ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()
-                                            AND 1 = 0               
+                                            --AND 1 = 0               
               
                 -- получаем значения Количество дней для анализа НТЗ из истории значений на дату  (00:00)
                 LEFT JOIN tmpObjectHistoryFloat_MCSPeriod AS ObjectHistoryFloat_MCSPeriod
@@ -620,11 +616,11 @@ BEGIN
                 LEFT JOIN tmpObjectHistoryFloatEnd AS ObjectHistoryFloat_PriceEnd
                                              ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                             AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
-            
+
                 LEFT JOIN tmpObjectHistoryFloatEnd AS ObjectHistoryFloat_MCSValueEnd
                                              ON ObjectHistoryFloat_MCSValueEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                             AND ObjectHistoryFloat_MCSValueEnd.DescId = zc_ObjectHistoryFloat_Price_MCSValue()
-                                            AND 1 = 0               
+                                            --AND 1 = 0               
 
                 -- получаем значения Количество дней для анализа НТЗ из истории значений на дату  (00:00)
                 LEFT JOIN tmpObjectHistoryFloatEnd AS ObjectHistoryFloat_MCSPeriodEnd
