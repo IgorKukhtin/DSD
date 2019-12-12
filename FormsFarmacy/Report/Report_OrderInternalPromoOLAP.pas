@@ -65,6 +65,7 @@ type
     Summ: TcxDBPivotGridField;
     Amount: TcxDBPivotGridField;
     Amount_Master: TcxDBPivotGridField;
+    ord: TcxDBPivotGridField;
   private
   public
   end;

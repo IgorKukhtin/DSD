@@ -34,7 +34,7 @@ $BODY$BEGIN
            , CAST (0 as Integer)   AS ModelServiceKindId
            , CAST ('' as TVarChar) AS ModelServiceKindName
 
-           , CAST (NULL AS Boolean) AS isTrainee
+           , CAST (FALSE AS Boolean) AS isTrainee
            , CAST (NULL AS Boolean) AS isErased
            
        FROM Object 
@@ -98,4 +98,4 @@ ALTER FUNCTION gpGet_Object_ModelService(integer, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_ModelService('2')
+-- select * from gpGet_Object_ModelService(inId := 0 ,  inSession := '5'::TVarChar);

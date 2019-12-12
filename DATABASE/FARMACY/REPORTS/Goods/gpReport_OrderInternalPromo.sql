@@ -19,6 +19,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, CodeStr_partner TVarChar, Goo
              , isManual TVarChar
              , JuridicalName TVarChar
              , ContractName TVarChar
+             , ord TFloat
               )
 AS
 $BODY$
@@ -161,7 +162,7 @@ BEGIN
           , Object_NDSKind.ValueData         AS NDSKindName
           , tmpMI_Child.UnitId
           , tmpMI_Child.UnitCode
-          , ((tmpSort.ord+100) ||'. '|| tmpSort.UnitName_full ):: TVarChar AS UnitName   -- +100 для правильной сортировки, если по порядку то после 1 идет 10 потом 11-19 , 2, 20 
+          , (/*(tmpSort.ord+100) ||'. '||*/ tmpSort.UnitName_full ):: TVarChar AS UnitName   -- +100 для правильной сортировки, если по порядку то после 1 идет 10 потом 11-19 , 2, 20 
           , tmpMI_Master.Price
           , tmpMI_Child.Amount                        :: TFloat AS Amount
           , (tmpMI_Child.Amount * tmpMI_Master.Price) :: TFloat AS Summ
@@ -173,6 +174,7 @@ BEGIN
           , CASE WHEN COALESCE (tmpMI_Child.AmountManual,0) <> 0 THEN 'ДА' ELSE 'НЕТ' END :: TVarChar AS isManual
           , tmpMI_Master.JuridicalName
           , tmpMI_Master.ContractName
+          , (tmpSort.ord+100) :: TFloat AS ord
      FROM tmpMI_Master 
           LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
 
@@ -207,6 +209,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.19         *
  22.04.19         *
 */
 
