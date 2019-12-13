@@ -1024,10 +1024,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashSettings_ShareFromPriceCode() RET
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashSettings_ShareFromPriceCode', zc_Object_CashSettings(), 'Перечень кодов товаров которые можно делить с любой ценой' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_ShareFromPriceCode');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_AccessKeyYF() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_AccessKeyYF'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_AccessKeyYF', zc_object_Unit(), 'Ключ ХО для отправки данных Юрия-Фарм' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_AccessKeyYF');
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 13.12.19                                                                                                         * zc_ObjectString_Unit_AccessKeyYF 
  25.11.19                                                                                                         * zc_ObjectString_CashSettings_ 
  20.11.19         * 
  29.09.19                                                                                                         * zc_ObjectString_Unit_Latitude zc_ObjectString_Unit_Longitude

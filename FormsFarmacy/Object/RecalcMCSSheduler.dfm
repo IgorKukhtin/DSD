@@ -151,6 +151,8 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
           object DateRunSun: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1057#1059#1053
             DataBinding.FieldName = 'DateRunSun'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yy hh:nn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -410,6 +412,37 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -449,6 +482,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end
         item
           Visible = True
@@ -560,6 +601,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     end
     object dxBarButton7: TdxBarButton
       Action = actRecalcMCSShedulerSelect
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = dsdSetErased
       Category = 0
     end
   end
@@ -715,5 +764,22 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     PackSize = 1
     Left = 544
     Top = 232
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 152
   end
 end

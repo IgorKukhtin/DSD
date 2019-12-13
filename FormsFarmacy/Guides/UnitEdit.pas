@@ -141,6 +141,10 @@ type
     edUnitOld: TcxButtonEdit;
     cxLabel39: TcxLabel;
     GuidesUnitOld: TdsdGuides;
+    ceMorionCode: TcxCurrencyEdit;
+    cxLabel40: TcxLabel;
+    edAccessKeyYF: TcxTextEdit;
+    cxLabel41: TcxLabel;
   private
     { Private declarations }
   public

@@ -664,6 +664,19 @@
         ParentShowHint = False
         ShowHint = True
       end
+      object ceMorionCode: TcxCurrencyEdit
+        Left = 0
+        Top = 171
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 8
+        Width = 217
+      end
+      object cxLabel40: TcxLabel
+        Left = 3
+        Top = 152
+        Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
@@ -800,6 +813,19 @@
         Top = 35
         TabOrder = 1
         Width = 129
+      end
+      object edAccessKeyYF: TcxTextEdit
+        Left = 15
+        Top = 201
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 16
+        Width = 450
+      end
+      object cxLabel41: TcxLabel
+        Left = 15
+        Top = 179
+        Caption = #1050#1083#1102#1095' '#1061#1054' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1076#1072#1085#1085#1099#1093' '#1070#1088#1080#1103'-'#1060#1072#1088#1084
       end
     end
   end
@@ -1248,6 +1274,21 @@
         Value = Null
         Component = GuidesUnitOld
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMorionCode'
+        Value = Null
+        Component = ceMorionCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccessKeyYF'
+        Value = Null
+        Component = edAccessKeyYF
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1735,6 +1776,19 @@
         Value = Null
         Component = GuidesUnitOld
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MorionCode'
+        Value = Null
+        Component = ceMorionCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccessKeyYF'
+        Value = Null
+        Component = edAccessKeyYF
         DataType = ftString
         MultiSelectSeparator = ','
       end>

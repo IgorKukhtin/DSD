@@ -45,7 +45,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SaturdayStart TDateTime, SaturdayEnd TDateTime,
                SundayStart TDateTime, SundayEnd TDateTime,
                isNotCashMCS Boolean, isNotCashListDiff Boolean,
-               UnitOldId  Integer, UnitOldName TVarChar
+               UnitOldId  Integer, UnitOldName TVarChar,
+               MorionCode Integer, AccessKeyYF TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -145,6 +146,9 @@ BEGIN
            
            , CAST (0 as Integer)   AS UnitOldId
            , CAST ('' as TVarChar) AS UnitOldName
+           
+           , CAST (0 as Integer)   AS MorionCode
+           , CAST ('' as TVarChar) AS AccessKeyYF
 ;
    ELSE
        RETURN QUERY 
@@ -243,6 +247,10 @@ BEGIN
       
       , COALESCE (Object_UnitOld.Id,0)          ::Integer  AS UnitOldId
       , COALESCE (Object_UnitOld.ValueData, '') ::TVarChar AS UnitOldName
+      
+      , ObjectFloat_MorionCode.ValueData::Integer          AS MorionCode
+      , ObjectString_AccessKeyYF.ValueData                 AS AccessKeyYF
+      
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -335,6 +343,10 @@ BEGIN
                                ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
 
+        LEFT JOIN ObjectString AS ObjectString_AccessKeyYF
+                               ON ObjectString_AccessKeyYF.ObjectId = Object_Unit.Id 
+                              AND ObjectString_AccessKeyYF.DescId = zc_ObjectString_Unit_AccessKeyYF()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
@@ -342,6 +354,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
                               ON ObjectFloat_TaxServiceNigth.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_MorionCode
+                              ON ObjectFloat_MorionCode.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_MorionCode.DescId = zc_ObjectFloat_Unit_MorionCode()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN
                               ON ObjectFloat_KoeffInSUN.ObjectId = Object_Unit.Id
@@ -491,6 +507,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 13.12.19                                                       * MorionCode, AccessKeyYF
  11.12.19                                                       * UnitOld
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * ListDaySUN
@@ -518,5 +535,5 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Unit('2')
 
---select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
+-- select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
 

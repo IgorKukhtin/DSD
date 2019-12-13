@@ -60,6 +60,11 @@ type
     spUpdate_SelectRun: TdsdStoredProc;
     dxBarButton7: TdxBarButton;
     DateRunSun: TcxGridDBColumn;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public
