@@ -542,6 +542,7 @@ BEGIN
 
                           GROUP BY tmpContainer.GoodsId
                           )
+                          
          , tmpMIContainerSend AS (SELECT COALESCE(MISend.ParentID, MIContainer_Count.MovementItemId) AS MovementItemId
                                        , MIContainer_Count.Amount                   AS Amount
                                        , COALESCE (MI_Income_find.Id,MovementItem.Id) AS MIIncomeID
@@ -568,7 +569,9 @@ BEGIN
        
                                   WHERE MIContainer_Count.MovementId = inMovementId 
                                     AND MIContainer_Count.DescId = zc_Container_Count()
-                                    AND MIContainer_Count.isActive = NOT vbisDeferred)   
+                                    AND MIContainer_Count.isActive = NOT vbisDeferred
+                                  )   
+
          , tmpMIContainerAll AS (SELECT MIContainer_Count.MovementItemId           AS MovementItemId
                                       , MIContainer_Count.Amount                   AS Amount
                                       , MIFloat_Price.ValueData                    AS Price
@@ -741,9 +744,10 @@ BEGIN
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            --, tmpMIContainer.MinExpirationDate   
            --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
-           , COALESCE (tmpMI_Child.ExpirationDate, 
+           /*, COALESCE (tmpMI_Child.ExpirationDate, 
              CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END)::TDateTime AS MinExpirationDate
-           
+           */
+           , COALESCE (tmpMI_Child.ExpirationDate, tmpMIContainer.MinExpirationDate, tmpMinExpirationDate.MinExpirationDate, zc_DateEnd() )::TDateTime AS MinExpirationDate
            , MovementItem_Send.IsErased                                AS isErased
 
            , tmpGoodsParam.GoodsGroupName                                      AS GoodsGroupName
