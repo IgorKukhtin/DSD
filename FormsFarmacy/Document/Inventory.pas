@@ -103,6 +103,8 @@ type
     edGoodsCode: TcxTextEdit;
     cxLabel7: TcxLabel;
     edGoodsName: TcxTextEdit;
+    Remains_Save: TcxGridDBColumn;
+    Remains_SumSave: TcxGridDBColumn;
   private
     { Private declarations }
   public

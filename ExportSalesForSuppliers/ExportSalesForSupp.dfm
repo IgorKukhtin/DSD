@@ -191,10 +191,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -212,8 +208,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -1447,7 +1441,20 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             DataBinding.FieldName = 'UnitAddress'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 304
+            Width = 229
+          end
+          object grYuriFarmUnit_MorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
+          object grYuriFarmUnit_AccessKeyYF: TcxGridDBColumn
+            DataBinding.FieldName = 'AccessKeyYF'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 201
           end
         end
         object grYuriFarmUnitLevel: TcxGridLevel

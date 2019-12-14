@@ -4,7 +4,7 @@ inherited PromoCodeDialogForm: TPromoCodeDialogForm
   Caption = #1042#1074#1086#1076' '#1087#1088#1086#1084#1086#1082#1086#1076#1072
   ClientHeight = 117
   ClientWidth = 283
-  Position = poDesktopCenter
+  Position = poScreenCenter
   ExplicitWidth = 289
   ExplicitHeight = 146
   PixelsPerInch = 96

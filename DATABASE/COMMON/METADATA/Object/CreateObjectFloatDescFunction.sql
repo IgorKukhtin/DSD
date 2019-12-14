@@ -1536,9 +1536,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeRazom() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeRazom', 'Код в системе "РАЗОМ"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeRazom');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_MorionCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_MorionCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_MorionCode', 'Код мориона' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_MorionCode');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.12.19                                                                                      * zc_ObjectFloat_Unit_MorionCode
  11.12.19                                                                                      * zc_ObjectFloat_Retail_LimitSUN
  10.12.19                                                                                      * zc_ObjectFloat_Unit_... for Sun
  04.12.19                                                                                      * zc_ObjectFloat_PriceChange_FixDiscount

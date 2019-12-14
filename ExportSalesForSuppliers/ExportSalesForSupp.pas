@@ -174,6 +174,8 @@ type
     IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
     IdHTTP: TIdHTTP;
     btnYuriFarmAll: TButton;
+    grYuriFarmUnit_AccessKeyYF: TcxGridDBColumn;
+    grYuriFarmUnit_MorionCode: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -225,7 +227,6 @@ type
     glFTPUserADV,
     glFTPPasswordADV: String;
 
-    FAccessKeyYF: String;
     FURLYF: String;
     FTokenYF : string;
     FIDYF : string;
@@ -870,13 +871,21 @@ begin
   while not qryReport_Upload_YuriFarm_Unit.Eof do
   begin
     Add_Log('Цикл отправки Юрия-Фарм по подразделению ' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString);
+    Application.ProcessMessages;
     YuriFarmExecute(1);
+    Application.ProcessMessages;
     btnYuriFarmSendClick(Sender);
+    Application.ProcessMessages;
     YuriFarmExecute(3);
+    Application.ProcessMessages;
     btnYuriFarmSendClick(Sender);
+    Application.ProcessMessages;
     YuriFarmExecute(51);
+    Application.ProcessMessages;
     btnYuriFarmSendClick(Sender);
+    Application.ProcessMessages;
     qryReport_Upload_YuriFarm_Unit.Next;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -1052,14 +1061,16 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
     sl.Clear;
 
       // Получение токена
-    if FTokenYF = '' then
+    if (FTokenYF = '') or (FUnitYF <> qryReport_Upload_YuriFarm_Unit.FieldByName('id').AsInteger) then
     begin
+      FIDYF := '';
+      FTokenYF := '';
       mStream := TMemoryStream.Create;
       try
         IdHTTP.Request.ContentType := 'application/xml';
         IdHTTP.Request.CustomHeaders.Clear;
         IdHTTP.Request.CustomHeaders.FoldLines := False;
-        IdHTTP.Request.CustomHeaders.Values['AccessKey'] := FAccessKeyYF;
+        IdHTTP.Request.CustomHeaders.Values['AccessKey'] := qryReport_Upload_YuriFarm_Unit.FieldByName('AccessKeyYF').AsString;
 
         try
           IdHTTP.Get(FURLYF + '/spauth/verify', mStream);
@@ -1083,8 +1094,9 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
     end;
 
       // Получение ID аптеки
-    if (FIDYF = '') or (FUnitYF <> qryReport_Upload_YuriFarm_Unit.FieldByName('id').AsInteger) then
+    if FIDYF = '' then
     begin
+      FIDYF := '';
 
         // Заполнение структуры для получение ID аптеки
       XMLToSend := TStringList.Create;
@@ -1097,8 +1109,8 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
                       '  addr="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitAddress').AsString + '" ' +
                       '  id_local="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitCode').AsString + '" ' +
                       '  local_name="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString + '" ' +
-                      '  br_nick="" ' +
-                      '  access_key="' + FAccessKeyYF + '" ' +
+                      '  br_nick="' + qryReport_Upload_YuriFarm_Unit.FieldByName('MorionCode').AsString + '" ' +
+                      '  access_key="' + qryReport_Upload_YuriFarm_Unit.FieldByName('AccessKeyYF').AsString + '" ' +
                       '/>');
         XMLToSend.SaveToFile(SavePathYuriFarm + 'TempXML.xml', TEncoding.UTF8);
       finally
@@ -1137,7 +1149,6 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
 
       // Отправка данных
 
-
     try
       S := '<?xml version="1.0" encoding="UTF-8"?> <body id_entity="' + IntToStr(FYuriFarmType) + '" id_customer="' + FIDYF + '" />';
 
@@ -1160,9 +1171,6 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
 
       if IdHTTP.ResponseCode = 200 then
       begin
-//        XML.Active := False;
-//        XML.XML.Text := sResponse;
-//        XML.Active := True;
         DeleteFile(SavePathYuriFarm + cFileNameYuriFarm);
         Add_Log('Отчет Юрия-Фарм ' + IntToStr(FYuriFarmType) + ' отправлен');
       end;
@@ -1387,9 +1395,6 @@ begin
 
     glFTPPasswordADV := Ini.ReadString('FTP','PasswordADV','MXps3yZWudD0');
     Ini.WriteString('FTP','Password',glFTPPassword);
-
-    FAccessKeyYF := Ini.ReadString('HTTP','AccessKeyYF','2c43ca2f579aff6477dfee03c893be17');
-    Ini.WriteString('HTTP','AccessKeyYF',FAccessKeyYF);
 
     FURLYF := Ini.ReadString('HTTP','URLYF','http://test-spho.pharmbase.com.ua');
     Ini.WriteString('HTTP','URLYF',FURLYF);

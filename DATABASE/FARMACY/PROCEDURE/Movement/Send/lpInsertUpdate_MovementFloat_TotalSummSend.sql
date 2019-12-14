@@ -104,7 +104,7 @@ BEGIN
        , tmpPrice AS (SELECT tmpMI.ObjectId                 AS GoodsId
                            , ObjectLink_Unit.ChildObjectId  AS UnitId
                            , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
-                      FROM tmpMI
+                      FROM (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI) AS tmpMI
                            INNER JOIN ObjectLink AS ObjectLink_Goods
                                                  ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
                                                 AND ObjectLink_Goods.DescId = zc_ObjectLink_Price_Goods()

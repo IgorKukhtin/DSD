@@ -151,7 +151,7 @@ BEGIN
                           -- inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                           -- inObjectId_1        := _tmpItem.UnitId) 
               , _tmpItem.AccountId
-              , CASE WHEN Container.Amount < _tmpItem.OperSumm THEN Container.Amount ELSE - _tmpItem.OperSumm END
+              , - CASE WHEN Container.Amount < _tmpItem.OperSumm THEN Container.Amount ELSE _tmpItem.OperSumm END
               , _tmpItem.OperDate
            FROM _tmpItem
                 INNER JOIN Container ON Container.Id = _tmpItem.ContainerId

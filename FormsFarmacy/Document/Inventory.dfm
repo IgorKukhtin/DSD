@@ -4,7 +4,7 @@ inherited InventoryForm: TInventoryForm
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 894
-  ExplicitHeight = 681
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -177,6 +177,16 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountUser
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_Save
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_SumSave
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -429,6 +439,28 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 59
           end
+          object Remains_Save: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080
+            DataBinding.FieldName = 'Remains_Save'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object Remains_SumSave: TcxGridDBColumn
+            Caption = #1057#1091#1084'. '#1086#1089#1090#1072#1090#1086#1082#1072' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080
+            DataBinding.FieldName = 'Remains_SumSave'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
         end
       end
     end
@@ -605,7 +637,6 @@ inherited InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = Panel1
-        ExplicitWidth = 8
       end
       object Panel1: TPanel
         Left = 0
