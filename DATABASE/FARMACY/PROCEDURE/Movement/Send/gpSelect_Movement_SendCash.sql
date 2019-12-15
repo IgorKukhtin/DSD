@@ -48,11 +48,11 @@ BEGIN
 
      -- ÓÔÂ‰ÂÎˇÂÚÒˇ <“Ó„Ó‚‡ˇ ÒÂÚ¸>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
-     
+
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN
         vbUnitKey := '0';
-     END IF;   
+     END IF;
      vbUnitId := vbUnitKey::Integer;
 
 
@@ -87,13 +87,11 @@ BEGIN
                                    , Object_ProvinceCity.Id                AS ProvinceCityId
                                    , Object_ProvinceCity.ValueData         AS ProvinceCityName
                               FROM ObjectLink AS ObjectLink_Unit_ProvinceCity
-                                   LEFT JOIN Object AS Object_ProvinceCity 
+                                   LEFT JOIN Object AS Object_ProvinceCity
                                                     ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
                               WHERE ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
                                 AND COALESCE (ObjectLink_Unit_ProvinceCity.ChildObjectId,0) <> 0
                               )
-
-        , tmpUnit_SUN_over AS (SELECT OB.ObjectId AS UnitId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2())
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT
              Movement.Id                            AS Id
@@ -134,20 +132,20 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
 
-           , ( MovementDate_Insert.ValueData::Date - Movement.OperDate::Date) ::TFloat AS InsertDateDiff 
+           , ( MovementDate_Insert.ValueData::Date - Movement.OperDate::Date) ::TFloat AS InsertDateDiff
            , ( MovementDate_Update.ValueData::Date - Movement.OperDate::Date) ::TFloat AS UpdateDateDiff
 
            , Movement_ReportUnLiquid.Id                    AS MovementId_Report
            , Movement_ReportUnLiquid.InvNumber             AS InvNumber_Report
            , ('π ' || Movement_ReportUnLiquid.InvNumber ||' ÓÚ '||TO_CHAR(Movement_ReportUnLiquid.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS ReportInvNumber_full
 
-           --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
+           --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON (inisSUN = TRUE AND Movement.OperDate = CURRENT_DATE
                                     OR inisSUN = TRUE AND inisSUNAll = TRUE
-                                    OR Movement.OperDate BETWEEN inStartDate AND inEndDate)  
+                                    OR Movement.OperDate BETWEEN inStartDate AND inEndDate)
                                AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
@@ -210,18 +208,21 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                       ON MovementBoolean_SUN.MovementId = Movement.Id
                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                     
+            LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                      ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                     AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                      AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
-                                     
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Sent
                                       ON MovementBoolean_Sent.MovementId = Movement.Id
                                      AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-                                     
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -235,7 +236,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
@@ -243,7 +244,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MLM_ReportUnLiquid
                                            ON MLM_ReportUnLiquid.MovementId = Movement.Id
@@ -255,24 +256,25 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
-            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_From ON tmpUnit_SUN_over_From.UnitId = MovementLinkObject_From.ObjectId
-            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_To   ON tmpUnit_SUN_over_To.UnitId   = MovementLinkObject_To.ObjectId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
          AND (inisSUN = FALSE OR inisSUN = TRUE AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE)
-         AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased() 
+         AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased()
            OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased()
              )
-         AND (vbIsSUN_over = TRUE OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE OR tmpUnit_SUN_over_From.UnitId IS NULL OR tmpUnit_SUN_over_To.UnitId IS NULL OR Movement.StatusId <> zc_Enum_Status_Erased())
-        
+         AND (vbIsSUN_over = TRUE
+           OR COALESCE (MovementBoolean_SUN.ValueData,    FALSE) = FALSE
+           OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
+           OR Movement.StatusId <> zc_Enum_Status_Erased()
+             )
+
+
        ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-	
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

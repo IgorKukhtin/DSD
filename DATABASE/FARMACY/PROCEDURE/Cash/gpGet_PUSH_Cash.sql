@@ -258,9 +258,14 @@ BEGIN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
                                              AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                              AND MovementBoolean_SUN.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                             ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                            AND MovementBoolean_SUN_v2.ValueData  = TRUE
                    LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                              ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
-                                            AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
+                                            AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
+                                            AND MovementBoolean_NotDisplaySUN.ValueData  = TRUE
                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -268,7 +273,8 @@ BEGIN
              WHERE Movement.DescId   = zc_Movement_Send()
                AND Movement.OperDate = CURRENT_DATE
                AND Movement.StatusId = zc_Enum_Status_Erased()
-               AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
+               AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
+               AND MovementBoolean_SUN_v2.MovementId IS NULL
             )
       AND (DATE_PART('HOUR',    CURRENT_TIME)::Integer <= 12
         OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
@@ -278,25 +284,31 @@ BEGIN
         AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 30
         AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 50
            ))
-      AND vbUnitId NOT IN (SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2())
    THEN
       IF (SELECT COUNT(*)
           FROM  Movement
                 INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
-                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                          AND MovementBoolean_SUN.ValueData = True
+                                          AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                          AND MovementBoolean_SUN.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                          ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                         AND MovementBoolean_SUN_v2.ValueData  = TRUE
                 LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                           ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
-                                         AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
+                                         AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
+                                         AND MovementBoolean_NotDisplaySUN.ValueData  = TRUE
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                            AND MovementLinkObject_From.ObjectId = vbUnitId
+                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                            AND MovementLinkObject_From.ObjectId    = vbUnitId
           WHERE Movement.DescId = zc_Movement_Send()
             AND Movement.OperDate = CURRENT_DATE
             AND Movement.StatusId = zc_Enum_Status_Erased()
-            AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE) = 1
+            AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
+            AND MovementBoolean_SUN_v2.MovementId IS NULL
+         ) >= 1
       THEN
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
           SELECT 6, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
@@ -308,19 +320,25 @@ BEGIN
           FROM  Movement
                 INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
-                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                          AND MovementBoolean_SUN.ValueData = True
+                                          AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                          AND MovementBoolean_SUN.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                          ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                         AND MovementBoolean_SUN_v2.ValueData  = TRUE
                 LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                           ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
-                                         AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
+                                         AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
+                                         AND MovementBoolean_NotDisplaySUN.ValueData  = TRUE
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                            AND MovementLinkObject_From.ObjectId = vbUnitId
+                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                            AND MovementLinkObject_From.ObjectId   = vbUnitId
           WHERE Movement.DescId = zc_Movement_Send()
             AND Movement.OperDate = CURRENT_DATE
             AND Movement.StatusId = zc_Enum_Status_Erased()
-            AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
+            AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
+            AND MovementBoolean_SUN_v2.MovementId IS NULL
           LIMIT 1;
       ELSE
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
@@ -337,15 +355,20 @@ BEGIN
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
-                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                             AND MovementBoolean_SUN.ValueData = True
+                                             AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                             AND MovementBoolean_SUN.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                             ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                            AND MovementBoolean_SUN_v2.ValueData  = TRUE
                    INNER JOIN MovementBoolean AS MovementBoolean_Sent
                                               ON MovementBoolean_Sent.MovementId = Movement.Id
-                                             AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
-                                             AND MovementBoolean_Sent.ValueData = True
+                                             AND MovementBoolean_Sent.DescId     = zc_MovementBoolean_Sent()
+                                             AND MovementBoolean_Sent.ValueData  = TRUE
                    LEFT JOIN MovementBoolean AS MovementBoolean_Received
-                                              ON MovementBoolean_Received.MovementId = Movement.Id
-                                             AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+                                             ON MovementBoolean_Received.MovementId = Movement.Id
+                                            AND MovementBoolean_Received.DescId     = zc_MovementBoolean_Received()
+                                            AND MovementBoolean_Received.ValueData  = TRUE
                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                  ON MovementLinkObject_To.MovementId = Movement.Id
                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -356,7 +379,9 @@ BEGIN
                                           AND MovementDate_Sent.ValueData >= CURRENT_TIMESTAMP - INTERVAL '20 MIN'
              WHERE Movement.DescId = zc_Movement_Send()
                AND Movement.StatusId = zc_Enum_Status_UnComplete()
-               AND COALESCE (MovementBoolean_Received.ValueData, False) = False)
+               AND MovementBoolean_Received.ValueData IS NULL
+               AND MovementBoolean_SUN_v2.MovementId IS NULL
+            )
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
    END IF;
@@ -371,22 +396,28 @@ BEGIN
                       INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                                  ON MovementBoolean_SUN.MovementId = Movement.Id
                                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                                AND MovementBoolean_SUN.ValueData = True
+                                                AND MovementBoolean_SUN.ValueData = TRUE
+                      LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                               AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                               AND MovementBoolean_SUN_v2.ValueData  = TRUE
                       INNER JOIN MovementBoolean AS MovementBoolean_Sent
                                                  ON MovementBoolean_Sent.MovementId = Movement.Id
-                                                AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
-                                                AND MovementBoolean_Sent.ValueData = True
+                                                AND MovementBoolean_Sent.DescId     = zc_MovementBoolean_Sent()
+                                                AND MovementBoolean_Sent.ValueData  = TRUE
                       LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                                 ON MovementBoolean_Received.MovementId = Movement.Id
-                                               AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-                                               AND MovementBoolean_Received.ValueData = False
+                                               AND MovementBoolean_Received.DescId     = zc_MovementBoolean_Received()
+                                               AND MovementBoolean_Received.ValueData  = TRUE
                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                     ON MovementLinkObject_To.MovementId = Movement.Id
-                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                   AND MovementLinkObject_To.ObjectId = vbUnitId
+                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                   AND MovementLinkObject_To.ObjectId   = vbUnitId
                 WHERE Movement.DescId = zc_Movement_Send()
                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                  AND COALESCE (MovementBoolean_Received.ValueData, False) = False)
+                  AND MovementBoolean_Received.ValueData IS NULL
+                  AND MovementBoolean_SUN_v2.MovementId IS NULL
+               )
       THEN
         INSERT INTO _PUSH (Id, Text) VALUES (8, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
       END IF;

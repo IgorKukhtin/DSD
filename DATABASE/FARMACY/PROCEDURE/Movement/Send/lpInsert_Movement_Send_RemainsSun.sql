@@ -862,8 +862,10 @@ BEGIN
                                      FROM ObjectDate
                                      WHERE ObjectDate.ObjectId IN  (SELECT  DISTINCT tmpCLO_PartionGoods.ObjectId FROM tmpCLO_PartionGoods)
                                        AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                       -- !!!оставили только эту категорию
                                        AND ObjectDate.ValueData >  vbDate_1
                                        AND ObjectDate.ValueData <= vbDate_6
+                                       -- !!!оставили только эту категорию
                                       )
 
            , tmpRes_SUN AS (SELECT Container.ContainerDescId
@@ -884,8 +886,13 @@ BEGIN
                             FROM tmpRes_SUN_1 AS Container              
                                  LEFT JOIN tmpCLO_PartionGoods AS CLO_PartionGoods
                                                                ON CLO_PartionGoods.ContainerId = Container.ContainerId
-                                 LEFT JOIN tmpOD_PartionGoods_Value AS ObjectDate_PartionGoods_Value
-                                                                    ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                 INNER JOIN tmpOD_PartionGoods_Value AS ObjectDate_PartionGoods_Value
+                                                                     ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+--                          WHERE
+                                  -- !!!оставили только эту категорию
+--                                ObjectDate_PartionGoods_Value.ValueData >  vbDate_1
+--                            AND ObjectDate_PartionGoods_Value.ValueData <= vbDate_6
+                                  -- !!!оставили только эту категорию
                            )
 
             -- для SUN - находим list
@@ -1271,7 +1278,7 @@ BEGIN
        ;
 
 
-     -- 5. из каких аптек остатки со сроками "полностью" закрывают АВТОЗАКАЗ
+     -- 5. из каких аптек остатки со сроками "максимально" закрывают АВТОЗАКАЗ
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)

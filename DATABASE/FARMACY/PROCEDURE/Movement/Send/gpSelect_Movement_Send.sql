@@ -86,7 +86,6 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
-        , tmpUnit_SUN_over AS (SELECT OB.ObjectId AS UnitId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2())
         , tmpProvinceCity AS (SELECT ObjectLink_Unit_ProvinceCity.ObjectId AS UnitId
                                    , Object_ProvinceCity.Id                AS ProvinceCityId
                                    , Object_ProvinceCity.ValueData         AS ProvinceCityName
@@ -125,7 +124,6 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
-           --, CASE WHEN MovementBoolean_SUN.ValueData = TRUE AND tmpUnit_SUN_over_From.UnitId > 0 AND tmpUnit_SUN_over_To.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isSUN_over
            , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2 
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean  AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
@@ -271,12 +269,13 @@ BEGIN
                                         AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
             LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
 
-            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_From ON tmpUnit_SUN_over_From.UnitId = MovementLinkObject_From.ObjectId
-            LEFT JOIN tmpUnit_SUN_over AS tmpUnit_SUN_over_To   ON tmpUnit_SUN_over_To.UnitId   = MovementLinkObject_To.ObjectId
-
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
-         AND (vbIsSUN_over = TRUE OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE OR tmpUnit_SUN_over_From.UnitId IS NULL OR tmpUnit_SUN_over_To.UnitId IS NULL OR Movement.StatusId <> zc_Enum_Status_Erased())
+         AND (vbIsSUN_over = TRUE
+           OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE
+           OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
+           OR Movement.StatusId <> zc_Enum_Status_Erased()
+             )
         
        ;
 
