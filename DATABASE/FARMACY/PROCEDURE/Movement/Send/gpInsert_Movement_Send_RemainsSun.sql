@@ -52,7 +52,7 @@ BEGIN
      CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      -- все Подразделения для схемы SUN-OVER
-     CREATE TEMP TABLE _tmpUnit_SUN_over (UnitId Integer) ON COMMIT DROP;
+     -- CREATE TEMP TABLE _tmpUnit_SUN_over (UnitId Integer) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
@@ -96,8 +96,8 @@ BEGIN
 
 
      -- !!!OVER!!!
-     INSERT INTO _tmpUnit_SUN_over (UnitId)
-        SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2();
+     -- INSERT INTO _tmpUnit_SUN_over (UnitId)
+     --    SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2();
 
      -- !!!первый водитель!!!
      vbDriverId_1 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
@@ -153,12 +153,17 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                          ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                         AND MovementBoolean_SUN_v2.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
-                LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
+                -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
-             AND _tmpUnit_SUN_over.UnitId IS NULL
+           --AND _tmpUnit_SUN_over.UnitId IS NULL
+             AND MovementBoolean_SUN_v2.MovementId IS NULL
           ) AS tmp;
 
      -- !!!Удаляем предыдущие документы - DefSUN!!!
@@ -179,12 +184,17 @@ BEGIN
                                            ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                           AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
                                           AND MovementBoolean_DefSUN.ValueData = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                          ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                         AND MovementBoolean_SUN_v2.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
-                LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
+                -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
-             AND _tmpUnit_SUN_over.UnitId IS NULL
+           --AND _tmpUnit_SUN_over.UnitId IS NULL
+             AND MovementBoolean_SUN_v2.MovementId IS NULL
           ) AS tmp;
 
 

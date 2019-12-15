@@ -62,8 +62,8 @@ BEGIN
      CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
      -- 2. вся статистика продаж - OVER
-     CREATE TEMP TABLE _tmpSale_over   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpSale_over_a (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpSale_over   (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpSale_over_a (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -129,8 +129,9 @@ BEGIN
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
       
 
-     -- !!!Удаляем предыдущие документы - SUN !!!
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(), tmp.MovementId, FALSE)
+     -- !!!Удаляем предыдущие документы - SUN-v2 !!!
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, FALSE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, FALSE)
      FROM (SELECT Movement.Id AS MovementId
            FROM Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -146,13 +147,17 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData  = TRUE
+                INNER JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
           ) AS tmp;
 
      -- !!!Удаляем предыдущие документы - DefSUN!!!
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, FALSE)
+    /*PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, FALSE)
      FROM (SELECT Movement.Id AS MovementId
            FROM Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -171,7 +176,7 @@ BEGIN
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
-          ) AS tmp;
+          ) AS tmp;*/
 
 
      -- создали документы
@@ -195,20 +200,21 @@ BEGIN
        AND _tmpResult_Partion_a.UnitId_to   = tmp.UnitId_to
           ;
 
-     -- сохранили свойство <Перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
+     -- сохранили свойство <Перемещение по СУН-v2> + isAuto + zc_Enum_PartionDateKind_6
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, TRUE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
      FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount > 0
           ) AS tmp;
      -- сохранили свойство <Отложено перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, TRUE)
+     /*PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
      FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount_next > 0
-          ) AS tmp;
+          ) AS tmp;*/
 
 
      -- 6.1. создали строки - Перемещение по СУН
@@ -232,7 +238,7 @@ BEGIN
           ;
 
      -- 6.2. создали строки - Отложено перемещение по СУН
-     UPDATE _tmpResult_Partion_a SET MovementItemId = tmp.MovementItemId
+     /*UPDATE _tmpResult_Partion_a SET MovementItemId = tmp.MovementItemId
      FROM (SELECT _tmpResult_Partion.MovementId
                 , _tmpResult_Partion.GoodsId
                 , lpInsertUpdate_MovementItem_Send (ioId                   := 0
@@ -249,12 +255,12 @@ BEGIN
           ) AS tmp
      WHERE _tmpResult_Partion_a.MovementId = tmp.MovementId
        AND _tmpResult_Partion_a.GoodsId    = tmp.GoodsId
-          ;
+          ;*/
 
 
 
      -- 7.2. создали строки Child - по СУН
-     PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId         := 0
+     /*PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId         := 0
                                                    , inParentId   := tmpResult_Partion.ParentId   -- _tmpResult_child.ParentId
                                                    , inMovementId := tmpResult_Partion.MovementId -- _tmpResult_child.MovementId
                                                    , inGoodsId    := _tmpResult_child.GoodsId
@@ -274,7 +280,7 @@ BEGIN
                       ON tmpResult_Partion.UnitId_from = _tmpResult_child .UnitId_from
                      AND tmpResult_Partion.UnitId_to   = _tmpResult_child .UnitId_to
                      AND tmpResult_Partion.GoodsId     = _tmpResult_child .GoodsId
-                    ;
+                    ;*/
 
 
      -- 8. Удаляем документы, что б не мешали

@@ -82,6 +82,8 @@ $BODY$
    DECLARE curRemains        refcursor;
    DECLARE curResult_partion refcursor;
    
+   DECLARE vbDOW_curr        TVarChar;
+
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -123,6 +125,11 @@ BEGIN
      DELETE FROM _tmpResult_child;
 
 
+     -- день недели
+     vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
+                   FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
+                  ) :: TVarChar;
+
 
      -- все Подразделения для схемы SUN-v2
      -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer) ON COMMIT DROP;
@@ -130,7 +137,13 @@ BEGIN
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
-        FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2();
+      --FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2();
+        FROM ObjectBoolean AS OB
+             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+        WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
+          -- если указан день недели - проверим его
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+       ;
 
        
      -- 1. вся статистика продаж: 1) у отправителя в разрезе T1=60 дней 2) у получателя в разрезе T2=45
@@ -145,7 +158,7 @@ BEGIN
                    , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
                    , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
                    , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t22
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
@@ -380,6 +393,11 @@ BEGIN
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
         FROM tmpObject_Price
+             -- Работают по СУН - только отправка
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
+                                     ON OB_Unit_SUN_out.ObjectId  = tmpObject_Price.UnitId
+                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_out()
+                                    AND OB_Unit_SUN_out.ValueData = TRUE
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
@@ -407,6 +425,7 @@ BEGIN
                                    AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
              */
+        WHERE OB_Unit_SUN_out.ObjectId IS NULL
        ;
      -- 2.2. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
@@ -571,8 +590,7 @@ BEGIN
                                   AND Movement.StatusId IN (zc_Enum_Status_Complete())
                                )
                  -- все что остается для NotSold
-               , tmpNotSold AS (SELECT tmpNotSold_all.ContainerDescId
-                                     , tmpNotSold_all.UnitID
+               , tmpNotSold AS (SELECT tmpNotSold_all.UnitID
                                      , tmpNotSold_all.GoodsID
                                      , tmpNotSold_all.Amount
                                      , tmpNotSold_all.Amount_notSold
@@ -592,12 +610,21 @@ BEGIN
              , 0 AS ContainerId_Parent
              , 0 AS ContainerId
              , tmpNotSold.GoodsId
+               -- остатки, ВСЕ
              , tmpNotSold.Amount
              , 0 AS PartionDateKindId
-             , zc_DateEnd() AS ExpirationDate
-             , 0            AS Amount_sun
-             , tmpNotSold.Amount_notSold
+             , zc_DateEnd()              AS ExpirationDate
+             , 0                         AS Amount_sun
+               -- остатки, OVER (Сверх запас)
+             , tmpNotSold.Amount_notSold AS Amount_notSold
         FROM tmpNotSold
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
+                                     ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
+                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
+                                    AND OB_Unit_SUN_in.ValueData = TRUE
+        WHERE -- !!!
+              OB_Unit_SUN_in.ObjectId IS NULL
+              -- !!!
        ;
 
 
@@ -642,9 +669,9 @@ BEGIN
                , tmp.UnitId
                , tmp.GoodsId
                , 0 AS MCSValue
-               , COALESCE (_tmpSale.Amount, 0) AS Amount_sale
+               , COALESCE (_tmpSale.Amount_t2, 0) AS Amount_sale
                  -- остатки, OVER (Сверх запас)
-               , tmp.Amount
+               , tmp.Amount_notSold
                    -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                  - COALESCE (_tmpRemains_all.AmountReserve, 0)
                    -- уменьшаем - Перемещение - расход (ожидается)
@@ -653,7 +680,7 @@ BEGIN
                  -- остатки, OVER (Сверх запас) без корректировки
                , tmp.Amount             AS Amount_save
                  --
-               , tmpRemains_real.Amount AS Amount_real
+               , tmp.Amount             AS Amount_real
                  --
                , 0 AS Amount_sun
                  --
@@ -671,8 +698,6 @@ BEGIN
                -- НТЗ
                LEFT JOIN tmpMCS ON tmpMCS.UnitId  = tmp.UnitId
                                AND tmpMCS.GoodsId = tmp.GoodsId
-               LEFT JOIN tmpRemains_real ON tmpRemains_real.UnitId  = tmp.UnitId
-                                        AND tmpRemains_real.GoodsId = tmp.GoodsId
                -- автозаказ
                LEFT JOIN _tmpRemains ON _tmpRemains.UnitId       = tmp.UnitId
                                     AND _tmpRemains.GoodsId      = tmp.GoodsId
@@ -686,13 +711,12 @@ BEGIN
                  - COALESCE (_tmpRemains_all.AmountReserve, 0)
                    -- уменьшаем - Перемещение - расход (ожидается)
                  - COALESCE (_tmpRemains_all.AmountSend_out, 0)
-                >= 1
+                > 1
           ;
 
 
-     -- 4. Остатки по которым есть Автозаказ и срок
+     -- 4. Остатки по которым есть ПОТРЕБНОСТЬ и OVER
      -- CREATE TEMP TABLE _tmpRemains_calc (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
-     --
      INSERT INTO _tmpRemains_calc (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve
                                  , AmountSun_real, AmountSun_summ, AmountSun_summ_save, AmountSun_unit, AmountSun_unit_save)
         SELECT _tmpRemains.UnitId
@@ -700,8 +724,8 @@ BEGIN
                -- Цена
              , _tmpRemains.Price
                -- НТЗ
-             , _tmpRemains.MCS
-               -- Автозаказ
+             , 0 AS MCS
+               -- ПОТРЕБНОСТЬ у получателя
              , _tmpRemains.AmountResult
                --
              , _tmpRemains.AmountRemains
@@ -723,50 +747,17 @@ BEGIN
              , COALESCE (_tmpRemains_Partion.Amount_save, 0) AS AmountSun_unit_save
 
         FROM _tmpRemains
-             -- итого сроковые которые будем распределять
+             -- итого OVER (Сверх запас) которые будем распределять
              INNER JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount) AS Amount, SUM (_tmpRemains_Partion.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion.Amount_real) AS Amount_real
                          FROM _tmpRemains_Partion
                          GROUP BY _tmpRemains_Partion.GoodsId
                          ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = _tmpRemains.GoodsId
-             -- сроковые на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем
+             -- OVER (Сверх запас) на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем
              LEFT JOIN _tmpRemains_Partion ON _tmpRemains_Partion.UnitId  = _tmpRemains.UnitId
                                           AND _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
-        WHERE _tmpRemains.AmountResult   > 0
-          AND _tmpRemains_Partion.UnitId IS NULL
+        WHERE _tmpRemains.AmountResult   > 1
        ;
 
-
-     -- 5. из каких аптек остатки со сроками "полностью" закрывают АВТОЗАКАЗ
-     -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
-     --
-     INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from
-             , _tmpRemains_calc.UnitId    AS UnitId_to
-               -- если сроковых больше чем в Автозаказе
-             , SUM (CASE WHEN _tmpRemains_Partion.Amount >= _tmpRemains_calc.AmountResult
-                              -- тогда сроковых = автозаказ
-                              THEN _tmpRemains_calc.AmountResult
-                              -- иначе закрываем "частично" - т.е. сколько есть сроковых
-                              ELSE _tmpRemains_Partion.Amount
-                    END
-                  * _tmpRemains_calc.Price
-                   )
-        FROM -- Остатки по которым есть Автозаказ и срок
-             _tmpRemains_calc
-             -- все остатки, СРОК
-             INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains_calc.GoodsId
-             -- а здесь, отбросили !!холод!!
-             LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
-                                  ON OL_Goods_ConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
-                                 AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
-              )
-           OR Object_ConditionsKeep.ValueData IS NULL
-        GROUP BY _tmpRemains_Partion.UnitId
-               , _tmpRemains_calc.UnitId
-       ;
 
 
      -- 6.1.1. распределяем-1 остатки со сроками - по всем аптекам - здесь только >= vbSumm_limit
@@ -895,407 +886,8 @@ BEGIN
      CLOSE curPartion; -- закрыли курсор1
 
 
-     -- 6.1.2. распределяем-2 остатки со сроками - по всем аптекам - здесь только !!!все что осталось!!!
-     --
-     -- курсор1 - все остатки, СРОК МИНУС сколько уже распределили
-     OPEN curPartion_next FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0) AS Amount
-        FROM _tmpRemains_Partion
-             -- сколько уже ушло после распределения - 1
-             LEFT JOIN (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId
-                       ) AS tmp ON tmp.UnitId_from = _tmpRemains_Partion.UnitId
-                               AND tmp.GoodsId     = _tmpRemains_Partion.GoodsId
-             -- начинаем с аптек, где расход может быть максимальным
-             LEFT JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
-                        -- !!!без лимита
-                        -- WHERE _tmpSumm_limit.Summ >= vbSumm_limit
-                        GROUP BY _tmpSumm_limit.UnitId_from
-                       ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
-        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
-       ;
-     -- начало цикла по курсору1
-     LOOP
-         -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount;
-         -- если данные закончились, тогда выход
-         IF NOT FOUND THEN EXIT; END IF;
 
-         -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
-         OPEN curResult_next FOR
-            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price
-            FROM _tmpRemains_calc
-                 -- сколько уже пришло после распределения - 1+2
-                 LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount + _tmpResult_Partion.Amount_next) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                           ) AS tmp ON tmp.UnitId_to = _tmpRemains_calc.UnitId
-                                   AND tmp.GoodsId   = _tmpRemains_calc.GoodsId
-                 -- начинаем с аптек, где приход может быть максимальным
-                 LEFT JOIN (SELECT _tmpSumm_limit.UnitId_to, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
-                            WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from
-                              -- !!!без лимита
-                              -- AND _tmpSumm_limit.Summ >= vbSumm_limit
-                            GROUP BY _tmpSumm_limit.UnitId_to
-                           ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
-                 -- !!!только НЕ DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit!!!
-                 LEFT JOIN _tmpList_DefSUN ON _tmpList_DefSUN.UnitId_from = vbUnitId_from
-                                          AND _tmpList_DefSUN.UnitId_to   = _tmpRemains_calc.UnitId
-                                          AND _tmpList_DefSUN.GoodsId     = vbGoodsId
-                 -- !!!только НЕ DefSUN-all - если 2 дня есть в перемещении, т.к. < vbSumm_limit!!!
-                 --LEFT JOIN (SELECT DISTINCT _tmpList_DefSUN.UnitId_to, _tmpList_DefSUN.GoodsId FROM _tmpList_DefSUN
-                 --          ) AS _tmpList_DefSUN_all
-                 --            ON _tmpList_DefSUN_all.UnitId_to = _tmpRemains_calc.UnitId
-                 --           AND _tmpList_DefSUN_all.GoodsId   = vbGoodsId
-                 
-                 -- !!!НЕ распределяем если уже был этот товар в 1!!!
-                 LEFT JOIN _tmpResult_Partion ON _tmpResult_Partion.UnitId_from = vbUnitId_from
-                                             AND _tmpResult_Partion.UnitId_to   = _tmpRemains_calc.UnitId
-                                             AND _tmpResult_Partion.GoodsId     = vbGoodsId
-                                             AND _tmpResult_Partion.Amount      > 0
-
-            WHERE _tmpRemains_calc.GoodsId = vbGoodsId
-              AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
-              -- !!!НЕ распределяем
-              AND _tmpResult_Partion.GoodsId IS NULL
-              -- !!!НЕ DefSUN
-              AND _tmpList_DefSUN.GoodsId IS NULL
-              -- !!!НЕ DefSUN-all
-              --AND _tmpList_DefSUN_all.GoodsId IS NULL
-              -- !!!без лимита
-              -- AND _tmpRemains_calc.UnitId IN (SELECT DISTINCT _tmpSumm_limit.UnitId_to FROM _tmpSumm_limit WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from AND _tmpSumm_limit.Summ >= vbSumm_limit)
-            ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
-           ;
-         -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
-         LOOP
-             -- данные по Автозаказ
-             FETCH curResult_next INTO vbUnitId_to, vbAmountResult, vbPrice;
-             -- если данные закончились, или все кол-во найдено тогда выход
-             IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
-
-             -- если Автозаказ > Остаток
-             IF vbAmountResult > vbAmount
-             THEN
-                 -- получилось в Автозаказе больше чем искали, т.е. отдаем весь "СРОК"
-                 INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
-                    SELECT inDriverId
-                         , vbUnitId_from
-                         , vbUnitId_to
-                         , vbGoodsId
-                         , 0                  AS Amount
-                         , 0                  AS Summ
-                         , vbAmount           AS Amount_next
-                         , vbAmount * vbPrice AS Summ_next
-                         , 0                  AS MovementId
-                         , 0                  AS MovementItemId
-                    WHERE vbAmount > 0
-                   -- AND NOT EXISTS (SELECT 1 FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from = vbUnitId_from AND _tmpResult_Partion.UnitId_to = vbUnitId_to AND _tmpResult_Partion.GoodsId = vbGoodsId)
-                   ;
-                 -- обнуляем кол-во что бы больше не искать
-                 vbAmount:= 0;
-             ELSE
-                 -- получилось в остатках меньше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
-                 INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
-                    SELECT inDriverId
-                         , vbUnitId_from
-                         , vbUnitId_to
-                         , vbGoodsId
-                         , 0                        AS Amount
-                         , 0                        AS Summ
-                         , vbAmountResult           AS Amount_next
-                         , vbAmountResult * vbPrice AS Summ_next
-                         , 0                        AS MovementId
-                         , 0                        AS MovementItemId
-                    WHERE vbAmountResult > 0
-                   -- AND NOT EXISTS (SELECT 1 FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from = vbUnitId_from AND _tmpResult_Partion.UnitId_to = vbUnitId_to AND _tmpResult_Partion.GoodsId = vbGoodsId)
-                   ;
-                 -- уменьшаем на кол-во которое нашли и продолжаем поиск
-                 vbAmount:= vbAmount - vbAmountResult;
-             END IF;
-
-         END LOOP; -- финиш цикла по курсору2
-         CLOSE curResult_next; -- закрыли курсор2.
-
-     END LOOP; -- финиш цикла по курсору1
-     CLOSE curPartion_next; -- закрыли курсор1
-
-
-     -- 6.1.3. Проверка
-     IF EXISTS (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                     , SUM (_tmpResult_Partion.Amount) AS Amount, SUM (_tmpResult_Partion.Amount_next) AS Amount_next
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-               )
-               AND 1=0
-     THEN
-         RAISE EXCEPTION 'Дублируется перемещение. <%> <%> <%> <%> <%> <%> <%>.'
-             , -- UnitId_from
-               lfGet_Object_ValueData_sh (
-               (SELECT _tmpResult_Partion.UnitId_from
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- UnitId_to
-               lfGet_Object_ValueData_sh (
-               (SELECT _tmpResult_Partion.UnitId_to
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- GoodsId
-               lfGet_Object_ValueData (
-               (SELECT _tmpResult_Partion.GoodsId
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- Amount
-               zfConvert_FloatToString (
-               (SELECT SUM (_tmpResult_Partion.Amount)
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- Amount_next
-               zfConvert_FloatToString (
-               (SELECT SUM (_tmpResult_Partion.Amount_next)
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- Summ
-               zfConvert_FloatToString (
-               (SELECT SUM (_tmpResult_Partion.Summ)
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-             , -- Summ_next
-               zfConvert_FloatToString (
-               (SELECT SUM (_tmpResult_Partion.Summ_next)
-                FROM _tmpResult_Partion
-                GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                HAVING SUM (_tmpResult_Partion.Amount)      <> 0
-                   AND SUM (_tmpResult_Partion.Amount_next) <> 0
-                ORDER BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
-                LIMIT 1
-               ))
-              ;
-
-     END IF;
-
-     -- 6.1.4.1. !!!важно, для vbSumm_limit - переносим из отложенных в Amount!!!
-     UPDATE _tmpResult_Partion SET Amount      = CASE WHEN _tmpResult_Partion.Amount_next > 0 THEN _tmpResult_Partion.Amount + _tmpResult_Partion.Amount_next  ELSE _tmpResult_Partion.Amount END
-                                 , Summ        = CASE WHEN _tmpResult_Partion.Summ_next   > 0 THEN _tmpResult_Partion.Summ   + _tmpResult_Partion.Summ_next    ELSE _tmpResult_Partion.Summ   END
-                                 , Amount_next = 0
-                                 , Summ_next   = 0
-     FROM -- собрали в 1 перемещение
-          (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
-           FROM _tmpResult_Partion
-           GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
-           HAVING SUM (_tmpResult_Partion.Summ + _tmpResult_Partion.Summ_next) >= vbSumm_limit
-          ) AS tmp
-     WHERE _tmpResult_Partion.UnitId_from = tmp.UnitId_from
-       AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
-       AND _tmpResult_Partion.Amount_next > 0
-    ;
-
-     -- 6.1.4.2. !!!важно, если остатка не хватило для vbSumm_limit - переносим в отложенные!!!
-     UPDATE _tmpResult_Partion SET Amount      = CASE WHEN _tmpResult_Partion.Amount_next = 0 THEN 0                         ELSE _tmpResult_Partion.Amount      END
-                                 , Summ        = CASE WHEN _tmpResult_Partion.Summ_next   = 0 THEN 0                         ELSE _tmpResult_Partion.Summ        END
-                                 , Amount_next = CASE WHEN _tmpResult_Partion.Amount_next = 0 THEN _tmpResult_Partion.Amount ELSE _tmpResult_Partion.Amount_next END
-                                 , Summ_next   = CASE WHEN _tmpResult_Partion.Summ_next   = 0 THEN _tmpResult_Partion.Summ   ELSE _tmpResult_Partion.Summ_next   END
-     FROM -- собрали в 1 перемещение
-          (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
-           FROM _tmpResult_Partion
-           GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
-           HAVING SUM (_tmpResult_Partion.Summ) < vbSumm_limit
-          ) AS tmp
-     WHERE _tmpResult_Partion.UnitId_from = tmp.UnitId_from
-       AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
-    ;
-     
-
-     -- 6.2.1. !!!важно, документы - DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit - тогда они участвовать не будут !!!
-     IF inStep = 1 AND 1=0
-     THEN
-         -- список DefSUN
-         INSERT INTO _tmpList_DefSUN (UnitId_from , UnitId_to, GoodsId)
-            WITH -- DefSUN - за предыдущие 2 дня
-                 tmpDefSUN AS (SELECT DISTINCT
-                                      MovementLinkObject_From.ObjectId AS UnitId_from
-                                    , MovementLinkObject_To.ObjectId   AS UnitId_to
-                                    , MovementItem.ObjectId            AS GoodsId
-                                    , Movement.OperDate                AS OperDate
-                               FROM Movement
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                 AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                 AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                    INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                                               ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                                              AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
-                                                              AND MovementBoolean_DefSUN.ValueData = TRUE
-                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                           AND MovementItem.DescId     = zc_MI_Master()
-                                                           AND MovementItem.isErased   = FALSE
-                                                           AND MovementItem.Amount     > 0
-                               WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
-                                 AND Movement.DescId   = zc_Movement_Send()
-                                 AND Movement.StatusId = zc_Enum_Status_Erased()
-                              )
-                 -- DefSUN - 2 дня подряд
-               , tmpResult AS (SELECT tmpDefSUN.UnitId_from, tmpDefSUN.UnitId_to, tmpDefSUN.GoodsId
-                              FROM tmpDefSUN
-                              GROUP BY tmpDefSUN.UnitId_from, tmpDefSUN.UnitId_to, tmpDefSUN.GoodsId
-                              HAVING COUNT (*) = 2
-                             )
-            -- Результат
-            SELECT DISTINCT
-                   _tmpResult_Partion.UnitId_from
-                 , _tmpResult_Partion.UnitId_to
-                 , _tmpResult_Partion.GoodsId
-            FROM _tmpResult_Partion
-                 JOIN tmpResult ON tmpResult.UnitId_from = _tmpResult_Partion.UnitId_from
-                               AND tmpResult.UnitId_to   = _tmpResult_Partion.UnitId_to
-                               AND tmpResult.GoodsId     = _tmpResult_Partion.GoodsId
-            WHERE _tmpResult_Partion.Amount_next > 0
-           ;
-         -- 6.2.2. !!!если нашлись товары - DefSUN!!!
-         IF 1=0 AND EXISTS (SELECT 1 FROM _tmpList_DefSUN)
-         THEN
-             -- тогда на 2-м шаге они участвовать не будут !!!
-             PERFORM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= inOperDate
-                                                      , inDriverId:= inDriverId
-                                                      , inStep    := 2
-                                                      , inUserId  := inUserId
-                                                       );
-         END IF;
-
-     END IF;
-
-
-     IF inStep = 2
-     THEN
-         -- !!!Выход!!!
-         RETURN;
-     END IF;
-
-
-     -- 7.1. распределяем перемещения - по партиям со сроками
-     -- CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-     --
-     -- !!!Т.к. товар дублируется - Распределим через курсор!!!
-     -- курсор1 - элементы перемещения
-     OPEN curResult_partion FOR (SELECT _tmpResult_Partion.MovementId
-                                      , _tmpResult_Partion.UnitId_from
-                                      , _tmpResult_Partion.UnitId_to
-                                      , _tmpResult_Partion.MovementItemId AS ParentId
-                                      , _tmpResult_Partion.GoodsId
-                                      , SUM (_tmpResult_Partion.Amount + _tmpResult_Partion.Amount_next) AS Amount
-                                 FROM _tmpResult_Partion
-                                 GROUP BY _tmpResult_Partion.MovementItemId 
-                                        , _tmpResult_Partion.MovementId
-                                        , _tmpResult_Partion.GoodsId
-                                        , _tmpResult_Partion.UnitId_from
-                                        , _tmpResult_Partion.UnitId_to
-                                );
-     -- начало цикла по курсору1
-     LOOP
-         -- данные по курсору1
-         FETCH curResult_partion INTO vbMovementId, vbUnitId_from, vbUnitId_to, vbParentId, vbGoodsId, vbAmount;
-         -- если данные закончились, тогда выход
-         IF NOT FOUND THEN EXIT; END IF;
-
-         -- курсор2. - остатки МИНУС сколько уже распределили для vbUnitId_from + vbGoodsId
-         OPEN curRemains FOR
-            SELECT _tmpRemains_Partion_all.ContainerId, _tmpRemains_Partion_all.Amount - COALESCE (tmp.Amount, 0)
-            FROM _tmpRemains_Partion_all
-                 LEFT JOIN (SELECT _tmpResult_child.ContainerId, SUM (_tmpResult_child.Amount) AS Amount FROM _tmpResult_child GROUP BY _tmpResult_child.ContainerId
-                           ) AS tmp ON tmp.ContainerId = _tmpRemains_Partion_all.ContainerId
-            WHERE _tmpRemains_Partion_all.UnitId  = vbUnitId_from
-              AND _tmpRemains_Partion_all.GoodsId = vbGoodsId
-              AND _tmpRemains_Partion_all.Amount - COALESCE (tmp.Amount, 0) > 0
-              -- !!!только если партии со сроками, т.е. не 100 дней!!!
-              AND _tmpRemains_Partion_all.ContainerDescId = zc_Container_CountPartionDate()
-            -- сначала с "хорошей" датой
-            -- ORDER BY _tmpRemains_Partion_all.ExpirationDate DESC, _tmpRemains_Partion_all.ContainerId
-            -- сначала с "плохой" датой
-            ORDER BY _tmpRemains_Partion_all.ExpirationDate ASC, _tmpRemains_Partion_all.ContainerId
-           ;
-         -- начало цикла по курсору2. - остатки
-         LOOP
-             -- данные по остаткам
-             FETCH curRemains INTO vbContainerId, vbAmount_remains;
-             -- если данные закончились, или все кол-во найдено тогда выход
-             IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
-
-             --
-             IF vbAmount_remains > vbAmount
-             THEN
-                 -- получилось в остатках больше чем искали
-                 INSERT INTO _tmpResult_child (MovementId, UnitId_from, UnitId_to, ParentId, ContainerId, GoodsId, Amount)
-                    SELECT vbMovementId, vbUnitId_from, vbUnitId_to, vbParentId, vbContainerId, vbGoodsId, vbAmount;
-
-                 -- обнуляем кол-во что бы больше не искать
-                 vbAmount:= 0;
-             ELSE
-                 -- получилось в остатках меньше чем искали
-                 INSERT INTO _tmpResult_child (MovementId, UnitId_from, UnitId_to, ParentId, ContainerId, GoodsId, Amount)
-                    SELECT vbMovementId, vbUnitId_from, vbUnitId_to, vbParentId, vbContainerId, vbGoodsId, vbAmount_remains;
-
-                 -- уменьшаем на кол-во которое нашли и продолжаем поиск
-                 vbAmount:= vbAmount - vbAmount_remains;
-             END IF;
-
-         END LOOP; -- финиш цикла по курсору2. - остатки
-         CLOSE curRemains; -- закрыли курсор2. - остатки
-
-     END LOOP; -- финиш цикла по курсору1 - перемещения
-     CLOSE curResult_partion; -- закрыли курсор1 - перемещения
-
-/*
-!!!
-     -- 7.2. создали строки Child - по СУН
-     PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId         := 0
-                                                   , inParentId   := _tmpResult_child.ParentId
-                                                   , inMovementId := _tmpResult_child.MovementId
-                                                   , inGoodsId    := _tmpResult_child.GoodsId
-                                                   , inAmount     := _tmpResult_child.Amount
-                                                   , inContainerId:= _tmpResult_child.ContainerId
-                                                   , inUserId     := inUserId
-                                                    )
-     FROM _tmpResult_child;
-
-
-     -- 8. Удаляем документы, что б не мешали
-     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
-                                 , inUserId     := inUserId
-                                  )
-     FROM (SELECT DISTINCT _tmpResult_Partion.MovementId FROM _tmpResult_Partion WHERE _tmpResult_Partion.MovementId > 0
-          ) AS tmp;
-*/
-
+    
      -- Результат
      RETURN QUERY
        SELECT Object_Unit.Id          AS UnitId
@@ -1304,8 +896,8 @@ BEGIN
             , Object_Goods.ObjectCode AS GoodsCode
             , Object_Goods.ValueData  AS GoodsName
               -- продажи
-            , _tmpSale.Amount AS Amount_sale
-            , _tmpSale.Summ   AS Summ_sale
+            , _tmpSale.Amount_t1 AS Amount_sale
+            , _tmpSale.Summ_t1   AS Summ_sale
               -- итого сроковых по реальным остаткам, должно сходиться с AmountSun_summ_save
             , _tmpRemains_calc.AmountSun_real
             , _tmpRemains_calc.AmountSun_summ_save
@@ -1512,7 +1104,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
      -- 2. вся статистика продаж
-     CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount1 TFloat, Summ1 TFloat, Amount2 TFloat, Summ2 TFloat, Amount3 TFloat, Summ3 TFloat, Amount4 TFloat, Summ4 TFloat, Amount5 TFloat, Summ5 TFloat, Amount6 TFloat, Summ6 TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -1535,4 +1127,3 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
-

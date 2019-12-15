@@ -123,7 +123,7 @@ BEGIN
 
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
-                   FROM (SELECT EXTRACT(DOW FROM CURRENT_DATE) AS RetV) AS tmp
+                   FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
                   ) :: TVarChar;
 
      -- все Подразделения для схемы SUN
@@ -142,9 +142,9 @@ BEGIN
                                   AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
                                   AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
         WHERE ObjectBoolean_SUN.ValueData = TRUE AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
-        -- если указан день недели - проверим его
-        AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-             ;
+          -- если указан день недели - проверим его
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+       ;
 
      IF inStep = 1
      THEN
@@ -671,6 +671,8 @@ BEGIN
                                          INNER JOIN Container ON Container.WhereObjectId = _tmpUnit_SUN.UnitId
                                                              AND Container.Amount        <> 0
                                                              AND Container.DescId        = zc_Container_Count()
+                                    -- !!!временно!!!
+                                    WHERE _tmpUnit_SUN.UnitId <> 12812109 -- Аптека 5  пр.Гагарина 74А
                                  -- WHERE 1=0
                                    )
                 -- список Sold
