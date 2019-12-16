@@ -6072,9 +6072,11 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and
+      if ((AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and
                             (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId) and
-                            (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
+                            (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) and
+          RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+                                                    CheckCDS.FieldByName('PartionDateKindID').AsVariant]),[]) then
       Begin
         CheckCDS.Edit;
 

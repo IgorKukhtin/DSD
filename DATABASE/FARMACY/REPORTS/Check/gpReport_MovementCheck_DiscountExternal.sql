@@ -49,6 +49,7 @@ BEGIN
                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                    WHERE (ObjectLink_Unit_Juridical.ObjectId = inUnitId or COALESCE(inUnitId, 0) = 0)
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                   LIMIT 1
                    )
                    END;
 
