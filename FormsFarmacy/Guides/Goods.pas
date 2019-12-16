@@ -112,6 +112,7 @@ type
     macUpdateHot_Yes: TMultiAction;
     bbUpdateNot_Yes: TdxBarButton;
     bbUpdateNot_No: TdxBarButton;
+    spUpdate_Goods_isNot: TdsdStoredProc;
   private
     { Private declarations }
   public

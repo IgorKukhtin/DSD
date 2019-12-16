@@ -198,11 +198,9 @@ inherited GoodsForm: TGoodsForm
             Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'isNot'
             PropertiesClassName = 'TcxCheckBoxProperties'
-            Properties.AllowGrayed = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
-            Options.Editing = False
             Width = 86
           end
           object isNotMarion: TcxGridDBColumn
@@ -680,6 +678,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_Analog
+        end
+        item
+          StoredProc = spUpdate_Goods_isNot
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1585,7 +1586,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 808
-    Top = 232
+    Top = 200
   end
   object spUpdate_CountPrice: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_CountPrice'
@@ -1656,11 +1657,12 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DoesNotShare'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 808
-    Top = 296
+    Left = 800
+    Top = 264
   end
   object spGetImportSetting_Goods_Price: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1831,7 +1833,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
+    Left = 928
     Top = 99
   end
   object spUpdateHot_No: TdsdStoredProc
@@ -1856,6 +1858,40 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 928
-    Top = 155
+    Top = 163
+  end
+  object spUpdate_Goods_isNot: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNot'
+        Value = 'FALSE'
+        Component = MasterCDS
+        ComponentItem = 'isNot'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNot'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'isNot'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 235
   end
 end

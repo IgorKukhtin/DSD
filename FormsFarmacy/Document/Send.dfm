@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -482,6 +482,13 @@ inherited SendForm: TSendForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object PartyRelated: TcxGridDBColumn
+            Caption = #1057#1074#1103#1079#1072#1085#1086' '#1089' '#1087#1072#1088#1090#1080#1077#1081
+            DataBinding.FieldName = 'PartyRelated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object chAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
