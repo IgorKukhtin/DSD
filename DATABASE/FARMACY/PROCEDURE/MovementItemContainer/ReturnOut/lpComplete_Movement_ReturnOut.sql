@@ -126,9 +126,9 @@ BEGIN
         INNER JOIN Movement_ReturnOut_View ON MovementItem_ReturnOut_View.MovementId = Movement_ReturnOut_View.Id
         INNER JOIN MovementItem AS MovementItem_Income
                                 ON MovementItem_ReturnOut_View.ParentId = MovementItem_Income.Id
-        INNER JOIN MovementItemContainer AS MIContainer_Income
-                                         ON MIContainer_Income.MovementItemId = MovementItem_Income.Id
-                                        AND MIContainer_Income.DescId = zc_MIContainer_Count()                                        
+        LEFT JOIN MovementItemContainer AS MIContainer_Income
+                                        ON MIContainer_Income.MovementItemId = MovementItem_Income.Id
+                                       AND MIContainer_Income.DescId = zc_MIContainer_Count()                                        
     WHERE Movement_ReturnOut_View.Id =  inMovementId
       AND MovementItem_ReturnOut_View.isErased = FALSE;
       
@@ -161,9 +161,10 @@ BEGIN
     IF EXISTS(SELECT 1 FROM 
                   _tmpItem
                   LEFT JOIN Container ON Container.Id = _tmpItem.ContainerId
-              WHERE Container.Amount < _tmpItem.OperSumm)
+              WHERE COALESCE(Container.Amount, 0) < _tmpItem.OperSumm)
     THEN
-    
+
+ 
       vbUnitId := (SELECT Movement_ReturnOut_View.FromId FROM Movement_ReturnOut_View WHERE Movement_ReturnOut_View.Id = inMovementId);
                  
       -- А сюда товары
@@ -182,10 +183,10 @@ BEGIN
                             , Container.ObjectId --Товар
                             , Container.Amount   --Тек. остаток 
                        FROM Container
-                            INNER JOIN ReturnOut ON Container.ObjectId = Container.ObjectId
+                            INNER JOIN ReturnOut ON ReturnOut.ObjectId = Container.ObjectId
                        WHERE Container.DescID = zc_Container_Count()
                          AND Container.WhereObjectId = vbUnitId
-                         AND Container.ID not IN (SELECT _tmpItem.ContainerId FROM _tmpItem)
+                         AND Container.ID not IN (SELECT COALESCE(_tmpItem.ContainerId, 0) FROM _tmpItem)
                          AND Container.Amount > 0
                        ),
            DD AS (SELECT ReturnOut.MovementItemId 
@@ -232,9 +233,11 @@ BEGIN
                 , AccountId
                 , -Amount
                 , OperDate
-             FROM tmpItem;
+             FROM tmpItem
+             WHERE Amount > 0;
+
     END IF;
-        
+    
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
     --                                         , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;

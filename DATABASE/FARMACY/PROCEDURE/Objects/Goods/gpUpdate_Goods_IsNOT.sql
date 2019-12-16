@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_isNOT(Integer, Boolean, TVarChar);
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_isNOT(
     IN inId        Integer   ,    -- ключ объекта <Товар>
     IN inisNOT     Boolean   ,    -- НОТ-неперемещаемый остаток
+   OUT outisNOT    Boolean   ,    -- НОТ-неперемещаемый остаток
     IN inSession   TVarChar       -- текущий пользователь
 )
-RETURNS VOID AS
+RETURNS BOOLEAN AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE text_var1 text;
@@ -19,6 +20,8 @@ BEGIN
 
    --
    vbUserId := lpGetUserBySession (inSession);
+   
+   outisNOT := inisNOT;
 
    -- сохранили св-во
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_NOT(), inId, inisNOT);

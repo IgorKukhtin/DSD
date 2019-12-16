@@ -154,6 +154,7 @@ type
     spUpdate_Movement_NotDisplaySUN: TdsdStoredProc;
     dxBarButton4: TdxBarButton;
     cbSun_v2: TcxCheckBox;
+    PartyRelated: TcxGridDBColumn;
   private
     { Private declarations }
   public
