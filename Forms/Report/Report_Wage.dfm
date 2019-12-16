@@ -4,7 +4,7 @@ inherited Report_WageForm: TReport_WageForm
   ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 439
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -300,7 +300,6 @@ inherited Report_WageForm: TReport_WageForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 90
           end
           object Amount: TcxGridDBColumn

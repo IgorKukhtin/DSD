@@ -83,6 +83,8 @@ type
     cxLabel6: TcxLabel;
     edServiceDate: TcxDateEdit;
     LinkINN: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

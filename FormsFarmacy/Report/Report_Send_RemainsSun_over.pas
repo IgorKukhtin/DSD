@@ -49,9 +49,6 @@ type
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
     cxSplitter1: TcxSplitter;
-    spSendSUN: TdsdStoredProc;
-    actSendSUN: TdsdExecStoredProc;
-    macSendSUN: TMultiAction;
     bbSendSUN: TdxBarButton;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
@@ -76,6 +73,9 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
+    spSendSUN: TdsdStoredProc;
+    actSendSUN: TdsdExecStoredProc;
+    mactSendSUN: TMultiAction;
   private
     { Private declarations }
   public

@@ -2701,8 +2701,6 @@
 				<Form>RepriceUnit_testForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IlliquidReductionPlanAllDialog.pas">
 				<Form>Report_IlliquidReductionPlanAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2726,6 +2724,9 @@
 				<Form>PermanentDiscountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\IftminFozzXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

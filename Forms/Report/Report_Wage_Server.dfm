@@ -4,7 +4,7 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
   ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 439
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,19 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
     Width = 991
     Height = 283
     TabOrder = 3
-    ExplicitTop = 115
+    ExplicitTop = 118
     ExplicitWidth = 991
-    ExplicitHeight = 286
+    ExplicitHeight = 283
     ClientRectBottom = 283
     ClientRectRight = 991
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 991
-      ExplicitHeight = 286
+      ExplicitHeight = 283
       inherited cxGrid: TcxGrid
         Width = 991
         Height = 283
         ExplicitWidth = 991
-        ExplicitHeight = 286
+        ExplicitHeight = 283
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -300,7 +300,6 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 90
           end
           object Amount: TcxGridDBColumn

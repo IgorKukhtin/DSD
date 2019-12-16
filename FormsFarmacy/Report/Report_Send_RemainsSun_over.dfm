@@ -1173,12 +1173,12 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 42736d
+      EditValue = 43466d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 173
-      EditValue = 42736d
+      EditValue = 43466d
       TabOrder = 2
       Visible = False
       ExplicitLeft = 173
@@ -1258,31 +1258,6 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
       Hint = #1087#1086' '#1044#1085#1103#1084
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actSendSUN: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSendSUN
-      StoredProcList = <
-        item
-          StoredProc = spSendSUN
-        end>
-      Caption = 'actSendSUN'
-      ImageIndex = 41
-    end
-    object macSendSUN: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSendSUN
-        end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2> '#1089#1086#1079#1076#1072#1085#1099
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>'
-      ImageIndex = 41
     end
     object actOpenReportPartionDateForm: TdsdOpenForm
       Category = 'Report'
@@ -1590,6 +1565,31 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
         end>
       isShowModal = False
     end
+    object actSendSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSendSUN
+      StoredProcList = <
+        item
+          StoredProc = spSendSUN
+        end>
+      Caption = 'actSendSUN'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2> '#1089#1086#1079#1076#1072#1085#1099
+    end
+    object mactSendSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendSUN
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-v2>'
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1716,7 +1716,7 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
       ShortCut = 16464
     end
     object bbSendSUN: TdxBarButton
-      Action = macSendSUN
+      Action = mactSendSUN
       Category = 0
     end
     object bbReportPartionDate: TdxBarButton
@@ -1816,21 +1816,19 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
   end
   object spSendSUN: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_Send_RemainsSun_over'
-    DataSets = <
-      item
-      end>
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inOperDate'
-        Value = 42370d
-        Component = deEnd
+        Value = 'NULL'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1000
-    Left = 624
-    Top = 192
+    PackSize = 1
+    Left = 576
+    Top = 224
   end
 end

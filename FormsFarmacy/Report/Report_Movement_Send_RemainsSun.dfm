@@ -4,7 +4,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 711
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1729,12 +1729,12 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 42736d
+      EditValue = 43466d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 173
-      EditValue = 42736d
+      EditValue = 43466d
       TabOrder = 2
       Visible = False
       ExplicitLeft = 173
@@ -3259,17 +3259,17 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     DataSets = <
       item
       end>
-    OutputType = otMultiExecute
+    OutputType = otResult
     Params = <
       item
         Name = 'inOperDate'
         Value = 42370d
-        Component = deEnd
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1000
+    PackSize = 1
     Left = 624
     Top = 192
   end
