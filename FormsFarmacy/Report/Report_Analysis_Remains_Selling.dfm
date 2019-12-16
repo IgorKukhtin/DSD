@@ -434,7 +434,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     end
     object cxDBPivotGridField2: TcxDBPivotGridField
       Area = faColumn
-      AreaIndex = 0
+      AreaIndex = 1
       AllowedAreas = [faColumn, faRow, faFilter]
       IsCaptionAssigned = True
       Caption = #1040#1087#1090#1077#1082#1072
@@ -582,6 +582,15 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       DisplayFormat = '0.00'
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1053#1044#1057
+    end
+    object Ord: TcxDBPivotGridField
+      Area = faColumn
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #8470' '#1087'/'#1087
+      DataBinding.FieldName = 'ord'
+      Visible = True
+      UniqueName = #8470' '#1087'/'#1087
     end
   end
   object DataSource: TDataSource
