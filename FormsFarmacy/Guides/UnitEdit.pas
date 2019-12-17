@@ -145,6 +145,7 @@ type
     cxLabel40: TcxLabel;
     edAccessKeyYF: TcxTextEdit;
     cxLabel41: TcxLabel;
+    cxLabel42: TcxLabel;
   private
     { Private declarations }
   public

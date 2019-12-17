@@ -1406,9 +1406,10 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
  }
