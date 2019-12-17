@@ -295,6 +295,15 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 85
       end
+      object SunIncome: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1076#1085'. '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053')'
+        DataBinding.FieldName = 'SunIncome'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053')'
+        Options.Editing = False
+        Width = 85
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

@@ -600,6 +600,10 @@ type
     PUSHDS: TClientDataSet;
     actPermanentDiscount: TdsdOpenForm;
     N205: TMenuItem;
+    actReport_PromoDoctors: TdsdOpenForm;
+    actReport_PromoEntrances: TdsdOpenForm;
+    N206: TMenuItem;
+    N207: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

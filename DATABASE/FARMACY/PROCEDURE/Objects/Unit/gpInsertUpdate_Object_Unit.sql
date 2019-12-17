@@ -7,6 +7,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -18,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inTaxServiceNigth         TFloat    ,    -- % от выручки в ночную смену
     IN inKoeffInSUN              TFloat    ,    -- Коэффициент баланса приход/расход
     IN inKoeffOutSUN             TFloat    ,    -- Коэффициент баланса расход/приход
+    IN inSunIncome               TFloat    ,    -- Кол-во дней приход от пост. (блокируем СУН) по-умолчанию 30 дней, если не установлено другое число > 0
     IN inStartServiceNigth       TDateTime ,
     IN inEndServiceNigth         TDateTime ,
     IN inCreateDate              TDateTime ,    -- дата создания точки
@@ -166,6 +174,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_KoeffInSUN(), ioId, inKoeffInSUN);
    -- Коэффициент баланса расход/приход
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_KoeffOutSUN(), ioId, inKoeffOutSUN);
+
+   -- Кол-во дней приход от пост. (блокируем СУН)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_SunIncome(), ioId, inSunIncome);
+   
 
    IF inStartServiceNigth ::Time <> '00:00'
    THEN
@@ -372,6 +384,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.12.19         * add inSunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF
  11.12.19                                                       * UnitOld
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff

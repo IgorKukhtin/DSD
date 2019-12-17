@@ -617,7 +617,7 @@
         Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 2
+        TabOrder = 4
         Width = 220
       end
       object cbNotCashMCS: TcxCheckBox
@@ -625,7 +625,7 @@
         Top = 27
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1053#1058#1047' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-        TabOrder = 3
+        TabOrder = 2
         Width = 233
       end
       object cbNotCashListDiff: TcxCheckBox
@@ -633,13 +633,21 @@
         Top = 54
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1042#1090#1086#1088#1072#1103' '#1096#1082#1072#1083#1072' '#1076#1083#1103' '#1083#1080#1089#1090#1086#1074' '#1086#1090#1082#1072#1079#1086#1074
-        TabOrder = 4
+        TabOrder = 3
         Width = 246
       end
       object cxLabel38: TcxLabel
         Left = 0
         Top = 51
         Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+      end
+      object cxLabel42: TcxLabel
+        Left = 240
+        Top = 100
+        Hint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053')'
+        Caption = #1050#1086#1083'. '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053')'
+        ParentShowHint = False
+        ShowHint = True
       end
       object edUnitOld: TcxButtonEdit
         Left = -1
@@ -653,7 +661,7 @@
           end>
         Properties.ReadOnly = True
         ShowHint = True
-        TabOrder = 6
+        TabOrder = 5
         Width = 220
       end
       object cxLabel39: TcxLabel
@@ -669,7 +677,15 @@
         Top = 171
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 8
+        TabOrder = 10
+        Width = 217
+      end
+      object edSunIncome: TcxCurrencyEdit
+        Left = 240
+        Top = 123
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 7
         Width = 217
       end
       object cxLabel40: TcxLabel
@@ -938,6 +954,14 @@
         Name = 'inKoeffOutSUN'
         Value = Null
         Component = edKoeffOutSUN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSunIncome'
+        Value = Null
+        Component = edSunIncome
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1791,6 +1815,12 @@
         Component = edAccessKeyYF
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SunIncome'
+        Value = Null
+        Component = edSunIncome
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -1880,8 +1910,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 111
+    Left = 80
+    Top = 119
   end
   object GuidesProvinceCity: TdsdGuides
     KeyField = 'Id'
@@ -1909,8 +1939,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 293
+    Left = 304
+    Top = 357
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'

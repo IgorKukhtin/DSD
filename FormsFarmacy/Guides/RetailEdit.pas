@@ -46,6 +46,7 @@ type
     cxLabel5: TcxLabel;
     edLimitSUN: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    cbGoodsReprice: TcxCheckBox;
   private
     { Private declarations }
   public

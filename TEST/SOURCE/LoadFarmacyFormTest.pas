@@ -518,12 +518,13 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailTab_ErrorForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsMainTab_ErrorForm');
     exit;
-{
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAll_TabForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAll_TabForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetail_TabForm'));
@@ -560,6 +561,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
@@ -810,6 +812,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoDoctorsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoEntrancesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoEntrancesForm');
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
@@ -1404,9 +1412,10 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
  }

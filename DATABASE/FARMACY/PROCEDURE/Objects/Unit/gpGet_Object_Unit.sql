@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                KoeffInSUN TFloat, KoeffOutSUN TFloat,
+               SunIncome TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                CreateDate TDateTime, CloseDate TDateTime,
                TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
@@ -103,6 +104,8 @@ BEGIN
 
            , CAST (0 as TFloat)    AS KoeffInSUN
            , CAST (0 as TFloat)    AS KoeffOutSUN
+           
+           , CAST (30 as TFloat)   AS SunIncome
 
            , CAST (Null as TDateTime) AS StartServiceNigth
            , CAST (Null as TDateTime) AS EndServiceNigth
@@ -201,6 +204,7 @@ BEGIN
 
       , COALESCE (ObjectFloat_KoeffInSUN.ValueData,0)  ::TFloat AS KoeffInSUN
       , COALESCE (ObjectFloat_KoeffOutSUN.ValueData,0) ::TFloat AS KoeffOutSUN
+      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END  ::TFloat AS SunIncome
 
       , CASE WHEN COALESCE(ObjectDate_StartServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartServiceNigth.ValueData ELSE Null END ::TDateTime  AS StartServiceNigth
       , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
@@ -366,6 +370,10 @@ BEGIN
                               ON ObjectFloat_KoeffOutSUN.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_SunIncome
+                              ON ObjectFloat_SunIncome.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_SunIncome.DescId = zc_ObjectFloat_Unit_SunIncome()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
@@ -507,6 +515,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.12.19         * add SunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF
  11.12.19                                                       * UnitOld
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff

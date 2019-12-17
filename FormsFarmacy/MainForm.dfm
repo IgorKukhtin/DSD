@@ -3198,6 +3198,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PromoDoctors: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080
+      FormName = 'TReport_MovementCheck_PromoDoctorsForm'
+      FormNameParam.Value = 'TReport_MovementCheck_PromoDoctorsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_PromoEntrances: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1084#1086' '#1087#1086#1076#1098#1077#1079#1076#1099
+      FormName = 'TReport_MovementCheck_PromoEntrancesForm'
+      FormNameParam.Value = 'TReport_MovementCheck_PromoEntrancesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3754,6 +3776,12 @@ inherited MainForm: TMainForm
       end
       object miReport_PriceProtocol: TMenuItem
         Action = actReport_PriceProtocol
+      end
+      object N206: TMenuItem
+        Action = actReport_PromoDoctors
+      end
+      object N207: TMenuItem
+        Action = actReport_PromoEntrances
       end
     end
     object N200: TMenuItem [6]

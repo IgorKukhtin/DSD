@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 516
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -204,6 +204,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086' '#1082#1072#1082#1080#1084' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+            Options.Editing = False
+            Width = 85
+          end
+          object SunIncome: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053')'
+            DataBinding.FieldName = 'SunIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053')'
             Options.Editing = False
             Width = 85
           end

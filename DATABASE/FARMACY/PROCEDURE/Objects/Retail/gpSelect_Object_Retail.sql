@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SummSUN TFloat
              , LimitSUN TFloat
              , ShareFromPrice TFloat
+             , isGoodsReprice Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -26,6 +27,8 @@ BEGIN
            , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
            , COALESCE (ObjectFloat_LimitSUN.ValueData, 0)      :: TFloat AS LimitSUN
            , COALESCE (ObjectFloat_ShareFromPrice.ValueData, 0):: TFloat AS ShareFromPrice
+           
+           , COALESCE (ObjectBoolean_GoodsReprice.ValueData, FALSE):: Boolean AS isGoodsReprice
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
@@ -44,6 +47,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
                                   ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsReprice
+                                    ON ObjectBoolean_GoodsReprice.ObjectId = Object_Retail.Id 
+                                   AND ObjectBoolean_GoodsReprice.DescId = zc_ObjectBoolean_Retail_GoodsReprice()
        WHERE Object_Retail.DescId = zc_Object_Retail();
    
 END;
@@ -53,6 +60,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 17.12.19         * add isGoodsReprice
  11.12.19                                                       * LimitSUN
  23.07.19         * SummSUN
  25.03.19         *

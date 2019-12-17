@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ListDaySUN TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
+             , SunIncome TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
              , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
@@ -119,6 +120,8 @@ BEGIN
 
       , COALESCE (ObjectFloat_KoeffInSUN.ValueData,0)  ::TFloat AS KoeffInSUN
       , COALESCE (ObjectFloat_KoeffOutSUN.ValueData,0) ::TFloat AS KoeffOutSUN
+      
+      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END  ::TFloat AS SunIncome
 
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
@@ -301,6 +304,10 @@ BEGIN
                               ON ObjectFloat_KoeffOutSUN.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_SunIncome
+                              ON ObjectFloat_SunIncome.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_SunIncome.DescId = zc_ObjectFloat_Unit_SunIncome()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
@@ -374,6 +381,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В. 
+ 17.12.19         * add SunIncome
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * ListDaySUN
  19.11.19         *
