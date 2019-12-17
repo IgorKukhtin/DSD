@@ -599,6 +599,24 @@ BEGIN
             WHERE Object_Goods.DescId = zc_Object_Goods()
               AND inBranchCode IN (1, 102)
            UNION ALL
+            -- Производство - (201)Сырье
+            SELECT DISTINCT Object_Goods.Id AS GoodsId
+                 , 0   AS GoodsKindId_max
+                 , ''  AS WordList
+            FROM Object AS Object_Goods
+                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                 AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                               )
+                                                  AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Специи
+                                                                                    )
+                                                     )
+            WHERE Object_Goods.DescId = zc_Object_Goods()
+              AND inBranchCode IN (201)
+           UNION ALL
             -- По коду - Склад Специй
             SELECT vbGoodsId AS GoodsId
                  , 0   AS GoodsKindId_max
@@ -690,6 +708,16 @@ BEGIN
                                                                                  )
                                     AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10202() -- Оболочка
                                                                      , zc_Enum_InfoMoney_10203() -- Упаковка
+                                                                      )
+                                       )
+                                UNION
+                                 SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                 FROM Object_InfoMoney_View AS View_InfoMoney
+                                 -- Производство - (201)Сырье
+                                 WHERE inBranchCode IN (201)
+                                   AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                 )
+                                    AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Специи
                                                                       )
                                        )
                                 UNION
