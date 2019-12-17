@@ -2727,6 +2727,14 @@
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_PromoDoctors.pas">
+				<Form>Report_MovementCheck_PromoDoctorsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_PromoEntrances.pas">
+				<Form>Report_MovementCheck_PromoEntrancesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

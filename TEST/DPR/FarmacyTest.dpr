@@ -789,7 +789,9 @@ uses
   PermanentDiscountJournal in '..\..\FormsFarmacy\Document\PermanentDiscountJournal.pas' {PermanentDiscountJournalForm: TParentForm},
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
+  Report_MovementCheck_PromoDoctors in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoDoctors.pas' {Report_MovementCheck_PromoDoctorsForm: TParentForm},
+  Report_MovementCheck_PromoEntrances in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoEntrances.pas' {Report_MovementCheck_PromoEntrancesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1103,12 +1103,12 @@ procedure TExportSalesForSuppForm.btnYuriFarmSendClick(Sender: TObject);
       try
         XMLToSend.Add('<?xml version="1.0" encoding="UTF-8"?> ');
         XMLToSend.Add('<body ' +
-                      '  head="' + qryReport_Upload_YuriFarm_Unit.FieldByName('JuridicalName').AsString + '" ' +
-                      '  name="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString + '" ' +
+                      '  head="' + StrToXML(qryReport_Upload_YuriFarm_Unit, 'JuridicalName') + '" ' +
+                      '  name="' + StrToXML(qryReport_Upload_YuriFarm_Unit, 'UnitName') + '" ' +
                       '  code="' + qryReport_Upload_YuriFarm_Unit.FieldByName('OKPO').AsString + '" ' +
-                      '  addr="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitAddress').AsString + '" ' +
+                      '  addr="' + StrToXML(qryReport_Upload_YuriFarm_Unit, 'UnitAddress') + '" ' +
                       '  id_local="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitCode').AsString + '" ' +
-                      '  local_name="' + qryReport_Upload_YuriFarm_Unit.FieldByName('UnitName').AsString + '" ' +
+                      '  local_name="' + StrToXML(qryReport_Upload_YuriFarm_Unit, 'UnitName') + '" ' +
                       '  br_nick="' + qryReport_Upload_YuriFarm_Unit.FieldByName('MorionCode').AsString + '" ' +
                       '  access_key="' + qryReport_Upload_YuriFarm_Unit.FieldByName('AccessKeyYF').AsString + '" ' +
                       '/>');
@@ -1506,6 +1506,8 @@ begin
     btnBaDMSendFTPClick(nil);
 
     btnTevaAllClick(nil);
+
+    btnYuriFarmAllClick(Nil);
   finally
     Close;
   end;
