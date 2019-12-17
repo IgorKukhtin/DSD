@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SummSUN TFloat
              , LimitSUN TFloat
              , ShareFromPrice TFloat
+             , isGoodsReprice Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -29,8 +30,8 @@ BEGIN
            , CAST (0 AS TFloat)      AS SummSUN
            , CAST (0 AS TFloat)      AS LimitSUN
            , CAST (0 AS TFloat)      AS ShareFromPrice
-
-           , CAST (NULL AS Boolean)  AS isErased;
+           , CAST (FALSE AS Boolean) AS isGoodsReprice
+           , CAST (FALSE AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -42,6 +43,8 @@ BEGIN
            , COALESCE (ObjectFloat_SummSUN.ValueData, 0)       :: TFloat AS SummSUN
            , COALESCE (ObjectFloat_LimitSUN.ValueData, 0)      :: TFloat AS LimitSUN
            , COALESCE (ObjectFloat_ShareFromPrice.ValueData, 0):: TFloat AS ShareFromPrice
+
+           , COALESCE (ObjectBoolean_GoodsReprice.ValueData, FALSE):: Boolean AS isGoodsReprice
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
@@ -57,6 +60,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
                                   ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
                                  AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsReprice
+                                    ON ObjectBoolean_GoodsReprice.ObjectId = Object_Retail.Id 
+                                   AND ObjectBoolean_GoodsReprice.DescId = zc_ObjectBoolean_Retail_GoodsReprice()
        WHERE Object_Retail.Id = inId;
 
    END IF; 
@@ -69,6 +76,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 17.12.19         * add isGoodsReprice
  11.12.19                                                       * LimitSUN
  23.07.19         * SummSUN
  25.03.19         *

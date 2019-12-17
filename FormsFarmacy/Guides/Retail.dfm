@@ -3,7 +3,7 @@ object RetailForm: TRetailForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
   ClientHeight = 390
-  ClientWidth = 541
+  ClientWidth = 604
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object RetailForm: TRetailForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 541
+    Width = 604
     Height = 364
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -100,6 +101,16 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 62
+      end
+      object isGoodsReprice: TcxGridDBColumn
+        Caption = '"'#1055#1077#1088#1077#1086#1094'. '#1074' '#1084#1080#1085#1091#1089'"'
+        DataBinding.FieldName = 'isGoodsReprice'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1084#1086#1076#1077#1083#1080' "'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1074' '#1084#1080#1085#1091#1089'"'
+        Options.Editing = False
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
