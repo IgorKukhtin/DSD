@@ -222,7 +222,7 @@ BEGIN
                                ON ObjectBoolean_isCorporate.ObjectId  = Object_BankAccount_View.JuridicalId
                               AND ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
                               AND ObjectBoolean_isCorporate.ValueData = TRUE
-       WHERE Object_BankAccount_View.Name = inBankAccount;
+       WHERE Object_BankAccount_View.Name = inBankAccount AND TRIM (inBankAccount) <> '';
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- ѕытаемс€ найти юр. лицо по OKPO
@@ -429,17 +429,18 @@ BEGIN
     END IF;
 
 
-/*   -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
-  */
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
--- if inSession = '5' 
--- then
---    RAISE EXCEPTION 'ok1 %', vbJuridicalId;
--- end if;
+
+/* if inSession = '5' 
+ then
+    RAISE EXCEPTION 'ok1 %   %    %    %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId);
+ end if;*/
 
 
    RETURN 0;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -462,4 +463,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_BankStatementItemLoad (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFileName:= 'xxx', inBankAccountId:= 1, inSession:= '2')
--- select * from gpInsertUpdate_Movement_BankStatementItemLoad(inDocNumber := '15299' , inOperDate := ('06.08.2019')::TDateTime , inBankAccountMain := '26000301367079' , inBankMFOMain := '300528' , inOKPO := '37989269' , inJuridicalName := '11011000 ”ƒ —” у —оборному р-н≥ м.ƒн≥п' , inBankAccount := '31110063004005' , inBankMFO := '899998' , inBankName := '' , inCurrencyCode := '980' , inCurrencyName := '' , inAmount := -21 , inComment := '*;101;24447183; в≥йськовий зб≥р ≥з доход≥в ф≥зл≥ц  1,5%' ,  inSession := '5');
+-- select * from gpInsertUpdate_Movement_BankStatementItemLoad(inDocNumber := '123' , inOperDate := CURRENT_DATE, inBankAccountMain := 'UA173005280000026000301367079' , inBankMFOMain := '300528' , inOKPO := '37907261' , inJuridicalName := '37907261' , inBankAccount := '26005060875503' , inBankMFO := '304795' , inBankName := '' , inCurrencyCode := '980' , inCurrencyName := '' , inAmount := -123 , inComment := 'inComment' ,  inSession := '5');
+-- select * from gpInsertUpdate_Movement_BankStatementItemLoad(inDocNumber := '123' , inOperDate := CURRENT_DATE, inBankAccountMain := 'UA173005280000026000301367079' , inBankMFOMain := '300528' , inOKPO := '32050382' , inJuridicalName := '32050382' , inBankAccount := '2600701586326' , inBankMFO := '304795' , inBankName := '' , inCurrencyCode := '980' , inCurrencyName := '' , inAmount := -123 , inComment := 'inComment' ,  inSession := '5');

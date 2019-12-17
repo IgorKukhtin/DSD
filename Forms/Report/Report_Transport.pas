@@ -89,6 +89,7 @@ type
     SumTransportTaxi: TcxGridDBColumn;
     InvNumber_Reestr: TcxGridDBColumn;
     UnitName_car: TcxGridDBColumn;
+    UnitName_route: TcxGridDBColumn;
   private
   public
   end;

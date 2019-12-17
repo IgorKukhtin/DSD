@@ -238,31 +238,40 @@ BEGIN
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                            )
            -- Связь с акциями для существующих MovementItem
-         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
+        , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               FROM (SELECT DISTINCT tmpMI_Goods.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI_Goods WHERE tmpMI_Goods.MovementId_Promo <> 0) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
-               -- Акции по товарам для существующих MovementItem
-             , tmpMIPromo AS (SELECT DISTINCT 
-                                     tmpMIPromo_all.MovementId_Promo
-                                   , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
-                              FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-                             )
-
+         , tmpMILinkObject_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                                         FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                         WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                        )
+        , tmpMIFloat_PriceWithOutVAT AS (SELECT MIFloat_PriceWithOutVAT.*
+                                         FROM MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                         WHERE MIFloat_PriceWithOutVAT.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                           AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                        )
+           -- Акции по товарам для существующих MovementItem
+         , tmpMIPromo AS (SELECT tmpMIPromo_all.MovementId_Promo
+                               , tmpMIPromo_all.MovementItemId
+                               , tmpMIPromo_all.GoodsId
+                               , tmpMIPromo_all.TaxPromo
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                          FROM tmpMIPromo_all
+                               LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
+                                                                   ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN tmpMIFloat_PriceWithOutVAT AS MIFloat_PriceWithOutVAT
+                                                                    ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                   AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                         )
            -- товары пересорт да/нет
           , tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                             , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
@@ -656,30 +665,40 @@ BEGIN
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                            )
            -- Связь с акциями для существующих MovementItem
-         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
+        , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               FROM (SELECT DISTINCT tmpMI_Goods.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI_Goods WHERE tmpMI_Goods.MovementId_Promo <> 0) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
-               -- Акции по товарам для существующих MovementItem
-             , tmpMIPromo AS (SELECT DISTINCT 
-                                     tmpMIPromo_all.MovementId_Promo
-                                   , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
-                              FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-                             )
+         , tmpMILinkObject_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                                         FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                         WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                        )
+        , tmpMIFloat_PriceWithOutVAT AS (SELECT MIFloat_PriceWithOutVAT.*
+                                         FROM MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                         WHERE MIFloat_PriceWithOutVAT.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                           AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                        )
+           -- Акции по товарам для существующих MovementItem
+         , tmpMIPromo AS (SELECT tmpMIPromo_all.MovementId_Promo
+                               , tmpMIPromo_all.MovementItemId
+                               , tmpMIPromo_all.GoodsId
+                               , tmpMIPromo_all.TaxPromo
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                          FROM tmpMIPromo_all
+                               LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
+                                                                   ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN tmpMIFloat_PriceWithOutVAT AS MIFloat_PriceWithOutVAT
+                                                                    ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                   AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                         )
             -- товары пересорт да/нет
           , tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                             , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
@@ -838,7 +857,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

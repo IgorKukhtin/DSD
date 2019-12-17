@@ -725,10 +725,15 @@ function TOTPBankLoad.GetBankAccountMain: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
     //result := FDataSet.FieldByName('RR_DB').AsString
-    result := FDataSet.FieldByName('IBAN_DB').AsString
+    if trim(FDataSet.FieldByName('IBAN_DB').AsString) <> ''
+    then result := FDataSet.FieldByName('IBAN_DB').AsString
+    else result := FDataSet.FieldByName('RR_DB').AsString
   else
     //result := FDataSet.FieldByName('RR_K').AsString;
-    result := FDataSet.FieldByName('IBAN_K').AsString;
+    if trim(FDataSet.FieldByName('IBAN_K').AsString) <> ''
+    then result := FDataSet.FieldByName('IBAN_K').AsString
+    else result := FDataSet.FieldByName('RR_K').AsString
+    ;
   result := trim(result);
 end;
 
@@ -736,10 +741,15 @@ function TOTPBankLoad.GetBankAccount: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
     //result := FDataSet.FieldByName('RR_DB').AsString
-    result := FDataSet.FieldByName('IBAN_DB').AsString
+    if trim(FDataSet.FieldByName('IBAN_DB').AsString) <> ''
+    then result := FDataSet.FieldByName('IBAN_DB').AsString
+    else result := FDataSet.FieldByName('RR_DB').AsString
   else
     //result := FDataSet.FieldByName('RR_K').AsString;
-    result := FDataSet.FieldByName('IBAN_K').AsString;
+    if trim(FDataSet.FieldByName('IBAN_K').AsString) <> ''
+    then result := FDataSet.FieldByName('IBAN_K').AsString
+    else result := FDataSet.FieldByName('RR_K').AsString
+    ;
   result := trim(result);
 end;
 

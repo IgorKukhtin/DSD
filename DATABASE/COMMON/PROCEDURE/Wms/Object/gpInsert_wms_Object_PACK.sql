@@ -99,7 +99,7 @@ BEGIN
                                -- Высота упаковки (см)
                                , tmpGoods.Height     :: TFloat   AS height
                                -- Вес упаковки (кг)
-                               , tmpGoods.WeightAvg  :: TFloat   AS weight
+                               , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.001 ELSE 1 END :: Integer AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
                                , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
                                --

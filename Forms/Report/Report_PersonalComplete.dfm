@@ -182,6 +182,20 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
         Width = 70
       end
+      object OperDate_parent: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
+        DataBinding.FieldName = 'OperDate_parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object InvNumber_parent: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
+        DataBinding.FieldName = 'InvNumber_parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
@@ -443,7 +457,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 251
   end
   object cbIsMovement: TcxCheckBox
@@ -670,6 +684,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh

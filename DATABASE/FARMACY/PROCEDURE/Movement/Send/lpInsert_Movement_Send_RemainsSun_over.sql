@@ -673,6 +673,22 @@ BEGIN
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                             AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                          )
+        -- отбросили !!холод!!
+      , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
+                              FROM ObjectLink AS OL_Goods_ConditionsKeep
+                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all)
+                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
+                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+                                    )
+                             )
+             -- отбросили !!НОТ!!
+           , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
+                              FROM ObjectBoolean AS OB_Goods_NOT
+                              WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT_Sun_v2()
+                                AND OB_Goods_NOT.ValueData = TRUE
+                             )
        -- Результат: все остатки, OVER (Сверх запас) - для распределения
        INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold)
           SELECT 0 AS ContainerDescId
@@ -712,6 +728,11 @@ BEGIN
                -- продажи
                LEFT JOIN _tmpSale_over AS _tmpSale ON _tmpSale.UnitId  = tmp.UnitId
                                                   AND _tmpSale.GoodsId = tmp.GoodsId
+               -- а здесь, отбросили !!холод!!
+               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
+               -- а здесь, отбросили !!НОТ!!
+               LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = tmp.GoodsId
+               
           -- маленькое кол-во не распределяем
           WHERE tmp.Amount_notSold
                    -- уменьшаем - отложенные Чеки + не проведенные с CommentError
@@ -719,6 +740,10 @@ BEGIN
                    -- уменьшаем - Перемещение - расход (ожидается)
                  - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                 > 1
+            -- отбросили !!холод!!
+            AND tmpConditionsKeep.ObjectId IS NULL
+            -- отбросили !!НОТ!!
+            AND tmpGoods_NOT.ObjectId IS NULL
           ;
 
 

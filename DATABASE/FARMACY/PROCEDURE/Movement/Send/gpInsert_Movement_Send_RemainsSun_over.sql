@@ -123,10 +123,10 @@ BEGIN
                                                    , inDriverId:= vbDriverId_2
                                                    , inStep    := 1
                                                    , inUserId  := vbUserId
-                                                    );*/
+                                                    );
      -- !!!2 - перенесли данные
      INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
-     INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
+     INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;*/
       
 
      -- !!!Удаляем предыдущие документы - SUN-v2 !!!

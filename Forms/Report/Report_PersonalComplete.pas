@@ -94,6 +94,8 @@ type
     cbDoc: TcxCheckBox;
     InvNumber: TcxGridDBColumn;
     actRefreshMov: TdsdDataSetRefresh;
+    InvNumber_parent: TcxGridDBColumn;
+    OperDate_parent: TcxGridDBColumn;
   private
   public
   end;

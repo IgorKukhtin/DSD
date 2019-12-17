@@ -131,7 +131,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('950858')
+                               AND Movement.InvNumber IN ('953365')
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT

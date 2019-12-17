@@ -960,6 +960,11 @@ AS  (SELECT
             ) AS Movement_Sheet
        )
          -- Данные для - Кол-во строк в документе
+       , tmpReport_PersonalComplete AS
+       (SELECT *
+        FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsDetail:= FALSE, inSession:= inSession) AS gpReport
+        WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
+       )
        , tmpMovement_PersonalComplete AS
        (SELECT gpReport.OperDate
              , DATE_PART ('ISODOW', gpReport.OperDate)  AS OperDate_num
@@ -973,12 +978,13 @@ AS  (SELECT
                -- Кол. док. (компл.)
              , SUM (COALESCE (gpReport.CountMovement, 0))  :: TFloat AS CountMovement
 
-        FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsDetail:= FALSE, inSession:= inSession) AS gpReport
-             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId
+        FROM tmpReport_PersonalComplete AS gpReport
+             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId, Setting_Wage_1.UnitId
                          FROM Setting_Wage_1
                          WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
-                           AND Setting_Wage_1.FromId > 0
-                        ) AS tmpFrom ON tmpFrom.FromId = gpReport.UnitId
+                           AND Setting_Wage_1.FromId > 0 OR Setting_Wage_1.UnitId > 0
+                        ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
+                                     OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
         WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
         GROUP BY gpReport.OperDate
                , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
@@ -1176,7 +1182,7 @@ AS  (SELECT
           AND Movement.StatusId = zc_Enum_Status_Complete()
           -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
           AND EXISTS (SELECT 1 FROM tmpUnit_Reestr)
-          -- 
+          --
           AND (tmpUnit_Reestr.FromId = OL_Unit_Parent_0.ChildObjectId
             OR tmpUnit_Reestr.FromId = OL_Unit_Parent_1.ChildObjectId
             OR tmpUnit_Reestr.FromId = OL_Unit_Parent_2.ChildObjectId
@@ -1184,7 +1190,9 @@ AS  (SELECT
             OR tmpUnit_Reestr.FromId = OL_Unit_Parent_4.ChildObjectId
             OR tmpUnit_Reestr.FromId = OL_Unit_Parent_5.ChildObjectId
             OR tmpUnit_Reestr.FromId = OL_Unit_Parent_6.ChildObjectId
-            OR tmpUnit_Reestr.FromId = 0)
+            OR tmpUnit_Reestr.FromId = 0
+              )
+          AND tmpMovement_Reestr_notWeight.MovementId IS NULL
         GROUP BY Movement.OperDate
                , tmpUnit_Reestr.FromId
                , Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
@@ -1536,7 +1544,8 @@ AS  (SELECT
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
     FROM Setting_Wage_1 AS Setting
-         INNER JOIN tmpMovement_PersonalComplete ON tmpMovement_PersonalComplete.UnitId = Setting.FromId
+         INNER JOIN tmpMovement_PersonalComplete ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
+                                                  OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0))
                                                 AND (tmpMovement_PersonalComplete.CountMI       <> 0
                                                   OR tmpMovement_PersonalComplete.TotalCountKg  <> 0
                                                   OR tmpMovement_PersonalComplete.CountMovement <> 0
@@ -1557,12 +1566,12 @@ AS  (SELECT
         Setting.StaffListId
       , 0 :: Integer AS DocumentKindId
    -- , Setting.UnitId
-      , tmpMovement_PersonalComplete.UnitId
+      , tmpMovement_Reestr.UnitId
    -- , Setting.UnitName
-      , tmpMovement_PersonalComplete.UnitName
+      , tmpMovement_Reestr.UnitName
 
-       ,tmpMovement_PersonalComplete.PositionId
-       ,tmpMovement_PersonalComplete.PositionName
+       ,tmpMovement_Reestr.PositionId
+       ,tmpMovement_Reestr.PositionName
        ,Object_PositionLevel.Id        AS PositionLevelId
        ,Object_PositionLevel.ValueData AS PositionLevelName
        ,Setting.Count_Member
@@ -1571,9 +1580,9 @@ AS  (SELECT
        ,Setting.HoursDay
        , Object_PersonalGroup.Id        AS PersonalGroupId
        , Object_PersonalGroup.ValueData AS PersonalGroupName
-       ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
-       ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
-       ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
+       ,tmpMovement_Reestr.PersonalId   :: Integer   AS MemberId
+       ,tmpMovement_Reestr.PersonalName :: TVarChar  AS MemberName
+       ,tmpMovement_Reestr.OperDate     :: TDateTime AS SheetWorkTime_Date
        ,0 :: TFloat  AS SUM_MemberHours
        ,0 :: TFloat  AS SheetWorkTime_Amount
        ,0 :: Integer AS Ord_SheetWorkTime
@@ -1604,54 +1613,53 @@ AS  (SELECT
        ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
        ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
 
-       , tmpMovement_PersonalComplete.OperDate AS OperDate
+       , tmpMovement_Reestr.OperDate AS OperDate
        , 0 :: Integer AS Count_Day
        , 0 :: Integer AS Count_MemberInDay
        , CASE -- Вес
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrWeight()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_Reestr.TotalCountKg
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_Reestr.CountMovement
               ELSE 0
          END :: TFloat AS Gross
        , CASE -- Вес (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrWeight()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_Reestr.TotalCountKg
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_Reestr.CountMovement
               ELSE 0
          END :: TFloat AS GrossOnOneMember
        , (CASE -- Вес
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrWeight()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_Reestr.TotalCountKg
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_Reestr.CountMovement
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS Amount
        , (CASE -- Вес
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrWeight()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_Reestr.TotalCountKg
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_Reestr.CountMovement
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
     FROM Setting_Wage_1 AS Setting
-         INNER JOIN tmpMovement_Reestr AS tmpMovement_PersonalComplete
-                                       ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId
-                                      AND tmpMovement_PersonalComplete.FromId     = COALESCE (Setting.FromId, 0)
-                                      AND (tmpMovement_PersonalComplete.TotalCountKg  <> 0
-                                        OR tmpMovement_PersonalComplete.CountMovement <> 0
+         INNER JOIN tmpMovement_Reestr ON tmpMovement_Reestr.UnitId_car = Setting.UnitId
+                                      AND tmpMovement_Reestr.FromId     = COALESCE (Setting.FromId, 0)
+                                      AND (tmpMovement_Reestr.TotalCountKg  <> 0
+                                        OR tmpMovement_Reestr.CountMovement <> 0
                                           )
-         LEFT JOIN Object AS Object_Unit_from ON Object_Unit_from.Id = tmpMovement_PersonalComplete.UnitId_from
+         LEFT JOIN Object AS Object_Unit_from ON Object_Unit_from.Id = tmpMovement_Reestr.UnitId_from
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                              ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                              ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_Reestr.PersonalId
                              AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_Reestr.PersonalId
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Transport(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
-             , BranchName TVarChar, UnitName_car TVarChar
+             , BranchName TVarChar, UnitName_car TVarChar, UnitName_route TVarChar
              , CarModelName TVarChar, CarName TVarChar
              , PersonalDriverName TVarChar
              , RouteName TVarChar, RouteKindName TVarChar
@@ -600,6 +600,7 @@ BEGIN
              , tmpFuel.OperDate
              , ViewObject_Unit.BranchName
              , ViewObject_Unit.Name             AS UnitName_car
+             , STRING_AGG (Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Car.ValueData             AS CarName
              , View_PersonalDriver.PersonalName AS PersonalDriverName
@@ -607,6 +608,7 @@ BEGIN
              , Object_RouteKind.ValueData       AS RouteKindName
              , Object_RateFuelKind.ValueData    AS RateFuelKindName
              , Object_Fuel.ValueData            AS FuelName
+             
 
              , SUM (tmpFuel.DistanceFuel)    :: TFloat AS DistanceFuel
              , MAX (tmpFuel.RateFuelKindTax) :: TFloat AS RateFuelKindTax
@@ -813,6 +815,11 @@ BEGIN
                                  AND ObjectLink_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
              LEFT JOIN Object_Unit_View AS ViewObject_Unit
                                         ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                        
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                  ON ObjectLink_Route_Unit.ObjectId = tmpFuel.RouteId
+                                 AND ObjectLink_Route_Unit.DescId   = zc_ObjectLink_Route_Unit()
+             LEFT JOIN Object AS Object_Unit_route ON Object_Unit_route.Id = ObjectLink_Route_Unit.ChildObjectId
                                    
              -- данные из реестра виз
              LEFT JOIN tmpDataReestr ON tmpDataReestr.MovementId = tmpFuel.MovementId

@@ -352,7 +352,7 @@ BEGIN
 
              -- расчет цены без НДС, до 4 знаков
            , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
+                  THEN CAST (tmpMI.Price - tmpMI.Price / (1 + 100 / vbVATPercent) AS NUMERIC (16, 4))
                   ELSE tmpMI.Price
              END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceNoVAT
@@ -379,7 +379,7 @@ BEGIN
 
              -- расчет суммы без НДС, до 2 знаков
            , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
+                                              THEN tmpMI.Price - tmpMI.Price / (1 + 100 / vbVATPercent)
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT
@@ -509,5 +509,3 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,  TVarChar) OWNER TO p
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_ReturnOut_Print (inMovementId := 432692, inSession:= '5');
-
---select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 357286 ,  inSession := '5');

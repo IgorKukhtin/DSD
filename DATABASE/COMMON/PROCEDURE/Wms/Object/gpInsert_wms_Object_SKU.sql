@@ -74,14 +74,15 @@ BEGIN
        --!        ||' weight_control="' || 'A'                              ||'"' -- Режим учета веса: "A" – автоматически при приемке "M" – вручную при приемке
        --! ||' host_transform_factor="' || '1'                              ||'"' -- Коэффициент пересчета из базовых единиц (сколько базовых единиц ГС в одной штучной в WMS).
                              ||' upc="' || ''                               ||'"' -- Штрихкод товара
-                        ||' weight_g="' || CASE WHEN tmpData.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 't' ELSE 'f' END ||'"' -- Признак весового товара "f" – не является, "t" – является. Значение по умолчанию: "f"
+                        ||' weight_g="' || CASE WHEN tmpData.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Nom() THEN 't' ELSE 'f' END ||'"' -- Признак весового товара "f" – не является, "t" – является. Значение по умолчанию: "f"
+                --||' weight_control="' || CASE WHEN tmpData.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Nom() THEN 'M' ELSE 'A' END ||'"' -- А - расчет автоматический, передается для штучного товара и не номинального M - задавать вручную, передается для номинального товара
                                         ||'></' || vbTagName || '>'
                      ) :: Text AS RowData
                      -- Id
                    , tmpData.ObjectId
                    , 0 AS GroupId
               FROM lpSelect_wms_Object_SKU() AS tmpData
-           -- WHERE tmpData.sku_id = '795292'
+            --WHERE tmpData.sku_id IN ('795513', '38391802')
              ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY 4

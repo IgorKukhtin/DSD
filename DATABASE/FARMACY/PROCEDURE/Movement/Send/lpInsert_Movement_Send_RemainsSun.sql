@@ -1128,6 +1128,22 @@ BEGIN
                              OR COALESCE (tmpMCS_all.MCSValue, 0) <> 0
                              OR COALESCE (tmpMCS_all.Price, 0)    <> 0
                          )
+        -- отбросили !!холод!!
+      , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
+                              FROM ObjectLink AS OL_Goods_ConditionsKeep
+                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all)
+                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
+                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+                                    )
+                             )
+             -- отбросили !!НОТ!!
+           , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
+                              FROM ObjectBoolean AS OB_Goods_NOT
+                              WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT()
+                                AND OB_Goods_NOT.ValueData = TRUE
+                             )
        -- Результат: все остатки, СРОК
        INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold)
           SELECT tmp.ContainerDescId
@@ -1192,6 +1208,12 @@ BEGIN
                -- продажи
                LEFT JOIN _tmpSale ON _tmpSale.UnitId  = tmp.UnitId
                                  AND _tmpSale.GoodsId = tmp.GoodsId
+
+               -- а здесь, отбросили !!холод!!
+               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
+               -- а здесь, отбросили !!НОТ!!
+               LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = tmp.GoodsId
+
           -- маленькое кол-во не распределяем
           WHERE CASE -- уменьшаем сроковые, если есть MCSValue
                       WHEN tmpMCS.MCSValue > 0 AND tmp.Amount > 0 THEN tmp.Amount - COALESCE (tmpMCS.MCSValue, 0)
@@ -1229,6 +1251,10 @@ BEGIN
                )*/
             -- !!!отбрасываем такие сроковые, по которым есть Автозаказ, т.е. распределять их пока не будем
             AND _tmpRemains.GoodsId IS NULL
+            -- отбросили !!холод!!
+            AND tmpConditionsKeep.ObjectId IS NULL
+            -- отбросили !!НОТ!!
+            AND tmpGoods_NOT.ObjectId IS NULL
           ;
 
 

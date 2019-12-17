@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export(
     IN inOperDate             TDateTime,
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RowData TVarChar)
+RETURNS TABLE (RowData Text)
 AS
 $BODY$
    DECLARE vbBankId    Integer;
@@ -22,7 +22,7 @@ $BODY$
    DECLARE er Text;
 BEGIN
      -- *** Временная таблица для сбора результата
-     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData TVarChar, errStr TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
 
 
      -- определили БАНК
@@ -207,9 +207,13 @@ BEGIN
        
                      -- Транзитный счет предприятия. Определяется по ЗКП ведомости из доп. параметра привязки ЗКП к предприятию; если для привязки определено несколько счетов, то надо подставить счет с минимальным ID; если для привязки не определено ни одного счета, то при импорте система выдаст ошибку
                      || ' PAYER_BANK_ACCOUNTNO="' || '29241009900000' || '"'                         
-       
+                     -- IBAN транзитного счета предприятия.
+                     || ' PAYER_BANK_ACCOUNTIBAN="' || ' UA29300528000002924100990000' || '"'                         
                      -- Счёт для списания средств
                      ||      ' PAYER_ACCOUNTNO="' || '26000301367079' || '"'                
+                     -- IBAN cчёта для списания средств
+                     || ' PAYER_ACCOUNTIBAN ="' || 'UA173005280000026000301367079' || '"'                         
+
                      -- Общая сумма зарплатной ведомости в формате ГРН,КОП
                      || ' TOTAL_SHEDULE_AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' 
                      -- Код зарплатного проекта. Обязательно указывается только для банков, использующих ЗКП

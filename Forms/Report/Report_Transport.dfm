@@ -389,6 +389,13 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
+      object UnitName_route: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1072#1088#1096#1088#1091#1090')'
+        DataBinding.FieldName = 'UnitName_route'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
         DataBinding.FieldName = 'Weight'
