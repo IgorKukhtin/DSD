@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isPromo boolean
              , isMarketToday Boolean
              , isNotMarion Boolean
-             , isNot Boolean
+             , isNot Boolean, isNot_Sun_v2 Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
@@ -242,6 +242,7 @@ BEGIN
            , CASE WHEN DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
            , Object_Goods_Main.isNotMarion
            , Object_Goods_Main.isNOT
+           , Object_Goods_Main.isNOT_Sun_v2
 
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice)::TDateTime     AS LastPriceDate
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPriceOld)::TDateTime  AS LastPriceOldDate

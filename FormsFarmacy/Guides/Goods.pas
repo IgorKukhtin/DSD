@@ -102,17 +102,27 @@ type
     macUpdateNotMarion_No: TMultiAction;
     bbUpdateNotMarion_Yes: TdxBarButton;
     bbUpdateNotMarion_No: TdxBarButton;
-    spUpdateHot_Yes: TdsdStoredProc;
-    spUpdateHot_No: TdsdStoredProc;
-    actUpdateHot_No: TdsdExecStoredProc;
-    actUpdateHot_Yes: TdsdExecStoredProc;
-    actSimpleUpdateHot_No: TMultiAction;
-    actSimpleUpdateHot_Yes: TMultiAction;
-    macUpdateHot_No: TMultiAction;
-    macUpdateHot_Yes: TMultiAction;
+    spUpdateNot_Yes: TdsdStoredProc;
+    spUpdateNot_No: TdsdStoredProc;
+    actUpdateNot_No: TdsdExecStoredProc;
+    actUpdateNot_Yes: TdsdExecStoredProc;
+    actSimpleUpdateNot_No: TMultiAction;
+    actSimpleUpdateNot_Yes: TMultiAction;
+    macUpdateNot_No: TMultiAction;
+    macUpdateNot_Yes: TMultiAction;
     bbUpdateNot_Yes: TdxBarButton;
     bbUpdateNot_No: TdxBarButton;
     spUpdate_Goods_isNot: TdsdStoredProc;
+    spUpdate_isNOT_v2_Yes: TdsdStoredProc;
+    spUpdate_isNot_v2_No: TdsdStoredProc;
+    actUpdate_isNOT_v2_Yes: TdsdExecStoredProc;
+    actSimpleUpdateNot_v2_Yes: TMultiAction;
+    macUpdateNot_v2_Yes: TMultiAction;
+    actUpdateNot_v2_No: TdsdExecStoredProc;
+    actSimpleUpdateNot_v2_No: TMultiAction;
+    macUpdateNot_v2_No: TMultiAction;
+    bbUpdateNot_v2_Yes: TdxBarButton;
+    bbUpdateNot_v2_No: TdxBarButton;
   private
     { Private declarations }
   public

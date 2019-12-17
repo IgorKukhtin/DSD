@@ -518,12 +518,13 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailTab_ErrorForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsMainTab_ErrorForm');
     exit;
-{
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAll_TabForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAll_TabForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetail_TabForm'));
@@ -560,6 +561,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');

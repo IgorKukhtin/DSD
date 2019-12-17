@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 1060
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1076
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -43,6 +43,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076
             Options.Editing = False
             Width = 80
           end
@@ -51,6 +52,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'MorionCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
             Options.Editing = False
             Width = 80
           end
@@ -59,6 +61,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'IdBarCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1072#1087#1090#1077#1082#1072')'
             Options.Editing = False
             Width = 90
           end
@@ -67,6 +70,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'BarCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
             Options.Editing = False
             Width = 110
           end
@@ -75,6 +79,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             Options.Editing = False
             Width = 324
           end
@@ -93,6 +98,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1044#1057', %'
             Options.Editing = False
             Width = 68
           end
@@ -101,6 +107,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
             Options.Editing = False
             Width = 59
           end
@@ -110,6 +117,7 @@ inherited GoodsForm: TGoodsForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             Options.Editing = False
             Width = 75
           end
@@ -118,6 +126,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             Options.Editing = False
             Width = 96
           end
@@ -129,6 +138,7 @@ inherited GoodsForm: TGoodsForm
             Properties.DisplayFormat = '0; ; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1084#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
             Options.Editing = False
             Width = 77
           end
@@ -138,6 +148,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             Options.Editing = False
             Width = 52
           end
@@ -147,6 +158,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
             Options.Editing = False
             Width = 37
           end
@@ -156,6 +168,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '1-'#1074#1099#1073#1086#1088
             Width = 60
           end
           object isSecond: TcxGridDBColumn
@@ -164,6 +177,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1099#1081' '#1074#1099#1073#1086#1088
             Width = 60
           end
           object isPublished: TcxGridDBColumn
@@ -173,6 +187,7 @@ inherited GoodsForm: TGoodsForm
             Properties.AllowGrayed = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
             Options.Editing = False
             Width = 86
           end
@@ -182,6 +197,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
             Options.Editing = False
             Width = 100
           end
@@ -195,12 +211,22 @@ inherited GoodsForm: TGoodsForm
             Width = 70
           end
           object isNot: TcxGridDBColumn
-            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097'. '#1086#1089#1090'.'
             DataBinding.FieldName = 'isNot'
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            HeaderHint = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 86
+          end
+          object isNot_Sun_v2: TcxGridDBColumn
+            Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084'. '#1086#1089#1090'. '#1076#1083#1103' '#1057#1059#1053'-v2'
+            DataBinding.FieldName = 'isNot_Sun_v2'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
             Width = 86
           end
           object isNotMarion: TcxGridDBColumn
@@ -219,7 +245,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'LastPriceDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             Options.Editing = False
             Width = 65
           end
@@ -228,7 +254,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'LastPriceOldDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            HeaderHint = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             Options.Editing = False
             Width = 85
           end
@@ -261,6 +287,7 @@ inherited GoodsForm: TGoodsForm
             Properties.DisplayFormat = ',0.##; ; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             Options.Editing = False
             Width = 60
           end
@@ -271,6 +298,7 @@ inherited GoodsForm: TGoodsForm
             Properties.DisplayFormat = ',0.##;-,0.## ; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Options.Editing = False
             Width = 84
           end
@@ -292,6 +320,7 @@ inherited GoodsForm: TGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
             Options.Editing = False
             Width = 70
           end
@@ -301,6 +330,7 @@ inherited GoodsForm: TGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
             Options.Editing = False
             Width = 100
           end
@@ -311,6 +341,7 @@ inherited GoodsForm: TGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1076#1072#1083#1077#1085
             Options.Editing = False
             Width = 51
           end
@@ -328,6 +359,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080')'
             Options.Editing = False
             Width = 48
           end
@@ -336,6 +368,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1088#1082#1090#1080#1088#1086#1074#1082#1080')'
             Options.Editing = False
             Width = 100
           end
@@ -345,6 +378,7 @@ inherited GoodsForm: TGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1103')'
             Options.Editing = False
             Width = 48
           end
@@ -354,6 +388,7 @@ inherited GoodsForm: TGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1103')'
             Options.Editing = False
             Width = 70
           end
@@ -379,6 +414,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'DoesNotShare'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
             Width = 60
           end
           object AllowDivision: TcxGridDBColumn
@@ -386,6 +422,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'AllowDivision'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
           end
           object GoodsAnalog: TcxGridDBColumn
             Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
@@ -393,6 +430,7 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
             Width = 70
           end
           object NotTransferTime: TcxGridDBColumn
@@ -400,6 +438,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'NotTransferTime'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
             Options.Editing = False
             Width = 78
           end
@@ -428,6 +467,46 @@ inherited GoodsForm: TGoodsForm
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
     end
+    object macUpdateNot_v2_Yes: TMultiAction [2]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateNot_v2_Yes
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072 +
+        '? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
+      ImageIndex = 7
+    end
+    object actSimpleUpdateNot_v2_Yes: TMultiAction [3]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isNOT_v2_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
+      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
+    end
+    object actUpdate_isNOT_v2_Yes: TdsdExecStoredProc [4]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isNOT_v2_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isNOT_v2_Yes
+        end>
+      Caption = 'actUpdateHot_Yes'
+    end
     inherited actInsert: TInsertUpdateChoiceAction
       MoveParams = <
         item
@@ -455,13 +534,53 @@ inherited GoodsForm: TGoodsForm
       FormNameParam.Value = 'TGoodsEditForm'
       DataSetRefresh = spRefreshOneRecord
     end
-    object InsertRecord1: TInsertRecord [4]
+    object InsertRecord1: TInsertRecord [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <>
       Caption = 'InsertRecord1'
+    end
+    object macUpdateNot_v2_No: TMultiAction [8]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUpdateNot_v2_No
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045 +
+        #1058'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
+      ImageIndex = 77
+    end
+    object actSimpleUpdateNot_v2_No: TMultiAction [9]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateNot_v2_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
+      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
+    end
+    object actUpdateNot_v2_No: TdsdExecStoredProc [10]
+      Category = 'UpdateNot'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isNot_v2_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isNot_v2_No
+        end>
+      Caption = 'actUpdateNot_No'
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -488,7 +607,7 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end>
     end
-    object macSimpleUpdateNDS: TMultiAction [8]
+    object macSimpleUpdateNDS: TMultiAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -499,7 +618,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
     end
-    object mactAfterInsert: TMultiAction [9]
+    object mactAfterInsert: TMultiAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -514,7 +633,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'mactAfterInsert'
     end
-    object macUpdateNDS: TMultiAction [10]
+    object macUpdateNDS: TMultiAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -530,7 +649,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       ImageIndex = 76
     end
-    object actUpdateNDS: TdsdExecStoredProc [11]
+    object actUpdateNDS: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -541,12 +660,12 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdateNDS'
     end
-    object macUpdateHot_Yes: TMultiAction [12]
-      Category = 'UpdateHot'
+    object macUpdateNot_Yes: TMultiAction [18]
+      Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleUpdateHot_Yes
+          Action = actSimpleUpdateNot_Yes
         end
         item
           Action = actRefresh
@@ -557,12 +676,12 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
       ImageIndex = 79
     end
-    object actSimpleUpdateHot_Yes: TMultiAction
-      Category = 'UpdateHot'
+    object actSimpleUpdateNot_Yes: TMultiAction
+      Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateHot_Yes
+          Action = actUpdateNot_Yes
         end>
       View = cxGridDBTableView
       Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1044#1072
@@ -581,23 +700,23 @@ inherited GoodsForm: TGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actUpdateHot_Yes: TdsdExecStoredProc
-      Category = 'UpdateHot'
+    object actUpdateNot_Yes: TdsdExecStoredProc
+      Category = 'UpdateNot'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateHot_Yes
+      StoredProc = spUpdateNot_Yes
       StoredProcList = <
         item
-          StoredProc = spUpdateHot_Yes
+          StoredProc = spUpdateNot_Yes
         end>
-      Caption = 'actUpdateHot_Yes'
+      Caption = 'actUpdateNot_Yes'
     end
-    object macUpdateHot_No: TMultiAction
-      Category = 'UpdateHot'
+    object macUpdateNot_No: TMultiAction
+      Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleUpdateHot_No
+          Action = actSimpleUpdateNot_No
         end
         item
           Action = actRefresh
@@ -615,12 +734,12 @@ inherited GoodsForm: TGoodsForm
       ImageIndex = 73
       DataSource = MasterDS
     end
-    object actSimpleUpdateHot_No: TMultiAction
-      Category = 'UpdateHot'
+    object actSimpleUpdateNot_No: TMultiAction
+      Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateHot_No
+          Action = actUpdateNot_No
         end>
       View = cxGridDBTableView
       Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
@@ -644,16 +763,16 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'spRefreshOnInsert'
     end
-    object actUpdateHot_No: TdsdExecStoredProc
-      Category = 'UpdateHot'
+    object actUpdateNot_No: TdsdExecStoredProc
+      Category = 'UpdateNot'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateHot_No
+      StoredProc = spUpdateNot_No
       StoredProcList = <
         item
-          StoredProc = spUpdateHot_No
+          StoredProc = spUpdateNot_No
         end>
-      Caption = 'actUpdateHot_No'
+      Caption = 'actUpdateNot_No'
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -955,6 +1074,18 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateNot_v2_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_v2_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_CountPrice'
         end
         item
@@ -1030,11 +1161,19 @@ inherited GoodsForm: TGoodsForm
       Category = 0
     end
     object bbUpdateNot_Yes: TdxBarButton
-      Action = macUpdateHot_Yes
+      Action = macUpdateNot_Yes
       Category = 0
     end
     object bbUpdateNot_No: TdxBarButton
-      Action = macUpdateHot_No
+      Action = macUpdateNot_No
+      Category = 0
+    end
+    object bbUpdateNot_v2_Yes: TdxBarButton
+      Action = macUpdateNot_v2_Yes
+      Category = 0
+    end
+    object bbUpdateNot_v2_No: TdxBarButton
+      Action = macUpdateNot_v2_No
       Category = 0
     end
   end
@@ -1474,8 +1613,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 256
+    Left = 632
+    Top = 248
   end
   object spUpdate_Goods_Published: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_Published'
@@ -1499,8 +1638,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 123
+    Left = 720
+    Top = 107
   end
   object spUpdate_Goods_LastPriceOld: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_LastPriceOld'
@@ -1542,7 +1681,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 560
+    Left = 528
     Top = 176
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -1594,8 +1733,8 @@ inherited GoodsForm: TGoodsForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 808
-    Top = 128
+    Left = 840
+    Top = 104
   end
   object spUpdate_Goods_isNotUploadSites: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isNotUploadSites'
@@ -1812,7 +1951,7 @@ inherited GoodsForm: TGoodsForm
     Left = 624
     Top = 107
   end
-  object spUpdateHot_Yes: TdsdStoredProc
+  object spUpdateNot_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isNOT'
     DataSets = <>
     OutputType = otResult
@@ -1836,7 +1975,7 @@ inherited GoodsForm: TGoodsForm
     Left = 928
     Top = 99
   end
-  object spUpdateHot_No: TdsdStoredProc
+  object spUpdateNot_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isNot'
     DataSets = <>
     OutputType = otResult
@@ -1892,6 +2031,54 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 928
-    Top = 235
+    Top = 251
+  end
+  object spUpdate_isNOT_v2_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNOT_Sun_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNot_SUN_v2'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 99
+  end
+  object spUpdate_isNot_v2_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNot_Sun_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNot_SUN_v2'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 163
   end
 end
