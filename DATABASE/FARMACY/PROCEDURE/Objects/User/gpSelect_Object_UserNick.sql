@@ -41,10 +41,10 @@ END IF;
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         INNER JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
-        INNER JOIN ObjectLink AS ObjectLink_Member_Unit
+        LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
                              ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                             AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
-        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
                              ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId

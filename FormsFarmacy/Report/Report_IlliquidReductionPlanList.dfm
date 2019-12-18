@@ -314,7 +314,6 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         item
         end>
       Caption = 'actRefreshSearch'
-      ShortCut = 13
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'

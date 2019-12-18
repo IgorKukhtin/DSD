@@ -44,6 +44,12 @@ type
     cxLabel5: TcxLabel;
     ceNotSalePastDay: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    edFilter: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    dsdFieldFilter1: TdsdFieldFilter;
+    Price: TcxGridDBColumn;
+    RemainsOut: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

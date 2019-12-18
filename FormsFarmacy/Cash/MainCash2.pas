@@ -5727,47 +5727,62 @@ begin
           Exit;
         end;
 
-      end else
-      with CheckCDS do
+      end else if not ((Self.FormParams.ParamByName('InvNumberSP').Value = '') and (DiscountServiceForm.gCode = 0) and
+        not UnitConfigCDS.FieldByName('PermanentDiscountID').IsNull and (UnitConfigCDS.FieldByName('PermanentDiscountPercent').AsCurrency > 0)) then
       begin
-        // Определяем сумму скидки наценки (скидки)
-        First;
-        while not EOF do
+        with CheckCDS do
         begin
-          if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-              Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
-
-          if (FieldByName('Multiplicity').AsCurrency <> 0) and (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency) and
-            (Trunc(FieldByName('Amount').AsCurrency / FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0) then
+          // Определяем сумму скидки наценки (скидки)
+          First;
+          while not EOF do
           begin
-            ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
-              'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity').AsString + ' упаковки.');
-            Exit;
-          end;
-          Next;
-        end;
+            if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+                Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
 
-        // Если есть скидка находим товар с суммой больше скидки
-        if Disc < 0 then
-        begin
-          Last;
-          while not BOF do
-          begin
-            if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) > 0 then
+            if (FieldByName('Multiplicity').AsCurrency <> 0) and (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency) and
+              (Trunc(FieldByName('Amount').AsCurrency / FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0) then
             begin
-              PosDisc:= RecNo;
-              Break;
+              ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+                'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity').AsString + ' упаковки.');
+              Exit;
             end;
-            Prior;
+            Next;
           end;
 
-          // Если есть скидка и нет товара с суммой больше скидки то ищем товар равный скидке
-          if (Disc < 0) and (PosDisc = 0) then
+          // Если есть скидка находим товар с суммой больше скидки
+          if Disc < 0 then
           begin
             Last;
             while not BOF do
             begin
-              if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+              if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) > 0 then
+              begin
+                PosDisc:= RecNo;
+                Break;
+              end;
+              Prior;
+            end;
+
+            // Если есть скидка и нет товара с суммой больше скидки то ищем товар равный скидке
+            if (Disc < 0) and (PosDisc = 0) then
+            begin
+              Last;
+              while not BOF do
+              begin
+                if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+                begin
+                  PosDisc:= RecNo;
+                  Break;
+                end;
+                Prior;
+              end;
+            end;
+          end else if Disc > 0 then
+          begin
+            Last;
+            while not BOF do
+            begin
+              if GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) > Disc then
               begin
                 PosDisc:= RecNo;
                 Break;
@@ -5775,25 +5790,13 @@ begin
               Prior;
             end;
           end;
-        end else if Disc > 0 then
-        begin
-          Last;
-          while not BOF do
-          begin
-            if GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) > Disc then
-            begin
-              PosDisc:= RecNo;
-              Break;
-            end;
-            Prior;
-          end;
-        end;
 
-        if (Disc <> 0) and (PosDisc = 0) then
-        begin
-          ShowMessage('Сумма скидки (наценки) по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
-            'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
-          Exit;
+          if (Disc <> 0) and (PosDisc = 0) then
+          begin
+            ShowMessage('Сумма скидки (наценки) по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
+              'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
+            Exit;
+          end;
         end;
       end;
 

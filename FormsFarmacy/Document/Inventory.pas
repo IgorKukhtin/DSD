@@ -105,6 +105,8 @@ type
     edGoodsName: TcxTextEdit;
     Remains_Save: TcxGridDBColumn;
     Remains_SumSave: TcxGridDBColumn;
+    spPUSHInfo: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public
