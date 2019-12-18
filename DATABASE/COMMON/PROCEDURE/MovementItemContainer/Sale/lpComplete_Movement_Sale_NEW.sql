@@ -506,6 +506,7 @@ BEGIN
      , tmpPL_Basis AS (-- цены из прайса напрямую, для скорости
                        SELECT DISTINCT
                               tmpMI_all.GoodsId
+                            , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                             , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
                        FROM tmpMI_all
                             INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -515,6 +516,10 @@ BEGIN
                                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
                                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                 ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
+
                             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                    AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -526,6 +531,7 @@ BEGIN
        , tmpPL_Jur AS (-- цены из прайса напрямую, для скорости
                        SELECT DISTINCT
                               tmpMI_all.GoodsId
+                            , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                             , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
                        FROM tmpMI_all
                             INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -535,6 +541,10 @@ BEGIN
                                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = vbPriceListId_Jur
                                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                 ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
+
                             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                    AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -780,8 +790,8 @@ BEGIN
                   , tmpMI.isChangePrice
                   , tmpMI.MovementId_promo
 
-                  , COALESCE (tmpPL_Basis.PriceListPrice, 0) AS PriceListPrice
-                  , COALESCE (tmpPL_Jur.PriceListPrice, 0)   AS PriceListJurPrice
+                  , COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS PriceListPrice
+                  , COALESCE (tmpPL_Jur_kind.PriceListPrice, tmpPL_Jur.PriceListPrice, 0)   AS PriceListJurPrice
                   , tmpMI.Price
                   , tmpMI.Price_original
                   , tmpMI.Price_Currency
@@ -794,9 +804,9 @@ BEGIN
                   , tmpMI.OperCount_Partner
 
                     -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
-                  , COALESCE (CAST (tmpMI.OperCount_Partner * tmpPL_Basis.PriceListPrice AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
+                  , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice,0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
                     -- промежуточная сумма СПЕЦ. прайс-листа по Контрагенту - с округлением до 2-х знаков
-                  , COALESCE (CAST (tmpMI.OperCount_Partner * tmpPL_Jur.PriceListPrice   AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceListJur
+                  , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Jur_kind.PriceListPrice, tmpPL_Jur.PriceListPrice,0)   AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceListJur
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
@@ -908,8 +918,19 @@ BEGIN
                                                                                                             zc_Enum_InfoMoney_70102()
                                                                                                   ELSE ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                                              END
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
+                                        AND tmpPL_Basis_kind.GoodsKindId IS NULL
+                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind 
+                                         ON tmpPL_Basis_kind.GoodsId = tmpMI.GoodsId
+                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId = tmpMI.GoodsId
+                                      AND tmpPL_Jur.GoodsKindId IS NULL
+                   LEFT JOIN tmpPL_Jur AS tmpPL_Jur_kind 
+                                       ON tmpPL_Jur_kind.GoodsId = tmpMI.GoodsId
+                                      AND COALESCE (tmpPL_Jur_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
              ) AS _tmp;
 
      -- !!!надо определить - есть ли скидка в цене!!!
@@ -3098,6 +3119,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.12.19         * add GoodsKindId в прайс
  16.01.15                                        * add !!!убрал, переводится в строчной части!!!
  18.12.14                                        * all
  19.10.14                                        * add inIsLastComplete = FALSE, тогда перепроводим Налоговую

@@ -79,6 +79,8 @@ BEGIN
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
+           
+           , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_TradeMark.ValueData      AS TradeMarkName
@@ -110,6 +112,10 @@ BEGIN
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
             LEFT JOIN Object AS Object_Goods
                              ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                 ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -170,6 +176,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.12.19         * add zc_ObjectLink_PriceListItem_GoodsKind
  03.12.15         *
 */
 

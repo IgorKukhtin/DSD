@@ -566,8 +566,8 @@ BEGIN
                                        , COALESCE (ObjectHistoryFloat_Value.ValueData, 0) AS ValuePrice
                                   FROM tmpMI
                                        INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                            ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
-                                                           AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                                             ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
+                                                            AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                                        INNER JOIN ObjectLink AS ObjectLink_PriceList
                                                              ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
                                                             AND ObjectLink_PriceList.ChildObjectId = vbPriceListId_Fuel

@@ -275,9 +275,9 @@ BEGIN
                    , MovementItem.Amount AS OperCount
                    , MovementItem.Amount * CASE -- если Надо по "остальным" - фиксированная цена из прайса zc_PriceList_ProductionSeparateHist
                                                 WHEN vbIsCalculated = TRUE AND COALESCE (MIBoolean_Calculated.ValueData, FALSE) = FALSE
-                                                     THEN COALESCE (tmpPriceSeparateHist.ValuePrice, 0)
+                                                     THEN COALESCE (tmpPriceSeparateHist_kind.ValuePrice, tmpPriceSeparateHist.ValuePrice, 0)
                                                 -- обычная схема - "распределение"
-                                                ELSE COALESCE (tmpPriceSeparate.ValuePrice, 0)
+                                                ELSE COALESCE (tmpPriceSeparate_kind.ValuePrice, tmpPriceSeparate.ValuePrice, 0)
                                            END AS tmpOperSumm
 
                     -- Управленческие назначения
@@ -336,8 +336,17 @@ BEGIN
                                                  ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                                 AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
 
-                   LEFT JOIN tmpPriceSeparate     ON tmpPriceSeparate.GoodsId       = MovementItem.ObjectId
-                   LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId   = MovementItem.ObjectId
+                   LEFT JOIN tmpPriceSeparate ON tmpPriceSeparate.GoodsId       = MovementItem.ObjectId
+                                             AND tmpPriceSeparate.GoodsKindId IS NULL
+                   LEFT JOIN tmpPriceSeparate AS tmpPriceSeparate_kind
+                                              ON tmpPriceSeparate_kind.GoodsId       = MovementItem.ObjectId
+                                             AND COALESCE (tmpPriceSeparate_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                   LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId = MovementItem.ObjectId
+                                                 AND tmpPriceSeparateHist.GoodsKindId IS NULL
+                   LEFT JOIN tmpPriceSeparateHist AS tmpPriceSeparateHist_kind
+                                                  ON tmpPriceSeparateHist_kind.GoodsId = MovementItem.ObjectId
+                                                 AND COALESCE (tmpPriceSeparateHist_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
@@ -1082,6 +1091,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.12.19         *
  17.08.14                                        * add MovementDescId
  17.08.14                                        * add только для существующих сумм
  13.08.14                                        * add lpInsertUpdate_MIReport_byTable

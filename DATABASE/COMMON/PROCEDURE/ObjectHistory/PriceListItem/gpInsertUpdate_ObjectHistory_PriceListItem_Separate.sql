@@ -65,11 +65,16 @@ BEGIN
                                 , tmpMovement.OperDate   AS OperDate
                                 , MovementItem.Id        AS MI_Id
                                 , MovementItem.ObjectId  AS GoodsId
+                                , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                            FROM tmpMovement
                                 LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                       AND MovementItem.DescId     = zc_MI_Child()
                                                       AND MovementItem.isErased   = FALSE
+                                /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
                           )
+
          , tmpMIContainer AS (SELECT tmpMI_Child.OperDate                            AS OperDate
                                    , MIContainer.ObjectId_Analyzer                   AS GoodsId
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
