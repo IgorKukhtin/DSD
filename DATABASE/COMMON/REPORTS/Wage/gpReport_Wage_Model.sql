@@ -992,7 +992,7 @@ AS  (SELECT
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
        )
          -- Данные для - Transport + Реестр Документов
-       , tmpUnit_Reestr AS (SELECT DISTINCT Setting_Wage_1.UnitId, COALESCE (Setting_Wage_1.FromId, 0) AS FromId
+       , tmpUnit_Reestr AS (SELECT DISTINCT Setting_Wage_1.UnitId
                             FROM Setting_Wage_1
                             WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
                               AND Setting_Wage_1.UnitId > 0

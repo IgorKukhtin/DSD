@@ -61,7 +61,8 @@ BEGIN
                        WHERE wms_MI_Incoming.OperDate     = CURRENT_DATE - INTERVAL '0 DAY'
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
-                      -- AND wms_MI_Incoming.StatusId_wms IS NULL
+                         -- AND wms_MI_Incoming.StatusId_wms IS NULL
+                         AND wms_MI_Incoming.sku_id :: TVarChar IN (/*'795292', '795293', '38391802', */'800561', '800562', '800563')
                       )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -99,7 +100,6 @@ BEGIN
                      --
                    , tmpData.Id AS GroupId
               FROM tmpMI AS tmpData
-              WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293', '38391802')
              UNION ALL
               -- Детали заказа на отгрузку
               SELECT vbProcName       AS ProcName
@@ -132,7 +132,6 @@ BEGIN
                      --
                    , tmpData.Id AS GroupId
               FROM tmpMI AS tmpData
-              WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293', '38391802')
              ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY tmp.GroupId, 4

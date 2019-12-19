@@ -86,7 +86,7 @@ BEGIN
    vbIsCommerce:= vbIsConstraint OR (EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce <> 0)
                                      AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerceAll <> 0)
                                     );
-   vbIsCommerce:= vbIsCommerce = TRUE AND vbUserId NOT IN (106593, 106596, 106594) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 80536); -- Галат Е.Н. + Середа Ю.В. + Дмитриева О.В. + Аналитики Мясо
+   vbIsCommerce:= vbIsCommerce = TRUE AND vbUserId NOT IN (106593, 106596, 106594, 602817) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 80536); -- Галат Е.Н. + Середа Ю.В. + Дмитриева О.В. + Якимчик А.С. + Аналитики Мясо
 
    -- Результат
    RETURN QUERY 

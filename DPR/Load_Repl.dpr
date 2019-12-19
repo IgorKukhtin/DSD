@@ -57,7 +57,16 @@ uses
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   Main in '..\Load_Repl\Main.pas' {MainForm},
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  Medoc1201007 in '..\SOURCE\MeDOC\Medoc1201007.pas',
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 

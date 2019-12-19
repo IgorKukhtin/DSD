@@ -63,33 +63,33 @@ object MainForm: TMainForm
         BevelOuter = bvNone
         TabOrder = 1
         object LabelObjectDescId: TLabel
-          Left = 222
-          Top = 16
+          Left = 243
+          Top = 17
           Width = 159
           Height = 13
           Caption = #1054#1076#1080#1085' '#1080#1083#1080' '#1042#1057#1045' '#1089#1087#1088#1072#1074', DescId =  '
         end
         object cbProtocol: TCheckBox
-          Left = 16
-          Top = 13
-          Width = 200
+          Left = 6
+          Top = 16
+          Width = 217
           Height = 17
-          Caption = #1055#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' / '#1080#1085#1072#1095#1077' '#1042#1057#1045
+          Caption = #1055#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' ('#1076#1072') / '#1080#1085#1072#1095#1077' '#1042#1057#1045
           Checked = True
           State = cbChecked
           TabOrder = 0
         end
         object EditObjectDescId: TEdit
-          Left = 384
+          Left = 406
           Top = 11
-          Width = 121
+          Width = 99
           Height = 21
           TabOrder = 1
         end
         object cbGUID: TCheckBox
-          Left = 511
+          Left = 508
           Top = 13
-          Width = 98
+          Width = 71
           Height = 17
           Caption = 'Find GUID'
           TabOrder = 2
@@ -465,8 +465,8 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object btnOKMain_toChild: TButton
-      Left = 108
-      Top = 26
+      Left = 111
+      Top = 25
       Width = 97
       Height = 25
       Caption = 'GO Main -> Child'
@@ -556,6 +556,8 @@ object MainForm: TMainForm
             '1. integer-srv.alan.dp.ua'
             '2. project-vds.vds.colocall.com')
           TabOrder = 0
+          ExplicitLeft = -6
+          ExplicitTop = -5
         end
       end
       object PanelError: TPanel
@@ -1397,8 +1399,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 283
+    Left = 680
+    Top = 83
   end
   object fQueryMS: TZQuery
     Connection = mainZConnection
@@ -1909,8 +1911,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 227
+    Left = 872
+    Top = 75
   end
   object spSelect_ReplMovement_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_ReplMovement'
@@ -1953,8 +1955,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 903
-    Top = 149
+    Left = 879
+    Top = 117
   end
   object Movement_ChildCDS: TClientDataSet
     Aggregates = <>

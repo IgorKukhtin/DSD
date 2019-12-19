@@ -131,7 +131,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('953365')
+                               AND Movement.InvNumber IN ('953460') -- 952893
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT
@@ -254,7 +254,7 @@ BEGIN
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_all.GoodsKindId
                                                                    AND tmpMI_all.sku_id    = 0
                        -- WHERE Object_Goods.Id > 0
-                          WHERE tmpMI_all.sku_id = 38391802
+                          WHERE tmpMI_all.sku_id = 800563 -- 38391802
                          )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -287,6 +287,7 @@ BEGIN
                      --
                    , tmpData.order_id AS GroupId
               FROM tmpMovement AS tmpData
+              WHERE EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.order_id = tmpData.order_id)
 
              UNION ALL
               -- Детали заказа на отгрузку

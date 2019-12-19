@@ -3533,7 +3533,9 @@ begin
     LogStr := S;
     LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + FormatDateTime('yyyy-mm-dd', Date) + '.log';
 
+// ShowMessage('1 - AddToMemoMsg -   ' + LogFileName);
     AssignFile(LogFile, LogFileName);
+// ShowMessage('1 - end - ' + LogFileName);
 
     if FileExists(LogFileName) then
       Append(LogFile)
@@ -3547,7 +3549,9 @@ begin
     if isError = TRUE then
     begin
         LogFileName_err := ChangeFileExt(Application.ExeName, '') + '\' + FormatDateTime('yyyy-mm-dd', Date) + '-ERR' + '.log';
+//    ShowMessage('2 - AddToMemoMsg -   ' + LogFileName);
         AssignFile(LogFile_err, LogFileName_err);
+//    ShowMessage('2 - end - ' + LogFileName);
         if FileExists(LogFileName_err) then
           Append(LogFile_err)
         else
@@ -3572,11 +3576,15 @@ begin
 
   myFolder:= ReplaceStr(myFolder, ':', '_');
 
+// ShowMessage('1 - AddToLog -   ' + myFolder);
   ForceDirectories(ChangeFileExt(Application.ExeName, '') + '\' + myFolder);
+// ShowMessage('1 - end -   ' + myFolder);
 
   LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + myFolder + '\' + myFile + '.sql';
 
+//ShowMessage('2 - AddToLog -   ' + LogFileName);
   AssignFile(LogFile, LogFileName);
+//ShowMessage('2 - AddToLog -   ' + LogFileName);
 
   if FileExists(LogFileName) then
     Append(LogFile)
