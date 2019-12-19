@@ -49,6 +49,7 @@ BEGIN
    PERFORM  lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
+                                                     , inGoodsKindId := ObjectLink_PriceListItem_GoodsKind.ChildObjectId
                                                      , inOperDate    := inOperDate
                                                      , inValue       := zfCalc_PriceTruncate (inOperDate     := CURRENT_DATE
                                                                                             , inChangePercent:= inTax
@@ -70,8 +71,12 @@ BEGIN
                                           ON ObjectBoolean_PriceWithVAT.ObjectId = ObjectLink_PriceListItem_PriceList.ChildObjectId
                                          AND ObjectBoolean_PriceWithVAT.DescId   = zc_ObjectBoolean_PriceList_PriceWithVAT()
                   LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
-                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                       ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                      AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                       ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                      AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                           ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -100,6 +105,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.19         * add zc_ObjectLink_PriceListItem_GoodsKind
  21.08.15         *
 */

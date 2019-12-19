@@ -472,6 +472,7 @@ BEGIN
      , tmpPL_Basis AS (-- цены из прайса напрямую, для скорости
                        SELECT DISTINCT
                               tmpMI_all.GoodsId
+                            , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                             , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
                        FROM tmpMI_all
                             INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -481,6 +482,9 @@ BEGIN
                                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
                                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                 ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
                             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                    AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -658,7 +662,7 @@ BEGIN
                   , tmpMI.ChangePercent
                   , tmpMI.isChangePrice
 
-                  , COALESCE (tmpPL_Basis.PriceListPrice, 0) AS PriceListPrice
+                  , COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS PriceListPrice
                   , tmpMI.Price
                   , tmpMI.Price_original
                   , tmpMI.CountForPrice
@@ -668,7 +672,7 @@ BEGIN
                   , tmpMI.OperCount_Partner
 
                     -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
-                  , COALESCE (CAST (tmpMI.OperCount_Partner * tmpPL_Basis.PriceListPrice AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
+                  , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
@@ -709,7 +713,14 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+                   /*LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId*/
+                   
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
+                                        AND tmpPL_Basis_kind.GoodsKindId IS NULL
+                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind 
+                                         ON tmpPL_Basis_kind.GoodsId = tmpMI.GoodsId
+                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
              ) AS _tmp;
 
      -- !!!надо определить - есть ли скидка в цене!!!
@@ -2479,6 +2490,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.12.19         * add GoodsKindId в прайс
  18.12.14                                        * all
  08.11.14                                        * add _tmpList_Alternative
  07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_From

@@ -877,6 +877,13 @@ BEGIN
 
 
      -- 3. Start
+      -- таблица -  Цены из прайса
+      CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+         INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
+             SELECT lfSelect.GoodsId     AS GoodsId
+                  , lfSelect.GoodsKindId AS GoodsKindId
+                  , lfSelect.ValuePrice  AS ValuePrice
+             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY') AS lfSelect;
 
      -- 3.1. заполняем таблицу - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
@@ -941,10 +948,10 @@ BEGIN
                      END AS OperSumm
 
               FROM _tmpItem
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
-                          AS lfSelect_PriceListItem ON lfSelect_PriceListItem.GoodsId = _tmpItem.GoodsId
-                                                   AND vbOperDate IN ('31.10.2015', '31.12.2015') -- в 1-ый раз для филиалов
-                                                   AND vbPriceListId <> 0
+                   LEFT JOIN tmpPriceList AS lfSelect_PriceListItem ON lfSelect_PriceListItem.GoodsId = _tmpItem.GoodsId
+                                                                   AND vbOperDate IN ('31.10.2015', '31.12.2015') -- в 1-ый раз для филиалов
+                                                                   AND vbPriceListId <> 0
+                                                                   AND lfSelect_PriceListItem.GoodsKindId IS NULL -- тогда еще не было учета по видам товара
 
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
@@ -1561,10 +1568,14 @@ end if;
             UNION ALL
               -- это введенные остатки по прайсу !!!плюс НДС!!!
               SELECT _tmpItem.MovementItemId
-                   , CAST (_tmpItem.OperCount * COALESCE (lfSelect_PriceListItem.ValuePrice, 0) * 1.2 AS NUMERIC (16,4)) AS OperSumm
+                   , CAST (_tmpItem.OperCount * COALESCE (lfSelect_PriceListItem_kind.ValuePrice, lfSelect_PriceListItem.ValuePrice, 0) * 1.2 AS NUMERIC (16,4)) AS OperSumm
               FROM _tmpItem
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
-                          AS lfSelect_PriceListItem ON lfSelect_PriceListItem.GoodsId = _tmpItem.GoodsId
+                   LEFT JOIN tmpPriceList AS lfSelect_PriceListItem 
+                                          ON lfSelect_PriceListItem.GoodsId = _tmpItem.GoodsId
+                                         AND lfSelect_PriceListItem.GoodsKindId IS NULL
+                   LEFT JOIN tmpPriceList AS lfSelect_PriceListItem_kind 
+                                          ON lfSelect_PriceListItem_kind.GoodsId = _tmpItem.GoodsId
+                                         AND COALESCE (lfSelect_PriceListItem_kind.GoodsKindId,0) = COALESCE (_tmpItem.GoodsKindId,0)
              ) AS _tmp
         GROUP BY _tmp.MovementItemId;
 
@@ -1754,10 +1765,14 @@ end if;
      -- !!!формируется свойство <Price>!!!
      IF vbPriceListId <> 0
      THEN
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem.MovementItemId, COALESCE (lfSelect.ValuePrice, 0))
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem.MovementItemId, COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0))
          FROM _tmpItem
-              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
-                     AS lfSelect ON lfSelect.GoodsId = _tmpItem.GoodsId;
+              LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = _tmpItem.GoodsId
+                                    AND tmpPriceList.GoodsKindId IS NULL
+              LEFT JOIN tmpPriceList AS tmpPriceList_kind 
+                                     ON tmpPriceList_kind.GoodsId = _tmpItem.GoodsId
+                                    AND COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (_tmpItem.GoodsKindId,0)
+         ;
      END IF;
 
      -- !!!формируется свойство <Цена>!!!
@@ -1786,6 +1801,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.12.19         *
  17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement

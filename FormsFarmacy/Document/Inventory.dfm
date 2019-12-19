@@ -844,6 +844,9 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spSelect_MI_Child
         end>
     end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      BeforeAction = actPUSHInfo
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1153,6 +1156,17 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spSelectBarCode
         end>
       Caption = 'actSpBarCodeScan'
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInfo
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInfo
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -2276,5 +2290,47 @@ inherited InventoryForm: TInventoryForm
     PageControl = PageControl
     Left = 760
     Top = 296
+  end
+  object spPUSHInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Inventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 754
+    Top = 368
   end
 end

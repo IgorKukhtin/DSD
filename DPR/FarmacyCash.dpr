@@ -118,7 +118,8 @@ uses
   PUSHMessageCash in '..\FormsFarmacy\Cash\PUSHMessageCash.pas' {PUSHMessageCashForm},
   EmployeeScheduleCash in '..\FormsFarmacy\Cash\EmployeeScheduleCash.pas' {EmployeeScheduleCashForm: TParentForm},
   EnterLoyaltyNumber in '..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas' {EnterLoyaltyNumberForm},
-  Report_ImplementationPlanEmployeeCash in '..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas' {Report_ImplementationPlanEmployeeCashForm};
+  Report_ImplementationPlanEmployeeCash in '..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas' {Report_ImplementationPlanEmployeeCashForm},
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
 
 {$R *.res}
 

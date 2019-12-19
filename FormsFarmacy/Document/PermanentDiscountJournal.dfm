@@ -375,21 +375,6 @@ inherited PermanentDiscountJournalForm: TPermanentDiscountJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCurrentData'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320

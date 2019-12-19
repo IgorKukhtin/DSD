@@ -1259,6 +1259,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Day7() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_Day7', zc_Object_Unit(), 'Страховой запас НТЗ для Х дней вс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Day7');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_SunIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SunIncome'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_SunIncome', zc_Object_Unit(), 'Кол-во дней приход от пост. (блокируем СУН)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SunIncome');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Asset_PeriodUse() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Asset_PeriodUse'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1544,6 +1547,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.12.19         * zc_ObjectFloat_Unit_SunIncome
  13.12.19                                                                                      * zc_ObjectFloat_Unit_MorionCode
  11.12.19                                                                                      * zc_ObjectFloat_Retail_LimitSUN
  10.12.19                                                                                      * zc_ObjectFloat_Unit_... for Sun
