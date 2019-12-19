@@ -107,6 +107,8 @@ type
     Remains_SumSave: TcxGridDBColumn;
     spPUSHInfo: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
+    edComment: TcxTextEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

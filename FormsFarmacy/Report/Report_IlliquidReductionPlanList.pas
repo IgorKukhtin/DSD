@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TReport_IlliquidReductionPlanListForm = class(TAncestorReportForm)
@@ -47,6 +47,14 @@ type
     cxLabel5: TcxLabel;
     ceNotSalePastDay: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    Price: TcxGridDBColumn;
+    RemainsOut: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
+    Color_font: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

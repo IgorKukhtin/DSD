@@ -8,22 +8,22 @@ inherited InventoryForm: TInventoryForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
+    Top = 115
     Width = 878
-    Height = 566
-    ExplicitTop = 77
+    Height = 528
+    ExplicitTop = 115
     ExplicitWidth = 878
-    ExplicitHeight = 566
-    ClientRectBottom = 566
+    ExplicitHeight = 528
+    ClientRectBottom = 528
     ClientRectRight = 878
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 878
-      ExplicitHeight = 542
+      ExplicitHeight = 504
       inherited cxGrid: TcxGrid
         Width = 878
-        Height = 542
+        Height = 504
         ExplicitWidth = 878
-        ExplicitHeight = 542
+        ExplicitHeight = 504
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -471,7 +471,7 @@ inherited InventoryForm: TInventoryForm
         Left = 0
         Top = 54
         Width = 878
-        Height = 488
+        Height = 450
         Align = alClient
         TabOrder = 1
         object cxGridChildDBTableView: TcxGridDBTableView
@@ -711,10 +711,10 @@ inherited InventoryForm: TInventoryForm
   end
   inherited DataPanel: TPanel
     Width = 878
-    Height = 51
+    Height = 89
     TabOrder = 3
     ExplicitWidth = 878
-    ExplicitHeight = 51
+    ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -772,6 +772,18 @@ inherited InventoryForm: TInventoryForm
       ShowHint = True
       TabOrder = 8
       Width = 146
+    end
+    object edComment: TcxTextEdit
+      Left = 8
+      Top = 60
+      Properties.ReadOnly = False
+      TabOrder = 9
+      Width = 441
+    end
+    object cxLabel8: TcxLabel
+      Left = 8
+      Top = 42
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1525,112 +1537,10 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Comment'
         Value = ''
+        Component = edComment
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1681,71 +1591,11 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inComment'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
+        Component = edComment
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1774,6 +1624,7 @@ inherited InventoryForm: TInventoryForm
         Control = edInvNumber
       end
       item
+        Control = edComment
       end
       item
       end

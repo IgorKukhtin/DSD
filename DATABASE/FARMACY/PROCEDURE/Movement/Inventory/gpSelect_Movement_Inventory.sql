@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DeficitSumm TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , UnitId Integer, UnitName TVarChar, FullInvent Boolean
              , Diff_calc TFloat, DeficitSumm_calc TFloat, ProficitSumm_calc TFloat, DiffSumm_calc TFloat
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -87,6 +88,7 @@ BEGIN
            , tmpMovement_calc.DeficitSumm  :: TFloat AS DeficitSumm_calc
            , tmpMovement_calc.ProficitSumm :: TFloat AS ProficitSumm_calc
            , (tmpMovement_calc.ProficitSumm - tmpMovement_calc.DeficitSumm) :: TFloat AS DiffSumm_calc
+           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -125,6 +127,10 @@ BEGIN
             LEFT OUTER JOIN MovementFloat AS MovementFloat_DiffSumm
                                           ON MovementFloat_DiffSumm.MovementId = Movement.Id
                                          AND MovementFloat_DiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
             ;
 
 END;
@@ -134,11 +140,12 @@ ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarC
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.   Шаблий О.В.
+ 19.12.19                                                                                      * + Comment
  04.05.16         *
  16.09.15                                                                       * + FullInvent
  11.07.15                                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Inventory (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Inventory (inStartDate:= '01.12.2019', inEndDate:= '31.12.2019', inIsErased:= FALSE, inSession:= '2')

@@ -19,21 +19,22 @@ BEGIN
   outShowMessage := False;
   vbText := '';
 
-  IF COALESCE (inMovementID, 0) <> 0
+  IF COALESCE (inMovementID, 0) <> 0 --OR inSession <> '3'
   THEN
     RETURN;
   END IF;
 
-  SELECT string_agg('Номер '||Movement.InvNumber||' дата '||TO_CHAR (Movement.OperDate, 'dd.mm.yyyy'), CHR(13) ORDER BY Movement.OperDate)
+  SELECT string_agg('Номер '||CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN 'возврата поставщику' ELSE 'перемещения' END||' '
+                            ||Movement.InvNumber||' дата '||TO_CHAR (Movement.OperDate, 'dd.mm.yyyy'), CHR(13) ORDER BY Movement.OperDate)
   INTO vbText
   FROM Movement
 
        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                    AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
                                     AND MovementLinkObject_Unit.ObjectId = inUnitID
 
-  WHERE Movement.DescId = zc_Movement_Inventory()
+  WHERE Movement.DescId in (zc_Movement_ReturnOut(), zc_Movement_Send())
     AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
 
@@ -41,7 +42,7 @@ BEGIN
   THEN
     outShowMessage := True;
     outPUSHType := 3;
-    outText := 'По подразделению не проведены инвентаризации:'||CHR(13)||vbText;
+    outText := 'По подразделению не проведены:'||CHR(13)||vbText;
   END IF;
 
 END;
@@ -56,4 +57,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
--- SELECT * FROM gpSelect_ShowPUSH_Inventory(1, 183292 , '3')
+-- SELECT * FROM gpSelect_ShowPUSH_Inventory(0, 183292 , '3')

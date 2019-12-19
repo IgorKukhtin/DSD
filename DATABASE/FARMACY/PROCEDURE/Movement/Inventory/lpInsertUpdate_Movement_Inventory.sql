@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- Подразделение
     IN inFullInvent          Boolean   , -- Полная инвентаризация
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -37,6 +39,9 @@ BEGIN
      -- сохранили признак <ПОлная инвентаризация>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_FullInvent(), ioId, inFullInvent);
 
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -49,7 +54,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.   Шаблий О.В.
+ 19.12.19                                                                                        * + Comment
  16.09.15                                                                         * + FullInvent
  11.07.15                                                                         *
  */

@@ -3,7 +3,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -81
   ExplicitWidth = 835
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -230,6 +229,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
             Options.Editing = False
             Width = 52
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 121
+          end
         end
       end
     end
@@ -334,6 +341,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
     object ExecuteDialog: TExecuteDialog

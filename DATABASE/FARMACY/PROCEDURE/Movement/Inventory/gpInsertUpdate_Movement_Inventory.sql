@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат поставщику>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- подразделение
     IN inFullInvent          Boolean   , -- Полная инвентаризация
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )                               
 RETURNS Integer AS
@@ -73,16 +75,18 @@ BEGIN
                                               , inOperDate         := inOperDate
                                               , inUnitId           := inUnitId
                                               , inFullInvent       := inFullInvent
+                                              , inComment          := inComment
                                               , inUserId           := vbUserId
                                                );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
   
-ALTER FUNCTION gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 19.12.19                                                                         * + Comment
  17.12.18                                                                         *
  16.09.15                                                          * + FullInvent
  11.07.15                                                          *

@@ -1,29 +1,29 @@
 inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUserForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 824
+  ClientWidth = 835
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 840
+  ExplicitWidth = 851
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 79
-    Width = 824
+    Width = 835
     Height = 425
     ExplicitTop = 79
     ExplicitWidth = 824
     ExplicitHeight = 425
     ClientRectBottom = 425
-    ClientRectRight = 824
+    ClientRectRight = 835
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
-        Top = 41
-        Width = 824
-        Height = 384
+        Top = 49
+        Width = 835
+        Height = 376
         ExplicitTop = 41
         ExplicitWidth = 824
         ExplicitHeight = 384
@@ -110,11 +110,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Options.Editing = False
             Width = 89
           end
-          object Color_calc: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Calc'
-            Visible = False
-            Options.Editing = False
-          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -145,16 +140,26 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Options.Editing = False
             Width = 79
           end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Options.Editing = False
+          end
+          object Color_font: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_font'
+            Visible = False
+          end
         end
       end
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 824
+        Width = 835
         Height = 41
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 824
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -188,7 +193,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
           OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object D_AmountStart: TcxGridDBColumn
@@ -225,10 +229,21 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
           GridView = cxGridDBTableView1
         end
       end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 41
+        Width = 835
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salTop
+        Control = cxGridDetals
+        ExplicitTop = 53
+        ExplicitWidth = 824
+      end
     end
   end
   inherited Panel: TPanel
-    Width = 824
+    Width = 835
     Height = 53
     ExplicitWidth = 824
     ExplicitHeight = 53
@@ -242,12 +257,12 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 115
     end
     inherited deEnd: TcxDateEdit
-      Left = 680
+      Left = 622
       Top = 29
       EditValue = 42491d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 680
+      ExplicitLeft = 622
       ExplicitTop = 29
     end
     inherited cxLabel1: TcxLabel
@@ -255,14 +270,14 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       ExplicitWidth = 83
     end
     inherited cxLabel2: TcxLabel
-      Left = 564
+      Left = 506
       Top = 30
       Visible = False
-      ExplicitLeft = 564
+      ExplicitLeft = 506
       ExplicitTop = 30
     end
     object ceProcUnit: TcxCurrencyEdit
-      Left = 720
+      Left = 662
       Top = 5
       EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
@@ -272,12 +287,12 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 45
     end
     object cxLabel4: TcxLabel
-      Left = 618
+      Left = 560
       Top = 6
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
     object ceProcGoods: TcxCurrencyEdit
-      Left = 565
+      Left = 507
       Top = 5
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
@@ -287,12 +302,12 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 45
     end
     object cxLabel5: TcxLabel
-      Left = 455
+      Left = 397
       Top = 6
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object ceNotSalePastDay: TcxCurrencyEdit
-      Left = 399
+      Left = 341
       Top = 5
       EditValue = 60.000000000000000000
       Properties.DecimalPlaces = 0
@@ -304,7 +319,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object cxLabel6: TcxLabel
       Left = 222
       Top = 6
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
+      Caption = #1044#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
     end
     object edFilter: TcxTextEdit
       Left = 101
@@ -319,6 +334,29 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Left = 10
       Top = 30
       Caption = #1060#1080#1083#1100#1090#1088
+    end
+    object cxLabel9: TcxLabel
+      Left = 713
+      Top = 31
+      Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
+      ParentColor = False
+      Style.Color = clWhite
+      Style.TextColor = clGray
+    end
+    object cxLabel8: TcxLabel
+      Left = 713
+      Top = 15
+      Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
+      ParentColor = False
+      Style.Color = 16636922
+      Style.TextColor = clWindowText
+    end
+    object cxLabel7: TcxLabel
+      Left = 713
+      Top = 0
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
+      ParentColor = False
+      Style.Color = 11201206
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -507,6 +545,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       end>
     ColorRuleList = <
       item
+        ValueColumn = Color_font
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end>

@@ -47,6 +47,7 @@ type
     DeficitSumm_calc: TcxGridDBColumn;
     ProficitSumm_calc: TcxGridDBColumn;
     DiffSumm_calc: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
