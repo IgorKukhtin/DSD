@@ -65,6 +65,7 @@ type
     procedure LoadInfoMoneyFormTest;
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
+    procedure LoadIlliquidUnitFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
@@ -1326,6 +1327,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnTypeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnTypeEditForm');
+end;
+
+procedure TLoadFormTest.LoadIlliquidUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIlliquidUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIlliquidUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIlliquidUnitJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIlliquidUnitJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

@@ -604,6 +604,8 @@ type
     actReport_PromoEntrances: TdsdOpenForm;
     N206: TMenuItem;
     N207: TMenuItem;
+    actIlliquidUnitJournal: TdsdOpenForm;
+    N208: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
