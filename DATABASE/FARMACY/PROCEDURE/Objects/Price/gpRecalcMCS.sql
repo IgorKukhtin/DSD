@@ -1,12 +1,13 @@
 -- Function: gpRecalcMCS (Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpRecalcMCS (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpRecalcMCS (Integer, Integer, Integer, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION gpRecalcMCS(
     IN inUnitId              Integer   , -- Подразделение
     IN inPeriod              Integer   , -- С какого дня
     IN inDay                 Integer   , -- Сколько дней брать в расчет
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inSession             TVarChar  , -- сессия пользователя
+    IN inisSUN               Boolean  = FALSE  -- Расчет для СУН
 )
 RETURNS Void
 AS
@@ -207,6 +208,7 @@ BEGIN
                                         ioStartDate    := zc_dateEnd(),         -- 
                                         inPrice        := NULL::TFloat,         -- цена
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
+                                        inMCSValueSun  := CASE WHEN COALESCE (inisSUN, FALSE) = TRUE THEN MAX(Sold) ELSE NULL END::TFloat, 
                                         inMCSValue_min := Object_Price.MCSValue_min ::TFloat,     --
                                         inMCSPeriod    := inPeriod::TFloat,     --
                                         inMCSDay       := inDay::TFloat,        --
@@ -233,15 +235,17 @@ BEGIN
         Object_Price.PercentMarkup,
         Object_Price.Fix
     HAVING  COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
+        
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar, Boolean) OWNER TO postgres;
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.12.19                                                                      * НТЗ для СУН
  11.09.19                                                                      * после 12 брать текущий день до 12
  23.12.18                                                                      * 
  03.12.18         * 

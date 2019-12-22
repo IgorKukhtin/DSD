@@ -1832,11 +1832,11 @@ begin
  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCS_LiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCS_LiteForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
 

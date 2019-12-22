@@ -284,7 +284,8 @@ BEGIN
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit_Juridical_Run.ObjectId,
                        inPeriod := ObjectFloat_PeriodSun.ValueData::Integer,
                        inDay := ObjectFloat_DaySun.ValueData::Integer,
-                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession)),
+                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession),
+                       inisSUN := TRUE),
            lpInsertUpdate_ObjectDate(zc_ObjectFloat_RecalcMCSSheduler_DateRunSun(), Object_RecalcMCSSheduler.Id, clock_timestamp())
   FROM Object AS Object_RecalcMCSSheduler
 
@@ -411,7 +412,8 @@ BEGIN
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit.ChildObjectId,
                        inPeriod := ObjectFloat_PeriodSun.ValueData::Integer,
                        inDay := ObjectFloat_DaySun.ValueData::Integer,
-                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession)),
+                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession),
+                       inisSUN := TRUE),
            lpInsertUpdate_ObjectDate(zc_ObjectFloat_RecalcMCSSheduler_DateRunSun(), Object_RecalcMCSSheduler.Id, clock_timestamp())
   FROM Object AS Object_RecalcMCSSheduler
 
@@ -508,6 +510,7 @@ ALTER FUNCTION gpRun_Object_RecalcMCSSheduler(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 21.12.19        *
  23.12.18        *
 */
 
