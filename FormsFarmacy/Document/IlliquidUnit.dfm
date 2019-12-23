@@ -1,29 +1,29 @@
 inherited IlliquidUnitForm: TIlliquidUnitForm
-  Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1090#1086#1095#1077#1082
+  Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
   ClientHeight = 479
-  ClientWidth = 685
+  ClientWidth = 706
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 701
+  ExplicitWidth = 722
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
-    Width = 685
-    Height = 356
-    ExplicitTop = 123
-    ExplicitWidth = 979
-    ExplicitHeight = 356
-    ClientRectBottom = 356
-    ClientRectRight = 685
+    Top = 115
+    Width = 706
+    Height = 364
+    ExplicitTop = 115
+    ExplicitWidth = 706
+    ExplicitHeight = 364
+    ClientRectBottom = 364
+    ClientRectRight = 706
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 979
-      ExplicitHeight = 332
+      ExplicitWidth = 706
+      ExplicitHeight = 340
       inherited cxGrid: TcxGrid
-        Width = 685
-        Height = 324
-        ExplicitWidth = 979
-        ExplicitHeight = 324
+        Width = 706
+        Height = 332
+        ExplicitWidth = 706
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -68,6 +68,9 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
               Column = Summ
             end>
           OptionsBehavior.IncSearch = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -101,6 +104,7 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 84
           end
           object Amount: TcxGridDBColumn
@@ -111,6 +115,7 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object Summ: TcxGridDBColumn
@@ -127,22 +132,21 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 324
-        Width = 685
+        Top = 332
+        Width = 706
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
-        ExplicitWidth = 979
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 685
-    Height = 97
+    Width = 706
+    Height = 89
     TabOrder = 3
-    ExplicitWidth = 979
-    ExplicitHeight = 97
+    ExplicitWidth = 706
+    ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -155,6 +159,7 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       Left = 108
       EditValue = 42767d
       Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.ReadOnly = True
       ExplicitLeft = 108
     end
     inherited cxLabel2: TcxLabel
@@ -187,7 +192,7 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 8
-      Width = 378
+      Width = 218
     end
     object edUnitName: TcxButtonEdit
       Left = 223
@@ -200,7 +205,63 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 378
+      Width = 218
+    end
+    object cxLabel6: TcxLabel
+      Left = 447
+      Top = 5
+      Caption = #1044#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
+    end
+    object ceNotSalePastDay: TcxCurrencyEdit
+      Left = 447
+      Top = 23
+      EditValue = 60.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 11
+      Width = 90
+    end
+    object cxLabel3: TcxLabel
+      Left = 447
+      Top = 45
+      Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
+    end
+    object ceProcGoods: TcxCurrencyEdit
+      Left = 447
+      Top = 62
+      EditValue = 20.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 13
+      Width = 90
+    end
+    object ceProcUnit: TcxCurrencyEdit
+      Left = 572
+      Top = 23
+      EditValue = 10.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 14
+      Width = 90
+    end
+    object cxLabel4: TcxLabel
+      Left = 572
+      Top = 5
+      Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
+    end
+    object cePenalty: TcxCurrencyEdit
+      Left = 572
+      Top = 62
+      EditValue = 500.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 16
+      Width = 90
+    end
+    object cxLabel5: TcxLabel
+      Left = 572
+      Top = 45
+      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087'.'
     end
   end
   inherited ActionList: TActionList
@@ -269,6 +330,22 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    object actFormationUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spFormationUnit
+      StoredProcList = <
+        item
+          StoredProc = spFormationUnit
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+      ImageIndex = 10
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_IlliquidUnit'
@@ -320,6 +397,10 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -352,6 +433,10 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actFormationUnit
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -458,25 +543,45 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitCategoryId'
+        Name = 'UnitId'
         Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitCategoryName'
+        Name = 'UnitName'
         Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalId'
+        Name = 'DayCount'
         Value = Null
+        Component = ceNotSalePastDay
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalName'
+        Name = 'ProcGoods'
         Value = Null
-        DataType = ftString
+        Component = ceProcGoods
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Penalty'
+        Value = Null
+        Component = cePenalty
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -517,14 +622,41 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inUnitId'
         Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitCategoryId'
+        Name = 'inDayCount'
         Value = Null
+        Component = ceNotSalePastDay
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenalty'
+        Value = Null
+        Component = cePenalty
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -591,83 +723,6 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_IlliquidUnit'
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPlanMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMax'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummPlanMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummPlanMax'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 320
@@ -804,6 +859,7 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitName
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -829,5 +885,32 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
       end>
     Left = 352
     Top = 16
+  end
+  object spFormationUnit: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_IlliquidUnit_FormationUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42767d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 314
+    Top = 352
   end
 end

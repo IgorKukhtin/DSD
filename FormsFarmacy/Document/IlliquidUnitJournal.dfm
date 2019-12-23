@@ -11,17 +11,17 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
     Width = 937
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 819
+    ExplicitWidth = 937
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 937
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 819
+      ExplicitWidth = 937
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 937
         Height = 478
-        ExplicitWidth = 819
+        ExplicitWidth = 937
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -65,7 +65,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0,####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 92
@@ -85,7 +85,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
             DataBinding.FieldName = 'ProcGoods'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0,####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -95,7 +95,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
             DataBinding.FieldName = 'ProcUnit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0,####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
@@ -105,7 +105,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
             DataBinding.FieldName = 'Penalty'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0,####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -124,7 +124,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
   end
   inherited Panel: TPanel
     Width = 937
-    ExplicitWidth = 819
+    ExplicitWidth = 937
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -172,10 +172,6 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-    end
-    inherited actComplete: TdsdChangeMovementStatus
-      QuestionBeforeExecute = #1055#1077#1088#1077#1076' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084' '#1085#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
-      InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -258,6 +254,55 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actIlliquidUnit_Formation: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialogData
+        end
+        item
+          Action = actExecIlliquidUnit_Formation
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      ImageIndex = 10
+    end
+    object actExecuteDialogData: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogData'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecIlliquidUnit_Formation: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spIlliquidUnit_Formation
+      StoredProcList = <
+        item
+          StoredProc = spIlliquidUnit_Formation
+        end>
+      Caption = 'actExecIlliquidUnit_Formation'
     end
   end
   inherited MasterDS: TDataSource
@@ -385,7 +430,7 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = actIlliquidUnit_Formation
       Category = 0
     end
     object bbPrint1: TdxBarButton
@@ -552,5 +597,22 @@ inherited IlliquidUnitJournalForm: TIlliquidUnitJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spIlliquidUnit_Formation: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_IlliquidUnit_Formation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 376
   end
 end
