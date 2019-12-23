@@ -34,6 +34,17 @@ type
     bbactStartLoad: TdxBarButton;
     GuidesUnit: TdsdGuides;
     edUnitName: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    ceNotSalePastDay: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    ceProcGoods: TcxCurrencyEdit;
+    ceProcUnit: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cePenalty: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    actFormationUnit: TdsdExecStoredProc;
+    spFormationUnit: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

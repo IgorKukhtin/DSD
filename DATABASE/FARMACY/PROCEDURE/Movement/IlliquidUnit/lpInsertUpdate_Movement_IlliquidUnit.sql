@@ -1,15 +1,16 @@
 -- Function: lpInsertUpdate_Movement_IlliquidUnit()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IlliquidUnit (Integer, TVarChar, TDateTime, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IlliquidUnit (Integer, TVarChar, TDateTime, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IlliquidUnit (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IlliquidUnit (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IlliquidUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- Подразделение
-    IN inFullInvent          Boolean   , -- Полная инвентаризация
+    IN inDayCount            Integer   , -- Дней без продаж от
+    IN inProcGoods           TFloat    , -- % продажи для вып. 
+    IN inProcUnit            TFloat    , -- % вып. по аптеке. 
+    IN inPenalty             TFloat    , -- Штраф за 1% невып. 
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -19,7 +20,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
+     IF inOperDate <> DATE_TRUNC ('month', inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
@@ -36,14 +37,20 @@ BEGIN
      -- сохранили связь с <Подразделение в документе>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
 
-     -- сохранили признак <ПОлная инвентаризация>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_FullInvent(), ioId, inFullInvent);
+     -- сохранили признак <Дней без продаж от>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);
+
+     -- сохранили признак <% продажи для вып.>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ProcGoods(), ioId, inProcGoods);
+
+     -- сохранили признак <% вып. по аптеке. >
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ProcUnit(), ioId, inProcUnit);
+
+     -- сохранили признак <Штраф за 1% невып. >
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Penalty(), ioId, inPenalty);
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
@@ -55,5 +62,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 20.12.19                                                       *
+ 23.12.19                                                       *
  */

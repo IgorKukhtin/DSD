@@ -44,6 +44,10 @@ type
     ExecuteDialog: TExecuteDialog;
     Penalty: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actIlliquidUnit_Formation: TMultiAction;
+    actExecuteDialogData: TExecuteDialog;
+    actExecIlliquidUnit_Formation: TdsdExecStoredProc;
+    spIlliquidUnit_Formation: TdsdStoredProc;
   private
     { Private declarations }
   public

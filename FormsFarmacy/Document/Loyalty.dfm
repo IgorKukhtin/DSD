@@ -11,19 +11,19 @@ inherited LoyaltyForm: TLoyaltyForm
     Top = 153
     Width = 1125
     Height = 505
-    ExplicitTop = 123
+    ExplicitTop = 153
     ExplicitWidth = 1125
-    ExplicitHeight = 442
+    ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1125
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1125
-      ExplicitHeight = 418
+      ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1125
         Height = 263
         ExplicitWidth = 1125
-        ExplicitHeight = 200
+        ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = SignDS
           OptionsBehavior.IncSearch = True
@@ -174,7 +174,6 @@ inherited LoyaltyForm: TLoyaltyForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitTop = 200
       end
       object Panel1: TPanel
         Left = 0
@@ -186,7 +185,6 @@ inherited LoyaltyForm: TLoyaltyForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 2
-        ExplicitTop = 208
         object Panel2: TPanel
           Left = 0
           Top = 0
@@ -1419,6 +1417,22 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       isShowModal = False
     end
+    object actUnhook_MovementItem: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUnhook_MovementItem
+      StoredProcList = <
+        item
+          StoredProc = spUnhook_MovementItem
+        end>
+      Caption = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      Hint = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      ImageIndex = 52
+      QuestionBeforeExecute = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loyalty'
@@ -1495,6 +1509,14 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -1652,6 +1674,10 @@ inherited LoyaltyForm: TLoyaltyForm
     end
     object dxBarButton3: TdxBarButton
       Action = actExportUsedPromocode
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUnhook_MovementItem
       Category = 0
     end
   end
@@ -2860,5 +2886,24 @@ inherited LoyaltyForm: TLoyaltyForm
       end>
     Left = 264
     Top = 16
+  end
+  object spUnhook_MovementItem: TdsdStoredProc
+    StoredProcName = 'gpUnhook_MovementItem_Loyalty_Parent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 488
+    Top = 360
   end
 end

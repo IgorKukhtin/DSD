@@ -160,6 +160,9 @@ type
     cxLabel19: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    spUnhook_MovementItem: TdsdStoredProc;
+    actUnhook_MovementItem: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public
