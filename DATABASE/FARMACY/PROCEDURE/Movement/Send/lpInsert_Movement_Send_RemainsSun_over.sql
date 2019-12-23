@@ -107,8 +107,10 @@ BEGIN
      -- 1. все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      DELETE FROM _tmpRemains_all;
      DELETE FROM _tmpRemains;
-     -- 2. вся статистика продаж: 1) у отправителя в разрезе T1=60 дней 2) у получателя в разрезе T2=45
+     -- 2.1. вся статистика продаж: 1) у отправителя в разрезе T1=60 дней 2) у получателя в разрезе T2=45
      DELETE FROM _tmpSale_over;
+     -- 2.2. NotSold
+     DELETE FROM _tmpSale_not;
      -- 3.1. все остатки, OVER (Сверх запас)
      DELETE FROM _tmpRemains_Partion_all;
      -- 3.2. остатки, OVER (Сверх запас) - для распределения
@@ -146,7 +148,7 @@ BEGIN
        ;
 
        
-     -- 1. вся статистика продаж
+     -- 1.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
      INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
         SELECT tmp.UnitId
@@ -172,6 +174,43 @@ BEGIN
              ) AS tmp
        ;
 
+     -- 1.2. NotSold
+     -- CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpSale_not (UnitId, GoodsId, Amount)
+        WITH -- список для NotSold
+             tmpContainer AS (SELECT Container.Id               AS ContainerId
+                                   , Container.WhereObjectId    AS UnitId
+                                   , Container.ObjectId         AS GoodsId
+                                   , Container.Amount           AS Amount
+                              FROM -- !!!только для таких Аптек!!!
+                                   _tmpUnit_SUN
+                                   INNER JOIN Container ON Container.WhereObjectId = _tmpUnit_SUN.UnitId
+                                                       AND Container.Amount        <> 0
+                                                       AND Container.DescId        = zc_Container_Count()
+                             )
+             -- так можно определить NotSold
+           , tmpNotSold_all AS (SELECT tmpContainer.UnitID
+                                     , tmpContainer.GoodsID
+                                     , SUM (tmpContainer.Amount) AS Amount
+                                FROM tmpContainer
+                                     LEFT JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.WhereObjectId_Analyzer = tmpContainer.UnitId
+                                                                    AND MIContainer.ObjectId_Analyzer      = tmpContainer.GoodsID
+                                                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                                                    AND MIContainer.OperDate               >= CURRENT_DATE - INTERVAL '250 DAY'
+                                                                    AND MIContainer.Amount                 <> 0
+                                                                    AND MIContainer.MovementDescId         = zc_Movement_Check()
+                                WHERE MIContainer.ObjectId_Analyzer IS NULL
+                                GROUP BY tmpContainer.UnitID
+                                       , tmpContainer.GoodsID
+                                HAVING SUM (tmpContainer.Amount) > 0
+                               )
+        -- Результат
+        SELECT tmpNotSold_all.UnitId
+             , tmpNotSold_all.GoodsId
+             , tmpNotSold_all.Amount
+        FROM tmpNotSold_all
+       ;
 
      -- 2.1. все остатки, продажи => расчет кол-ва ПОТРЕБНОСТЬ у получателя
      -- CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
@@ -545,13 +584,34 @@ BEGIN
                                      , tmpOver_list.GoodsID
                                        --  Остаток
                                      , tmpOver_list.Amount
-                                       --  Отправка: округляем ВВНИЗ: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправителя в разрезе T1=60 дней;
-                                     , FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0)) AS Amount_notSold
+                                       
+                                     , CASE -- отдаем ВСЕ
+                                            WHEN _tmpSale_not.GoodsID > 0 
+                                                 THEN tmpOver_list.Amount
+
+                                            -- оставляем 1
+                                            WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1 
+                                                 THEN FLOOR (tmpOver_list.Amount - 1)
+
+                                            --  Отправка: округляем ВВНИЗ: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправителя в разрезе T1=60 дней;
+                                            ELSE FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0))
+                                       END AS Amount_notSold
                                 FROM tmpOver_list
                                      LEFT JOIN _tmpSale_over ON _tmpSale_over.UnitId  = tmpOver_list.UnitId
                                                             AND _tmpSale_over.GoodsID = tmpOver_list.GoodsID
-                                WHERE --  Отправка: если X1 больше Y1 на 1 и больше
-                                      tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0) >= 1
+                                     LEFT JOIN _tmpSale_not ON _tmpSale_not.UnitId  = tmpOver_list.UnitId
+                                                           AND _tmpSale_not.GoodsID = tmpOver_list.GoodsID
+                                WHERE CASE -- отдаем ВСЕ
+                                            WHEN _tmpSale_not.GoodsID > 0 
+                                                 THEN tmpOver_list.Amount
+
+                                            -- оставляем 1
+                                            WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1 
+                                                 THEN FLOOR (tmpOver_list.Amount - 1)
+
+                                            --  Отправка: округляем ВВНИЗ: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправителя в разрезе T1=60 дней;
+                                            ELSE FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0))
+                                       END > 0
                                )
      -- для OVER - находим ВСЕ сроковые
    , tmpNotSold_PartionDate AS (SELECT tmpNotSold_all.UnitID
@@ -1175,8 +1235,10 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
-     -- 2. вся статистика продаж
+     -- 2.1. вся статистика продаж
      CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
+     -- 2.2. NotSold
+     CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;

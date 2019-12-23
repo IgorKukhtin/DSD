@@ -894,7 +894,6 @@ BEGIN
 --                            AND ObjectDate_PartionGoods_Value.ValueData <= vbDate_6
                                   -- !!!оставили только эту категорию
                            )
-
             -- для SUN - находим list
        , tmpIncomeSUN_list AS (SELECT DISTINCT
                                        tmpRes_SUN.UnitID
