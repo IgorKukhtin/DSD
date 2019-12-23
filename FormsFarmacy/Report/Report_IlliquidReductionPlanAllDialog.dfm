@@ -3,7 +3,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-  ClientHeight = 225
+  ClientHeight = 262
   ClientWidth = 290
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 33
-    Top = 178
+    Top = 218
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   end
   object cxButton2: TcxButton
     Left = 175
-    Top = 177
+    Top = 217
     Width = 75
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
@@ -66,7 +66,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   object ceProcUnit: TcxCurrencyEdit
     Left = 188
     Top = 141
-    EditValue = 20.000000000000000000
+    EditValue = 10.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
     TabOrder = 6
@@ -91,12 +91,26 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Top = 102
     Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
   end
+  object cePenalty: TcxCurrencyEdit
+    Left = 188
+    Top = 181
+    EditValue = 500.000000000000000000
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 10
+    Width = 90
+  end
+  object cxLabel2: TcxLabel
+    Left = 11
+    Top = 182
+    Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
+  end
   object PeriodChoice: TPeriodChoice
-    Left = 143
+    Left = 103
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 158
+    Left = 102
     Top = 22
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -109,7 +123,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 247
+    Left = 175
     Top = 100
   end
   object FormParams: TdsdFormParams
@@ -143,13 +157,20 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
         Component = ceProcUnit
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Penalty'
+        Value = Null
+        Component = cePenalty
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 46
     Top = 102
   end
   object ActionList: TActionList
-    Left = 267
-    Top = 23
+    Left = 187
+    Top = 15
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

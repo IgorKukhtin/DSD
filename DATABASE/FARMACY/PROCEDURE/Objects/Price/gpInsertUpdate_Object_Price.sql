@@ -9,12 +9,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
  INOUT ioStartDate                TDateTime , 
     IN inPrice                    TFloat    ,    -- цена
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
+    IN inMCSValueSun              TFloat    ,    -- Неснижаемый товарный запас для СУН
     IN inMCSValue_min             TFloat    ,    -- мин. Неснижаемый товарный запас
     IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
     IN inMCSDay                   TFloat    ,    -- Страховой запас дней НТЗ
@@ -51,6 +53,7 @@ $BODY$
         vbUserId       Integer;
         vbPrice        TFloat;
         vbMCSValue     TFloat;
+        vbMCSValueSun  TFloat;
         vbMCSValue_min TFloat;
         vbMCSIsClose   Boolean;
         vbMCSNotRecalc Boolean;
@@ -73,7 +76,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Цена <%> должна быть больше 0.', inPrice;
     END IF;
     -- проверили корректность цены
-    IF inMCSValue is not null AND (inMCSValue<0)
+    IF inMCSValue is not null AND (inMCSValue<0) OR inMCSValueSun is not null AND (inMCSValueSun<0)
     THEN
         RAISE EXCEPTION 'Ошибка.Неснижаемый товарный запас <%> Не может быть меньше 0.', inMCSValue;
     END IF;
@@ -94,6 +97,7 @@ BEGIN
     SELECT Id, 
            Price, 
            MCSValue, 
+           MCSValueSun, 
            DateChange, 
            MCSDateChange, 
            MCSIsClose, 
@@ -110,6 +114,7 @@ BEGIN
       INTO ioId, 
            vbPrice, 
            vbMCSValue, 
+           vbMCSValueSun, 
            outDateChange, 
            outMCSDateChange,
            vbMCSIsClose, 
@@ -126,6 +131,7 @@ BEGIN
     FROM (WITH tmp1 AS (SELECT Object_Price.Id                         AS Id
                              , ROUND(Price_Value.ValueData,2)::TFloat AS Price
                              , MCS_Value.ValueData                     AS MCSValue
+                             , MCS_ValueSun.ValueData                  AS MCSValueSun
                              , Price_Goods.ChildObjectId               AS GoodsId
                              , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                              , price_datechange.valuedata              AS DateChange
@@ -159,6 +165,9 @@ BEGIN
                                LEFT JOIN ObjectFloat AS MCS_Value
                                                      ON MCS_Value.ObjectId = Object_Price.Id
                                                     AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               LEFT JOIN ObjectFloat AS MCS_ValueSun
+                                                     ON MCS_ValueSun.ObjectId = Object_Price.Id
+                                                    AND MCS_ValueSun.DescId = zc_ObjectFloat_Price_MCSValueSun()
                                LEFT JOIN ObjectFloat AS MCS_Value_min
                                                      ON MCS_Value_min.ObjectId = Object_Price.Id
                                                     AND MCS_Value_min.DescId = zc_ObjectFloat_Price_MCSValueMin()
@@ -331,6 +340,12 @@ BEGIN
         END IF;
     END IF;
 
+    -- сохранили св-во < Неснижаемый товарный запас для СУН >
+    IF (inMCSValueSun is not null) AND (inMCSValueSun <> COALESCE(vbMCSValueSun,0))
+    THEN
+        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueSun(), ioId, inMCSValueSun);
+    END IF;
+
     -- сохранили св-во < % наценки >
     IF (inPercentMarkup is not null) AND (inPercentMarkup <> COALESCE(vbPercentMarkup,0))
     THEN
@@ -387,7 +402,7 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-    
+        
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -396,7 +411,8 @@ LANGUAGE plpgsql VOLATILE;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.12.19                                                                      * НТЗ для СУН
  30.11.18         *
  13.06.17         * без Object_Price_View
  09.06.17         *

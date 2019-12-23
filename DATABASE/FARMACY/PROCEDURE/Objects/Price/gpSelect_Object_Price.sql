@@ -56,6 +56,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isChecked          Boolean
              , isError_MarginPercent Boolean
              , isNotSold Boolean
+             , MCSValueSun TFloat
              ) AS
 $BODY$
 DECLARE
@@ -154,6 +155,7 @@ BEGIN
                ,NULL:: TFloat                    AS MarginPercentNew   
                ,NULL:: Boolean                   AS isChecked          
                ,NULL:: Boolean                   AS isError_MarginPercent
+               ,NULL::TFloat                     AS MCSValueSun
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -301,6 +303,7 @@ BEGIN
                                    ELSE ROUND (Price_Value.ValueData, 2)
                               END                           :: TFloat AS Price 
                             , MCS_Value.ValueData                     AS MCSValue 
+                            , MCS_ValueSun.ValueData                  AS MCSValueSun 
                             , price_datechange.valuedata              AS DateChange 
                             , MCS_datechange.valuedata                AS MCSDateChange 
                             , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose 
@@ -352,6 +355,9 @@ BEGIN
                             LEFT JOIN ObjectFloat AS Price_MCSValueOld
                                                   ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                  AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                            LEFT JOIN ObjectFloat AS MCS_ValueSun
+                                                  ON MCS_ValueSun.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND MCS_ValueSun.DescId = zc_ObjectFloat_Price_MCSValueSun()
 
                             LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                   ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -766,6 +772,7 @@ BEGIN
                , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_View.PercentMarkup AND tmpPrice_View.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
 
                , COALESCE(tmpNotSold.GoodsId, 0) <> 0 AS isNotSold
+               , COALESCE (tmpPrice_View.MCSValueSun,0)                      :: TFloat AS MCSValueSun
 
             FROM tmpGoodsAll AS Object_Goods_View
                 /*INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -1026,6 +1033,7 @@ BEGIN
                                       ELSE ROUND (Price_Value.ValueData, 2)
                                  END                           :: TFloat AS Price 
                                , MCS_Value.ValueData                     AS MCSValue 
+                               , MCS_ValueSun.ValueData                  AS MCSValueSun 
                                , tmpPrice.GoodsId                        AS GoodsId
                                , price_datechange.valuedata              AS DateChange 
                                , MCS_datechange.valuedata                AS MCSDateChange 
@@ -1069,6 +1077,9 @@ BEGIN
                                LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                      ON Price_MCSValueMin.ObjectId = tmpPrice.Id
                                                     AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
+                               LEFT JOIN ObjectFloat AS MCS_ValueSun
+                                                     ON MCS_ValueSun.ObjectId = tmpPrice.Id
+                                                    AND MCS_ValueSun.DescId = zc_ObjectFloat_Price_MCSValueSun()
 
                                LEFT JOIN ObjectDate AS Price_DateChange
                                                     ON Price_DateChange.ObjectId = tmpPrice.Id
@@ -1156,6 +1167,7 @@ BEGIN
                               , tmpRemeins.Remains
                               , tmpRemeins.DeferredSend
                               , tmpRemeins.MinExpirationDate 
+                              , tmpPrice.MCSValueSun 
                         FROM tmpPrice_View AS tmpPrice
                              FULL JOIN tmpRemeins ON tmpRemeins.ObjectId = tmpPrice.GoodsId
                         )
@@ -1621,6 +1633,7 @@ BEGIN
                , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_All.PercentMarkup AND tmpPrice_All.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
 
                , COALESCE(tmpNotSold.GoodsId, 0) <> 0 AS isNotSold
+               , COALESCE (tmpPrice_All.MCSValueSun,0)                       :: TFloat    AS MCSValueSun
             FROM tmpPrice_All
                LEFT JOIN tmpGoods_All AS Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.GoodsId
 
@@ -1662,6 +1675,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.12.19                                                                      * НТЗ для СУН
  09.12.19         *
  26.09.19         * немножко ускорила
  11.02.19         * признак Товары соц-проект берем и документа

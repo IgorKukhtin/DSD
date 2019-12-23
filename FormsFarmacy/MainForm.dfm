@@ -3220,6 +3220,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actIlliquidUnitJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1053#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      FormName = 'TIlliquidUnitJournalForm'
+      FormNameParam.Value = 'TIlliquidUnitJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3951,6 +3963,9 @@ inherited MainForm: TMainForm
       end
       object N124: TMenuItem
         Action = actReport_Check_Rating
+      end
+      object N208: TMenuItem
+        Action = actIlliquidUnitJournal
       end
       object N133: TMenuItem
         Caption = '-'

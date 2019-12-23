@@ -11,9 +11,6 @@ inherited MCS_LiteForm: TMCS_LiteForm
   inherited Panel: TPanel
     Width = 1061
     ExplicitWidth = 1061
-    inherited cbisMCSAuto: TcxCheckBox
-      ExplicitHeight = 21
-    end
   end
   inherited PageControl: TcxPageControl
     Width = 1061
@@ -143,6 +140,8 @@ inherited MCS_LiteForm: TMCS_LiteForm
           end
           inherited DeferredSend: TcxGridDBColumn [54]
           end
+          inherited isNotSold: TcxGridDBColumn [55]
+          end
         end
       end
     end
@@ -271,6 +270,14 @@ inherited MCS_LiteForm: TMCS_LiteForm
         Component = MasterCDS
         ComponentItem = 'MCSValue'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValueSun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValueSun'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

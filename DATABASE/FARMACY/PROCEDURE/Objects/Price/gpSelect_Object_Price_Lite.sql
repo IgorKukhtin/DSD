@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat, MCSValue_min TFloat
              , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
              , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
              , Remains TFloat
+             , MCSValueSun TFloat
              ) AS
 $BODY$
 DECLARE
@@ -85,6 +86,7 @@ BEGIN
                ,NULL::Boolean                    AS isMCSAuto
                ,NULL::Boolean                    AS isMCSNotRecalcOld
                ,NULL::TFloat                     AS Remains
+               ,NULL::TFloat                     AS MCSValueSun
 
            WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -150,6 +152,7 @@ BEGIN
                           , Price_Goods.ChildObjectId                  AS GoodsId
                           , ROUND(Price_Value.ValueData,2)   ::TFloat  AS Price
                           , COALESCE (MCS_Value.ValueData,0) ::TFloat  AS MCSValue
+                          , MCS_ValueSun.ValueData                     AS MCSValueSun 
                           , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
                           , price_datechange.valuedata                 AS DateChange
                           , MCS_datechange.valuedata                   AS MCSDateChange
@@ -190,6 +193,9 @@ BEGIN
                         LEFT JOIN ObjectLink        AS Price_Goods
                                ON Price_Goods.ObjectId = Object_Price.Id
                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                        LEFT JOIN ObjectFloat AS MCS_ValueSun
+                                             ON MCS_ValueSun.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                            AND MCS_ValueSun.DescId = zc_ObjectFloat_Price_MCSValueSun()
 
                         LEFT JOIN ObjectBoolean      AS MCS_isClose
                                ON MCS_isClose.ObjectId = Object_Price.Id
@@ -287,6 +293,7 @@ BEGIN
                  , tmpPrice.isMCSAuto
                  , tmpPrice.isMCSNotRecalcOld       
                  , tmpContainerCount.Remains 
+                 , tmpPrice.MCSValueSun 
               FROM tmpGoods
                 LEFT OUTER JOIN tmpPrice ON  tmpPrice.goodsid = tmpGoods.GoodsId
                 LEFT JOIN tmpContainerCount ON tmpContainerCount.goodsid = tmpPrice.goodsid
@@ -351,6 +358,7 @@ BEGIN
       , tmpPrice AS (SELECT Object_Price.Id                           AS Id
                           , Price_Goods.ChildObjectId                 AS GoodsId
                           , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
+                          , MCS_ValueSun.ValueData                    AS MCSValueSun 
                           , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
                           , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
                           , price_datechange.valuedata                AS DateChange
@@ -392,7 +400,10 @@ BEGIN
                         LEFT JOIN ObjectLink        AS Price_Goods
                                     ON Price_Goods.ObjectId = Object_Price.Id
                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-      
+                        LEFT JOIN ObjectFloat AS MCS_ValueSun
+                                              ON MCS_ValueSun.ObjectId = Object_Price.Id
+                                             AND MCS_ValueSun.DescId = zc_ObjectFloat_Price_MCSValueSun()
+
                        LEFT JOIN ObjectBoolean      AS MCS_isClose
                                     ON MCS_isClose.ObjectId = Object_Price.Id
                                    AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
@@ -487,6 +498,7 @@ BEGIN
                  , tmpPrice.isMCSAuto
                  , tmpPrice.isMCSNotRecalcOld
                  , tmpContainerCount.Remains 
+                 , tmpPrice.MCSValueSun             AS MCSValueSun
             FROM tmpPrice
                 JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
                 LEFT JOIN tmpContainerCount ON tmpContainerCount.goodsid = tmpPrice.goodsid
@@ -501,7 +513,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.12.19                                                                      * НТЗ для СУН
  04.12.18         *
  14.06.17 
  05.10.16         * parce

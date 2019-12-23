@@ -36,7 +36,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , OperDateEnd        TDateTime
             , BeginDateStart     TDateTime
             , BeginDateEnd       TDateTime
-            )
+            , PositionName_old   TVarChar)
 AS
 $BODY$
     DECLARE vbUserId       Integer;
@@ -62,7 +62,7 @@ BEGIN
 
     WITH
     -- сотрудники
-    tmpMemberPersonal AS (SELECT lfSelect.MemberId
+   /* tmpMemberPersonal AS (SELECT lfSelect.MemberId
                                , lfSelect.PersonalId
                                , lfSelect.UnitId
                                , lfSelect.PositionId
@@ -72,10 +72,51 @@ BEGIN
                             AND (lfSelect.MemberId = inMemberId OR inMemberId = 0)
                             AND (lfSelect.UnitId = inUnitId OR inUnitId = 0)
                           )
+*/
+    tmpMemberPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId     AS MemberId
+                               , ObjectLink_Personal_Member.ObjectId          AS PersonalId
+                               , ObjectLink_Personal_Unit.ChildObjectId       AS UnitId
+                               , ObjectLink_Personal_Position.ChildObjectId   AS PositionId
+                               , ObjectLink_Unit_Branch.ChildObjectId         AS BranchId
+                               , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+                               , COALESCE (ObjectBoolean_Main.ValueData, FALSE) AS isMain
+                          FROM ObjectLink AS ObjectLink_Personal_Member
+                               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                               LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                    ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                    ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                    ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                    ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                   AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                                       ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                          WHERE ObjectLink_Personal_Member.ChildObjectId > 0
+                            AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                            AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
+                            AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+                         )
+
     -- сотрудники дата приема , увольнения
   , tmpPersonal AS (SELECT Object_Personal_View.*
                          , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
                          , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнения путая ставим = дате форм. отчета, для расчета отр. месяцев на дату форм. отчета
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMemberPersonal.MemberId
+                                                    -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                    ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut_user, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                           , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                           , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
+                                                           , Object_Personal_View.PersonalId
+                                                   ) AS Ord
                     FROM tmpMemberPersonal
                          LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
                                                        AND Object_Personal_View.UnitId = tmpMemberPersonal.UnitId
@@ -83,6 +124,14 @@ BEGIN
                     WHERE Object_Personal_View.DateIn <= inStartDate
                       AND ((Object_Personal_View.isDateOut = TRUE AND Object_Personal_View.DateOut_user >= vbStartDate) OR Object_Personal_View.isDateOut = FALSE)
                    )
+  -- прошлые должности (информативно)
+  , tmpPositionOld AS (SELECT tmpPersonal.MemberId
+                            , string_agg (DISTINCT tmpPersonal.PositionName ||' ('|| TO_CHAR (tmpPersonal.DateIn, 'dd.mm.yyyy')|| ' / '|| TO_CHAR(tmpPersonal.DateOut_user, 'dd.mm.yyyy') ||') ' ||tmpPersonal.UnitName, '; ') AS PositionName
+                       FROM tmpPersonal
+                       WHERE ord > 1
+                       GROUP BY tmpPersonal.MemberId
+                       )
+
   -- вычисляем интервалы непрерывной работы более 6 месяцев
   , tmp1 (MemberId, DateIn_Calc, ord) AS
          -- получем нач.дату интервалов работы
@@ -259,16 +308,19 @@ BEGIN
          , tmpHoliday.OperDateEnd    :: TDateTime
          , tmpHoliday.BeginDateStart  :: TDateTime
          , tmpHoliday.BeginDateEnd    :: TDateTime
+, tmpPositionOld.PositionName  :: TVarChar AS PositionName_old
     FROM tmpVacation
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
 
-         LEFT JOIN tmpMemberPersonal ON tmpMemberPersonal.MemberId = tmpVacation.MemberId
+        -- LEFT JOIN tmpMemberPersonal ON tmpMemberPersonal.MemberId = tmpVacation.MemberId
+
          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId   = tmpVacation.MemberId
-                              AND tmpPersonal.PositionId = tmpMemberPersonal.PositionId
-                              AND tmpPersonal.UnitId     = tmpMemberPersonal.UnitId
+                             -- AND tmpPersonal.PositionId = tmpMemberPersonal.PositionId
+                             -- AND tmpPersonal.UnitId     = tmpMemberPersonal.UnitId
+                                AND tmpPersonal.ord = 1
          LEFT JOIN (SELECT COUNT(*) AS Day_bol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
                    ) AS MI_SheetWorkTime ON MI_SheetWorkTime.MemberId = tmpVacation.MemberId
-         
+         LEFT JOIN tmpPositionOld ON tmpPositionOld.MemberId = tmpVacation.MemberId
                               
     ORDER BY tmpPersonal.UnitName
            , tmpPersonal.PersonalName
@@ -279,5 +331,13 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.12.19         *
+ 24.12.18         *
+*/
 -- тест
 -- SELECT * FROM gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);
+--select * from gpReport_HolidayPersonal(inStartDate := ('23.12.2019')::TDateTime , inUnitId := 0 , inMemberId := 2671562 , inisDetail := 'False' ,  inSession := '5');

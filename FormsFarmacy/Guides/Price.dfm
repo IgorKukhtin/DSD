@@ -4,7 +4,7 @@ inherited PriceForm: TPriceForm
   ClientWidth = 829
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 845
-  ExplicitHeight = 460
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -778,6 +778,16 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1072#1094'. '#1072#1087#1090#1077#1082#1080' '#1080' '#1053#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
             Options.Editing = False
             Width = 43
+          end
+          object MCSValueSun: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1076#1083#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'MCSValueSun'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
           end
         end
       end
@@ -1676,6 +1686,15 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValueSun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValueSun'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -35,6 +35,8 @@ $BODY$
    DECLARE vbAmount        TFloat;
    DECLARE vbAmountManual  TFloat;
    DECLARE vbAmountStorage TFloat;
+   DECLARE vbisSUN         Boolean;
+   DECLARE vbisSUN_v2      Boolean;
    DECLARE vbisDefSUN      Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -42,17 +44,34 @@ BEGIN
     vbUserId := inSession;
 
     --определяем подразделение получателя
-    SELECT MovementLinkObject_To.ObjectId AS UnitId, COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
-           INTO vbUnitId, vbisDefSUN
+    SELECT MovementLinkObject_To.ObjectId                               AS UnitId
+         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)::Boolean     AS isSUN
+         , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN
+         , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
+    INTO vbUnitId, vbisSUN, vbisSUN_v2, vbisDefSUN
     FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
     
+          LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                    ON MovementBoolean_SUN.MovementId = Movement.Id
+                                   AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                    ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                   AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+
           LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                     ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                    AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
     WHERE Movement.Id = inMovementId;
+    
+    IF COALESCE (ioId, 0) = 0 AND (vbisSUN = TRUE OR vbisSUN_v2 = TRUE) AND
+      NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      RAISE EXCEPTION 'Ошибка. В перемещения по СУН добавление товара запрещено.';    
+    END IF;
 
     -- Получаем предыдущее значение количеств
     SELECT
@@ -196,6 +215,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 21.12.19                                                                      * звпрет добавления в перемещения по СУН
  01.04.19                                                                      *
  05.02.19         * add inAmountStorage
  19.12.18                                                                      *

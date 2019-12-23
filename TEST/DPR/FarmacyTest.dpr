@@ -791,7 +791,9 @@ uses
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
   Report_MovementCheck_PromoDoctors in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoDoctors.pas' {Report_MovementCheck_PromoDoctorsForm: TParentForm},
-  Report_MovementCheck_PromoEntrances in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoEntrances.pas' {Report_MovementCheck_PromoEntrancesForm: TParentForm};
+  Report_MovementCheck_PromoEntrances in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoEntrances.pas' {Report_MovementCheck_PromoEntrancesForm: TParentForm},
+  IlliquidUnit in '..\..\FormsFarmacy\Document\IlliquidUnit.pas' {IlliquidUnitForm: TParentForm},
+  IlliquidUnitJournal in '..\..\FormsFarmacy\Document\IlliquidUnitJournal.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

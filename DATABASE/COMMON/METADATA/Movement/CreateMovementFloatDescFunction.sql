@@ -477,9 +477,22 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_MonthCount() RETURNS Integer AS $BOD
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_MonthCount', 'Количество месяцев' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MonthCount');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ProcGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ProcGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_ProcGoods', '% продажи для вып. плана по позиции' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ProcGoods');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ProcUnit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ProcUnit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_ProcUnit', '% вып. по аптеке.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ProcUnit');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Penalty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Penalty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Penalty', 'Штраф за 1% невыполнения' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Penalty');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 20.11.19                                                                                     * zc_MovementFloat_ProcGoods, zc_MovementFloat_ProcUnit, zc_MovementFloat_Penalty
  04.11.19                                                                                     * zc_MovementFloat_MonthCount
  15.10.19         * zc_MovementFloat_TotalSummFineRecalc
                     zc_MovementFloat_TotalSummHospRecalc
