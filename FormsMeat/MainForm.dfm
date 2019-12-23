@@ -1,11 +1,11 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 171
+  ClientHeight = 196
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 229
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]

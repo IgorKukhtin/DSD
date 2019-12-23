@@ -192,6 +192,14 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         Options.Editing = False
         Width = 80
       end
+      object PositionName_old: TcxGridDBColumn
+        Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1072#1103' '#1076#1086#1083#1078#1085#1086#1089#1090#1100' '
+        DataBinding.FieldName = 'PositionName_old'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 180
+      end
       object Month_work: TcxGridDBColumn
         Caption = #1042#1089#1077#1075#1086' '#1086#1090#1088'. '#1084#1077#1089#1103#1094#1077#1074
         DataBinding.FieldName = 'Month_work'
