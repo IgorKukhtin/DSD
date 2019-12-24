@@ -33,7 +33,7 @@ type
     cxLabel3: TcxLabel;
     cxGridDetals: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    D_AmountStart: TcxGridDBColumn;
+    D_AmountAll: TcxGridDBColumn;
     D_ProcSale: TcxGridDBColumn;
     D_Color_calc: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
@@ -45,7 +45,7 @@ type
     cxLabel4: TcxLabel;
     ceProcGoods: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
-    ceNotSalePastDay: TcxCurrencyEdit;
+    cePenalty: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     Price: TcxGridDBColumn;
     RemainsOut: TcxGridDBColumn;
@@ -55,6 +55,8 @@ type
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
+    D_AmountStart: TcxGridDBColumn;
+    D_SummaPenalty: TcxGridDBColumn;
   private
     { Private declarations }
   public

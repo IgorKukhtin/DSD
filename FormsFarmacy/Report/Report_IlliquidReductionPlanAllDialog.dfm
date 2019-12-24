@@ -3,7 +3,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-  ClientHeight = 262
+  ClientHeight = 221
   ClientWidth = 290
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 33
-    Top = 218
+    Top = 178
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,33 +29,19 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   end
   object cxButton2: TcxButton
     Left = 175
-    Top = 217
+    Top = 177
     Width = 75
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
   end
-  object ceNotSalePastDay: TcxCurrencyEdit
-    Left = 188
-    Top = 61
-    EditValue = 60.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 2
-    Width = 90
-  end
-  object cxLabel6: TcxLabel
-    Left = 11
-    Top = 62
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
-  end
   object deOperDate: TcxDateEdit
     Left = 188
     Top = 21
     EditValue = 42705d
     Properties.ShowTime = False
-    TabOrder = 4
+    TabOrder = 2
     Width = 90
   end
   object cxLabel1: TcxLabel
@@ -65,44 +51,44 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   end
   object ceProcUnit: TcxCurrencyEdit
     Left = 188
-    Top = 141
+    Top = 99
     EditValue = 10.000000000000000000
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 4
+    Width = 90
+  end
+  object cxLabel4: TcxLabel
+    Left = 11
+    Top = 100
+    Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
+  end
+  object ceProcGoods: TcxCurrencyEdit
+    Left = 188
+    Top = 59
+    EditValue = 20.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
     TabOrder = 6
     Width = 90
   end
-  object cxLabel4: TcxLabel
+  object cxLabel3: TcxLabel
     Left = 11
-    Top = 142
-    Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
+    Top = 60
+    Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
   end
-  object ceProcGoods: TcxCurrencyEdit
+  object cePenalty: TcxCurrencyEdit
     Left = 188
-    Top = 101
-    EditValue = 20.000000000000000000
+    Top = 139
+    EditValue = 500.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
     TabOrder = 8
     Width = 90
   end
-  object cxLabel3: TcxLabel
-    Left = 11
-    Top = 102
-    Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
-  end
-  object cePenalty: TcxCurrencyEdit
-    Left = 188
-    Top = 181
-    EditValue = 500.000000000000000000
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.##'
-    TabOrder = 10
-    Width = 90
-  end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 182
+    Top = 140
     Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
   end
   object PeriodChoice: TPeriodChoice
@@ -124,7 +110,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 175
-    Top = 100
+    Top = 108
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -133,13 +119,6 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
         Value = ''
         Component = deOperDate
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'NotSalePastDay'
-        Value = Null
-        Component = ceNotSalePastDay
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -165,8 +144,8 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 46
-    Top = 102
+    Left = 38
+    Top = 110
   end
   object ActionList: TActionList
     Left = 187

@@ -23,8 +23,6 @@ type
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    ceNotSalePastDay: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
     deOperDate: TcxDateEdit;
     cxLabel1: TcxLabel;
     ceProcUnit: TcxCurrencyEdit;

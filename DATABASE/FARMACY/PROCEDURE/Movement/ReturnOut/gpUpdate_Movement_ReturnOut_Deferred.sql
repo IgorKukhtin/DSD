@@ -44,6 +44,10 @@ BEGIN
     
        IF inisDeferred = TRUE
        THEN
+
+           -- Проверили перед проведением на достаточность наличия, НДС и пр.
+           PERFORM lpCheckComplete_Movement_ReturnOut (inMovementId);
+
            -- собственно проводки
            PERFORM lpComplete_Movement_ReturnOut(inMovementId  -- ключ Документа
                                                , vbUserId);    -- Пользователь  
@@ -71,3 +75,4 @@ LANGUAGE plpgsql VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
  26.11.19                                                      *
 */
+

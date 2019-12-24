@@ -55,6 +55,8 @@ type
     cxLabel9: TcxLabel;
     cxLabel8: TcxLabel;
     cxLabel7: TcxLabel;
+    D_AmountAll: TcxGridDBColumn;
+    D_SummaPenalty: TcxGridDBColumn;
   private
     { Private declarations }
   public

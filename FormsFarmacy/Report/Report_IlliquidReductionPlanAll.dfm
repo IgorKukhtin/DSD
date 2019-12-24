@@ -1,24 +1,24 @@
 inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072'>'
   ClientHeight = 504
-  ClientWidth = 824
+  ClientWidth = 869
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 840
+  ExplicitWidth = 885
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 824
+    Width = 869
     Height = 447
     ExplicitWidth = 824
     ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 824
+    ClientRectRight = 869
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 824
+        Width = 869
         Height = 447
         ExplicitWidth = 824
         ExplicitHeight = 447
@@ -33,8 +33,9 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
+              Column = SummaPenalty
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -79,13 +80,21 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 220
           end
-          object AmountStart: TcxGridDBColumn
+          object AmountAll: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088#1086#1074' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'AmountAll'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object AmountStart: TcxGridDBColumn
+            Caption = #1059#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1073#1077#1079' '#1089#1077#1088#1099#1093')'
             DataBinding.FieldName = 'AmountStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 77
+            Width = 81
           end
           object AmountSale: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -93,7 +102,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 75
           end
           object ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
@@ -103,19 +112,29 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 65
           end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
             Options.Editing = False
           end
+          object SummaPenalty: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'SummaPenalty'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 824
+    Width = 869
     ExplicitWidth = 824
     inherited deStart: TcxDateEdit
       EditValue = 43344d
@@ -145,22 +164,22 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       ExplicitLeft = 15
       ExplicitTop = 31
     end
-    object ceNotSalePastDay: TcxCurrencyEdit
-      Left = 397
+    object cePenalty: TcxCurrencyEdit
+      Left = 695
       Top = 5
-      EditValue = 60.000000000000000000
+      EditValue = 500.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       TabOrder = 4
       Width = 47
     end
     object cxLabel6: TcxLabel
-      Left = 222
+      Left = 538
       Top = 6
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
+      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
     end
     object ceProcGoods: TcxCurrencyEdit
-      Left = 559
+      Left = 335
       Top = 5
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
@@ -169,21 +188,21 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Width = 45
     end
     object cxLabel3: TcxLabel
-      Left = 449
+      Left = 225
       Top = 6
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object ceProcUnit: TcxCurrencyEdit
-      Left = 711
+      Left = 487
       Top = 5
-      EditValue = 20.000000000000000000
+      EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       TabOrder = 8
       Width = 45
     end
     object cxLabel4: TcxLabel
-      Left = 609
+      Left = 385
       Top = 6
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
@@ -246,7 +265,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         item
           Name = 'NotSalePastDay'
           Value = Null
-          Component = ceNotSalePastDay
+          Component = cePenalty
           MultiSelectSeparator = ','
         end
         item
@@ -294,13 +313,6 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           MultiSelectSeparator = ','
         end
         item
-          Name = 'NotSalePastDay'
-          Value = Null
-          Component = ceNotSalePastDay
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ProcGoods'
           Value = Null
           Component = ceProcGoods
@@ -311,6 +323,13 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           Name = 'ProcUnit'
           Value = Null
           Component = ceProcUnit
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Penalty'
+          Value = Null
+          Component = cePenalty
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -339,13 +358,6 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNotSalePastDay'
-        Value = Null
-        Component = ceNotSalePastDay
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inProcGoods'
         Value = Null
         Component = ceProcGoods
@@ -357,6 +369,14 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         Name = 'inProcUnit'
         Value = Null
         Component = ceProcUnit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenalty'
+        Value = Null
+        Component = cePenalty
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
