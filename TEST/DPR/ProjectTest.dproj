@@ -3801,10 +3801,6 @@
 				<Form>Route_SelfForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendOnPrice_ReestrJournal.pas">
-				<Form>SendOnPrice_ReestrJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Movement_ProfitLossService.pas">
 				<Form>Report_Movement_ProfitLossServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3816,6 +3812,18 @@
 			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\IftminFozzXML.pas"/>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalSlickJournal.pas">
+				<Form>OrderInternalSlickJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalBasisPackJournal.pas">
+				<Form>OrderInternalBasisPackJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalBasisPack.pas">
+				<Form>OrderInternalBasisPackForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

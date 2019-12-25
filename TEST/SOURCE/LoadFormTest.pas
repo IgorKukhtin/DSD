@@ -891,6 +891,11 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisPackForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisPackForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisPackJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisPackJournalForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsForm');
