@@ -62,17 +62,6 @@ BEGIN
 
     WITH
     -- сотрудники
-   /* tmpMemberPersonal AS (SELECT lfSelect.MemberId
-                               , lfSelect.PersonalId
-                               , lfSelect.UnitId
-                               , lfSelect.PositionId
-                               , lfSelect.BranchId
-                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                          WHERE lfSelect.Ord = 1
-                            AND (lfSelect.MemberId = inMemberId OR inMemberId = 0)
-                            AND (lfSelect.UnitId = inUnitId OR inUnitId = 0)
-                          )
-*/
     tmpMemberPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId     AS MemberId
                                , ObjectLink_Personal_Member.ObjectId          AS PersonalId
                                , ObjectLink_Personal_Unit.ChildObjectId       AS UnitId
@@ -103,34 +92,63 @@ BEGIN
                           WHERE ObjectLink_Personal_Member.ChildObjectId > 0
                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                             AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
-                            AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+                            --AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId OR inUnitId = 0) --выбираем по всем подразделениям, чтоб можно было определить реальную дату приема на работу (вдруг были переводы по подразделениям)
                          )
 
     -- сотрудники дата приема , увольнения
-  , tmpPersonal AS (SELECT Object_Personal_View.*
-                         , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
-                         , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнения путая ставим = дате форм. отчета, для расчета отр. месяцев на дату форм. отчета
-                               , ROW_NUMBER() OVER (PARTITION BY tmpMemberPersonal.MemberId
-                                                    -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
-                                                    ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut_user, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
-                                                           , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
-                                                           , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
-                                                           , Object_Personal_View.PersonalId
-                                                   ) AS Ord
-                    FROM tmpMemberPersonal
-                         LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
-                                                       AND Object_Personal_View.UnitId = tmpMemberPersonal.UnitId
-                                                       AND Object_Personal_View.PositionId = tmpMemberPersonal.PositionId
-                    WHERE Object_Personal_View.DateIn <= inStartDate
-                      AND ((Object_Personal_View.isDateOut = TRUE AND Object_Personal_View.DateOut_user >= vbStartDate) OR Object_Personal_View.isDateOut = FALSE)
+  , tmpList AS (SELECT Object_Personal_View.*
+                     , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
+                     , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнения путая ставим = дате форм. отчета, для расчета отр. месяцев на дату форм. отчета
+                           , ROW_NUMBER() OVER (PARTITION BY tmpMemberPersonal.MemberId
+                                                -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                ORDER BY CASE WHEN COALESCE (inUnitId,0) = Object_Personal_View.UnitId THEN 0 ELSE 1 END 
+                                                       , CASE WHEN COALESCE (Object_Personal_View.DateOut_user, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                       , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                       , Object_Personal_View.PersonalId
+                                               ) AS Ord
+                FROM tmpMemberPersonal
+                     LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
+                                                   AND Object_Personal_View.UnitId = tmpMemberPersonal.UnitId
+                                                   AND Object_Personal_View.PositionId = tmpMemberPersonal.PositionId
+                WHERE Object_Personal_View.DateIn <= inStartDate
+                 -- AND Object_Personal_View.isOfficial = TRUE
+                --  AND ((Object_Personal_View.isDateOut = TRUE AND Object_Personal_View.DateOut_user >= vbStartDate) OR Object_Personal_View.isDateOut = FALSE)
+               )
+    --не уволенные или уволены в течении года 
+  , tmpPersonal AS (SELECT *
+                    FROM tmpList
+                    WHERE ((tmpList.isDateOut = TRUE AND tmpList.DateOut_user >= vbStartDate) OR tmpList.isDateOut = FALSE)
+                      AND (tmpList.UnitId = inUnitId OR inUnitId = 0)
                    )
+                   
   -- прошлые должности (информативно)
   , tmpPositionOld AS (SELECT tmpPersonal.MemberId
-                            , string_agg (DISTINCT tmpPersonal.PositionName ||' ('|| TO_CHAR (tmpPersonal.DateIn, 'dd.mm.yyyy')|| ' / '|| TO_CHAR(tmpPersonal.DateOut_user, 'dd.mm.yyyy') ||') ' ||tmpPersonal.UnitName, '; ') AS PositionName
-                       FROM tmpPersonal
-                       WHERE ord > 1
+                            , string_agg (  tmpPersonal.PositionName ||' ('|| TO_CHAR (tmpPersonal.DateIn, 'dd.mm.yyyy')|| ' / '|| TO_CHAR(tmpPersonal.DateOut_user, 'dd.mm.yyyy') ||') ' ||tmpPersonal.UnitName, '; ' ORDER BY tmpPersonal.DateIn) AS PositionName
+                       FROM (SELECT DISTINCT tmpList.MemberId, tmpList.UnitName, tmpList.PositionName, tmpList.DateIn, tmpList.DateOut_user FROM tmpList WHERE ord > 1) AS tmpPersonal
                        GROUP BY tmpPersonal.MemberId
                        )
+  -- дата начала работы на предприятии
+  , tmpStart AS (SELECT tmpPersonal.memberId
+                      , MIN (COALESCE (tmpList5.DateIn, tmpList4.DateIn,tmpList3.DateIn,tmpList2.DateIn,tmpList1.DateIn,tmpPersonal.DateIn)) AS DateIn
+                 FROM tmpPersonal
+                      LEFT JOIN tmpList AS tmpList1 
+                                        ON tmpList1.memberId = tmpPersonal.memberId
+                                       AND tmpList1.DateOut_Calc = tmpPersonal.DateIn - '1 day' ::interval
+                      LEFT JOIN tmpList AS tmpList2 
+                                        ON tmpList2.memberId = tmpPersonal.memberId
+                                       AND tmpList2.DateOut_Calc = tmpList1.DateIn - '1 day' ::interval
+                      LEFT JOIN tmpList AS tmpList3 
+                                        ON tmpList3.memberId = tmpPersonal.memberId
+                                       AND tmpList3.DateOut_Calc = tmpList2.DateIn - '1 day' ::interval
+                      LEFT JOIN tmpList AS tmpList4 
+                                        ON tmpList4.memberId = tmpPersonal.memberId
+                                       AND tmpList4.DateOut_Calc = tmpList3.DateIn - '1 day' ::interval
+                      LEFT JOIN tmpList AS tmpList5 
+                                        ON tmpList5.memberId = tmpPersonal.memberId
+                                       AND tmpList5.DateOut_Calc = tmpList4.DateIn - '1 day' ::interval
+                 WHERE tmpPersonal.ord = 1
+                 GROUP BY tmpPersonal.MemberId
+                 )
 
   -- вычисляем интервалы непрерывной работы более 6 месяцев
   , tmp1 (MemberId, DateIn_Calc, ord) AS
@@ -139,7 +157,7 @@ BEGIN
                , min(t1.DateIn_Calc) AS DateIn_Calc
                , row_number() over (partition by t1.MemberId order by min(t1.DateIn_Calc))
           FROM tmpPersonal AS t1
-               LEFT JOIN tmpPersonal AS t2 ON t1.DateIn_Calc > t2.DateIn_Calc and t1.DateIn_Calc <= t2.DateOut_Calc + interval '1 day' and t2.MemberId = t1.MemberId
+               LEFT JOIN tmpPersonal AS t2 ON t1.DateIn_Calc > t2.DateIn_Calc AND t1.DateIn_Calc <= t2.DateOut_Calc + interval '1 day' AND t2.MemberId = t1.MemberId
           WHERE t2.MemberId IS NULL
           GROUP BY t1.DateIn_Calc, t1.MemberId
          )
@@ -149,7 +167,7 @@ BEGIN
                , min(t1.DateOut_Calc) AS DateOut_Calc
                , row_number() over (partition by t1.MemberId  order by min(t1.DateOut_Calc)) AS Ord
           FROM tmpPersonal AS t1
-               LEFT JOIN tmpPersonal AS t2 ON t1.DateOut_Calc + interval '1 day' >= t2.DateIn_Calc and t1.DateOut_Calc < t2.DateOut_Calc and t2.MemberId = t1.MemberId
+               LEFT JOIN tmpPersonal AS t2 ON t1.DateOut_Calc + interval '1 day' >= t2.DateIn_Calc AND t1.DateOut_Calc < t2.DateOut_Calc AND t2.MemberId = t1.MemberId
           WHERE t2.MemberId IS NULL
           GROUP BY t1.DateOut_Calc, t1.MemberId
          )
@@ -285,13 +303,13 @@ BEGIN
          , tmpPersonal.BranchName
          , tmpPersonal.PersonalGroupName
          , tmpPersonal.StorageLineName
-         , tmpPersonal.DateIn
-         , tmpPersonal.DateOut_user AS DateOut
+         , COALESCE (tmpStart.DateIn, tmpPersonal.DateIn) :: TDateTime AS DateIn
+         , tmpPersonal.DateOut_user                       :: TDateTime AS DateOut
          , tmpPersonal.isDateOut
          , tmpPersonal.isMain
          , tmpPersonal.isOfficial
          --, tmpPersonal.Age_work      :: TVarChar
-         , tmpVacation.Month_work    :: TFloat
+         , tmpVacation.Month_work        :: TFloat
            -- так считаются - Рабоч. дней
          , (tmpVacation.Day_real - COALESCE (MI_SheetWorkTime.Day_bol, 0)) :: TFloat AS Day_calendar
            -- Календ. дней
@@ -300,15 +318,15 @@ BEGIN
          , COALESCE (MI_SheetWorkTime.Day_bol, 0)                          :: TFloat AS Day_Hol
            --
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation 
-         , tmpHoliday.Day_holiday    :: TFloat                                                                       -- использовано 
+         , tmpHoliday.Day_holiday        :: TFloat                                                                       -- использовано 
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff   -- не использовано   
          , tmpHoliday.InvNumber          :: TVarChar 
          , tmpHoliday.OperDate           :: TDateTime
-         , tmpHoliday.OperDateStart  :: TDateTime
-         , tmpHoliday.OperDateEnd    :: TDateTime
-         , tmpHoliday.BeginDateStart  :: TDateTime
-         , tmpHoliday.BeginDateEnd    :: TDateTime
-, tmpPositionOld.PositionName  :: TVarChar AS PositionName_old
+         , tmpHoliday.OperDateStart      :: TDateTime
+         , tmpHoliday.OperDateEnd        :: TDateTime
+         , tmpHoliday.BeginDateStart     :: TDateTime
+         , tmpHoliday.BeginDateEnd       :: TDateTime
+         , tmpPositionOld.PositionName   :: TVarChar AS PositionName_old
     FROM tmpVacation
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
 
@@ -320,8 +338,10 @@ BEGIN
                                 AND tmpPersonal.ord = 1
          LEFT JOIN (SELECT COUNT(*) AS Day_bol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
                    ) AS MI_SheetWorkTime ON MI_SheetWorkTime.MemberId = tmpVacation.MemberId
+
          LEFT JOIN tmpPositionOld ON tmpPositionOld.MemberId = tmpVacation.MemberId
-                              
+         LEFT JOIN tmpStart ON tmpStart.MemberId = tmpVacation.MemberId
+
     ORDER BY tmpPersonal.UnitName
            , tmpPersonal.PersonalName
            , tmpPersonal.PositionName
@@ -340,4 +360,5 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);
---select * from gpReport_HolidayPersonal(inStartDate := ('23.12.2019')::TDateTime , inUnitId := 0 , inMemberId := 2671562 , inisDetail := 'False' ,  inSession := '5');
+--
+select * from gpReport_HolidayPersonal(inStartDate := ('24.12.2019')::TDateTime , inUnitId := 0 , inMemberId := 2671562  , inisDetail := 'False' ,  inSession := '5'); --2671562

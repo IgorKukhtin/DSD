@@ -452,7 +452,8 @@ BEGIN
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
        )
 
-     , tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+     , tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                   , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
                                    , ObjectHistory_PriceListItem.StartDate
                                    , ObjectHistory_PriceListItem.EndDate
                                    , (ObjectHistoryFloat_PriceListItem_Value.ValueData * 1.2) :: TFloat AS ValuePrice
@@ -461,6 +462,9 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                         ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                        AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                   LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                        ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                       AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
                                    LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                            ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -498,7 +502,7 @@ BEGIN
 
                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate <= inEndDate  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() THEN MIContainer.Amount ELSE 0 END) AS AmountInventory
                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate <= inEndDate  AND MIContainer.AnalyzerId               =  zc_Enum_AccountGroup_60000() THEN MIContainer.Amount ELSE 0 END) AS AmountInventory_RePrice -- Переоценка, т.е. AnalyzerId = Прибыль будущих периодов 
-                               , SUM (tmpPriceList_Basis.ValuePrice * 
+                               , SUM (COALESCE (tmpPriceList_Basis_kind.ValuePrice, tmpPriceList_Basis.ValuePrice) * 
                                       CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND _tmpContainer.ContainerDescId = zc_Container_Count() 
                                             AND MIContainer.OperDate <= inEndDate  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() THEN MIContainer.Amount ELSE 0 END ) AS SummInventory_Basis
                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss()      AND MIContainer.OperDate <= inEndDate  THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountLoss
@@ -508,7 +512,12 @@ BEGIN
                                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
                                                                              AND MIContainer.OperDate >= inStartDate
                                LEFT JOIN tmpPriceList_Basis ON tmpPriceList_Basis.GoodsId = _tmpContainer.GoodsId
+                                                           AND tmpPriceList_Basis.GoodsKindId IS NULL
                                                            AND (tmpPriceList_Basis.StartDate <= MIContainer.OperDate AND MIContainer.OperDate < tmpPriceList_Basis.EndDate)
+                               LEFT JOIN tmpPriceList_Basis AS tmpPriceList_Basis_kind 
+                                                            ON tmpPriceList_Basis_kind.GoodsId = _tmpContainer.GoodsId
+                                                           AND COALESCE (tmpPriceList_Basis_kind.GoodsKindId,0) = COALESCE (_tmpContainer.GoodsKindId,0)
+                                                           AND (tmpPriceList_Basis_kind.StartDate <= MIContainer.OperDate AND MIContainer.OperDate < tmpPriceList_Basis_kind.EndDate)
                           GROUP BY _tmpContainer.ContainerDescId
                                  , _tmpContainer.ContainerId_count
                                  , _tmpContainer.ContainerId_begin
@@ -570,12 +579,14 @@ BEGIN
                       )
      , tmpPriceStart AS (-- Цены Прайс начальные !!!временно * 1.2!!!
                         SELECT lfObjectHistory_PriceListItem.GoodsId
+                             , lfObjectHistory_PriceListItem.GoodsKindId 
                              , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
                         WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                      )
      , tmpPriceEnd AS (-- Цены Прайс конечные !!!временно * 1.2!!!
                       SELECT lfObjectHistory_PriceListItem.GoodsId
+                           , lfObjectHistory_PriceListItem.GoodsKindId
                            , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
                       FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate + INTERVAL '1 DAY') AS lfObjectHistory_PriceListItem
                       WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
@@ -1299,12 +1310,12 @@ BEGIN
 
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
-        , CASE WHEN COALESCE (tmpPriceStart.Price, 0) <> COALESCE (tmpPriceEnd.Price, 0) THEN TRUE ELSE FALSE END isReprice
+        , CASE WHEN COALESCE (tmpPriceStart_kind.Price, tmpPriceStart.Price, 0) <> COALESCE (tmpPriceEnd_kind.Price, tmpPriceEnd.Price, 0) THEN TRUE ELSE FALSE END isReprice
         , CASE WHEN tmpResult.CountStart = 0 AND ABS (tmpResult.SummStart) < 0.01
                     THEN FALSE
                WHEN tmpResult.CountStart = 0
                     THEN TRUE
-               WHEN ABS (tmpResult.SummStart / tmpResult.CountStart - COALESCE (tmpPriceStart.Price, 0)) > 0.01
+               WHEN ABS (tmpResult.SummStart / tmpResult.CountStart - COALESCE (tmpPriceStart_kind.Price, tmpPriceStart.Price, 0)) > 0.01
                     THEN TRUE
                ELSE FALSE
           END :: Boolean AS isPriceStart_diff
@@ -1312,7 +1323,7 @@ BEGIN
                     THEN FALSE
                WHEN tmpResult.CountEnd = 0
                     THEN TRUE
-               WHEN ABS (tmpResult.SummEnd / tmpResult.CountEnd - COALESCE (tmpPriceEnd.Price, 0)) > 0.01
+               WHEN ABS (tmpResult.SummEnd / tmpResult.CountEnd - COALESCE (tmpPriceEnd_kind.Price, tmpPriceEnd.Price, 0)) > 0.01
                     THEN TRUE
                ELSE FALSE
           END :: Boolean AS isPriceEnd_diff
@@ -1394,8 +1405,18 @@ BEGIN
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = NULL
 
+        -- цены привязываем 2 раза по виду товара и без
         LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpResult.GoodsId
+                               AND tmpPriceStart.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceStart AS tmpPriceStart_kind
+                                ON tmpPriceStart_kind.GoodsId = tmpResult.GoodsId
+                               AND COALESCE (tmpPriceStart_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+        -- цены привязываем 2 раза по виду товара и без                      
         LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpResult.GoodsId
+                             AND tmpPriceEnd.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceEnd AS tmpPriceEnd_kind
+                              ON tmpPriceEnd_kind.GoodsId = tmpResult.GoodsId
+                             AND COALESCE (tmpPriceEnd_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
         LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpResult.GoodsId
                                                     AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpResult.GoodsKindId
@@ -1441,6 +1462,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.12.19         *
  12.11.18         *
  19.10.18         *
  29.07.16         * add tmpObject_GoodsPropertyValue_basis

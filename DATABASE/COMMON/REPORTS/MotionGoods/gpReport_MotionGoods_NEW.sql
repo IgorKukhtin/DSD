@@ -354,12 +354,14 @@ BEGIN
          -- !!!!!!!!!!!!!!!!!!!!!!!
       RETURN QUERY
          WITH tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                     , lfObjectHistory_PriceListItem.GoodsKindId
                                      , lfObjectHistory_PriceListItem.ValuePrice AS Price
                                 FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate)
                                      AS lfObjectHistory_PriceListItem
                                 WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                                )
               , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                     , lfObjectHistory_PriceListItem.GoodsKindId
                                      , lfObjectHistory_PriceListItem.ValuePrice AS Price
                                 FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate)
                                      AS lfObjectHistory_PriceListItem
@@ -1270,8 +1272,8 @@ BEGIN
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
 
-        , tmpPriceStart.Price AS PriceListStart
-        , tmpPriceEnd.Price   AS PriceListEnd
+        , COALESCE (tmpPriceStart_kind.Price,tmpPriceStart.Price) AS PriceListStart
+        , COALESCE (tmpPriceEnd_kind.Price, tmpPriceEnd.Price)   AS PriceListEnd
 
         , View_InfoMoney.InfoMoneyId
         , View_InfoMoney.InfoMoneyCode
@@ -1468,8 +1470,18 @@ BEGIN
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
+        -- привязываем цены 2 раза по виду товара и без
         LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
+                               AND tmpPriceStart.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceStart AS tmpPriceStart_kind
+                                ON tmpPriceStart_kind.GoodsId = tmpMIContainer_group.GoodsId
+                               AND COALESCE (tmpPriceStart_kind.GoodsKindId,0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
+
         LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
+                             AND tmpPriceEnd.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceEnd AS tmpPriceEnd_kind
+                              ON tmpPriceEnd_kind.GoodsId = tmpMIContainer_group.GoodsId
+                             AND COALESCE (tmpPriceEnd_kind.GoodsKindId,0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
       ;
 
          -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -1485,6 +1497,7 @@ ALTER FUNCTION gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer,
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.12.19         *
  15.02.15                                        * add zc_Enum_AnalyzerId_Loss...
  01.02.15                                                       *
  14.11.14                                                       * add LineNum

@@ -295,15 +295,17 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                , lfObjectHistory_PriceListItem.GoodsKindId
                                 , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
-         , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
-                          )
+       , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                              , lfObjectHistory_PriceListItem.GoodsKindId
+                              , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
+                         WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                        )
        , tmpReport_all AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
@@ -821,8 +823,8 @@ BEGIN
         , (tmpMIContainer_group.CountOtherOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherOut_by_Weight
         , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
 
-        , tmpPriceStart.Price AS PriceListStart
-        , tmpPriceEnd.Price   AS PriceListEnd
+        , COALESCE (tmpPriceStart_kind.Price,tmpPriceStart.Price) AS PriceListStart
+        , COALESCE (tmpPriceEnd_kind.Price, tmpPriceEnd.Price)   AS PriceListEnd
 
         , View_InfoMoney.InfoMoneyId
         , View_InfoMoney.InfoMoneyCode
@@ -917,11 +919,20 @@ BEGIN
                               ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
                              AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
 
-
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
+        -- привязываем цены 2 раза по виду товара и без
         LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
+                               AND tmpPriceStart.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceStart AS tmpPriceStart_kind
+                                ON tmpPriceStart_kind.GoodsId = tmpMIContainer_group.GoodsId
+                               AND COALESCE (tmpPriceStart_kind.GoodsKindId,0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
+
         LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
+                             AND tmpPriceEnd.GoodsKindId IS NULL
+        LEFT JOIN tmpPriceEnd AS tmpPriceEnd_kind
+                              ON tmpPriceEnd_kind.GoodsId = tmpMIContainer_group.GoodsId
+                             AND COALESCE (tmpPriceEnd_kind.GoodsKindId,0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
 
         LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpMIContainer_group.GoodsId
                                           AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
@@ -936,6 +947,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.12.19         *
  14.11.18         *
  19.10.18         *
  11.07.15                                        * add GoodsKindName_complete
