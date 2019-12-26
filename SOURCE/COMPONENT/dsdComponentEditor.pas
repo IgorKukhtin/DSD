@@ -44,7 +44,7 @@ implementation
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
      cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc, Vcl.ActnList,
-     cxGridTableView, cxGridDBTableView, cxDropDownEdit, cxDateNavigator;
+     cxGridTableView, cxGridDBTableView, cxDropDownEdit, cxDateNavigator, cxMaskEdit;
 
 procedure Register;
 begin
@@ -72,6 +72,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxMaskEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxMemo)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxComboBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);

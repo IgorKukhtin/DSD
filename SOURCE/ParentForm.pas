@@ -66,7 +66,7 @@ uses
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, cxDateNavigator,
-  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid, cxDBLabel, cxBlobEdit,
+  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid, cxDBLabel, cxBlobEdit, cxMaskEdit,
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
@@ -610,6 +610,7 @@ initialization
   RegisterClass (TcxTextEdit);
   RegisterClass (TcxComboBox);
   RegisterClass (TcxDateNavigator);
+  RegisterClass (TcxMaskEdit);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);

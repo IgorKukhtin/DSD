@@ -2740,6 +2740,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IlliquidUnitJournal.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Buyer.pas">
+				<Form>BuyerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BuyerEdit.pas">
+				<Form>BuyerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

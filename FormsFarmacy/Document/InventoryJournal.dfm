@@ -292,6 +292,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end>
     end
     inherited actComplete: TdsdChangeMovementStatus
+      BeforeAction = actPUSHCompile
       QuestionBeforeExecute = #1055#1077#1088#1077#1076' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084' '#1085#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
       InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
     end
@@ -376,6 +377,16 @@ inherited InventoryJournalForm: TInventoryJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPUSHCompile: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHCompile
+      StoredProcList = <
+        item
+          StoredProc = spPUSHCompile
+        end>
+      Caption = 'actPUSHCompile'
     end
   end
   inherited MasterDS: TDataSource
@@ -674,5 +685,56 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spPUSHCompile: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowCompilePUSH_Inventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 706
+    Top = 344
   end
 end

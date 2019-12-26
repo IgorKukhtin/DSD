@@ -3244,6 +3244,30 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_IlliquidReductionPlanUser: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072'  '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072'  '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      FormName = 'TReport_IlliquidReductionPlanUserForm'
+      FormNameParam.Value = 'TReport_IlliquidReductionPlanUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBuyer: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+      Hint = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+      FormName = 'TBuyerForm'
+      FormNameParam.Value = 'TBuyerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3508,6 +3532,12 @@ inherited MainForm: TMainForm
         end
         object N205: TMenuItem
           Action = actPermanentDiscount
+        end
+        object N212: TMenuItem
+          Caption = '-'
+        end
+        object N213: TMenuItem
+          Action = actBuyer
         end
       end
     end
@@ -3951,6 +3981,9 @@ inherited MainForm: TMainForm
       end
       object N201: TMenuItem
         Action = actReport_IlliquidReductionPlanAll
+      end
+      object N211: TMenuItem
+        Action = actReport_IlliquidReductionPlanUser
       end
       object miReport_IncomeSample: TMenuItem
         Action = actReport_IncomeSample

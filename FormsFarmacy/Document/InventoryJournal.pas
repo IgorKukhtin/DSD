@@ -48,6 +48,8 @@ type
     ProficitSumm_calc: TcxGridDBColumn;
     DiffSumm_calc: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    spPUSHCompile: TdsdStoredProc;
+    actPUSHCompile: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public
