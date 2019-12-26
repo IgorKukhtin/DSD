@@ -606,6 +606,9 @@ type
     N207: TMenuItem;
     actIlliquidUnitJournal: TdsdOpenForm;
     N208: TMenuItem;
+    N209: TMenuItem;
+    actLoyaltySaveMoneyJournal: TdsdOpenForm;
+    N210: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

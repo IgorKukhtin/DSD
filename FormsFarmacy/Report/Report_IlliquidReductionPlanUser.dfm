@@ -1,31 +1,31 @@
 inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUserForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 835
+  ClientWidth = 866
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 851
+  ExplicitWidth = 882
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 835
+    Width = 866
     Height = 421
     ExplicitTop = 83
-    ExplicitWidth = 835
+    ExplicitWidth = 866
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 835
+    ClientRectRight = 866
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 835
+      ExplicitWidth = 866
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 49
-        Width = 835
+        Width = 866
         Height = 372
         ExplicitTop = 49
-        ExplicitWidth = 835
+        ExplicitWidth = 866
         ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,12 +149,16 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             DataBinding.FieldName = 'Color_font'
             Visible = False
           end
+          object Check_Filter: TcxGridDBColumn
+            DataBinding.FieldName = 'Check_Filter'
+            Visible = False
+          end
         end
       end
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 835
+        Width = 866
         Height = 41
         Align = alTop
         PopupMenu = PopupMenu
@@ -249,7 +253,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 41
-        Width = 835
+        Width = 866
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
@@ -258,9 +262,9 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     end
   end
   inherited Panel: TPanel
-    Width = 835
+    Width = 866
     Height = 57
-    ExplicitWidth = 835
+    ExplicitWidth = 866
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d
@@ -350,28 +354,41 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Top = 30
       Caption = #1060#1080#1083#1100#1090#1088
     end
-    object cxLabel9: TcxLabel
+    object cbFilter3: TcxCheckBox
       Left = 713
-      Top = 31
+      Top = 35
       Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = clWhite
       Style.TextColor = clGray
+      TabOrder = 12
+      Width = 139
     end
-    object cxLabel8: TcxLabel
+    object cbFilter2: TcxCheckBox
       Left = 713
-      Top = 15
+      Top = 17
       Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = 16636922
       Style.TextColor = clWindowText
+      TabOrder = 13
+      Width = 139
     end
-    object cxLabel7: TcxLabel
+    object cbFilter1: TcxCheckBox
       Left = 713
-      Top = 0
+      Top = -1
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = 11201206
+      Style.TextColor = clWindowText
+      TabOrder = 14
+      Width = 139
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -611,11 +628,54 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     Left = 520
     Top = 344
   end
-  object dsdFieldFilter1: TdsdFieldFilter
+  object dsdFieldFilter: TdsdFieldFilter
     TextEdit = edFilter
     DataSet = MasterCDS
     Column = GoodsName
+    CheckColumn = Check_Filter
+    CheckBoxList = <
+      item
+        Value = '1'
+        CheckBox = cbFilter1
+      end
+      item
+        Value = '2'
+        CheckBox = cbFilter2
+      end
+      item
+        Value = '3'
+        CheckBox = cbFilter3
+      end>
     Left = 520
     Top = 168
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpReport_GetIlliquidReductionPlanUser'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = DetalsCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43344d
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 240
   end
 end

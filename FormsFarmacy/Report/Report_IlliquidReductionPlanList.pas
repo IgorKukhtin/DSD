@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCheckBox;
 
 type
   TReport_IlliquidReductionPlanListForm = class(TAncestorReportForm)
@@ -52,11 +52,13 @@ type
     AccommodationName: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     Color_font: TcxGridDBColumn;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
     D_AmountStart: TcxGridDBColumn;
     D_SummaPenalty: TcxGridDBColumn;
+    cbFilter3: TcxCheckBox;
+    cbFilter2: TcxCheckBox;
+    cbFilter1: TcxCheckBox;
+    dsdFieldFilter: TdsdFieldFilter;
+    Check_Filter: TcxGridDBColumn;
   private
     { Private declarations }
   public

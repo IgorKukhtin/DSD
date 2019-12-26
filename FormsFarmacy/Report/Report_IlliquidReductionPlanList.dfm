@@ -145,6 +145,9 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             DataBinding.FieldName = 'Color_font'
             Visible = False
           end
+          object Check_Filter: TcxGridDBColumn
+            DataBinding.FieldName = 'Check_Filter'
+          end
         end
       end
       object cxGridDetals: TcxGrid
@@ -355,28 +358,41 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Top = 30
       Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
     end
-    object cxLabel7: TcxLabel
-      Left = 611
-      Top = 2
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
-      ParentColor = False
-      Style.Color = 11201206
-    end
-    object cxLabel8: TcxLabel
-      Left = 611
-      Top = 17
-      Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
-      ParentColor = False
-      Style.Color = 16636922
-      Style.TextColor = clWindowText
-    end
-    object cxLabel9: TcxLabel
-      Left = 611
+    object cbFilter3: TcxCheckBox
+      Left = 596
       Top = 33
       Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = clWhite
       Style.TextColor = clGray
+      TabOrder = 13
+      Width = 139
+    end
+    object cbFilter2: TcxCheckBox
+      Left = 596
+      Top = 18
+      Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
+      ParentBackground = False
+      ParentColor = False
+      State = cbsChecked
+      Style.Color = 16636922
+      Style.TextColor = clWindowText
+      TabOrder = 14
+      Width = 139
+    end
+    object cbFilter1: TcxCheckBox
+      Left = 596
+      Top = 0
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
+      ParentBackground = False
+      ParentColor = False
+      State = cbsChecked
+      Style.Color = 11201206
+      Style.TextColor = clWindowText
+      TabOrder = 15
+      Width = 139
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -673,5 +689,24 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     SummaryItemList = <>
     Left = 520
     Top = 344
+  end
+  object dsdFieldFilter: TdsdFieldFilter
+    DataSet = MasterCDS
+    CheckColumn = Check_Filter
+    CheckBoxList = <
+      item
+        Value = '1'
+        CheckBox = cbFilter1
+      end
+      item
+        Value = '2'
+        CheckBox = cbFilter2
+      end
+      item
+        Value = '3'
+        CheckBox = cbFilter3
+      end>
+    Left = 512
+    Top = 176
   end
 end
