@@ -235,11 +235,12 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Visible = False
             Options.Editing = False
           end
-          object D_SummaPenalty: TcxGridDBColumn
+          object D_Value: TcxGridDBColumn
             Caption = '  '
-            DataBinding.FieldName = 'SummaPenalty'
+            DataBinding.FieldName = 'Value'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -298,7 +299,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object ceProcUnit: TcxCurrencyEdit
       Left = 662
       Top = 5
-      EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
@@ -313,7 +313,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object ceProcGoods: TcxCurrencyEdit
       Left = 507
       Top = 5
-      EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
@@ -328,7 +327,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object ceNotSalePastDay: TcxCurrencyEdit
       Left = 341
       Top = 5
-      EditValue = 60.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
@@ -390,6 +388,21 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       TabOrder = 14
       Width = 139
     end
+    object edLabelPenalty: TcxTextEdit
+      Left = 480
+      Top = 29
+      TabStop = False
+      Enabled = False
+      ParentColor = True
+      Properties.AutoSelect = False
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      StyleDisabled.TextColor = clWindowText
+      StyleHot.BorderStyle = ebsNone
+      TabOrder = 15
+      Text = 'edLabelPenalty'
+      Width = 227
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -402,6 +415,16 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
   inherited ActionList: TActionList
     Left = 119
     Top = 247
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -487,6 +510,9 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       end
       item
         DataSet = DetalsCDS
+      end
+      item
+        DataSet = HeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -608,26 +634,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     Left = 296
     Top = 160
   end
-  object DBViewAddOnDetals: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <
-      item
-        BackGroundValueColumn = D_Color_calc
-        ColorValueList = <>
-      end>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    Left = 520
-    Top = 344
-  end
   object dsdFieldFilter: TdsdFieldFilter
     TextEdit = edFilter
     DataSet = MasterCDS
@@ -671,11 +677,61 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         MultiSelectSeparator = ','
       end
       item
+        Name = 'DayCount'
         Value = Null
+        Component = ceNotSalePastDay
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPenalty'
+        Value = Null
+        Component = edLabelPenalty
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
     Top = 240
+  end
+  object HeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 256
+    Top = 312
+  end
+  object CrossDBViewAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = D_Color_calc
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = D_Value
+    Left = 688
+    Top = 264
   end
 end

@@ -36,7 +36,6 @@ type
     cxGridLevel1: TcxGridLevel;
     DetalsDS: TDataSource;
     DetalsCDS: TClientDataSet;
-    DBViewAddOnDetals: TdsdDBViewAddOn;
     D_AmountSale: TcxGridDBColumn;
     ceProcUnit: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
@@ -53,12 +52,15 @@ type
     cxSplitter1: TcxSplitter;
     Color_font: TcxGridDBColumn;
     D_AmountAll: TcxGridDBColumn;
-    D_SummaPenalty: TcxGridDBColumn;
+    D_Value: TcxGridDBColumn;
     cbFilter3: TcxCheckBox;
     cbFilter2: TcxCheckBox;
     cbFilter1: TcxCheckBox;
     Check_Filter: TcxGridDBColumn;
     spGet: TdsdStoredProc;
+    edLabelPenalty: TcxTextEdit;
+    HeaderCDS: TClientDataSet;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public
