@@ -3812,10 +3812,6 @@
 			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\IftminFozzXML.pas"/>
-			<DCCReference Include="..\..\Forms\Document\OrderInternalSlickJournal.pas">
-				<Form>OrderInternalSlickJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderInternalBasisPackJournal.pas">
 				<Form>OrderInternalBasisPackJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>

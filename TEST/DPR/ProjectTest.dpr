@@ -1122,7 +1122,6 @@ uses
   OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderInternalSlickJournal in '..\..\Forms\Document\OrderInternalSlickJournal.pas' {OrderInternalSlickJournalForm: TParentForm},
   OrderInternalBasisPackJournal in '..\..\Forms\Document\OrderInternalBasisPackJournal.pas' {OrderInternalBasisPackJournalForm: TParentForm},
   OrderInternalBasisPack in '..\..\Forms\Document\OrderInternalBasisPack.pas' {OrderInternalBasisPackForm: TParentForm};
 

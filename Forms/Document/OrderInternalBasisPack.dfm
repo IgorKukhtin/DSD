@@ -326,7 +326,6 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -856,7 +855,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
     Top = 377
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_OrderInternalBasis'
+    StoredProcName = 'gpSelect_MI_OrderInternalBasisPack'
     OutputType = otMultiDataSet
     Params = <
       item
@@ -1121,7 +1120,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
       end
       item
         Name = 'isPack'
-        Value = True
+        Value = 'FALSE'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1169,7 +1168,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
       end
       item
         Name = 'inIsPack'
-        Value = Null
+        Value = 'FALSE'
         Component = FormParams
         ComponentItem = 'isPack'
         DataType = ftBoolean
@@ -1640,7 +1639,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
     Top = 8
   end
   object spUpdateAmountRemains: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountRemains'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountRemainsBasisPack'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1671,7 +1670,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
       item
         Name = 'inToId'
         Value = Null
-        Component = GuidesTo
+        Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1681,7 +1680,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
     Top = 248
   end
   object spUpdateAmountBasis: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountBasis'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountBasisPack'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1714,7 +1713,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
     Top = 264
   end
   object spUpdateAmountForecast: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecast'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecastBasisPack'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1723,22 +1722,6 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inStartDate'
-        Value = 0d
-        Component = edOperDateStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 0d
-        Component = edOperDateEnd
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
