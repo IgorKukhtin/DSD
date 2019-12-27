@@ -324,6 +324,21 @@ object BuyerForm: TBuyerForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
+          ComponentItem = 'Phone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name'
+          Value = Null
+          Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','

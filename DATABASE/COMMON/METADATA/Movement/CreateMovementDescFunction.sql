@@ -360,11 +360,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_IlliquidUnit() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_IlliquidUnit', 'Неликвиды по подразделениям' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_IlliquidUnit');
 
+CREATE OR REPLACE FUNCTION zc_Movement_LoyaltySaveMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_LoyaltySaveMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_LoyaltySaveMoney', 'Программа лояльности накопительная' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_LoyaltySaveMoney');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 27.12.19                                                                                     * zc_Movement_LoyaltySaveMoney
  20.12.19                                                                                     * zc_Movement_IlliquidUnit
  06.12.19                                                                                     * zc_Movement_PermanentDiscount
  04.11.19                                                                                     * zc_Movement_Loyalty

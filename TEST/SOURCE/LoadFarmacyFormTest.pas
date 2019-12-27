@@ -71,6 +71,7 @@ type
     procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
+    procedure LoadLoyaltySaveMoneyFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
     procedure LoadListDiffFormTest;
@@ -803,6 +804,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Loyalty_UsedPromocodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_UsedPromocodeForm');
+end;
+
+procedure TLoadFormTest.LoadLoyaltySaveMoneyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltySaveMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltySaveMoneyForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltySaveMoneyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltySaveMoneyJournalForm');
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;
