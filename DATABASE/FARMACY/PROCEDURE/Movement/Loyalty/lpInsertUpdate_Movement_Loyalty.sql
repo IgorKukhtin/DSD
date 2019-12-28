@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Tfloat, Integer, Integer, Tfloat, TVarChar, Tfloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
     IN inSummLimit             Tfloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
+    IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -61,6 +62,9 @@ BEGIN
 
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailID);
+
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Beginning(), ioId, inisBeginning);
 
     IF vbIsInsert = True
     THEN

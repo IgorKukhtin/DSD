@@ -202,9 +202,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotDisplaySUN() RETURNS integer AS
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_NotDisplaySUN', 'Не отображать для сбора СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotDisplaySUN');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Beginning() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Beginning'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Beginning', 'Генерация скидак с начало акции'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Beginning');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 28.12.19                                                                                    * zc_MovementBoolean_Beginning
  09.12.19         * zc_MovementBoolean_SUN_v2
  20.09.19                                                                                    * zc_MovementBoolean_NotDisplaySUN
  16.09.19                                                                                    * zc_MovementBoolean_PaymentFormed
