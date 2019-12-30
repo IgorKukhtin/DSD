@@ -833,12 +833,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoDoctorsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoEntrancesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoEntrancesForm');
     exit;
-
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
     exit;}

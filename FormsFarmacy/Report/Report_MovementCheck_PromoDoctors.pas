@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TReport_MovementCheck_PromoDoctorsForm = class(TAncestorReportForm)
@@ -35,6 +35,20 @@ type
     ChangePercent: TcxGridDBColumn;
     SummChangePercent: TcxGridDBColumn;
     Doctors: TcxGridDBColumn;
+    cxGridDetals: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    Itog_Doctors: TcxGridDBColumn;
+    Itog_GoodsCount: TcxGridDBColumn;
+    Itog_SummSale: TcxGridDBColumn;
+    Itog_SummChangePercent: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    Itog_CheckCount: TcxGridDBColumn;
+    spItog: TdsdStoredProc;
+    ItogDS: TDataSource;
+    ItogCDS: TClientDataSet;
+    actGridToExcelItog: TdsdGridToExcel;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

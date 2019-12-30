@@ -1,33 +1,33 @@
 inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoctorsForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080')'
-  ClientHeight = 395
+  ClientHeight = 555
   ClientWidth = 1072
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1088
-  ExplicitHeight = 434
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 1072
-    Height = 336
+    Height = 496
     ExplicitTop = 59
     ExplicitWidth = 1072
     ExplicitHeight = 336
-    ClientRectBottom = 336
+    ClientRectBottom = 496
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1072
       ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1072
-        Height = 336
+        Height = 360
         ExplicitWidth = 1072
-        ExplicitHeight = 336
+        ExplicitHeight = 185
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = Amount
             end
@@ -207,6 +207,166 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
           end
         end
       end
+      object cxGridDetals: TcxGrid
+        Left = 0
+        Top = 368
+        Width = 1072
+        Height = 128
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        ExplicitTop = 208
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ItogDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Itog_GoodsCount
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = Itog_GoodsCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Itog_SummSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Itog_SummChangePercent
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Itog_GoodsCount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Itog_Doctors
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Itog_SummChangePercent
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Itog_SummSale
+            end
+            item
+              Format = ',0'
+              Kind = skSum
+              Column = Itog_CheckCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Itog_Doctors: TcxGridDBColumn
+            Caption = #1060'.'#1048'.'#1054'. '#1042#1088#1072#1095#1072
+            DataBinding.FieldName = 'Doctors'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 264
+          end
+          object Itog_CheckCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
+            DataBinding.FieldName = 'CheckCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Itog_GoodsCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'GoodsCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Itog_SummSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079'. '
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
+          object Itog_SummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 360
+        Width = 1072
+        Height = 8
+        Touch.ParentTabletOptions = False
+        Touch.TabletOptions = [toPressAndHold]
+        AlignSplitter = salBottom
+        Control = cxGridDetals
+        ExplicitTop = 0
+      end
     end
   end
   inherited Panel: TPanel
@@ -234,6 +394,15 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
   inherited ActionList: TActionList
     Left = 87
     Top = 191
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spItog
+        end>
+    end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -333,6 +502,15 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGridToExcelItog: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGridDetals
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -400,6 +578,10 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -413,6 +595,10 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actGridToExcelItog
       Category = 0
     end
   end
@@ -556,5 +742,45 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
       end>
     Left = 360
     Top = 24
+  end
+  object spItog: TdsdStoredProc
+    StoredProcName = 'gpReport_MovementCheck_PromoDoctorsItog'
+    DataSet = ItogCDS
+    DataSets = <
+      item
+        DataSet = ItogCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42491d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42491d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 96
+    Top = 320
+  end
+  object ItogDS: TDataSource
+    DataSet = ItogCDS
+    Left = 64
+    Top = 320
+  end
+  object ItogCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 32
+    Top = 320
   end
 end
