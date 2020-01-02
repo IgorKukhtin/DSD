@@ -29,7 +29,7 @@ BEGIN
 
 
        -- пересчет кол-во для zc_MI_Master
-       outAmount_master = CASE -- для  Тушенка
+        outAmount_master = CASE -- для  Тушенка
                                WHEN EXISTS (SELECT 1 FROM MovementItem JOIN ObjectLink AS OL ON OL.ObjectId = MovementItem.ObjectId AND OL.ChildObjectId = zc_Enum_InfoMoney_30102() AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() WHERE MovementItem.Id = inParentId)
                                     THEN (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId)
                                -- для  ЯЗЫК СВИН. ВАРЕН.
@@ -37,22 +37,44 @@ BEGIN
                                     THEN vbCuterCount * vbValue_Receipt
                                ELSE
                                -- для остальных
-                  (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                  (SELECT SUM (CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal
+                                                                 (inGoodsId                := MovementItem.ObjectId
+                                                                , inGoodsKindId            := MILO_GoodsKind.ObjectId
+                                                                , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                                , inIsWeightMain           := COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
+                                                                , inIsTaxExit              := COALESCE (MIBoolean_TaxExit.ValueData, FALSE)
+                                                                 )
+                                        THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                    ELSE 0
+                               END
+                               )
+                                        
                    FROM MovementItem
+                        LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                         ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                        AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                         LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
-                                                      ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
-                                                     AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
-                                                     AND MIBoolean_TaxExit.ValueData = TRUE
+                                                      ON MIBoolean_TaxExit.MovementItemId = MovementItem.Id
+                                                     AND MIBoolean_TaxExit.DescId         = zc_MIBoolean_TaxExit()
+                                                     AND MIBoolean_TaxExit.ValueData      = TRUE
+                        LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
+                                                      ON MIBoolean_WeightMain.MovementItemId = MovementItem.Id
+                                                     AND MIBoolean_WeightMain.DescId         = zc_MIBoolean_WeightMain()
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                               ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                   WHERE MovementItem.ParentId = inParentId
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                            AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                   WHERE MovementItem.ParentId   = inParentId
                      AND MovementItem.MovementId = inMovementId
-                     AND MovementItem.DescId = zc_MI_Child()
-                     AND MovementItem.isErased = FALSE
+                     AND MovementItem.DescId     = zc_MI_Child()
+                     AND MovementItem.isErased   = FALSE
                      AND MIBoolean_TaxExit.MovementItemId IS NULL
                   )
                           END;

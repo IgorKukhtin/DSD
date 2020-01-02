@@ -172,6 +172,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = SumRateExp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg_Reestr_zp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -299,6 +304,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = SumRateExp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg_Reestr_zp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -662,6 +672,17 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1077#1089' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
         Options.Editing = False
+        Width = 76
+      end
+      object TotalCountKg_Reestr_zp: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1076#1083#1103' '#1047#1055' '#1042#1077#1089' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        DataBinding.FieldName = 'TotalCountKg_Reestr_zp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1089' '#1076#1083#1103' '#1047#1055' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
         Width = 76
       end
       object InvNumber_Reestr: TcxGridDBColumn

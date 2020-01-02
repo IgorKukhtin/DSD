@@ -25,7 +25,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
              , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat, SumRateExp TFloat
-             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat, InvNumber_Reestr TVarChar
+             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat, TotalCountKg_Reestr_zp TFloat, InvNumber_Reestr TVarChar
               )
 AS
 $BODY$
@@ -641,6 +641,7 @@ BEGIN
 
              , MAX (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
              , MAX (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
+             , MAX (CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE COALESCE (tmpDataReestr.TotalCountKg, 0) END) :: TFloat AS TotalCountKg_Reestr_zp
              , MAX (COALESCE (tmpDataReestr.InvNumber, ''))         :: TVarChar AS InvNumber_Reestr
 
               -- группировка по всем
@@ -808,6 +809,10 @@ BEGIN
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = tmpFuel.RouteKindId
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = tmpFuel.RateFuelKindId
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
+
+             LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
+                                     ON OB_NotPayForWeight.ObjectId = tmpFuel.RouteId
+                                    AND OB_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
 
              -- ограничиваем по филиалу, если нужно
              LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 

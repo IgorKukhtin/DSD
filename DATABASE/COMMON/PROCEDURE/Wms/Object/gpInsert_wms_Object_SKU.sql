@@ -98,9 +98,9 @@ $BODY$
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.08.19                                       *
 */
--- 956-16 - select * from wms_Object_GoodsByGoodsKind where '38391802' in (sku_id_sh, sku_id_nom, sku_id_ves)
--- 777-16 - select * from wms_Object_GoodsByGoodsKind where '800563' in (sku_id_sh, sku_id_nom, sku_id_ves)
--- 39-3   - select * from wms_Object_GoodsByGoodsKind where sku_id_nom = '795292'
+-- 956-   - select * from lpSelect_wms_Object_SKU() where sku_id IN ('38391802') -- "СОСИСКИ ВАРЕНІ «ХОТ-ДОГ З СИРОМ» Ул упак. Номинальный"
+-- 777-16 - select * from lpSelect_wms_Object_SKU() where sku_id IN ('800562', '800563') -- "БАСТУРМА КАВКАЗЬКА С/К В/Г Б/В Номинальный + Неноминальный"
+-- 39-3   - select * from lpSelect_wms_Object_SKU() where sku_id IN ('795292', '795293') -- "ЛЮБИТЕЛЬСЬКА СВИНЯЧА ВАР.  В/Г Б/В Номинальный + Неноминальный" 
 -- select * FROM wms_Message WHERE RowData ILIKE '%sku_id=945179%
 -- select * FROM wms_Message WHERE GUID = '1' ORDER BY Id
 -- тест

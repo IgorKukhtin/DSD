@@ -62,7 +62,7 @@ BEGIN
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
                          -- AND wms_MI_Incoming.StatusId_wms IS NULL
-                         AND wms_MI_Incoming.sku_id :: TVarChar IN (/*'795292', '795293', '38391802', */'800561', '800562', '800563')
+                         AND wms_MI_Incoming.sku_id :: TVarChar IN ('795292', '795293', '38391802', '800562', '800563')
                       )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

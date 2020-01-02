@@ -78,8 +78,8 @@ BEGIN
                                    , MovementItem.ObjectId                             AS GoodsId
                                    , MILO_GoodsKind.ObjectId                           AS GoodsKindId
                                    , OL_Goods_Measure.ChildObjectId                    AS MeasureId
-                                -- , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
-                                   , 1 AS Amount
+                                   , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                 --, 1 AS Amount
                                      -- расчетная Категорию -некоторым ставим лучшую 
                                    , CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                            AND tmpPartnerTag.PartnerTagId > 0
@@ -115,7 +115,7 @@ BEGIN
                                                           AND MovementString_Comment.DescId     = zc_MovementString_Comment()
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.Amount     > 0
+                                                       -- AND MovementItem.Amount     > 0
                                                          AND MovementItem.isErased   = FALSE
                                   LEFT JOIN ObjectLink AS OL_Goods_Measure
                                                        ON OL_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -131,7 +131,8 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('953460') -- 952893
+                               AND Movement.InvNumber IN ('955244') -- 952893
+                               AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
         , tmpMovement AS (SELECT DISTINCT
@@ -254,7 +255,7 @@ BEGIN
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_all.GoodsKindId
                                                                    AND tmpMI_all.sku_id    = 0
                        -- WHERE Object_Goods.Id > 0
-                          WHERE tmpMI_all.sku_id = 800563 -- 38391802
+                          WHERE tmpMI_all.sku_id = 38391802 -- 800563
                          )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

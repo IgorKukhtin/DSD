@@ -32,6 +32,24 @@ BEGIN
 
 
      RETURN QUERY 
+       WITH lfObject_Account AS (SELECT * FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000())) -- 20000; "Запасы"
+          , tmpMovement AS (SELECT Movement.* FROM Movement WHERE Movement.ParentId = inParentId)
+          , tmpMIContainer_all AS (SELECT MIContainer.*
+                                   FROM MovementItemContainer AS MIContainer
+                                   WHERE MIContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                                     AND MIContainer.DescId = zc_MIContainer_Summ()
+                                  )
+          , tmpMIContainer AS (SELECT MIContainer.MovementItemId, SUM (MIContainer.Amount) AS Amount
+                               FROM Movement
+                                    JOIN tmpMIContainer_all AS MIContainer ON MIContainer.MovementId = Movement.Id
+                                                                         AND MIContainer.DescId = zc_MIContainer_Summ()
+                                    JOIN Container ON Container.Id = MIContainer.ContainerId
+                                    JOIN lfObject_Account ON lfObject_Account.AccountId = Container.ObjectId
+                               WHERE Movement.ParentId = inParentId
+                               GROUP BY MIContainer.MovementItemId
+                              )
+          , tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
+       --
        SELECT
              Movement.Id AS MovementId
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -75,10 +93,11 @@ BEGIN
 
            , MovementItem.isErased
 
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN Movement ON Movement.ParentId = inParentId
-                         AND Movement.DescId = zc_Movement_Income()
-                         -- AND Movement.isErased = tmpIsErased.isErased !!!убрал т.к. удаляются только элементы!!!
+     --FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+          --JOIN Movement ON Movement.ParentId = inParentId
+          --             AND Movement.DescId = zc_Movement_Income()
+                     -- AND Movement.isErased = tmpIsErased.isErased !!!убрал т.к. удаляются только элементы!!!
+       FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -130,17 +149,9 @@ BEGIN
 
             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = tmpIsErased.isErased
+            JOIN tmpIsErased ON tmpIsErased.isErased = MovementItem.isErased
 
-            LEFT JOIN (SELECT MIContainer.MovementItemId, SUM (MIContainer.Amount) AS Amount
-                       FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- 20000; "Запасы"
-                            JOIN Movement ON Movement.ParentId = inParentId
-                            JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = Movement.Id
-                                                                     AND MIContainer.DescId = zc_MIContainer_Summ()
-                            JOIN Container ON Container.Id = MIContainer.ContainerId
-                                          AND Container.ObjectId = lfObject_Account.AccountId
-                       GROUP BY MIContainer.MovementItemId
-                      ) AS tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -151,20 +162,22 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
-                                                                AND MIContainer_Count.DescId = zc_MIContainer_Count()
-                                                                AND MIContainer_Count.isActive = TRUE
+            LEFT JOIN tmpMIContainer_all AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
+                                                             AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                             AND MIContainer_Count.isActive = TRUE
+                                                           --AND 1=0
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                                          AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = COALESCE (Container_Count.ObjectId, ObjectLink_Goods_Fuel.ChildObjectId)
+       WHERE Movement.ParentId = inParentId
+         AND Movement.DescId = zc_Movement_Income()
 
        ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -179,3 +192,4 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 688, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+ select * from gpSelect_Movement_TransportIncome (inParentId := 15468824 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '10909');

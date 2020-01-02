@@ -599,6 +599,8 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153992, 1159046, 1154906, 1145420, 1154908, 1145419) -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153989, 1145422); -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (130771, 128511, 1489115, 131613, 1453527, 129793); -- 08.2017
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (2811931, 2807719); -- 12.2019
+
 /*   -- 04.2018
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898);
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (
@@ -1544,4 +1546,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.10.2019', inEndDate:= '26.10.2019', inBranchId:= 3080683 /*филиал Ћьвов*/, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2019', inEndDate:= '25.12.2019', inBranchId:= 0 /*филиал Ћьвов*/, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

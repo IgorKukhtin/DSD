@@ -527,7 +527,10 @@ BEGIN
 
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
-     FROM (SELECT _tmpItem_Transport.MovementItemId, COALESCE (_tmpPropertyRemains.Amount, 0) AS StartAmountFuel
+     FROM (WITH tmpItem_Transport_all AS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND DescId = zc_MI_Master() AND isErased = FALSE)
+              , tmpItem_Transport AS (SELECT MIN (tmpItem_Transport_all.Id) AS MovementItemId_parent FROM tmpItem_Transport_all)
+           --
+           SELECT _tmpItem_Transport.MovementItemId, COALESCE (_tmpPropertyRemains.Amount, 0) AS StartAmountFuel
            FROM (SELECT (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport WHERE _tmpItem_Transport.MovementItemId > 0
                 ) AS _tmpItem_Transport
                 LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
@@ -563,8 +566,7 @@ BEGIN
                  WHERE _tmpPropertyRemains.Kind = 3
                    AND _tmpItem_Transport.GoodsId IS NULL
                 ) AS tmp
-                JOIN (SELECT MIN (Id) AS MovementItemId_parent FROM MovementItem WHERE MovementId = inMovementId AND DescId = zc_MI_Master() AND isErased = FALSE
-                     ) AS tmpItem_Transport ON 1=1
+                JOIN tmpItem_Transport ON 1=1
           ) AS tmp;
 
 
@@ -937,6 +939,11 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
+-- if inUserId = 5
+-- then
+--     RAISE EXCEPTION 'Ошибка.1';
+-- end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -968,5 +975,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 15465178, inUserId:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())

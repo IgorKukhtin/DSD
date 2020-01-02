@@ -81,7 +81,7 @@ BEGIN
                                        , Movement.StatusId
                                   FROM Movement
                                   WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
-                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
                                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
                                  -- AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
@@ -106,7 +106,7 @@ BEGIN
                                        , Movement.StatusId
                                   FROM tmpInvNumber AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                         --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
@@ -136,7 +136,7 @@ BEGIN
 
 
     -- Проверка
-    IF EXISTS (SELECT 1 FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased())
+    IF EXISTS (SELECT 1 FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased() AND tmp.DescId <> zc_Movement_ReturnIn())
     THEN
         RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> удален.'
                       , (SELECT tmp.InvNumber FROM _tmpMovement_find_all AS tmp WHERE tmp.StatusId = zc_Enum_Status_Erased() ORDER BY tmp.Id LIMIT 1)
@@ -208,7 +208,7 @@ BEGIN
 
                                              THEN MovementLinkObject_Unit.ObjectId
 
-                                        -- Для остальных - Заявка покупателя или SendOnPrice
+                                        -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                         ELSE MovementLinkObject_From.ObjectId
 
                                    END AS FromId
@@ -229,7 +229,7 @@ BEGIN
                                          AND tmpMovement.DescId = zc_Movement_OrderInternal()
                                              THEN 8455 -- Склад специй
 
-                                        -- Для остальных - Заявка покупателя или SendOnPrice
+                                        -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                         ELSE MovementLinkObject_To.ObjectId
 
                                    END AS ToId
@@ -363,6 +363,7 @@ BEGIN
                                              -- LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
                                         WHERE tmpMovement.DescId = zc_Movement_OrderIncome()
                                            OR tmpMovement.DescId = zc_Movement_SendOnPrice()
+                                           OR tmpMovement.DescId = zc_Movement_ReturnIn()
                                         -- OR Object_From.DescId = zc_Object_ArticleLoss()
                                         -- OR Object_From.DescId = zc_Object_Unit()
                                            OR tmpMovement.DescId_From = zc_Object_ArticleLoss()
@@ -381,6 +382,9 @@ BEGIN
                                                                                            -- для списания
                                                                                            WHEN tmp.MovementDescId = zc_Movement_Loss()
                                                                                                 THEN tmp.ToId
+                                                                                           -- для возврата от Покупателя
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_ReturnIn()
+                                                                                                THEN 0
 --    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
 --     AND tmp.FromId = 3080691 -- Склад ГП ф.Львов
 --     AND tmp.ToId   = 8411    -- Склад ГП ф.Киев
@@ -410,6 +414,9 @@ BEGIN
                                                                                            -- для списания здесь 0 т.к. он выбирается из справочника
                                                                                            WHEN tmp.MovementDescId = zc_Movement_Loss()
                                                                                                 THEN 0
+                                                                                           -- для возврата от Покупателя
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_ReturnIn()
+                                                                                                THEN tmp.ToId
 --    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
 --     AND tmp.FromId = 3080691 -- Склад ГП ф.Львов
 --     AND tmp.ToId   = 8411    -- Склад ГП ф.Киев
@@ -433,7 +440,7 @@ BEGIN
                                                                                            WHEN tmp.isSendOnPriceIn = FALSE
                                                                                                 THEN tmp.ToId
                                                                                       END
-                                                               AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
+                                                               AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN tmp.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
                                                                                                                   THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = tmp.MovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind())
                                                                                                              ELSE COALESCE (tmpSelect.PaidKindId, 0)
                                                                                                         END
@@ -498,6 +505,8 @@ BEGIN
                         THEN tmpMovement.ToId
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN tmpMovement.FromId
+                   WHEN tmpMovement.DescId = zc_Movement_ReturnIn()
+                        THEN tmpMovement.FromId
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN tmpMovement.FromId
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
@@ -507,6 +516,8 @@ BEGIN
                         THEN tmpMovement.ToCode
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN tmpMovement.FromCode
+                   WHEN tmpMovement.DescId = zc_Movement_ReturnIn()
+                        THEN tmpMovement.FromCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN tmpMovement.FromCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
@@ -515,6 +526,8 @@ BEGIN
             , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
                         THEN tmpMovement.ToName
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                        THEN tmpMovement.FromName
+                   WHEN tmpMovement.DescId = zc_Movement_ReturnIn()
                         THEN tmpMovement.FromName
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN tmpMovement.FromName
@@ -618,7 +631,7 @@ BEGIN
       ;
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+     /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -659,7 +672,7 @@ BEGIN
     || ', ' || inBranchCode :: TVarChar
     || ', ' || inBarCode
     || ', ' || inSession
-              ;
+              ;*/
 
 END;
 $BODY$

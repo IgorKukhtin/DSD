@@ -565,6 +565,7 @@ BEGIN
                                             END
                                   WHEN tmpMI_ReceiptChild.Value_master <> 0
                                        THEN tmpMI_ReceiptChild.Amount_calc * tmpMI_ReceiptChild.Value / tmpMI_ReceiptChild.Value_master 
+
                                   ELSE 0
                              END
                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END

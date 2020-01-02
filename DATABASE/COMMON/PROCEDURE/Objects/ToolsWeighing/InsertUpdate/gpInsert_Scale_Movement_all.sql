@@ -478,6 +478,20 @@ end if;
                                   AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
      END IF;
+     IF vbMovementDescId = zc_Movement_ReturnIn()
+     THEN
+          -- поиск существующего документа <ReturnIn> по ReturnIn
+          vbMovementId_find:= (SELECT Movement.Id
+                                FROM MovementLinkMovement
+                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                        AND Movement.DescId = zc_Movement_ReturnIn()
+                                                      --AND Movement.OperDate = inOperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_Erased(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                  -- AND inSession <> '5'
+                              );
+     END IF;
 
      -- это <Перемещение по цене>
      IF vbMovementDescId = zc_Movement_SendOnPrice()
@@ -840,6 +854,9 @@ end if;
                                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
                                , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
+                               
+                               , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent    -- используется только для возврата
+                               , COALESCE (MIFloat_PromoMovement.ValueData, 0)       AS MovementId_Promo -- используется только для возврата
 
                                , MovementItem.Amount                                 AS Amount
                                , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
@@ -882,6 +899,15 @@ end if;
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                              ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                                           AND vbMovementDescId = zc_Movement_ReturnIn()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                            ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                           AND vbMovementDescId = zc_Movement_ReturnIn()
 
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -928,7 +954,7 @@ end if;
                           WHERE MovementItem.MovementId = vbMovementId_find
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
-                            AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice())
+                            AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
                           )
 
            -- InsertUpdate
@@ -994,7 +1020,7 @@ end if;
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inAmountPartner       := tmp.Amount
+                                                        , inAmountPartner       := tmp.AmountPartner
                                                         , inChangePercent       := tmp.ChangePercent
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
@@ -1117,7 +1143,7 @@ end if;
                      , tmp.UnitId_to
                 FROM (-- элементы взвешивания
                       SELECT 0 AS MovementItemId
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END ELSE MovementItem.ObjectId             END AS GoodsId
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END ELSE MovementItem.ObjectId END AS GoodsId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  END AS GoodsKindId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_Box.ObjectId, 0)        END AS BoxId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE MIDate_PartionGoods.ValueData                  END AS PartionGoodsDate
@@ -1149,17 +1175,34 @@ end if;
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
                                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -- формируется только приход = вес со скидкой
 
+                                  WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
+                                       THEN 0 -- не заполняется - берем из мобильного торговоого
+
                                   ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
 
                              END AS AmountPartner
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) END AS ChangePercentAmount
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
+                                       THEN NULL
+                                  -- если есть - берем из мобильного торговоого
+                                  ELSE COALESCE (tmpMI.ChangePercentAmount, COALESCE (MIFloat_ChangePercentAmount.ValueData, 0))
+                             END AS ChangePercentAmount
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_Price.ValueData, 0)               END AS Price
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0)       END AS CountForPrice
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
+                                       THEN NULL
+                                  -- если есть - берем из мобильного торговоого
+                                  ELSE COALESCE (tmpMI.Price, COALESCE (MIFloat_Price.ValueData, 0))
+                             END AS Price
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
+                                       THEN NULL
+                                  -- если есть - берем из мобильного торговоого
+                                  ELSE COALESCE (tmpMI.CountForPrice, COALESCE (MIFloat_CountForPrice.ValueData, 0))
+                             END AS CountForPrice
 
-                           , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent    -- используется только для возврата
-                           , COALESCE (MIFloat_PromoMovement.ValueData, 0)       AS MovementId_Promo -- используется только для возврата
+                             -- используется только для возврата
+                           , COALESCE (tmpMI.ChangePercent, COALESCE (MIFloat_ChangePercent.ValueData, 0)) AS ChangePercent
+                             -- используется только для возврата
+                           , COALESCE (tmpMI.MovementId_Promo, COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_Promo
 
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
@@ -1248,6 +1291,13 @@ end if;
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                                                 AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn= FALSE -- !!!важно!!!
 
+                           -- используется для возврата + только для цены + ChangePercentAmount + ChangePercent
+                           LEFT JOIN tmpMI ON tmpMI.GoodsId     = MovementItem.ObjectId
+                                          AND tmpMI.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                          AND tmpMI.Ord         = 1
+                                          AND vbMovementDescId  = zc_Movement_ReturnIn()
+                                          AND vbMovementId_find > 0
+
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
@@ -1275,8 +1325,16 @@ end if;
                                   ELSE tmpMI.PartionGoods
                              END AS PartionGoods
 
-                           , tmpMI.Amount
-                           , tmpMI.AmountChangePercent
+                           , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
+                                       THEN 0 -- не заполняется - берем из реального взвешивания
+                                  ELSE tmpMI.Amount
+                             END AS Amount
+                           
+                           , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
+                                       THEN 0 -- не заполняется - берем из реального взвешивания
+                                  ELSE tmpMI.AmountChangePercent
+                             END AS AmountChangePercent
+
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN 0 -- не заполняется, т.к. сейчас расход
                                   ELSE tmpMI.AmountPartner
@@ -1286,8 +1344,8 @@ end if;
                            , tmpMI.Price
                            , tmpMI.CountForPrice
 
-                           , 0 AS ChangePercent    -- используется только для возврата
-                           , 0 AS MovementId_Promo -- используется только для возврата
+                           , tmpMI.ChangePercent    -- используется только для возврата
+                           , tmpMI.MovementId_Promo -- используется только для возврата
 
                            , tmpMI.BoxCount
                            , tmpMI.Count
@@ -1593,12 +1651,15 @@ end if;*/
 
 -- !!! ВРЕМЕННО !!!
 IF inSession = '5' AND 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % %'
+    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin
   , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin)
   , (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner())
   , (SELECT  MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
+  , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCount())
+  , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCountPartner())
+  , (SELECT MIF.ValueData FROM MovementItem AS MI JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_Price() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master())
    ;
 END IF;
 

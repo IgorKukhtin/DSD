@@ -90,6 +90,7 @@ type
     InvNumber_Reestr: TcxGridDBColumn;
     UnitName_car: TcxGridDBColumn;
     UnitName_route: TcxGridDBColumn;
+    TotalCountKg_Reestr_zp: TcxGridDBColumn;
   private
   public
   end;

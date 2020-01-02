@@ -106,10 +106,8 @@ BEGIN
          -- нашли свойство <Маршрут> у Master <Документа>
          IF COALESCE (ioRouteId, 0) =0
          THEN
-             ioRouteId := (SELECT MovementItem.ObjectId
-                           FROM (SELECT MIN (Id) AS Id FROM MovementItem WHERE MovementId = inParentId AND DescId = zc_MI_Master() AND isErased = FALSE
-                                ) AS tmpMI
-                                JOIN MovementItem ON MovementItem.Id = tmpMI.Id
+             ioRouteId := (WITH tmpMI AS (SELECT * FROM MovementItem WHERE MovementId = inParentId AND DescId = zc_MI_Master() AND isErased = FALSE)
+                           SELECT tmpMI.ObjectId FROM tmpMI ORDER BY tmpMI.Id LIMIT 1
                           );
              ioRouteId:= COALESCE (ioRouteId, 0);
              ioRouteName := lfGet_Object_ValueData (ioRouteId);
@@ -239,6 +237,12 @@ BEGIN
                                                 , inUserId        := vbUserId
                                                  ) AS tmp;
 
+
+-- if inSession = 5
+-- then
+--     RAISE EXCEPTION 'Ошибка.1';
+-- end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -259,3 +263,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TransportIncome (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- select * from gpInsertUpdate_Movement_TransportIncome(inParentId := 15468942 , ioMovementId := 0 , ioInvNumber := '' , inOperDate := ('01.12.2019')::TDateTime , ioOperDatePartner := ('12.12.2019')::TDateTime , inInvNumberPartner := '' , ioPriceWithVAT := 'False' , ioVATPercent := 0 , inChangePrice := 4.2 , inFromId := 1002038 , inToId := 1002064 , ioPaidKindId := 4 , ioPaidKindName := 'Нал' , ioContractId := 880397 , ioContractName := 'П041652' , ioRouteId := 0 , ioRouteName := '' , inPersonalDriverId := 956811 , ioMovementItemId := 0 , ioGoodsId := 8124 , ioGoodsCode := 7001 , ioGoodsName := 'бензин А-92' , ioFuelName := 'Бензин' , inAmount := 40.33 , ioPrice := 28.99 , ioCountForPrice := 0 , inSession:= zfCalc_UserAdmin());

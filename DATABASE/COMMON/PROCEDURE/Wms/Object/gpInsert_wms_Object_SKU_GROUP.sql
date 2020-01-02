@@ -43,15 +43,21 @@ BEGIN
      -- RETURN QUERY
      -- –езультат - сформировали новые данные - Ёлементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpGoods_all AS (SELECT tmpGoods.sku_id, tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.ObjectId
-                              FROM lpSelect_wms_Object_SKU() AS tmpGoods
+        WITH tmpObject_SKU AS (SELECT tmpGoods.sku_id, tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.ObjectId, tmpGoods.GoodsTypeKindId, tmpGoods.GoodsTypeKindName
+                               FROM lpSelect_wms_Object_SKU() AS tmpGoods
+                              )
+           , tmpGoods_all AS (SELECT tmpGoods.sku_id, tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.ObjectId, zc_Object_GoodsGroup() AS DescId
+                              FROM tmpObject_SKU AS tmpGoods
+                             UNION ALL
+                              SELECT tmpGoods.sku_id, tmpGoods.GoodsTypeKindId AS GoodsGroupId, tmpGoods.GoodsTypeKindName AS GoodsGroupName, tmpGoods.ObjectId, zc_Object_GoodsTypeKind() AS DescId
+                              FROM tmpObject_SKU AS tmpGoods
                              )
           -- 0
         , tmpGoodsGroup_0 AS (SELECT tmpGoodsGroup.GoodsGroupId                               AS GoodsGroupId
                                    , tmpGoodsGroup.GoodsGroupName                             AS GoodsGroupName
                                    , COALESCE (ObjectLink_GoodsGroup_parent.ChildObjectId, 0) AS ParentId
                                    , 0                                                        AS Ord
-                              FROM (SELECT DISTINCT tmpGoods_all.GoodsGroupId, tmpGoods_all.GoodsGroupName FROM tmpGoods_all
+                              FROM (SELECT DISTINCT tmpGoods_all.GoodsGroupId, tmpGoods_all.GoodsGroupName FROM tmpGoods_all WHERE tmpGoods_all.DescId = zc_Object_GoodsGroup()
                                    ) AS tmpGoodsGroup
                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
                                                         ON ObjectLink_GoodsGroup_parent.ObjectId = tmpGoodsGroup.GoodsGroupId
@@ -178,27 +184,31 @@ BEGIN
                                                        AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
                              )
           -- all
-        , tmpData AS (SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_0 AS tmp
+        , tmpData AS (SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_0 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_1 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_1 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_2 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_2 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_3 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_3 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_4 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_4 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_5 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_5 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_6 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_6 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_7 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_7 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_8 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_8 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_9 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_9 AS tmp
                      UNION
-                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id FROM tmpGoodsGroup_10 AS tmp
+                      SELECT tmp.GoodsGroupId AS sku_group_id, tmp.GoodsGroupName AS description, tmp.ParentId AS parent_id, zc_Object_GoodsGroup() AS DescId FROM tmpGoodsGroup_10 AS tmp
+                     UNION
+                      SELECT Object.Id AS sku_group_id, Object.ValueData AS description, 0 AS parent_id, Object.DescId
+                      FROM Object
+                      WHERE Object.Id IN (zc_Enum_GoodsTypeKind_Ves(), zc_Enum_GoodsTypeKind_Nom(), zc_Enum_GoodsTypeKind_Sh())
                      )
         -- –езультат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -206,19 +216,20 @@ BEGIN
              (-- sku_group
               SELECT vbProcName          AS ProcName
                    , vbTagName_sku_group AS TagName
-                   , (ROW_NUMBER() OVER (ORDER BY COALESCE (tmpGoodsGroup_10.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_9.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_8.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_7.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_6.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_5.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_4.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_3.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_2.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_1.Ord, 0) DESC
-                                                          , COALESCE (tmpGoodsGroup_0.Ord, 0) DESC
-                                                          , tmpData.sku_group_id
-                                                           ) :: Integer) AS RowNum
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.DescId DESC
+                                                , COALESCE (tmpGoodsGroup_10.Ord, 0) DESC
+                                                , COALESCE (tmpGoodsGroup_9.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_8.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_7.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_6.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_5.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_4.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_3.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_2.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_1.Ord, 0)  DESC
+                                                , COALESCE (tmpGoodsGroup_0.Ord, 0)  DESC
+                                                , tmpData.sku_group_id
+                                        ) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName_sku_group
                           ||' action="' || vbActionName                     ||'"' -- ???
@@ -232,22 +243,22 @@ BEGIN
                    , 1                    AS GroupId
               FROM tmpData
                    LEFT JOIN tmpGoodsGroup_10 ON tmpGoodsGroup_10.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_9 ON tmpGoodsGroup_9.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_8 ON tmpGoodsGroup_8.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_7 ON tmpGoodsGroup_7.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_6 ON tmpGoodsGroup_6.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_5 ON tmpGoodsGroup_5.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_4 ON tmpGoodsGroup_4.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_3 ON tmpGoodsGroup_3.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_2 ON tmpGoodsGroup_2.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_1 ON tmpGoodsGroup_1.GoodsGroupId = tmpData.sku_group_id
-                   LEFT JOIN tmpGoodsGroup_0 ON tmpGoodsGroup_0.GoodsGroupId = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_9  ON tmpGoodsGroup_9.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_8  ON tmpGoodsGroup_8.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_7  ON tmpGoodsGroup_7.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_6  ON tmpGoodsGroup_6.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_5  ON tmpGoodsGroup_5.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_4  ON tmpGoodsGroup_4.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_3  ON tmpGoodsGroup_3.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_2  ON tmpGoodsGroup_2.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_1  ON tmpGoodsGroup_1.GoodsGroupId  = tmpData.sku_group_id
+                   LEFT JOIN tmpGoodsGroup_0  ON tmpGoodsGroup_0.GoodsGroupId  = tmpData.sku_group_id
       
              UNION ALL
               -- sku_depends
               SELECT vbProcName            AS ProcName
                    , vbTagName_sku_depends AS TagName
-                   , (ROW_NUMBER() OVER (ORDER BY tmpData.sku_id) :: Integer) AS RowNum
+                   , (ROW_NUMBER() OVER (ORDER BY tmpData.DescId DESC, tmpData.sku_id ASC) :: Integer) AS RowNum
                      -- XML
                    , ('<' || vbTagName_sku_depends
                           ||' action="' || vbActionName                     ||'"' -- ???
