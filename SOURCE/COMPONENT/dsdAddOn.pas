@@ -10,7 +10,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
-     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL
+     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -799,25 +799,49 @@ type
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
   end;
 
+  // Установка фильтров по галочкам
+  TCheckBoxItem = class(TCollectionItem)
+  private
+    FValues: String;
+    FCheckBox: TcxCheckBox;
+    FOnCheckChange: TNotifyEvent;
+    procedure SetCheckBox(const Value: TcxCheckBox);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    // Значения для фильтра
+    property Value: String read FValues write FValues;
+    // Откуда брать значение для определения Bold
+    property CheckBox: TcxCheckBox read FCheckBox write SetCheckBox;
+  end;
+
+
   // Установка фильтра на поле
   TdsdFieldFilter = class(TComponent)
   private
     FTextEdit: TcxTextEdit;
     FDataSet: TDataSet;
     FColumn: TcxGridColumn;
+    FCheckColumn: TcxGridColumn;
 
     FTimer: TTimer;
     FProgressBar: TProgressBar;
     FOnEditChange: TNotifyEvent;
     FOnEditExit: TNotifyEvent;
 
+
     FOldStr : string;
 
     FFilterRecord: TFilterRecordEvent;
     FFiltered: Boolean;
 
+    FCheckBoxList: TOwnedCollection;
+
     procedure OnEditChange(Sender: TObject);
     procedure OnEditExit(Sender: TObject);
+    procedure OnCheckChange(Sender: TObject);
     procedure SetTextEdit(const Value: TcxTextEdit);
     procedure SetDataSet(const Value: TDataSet);
     procedure SetColumn(const Value: TcxGridColumn);
@@ -828,11 +852,15 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function CheckSelected : Boolean;
   published
     // Edit - для ввода текста фильтра
     property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
     property DataSet: TDataSet read FDataSet write SetDataSet;
     property Column: TcxGridColumn read FColumn write SetColumn;
+    property CheckColumn: TcxGridColumn read FCheckColumn write FCheckColumn;
+    // Массив CheckBox для установки фильта
+    property CheckBoxList: TOwnedCollection read FCheckBoxList write FCheckBoxList;
   end;
 
 
@@ -843,10 +871,10 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
-     cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
+     cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxDropDownEdit, cxMemo, dsdException, Soap.EncdDecd;
+     cxDropDownEdit, cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd;
 
 type
 
@@ -1910,6 +1938,8 @@ begin
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxTextEdit).Text;
   if Sender is TcxMemo then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxMemo).Text;
+  if Sender is TcxMaskEdit then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxMaskEdit).Text;
   if Sender is TcxButtonEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
@@ -1942,6 +1972,8 @@ begin
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;
   if Sender is TcxMemo then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxMemo).Text;
+  if Sender is TcxMaskEdit then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxMaskEdit).Text;
   if Sender is TcxButtonEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
@@ -2057,6 +2089,10 @@ begin
           if FControl is TcxMemo then begin
              (FControl as TcxMemo).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
              (FControl as TcxMemo).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxMaskEdit then begin
+             (FControl as TcxMaskEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxMaskEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
           end;
           if FControl is TcxDateEdit then begin
              (FControl as TcxDateEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
@@ -3763,6 +3799,8 @@ begin
           (FControl as TcxTextEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxMemo then
           (FControl as TcxMemo).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxMaskEdit then
+          (FControl as TcxMaskEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxDateEdit then
           (FControl as TcxDateEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxButtonEdit then
@@ -3837,6 +3875,7 @@ begin
   if Assigned(Action) then
     if (Sender is TcxTextEdit) or
       (Sender is TcxMemo) or
+      (Sender is TcxMaskEdit) or
       (Sender is TcxButtonEdit) or
       (Sender is TcxCurrencyEdit) or
       (Sender is TcxDateEdit) or
@@ -3903,6 +3942,7 @@ begin
   if Assigned(Value) then
   begin
     if not (Value is TcxTextEdit) and
+       not (Value is TcxMaskEdit) and
        not (Value is TcxButtonEdit) and
        not (Value is TcxCurrencyEdit) and
        not (Value is TcxDateEdit) then
@@ -3913,6 +3953,8 @@ begin
   begin
     if FControl is TcxTextEdit then
        (FControl as TcxTextEdit).OnKeyDown := FKeyDown
+    else if FControl is TcxMaskEdit then
+       (FControl as TcxMaskEdit).OnKeyDown := FKeyDown
     else if FControl is TcxButtonEdit then
        (FControl as TcxButtonEdit).OnKeyDown := FKeyDown
     else if FControl is TcxCurrencyEdit then
@@ -3927,6 +3969,11 @@ begin
     begin
       FKeyDown := (Value as TcxTextEdit).OnKeyDown;
       (Value as TcxTextEdit).OnKeyDown := edKeyDown
+    end
+    else if Value is TcxMaskEdit then
+    begin
+      FKeyDown := (Value as TcxMaskEdit).OnKeyDown;
+      (Value as TcxMaskEdit).OnKeyDown := edKeyDown
     end
     else if Value is TcxButtonEdit then
     begin
@@ -4146,12 +4193,54 @@ begin
   end;
 end;
 
+  { TCheckBoxItem }
+
+procedure TCheckBoxItem.Assign(Source: TPersistent);
+begin
+  if Source is TCheckBoxItem then
+    with TCheckBoxItem(Source) do
+    begin
+      Self.Value := Value;
+      Self.CheckBox := CheckBox;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TCheckBoxItem.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FValues := '';
+  FOnCheckChange := Nil;
+end;
+
+destructor TCheckBoxItem.Destroy;
+begin
+  inherited;
+end;
+
+procedure TCheckBoxItem.SetCheckBox(const Value: TcxCheckBox);
+begin
+   if Assigned(FCheckBox) then
+  begin
+    FCheckBox.Properties.OnChange := FOnCheckChange;
+  end;
+  FCheckBox := Value;
+  if Assigned(FCheckBox) then
+  begin
+    FOnCheckChange := FCheckBox.Properties.OnChange;
+    if Collection.Owner is TdsdFieldFilter then
+      FCheckBox.Properties.OnChange := TdsdFieldFilter(Collection.Owner).OnCheckChange;
+  end;
+end;
+
   { TdsdFieldFilter }
 
 constructor TdsdFieldFilter.Create(AOwner: TComponent);
 begin
   inherited;
   FTimer := TTimer.Create(Self);
+  FCheckBoxList := TOwnedCollection.Create(Self, TCheckBoxItem);
   FTimer.Enabled:=False;
   FTimer.OnTimer := TimerTimer;
   FProgressBar := TProgressBar.Create(Self);
@@ -4168,6 +4257,7 @@ end;
 
 destructor TdsdFieldFilter.Destroy;
 begin
+  FreeAndNil(FCheckBoxList);
   FreeAndNil(FTimer);
   inherited;
 end;
@@ -4233,7 +4323,7 @@ end;
 procedure TdsdFieldFilter.OnEditChange(Sender: TObject);
 begin
   if not Assigned(FDataSet) then Exit;
-  if not Assigned(FColumn) then Exit;
+  if not Assigned(FColumn) and not Assigned(FCheckColumn) then Exit;
   if Sender is TcxTextEdit then
   begin
     if Trim(TcxTextEdit(Sender).Text)=FOldStr then exit;
@@ -4246,6 +4336,15 @@ begin
   end;
 end;
 
+function TdsdFieldFilter.CheckSelected : Boolean;
+  var Item : TCollectionItem;
+begin
+  Result := False;
+  for Item in FCheckBoxList do if Assigned(TCheckBoxItem(Item).FCheckBox) then
+  if not TCheckBoxItem(Item).FCheckBox.Checked then Exit;
+  Result := True;
+end;
+
 procedure TdsdFieldFilter.OnEditExit(Sender: TObject);
 begin
   FTimer.Enabled:=False;
@@ -4253,13 +4352,13 @@ begin
   FProgressBar.Visible:=False;
   if not Assigned(FDataSet) then Exit;
   if not FDataSet.Active then Exit;
-  if not Assigned(FColumn) then Exit;
+  if not Assigned(FColumn) and not Assigned(FCheckColumn) then Exit;
   FDataSet.DisableControls;
   try
     FDataSet.OnFilterRecord := FFilterRecord;
     FDataSet.Filtered := FFiltered;
 
-    if FOldStr <> '' then
+    if (FOldStr <> '') or not CheckSelected then
     begin
       FDataSet.Filtered:=False;
       FDataSet.OnFilterRecord:=FilterRecord;
@@ -4271,8 +4370,14 @@ begin
   end;
 end;
 
+procedure TdsdFieldFilter.OnCheckChange(Sender: TObject);
+begin
+  OnEditExit(Sender);
+end;
+
 procedure TdsdFieldFilter.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
   Var S,S1,Name:String; k:integer; F:Boolean;
+      Item : TCollectionItem;
 begin
   if Assigned(FFilterRecord) then
   begin
@@ -4280,9 +4385,27 @@ begin
     if not Accept then Exit;
   end;
 
-  S1 := Trim(FOldStr);
-
   if not FDataSet.Active then Exit;
+
+  if not CheckSelected and Assigned(FCheckColumn) then
+  begin
+    if FCheckColumn is TcxGridDBBandedColumn then Name:= TcxGridDBBandedColumn(FCheckColumn).DataBinding.FieldName
+    else if FCheckColumn is TcxGridDBColumn then Name:= TcxGridDBColumn(FCheckColumn).DataBinding.FieldName
+    else Name := '';
+
+    if Name <> '' then
+      for Item in FCheckBoxList do if Assigned(TCheckBoxItem(Item).FCheckBox) then
+        if not TCheckBoxItem(Item).CheckBox.Checked and (AnsiUpperCase(DataSet.FieldByName(Name).AsString) = AnsiUpperCase(TCheckBoxItem(Item).Value)) then
+    begin
+      Accept := False;
+      Exit;
+    end;
+  end;
+
+
+  S1 := Trim(FOldStr);
+  if not Assigned(FColumn) then Exit;
+
   if FColumn is TcxGridDBBandedColumn then Name:= TcxGridDBBandedColumn(FColumn).DataBinding.FieldName
   else if FColumn is TcxGridDBColumn then Name:= TcxGridDBColumn(FColumn).DataBinding.FieldName
   else Name := '';

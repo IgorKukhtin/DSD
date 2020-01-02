@@ -895,6 +895,7 @@ inherited InventoryForm: TInventoryForm
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
+      BeforeAction = actPUSHCompile
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -1179,6 +1180,16 @@ inherited InventoryForm: TInventoryForm
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
+    end
+    object actPUSHCompile: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHCompile
+      StoredProcList = <
+        item
+          StoredProc = spPUSHCompile
+        end>
+      Caption = 'actPUSHCompile'
     end
   end
   inherited MasterDS: TDataSource
@@ -2183,5 +2194,55 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 754
     Top = 368
+  end
+  object spPUSHCompile: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowCompilePUSH_Inventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 754
+    Top = 440
   end
 end

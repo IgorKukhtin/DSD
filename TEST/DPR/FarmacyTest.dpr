@@ -793,7 +793,11 @@ uses
   Report_MovementCheck_PromoDoctors in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoDoctors.pas' {Report_MovementCheck_PromoDoctorsForm: TParentForm},
   Report_MovementCheck_PromoEntrances in '..\..\FormsFarmacy\Report\Report_MovementCheck_PromoEntrances.pas' {Report_MovementCheck_PromoEntrancesForm: TParentForm},
   IlliquidUnit in '..\..\FormsFarmacy\Document\IlliquidUnit.pas' {IlliquidUnitForm: TParentForm},
-  IlliquidUnitJournal in '..\..\FormsFarmacy\Document\IlliquidUnitJournal.pas';
+  IlliquidUnitJournal in '..\..\FormsFarmacy\Document\IlliquidUnitJournal.pas',
+  Buyer in '..\..\FormsFarmacy\Guides\Buyer.pas' {BuyerForm: TParentForm},
+  BuyerEdit in '..\..\FormsFarmacy\Guides\BuyerEdit.pas' {BuyerEditForm: TParentForm},
+  LoyaltySaveMoney in '..\..\FormsFarmacy\Document\LoyaltySaveMoney.pas' {LoyaltySaveMoneyForm: TParentForm},
+  LoyaltySaveMoneyJournal in '..\..\FormsFarmacy\Document\LoyaltySaveMoneyJournal.pas' {LoyaltySaveMoneyJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

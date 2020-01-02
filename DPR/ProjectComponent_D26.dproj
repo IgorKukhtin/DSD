@@ -237,6 +237,9 @@
             <Form>PUSHMessageForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
         <None Include="ModelSupport_ProjectComponent_D26\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

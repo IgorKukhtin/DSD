@@ -70,6 +70,9 @@ BEGIN
     -- сохранили связь с <Сотрудником>
     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RepriceUnitSheduler_User(), ioId, inUserId);
 
+    -- сохранили протокол
+    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

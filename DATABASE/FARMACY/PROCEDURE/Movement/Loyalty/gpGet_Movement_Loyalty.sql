@@ -31,7 +31,8 @@ RETURNS TABLE (Id Integer
              , UpdateName    TVarChar
              , UpdateDate    TDateTime
              , Comment       TVarChar
-             , PercentUsed   TFloat)
+             , PercentUsed   TFloat
+             , isBeginning   Boolean)
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -70,6 +71,7 @@ BEGIN
           , Null  :: TDateTime          AS UpdateDate
           , NULL  ::TVarChar            AS Comment
           , 0     ::TFloat              AS PercentUsed
+          , FALSE                       AS isBeginning
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -153,6 +155,7 @@ BEGIN
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
           , tmpPercentUsed.PercentUsed::TFloat                             AS PercentUsed
+          , COALESCE(MovementBoolean_Beginning.ValueData, FALSE)           AS isBeginning
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -191,6 +194,10 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Beginning
+                                  ON MovementBoolean_Beginning.MovementId = Movement.Id
+                                 AND MovementBoolean_Beginning.DescId = zc_MovementBoolean_Beginning()
 
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id

@@ -162,8 +162,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
-     cxMemo, cxImage, cxDropDownEdit, dsdInternetAction, ParentForm, Vcl.ActnList,
-     System.Rtti;
+     cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
+     Vcl.ActnList, System.Rtti;
 
 procedure Register;
 begin
@@ -824,6 +824,8 @@ begin
         Result := (Component as TcxTextEdit).Text;
      if Component is TcxMemo then
         Result := (Component as TcxMemo).Text;
+     if Component is TcxMaskEdit then
+        Result := (Component as TcxMaskEdit).Text;
      if Component is TcxButtonEdit then
         Result := (Component as TcxButtonEdit).Text;
      if (Component is TDataSet) then
@@ -976,6 +978,8 @@ begin
         (Component as TcxTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
+     if Component is TcxMaskEdit then
+        (Component as TcxMaskEdit).Text := FValue;
      if Component is TcxComboBox then
         (Component as TcxComboBox).Text := FValue;
      if Component is TcxDateNavigator then

@@ -115,15 +115,16 @@ BEGIN
                     SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0) AS UnitId_by, TRUE  AS isActive FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE
                    )
 
-             -- Цены из прайса
-           , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                                   , CASE WHEN TRUE = COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE)
-                                            OR 0    = COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0)
-                                               THEN lfSelect.ValuePrice
-                                          ELSE lfSelect.ValuePrice * (1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100)
-                                     END AS Price_vat
-                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfSelect
-                             )
+       -- Цены из прайса
+     , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                             , lfSelect.GoodsKindId AS GoodsKindId
+                             , CASE WHEN TRUE = COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE)
+                                      OR 0    = COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0)
+                                         THEN lfSelect.ValuePrice
+                                    ELSE lfSelect.ValuePrice * (1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100)
+                               END AS Price_vat
+                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfSelect
+                       )
      , tmpSend_ProfitLoss AS (SELECT MIContainer.Id
                                    , MIContainer.MovementId
                                    , MIContainer.DescId
@@ -324,8 +325,8 @@ BEGIN
          , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_zavod   / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_zavod
          , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_branch  / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_branch
 
-         , tmpPriceList.Price_vat ::TFloat AS Price_PriceList
-         , (tmpOperationGroup.AmountOut * tmpPriceList.Price_vat) :: TFloat AS SummOut_PriceList
+         , COALESCE (tmpPriceList_kind.Price_vat, tmpPriceList.Price_vat) ::TFloat AS Price_PriceList
+         , (tmpOperationGroup.AmountOut * COALESCE (tmpPriceList_kind.Price_vat, tmpPriceList.Price_vat) ) :: TFloat AS SummOut_PriceList
 
          , View_ProfitLoss.ProfitLossCode, View_ProfitLoss.ProfitLossGroupName, View_ProfitLoss.ProfitLossDirectionName, View_ProfitLoss.ProfitLossName
          , View_ProfitLoss.ProfitLossName_all
@@ -417,6 +418,10 @@ BEGIN
           ) AS tmpOperationGroup
 
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpOperationGroup.GoodsId
+                                AND tmpPriceList.GoodsKindId Is NULL
+          LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                 ON tmpPriceList_kind.GoodsId = tmpOperationGroup.GoodsId
+                                AND COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
 
           LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
                                         ON ContainerLO_ProfitLoss.ContainerId = tmpOperationGroup.ContainerId_analyzer
@@ -483,6 +488,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.12.19         * add цена по виду
  30.01.19         * add Comment
  12.08.15                                        * all
  19.07.15         *

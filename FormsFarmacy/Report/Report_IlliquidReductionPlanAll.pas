@@ -23,16 +23,18 @@ type
     actRefreshSearch: TdsdExecStoredProc;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    AmountStart: TcxGridDBColumn;
+    AmountAll: TcxGridDBColumn;
     AmountSale: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
-    ceNotSalePastDay: TcxCurrencyEdit;
+    cePenalty: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     ceProcGoods: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     ceProcUnit: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    AmountStart: TcxGridDBColumn;
+    SummaPenalty: TcxGridDBColumn;
   private
     { Private declarations }
   public

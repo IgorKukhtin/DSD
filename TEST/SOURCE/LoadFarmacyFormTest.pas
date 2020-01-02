@@ -27,6 +27,7 @@ type
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankPOSTerminalFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadBuyerFormTest;
     procedure LoadCalendarFormTest;
     procedure LoadCashRegisterFormTest;
     procedure LoadChangeIncomePaymentKindFormTest;
@@ -70,6 +71,7 @@ type
     procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
+    procedure LoadLoyaltySaveMoneyFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
     procedure LoadListDiffFormTest;
@@ -273,6 +275,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
+end;
+
+procedure TLoadFormTest.LoadBuyerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBuyerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBuyerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBuyerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBuyerEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
@@ -796,6 +806,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_UsedPromocodeForm');
 end;
 
+procedure TLoadFormTest.LoadLoyaltySaveMoneyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltySaveMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltySaveMoneyForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltySaveMoneyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltySaveMoneyJournalForm');
+end;
+
 procedure TLoadFormTest.LoadLossDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));
@@ -814,12 +833,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoDoctorsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoEntrancesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoEntrancesForm');
     exit;
-
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
     exit;}

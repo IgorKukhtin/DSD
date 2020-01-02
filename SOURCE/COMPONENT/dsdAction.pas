@@ -3531,7 +3531,7 @@ begin
                        end;
             pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation);
             pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                #13#10#13#10'Продолжит выполнение ?...', mtConfirmation) then
+                                #13#10#13#10'Продолжить изменение ?...', mtConfirmation) then
                               begin
                                 raise Exception.Create('Выполнение операции прервано...');
                                 Result := False;

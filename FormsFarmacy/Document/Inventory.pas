@@ -109,6 +109,8 @@ type
     actPUSHInfo: TdsdShowPUSHMessage;
     edComment: TcxTextEdit;
     cxLabel8: TcxLabel;
+    spPUSHCompile: TdsdStoredProc;
+    actPUSHCompile: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

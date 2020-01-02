@@ -734,16 +734,16 @@ BEGIN
              LEFT JOIN Object AS Object_MarginCategory_site ON Object_MarginCategory_site.Id = vbMarginCategoryId_site
 
              LEFT JOIN tmpPDGoodsRemains AS PDGoodsRemains
-                                         ON PDGoodsRemains.GoodsId = Object_Goods.Id
+                                         ON PDGoodsRemains.GoodsId = tmpList.GoodsId_retail
                                         AND PDGoodsRemains.UnitId = tmpList.UnitId
 
              LEFT JOIN _tmpContainerCountPD AS PDGoodsRemains1
-                                            ON PDGoodsRemains1.GoodsId = Object_Goods.Id
+                                            ON PDGoodsRemains1.GoodsId = tmpList.GoodsId_retail
                                            AND PDGoodsRemains1.UnitId = tmpList.UnitId
                                            AND PDGoodsRemains1.PartionDateKindId = zc_Enum_PartionDateKind_1()
 
              LEFT JOIN _tmpContainerCountPD AS PDGoodsRemains6
-                                            ON PDGoodsRemains6.GoodsId = Object_Goods.Id
+                                            ON PDGoodsRemains6.GoodsId = tmpList.GoodsId_retail
                                            AND PDGoodsRemains6.UnitId = tmpList.UnitId
                                            AND PDGoodsRemains6.PartionDateKindId = zc_Enum_PartionDateKind_6()
         ORDER BY Price_Unit.Price

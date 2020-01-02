@@ -29,6 +29,7 @@ $BODY$
    DECLARE vbServiceDate TDateTime;
    DECLARE vbIsInsert Boolean;
    DECLARE vbLimit TFloat;
+   DECLARE vbisBeginning Boolean;
 BEGIN
 
       -- проверка прав пользователя на вызов процедуры
@@ -54,8 +55,9 @@ BEGIN
            MovementDate_EndPromo.ValueData,
            COALESCE(MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent,
            MovementDate_ServiceDate.ValueData                 AS ServiceDate,
-           MovementFloat_MonthCount.ValueData::Integer  
-    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate, vbMonthCount
+           MovementFloat_MonthCount.ValueData::Integer ,
+           COALESCE(MovementBoolean_Beginning.ValueData, FALSE)
+    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate, vbMonthCount, vbisBeginning
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartPromo
                                 ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -73,6 +75,9 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                  ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                 AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+         LEFT JOIN MovementBoolean AS MovementBoolean_Beginning
+                                   ON MovementBoolean_Beginning.MovementId = Movement.Id
+                                  AND MovementBoolean_Beginning.DescId = zc_MovementBoolean_Beginning()
     WHERE Movement.ID = inMovementId;
 
     IF COALESCE(vbChangePercent, 0) > 0 AND COALESCE(vbServiceDate, CURRENT_DATE - INTERVAL '1 DAY') <> CURRENT_DATE
@@ -101,7 +106,7 @@ BEGIN
           RETURN;
         END IF;
 
-        -- Если аптека невходит
+        -- Если аптека не входит
         IF NOT EXISTS(SELECT 1 FROM MovementItem AS MI_Loyalty
                       WHERE MI_Loyalty.MovementId = inMovementId
                         AND MI_Loyalty.DescId = zc_MI_Child()
@@ -163,13 +168,14 @@ BEGIN
                       AND MI_Loyalty.Amount > 0 
                       AND COALESCE(MIFloat_Count.ValueData, 0) > 0)
            , CC AS (SELECT Sum(Count) AS Options FROM DD)
-           , SS AS (SELECT count(*)                         AS CountDay
-                         , COALESCE(SUM(CASE WHEN MI_Sign.ObjectId = vbUnitId THEN MI_Sign.Amount ELSE 0 END), 0) AS SummDay
+           , SS AS (SELECT count(*)                         AS CountAll
+                         , COALESCE(SUM(CASE WHEN MIDate_OperDate.ValueData  = CURRENT_DATE THEN 1 ELSE 0 END), 0)::Integer AS CountDay
+                         , COALESCE(SUM(CASE WHEN MI_Sign.ObjectId = vbUnitId AND MIDate_OperDate.ValueData  = CURRENT_DATE THEN MI_Sign.Amount ELSE 0 END), 0) AS SummDay
                     FROM MovementItem AS MI_Sign
                          INNER JOIN MovementItemDate AS MIDate_OperDate
                                                      ON MIDate_OperDate.MovementItemId = MI_Sign.Id
                                                     AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
-                                                    AND MIDate_OperDate.ValueData  = CURRENT_DATE
+                                                    AND (MIDate_OperDate.ValueData  = CURRENT_DATE OR vbisBeginning = TRUE)
                     WHERE MI_Sign.MovementId = inMovementId
                       AND MI_Sign.DescId = zc_MI_Sign()
                       AND MI_Sign.isErased = FALSE)
@@ -205,7 +211,7 @@ BEGIN
              INNER JOIN CC ON 1 = 1
              INNER JOIN SS ON 1 = 1
              INNER JOIN MM ON 1 = 1
-        WHERE COALESCE((SELECT SUM(D0.Count) FROM DD AS D0 WHERE D0.ORD < D1.ORD), 0) <= (SS.CountDay % CC.Options)
+        WHERE COALESCE((SELECT SUM(D0.Count) FROM DD AS D0 WHERE D0.ORD < D1.ORD), 0) <= (SS.CountAll % CC.Options)
         ORDER BY ORD DESC
         LIMIT 1;
 
@@ -294,11 +300,11 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
     END IF;
     
-/*    IF inSession = '3'
+    IF inSession = '3'
     THEN
-      RAISE EXCEPTION 'Ошибка. Прошло...';
+      RAISE EXCEPTION 'Ошибка. Прошло % ...', vbAmount;
     END IF;
-*/
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

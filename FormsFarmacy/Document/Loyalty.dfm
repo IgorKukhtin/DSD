@@ -776,6 +776,18 @@ inherited LoyaltyForm: TLoyaltyForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1089#1077#1090#1100'>'
       Width = 196
     end
+    object cbBeginning: TcxCheckBox
+      Left = 8
+      Top = 102
+      Hint = 
+        #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
+        #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
+      Caption = #1043#1077#1085#1077#1088#1072#1094#1080#1103' '#1089#1082#1080#1076#1072#1082' '#1089' '#1085#1072#1095#1072#1083#1086' '#1072#1082#1094#1080#1080
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 38
+      Width = 200
+    end
   end
   inherited ActionList: TActionList
     Left = 207
@@ -1958,6 +1970,13 @@ inherited LoyaltyForm: TLoyaltyForm
         ComponentItem = 'PercentUsed'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBeginning'
+        Value = Null
+        Component = cbBeginning
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -2072,6 +2091,14 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = Null
         Component = edChangePercent
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBeginning'
+        Value = Null
+        Component = cbBeginning
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

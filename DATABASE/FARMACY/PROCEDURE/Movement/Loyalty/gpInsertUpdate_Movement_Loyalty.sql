@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
     IN inSummLimit             TFloat     , -- Лимит суммы скидки в день для аптеки
     IN inComment               TVarChar   , -- Примечание
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
+    IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -42,6 +43,7 @@ BEGIN
                                            , inSummLimit     := inSummLimit                                       
                                            , inComment       := inComment
                                            , inChangePercent := inChangePercent
+                                           , inisBeginning   := inisBeginning
                                            , inUserId        := vbUserId
                                            );
 

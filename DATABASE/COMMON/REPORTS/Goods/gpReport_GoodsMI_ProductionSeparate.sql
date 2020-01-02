@@ -391,7 +391,9 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsGroupChild ON Object_GoodsGroupChild.Id = ObjectLink_Goods_GoodsGroupChild.ChildObjectId
 
              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= inEndDate)
-                                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
+                    AS lfObjectHistory_PriceListItem 
+                    ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
+                   AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
 
       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate

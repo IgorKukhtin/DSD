@@ -1,32 +1,32 @@
 inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUserForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 835
+  ClientWidth = 866
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 851
+  ExplicitWidth = 882
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 79
-    Width = 835
-    Height = 425
-    ExplicitTop = 79
-    ExplicitWidth = 824
-    ExplicitHeight = 425
-    ClientRectBottom = 425
-    ClientRectRight = 835
+    Top = 83
+    Width = 866
+    Height = 421
+    ExplicitTop = 83
+    ExplicitWidth = 866
+    ExplicitHeight = 421
+    ClientRectBottom = 421
+    ClientRectRight = 866
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
-      ExplicitHeight = 425
+      ExplicitWidth = 866
+      ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 49
-        Width = 835
-        Height = 376
-        ExplicitTop = 41
-        ExplicitWidth = 824
-        ExplicitHeight = 384
+        Width = 866
+        Height = 372
+        ExplicitTop = 49
+        ExplicitWidth = 866
+        ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -149,17 +149,20 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             DataBinding.FieldName = 'Color_font'
             Visible = False
           end
+          object Check_Filter: TcxGridDBColumn
+            DataBinding.FieldName = 'Check_Filter'
+            Visible = False
+          end
         end
       end
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 835
+        Width = 866
         Height = 41
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 824
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -195,8 +198,16 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object D_AmountStart: TcxGridDBColumn
+          object D_AmountAll: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088#1086#1074' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'AmountAll'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
+          object D_AmountStart: TcxGridDBColumn
+            Caption = #1059#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1073#1077#1079' '#1089#1077#1088#1099#1093')'
             DataBinding.FieldName = 'AmountStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -224,6 +235,17 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Visible = False
             Options.Editing = False
           end
+          object D_Value: TcxGridDBColumn
+            Caption = '  '
+            DataBinding.FieldName = 'Value'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 138
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -232,21 +254,19 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 41
-        Width = 835
+        Width = 866
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
-        ExplicitTop = 53
-        ExplicitWidth = 824
       end
     end
   end
   inherited Panel: TPanel
-    Width = 835
-    Height = 53
-    ExplicitWidth = 824
-    ExplicitHeight = 53
+    Width = 866
+    Height = 57
+    ExplicitWidth = 866
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -257,29 +277,28 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 115
     end
     inherited deEnd: TcxDateEdit
-      Left = 622
-      Top = 29
+      Left = 217
+      Top = 55
       EditValue = 42491d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 622
-      ExplicitTop = 29
+      ExplicitLeft = 217
+      ExplicitTop = 55
     end
     inherited cxLabel1: TcxLabel
       Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
       ExplicitWidth = 83
     end
     inherited cxLabel2: TcxLabel
-      Left = 506
-      Top = 30
+      Left = 101
+      Top = 56
       Visible = False
-      ExplicitLeft = 506
-      ExplicitTop = 30
+      ExplicitLeft = 101
+      ExplicitTop = 56
     end
     object ceProcUnit: TcxCurrencyEdit
       Left = 662
       Top = 5
-      EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
@@ -294,7 +313,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object ceProcGoods: TcxCurrencyEdit
       Left = 507
       Top = 5
-      EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
@@ -309,7 +327,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     object ceNotSalePastDay: TcxCurrencyEdit
       Left = 341
       Top = 5
-      EditValue = 60.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
@@ -335,41 +352,79 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Top = 30
       Caption = #1060#1080#1083#1100#1090#1088
     end
-    object cxLabel9: TcxLabel
+    object cbFilter3: TcxCheckBox
       Left = 713
-      Top = 31
+      Top = 35
       Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = clWhite
       Style.TextColor = clGray
+      TabOrder = 12
+      Width = 139
     end
-    object cxLabel8: TcxLabel
+    object cbFilter2: TcxCheckBox
       Left = 713
-      Top = 15
+      Top = 17
       Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = 16636922
       Style.TextColor = clWindowText
+      TabOrder = 13
+      Width = 139
     end
-    object cxLabel7: TcxLabel
+    object cbFilter1: TcxCheckBox
       Left = 713
-      Top = 0
+      Top = -1
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
+      ParentBackground = False
       ParentColor = False
+      State = cbsChecked
       Style.Color = 11201206
+      Style.TextColor = clWindowText
+      TabOrder = 14
+      Width = 139
+    end
+    object edLabelPenalty: TcxTextEdit
+      Left = 480
+      Top = 29
+      TabStop = False
+      Enabled = False
+      ParentColor = True
+      Properties.AutoSelect = False
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      StyleDisabled.TextColor = clWindowText
+      StyleHot.BorderStyle = ebsNone
+      TabOrder = 15
+      Text = 'edLabelPenalty'
+      Width = 227
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 51
-    Top = 192
+    Left = 67
+    Top = 248
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 48
-    Top = 240
+    Left = 64
+    Top = 296
   end
   inherited ActionList: TActionList
-    Left = 103
-    Top = 191
+    Left = 119
+    Top = 247
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -442,12 +497,10 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     end
   end
   inherited MasterDS: TDataSource
-    Left = 40
-    Top = 88
+    Top = 144
   end
   inherited MasterCDS: TClientDataSet
-    Left = 8
-    Top = 88
+    Top = 144
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_IlliquidReductionPlanUser'
@@ -457,6 +510,9 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       end
       item
         DataSet = DetalsCDS
+      end
+      item
+        DataSet = HeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -468,36 +524,11 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inNotSalePastDay'
-        Value = Null
-        Component = ceNotSalePastDay
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProcGoods'
-        Value = Null
-        Component = ceProcGoods
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProcUnit'
-        Value = Null
-        Component = ceProcUnit
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 88
+    Top = 144
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 88
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -551,11 +582,12 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       end>
   end
   inherited PopupMenu: TPopupMenu
-    Left = 136
-    Top = 232
+    Left = 152
+    Top = 288
   end
   inherited PeriodChoice: TPeriodChoice
-    Top = 136
+    Left = 32
+    Top = 192
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -564,8 +596,8 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       end
       item
       end>
-    Left = 104
-    Top = 136
+    Left = 120
+    Top = 192
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -587,8 +619,8 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 304
+    Left = 64
+    Top = 360
   end
   object DetalsDS: TDataSource
     DataSet = DetalsCDS
@@ -602,12 +634,89 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     Left = 296
     Top = 160
   end
-  object DBViewAddOnDetals: TdsdDBViewAddOn
+  object dsdFieldFilter: TdsdFieldFilter
+    TextEdit = edFilter
+    DataSet = MasterCDS
+    Column = GoodsName
+    CheckColumn = Check_Filter
+    CheckBoxList = <
+      item
+        Value = '1'
+        CheckBox = cbFilter1
+      end
+      item
+        Value = '2'
+        CheckBox = cbFilter2
+      end
+      item
+        Value = '3'
+        CheckBox = cbFilter3
+      end>
+    Left = 520
+    Top = 168
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpReport_GetIlliquidReductionPlanUser'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = DetalsCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43344d
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayCount'
+        Value = Null
+        Component = ceNotSalePastDay
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcGoods'
+        Value = Null
+        Component = ceProcGoods
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProcUnit'
+        Value = Null
+        Component = ceProcUnit
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPenalty'
+        Value = Null
+        Component = edLabelPenalty
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 240
+  end
+  object HeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 256
+    Top = 312
+  end
+  object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView1
-    OnDblClickActionList = <
-      item
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
@@ -619,14 +728,10 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 520
-    Top = 344
-  end
-  object dsdFieldFilter1: TdsdFieldFilter
-    TextEdit = edFilter
-    DataSet = MasterCDS
-    Column = GoodsName
-    Left = 520
-    Top = 168
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = D_Value
+    Left = 688
+    Top = 264
   end
 end
