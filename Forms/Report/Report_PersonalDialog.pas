@@ -46,6 +46,7 @@ type
     cxLabel2: TcxLabel;
     cePersonal: TcxButtonEdit;
     PersonalGuides: TdsdGuides;
+    cbMember: TcxCheckBox;
   private
     { Private declarations }
   public
