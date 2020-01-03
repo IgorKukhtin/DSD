@@ -44,29 +44,24 @@ BEGIN
 
 
      -- 
-     CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
-                                    , ReceiptId Integer
-                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat, AmountPartnerSecond TFloat
+     CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer
+                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat
                                     , AmountForecast TFloat
                                     , isErased Boolean) ON COMMIT DROP;
-     INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId
-                              , ReceiptId
-                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior, AmountPartnerSecond
+     INSERT INTO _tmpMI_master (MovementItemId, GoodsId
+                              , Amount, AmountSecond, AmountRemains, AmountPartner
                               , AmountForecast
                               , isErased)
                               -- результат
                               SELECT MovementItem.Id AS MovementItemId
                                    , MovementItem.ObjectId AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                   , COALESCE (MILinkObject_Receipt.ObjectId, 0)   AS ReceiptId
 
                                    , MovementItem.Amount                                   AS Amount
                                    , COALESCE (MIFloat_AmountSecond.ValueData, 0)          AS AmountSecond
 
                                    , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
-                                   , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)    AS AmountPartnerPrior
-                                   , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)   AS AmountPartnerSecond
+
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
 
                                    , MovementItem.isErased                                 AS isErased
@@ -85,37 +80,18 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
-                                                               ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
-                                                               ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
                                                                ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
-
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
-                                                                    ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              ;
 
        --
        OPEN Cursor1 FOR
        WITH tmpMI_Send AS (-- группируется Перемещение
                            SELECT tmpMI.GoodsId                          AS GoodsId
-                                , tmpMI.GoodsKindId                      AS GoodsKindId
                                 , SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
-                                      , CASE -- !!!временно захардкодил!!!
-                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                  THEN 8338 -- морож.
-                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                        END AS GoodsKindId
                                       , SUM (MIContainer.Amount)                       AS Amount
                                  FROM MovementItemContainer AS MIContainer
                                  WHERE MIContainer.OperDate   = vbOperDate
@@ -124,12 +100,6 @@ BEGIN
                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
                                    -- AND MIContainer.isActive = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
-                                        , CASE -- !!!временно захардкодил!!!
-                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                    THEN 8338 -- морож.
-                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                          END
                                 ) AS tmpMI
                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                      ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
@@ -138,7 +108,6 @@ BEGIN
                                                       ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             GROUP BY tmpMI.GoodsId
-                                   , tmpMI.GoodsKindId
                           )
        SELECT
              tmpMI.MovementItemId :: Integer      AS Id
@@ -147,13 +116,6 @@ BEGIN
            , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , Object_GoodsKind.Id                  AS GoodsKindId
-           , Object_GoodsKind.ValueData           AS GoodsKindName
-
-           , 0                                    AS ReceiptId_basis
-           , Object_Receipt.Id                    AS ReceiptId
-           , ObjectString_Receipt_Code.ValueData  AS ReceiptCode
-           , Object_Receipt.ValueData             AS ReceiptName
            , Object_Unit.Id                       AS UnitId
            , Object_Unit.ObjectCode               AS UnitCode
            , Object_Unit.ValueData                AS UnitName
@@ -166,9 +128,8 @@ BEGIN
 
            , tmpMI.AmountRemains      :: TFloat  AS AmountRemains       -- Ост. начальн.
            , tmpMI.AmountPartner      :: TFloat  AS AmountPartner       -- расчет составляющих по заявке на производство (без производства ПФ)
-           , tmpMI.AmountPartnerPrior :: TFloat  AS AmountPartnerPrior  -- расчет составляющих по заявке на производство (для производства ПФ)
-           , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
-           , tmpMI.AmountPartnerSecond :: TFloat AS AmountPartnerSecond -- расчет ....
+
+           , (tmpMI.AmountPartner) :: TFloat AS AmountPartner_all       -- расчет составляющих по заявке на производство (итого)
 
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1 THEN tmpMI.AmountForecast ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast -- Прогноз по факт. расходу на производство
            , CAST (CASE WHEN vbDayCount <> 0 THEN tmpMI.AmountForecast / vbDayCount ELSE 0 END AS NUMERIC (16, 1))                      :: TFloat AS CountForecast  -- Норм 1д (по пр.)
@@ -192,15 +153,9 @@ BEGIN
 
        FROM _tmpMI_master AS tmpMI
             LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpMI.GoodsId
-                                AND tmpMI_Send.GoodsKindId = tmpMI.GoodsKindId
-
-            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
-            LEFT JOIN ObjectString AS ObjectString_Receipt_Code
-                                   ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
-                                  AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -215,9 +170,7 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ReceiptId > 0
-                                                                          THEN vbFromId
-                                                                     WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                           THEN 8455 -- Склад специй
                                                                      ELSE 8439 -- Участок мясного сырья
                                                                 END

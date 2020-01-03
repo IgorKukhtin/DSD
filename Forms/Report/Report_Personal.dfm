@@ -865,7 +865,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     object cbMember: TcxCheckBox
       Left = 447
       Top = 56
-      Caption = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+      Action = actRefMember
       TabOrder = 16
       Width = 85
     end
@@ -958,6 +958,22 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited ActionList: TActionList
     Left = 127
     Top = 327
+    object actRefMember: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetDescSets
+      StoredProcList = <
+        item
+          StoredProc = spGetDescSets
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+      Hint = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGetDescSets
       StoredProcList = <

@@ -36,7 +36,6 @@ type
     GuidesTo: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
@@ -66,7 +65,6 @@ type
     cxLabel20: TcxLabel;
     edOperDateEnd: TcxDateEdit;
     AmountRemains: TcxGridDBColumn;
-    AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     bbMultiAmountRemain: TdxBarButton;
     actUpdateAmountPartner: TdsdExecStoredProc;
@@ -91,9 +89,7 @@ type
     ColorB_AmountPartner: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    AmountPartnerPrior: TcxGridDBColumn;
     AmountPartner_all: TcxGridDBColumn;
-    AmountPartnerSecond: TcxGridDBColumn;
     AmountSend: TcxGridDBColumn;
     actPrintScan: TdsdPrintAction;
   private
