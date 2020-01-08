@@ -91,7 +91,13 @@ BEGIN
     
        IF inisDeferred = TRUE
        THEN
-           -- собственно проводки
+       
+           IF vbisDeferred = TRUE
+           THEN
+             RAISE EXCEPTION 'Ошибка.Документ уже отложен!';
+           END IF;
+
+           -- собст	венно проводки
            PERFORM lpComplete_Movement_Send(inMovementId  -- ключ Документа
                                           , vbUserId);    -- Пользователь  
        ELSE

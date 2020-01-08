@@ -41,6 +41,12 @@ BEGIN
 
       -- Ограничение на просмотр товарного справочника
       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    
+    IF vbUserId <> 948223      
+    THEN
+        RAISE EXCEPTION 'Ошибка. Запуск отчета разрешен только директору.';
+    END IF;
+      
 
      vbDateWStart := DATE_TRUNC ('month', inDateStart);
      vbDateWEnd   := DATE_TRUNC ('month', inDateFinal);

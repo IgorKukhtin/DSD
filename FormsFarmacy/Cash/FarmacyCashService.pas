@@ -193,6 +193,7 @@ type
     procedure SaveUserSettings;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
+    procedure SaveBuyer;
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -222,11 +223,6 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
-  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
-  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
-  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule : THandle;
-  LastErr: Integer;
 
   FM_SERVISE: Integer;
     function GenerateGUID: String;
@@ -507,6 +503,8 @@ begin   //yes
         if not gc_User.Local then SaveTaxUnitNight;
         //ѕолучение остатков по парти€м
         if not gc_User.Local then SaveGoodsExpirationDate;
+        //ѕолучение покупателей
+        if not gc_User.Local then SaveBuyer;
         //ѕолучение справочника аналогов
 //        if not gc_User.Local then SaveGoodsAnalog;
 
@@ -556,41 +554,7 @@ begin
   else tiServise.PopupMenu:=nil;
 
   Application.OnMessage := AppMsgHandler;
-  // создаем мутексы если не созданы
-  MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
-  LastErr := GetLastError;
-  MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
-  LastErr := GetLastError;
-  MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
-  LastErr := GetLastError;
-  MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
-  LastErr := GetLastError;
-  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
-  LastErr := GetLastError;
-  MutexRefresh := CreateMutex(nil, false, 'farmacycashMutexRefresh');
-  LastErr := GetLastError;
-  MutexDiffKind := CreateMutex(nil, false, 'farmacycashMutexDiffKind');
-  LastErr := GetLastError;
-  MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
-  LastErr := GetLastError;
-  MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
-  LastErr := GetLastError;
-  MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
-  LastErr := GetLastError;
-  MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
-  LastErr := GetLastError;
-  MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
-  LastErr := GetLastError;
-  MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
-  LastErr := GetLastError;
-  MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
-  LastErr := GetLastError;
-  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
-  LastErr := GetLastError;
-  MutexUserHelsi := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
-  LastErr := GetLastError;
-  MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
-  LastErr := GetLastError;
+  InitMutex;
   FHasError := false;
   //сгенерили гуид дл€ определени€ сессии
   ChangeStatus('”становка первоначальных параметров');
@@ -2031,6 +1995,46 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveBuyer;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'ѕолучение покупателей';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_Buyer';
+        sp.Execute;
+        Add_Log('Start MutexBuyer');
+        WaitForSingleObject(MutexBuyer, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,Buyer_lcl);
+        finally
+          Add_Log('End MutexBuyer');
+          ReleaseMutex(MutexBuyer);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveBuyer Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure TMainCashForm2.SaveUserHelsi;
 var
   sp : TdsdStoredProc;
@@ -2598,23 +2602,7 @@ end;
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
  Add_Log('== Close');
- CloseHandle(MutexDBF);
- CloseHandle(MutexDBFDiff);
- CloseHandle(MutexVip);
- CloseHandle(MutexRemains);
- CloseHandle(MutexAlternative);
- CloseHandle(MutexRefresh);
- CloseHandle(MutexDiffKind);
- CloseHandle(MutexDiffCDS);
- CloseHandle(MutexEmployeeWorkLog);
- CloseHandle(MutexBankPOSTerminal);
- CloseHandle(MutexUnitConfig);
- CloseHandle(MutexTaxUnitNight);
- CloseHandle(MutexGoodsExpirationDate);
- CloseHandle(MutexGoods);
- CloseHandle(MutexGoodsAnalog);
- CloseHandle(MutexEmployeeSchedule);
- CloseHandle(MutexUserHelsi);
+ CloseMutex;
 end;
 
 

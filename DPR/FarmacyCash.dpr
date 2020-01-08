@@ -119,7 +119,9 @@ uses
   EmployeeScheduleCash in '..\FormsFarmacy\Cash\EmployeeScheduleCash.pas' {EmployeeScheduleCashForm: TParentForm},
   EnterLoyaltyNumber in '..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas' {EnterLoyaltyNumberForm},
   Report_ImplementationPlanEmployeeCash in '..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas' {Report_ImplementationPlanEmployeeCashForm},
-  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  EnterLoyaltySaveMoney in '..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas' {EnterLoyaltySaveMoneyForm},
+  LoyaltySPList in '..\FormsFarmacy\Cash\LoyaltySPList.pas' {LoyaltySPListForm: TParentForm};
 
 {$R *.res}
 

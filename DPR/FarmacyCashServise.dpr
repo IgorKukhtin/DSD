@@ -73,7 +73,10 @@ uses
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
-  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
 
 {$R *.res}
 

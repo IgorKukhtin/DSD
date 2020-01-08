@@ -1,9 +1,10 @@
 inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 537
-  ClientWidth = 820
+  ClientHeight = 560
+  ClientWidth = 858
   PopupMenu = PopupMenu
+  Position = poScreenCenter
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnDestroy = ParentFormDestroy
@@ -11,14 +12,14 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 836
-  ExplicitHeight = 576
+  ExplicitWidth = 874
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 384
-    Width = 820
+    Top = 407
+    Width = 858
     Height = 153
     Align = alBottom
     BevelOuter = bvNone
@@ -26,7 +27,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 355
+      Width = 393
       Height = 153
       Align = alClient
       TabOrder = 0
@@ -140,7 +141,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 569
+      Left = 607
       Top = 0
       Width = 251
       Height = 153
@@ -215,7 +216,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 355
+      Left = 393
       Top = 0
       Width = 3
       Height = 153
@@ -223,7 +224,7 @@ inherited MainCashForm2: TMainCashForm2
       Control = ExpirationDateGrid
     end
     object ExpirationDateGrid: TcxGrid
-      Left = 358
+      Left = 396
       Top = 0
       Width = 211
       Height = 153
@@ -274,25 +275,25 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 381
-    Width = 820
+    Top = 404
+    Width = 858
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 221
-    Width = 820
-    Height = 160
+    Top = 242
+    Width = 858
+    Height = 162
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
-      Width = 820
-      Height = 106
+      Width = 858
+      Height = 108
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -972,8 +973,8 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 127
-      Width = 820
+      Top = 129
+      Width = 858
       Height = 33
       Align = alBottom
       TabOrder = 1
@@ -1208,7 +1209,7 @@ inherited MainCashForm2: TMainCashForm2
     object pnlExpirationDateFilter: TPanel
       Left = 0
       Top = 0
-      Width = 820
+      Width = 858
       Height = 21
       Align = alTop
       Color = 15656679
@@ -1219,7 +1220,7 @@ inherited MainCashForm2: TMainCashForm2
         Left = 1
         Top = 1
         Width = 204
-        Height = 13
+        Height = 19
         Align = alLeft
         Caption = '     '#1060#1080#1083#1100#1090#1088' '#1087#1086' '#1089#1088#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072'.'
         Font.Charset = DEFAULT_CHARSET
@@ -1228,6 +1229,7 @@ inherited MainCashForm2: TMainCashForm2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+        ExplicitHeight = 13
       end
       object Label14: TLabel
         Left = 500
@@ -1255,7 +1257,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 39
-    Width = 820
+    Width = 858
     Height = 17
     Align = alTop
     Color = 15656679
@@ -1266,7 +1268,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 71
-      Height = 13
+      Height = 15
       Align = alLeft
       Caption = '     '#1052#1077#1085#1077#1076#1078#1077#1088' '
       Font.Charset = DEFAULT_CHARSET
@@ -1275,12 +1277,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 12
-      Height = 13
+      Width = 453
+      Height = 15
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -1289,12 +1292,14 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 13
     end
     object Label2: TLabel
-      Left = 487
+      Left = 525
       Top = 1
       Width = 64
-      Height = 13
+      Height = 15
       Align = alRight
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '
       Font.Charset = DEFAULT_CHARSET
@@ -1303,9 +1308,10 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblBayer: TLabel
-      Left = 551
+      Left = 589
       Top = 1
       Width = 268
       Height = 15
@@ -1324,7 +1330,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlDiscount: TPanel [4]
     Left = 0
     Top = 56
-    Width = 820
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1335,7 +1341,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 55
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1055#1088#1086#1077#1082#1090' '
       Font.Charset = DEFAULT_CHARSET
@@ -1344,6 +1350,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountExternalName: TLabel
       Left = 56
@@ -1364,7 +1371,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 265
       Top = 1
       Width = 114
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099' '
       Font.Charset = DEFAULT_CHARSET
@@ -1373,6 +1380,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
       Left = 379
@@ -1393,7 +1401,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 489
       Top = 1
       Width = 74
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
       Font.Charset = DEFAULT_CHARSET
@@ -1402,6 +1410,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblAmount: TLabel
       Left = 650
@@ -1434,7 +1443,7 @@ inherited MainCashForm2: TMainCashForm2
   object Panel1: TPanel [5]
     Left = 0
     Top = 0
-    Width = 820
+    Width = 858
     Height = 21
     Align = alTop
     TabOrder = 5
@@ -1488,7 +1497,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 146
     end
     object PanelMCSAuto: TPanel
-      Left = 557
+      Left = 595
       Top = 1
       Width = 262
       Height = 19
@@ -1546,7 +1555,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlSP: TPanel [6]
     Left = 0
     Top = 77
-    Width = 820
+    Width = 858
     Height = 18
     Align = alTop
     Color = 15656679
@@ -1557,7 +1566,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 63
-      Height = 13
+      Height = 16
       Align = alLeft
       Caption = '     '#1052#1077#1076'.'#1091#1095'.: '
       Font.Charset = DEFAULT_CHARSET
@@ -1567,12 +1576,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Style = []
       ParentFont = False
       OnClick = Label4Click
+      ExplicitHeight = 13
     end
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 12
-      Height = 14
+      Width = 405
+      Height = 16
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -1581,12 +1591,14 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 14
     end
     object Label7: TLabel
-      Left = 431
+      Left = 469
       Top = 1
       Width = 26
-      Height = 13
+      Height = 16
       Align = alRight
       Caption = #1060#1048#1054' '
       Font.Charset = DEFAULT_CHARSET
@@ -1595,9 +1607,10 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
-      Left = 457
+      Left = 495
       Top = 1
       Width = 362
       Height = 16
@@ -1617,7 +1630,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlPromoCode: TPanel [7]
     Left = 0
     Top = 95
-    Width = 820
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1628,7 +1641,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 53
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1040#1082#1094#1080#1103': '
       Font.Charset = DEFAULT_CHARSET
@@ -1637,6 +1650,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoName: TLabel
       Left = 54
@@ -1657,7 +1671,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 219
       Top = 1
       Width = 57
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
       Font.Charset = DEFAULT_CHARSET
@@ -1666,6 +1680,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoCode: TLabel
       Left = 276
@@ -1700,7 +1715,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 355
       Top = 1
       Width = 30
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1060#1048#1054': '
       Font.Charset = DEFAULT_CHARSET
@@ -1709,6 +1724,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoBayerName: TLabel
       Left = 385
@@ -1737,8 +1753,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlManualDiscount: TPanel [8]
     Left = 0
-    Top = 137
-    Width = 820
+    Top = 158
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1750,7 +1766,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 94
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1759,6 +1775,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label15: TLabel
       Left = 522
@@ -1783,7 +1800,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton2: TcxButton
-      Left = 787
+      Left = 825
       Top = 1
       Width = 32
       Height = 19
@@ -1797,8 +1814,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlSiteDiscount: TPanel [9]
     Left = 0
-    Top = 179
-    Width = 820
+    Top = 200
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1809,7 +1826,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 127
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1057#1082#1080#1076#1082#1072' '#171#1095#1077#1088#1077#1079' '#1089#1072#1081#1090#187'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1818,6 +1835,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label17: TLabel
       Left = 522
@@ -1842,7 +1860,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton3: TcxButton
-      Left = 787
+      Left = 825
       Top = 1
       Width = 32
       Height = 19
@@ -1856,8 +1874,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlTaxUnitNight: TPanel [10]
     Left = 0
-    Top = 158
-    Width = 820
+    Top = 179
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1868,7 +1886,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 173
-      Height = 14
+      Height = 19
       Align = alLeft
       Caption = '     '#1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1085#1086#1095#1085#1072#1103' '#1094#1077#1085#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1877,6 +1895,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitHeight = 14
     end
     object edTaxUnitNight: TcxTextEdit
       Left = 567
@@ -1894,8 +1913,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlAnalogFilter: TPanel [11]
     Left = 0
-    Top = 200
-    Width = 820
+    Top = 221
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1903,7 +1922,7 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 11
     Visible = False
     DesignSize = (
-      820
+      858
       21)
     object Label19: TLabel
       Left = 1
@@ -1944,7 +1963,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 524
     end
     object ProgressBar1: TProgressBar
-      Left = 719
+      Left = 757
       Top = 9
       Width = 57
       Height = 9
@@ -1954,7 +1973,7 @@ inherited MainCashForm2: TMainCashForm2
       Visible = False
     end
     object cxButton7: TcxButton
-      Left = 787
+      Left = 825
       Top = 1
       Width = 32
       Height = 19
@@ -1969,7 +1988,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlHelsiError: TPanel [12]
     Left = 0
     Top = 21
-    Width = 820
+    Width = 858
     Height = 18
     Align = alTop
     Color = 12173055
@@ -1980,7 +1999,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 197
-      Height = 13
+      Height = 16
       Align = alLeft
       Caption = '     '#1054#1096#1080#1073#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1072' '#1093#1077#1083#1089#1080': '
       Font.Charset = DEFAULT_CHARSET
@@ -1990,6 +2009,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Style = []
       ParentFont = False
       OnClick = Label4Click
+      ExplicitHeight = 13
     end
     object edHelsiError: TcxTextEdit
       Left = 204
@@ -2005,7 +2025,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 151
     end
     object cxButton4: TcxButton
-      Left = 787
+      Left = 825
       Top = 1
       Width = 32
       Height = 16
@@ -2017,7 +2037,7 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = cxButton4Click
     end
     object cxButton5: TcxButton
-      Left = 550
+      Left = 588
       Top = 1
       Width = 114
       Height = 16
@@ -2030,7 +2050,7 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = cxButton5Click
     end
     object cxButton6: TcxButton
-      Left = 664
+      Left = 702
       Top = 1
       Width = 123
       Height = 16
@@ -2046,7 +2066,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlPromoCodeLoyalty: TPanel [13]
     Left = 0
     Top = 116
-    Width = 820
+    Width = 858
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2057,7 +2077,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 134
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080' '
       Font.Charset = DEFAULT_CHARSET
@@ -2066,12 +2086,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label25: TLabel
       Left = 135
       Top = 1
       Width = 57
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
       Font.Charset = DEFAULT_CHARSET
@@ -2080,12 +2101,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoCodeLoyalty: TLabel
       Left = 192
       Top = 1
       Width = 12
-      Height = 14
+      Height = 19
       Align = alLeft
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -2094,6 +2116,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitHeight = 14
     end
     object Label27: TLabel
       Left = 488
@@ -2115,6 +2138,126 @@ inherited MainCashForm2: TMainCashForm2
       Properties.DisplayFormat = ',0.00;-,0.00'
       Properties.ReadOnly = True
       TabOrder = 0
+      Width = 60
+    end
+  end
+  object pnlLoyaltySaveMoney: TPanel [14]
+    Left = 0
+    Top = 137
+    Width = 858
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 14
+    Visible = False
+    DesignSize = (
+      858
+      21)
+    object Label26: TLabel
+      Left = 1
+      Top = 1
+      Width = 150
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1053#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object Label28: TLabel
+      Left = 151
+      Top = 1
+      Width = 71
+      Height = 19
+      Align = alLeft
+      Caption = ' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100': '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object lblLoyaltySMBuyer: TLabel
+      Left = 222
+      Top = 1
+      Width = 12
+      Height = 19
+      Align = alLeft
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitHeight = 14
+    end
+    object lblLoyaltySMSummaRemainder: TLabel
+      Left = 544
+      Top = 3
+      Width = 55
+      Height = 13
+      Align = alCustom
+      Anchors = [akTop, akRight]
+      Caption = #1053#1072#1082#1086#1087#1083#1077#1085#1086
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitLeft = 552
+    end
+    object lblLoyaltySMChangeSumma: TLabel
+      Left = 671
+      Top = 3
+      Width = 73
+      Height = 13
+      Align = alCustom
+      Anchors = [akTop, akRight]
+      Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edLoyaltySMSummaRemainder: TcxCurrencyEdit
+      Left = 605
+      Top = 0
+      Anchors = [akTop, akRight]
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 60
+    end
+    object cxButton8: TcxButton
+      Left = 825
+      Top = 1
+      Width = 32
+      Height = 19
+      Align = alRight
+      OptionsImage.ImageIndex = 52
+      OptionsImage.Images = dmMain.ImageList
+      TabOrder = 1
+      TabStop = False
+      OnClick = cxButton8Click
+    end
+    object edLoyaltySMChangeSumma: TcxCurrencyEdit
+      Left = 759
+      Top = 0
+      Anchors = [akTop, akRight]
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
+      TabOrder = 2
       Width = 60
     end
   end
@@ -3429,6 +3572,12 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actSetLoyaltySaveMoney: TAction
+      Caption = #1042#1099#1073#1086#1088' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1076#1083#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086#1081'  '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
+      Hint = #1042#1099#1073#1086#1088' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1076#1083#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086#1081'  '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
+      ShortCut = 32888
+      OnExecute = actSetLoyaltySaveMoneyExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3698,6 +3847,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N36: TMenuItem
       Action = actSetPromoCodeLoyalty
+    end
+    object N39: TMenuItem
+      Action = actSetLoyaltySaveMoney
     end
     object miManualDiscount: TMenuItem
       Action = actManualDiscount
@@ -4032,6 +4184,23 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'LoyaltyShowMessage'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySMID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySMChangeSumma'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySMText'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -5382,5 +5551,59 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 712
     Top = 328
+  end
+  object spLoyaltySP: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_LoyaltySM_Cash'
+    DataSet = LoyaltySPCDS
+    DataSets = <
+      item
+        DataSet = LoyaltySPCDS
+      end>
+    Params = <
+      item
+        Name = 'inBuyerID'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 248
+  end
+  object LoyaltySPCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 784
+    Top = 296
+  end
+  object spInsertMovementItem: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_LoyaltySaveMoney_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBuyerID'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 785
+    Top = 349
   end
 end

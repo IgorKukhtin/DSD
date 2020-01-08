@@ -11,6 +11,7 @@ object AncestorBaseForm: TAncestorBaseForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesktopCenter
   AddOnFormData.RefreshAction = actRefresh
   PixelsPerInch = 96
   TextHeight = 13

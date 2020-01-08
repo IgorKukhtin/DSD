@@ -425,6 +425,20 @@ type
     MainFixDiscount: TcxGridDBColumn;
     edPermanentDiscount: TcxTextEdit;
     Label24: TLabel;
+    actSetLoyaltySaveMoney: TAction;
+    N39: TMenuItem;
+    pnlLoyaltySaveMoney: TPanel;
+    Label26: TLabel;
+    Label28: TLabel;
+    lblLoyaltySMBuyer: TLabel;
+    lblLoyaltySMSummaRemainder: TLabel;
+    edLoyaltySMSummaRemainder: TcxCurrencyEdit;
+    cxButton8: TcxButton;
+    edLoyaltySMChangeSumma: TcxCurrencyEdit;
+    lblLoyaltySMChangeSumma: TLabel;
+    spLoyaltySP: TdsdStoredProc;
+    LoyaltySPCDS: TClientDataSet;
+    spInsertMovementItem: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -549,6 +563,8 @@ type
     procedure actSetPromoCodeLoyaltyExecute(Sender: TObject);
     procedure actOpenMCSExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
+    procedure actSetLoyaltySaveMoneyExecute(Sender: TObject);
+    procedure cxButton8Click(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -620,6 +636,7 @@ type
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
       ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
+      ALoyaltySMID : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -679,6 +696,7 @@ type
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: currency);
     procedure SetPromoCodeLoyalty(APromoCodeId: Integer; APromoCodeGUID: String; APromoCodeSumma: currency);
+    procedure SetPromoCodeLoyaltySM(ALoyaltySMID : Integer; APhone, AName : string; ASummaRemainder, AChangeSumma: currency);
     procedure PromoCodeLoyaltyCalc;
   end;
 
@@ -693,13 +711,6 @@ var
   csCriticalSection,
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
-
-  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
-  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
-  MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule : THandle;  // MutexAllowedConduct только 2 форма
-
-  LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
   function GetPrice(Price, Discount:currency): currency;
   function GetSumm(Amount,Price:currency;Down:Boolean): currency;
@@ -716,7 +727,8 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
-     EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash;
+     EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash, EnterLoyaltySaveMoney,
+     LoyaltySPList;
 
 const
   StatusUnCompleteCode = 1;
@@ -1121,6 +1133,10 @@ begin
   FormParams.ParamByName('LoyaltyText').Value := '';
   FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
   FormParams.ParamByName('LoyaltyShowMessage').Value := True;
+  //**08.01.20
+  FormParams.ParamByName('LoyaltySMID').Value := 0;
+  FormParams.ParamByName('LoyaltySMText').Value := '';
+  FormParams.ParamByName('LoyaltySMChangeSumma').Value := 0;
 
   ClearFilterAll;
 
@@ -1152,6 +1168,10 @@ begin
   edPromoCode.Text := '';
   pnlSiteDiscount.Visible := false;
   edSiteDiscount.Value := 0;
+  pnlLoyaltySaveMoney.Visible := false;
+  lblLoyaltySMBuyer.Caption := '';
+  edLoyaltySMSummaRemainder.Value := 0;
+  edLoyaltySMChangeSumma.Value := 0;
 
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
@@ -1880,6 +1900,10 @@ begin
   pnlPromoCodeLoyalty.Visible := false;
   lblPromoCodeLoyalty.Caption := '';
   edPromoCodeLoyaltySumm.Value := 0;
+  pnlLoyaltySaveMoney.Visible := false;
+  lblLoyaltySMBuyer.Caption := '';
+  edLoyaltySMSummaRemainder.Value := 0;
+  edLoyaltySMChangeSumma.Value := 0;
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
@@ -2260,6 +2284,8 @@ begin
                      FormParams.ParamByName('ConfirmationCodeSP').Value,
                      //***07.11.19
                      FormParams.ParamByName('LoyaltySignID').Value,
+                     //***08.01.20
+                     FormParams.ParamByName('LoyaltySMID').Value,
 
                      True,         // NeedComplete
                      CheckNumber,  // FiscalCheckNumber
@@ -2620,6 +2646,114 @@ begin
   if isScaner = true
   then ActiveControl := ceScaner
   else ActiveControl := lcName;
+end;
+
+procedure TMainCashForm2.SetPromoCodeLoyaltySM(ALoyaltySMID : Integer; APhone, AName : string; ASummaRemainder, AChangeSumma: currency);
+var
+  nRecNo: Integer;
+begin
+
+  if ALoyaltySMID = 0 then
+  begin
+    FormParams.ParamByName('LoyaltySMID').Value           := 0;
+    FormParams.ParamByName('LoyaltySMText').Value         := '';
+    FormParams.ParamByName('LoyaltySMChangeSumma').Value  := 0;
+
+    pnlLoyaltySaveMoney.Visible := false;
+    lblLoyaltySMBuyer.Caption := '';
+    edLoyaltySMSummaRemainder.Value := 0;
+    edLoyaltySMChangeSumma.Value := 0;
+  end else
+  begin
+    FormParams.ParamByName('LoyaltySMID').Value               := ALoyaltySMID;
+    FormParams.ParamByName('LoyaltySMText').Value             := '';
+    FormParams.ParamByName('LoyaltySMChangeSumma').Value      := AChangeSumma;
+    //***27.06.18
+
+    pnlLoyaltySaveMoney.Visible := ALoyaltySMID > 0;
+    lblLoyaltySMBuyer.Caption := AName + '  ' + APhone;
+    edLoyaltySMSummaRemainder.Value := ASummaRemainder;
+    edLoyaltySMChangeSumma.Value := AChangeSumma;
+    lblLoyaltySMSummaRemainder.Visible := ASummaRemainder > 0;
+    edLoyaltySMSummaRemainder.Visible := lblLoyaltySMSummaRemainder.Visible;
+    lblLoyaltySMChangeSumma.Visible := lblLoyaltySMSummaRemainder.Visible;
+    edLoyaltySMChangeSumma.Visible := lblLoyaltySMSummaRemainder.Visible;
+    FormParams.ParamByName('ManualDiscount').Value          := 0;
+  end;
+
+  FormParams.ParamByName('ManualDiscount').Value            := 0;
+  pnlManualDiscount.Visible := false;
+  edManualDiscount.Value := 0;
+
+  PromoCodeLoyaltyCalc;
+  CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actSetLoyaltySaveMoneyExecute(Sender: TObject);
+  var nID : integer; cPhone, cName : string;
+      nLoyaltySMID : integer; nPromoCodeSumma: currency;
+begin
+
+  if gc_User.Local and not FileExists(Buyer_lcl) then
+  Begin
+    ShowMessage('В отложенном режиме справочник покупатедлей не найден...');
+    Exit;
+  End;
+
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if (DiscountServiceForm.gCode = 2) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
+  begin
+    ShowMessage('Установлен промокод.'#13#10'Для применениея изменения обнулите промокод..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('SiteDiscount').Value <> 0
+   then
+  begin
+    ShowMessage('Установлена скидка через сайт.'#13#10'Для променениея программы лояльности обнулите скидку через сайт..');
+    Exit;
+  end;
+
+  nPromoCodeSumma := 0;
+  if not InputEnterLoyaltySaveMoney(nID, cPhone, cName, nLoyaltySMID) then Exit;
+  if nID = 0 then Exit;
+
+  if gc_User.Local then
+  begin
+    if nLoyaltySMID <> 0 then
+      SetPromoCodeLoyaltySM(nLoyaltySMID, cPhone, cName, 0, 0)
+    else  ShowMessage('Активной акции по покупателю '#13#10 + cName + ' ' + cPhone + #13#10'не найдено..');
+  end else
+  begin
+    spLoyaltySP.ParamByName('inBuyerID').Value := nID;
+    spLoyaltySP.Execute;
+    if LoyaltySPCDS.RecordCount <= 0 then
+    begin
+      ShowMessage('Активной акции по покупателю '#13#10 + cName + ' ' + cPhone + #13#10'не найдено..');
+      Exit;
+    end else if LoyaltySPCDS.RecordCount = 1 then
+    begin
+
+    end else
+    begin
+      if not ShowLoyaltySPList then Exit;
+      if not LoyaltySPCDS.Active then Exit;
+    end;
+    if LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger > 0 then
+      SetPromoCodeLoyaltySM(LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger, cPhone, cName, LoyaltySPCDS.FieldByName('SummaRemainder').AsCurrency, 0)
+
+  end;
 end;
 
 procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;
@@ -3203,6 +3337,8 @@ begin
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
               //***07.11.19
               ,FormParams.ParamByName('LoyaltySignID').Value
+              //***08.01.20
+              ,FormParams.ParamByName('LoyaltySMID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3296,6 +3432,8 @@ begin
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
               //***07.11.19
               ,FormParams.ParamByName('LoyaltySignID').Value
+              //***08.01.20
+              ,FormParams.ParamByName('LoyaltySMID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3850,6 +3988,8 @@ begin
               ,FormParams.ParamByName('ConfirmationCodeSP').Value
               //***07.11.19
               ,FormParams.ParamByName('LoyaltySignID').Value
+              //***08.01.20
+              ,FormParams.ParamByName('LoyaltySMID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -4228,6 +4368,11 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.cxButton8Click(Sender: TObject);
+begin
+  SetPromoCodeLoyaltySM(0, '', '', 0, 0);
+end;
+
 procedure TMainCashForm2.edAmountExit(Sender: TObject);
 begin
   edAmount.Enabled := false;
@@ -4351,38 +4496,7 @@ begin
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= False;
   //для
   // создаем мутексы если не созданы
-  MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
-  LastErr := GetLastError;
-  MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
-  LastErr := GetLastError;
-  MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
-  LastErr := GetLastError;
-  MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
-  LastErr := GetLastError;
-  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
-  LastErr := GetLastError;
-  MutexDiffKind := CreateMutex(nil, false, 'farmacycashMutexDiffKind');
-  LastErr := GetLastError;
-  MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
-  LastErr := GetLastError;
-  MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
-  LastErr := GetLastError;
-  MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
-  LastErr := GetLastError;
-  MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
-  LastErr := GetLastError;
-  MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
-  LastErr := GetLastError;
-  MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
-  LastErr := GetLastError;
-  MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
-  LastErr := GetLastError;
-  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
-  LastErr := GetLastError;
-  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
-  LastErr := GetLastError;
-  MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
-  LastErr := GetLastError;
+  InitMutex;
 
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
@@ -5427,6 +5541,10 @@ begin
   FormParams.ParamByName('LoyaltyText').Value := '';
   FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
   FormParams.ParamByName('LoyaltyShowMessage').Value := True;
+  //**08.01.20
+  FormParams.ParamByName('LoyaltySMID').Value := 0;
+  FormParams.ParamByName('LoyaltySMText').Value := '';
+  FormParams.ParamByName('LoyaltySMChangeSumma').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -5455,6 +5573,10 @@ begin
   pnlSiteDiscount.Visible := false;
   edSiteDiscount.Value := 0;
   DiscountServiceForm.gCode := 0;
+  pnlLoyaltySaveMoney.Visible := false;
+  lblLoyaltySMBuyer.Caption := '';
+  edLoyaltySMSummaRemainder.Value := 0;
+  edLoyaltySMChangeSumma.Value := 0;
   try
     CheckCDS.EmptyDataSet;
   finally
@@ -5540,22 +5662,7 @@ end;
 procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
 begin
   inherited;
-  CloseHandle(MutexDBF);
-  CloseHandle(MutexDBFDiff);
-  CloseHandle(MutexVip);
-  CloseHandle(MutexRemains);
-  CloseHandle(MutexAlternative);
-  CloseHandle(MutexDiffKind);
-  CloseHandle(MutexDiffCDS);
-  CloseHandle(MutexEmployeeWorkLog);
-  CloseHandle(MutexBankPOSTerminal);
-  CloseHandle(MutexUnitConfig);
-  CloseHandle(MutexTaxUnitNight);
-  CloseHandle(MutexGoodsExpirationDate);
-  CloseHandle(MutexGoods);
-  CloseHandle(MutexGoodsAnalog);
-  CloseHandle(MutexUserHelsi);
-  CloseHandle(MutexEmployeeSchedule);
+  CloseMutex;
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -6450,6 +6557,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
       ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
+      ALoyaltySMID : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -6654,7 +6762,9 @@ begin
                                          APartionDateKindId,       // Тип срок/не срок
                                          AConfirmationCodeSP,      // Код подтверждения рецепта
                                          //***07.05.19
-                                         ALoyaltySignID            // Регистрация программы лояльности
+                                         ALoyaltySignID,           // Регистрация программы лояльности
+                                         //***08.01.20
+                                         ALoyaltySMID              // Регистрация программы лояльности накопительной
                                         ]));
       End
       else

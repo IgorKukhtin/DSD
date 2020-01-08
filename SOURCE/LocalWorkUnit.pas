@@ -42,6 +42,7 @@ function CashAttachment_lcl: String;
 function UserHelsi_lcl: String;
 function UserSettings_lcl: String;
 function EmployeeSchedule_lcl: String;
+function Buyer_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -49,8 +50,15 @@ function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;
 
+procedure InitMutex;
+procedure CloseMutex;
+
+
 var
-  MutexUserSettings: THandle;
+  MutexUserSettings, MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
+  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
+  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
+  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer : THandle;
 
 implementation
 
@@ -162,6 +170,11 @@ End;
 function EmployeeSchedule_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'EmployeeSchedule.local';
+End;
+
+function Buyer_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'Buyer.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
@@ -405,11 +418,72 @@ Begin
   end;
 End;
 
-initialization
+  // создаем мутексы если не созданы
+procedure InitMutex;
+  var LastErr: Integer;
+begin
   MutexUserSettings := CreateMutex(nil, false, 'farmacycashMutexUserSettings');
+  LastErr := GetLastError;
+  MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
+  LastErr := GetLastError;
+  MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
+  LastErr := GetLastError;
+  MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
+  LastErr := GetLastError;
+  MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
+  LastErr := GetLastError;
+  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+  LastErr := GetLastError;
+  MutexRefresh := CreateMutex(nil, false, 'farmacycashMutexRefresh');
+  LastErr := GetLastError;
+  MutexDiffKind := CreateMutex(nil, false, 'farmacycashMutexDiffKind');
+  LastErr := GetLastError;
+  MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
+  LastErr := GetLastError;
+  MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
+  LastErr := GetLastError;
+  MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
+  LastErr := GetLastError;
+  MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
+  LastErr := GetLastError;
+  MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
+  LastErr := GetLastError;
+  MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
+  LastErr := GetLastError;
+  MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
+  LastErr := GetLastError;
+  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
+  LastErr := GetLastError;
+  MutexUserHelsi := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
+  LastErr := GetLastError;
+  MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
+  LastErr := GetLastError;
+  MutexBuyer := CreateMutex(nil, false, 'farmacycashMutexBuyer');
+  LastErr := GetLastError;
+end;
 
-finalization
+procedure CloseMutex;
+begin
  CloseHandle(MutexUserSettings);
+ CloseHandle(MutexDBF);
+ CloseHandle(MutexDBFDiff);
+ CloseHandle(MutexVip);
+ CloseHandle(MutexRemains);
+ CloseHandle(MutexAlternative);
+ CloseHandle(MutexRefresh);
+ CloseHandle(MutexDiffKind);
+ CloseHandle(MutexDiffCDS);
+ CloseHandle(MutexEmployeeWorkLog);
+ CloseHandle(MutexBankPOSTerminal);
+ CloseHandle(MutexUnitConfig);
+ CloseHandle(MutexTaxUnitNight);
+ CloseHandle(MutexGoodsExpirationDate);
+ CloseHandle(MutexGoods);
+ CloseHandle(MutexGoodsAnalog);
+ CloseHandle(MutexEmployeeSchedule);
+ CloseHandle(MutexUserHelsi);
+ CloseHandle(MutexBuyer);
+end;
 
 
 end.
