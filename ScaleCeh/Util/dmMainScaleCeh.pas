@@ -577,7 +577,7 @@ begin
            //1-ая линия - Всегда этот цвет
            Params.AddParam('inGoodsTypeKindId_1', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger);
            Params.AddParam('inBarCodeBoxId_1', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger);
-           if SettingMain.isLightLEFT_321 = TRUE
+           if SettingMain.isLightLEFT_123 = TRUE
            then Params.AddParam('inLineCode_1', ftInteger, ptInput, 1)
            else Params.AddParam('inLineCode_1', ftInteger, ptInput, 3);
            // вложенность - Вес
@@ -597,7 +597,7 @@ begin
             //3-ья линия - Всегда этот цвет
            Params.AddParam('inGoodsTypeKindId_3', ftInteger, ptInput, ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger);
            Params.AddParam('inBarCodeBoxId_3', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger);
-           if SettingMain.isLightLEFT_321 = TRUE
+           if SettingMain.isLightLEFT_123 = TRUE
            then Params.AddParam('inLineCode_3', ftInteger, ptInput, 3)
            else Params.AddParam('inLineCode_3', ftInteger, ptInput, 1);
            // вложенность - Вес
@@ -608,7 +608,7 @@ begin
            // минимальный вес 1шт.
            Params.AddParam('inWeightMin', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin').AsFloat);
            // максимальный вес 1шт.
-           Params.AddParam('inWeightMax', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin').AsFloat);
+           Params.AddParam('inWeightMax', ftFloat, ptInput, ParamsLight.ParamByName('WeightMax').AsFloat);
 
            Params.AddParam('inAmount', ftFloat, ptInput, 1);
            Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
@@ -627,9 +627,9 @@ begin
            ParamsLight.ParamByName('isFull_2').asBoolean:= DataSet.FieldByName('isFull_2').asBoolean;
            ParamsLight.ParamByName('isFull_3').asBoolean:= DataSet.FieldByName('isFull_3').asBoolean;
            // вернули № линии, что б подсветить
-           if (SettingMain.isLightLEFT_321 = false) and (DataSet.FieldByName('LineCode').asInteger = 3)
+           if (SettingMain.isLightLEFT_123 = false) and (DataSet.FieldByName('LineCode').asInteger = 3)
            then ParamsLight.ParamByName('LineCode_begin').asInteger:= 1
-           else if (SettingMain.isLightLEFT_321 = false) and (DataSet.FieldByName('LineCode').asInteger = 1)
+           else if (SettingMain.isLightLEFT_123 = false) and (DataSet.FieldByName('LineCode').asInteger = 1)
            then ParamsLight.ParamByName('LineCode_begin').asInteger:= 3
            else ParamsLight.ParamByName('LineCode_begin').asInteger:=DataSet.FieldByName('LineCode').asInteger;
            //
@@ -843,6 +843,7 @@ begin
        Params.Clear;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
          //
@@ -866,6 +867,22 @@ begin
               ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').asInteger;
               ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').AsInteger;
               ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+
+              // только для программы ScaleCeh
+              ParamByName('Weight_gd').AsFloat        := DataSet.FieldByName('Weight_gd').AsFloat;
+              ParamByName('WeightTare_gd').AsFloat    := DataSet.FieldByName('WeightTare_gd').AsFloat;
+              ParamByName('CountForWeight_gd').AsFloat:= DataSet.FieldByName('CountForWeight_gd').AsFloat;
+              // Схема - втулки - только для программы ScaleCeh
+              if (ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
+              and(ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+              and(ParamByName('Weight_gd').AsFloat   > 0)
+              and(ParamByName('Weight_gd').AsFloat   > 0)
+              and((SettingMain.BranchCode = 1)
+                or(SettingMain.BranchCode = 102))
+              and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
+              then ParamByName('isWeight_gd').AsBoolean := true
+              else ParamByName('isWeight_gd').AsBoolean := false;
+
 
               // только для программы ScaleCeh
               ParamByName('GoodsKindId_list').asString   := DataSet.FieldByName('GoodsKindId_list').asString;
@@ -1111,7 +1128,7 @@ begin
          // минимальный вес 1шт.
          ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
          // максимальный вес 1шт.
-         ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
+         ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMax').AsFloat;
 
          //1-ая линия - Всегда этот цвет
          ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;
@@ -1286,9 +1303,9 @@ begin
          zc_Movement_OrderExternal:=DataSet.FieldByName('Value').asInteger;
 
          //Measure
-         //Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
-         //Execute;
-         //zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
+         Execute;
+         zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
 
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kg() :: TVarChar';
          Execute;
@@ -1414,10 +1431,14 @@ begin
   SettingMain.LightCOMPort:=Ini.ReadInteger('Main','DefaultLightCOMPort',0);
   if SettingMain.LightCOMPort=0 then Ini.WriteInteger('Main','DefaultLightCOMPort',4);
 
-  //isLightLEFT_321
-  tmpValue:=Ini.ReadString('Main','isLightLEFT_321','');
-  if tmpValue='' then Ini.WriteString('Main','isLightLEFT_321', 'TRUE');
-  SettingMain.isLightLEFT_321:= AnsiUpperCase(tmpValue) = AnsiUpperCase('TRUE');
+  //isLightLEFT_123
+  tmpValue:=Ini.ReadString('Main','isLightLEFT_123','');
+  if tmpValue='' then Ini.WriteString('Main','isLightLEFT_123', 'TRUE');
+  SettingMain.isLightLEFT_123:= AnsiUpperCase(tmpValue) = AnsiUpperCase('TRUE');
+  //isLightLEFT_123
+  tmpValue:=Ini.ReadString('Main','isLightCOMPort','');
+  if tmpValue='' then Ini.WriteString('Main','isLightCOMPort', 'FALSE');
+  SettingMain.isLightCOMPort:= AnsiUpperCase(tmpValue) = AnsiUpperCase('TRUE');
 
   SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCehCount',1);
   if SettingMain.ScaleCount=1 then Ini.WriteInteger('Main','ScaleCehCount',1);
@@ -1458,6 +1479,8 @@ begin
   if SettingMain.isCeh = TRUE then
   begin
        SettingMain.isModeSorting:=GetArrayList_Value_byName(Default_Array,'isModeSorting') = AnsiUpperCase('TRUE');
+
+       SettingMain.isCalc_sht:=GetArrayList_Value_byName(Default_Array,'isCalc_sht') = AnsiUpperCase('TRUE');
 
        SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));

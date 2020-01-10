@@ -26,8 +26,6 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 731
-    ExplicitHeight = 531
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -36,7 +34,6 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 731
       object bbExit: TSpeedButton
         Left = 443
         Top = 3
@@ -99,8 +96,6 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
       Height = 397
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 731
-      ExplicitHeight = 498
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -141,6 +136,36 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
+        object Weight: TcxGridDBColumn
+          Caption = #1042#1077#1089
+          DataBinding.FieldName = 'Weight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object WeightTare: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
+          DataBinding.FieldName = 'WeightTare'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountForWeight: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1076#1083#1103' '#1042#1077#1089#1072
+          DataBinding.FieldName = 'CountForWeight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -155,7 +180,6 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 731
     object gbGoodsCode: TGroupBox
       Left = 0
       Top = 0
@@ -185,7 +209,6 @@ object GuideGoodsLineForm: TGuideGoodsLineForm
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
-      ExplicitWidth = 594
       object EditGoodsName: TEdit
         Left = 5
         Top = 17

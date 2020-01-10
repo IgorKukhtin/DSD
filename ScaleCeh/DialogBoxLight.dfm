@@ -104,7 +104,6 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
         Properties.Alignment.Vert = taVCenter
-        ExplicitHeight = 19
         AnchorX = 187
         AnchorY = 30
       end

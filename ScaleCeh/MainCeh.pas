@@ -240,23 +240,23 @@ type
     infoPanelTotalSorting: TPanel;
     infoWeightOnBoxTotal_2Panel: TPanel;
     infoWeightOnBoxTotal_2Label: TLabel;
-    infoWeightOnBoxTotal_1Panel: TPanel;
-    infoWeightOnBoxTotal_1Label: TLabel;
     infoWeightOnBoxTotal_3Panel: TPanel;
     infoWeightOnBoxTotal_3Label: TLabel;
+    infoWeightOnBoxTotal_1Panel: TPanel;
+    infoWeightOnBoxTotal_1Label: TLabel;
     Space00Panel: TPanel;
     Space1Panel: TPanel;
     InfoBoxLabel: TLabel;
     Space0Panel: TPanel;
-    WeightOnBoxTotal_3Label: TcxLabel;
-    WeightOnBoxTotal_2Label: TcxLabel;
     WeightOnBoxTotal_1Label: TcxLabel;
-    WeightOnBoxAll_3Label: TcxLabel;
-    WeightOnBoxAll_2Label: TcxLabel;
+    WeightOnBoxTotal_2Label: TcxLabel;
+    WeightOnBoxTotal_3Label: TcxLabel;
     WeightOnBoxAll_1Label: TcxLabel;
-    BarCodeOnBox_3Label: TcxLabel;
-    BarCodeOnBox_2Label: TcxLabel;
+    WeightOnBoxAll_2Label: TcxLabel;
+    WeightOnBoxAll_3Label: TcxLabel;
     BarCodeOnBox_1Label: TcxLabel;
+    BarCodeOnBox_2Label: TcxLabel;
+    BarCodeOnBox_3Label: TcxLabel;
     Panel1: TPanel;
     LightColor: TcxGridDBColumn;
     Timer_GetWeight: TTimer;
@@ -264,6 +264,7 @@ type
     testButton2: TButton;
     bbInsertPartionGoodsOpen_out: TSpeedButton;
     bbInsertPartionGoodsClose_out: TSpeedButton;
+    RealWeight_gd: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -339,6 +340,7 @@ type
     procedure testButton2Click(Sender: TObject);
     procedure bbInsertPartionGoodsOpen_outClick(Sender: TObject);
     procedure bbInsertPartionGoodsClose_outClick(Sender: TObject);
+    procedure EditCountPackEnter(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -381,6 +383,7 @@ type
     //
     function Set_LightOn(number : byte) : Boolean;
     function Set_LightOff(number : byte) : Boolean;
+    function Set_FlashOn(number : byte) : Boolean;
 
     function Set_LightOn_all : Boolean;
     function Set_LightOff_all : Boolean;
@@ -509,7 +512,8 @@ begin
          First;
          //посчитали те что в режиме "обнулить", у них WeightTare = 0
          while(not EOF)and((FieldByName('WeightTare').AsFloat=0)or(FieldByName('isErased').AsBoolean = TRUE)
-            or(FieldByName('MeasureId').AsInteger <> zc_Measure_Kg))
+                         or(FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                          )
          do begin
             //пропустили "удаленные"
             if  (FieldByName('isErased').AsBoolean = FALSE)
@@ -555,7 +559,9 @@ begin
         then calcOperCount:=ParamByName('RealWeight').AsFloat
         else calcOperCount:=ParamByName('RealWeight').AsFloat - GetOldRealWeight;
         //
-        if (ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
+        if  ((ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
+          and(SettingMain.isCalc_sht = FALSE))
+         or (ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
         then ParamByName('OperCount').AsFloat:=calcOperCount
         else ParamByName('OperCount').AsFloat:=calcOperCount
                                               -ParamByName('WeightTare').AsFloat
@@ -564,7 +570,8 @@ begin
                                               -ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
                                               ;
         //
-        if (ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+        if  ((ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+        and (ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
         then EditEnterCount.Text:='';
         //
         PanelGoodsWeight.Caption:= FormatFloat(fmtWeight, ParamByName('OperCount').AsFloat);
@@ -643,7 +650,7 @@ begin
          exit;
      end;
      //Проверка - если есть несохраненный элемент, тогда формирование документа не произойдет
-     if ParamsMI.ParamByName('GoodsId').AsInteger <> 0 then
+     if (ParamsMI.ParamByName('GoodsId').AsInteger <> 0)and (SettingMain.isModeSorting = FALSE) then
      begin
           ShowMessage('Сохраните элемент взвешивания нажатием клавиши <F4>.');
           ActiveControl:=EditGoodsCode;
@@ -663,6 +670,7 @@ begin
 
 
      //параметры для печати
+     if SettingMain.isModeSorting = FALSE then
      if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
                                    ,1
                                    ,ParamsMovement.ParamByName('isMovement').asBoolean
@@ -680,6 +688,8 @@ begin
          exit;
      end;
 
+     // потушили все
+     Set_LightOff_all;
      //!!!Сохранили документ!!!
      if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
      begin
@@ -687,13 +697,19 @@ begin
           ValueStep_obv:= 0;
           //
           //Print and Create Quality + Transport + Tax
+          if SettingMain.isModeSorting = FALSE then
           Print_Movement_afterSave;
           //Initialize or Empty
           //НЕ будем автоматов открывать предыдущий док.
           //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
           //DMMainScaleCehForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+          //
           EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
+          if SettingMain.isModeSorting = TRUE then EmptyValuesParams(ParamsLight);
+
           gpInitialize_MovementDesc;
+          if SettingMain.isModeSorting = TRUE then GetParams_MovementDesc('')
+          else InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
           //
           Initialize_afterSave_all;
           Initialize_afterSave_MI;
@@ -992,10 +1008,10 @@ procedure TMainCehForm.WriteParamsLight;
          if ((num = 1) and (Id = 0)) or (Id = -1) or ((Id = Id_Sh) and (Id_Sh > 0)) then
          begin
              //!!!замена!!!
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 1)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
              then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Sh
              else
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 3)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
              then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Sh
              else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Sh;
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Sh;
@@ -1005,10 +1021,10 @@ procedure TMainCehForm.WriteParamsLight;
          if ((num = 2) and (Id = 0)) or (Id = -2) or ((Id = Id_Nom) and (Id_Nom > 0)) then
          begin
              //!!!замена!!!
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 1)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
              then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Nom
              else
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 3)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
              then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Nom
              else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Nom;
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Nom;
@@ -1018,10 +1034,10 @@ procedure TMainCehForm.WriteParamsLight;
          if ((num = 3) and (Id = 0)) or (Id = -3) or ((Id = Id_Ves) and (Id_Ves > 0)) then
          begin
              //!!!замена!!!
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 1)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
              then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Ves
              else
-             if (SettingMain.isLightLEFT_321 = FALSE) and (num = 3)
+             if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
              then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Ves
              else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Ves;
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Ves;
@@ -1157,10 +1173,10 @@ begin
      if num > 0 then
      begin
        PanelMovementDesc.Font.Color:=clRed;
-       if (SettingMain.isLightLEFT_321 = false) and (num = 3)
+       if (SettingMain.isLightLEFT_123 = false) and (num = 3)
        then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(1)+'>.'
        else
-       if (SettingMain.isLightLEFT_321 = false) and (num = 1)
+       if (SettingMain.isLightLEFT_123 = false) and (num = 1)
        then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(3)+'>.'
        else PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(num)+'>.';
        // только один
@@ -1721,7 +1737,8 @@ begin
      then begin
           PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
           WriteParamsMovement;
-          if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
+          if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
+           or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
           if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
@@ -1730,6 +1747,18 @@ begin
 
           //сохраним что был ГЕТ
           oldGoodsCode:= GoodsCode_int;
+
+          // поменяем на Втулки или обратно - если надо
+          if SettingMain.isGoodsComplete = TRUE
+          then
+              // если Схема - втулки
+              if (ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
+              then begin LabelCount.Caption:='Втулки';
+                         LabelCountPack.Caption:='-';
+                   end
+              else begin LabelCount.Caption:='Батоны';
+                         LabelCountPack.Caption:='Пакеты';
+              end;
 
      end
      else begin
@@ -1748,7 +1777,9 @@ begin
      ParamsMI.ParamByName('RealWeight').AsFloat:=fGetScale_CurrentWeight;
      SetParams_OperCount;
      //
-     if (ParamsMI.ParamByName('OperCount').AsFloat<=0)and(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+     if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+     and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+     and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
      then begin ActiveControl:=EditGoodsCode;
                 PanelMovementDesc.Font.Color:=clRed;
                 PanelMovementDesc.Caption:='Ошибка.Не определен вес <Продукции>';
@@ -1967,7 +1998,16 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditCountKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = 13 then ActiveControl:=EditCountPack;
+     if Key = 13 then
+       if ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE
+       then ActiveControl:=EditWeightTare_enter
+       else ActiveControl:=EditCountPack;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditCountPackEnter(Sender: TObject);
+begin
+    if ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE
+    then ActiveControl:= EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditCountPackKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -2083,7 +2123,8 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountPropertiesChange(Sender: TObject);
 begin
-     if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
+     if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
+      or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
      then
           try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditEnterCount.Text);
               SetParams_OperCount;
@@ -2094,7 +2135,8 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountEnter(Sender: TObject);
 begin
-     if ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg
+     if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
      then ActiveControl:=EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
@@ -2165,7 +2207,9 @@ begin
     //получили Вес, и если 3-ье значение ПОДРЯД одинаковое, вес стабилизироваляс и его надо сохранить
     fGetScale_TimerWeight;
   finally
-    if not (Timer_GetWeight.Enabled) then Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
+    if (1=0) and (lTimerWeight_1 = 0) and (lTimerWeight_2 = 0) and (lTimerWeight_3 = 0)
+    then Timer_GetWeight.Enabled:= false
+    else if not (Timer_GetWeight.Enabled) then Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -2257,6 +2301,8 @@ begin
   // or isModeSorting = RealWeight
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          :=(1=1) or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          :=(SettingMain.isModeSorting = FALSE);
+  // Вес за минусом втулок и тары
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight_gd').Index].Visible       :=(SettingMain.isCalc_sht = TRUE);
   //
   //rename Columns
   if SettingMain.isModeSorting = TRUE then
@@ -2282,6 +2328,8 @@ begin
   infoPanel_Weight.Visible :=(SettingMain.isModeSorting = FALSE);
   infoPanelTotalSumm.Visible :=(SettingMain.isModeSorting = FALSE);
   infoPanelTotalSorting.Visible :=(SettingMain.isModeSorting = TRUE);
+  if infoPanelTotalSorting.Visible then infoPanelTotalSorting.Align:= alClient;
+
   //local visible
   if SettingMain.isGoodsComplete = TRUE
   then begin
@@ -2340,11 +2388,11 @@ begin
          OutputType:=otDataSet;
          Params.AddParam('inMovementId', ftInteger, ptInput,0);
          Params.AddParam('inBranchCode', ftInteger, ptInput,SettingMain.BranchCode);
-         if SettingMain.isLightLEFT_321 = TRUE
+         if SettingMain.isLightLEFT_123 = TRUE
          then Params.AddParam('inColor_1', ftInteger, ptInput,SettingMain.LightColor_1)
          else Params.AddParam('inColor_1', ftInteger, ptInput,SettingMain.LightColor_3);
          Params.AddParam('inColor_2', ftInteger, ptInput,SettingMain.LightColor_2);
-         if SettingMain.isLightLEFT_321 = TRUE
+         if SettingMain.isLightLEFT_123 = TRUE
          then Params.AddParam('inColor_3', ftInteger, ptInput,SettingMain.LightColor_3)
          else Params.AddParam('inColor_3', ftInteger, ptInput,SettingMain.LightColor_1);
     end
@@ -2396,11 +2444,11 @@ begin
     begin
        Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inBranchCode').Value:=SettingMain.BranchCode;
-       if SettingMain.isLightLEFT_321 = TRUE
+       if SettingMain.isLightLEFT_123 = TRUE
        then Params.ParamByName('inColor_1').Value:= SettingMain.LightColor_1
        else Params.ParamByName('inColor_1').Value:= SettingMain.LightColor_3;
        Params.ParamByName('inColor_2').Value:= SettingMain.LightColor_2;
-       if SettingMain.isLightLEFT_321 = TRUE
+       if SettingMain.isLightLEFT_123 = TRUE
        then Params.ParamByName('inColor_3').Value:= SettingMain.LightColor_3
        else Params.ParamByName('inColor_3').Value:= SettingMain.LightColor_1;
        Execute;
@@ -2441,7 +2489,7 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightGoods_test(number : byte) : Boolean;
 begin
-     if (SettingMain.isModeSorting = FALSE) or (ErrLight = FALSE) then exit;
+     if (SettingMain.isModeSorting = FALSE) or (SettingMain.isLightCOMPort = FALSE) then exit;
      //
      Set_LightOff(1);
      Set_LightOff(2);
@@ -2452,16 +2500,50 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOn(number : byte) : Boolean;
 begin
-     if (ErrLight = FALSE) then exit;
+     if (SettingMain.isLightCOMPort = FALSE) then exit;
+     // выключили
+     Set_LightOff(number);
      //
-     Result:= MU110.OutOn(number);
+     if number = 1
+     then // !замена!
+          Result:= MU110.OutOn(3)
+     else if number = 3
+          then
+              // !замена!
+              Result:= MU110.OutOn(1)
+          else
+              Result:= MU110.OutOn(number);
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.Set_FlashOn(number : byte) : Boolean;
+begin
+     if (SettingMain.isLightCOMPort = FALSE) then exit;
+     // выключили
+     Set_LightOff(number);
+     //
+     if number = 1
+     then // !замена!
+          Result:= MU110.OutFlash(3)
+     else if number = 3
+          then // !замена!
+               Result:= MU110.OutFlash(1)
+          else
+               Result:= MU110.OutFlash(number);
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOff(number : byte) : Boolean;
 begin
-     if (ErrLight = FALSE) then exit;
+     if (SettingMain.isLightCOMPort = FALSE) then exit;
      //
-     Result:= MU110.OutOff(number);
+     if number = 1
+     then
+         // !замена!
+         Result:= MU110.OutOff(3)
+     else if number = 3
+          then // !замена!
+               Result:= MU110.OutOff(1)
+          else
+               Result:= MU110.OutOff(number);
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOn_all: Boolean;
@@ -2492,7 +2574,7 @@ function TMainCehForm.Create_Light : Boolean;
 begin
      Result:= false;
      //
-     if (SettingMain.isModeSorting = FALSE) or (ErrLight = FALSE) then exit;
+     if (SettingMain.isModeSorting = FALSE) or (SettingMain.isLightCOMPort = FALSE) then exit;
      //
      MU110:= TMU110.GetInstance(self);
      //
@@ -2511,7 +2593,7 @@ function TMainCehForm.Close_Light : Boolean;
 begin
      Result:= false;
      //
-     if (SettingMain.isModeSorting = FALSE) or (ErrLight = FALSE) then exit;
+     if (SettingMain.isModeSorting = FALSE) or (SettingMain.isLightCOMPort = FALSE) then exit;
      //
      // зажгли все
      Set_LightOn_all;
@@ -2655,6 +2737,9 @@ begin
         else // если это только второй
              if lTimerWeight_2 <> tmpCurrentWeight then begin lTimerWeight_2:= tmpCurrentWeight; lTimerWeight_3:= 0;end
              else begin
+                 // Отключили предыдущий
+                 Set_LightOff_all;
+                 //
                  // третий - последний
                  lTimerWeight_3:= tmpCurrentWeight;
                  //
@@ -2702,7 +2787,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
-     if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg) or (ParamsMI.ParamByName('MeasureId').AsInteger = 0)
+     if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+       or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
+       or(SettingMain.isCalc_sht = TRUE))
+     and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
      then begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;

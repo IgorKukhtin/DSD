@@ -40,6 +40,9 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    Weight: TcxGridDBColumn;
+    WeightTare: TcxGridDBColumn;
+    CountForWeight: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -99,6 +102,11 @@ begin
      fEnterGoodsName:=false;
      ActiveControl:=EditGoodsName;
 
+     //
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible                        := (SettingMain.BranchCode = 1);
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].VisibleForCustomization    := (SettingMain.BranchCode = 1);
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].VisibleForCustomization:= (SettingMain.BranchCode = 1);
+     //
      Application.ProcessMessages;
      Application.ProcessMessages;
      Application.ProcessMessages;

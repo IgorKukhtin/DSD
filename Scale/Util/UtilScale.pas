@@ -58,6 +58,7 @@ type
     isSticker:Boolean;      // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
+    isCalc_sht:Boolean;     // ScaleCeh - вес - из него получаем м. или шт.
     WeightSkewer1:Double;   // only ScaleCeh
     WeightSkewer2:Double;   // only ScaleCeh
     Exception_WeightDiff:Double; // only Scale
@@ -68,7 +69,8 @@ type
     UnitId1_sep, UnitId2_sep, UnitId3_sep, UnitId4_sep, UnitId5_sep:Integer;
     UnitName1_sep, UnitName2_sep, UnitName3_sep, UnitName4_sep, UnitName5_sep :String;
 
-    isLightLEFT_321 : Boolean;
+    isLightLEFT_123 : Boolean;
+    isLightCOMPort : Boolean;
     LightColor_1, LightColor_2, LightColor_3 : Integer;
     Name_Sh, Name_Nom, Name_Ves : String;
     ShName_Sh, ShName_Nom, ShName_Ves : String;
@@ -179,14 +181,15 @@ var
   zc_Object_Unit       : Integer;
   zc_Object_Car        : Integer;
 
-//  zc_Measure_Sh: Integer;
+  zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
 
   zc_BarCodePref_Object  :String;
   zc_BarCodePref_Movement:String;
   zc_BarCodePref_MI      :String;
 
-const ErrLight : Boolean = false;
+//const ErrLight : Boolean = true;
+//const ErrLight : Boolean = false;
 
 implementation
 //uses DMMainScale;
@@ -444,6 +447,12 @@ begin
      ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
      ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
      ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
+
+     ParamAdd(Params,'isWeight_gd',ftBoolean);       // Схема - втулки
+     ParamAdd(Params,'Weight_gd',ftFloat);           // Вес товара
+     ParamAdd(Params,'WeightTare_gd',ftFloat);       // Вес втулки
+     ParamAdd(Params,'CountForWeight_gd',ftFloat);   // Кол. для Веса
+
      ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
      ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
@@ -645,8 +654,10 @@ begin
      DecodeTime(Present, Hour, Min, Sec, MSec);
      //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
      //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
-     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
-     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
      while abs(calcSec-calcSec2)<mySec do
      begin
           Application.ProcessMessages;
@@ -657,7 +668,8 @@ begin
           DecodeDate(Present, Year, Month, Day);
           DecodeTime(Present, Hour, Min, Sec, MSec);
           //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
-          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+          calcSec2:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
           Application.ProcessMessages;
           Application.ProcessMessages;
           Application.ProcessMessages;
@@ -675,15 +687,18 @@ begin
      DecodeTime(Present, Hour, Min, Sec, MSec);
      //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
      //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
-     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
-     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
      while abs(calcSec-calcSec2)<mySec do
      begin
           Present:=Now;
           DecodeDate(Present, Year, Month, Day);
           DecodeTime(Present, Hour, Min, Sec, MSec);
           //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
-          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+//          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+          calcSec2:=Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
      end;
 end;
 {------------------------------------------------------------------------------}

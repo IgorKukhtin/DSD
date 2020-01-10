@@ -610,6 +610,11 @@ object MainCehForm: TMainCehForm
             Format = ',0.####'
             Kind = skSum
             Column = CountPack
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_gd
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -681,6 +686,11 @@ object MainCehForm: TMainCehForm
             Format = ',0.####'
             Kind = skSum
             Column = CountPack
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_gd
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -769,16 +779,28 @@ object MainCehForm: TMainCehForm
           HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1073#1072#1090#1086#1085#1072
           Width = 45
         end
+        object RealWeight_gd: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1073#1077#1079' '#1074#1090'.'
+          DataBinding.FieldName = 'RealWeight_gd'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1079#1072' '#1084#1080#1085#1091#1089#1086#1084' '#1074#1090#1091#1083#1086#1082' '#1080' '#1090#1072#1088#1099
+          Width = 55
+        end
         object Count: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1073#1072#1090'.'
+          Caption = #1050#1086#1083'. '#1073#1072#1090'./'#1074#1090'.'
           DataBinding.FieldName = 'Count'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1074#1090#1091#1083#1086#1082
           Options.Editing = False
-          Width = 45
+          Width = 53
         end
         object CountPack: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1087#1072#1082'.'
@@ -1257,7 +1279,7 @@ object MainCehForm: TMainCehForm
       Left = 0
       Top = 160
       Width = 130
-      Height = 441
+      Height = 494
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 7
@@ -1356,7 +1378,7 @@ object MainCehForm: TMainCehForm
           AnchorY = 81
         end
       end
-      object infoWeightOnBoxTotal_1Panel: TPanel
+      object infoWeightOnBoxTotal_3Panel: TPanel
         Left = 0
         Top = 313
         Width = 130
@@ -1365,101 +1387,6 @@ object MainCehForm: TMainCehForm
         Alignment = taLeftJustify
         BevelOuter = bvNone
         TabOrder = 1
-        object infoWeightOnBoxTotal_1Label: TLabel
-          Left = 0
-          Top = 0
-          Width = 130
-          Height = 13
-          Align = alTop
-          Alignment = taCenter
-          Caption = #8470'1 - '#1074#1077#1089' '#1064#1058'. '
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ExplicitWidth = 72
-        end
-        object WeightOnBoxTotal_1Label: TcxLabel
-          Left = 0
-          Top = 13
-          Align = alClient
-          Caption = 'WeightOnBoxTotal_1Label'
-          ParentColor = False
-          ParentFont = False
-          Style.BorderColor = clWindowFrame
-          Style.BorderStyle = ebsThick
-          Style.Color = clBtnFace
-          Style.Font.Charset = RUSSIAN_CHARSET
-          Style.Font.Color = clWindowText
-          Style.Font.Height = -11
-          Style.Font.Name = 'Tahoma'
-          Style.Font.Style = [fsBold]
-          Style.IsFontAssigned = True
-          Properties.Alignment.Horz = taCenter
-          Properties.Alignment.Vert = taVCenter
-          AnchorX = 65
-          AnchorY = 28
-        end
-        object WeightOnBoxAll_1Label: TcxLabel
-          Left = 0
-          Top = 43
-          Align = alBottom
-          AutoSize = False
-          Caption = 'WeightOnBoxAll_1Label'
-          ParentColor = False
-          ParentFont = False
-          Style.BorderColor = clWindowFrame
-          Style.BorderStyle = ebsSingle
-          Style.Color = clBtnFace
-          Style.Font.Charset = RUSSIAN_CHARSET
-          Style.Font.Color = clWindowText
-          Style.Font.Height = -11
-          Style.Font.Name = 'Tahoma'
-          Style.Font.Style = []
-          Style.IsFontAssigned = True
-          Properties.Alignment.Horz = taCenter
-          Properties.Alignment.Vert = taVCenter
-          Height = 27
-          Width = 130
-          AnchorX = 65
-          AnchorY = 57
-        end
-        object BarCodeOnBox_1Label: TcxLabel
-          Left = 0
-          Top = 70
-          Align = alBottom
-          AutoSize = False
-          Caption = 'BarCodeOnBox_1Label'
-          ParentColor = False
-          ParentFont = False
-          Style.BorderColor = clWindowFrame
-          Style.BorderStyle = ebsSingle
-          Style.Color = clBtnFace
-          Style.Font.Charset = RUSSIAN_CHARSET
-          Style.Font.Color = clWindowText
-          Style.Font.Height = -9
-          Style.Font.Name = 'Tahoma'
-          Style.Font.Style = []
-          Style.IsFontAssigned = True
-          Properties.Alignment.Horz = taCenter
-          Properties.Alignment.Vert = taVCenter
-          Height = 21
-          Width = 130
-          AnchorX = 65
-          AnchorY = 81
-        end
-      end
-      object infoWeightOnBoxTotal_3Panel: TPanel
-        Left = 0
-        Top = 71
-        Width = 130
-        Height = 91
-        Align = alTop
-        Alignment = taLeftJustify
-        BevelOuter = bvNone
-        TabOrder = 2
         object infoWeightOnBoxTotal_3Label: TLabel
           Left = 0
           Top = 0
@@ -1467,14 +1394,14 @@ object MainCehForm: TMainCehForm
           Height = 13
           Align = alTop
           Alignment = taCenter
-          Caption = #8470'3 - '#1074#1077#1089' '#1053#1045#1053#1054#1052'.'
+          Caption = #8470'3 - '#1074#1077#1089' '#1064#1058'. '
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          ExplicitWidth = 89
+          ExplicitWidth = 72
         end
         object WeightOnBoxTotal_3Label: TcxLabel
           Left = 0
@@ -1527,6 +1454,101 @@ object MainCehForm: TMainCehForm
           Align = alBottom
           AutoSize = False
           Caption = 'BarCodeOnBox_3Label'
+          ParentColor = False
+          ParentFont = False
+          Style.BorderColor = clWindowFrame
+          Style.BorderStyle = ebsSingle
+          Style.Color = clBtnFace
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -9
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taVCenter
+          Height = 21
+          Width = 130
+          AnchorX = 65
+          AnchorY = 81
+        end
+      end
+      object infoWeightOnBoxTotal_1Panel: TPanel
+        Left = 0
+        Top = 71
+        Width = 130
+        Height = 91
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 2
+        object infoWeightOnBoxTotal_1Label: TLabel
+          Left = 0
+          Top = 0
+          Width = 130
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #8470'1 - '#1074#1077#1089' '#1053#1045#1053#1054#1052'.'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 89
+        end
+        object WeightOnBoxTotal_1Label: TcxLabel
+          Left = 0
+          Top = 13
+          Align = alClient
+          Caption = 'WeightOnBoxTotal_1Label'
+          ParentColor = False
+          ParentFont = False
+          Style.BorderColor = clWindowFrame
+          Style.BorderStyle = ebsThick
+          Style.Color = clBtnFace
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -11
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taVCenter
+          AnchorX = 65
+          AnchorY = 28
+        end
+        object WeightOnBoxAll_1Label: TcxLabel
+          Left = 0
+          Top = 43
+          Align = alBottom
+          AutoSize = False
+          Caption = 'WeightOnBoxAll_1Label'
+          ParentColor = False
+          ParentFont = False
+          Style.BorderColor = clWindowFrame
+          Style.BorderStyle = ebsSingle
+          Style.Color = clBtnFace
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -11
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taVCenter
+          Height = 27
+          Width = 130
+          AnchorX = 65
+          AnchorY = 57
+        end
+        object BarCodeOnBox_1Label: TcxLabel
+          Left = 0
+          Top = 70
+          Align = alBottom
+          AutoSize = False
+          Caption = 'BarCodeOnBox_1Label'
           ParentColor = False
           ParentFont = False
           Style.BorderColor = clWindowFrame
@@ -2272,14 +2294,14 @@ object MainCehForm: TMainCehForm
           Height = 14
           Align = alTop
           Alignment = taCenter
-          Caption = #1041#1072#1090#1086#1085#1099'/'#1064#1090#1091#1082#1080
+          Caption = #1041#1072#1090#1086#1085#1099'/'#1064#1090#1091#1082#1080'/'#1042#1090#1091#1083#1082#1080
           Font.Charset = RUSSIAN_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitWidth = 75
+          ExplicitWidth = 114
         end
         object EditCount: TcxCurrencyEdit
           Left = 4
@@ -2327,6 +2349,7 @@ object MainCehForm: TMainCehForm
           Properties.DecimalPlaces = 4
           Properties.OnChange = EditCountPackPropertiesChange
           TabOrder = 0
+          OnEnter = EditCountPackEnter
           OnKeyDown = EditCountPackKeyDown
           Width = 90
         end
@@ -2372,6 +2395,7 @@ object MainCehForm: TMainCehForm
           Properties.DecimalPlaces = 0
           Properties.OnChange = EditSkewer2PropertiesChange
           TabOrder = 0
+          OnEnter = EditCountPackEnter
           OnExit = EditSkewer2Exit
           OnKeyDown = EditSkewer2KeyDown
           Width = 90
@@ -2578,6 +2602,7 @@ object MainCehForm: TMainCehForm
           Properties.DecimalPlaces = 0
           Properties.OnChange = EditSkewer1PropertiesChange
           TabOrder = 0
+          OnEnter = EditCountPackEnter
           OnExit = EditSkewer1Exit
           OnKeyDown = EditSkewer1KeyDown
           Width = 90
@@ -2651,6 +2676,7 @@ object MainCehForm: TMainCehForm
         Properties.DecimalPlaces = 2
         Properties.OnChange = EditWeightOtherPropertiesChange
         TabOrder = 0
+        OnEnter = EditCountPackEnter
         OnExit = EditWeightOtherExit
         OnKeyDown = EditWeightOtherKeyDown
         Width = 90

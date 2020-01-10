@@ -194,6 +194,7 @@ begin
    fStartWrite:= false;
    //
    try
+      // потушили ВСЕ
       MainCehForm.Set_LightOff_all;
       Timer.Interval:= msc_Blink;
       Timer.Enabled:= true;
@@ -202,6 +203,7 @@ begin
       if not Result then ActiveControl:= bbCancel;
    finally
       Timer.Enabled:= false;
+      // потушили ВСЕ
       MainCehForm.Set_LightOff_all;
       //
       ParamsLight.ParamByName('isFull_1').asBoolean:= FALSE;
@@ -284,7 +286,7 @@ begin
   Light_2Memo.Color:= SettingMain.LightColor_2;
   Light_3Memo.Color:= SettingMain.LightColor_3;
   //
-  if SettingMain.isLightLEFT_321 = TRUE then
+  if SettingMain.isLightLEFT_123 = TRUE then
   begin
      Box3Label.Caption:= 'Линия 3 :';
      Box1Label.Caption:= 'Линия 1 :';
@@ -490,20 +492,21 @@ begin
                if ParamByName('GoodsTypeKindId_1').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
                then is_Ves := FALSE;
      //
-     if trim (Box1Edit.Text) = ''
+     {if trim (Box1Edit.Text) = ''
      then
           // потушили № 1
           MainCehForm.Set_LightOff(1)
      else
           // зажгли № 1
-          MainCehForm.Set_LightOn(1);
+          MainCehForm.Set_LightOn(1);}
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box1EditEnter(Sender: TObject);
 begin
      Active_box:= 1;
-     // зажгли № 1
-     if trim (Box1Edit.Text) <> '' then begin MainCehForm.Set_LightOff(1);MainCehForm.Set_LightOn(1);end;
+     // зажгли/замигали № 1
+     //if trim (Box1Edit.Text) <> '' then
+     MainCehForm.Set_FlashOn(1);
      // мигающее сообщение - какая линия заполняется
      WriteMsgBlink(1);
 end;
@@ -601,6 +604,8 @@ begin
           BoxCode1Label.Caption:= '(' + ParamByName('BoxCode_1').asString + ')';
           Box1Edit.Text:= ParamByName('BoxBarCode_1').AsString;
           fStartWrite:= false;
+          // зажгли № 1
+          MainCehForm.Set_LightOn(1);
       end;
    end;
 end;
@@ -651,20 +656,22 @@ begin
                if ParamByName('GoodsTypeKindId_2').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
                then is_Ves := FALSE;
      //
-     if trim (Box2Edit.Text) = ''
+     {if trim (Box2Edit.Text) = ''
      then
           // потушили № 2
-          MainCehForm.Set_LightOff(2)
+        //MainCehForm.Set_LightOff(2)
+          MainCehForm.Set_LightOn(2)
      else
           // зажгли № 2
-          MainCehForm.Set_LightOn(2);
+          MainCehForm.Set_LightOn(2);}
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box2EditEnter(Sender: TObject);
 begin
      Active_box:= 2;
-     // зажгли № 2
-     if trim (Box2Edit.Text) <> '' then begin MainCehForm.Set_LightOff(2);MainCehForm.Set_LightOn(2);end;
+     // зажгли/замигали № 2
+     //if trim (Box2Edit.Text) <> '' then
+     MainCehForm.Set_FlashOn(2);
      // мигающее сообщение - какая линия заполняется
      WriteMsgBlink(2);
 end;
@@ -761,6 +768,8 @@ begin
           BoxCode2Label.Caption:= '(' + ParamByName('BoxCode_2').asString + ')';
           Box2Edit.Text:= ParamByName('BoxBarCode_2').AsString;
           fStartWrite:= false;
+          // зажгли № 2
+          MainCehForm.Set_LightOn(2);
       end;
    end;
 end;
@@ -829,20 +838,22 @@ begin
                if ParamByName('GoodsTypeKindId_3').AsInteger = ParamByName('GoodsTypeKindId_Ves').AsInteger
                then is_Ves := FALSE;
      //
-     if trim (Box3Edit.Text) = ''
+     {if trim (Box3Edit.Text) = ''
      then
           // потушили № 3
-          MainCehForm.Set_LightOff(3)
+        //MainCehForm.Set_LightOff(3)
+          MainCehForm.Set_LightOn(3)
      else
           // зажгли № 3
-          MainCehForm.Set_LightOn(3);
+          MainCehForm.Set_LightOn(3);}
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogBoxLightForm.Box3EditEnter(Sender: TObject);
 begin
      Active_box:= 3;
-     // зажгли № 3
-     if trim (Box3Edit.Text) <> '' then begin MainCehForm.Set_LightOff(3);MainCehForm.Set_LightOn(3);end;
+     // зажгли/замигали № 3
+     //if trim (Box3Edit.Text) <> '' then
+     MainCehForm.Set_FlashOn(3);
      // мигающее сообщение - какая линия заполняется
      WriteMsgBlink(3);
 end;
@@ -939,6 +950,8 @@ begin
           BoxCode3Label.Caption:= '(' + ParamByName('BoxCode_3').asString + ')';
           Box3Edit.Text:= ParamByName('BoxBarCode_3').AsString;
           fStartWrite:= false;
+          // зажгли № 3
+          MainCehForm.Set_LightOn(3);
       end;
    end;
 end;
