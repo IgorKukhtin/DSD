@@ -184,10 +184,16 @@ type
   private
     fBegin_All : Boolean;
     fStop : Boolean;
-    gSessionGUID : String;
+    gSessionGUID_object, gSessionGUID_movement: String;
+    //
     outMinId, outMaxId, outCountIteration, outCountPack : Integer;
-    outCount, outCountString, outCountFloat, outCountDate, outCountBoolean, outCountLink, outCountLinkM : Integer;
+    outMinMovId, outMaxMovId, outCountMovIteration, outCountMovPack : Integer;
+    //
+    outCount, outCountString, outCountFloat, outCountDate, outCountBoolean, outCountLink : Integer;
     outCountHistory, outCountHistoryString, outCountHistoryFloat, outCountHistoryDate, outCountHistoryBoolean, outCountHistoryLink : Integer;
+    //
+    outCountMov, outCountMovString, outCountMovFloat, outCountMovDate, outCountMovBoolean, outCountMovLink, outCountMovLinkMov : Integer;
+    outCountMI, outCountMIString, outCountMIFloat, outCountMIDate, outCountMIBoolean, outCountMILink : Integer;
 
     procedure myShowSql(mySql:TStrings);
     procedure MyDelay(mySec:Integer);
@@ -232,7 +238,7 @@ type
 
     function gpSelect_ReplServer_load: TArrayReplServer;
     function IniConnection_Main (isConnected : Boolean): Boolean;
-    function IniConnection_Child(isMsg : Boolean; _PropertyName : String; isGetDesc : Boolean): Boolean;
+    function IniConnection_Child      (isMsg : Boolean; _PropertyName : String; isGetDesc : Boolean; isCycle : Boolean; numCycle : Integer; var Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7 : String): Boolean;
     function IniConnection_Child_cycle(isMsg : Boolean; _PropertyName : String; isGetDesc : Boolean): Boolean;
 
     //Object
@@ -323,8 +329,8 @@ begin
   CreateGUID(G);
   //
   if isFromMain = TRUE
-  then Result := MainForm.FormatFromDateTime_folder(now) + '-m - ' + GUIDToString(G)
-  else Result := MainForm.FormatFromDateTime_folder(now) + '-c - ' + GUIDToString(G);
+  then Result := MainForm.FormatFromDateTime_folder(now) + ' - main - ' + GUIDToString(G)
+  else Result := MainForm.FormatFromDateTime_folder(now) + ' - child - ' + GUIDToString(G);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.gpSelect_ReplServer_load: TArrayReplServer;
@@ -789,39 +795,68 @@ begin
         try Connected:=true; except AddToMemoMsg(' !!!!! not Connected From!!!!', TRUE);end;
         //
         Result:= Connected;
-
      end;
+     //Result:= true;
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.IniConnection_Child_cycle(isMsg : Boolean; _PropertyName : String; isGetDesc: Boolean) : Boolean;
+var Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7 : String;
 //Child: соединение - ПРЯМОЕ
 begin
      Result:= false;
      //
-     if not IniConnection_Child (isMsg, _PropertyName + ' try 0', isGetDesc)
-     then begin
-               MyDelay(3*1000);
+     Message_ret0:= '';
+     Message_ret1:= '';
+     Message_ret2:= '';
+     Message_ret3:= '';
+     Message_ret4:= '';
+     Message_ret5:= '';
+     Message_ret6:= '';
+     //
+     if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 0, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+     begin
+       MyDelay(3*1000);
+       //
+       if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 1, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+       begin
+         MyDelay(5*1000);
+         //
+         if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 2, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+         begin
+           MyDelay(7*1000);
+           //
+           if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 3, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+           begin
+             MyDelay(8*1000);
+             //
+             if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 4, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+             begin
+               MyDelay(10*1000);
                //
-               if not IniConnection_Child (TRUE, _PropertyName + ' try 1', isGetDesc)
-               then begin
-                         MyDelay(5*1000);
-                         //
-                         if not IniConnection_Child (TRUE, _PropertyName + ' try 2', isGetDesc)
-                         then begin
-                                   MyDelay(10*1000);
-                                   //
-                                   if not IniConnection_Child (TRUE, _PropertyName + ' try 3', isGetDesc)
-                                   then exit;
-                         end;
+               if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 5, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+               begin
+                 MyDelay(11*1000);
+                 //
+                 if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 6, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7) then
+                 begin
+                   MyDelay(11*1000);
+                   //
+                   if not IniConnection_Child (isMsg, _PropertyName, isGetDesc, TRUE, 7, Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7)
+                   then exit;
+                 end;
                end;
-          end;
+             end;
+           end;
+         end;
+       end;
+     end;
      //
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.IniConnection_Child (isMsg : Boolean; _PropertyName : String; isGetDesc: Boolean) : Boolean;
+function TMainForm.IniConnection_Child (isMsg : Boolean; _PropertyName : String; isGetDesc: Boolean; isCycle : Boolean; numCycle : Integer; var Message_ret0, Message_ret1, Message_ret2, Message_ret3, Message_ret4, Message_ret5, Message_ret6, Message_ret7 : String) : Boolean;
 //Child: соединение - ПРЯМОЕ
 var i : Integer;
 begin
@@ -829,7 +864,7 @@ begin
      //
      try
      //
-     if isMsg = TRUE then
+     if (isMsg = TRUE) and (isCycle = FALSE) then
      begin
        AddToMemoMsg('----- startConnect Child(' + _PropertyName + '):', FALSE);
        AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
@@ -843,7 +878,64 @@ begin
         Port    := StrToInt(ArrayReplServer[1].Port);
         DataBase:= ArrayReplServer[1].DataBases;
         //
-        try Connected:=true; except AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);end;
+        try Connected:=true;
+        //  AddToMemoMsg(' !!!!! OK Connected To!!!!', FALSE);
+        // except AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+        except on E:Exception do
+           begin
+              if numCycle = 0 then Message_ret0:= E.Message;
+              if numCycle = 1 then Message_ret1:= E.Message;
+              if numCycle = 2 then Message_ret2:= E.Message;
+              if numCycle = 3 then Message_ret3:= E.Message;
+              if numCycle = 4 then Message_ret4:= E.Message;
+              if numCycle = 5 then Message_ret5:= E.Message;
+              if numCycle = 6 then Message_ret6:= E.Message;
+              if numCycle = 7 then Message_ret7:= E.Message;
+              //
+              if (isCycle = TRUE) and (numCycle = 7) then
+              begin
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 0' + '):', FALSE);
+                   AddToMemoMsg(Message_ret0, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 1' + '):', FALSE);
+                   AddToMemoMsg(Message_ret1, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 2' + '):', FALSE);
+                   AddToMemoMsg(Message_ret2, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 3' + '):', FALSE);
+                   AddToMemoMsg(Message_ret3, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 4' + '):', FALSE);
+                   AddToMemoMsg(Message_ret4, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 5' + '):', FALSE);
+                   AddToMemoMsg(Message_ret5, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 6' + '):', FALSE);
+                   AddToMemoMsg(Message_ret6, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg('----- startConnect Child(' + _PropertyName + ' try 7' + '):', FALSE);
+                   AddToMemoMsg(E.Message, TRUE);
+                   AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   //
+                   AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
+              end
+              else if isCycle = FALSE then
+                   begin
+                        AddToMemoMsg(E.Message, TRUE);
+                        AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);
+                   end;
+              exit;
+           end;
+        end;
         //
         Result:= Connected;
 
@@ -925,7 +1017,7 @@ begin
            Close;
      end;
      //
-     if isMsg = TRUE then
+     if (isMsg = TRUE) and (isCycle = FALSE) then
        AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
      //
      except on E:Exception do
@@ -947,63 +1039,63 @@ begin
      //
      try
 
-     gSessionGUID:= GenerateGUID (FALSE);
+     gSessionGUID_movement:= GenerateGUID (FALSE);
      //
      AddToMemoMsg('----- gSessionGUID (fromChild) :', FALSE);
-     AddToMemoMsg(gSessionGUID, FALSE);
+     AddToMemoMsg(gSessionGUID_movement, FALSE);
      //
      if 1=1 // cbClientDataSet.Checked = TRUE
      then
        with spInsert_ReplMovement_fromChild do
        begin
-           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inSessionGUID').Value:= gSessionGUID_movement;
            ParamByName('inStartDate').Value  := ArrayReplServer[1].Start_fromChild;
            ParamByName('inDescCode').Value   := EditObjectDescId.Text;
            ParamByName('gConnectHost').Value := ArrayReplServer[1].HostName;
            ParamByName('inDataBaseId').Value := ArrayReplServer[1].Id;
            Execute;
            //
-           outCount          :=ParamByName('outCount').Value;
-           outCountString    :=ParamByName('outCountString').Value;
-           outCountFloat     :=ParamByName('outCountFloat').Value;
-           outCountDate      :=ParamByName('outCountDate').Value;
-           outCountBoolean   :=ParamByName('outCountBoolean').Value;
-           outCountLink      :=ParamByName('outCountLink').Value;
-           outCountLinkM     :=ParamByName('outCountLinkM').Value;
+           outCountMov          :=ParamByName('outCount').Value;
+           outCountMovString    :=ParamByName('outCountString').Value;
+           outCountMovFloat     :=ParamByName('outCountFloat').Value;
+           outCountMovDate      :=ParamByName('outCountDate').Value;
+           outCountMovBoolean   :=ParamByName('outCountBoolean').Value;
+           outCountMovLink      :=ParamByName('outCountLink').Value;
+           outCountMovLinkMov   :=ParamByName('outCountLinkM').Value;
 
-           outCountHistory       :=ParamByName('outCountMI').Value;
-           outCountHistoryString :=ParamByName('outCountMIString').Value;
-           outCountHistoryFloat  :=ParamByName('outCountMIFloat').Value;
-           outCountHistoryDate   :=ParamByName('outCountMIDate').Value;
-           outCountHistoryBoolean:=ParamByName('outCountMIBoolean').Value;
-           outCountHistoryLink   :=ParamByName('outCountMILink').Value;
+           outCountMI       :=ParamByName('outCountMI').Value;
+           outCountMIString :=ParamByName('outCountMIString').Value;
+           outCountMIFloat  :=ParamByName('outCountMIFloat').Value;
+           outCountMIDate   :=ParamByName('outCountMIDate').Value;
+           outCountMIBoolean:=ParamByName('outCountMIBoolean').Value;
+           outCountMILink   :=ParamByName('outCountMILink').Value;
 
-           outMinId          :=ParamByName('outMinId').Value;
-           outMaxId          :=ParamByName('outMaxId').Value;
-           outCountIteration :=ParamByName('outCountIteration').Value;
-           outCountPack      :=ParamByName('outCountPack').Value;
+           outMinMovId          :=ParamByName('outMinId').Value;
+           outMaxMovId          :=ParamByName('outMaxId').Value;
+           outCountMovIteration :=ParamByName('outCountIteration').Value;
+           outCountMovPack      :=ParamByName('outCountPack').Value;
        end;
      //
      //
-     AddToMemoMsg('Count : ' + IntToStr (outCount), FALSE);
-     AddToMemoMsg('String : ' + IntToStr (outCountString), FALSE);
-     AddToMemoMsg('Float : ' + IntToStr (outCountFloat), FALSE);
-     AddToMemoMsg('Date : ' + IntToStr (outCountDate), FALSE);
-     AddToMemoMsg('Boolean : ' + IntToStr (outCountBoolean), FALSE);
-     AddToMemoMsg('Link : ' + IntToStr (outCountLink), FALSE);
-     AddToMemoMsg('LinkM : ' + IntToStr (outCountLinkM), FALSE);
+     AddToMemoMsg('Count : ' + IntToStr (outCountMov), FALSE);
+     AddToMemoMsg('String : ' + IntToStr (outCountMovString), FALSE);
+     AddToMemoMsg('Float : ' + IntToStr (outCountMovFloat), FALSE);
+     AddToMemoMsg('Date : ' + IntToStr (outCountMovDate), FALSE);
+     AddToMemoMsg('Boolean : ' + IntToStr (outCountMovBoolean), FALSE);
+     AddToMemoMsg('Link : ' + IntToStr (outCountMovLink), FALSE);
+     AddToMemoMsg('MLinkM : ' + IntToStr (outCountMovLinkMov), FALSE);
      AddToMemoMsg('-', FALSE);
-     AddToMemoMsg('CountMI : ' + IntToStr (outCountHistory), FALSE);
-     AddToMemoMsg('MIString : ' + IntToStr (outCountHistoryString), FALSE);
-     AddToMemoMsg('MIFloat : ' + IntToStr (outCountHistoryFloat), FALSE);
-     AddToMemoMsg('MIDate : ' + IntToStr (outCountHistoryDate), FALSE);
-     AddToMemoMsg('MIBoolean : ' + IntToStr (outCountHistoryBoolean), FALSE);
-     AddToMemoMsg('MILink : ' + IntToStr (outCountHistoryLink), FALSE);
+     AddToMemoMsg('CountMI : ' + IntToStr (outCountMI), FALSE);
+     AddToMemoMsg('MIString : ' + IntToStr (outCountMIString), FALSE);
+     AddToMemoMsg('MIFloat : ' + IntToStr (outCountMIFloat), FALSE);
+     AddToMemoMsg('MIDate : ' + IntToStr (outCountMIDate), FALSE);
+     AddToMemoMsg('MIBoolean : ' + IntToStr (outCountMIBoolean), FALSE);
+     AddToMemoMsg('MILink : ' + IntToStr (outCountMILink), FALSE);
      AddToMemoMsg('-', FALSE);
-     AddToMemoMsg('MinId : ' + IntToStr (outMinId), FALSE);
-     AddToMemoMsg('MaxId : ' + IntToStr (outMaxId), FALSE);
-     AddToMemoMsg('CountIteration : ' + IntToStr (outCountIteration), FALSE);
-     AddToMemoMsg('CountPack : ' + IntToStr (outCountPack), FALSE);
+     AddToMemoMsg('MinId : ' + IntToStr (outMinMovId), FALSE);
+     AddToMemoMsg('MaxId : ' + IntToStr (outMaxMovId), FALSE);
+     AddToMemoMsg('CountIteration : ' + IntToStr (outCountMovIteration), FALSE);
+     AddToMemoMsg('CountPack : ' + IntToStr (outCountMovPack), FALSE);
      AddToMemoMsg('-', FALSE);
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
@@ -1027,41 +1119,41 @@ begin
      //
      try
 
-     gSessionGUID:= GenerateGUID (TRUE);
+     gSessionGUID_movement:= GenerateGUID (TRUE);
      //
      AddToMemoMsg('----- gSessionGUID (fromMain) :', FALSE);
-     AddToMemoMsg(gSessionGUID, FALSE);
+     AddToMemoMsg(gSessionGUID_movement, FALSE);
      //
      if cbClientDataSet.Checked = TRUE
      then
        with spInsert_ReplMovement do
        begin
-           ParamByName('inSessionGUID').Value:= gSessionGUID;
-           ParamByName('inStartDate').Value  := ArrayReplServer[1].Start_toChild;
+           ParamByName('inSessionGUID').Value:= gSessionGUID_movement;
+           ParamByName('inStartDate').Value  := ArrayReplServer[0].Start_toChild;
            ParamByName('inDescCode').Value   := EditObjectDescId.Text;
            ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
            ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
            Execute;
            //
-           outCount          :=ParamByName('outCount').Value;
-           outCountString    :=ParamByName('outCountString').Value;
-           outCountFloat     :=ParamByName('outCountFloat').Value;
-           outCountDate      :=ParamByName('outCountDate').Value;
-           outCountBoolean   :=ParamByName('outCountBoolean').Value;
-           outCountLink      :=ParamByName('outCountLink').Value;
-           outCountLinkM     :=ParamByName('outCountLinkM').Value;
+           outCountMov          :=ParamByName('outCount').Value;
+           outCountMovString    :=ParamByName('outCountString').Value;
+           outCountMovFloat     :=ParamByName('outCountFloat').Value;
+           outCountMovDate      :=ParamByName('outCountDate').Value;
+           outCountMovBoolean   :=ParamByName('outCountBoolean').Value;
+           outCountMovLink      :=ParamByName('outCountLink').Value;
+           outCountMovLinkMov   :=ParamByName('outCountLinkM').Value;
 
-           outCountHistory       :=ParamByName('outCountMI').Value;
-           outCountHistoryString :=ParamByName('outCountMIString').Value;
-           outCountHistoryFloat  :=ParamByName('outCountMIFloat').Value;
-           outCountHistoryDate   :=ParamByName('outCountMIDate').Value;
-           outCountHistoryBoolean:=ParamByName('outCountMIBoolean').Value;
-           outCountHistoryLink   :=ParamByName('outCountMILink').Value;
+           outCountMI       :=ParamByName('outCountMI').Value;
+           outCountMIString :=ParamByName('outCountMIString').Value;
+           outCountMIFloat  :=ParamByName('outCountMIFloat').Value;
+           outCountMIDate   :=ParamByName('outCountMIDate').Value;
+           outCountMIBoolean:=ParamByName('outCountMIBoolean').Value;
+           outCountMILink   :=ParamByName('outCountMILink').Value;
 
-           outMinId          :=ParamByName('outMinId').Value;
-           outMaxId          :=ParamByName('outMaxId').Value;
-           outCountIteration :=ParamByName('outCountIteration').Value;
-           outCountPack      :=ParamByName('outCountPack').Value;
+           outMinMovId          :=ParamByName('outMinId').Value;
+           outMaxMovId          :=ParamByName('outMaxId').Value;
+           outCountMovIteration :=ParamByName('outCountIteration').Value;
+           outCountMovPack      :=ParamByName('outCountPack').Value;
        end
      else
        with fromSqlQuery do
@@ -1069,55 +1161,55 @@ begin
            // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
            if not IniConnection_Main (TRUE) then exit;
            //
-           fOpenSqFromQuery ('select * from gpInsert_ReplMovement('+ConvertFromVarChar(gSessionGUID)
-                            +',' + FormatFromDateTime(ArrayReplServer[1].Start_toChild)
+           fOpenSqFromQuery ('select * from gpInsert_ReplMovement('+ConvertFromVarChar(gSessionGUID_movement)
+                            +',' + FormatFromDateTime(ArrayReplServer[0].Start_toChild)
                             +',' + ConvertFromVarChar(EditObjectDescId.Text)
                             +',' + IntToStr(ArrayReplServer[0].Id)
                             +', CAST (NULL AS TVarChar) '
                             +', CAST (NULL AS TVarChar) '
                             +')');
            //
-           outCount          :=FieldByName('outCount').AsInteger;
-           outCountString    :=FieldByName('outCountString').AsInteger;
-           outCountFloat     :=FieldByName('outCountFloat').AsInteger;
-           outCountDate      :=FieldByName('outCountDate').AsInteger;
-           outCountBoolean   :=FieldByName('outCountBoolean').AsInteger;
-           outCountLink      :=FieldByName('outCountLink').AsInteger;
-           outCountLinkM     :=FieldByName('outCountLinkM').AsInteger;
+           outCountMov          :=ParamByName('outCount').Value;
+           outCountMovString    :=ParamByName('outCountString').Value;
+           outCountMovFloat     :=ParamByName('outCountFloat').Value;
+           outCountMovDate      :=ParamByName('outCountDate').Value;
+           outCountMovBoolean   :=ParamByName('outCountBoolean').Value;
+           outCountMovLink      :=ParamByName('outCountLink').Value;
+           outCountMovLinkMov   :=ParamByName('outCountLinkM').Value;
 
-           outCountHistory       :=ParamByName('outCountMI').Value;
-           outCountHistoryString :=ParamByName('outCountMIString').Value;
-           outCountHistoryFloat  :=ParamByName('outCountMIFloat').Value;
-           outCountHistoryDate   :=ParamByName('outCountMIDate').Value;
-           outCountHistoryBoolean:=ParamByName('outCountMIBoolean').Value;
-           outCountHistoryLink   :=ParamByName('outCountMILink').Value;
+           outCountMI       :=ParamByName('outCountMI').Value;
+           outCountMIString :=ParamByName('outCountMIString').Value;
+           outCountMIFloat  :=ParamByName('outCountMIFloat').Value;
+           outCountMIDate   :=ParamByName('outCountMIDate').Value;
+           outCountMIBoolean:=ParamByName('outCountMIBoolean').Value;
+           outCountMILink   :=ParamByName('outCountMILink').Value;
 
-           outMinId          :=FieldByName('outMinId').AsInteger;
-           outMaxId          :=FieldByName('outMaxId').AsInteger;
-           outCountIteration :=FieldByName('outCountIteration').AsInteger;
-           outCountPack      :=FieldByName('outCountPack').AsInteger;
+           outMinMovId          :=ParamByName('outMinId').Value;
+           outMaxMovId          :=ParamByName('outMaxId').Value;
+           outCountMovIteration :=ParamByName('outCountIteration').Value;
+           outCountMovPack      :=ParamByName('outCountPack').Value;
        end;
      //
      //
-     AddToMemoMsg('Count : ' + IntToStr (outCount), FALSE);
-     AddToMemoMsg('String : ' + IntToStr (outCountString), FALSE);
-     AddToMemoMsg('Float : ' + IntToStr (outCountFloat), FALSE);
-     AddToMemoMsg('Date : ' + IntToStr (outCountDate), FALSE);
-     AddToMemoMsg('Boolean : ' + IntToStr (outCountBoolean), FALSE);
-     AddToMemoMsg('Link : ' + IntToStr (outCountLink), FALSE);
-     AddToMemoMsg('LinkM : ' + IntToStr (outCountLinkM), FALSE);
+     AddToMemoMsg('CountMov : ' + IntToStr (outCountMov), FALSE);
+     AddToMemoMsg('MString : ' + IntToStr (outCountMovString), FALSE);
+     AddToMemoMsg('MFloat : ' + IntToStr (outCountMovFloat), FALSE);
+     AddToMemoMsg('MDate : ' + IntToStr (outCountMovDate), FALSE);
+     AddToMemoMsg('MBoolean : ' + IntToStr (outCountMovBoolean), FALSE);
+     AddToMemoMsg('MLink : ' + IntToStr (outCountMovLink), FALSE);
+     AddToMemoMsg('MLinkM : ' + IntToStr (outCountMovLinkMov), FALSE);
      AddToMemoMsg('-', FALSE);
-     AddToMemoMsg('CountMI : ' + IntToStr (outCountHistory), FALSE);
-     AddToMemoMsg('MIString : ' + IntToStr (outCountHistoryString), FALSE);
-     AddToMemoMsg('MIFloat : ' + IntToStr (outCountHistoryFloat), FALSE);
-     AddToMemoMsg('MIDate : ' + IntToStr (outCountHistoryDate), FALSE);
-     AddToMemoMsg('MIBoolean : ' + IntToStr (outCountHistoryBoolean), FALSE);
-     AddToMemoMsg('MILink : ' + IntToStr (outCountHistoryLink), FALSE);
+     AddToMemoMsg('CountMI : ' + IntToStr (outCountMI), FALSE);
+     AddToMemoMsg('MIString : ' + IntToStr (outCountMIString), FALSE);
+     AddToMemoMsg('MIFloat : ' + IntToStr (outCountMIFloat), FALSE);
+     AddToMemoMsg('MIDate : ' + IntToStr (outCountMIDate), FALSE);
+     AddToMemoMsg('MIBoolean : ' + IntToStr (outCountMIBoolean), FALSE);
+     AddToMemoMsg('MILink : ' + IntToStr (outCountMILink), FALSE);
      AddToMemoMsg('-', FALSE);
-     AddToMemoMsg('MinId : ' + IntToStr (outMinId), FALSE);
-     AddToMemoMsg('MaxId : ' + IntToStr (outMaxId), FALSE);
-     AddToMemoMsg('CountIteration : ' + IntToStr (outCountIteration), FALSE);
-     AddToMemoMsg('CountPack : ' + IntToStr (outCountPack), FALSE);
+     AddToMemoMsg('MinId : ' + IntToStr (outMinMovId), FALSE);
+     AddToMemoMsg('MaxId : ' + IntToStr (outMaxMovId), FALSE);
+     AddToMemoMsg('CountIteration : ' + IntToStr (outCountMovIteration), FALSE);
+     AddToMemoMsg('CountPack : ' + IntToStr (outCountMovPack), FALSE);
      AddToMemoMsg('-', FALSE);
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
@@ -1141,21 +1233,22 @@ begin
      //
      try
 
-     gSessionGUID:= GenerateGUID (TRUE);
+     gSessionGUID_object:= GenerateGUID (TRUE);
      //
      AddToMemoMsg('----- gSessionGUID (fromMain) :', FALSE);
-     AddToMemoMsg(gSessionGUID, FALSE);
+     AddToMemoMsg(gSessionGUID_object, FALSE);
      //
      if cbClientDataSet.Checked = TRUE
      then
        with spInsert_ReplObject do
        begin
-           ParamByName('inSessionGUID').Value:= gSessionGUID;
-           ParamByName('inStartDate').Value  := ArrayReplServer[1].Start_toChild;
-           ParamByName('inDescCode').Value   := EditObjectDescId.Text;
-           ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
-           ParamByName('inIsProtocol').Value := cbProtocol.Checked;
-           ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+           ParamByName('inSessionGUID').Value    := gSessionGUID_object;
+           ParamByName('inSessionGUID_mov').Value:= gSessionGUID_movement;
+           ParamByName('inStartDate').Value      := ArrayReplServer[0].Start_toChild;
+           ParamByName('inDescCode').Value       := EditObjectDescId.Text;
+           ParamByName('gConnectHost').Value     := ArrayReplServer[0].HostName;
+           ParamByName('inIsProtocol').Value     := cbProtocol.Checked;
+           ParamByName('inDataBaseId').Value     := ArrayReplServer[0].Id;
            Execute;
            //
            outCount          :=ParamByName('outCount').Value;
@@ -1182,8 +1275,9 @@ begin
            // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
            if not IniConnection_Main (TRUE) then exit;
            //
-           fOpenSqFromQuery ('select * from gpInsert_ReplObject('+ConvertFromVarChar(gSessionGUID)
-                            +',' + FormatFromDateTime(ArrayReplServer[1].Start_toChild)
+           fOpenSqFromQuery ('select * from gpInsert_ReplObject('+ConvertFromVarChar(gSessionGUID_object)
+                            +',' + ConvertFromVarChar(gSessionGUID_movement)
+                            +',' + FormatFromDateTime(ArrayReplServer[0].Start_toChild)
                             +',' + ConvertFromVarChar(EditObjectDescId.Text)
                             +',' + ConvertFromBoolean(cbProtocol.Checked, FALSE)
                             +',' + IntToStr(ArrayReplServer[0].Id)
@@ -1253,7 +1347,7 @@ var lMovement, lMovementString, lMovementFloat, lMovementDate, lMovementBoolean,
        begin
            StoredProcName:= spName;
            //
-           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inSessionGUID').Value:= gSessionGUID_movement;
            ParamByName('inStartId').Value    := StartId;
            ParamByName('inEndId').Value      := EndId;
            if isFromMain = TRUE then
@@ -1275,7 +1369,7 @@ var lMovement, lMovementString, lMovementFloat, lMovementDate, lMovementBoolean,
        with lQuery, Sql do
        begin
            Clear;
-           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID)
+           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID_movement)
                                            +',' + IntToStr(StartId)
                                            +',' + IntToStr(EndId)
                                            +',' + IntToStr(ArrayReplServer[0].Id)
@@ -1434,7 +1528,7 @@ var lObject, lObjectString, lObjectFloat, lObjectDate, lObjectBoolean, lObjectLi
        begin
            StoredProcName:= spName;
            //
-           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inSessionGUID').Value:= gSessionGUID_object;
            ParamByName('inStartId').Value    := StartId;
            ParamByName('inEndId').Value      := EndId;
            ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
@@ -1447,7 +1541,7 @@ var lObject, lObjectString, lObjectFloat, lObjectDate, lObjectBoolean, lObjectLi
        with lQuery, Sql do
        begin
            Clear;
-           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID)
+           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID_object)
                                            +',' + IntToStr(StartId)
                                            +',' + IntToStr(EndId)
                                            +',' + IntToStr(ArrayReplServer[0].Id)
@@ -1645,7 +1739,7 @@ begin
      //
      // Подключились к серверу Child
      if isFromMain = TRUE then
-       if not IniConnection_Child (TRUE, lMovement, FALSE) then exit;
+       if not IniConnection_Child_cycle(TRUE, lMovement, FALSE) then exit;
      // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
      if isFromMain = FALSE then
        if not IniConnection_Main (TRUE) then exit;
@@ -1903,7 +1997,7 @@ begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
                       // !!!сохранили - в ФАЙЛ!!!
-                      AddToLog(StrPack, lMovement, gSessionGUID, false);
+                      AddToLog(StrPack, lMovement, gSessionGUID_movement, false);
                       //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
@@ -1915,7 +2009,7 @@ begin
                   //
                   // !!!сохранили - в ФАЙЛ!!!
                   //ShowMessage (StrPack);
-                  AddToLog(StrPack, lMovement, gSessionGUID, false);
+                  AddToLog(StrPack, lMovement, gSessionGUID_movement, false);
                   //
                   // обнулили
                   StrPack:= '';
@@ -1949,7 +2043,7 @@ begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
               // !!!сохранили - в ФАЙЛ!!!
-              AddToLog(StrPack, lMovement, gSessionGUID, false);
+              AddToLog(StrPack, lMovement, gSessionGUID_movement, false);
               //
               // ERROR
               AddToMemoMsg ('', FALSE);
@@ -1960,7 +2054,7 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          AddToLog(StrPack, lMovement, gSessionGUID, false);
+          AddToLog(StrPack, lMovement, gSessionGUID_movement, false);
           //
           //
      end;
@@ -1985,6 +2079,7 @@ var StrPack, nextL : String;
     _PropertyName, _PropertyValue, Column_upd : String;
     resStr : String;
     lMovement: String;
+    Message_ret0, Message_ret1, Message_ret2, Message_ret3 : String;
 begin
      Result:= false;
      //
@@ -2009,7 +2104,7 @@ begin
         //
         // Подключились к серверу Child
         if isFromMain = TRUE then
-          if not IniConnection_Child (TRUE, _PropertyName, FALSE) then exit;
+          if not IniConnection_Child_cycle(TRUE, _PropertyName, FALSE) then exit;
         // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
         if isFromMain = FALSE then
           if not IniConnection_Main (TRUE) then exit;
@@ -2188,7 +2283,7 @@ begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
                       // !!!сохранили - в ФАЙЛ!!!
-                      AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                      AddToLog(StrPack, _PropertyName, gSessionGUID_movement, false);
                       //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
@@ -2199,7 +2294,7 @@ begin
                   end;
                   //
                   // !!!сохранили - в ФАЙЛ!!!
-                  AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                  AddToLog(StrPack, _PropertyName, gSessionGUID_movement, false);
                   //
                   // обнулили
                   StrPack:= '';
@@ -2233,7 +2328,7 @@ begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
               // !!!сохранили - в ФАЙЛ!!!
-              AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+              AddToLog(StrPack, _PropertyName, gSessionGUID_movement, false);
               //
               // ERROR
               AddToMemoMsg ('', FALSE);
@@ -2244,7 +2339,7 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+          AddToLog(StrPack, _PropertyName, gSessionGUID_movement, false);
           //
           //
      end;
@@ -2283,7 +2378,7 @@ begin
      if cbProtocol.Checked = TRUE
      then
        // Подключились к серверу Child
-       if not IniConnection_Child (TRUE, lObject, FALSE) then exit;
+       if not IniConnection_Child_cycle(TRUE, lObject, FALSE) then exit;
      //
      try
      //
@@ -2328,7 +2423,7 @@ begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
               // !!!сохранили - в ФАЙЛ!!!
-              AddToLog(StrPack, lObject, gSessionGUID, false);
+              AddToLog(StrPack, lObject, gSessionGUID_object, false);
               //
               // ERROR
               AddToMemoMsg ('', FALSE);
@@ -2339,7 +2434,7 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          AddToLog(StrPack, lObject, gSessionGUID, false);
+          AddToLog(StrPack, lObject, gSessionGUID_object, false);
           //
           StrPack:= '';
      end;
@@ -2553,7 +2648,7 @@ begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
                       // !!!сохранили - в ФАЙЛ!!!
-                      AddToLog(StrPack, lObject, gSessionGUID, false);
+                      AddToLog(StrPack, lObject, gSessionGUID_object, false);
                       //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
@@ -2565,7 +2660,7 @@ begin
                   //
                   // !!!сохранили - в ФАЙЛ!!!
                   //ShowMessage (StrPack);
-                  AddToLog(StrPack, lObject, gSessionGUID, false);
+                  AddToLog(StrPack, lObject, gSessionGUID_object, false);
                   //
                   // обнулили
                   StrPack:= '';
@@ -2601,7 +2696,7 @@ begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
               // !!!сохранили - в ФАЙЛ!!!
-              AddToLog(StrPack, lObject, gSessionGUID, false);
+              AddToLog(StrPack, lObject, gSessionGUID_object, false);
               //
               // ERROR
               AddToMemoMsg ('', FALSE);
@@ -2612,7 +2707,7 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          AddToLog(StrPack, lObject, gSessionGUID, false);
+          AddToLog(StrPack, lObject, gSessionGUID_object, false);
           //
           //
      end;
@@ -2668,7 +2763,7 @@ begin
         if cbProtocol.Checked = TRUE
         then
           // Подключились к серверу Child
-          if not IniConnection_Child (TRUE, _PropertyName, FALSE) then exit;
+          if not IniConnection_Child_cycle(TRUE, _PropertyName, FALSE) then exit;
         //
         //
         First;
@@ -2838,7 +2933,7 @@ begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
                       // !!!сохранили - в ФАЙЛ!!!
-                      AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                      AddToLog(StrPack, _PropertyName, gSessionGUID_object, false);
                       //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
@@ -2849,7 +2944,7 @@ begin
                   end;
                   //
                   // !!!сохранили - в ФАЙЛ!!!
-                  AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                  AddToLog(StrPack, _PropertyName, gSessionGUID_object, false);
                   //
                   // обнулили
                   StrPack:= '';
@@ -2886,7 +2981,7 @@ begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
               // !!!сохранили - в ФАЙЛ!!!
-              AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+              AddToLog(StrPack, _PropertyName, gSessionGUID_object, false);
               //
               // ERROR
               AddToMemoMsg ('', FALSE);
@@ -2897,7 +2992,7 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+          AddToLog(StrPack, _PropertyName, gSessionGUID_object, false);
           //
           //
      end;
@@ -3002,7 +3097,7 @@ begin
      Result:= false;
      //
      // Подключились к серверу Child
-     if not IniConnection_Child (TRUE, 'on Move_ObjectHistory_repl', FALSE) then exit;
+     if not IniConnection_Child_cycle(TRUE, 'on Move_ObjectHistory_repl', FALSE) then exit;
      //
      StrPack:= '';
      nextL  := #13;
@@ -3070,7 +3165,7 @@ begin
      AddToMemoMsg ('...', FALSE);
      //
      // !!!сохранили - в ФАЙЛ!!!
-     AddToLog(StrPack, 'ObjectHistory', gSessionGUID, false);
+     AddToLog(StrPack, 'ObjectHistory', gSessionGUID_object, false);
      //
      // !!!сохранили - СКРИПТ!!!
      resStr:= fExecSqToQuery (StrPack);
@@ -3078,10 +3173,10 @@ begin
      if resStr = ''
      then
          // !!!сохранили - в ФАЙЛ - результат = OK!!!
-         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = OK : ' + nextL + nextL, 'ObjectHistory', gSessionGUID, false)
+         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = OK : ' + nextL + nextL, 'ObjectHistory', gSessionGUID_object, false)
      else begin
          // !!!сохранили - в ФАЙЛ - результат = ERROR!!!
-         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = ERROR : ' + nextL + nextL, 'ObjectHistory', gSessionGUID, false);
+         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = ERROR : ' + nextL + nextL, 'ObjectHistory', gSessionGUID_object, false);
          //
          // ERROR
          AddToMemoMsg ('', FALSE);
@@ -3111,7 +3206,7 @@ begin
      // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
      if not IniConnection_Main (TRUE) then exit;
      // Подключились к серверу Child
-     if not IniConnection_Child (TRUE, 'ObjectDesc + ObjectHistoryDesc', FALSE) then exit;
+     if not IniConnection_Child_cycle(TRUE, 'ObjectDesc + ObjectHistoryDesc', FALSE) then exit;
      //
      try
      //
@@ -3603,8 +3698,8 @@ begin
      Result:= false;
      //
      // стартовый период для Id - Movement...
-     StartId:= outMinId;
-     EndId  := StartId + outCountIteration;
+     StartId:= outMinMovId;
+     EndId  := StartId + outCountMovIteration;
      num    := 0;
 
      while StartId <= outMaxId do
@@ -3623,32 +3718,32 @@ begin
           if cbOnlyOpen.Checked = TRUE then exit;
           //
           //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
-          if not pSendPackTo_ReplMovement(isFromMain, num, outCountPack, FALSE)
+          if not pSendPackTo_ReplMovement(isFromMain, num, outCountMovPack, FALSE)
           then exit;
           //MovementString - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(MSCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(fQueryMS), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(MSCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(fQueryMS), FALSE) then exit else;
           //MovementFloat - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(MFCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(fQueryMF), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(MFCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(fQueryMF), FALSE) then exit else;
           //MovementDate - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(MDCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(fQueryMD), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(MDCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(fQueryMD), FALSE) then exit else;
           //MovementBoolean - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(MBCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(fQueryMB), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(MBCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(fQueryMB), FALSE) then exit else;
           //MovementLinkObject - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(MLOCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountPack, TClientDataSet(fQueryMLO), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(MLOCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(isFromMain, num, outCountMovPack, TClientDataSet(fQueryMLO), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
-          EndId  := StartId + outCountIteration;
+          EndId  := StartId + outCountMovIteration;
      end;
      //
      Result:= true;
@@ -3662,7 +3757,7 @@ begin
      //
      // стартовый период для Id - Movement...
      StartId:= outMinId;
-     EndId  := StartId + outCountIteration;
+     EndId  := StartId + outCountMovIteration;
      num    := 0;
 
      while StartId <= outMaxId do
@@ -3682,12 +3777,12 @@ begin
           //
           //MovementLinkMovement - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) or (isFromMain = FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MLMCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMLM), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MLMCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMLM), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
-          EndId  := StartId + outCountIteration;
+          EndId  := StartId + outCountMovIteration;
      end;
      //
      Result:= true;
@@ -3700,8 +3795,8 @@ begin
      Result:= false;
      //
      // стартовый период для Id - Movement...
-     StartId:= outMinId;
-     EndId  := StartId + outCountIteration;
+     StartId:= outMinMovId;
+     EndId  := StartId + outCountMovIteration;
      num    := 0;
 
      while StartId <= outMaxId do
@@ -3720,32 +3815,32 @@ begin
           if cbOnlyOpen.Checked = TRUE then exit;
           //
           //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
-          if not pSendPackTo_ReplMovement(isFromMain, num, outCountPack, TRUE)
+          if not pSendPackTo_ReplMovement(isFromMain, num, outCountMovPack, TRUE)
           then exit;
           //MovementItemString - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) OR (isFromMain= FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MSCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMS), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MSCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMS), TRUE) then exit else;
           //MovementItemFloat - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) OR (isFromMain= FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MFCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMF), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MFCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMF), TRUE) then exit else;
           //MovementItemDate - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) OR (isFromMain= FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MDCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMD), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MDCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMD), TRUE) then exit else;
           //MovementItemBoolean - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) OR (isFromMain= FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MBCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMB), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MBCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMB), TRUE) then exit else;
           //MovementItemLinkObject - на НЕСКОЛЬКО пакетов и ...
           if (cbClientDataSet.Checked = TRUE) OR (isFromMain= FALSE)
-          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(MLOCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountPack, TClientDataSet(fQueryMLO), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(MLOCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty (isFromMain, num, outCountMovPack, TClientDataSet(fQueryMLO), TRUE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
-          EndId  := StartId + outCountIteration;
+          EndId  := StartId + outCountMovIteration;
      end;
      //
      Result:= true;
@@ -3940,23 +4035,23 @@ begin
      //
      //
      // показали Итоги
-     EditCountObject.Text          := IntToStr(outCount)       + ' / ' + IntToStr(outCountHistory);
-     EditCountStringObject.Text    := IntToStr(outCountString) + ' / ' + IntToStr(outCountHistoryString);
-     EditCountFloatObject.Text     := IntToStr(outCountFloat)  + ' / ' + IntToStr(outCountHistoryFloat);
-     EditCountDateObject.Text      := IntToStr(outCountDate)   + ' / ' + IntToStr(outCountHistoryDate);
-     EditCountBooleanObject.Text   := IntToStr(outCountBoolean)+ ' / ' + IntToStr(outCountHistoryBoolean);
-     EditCountLinkObject.Text      := IntToStr(outCountLink)   + ' * ' + IntToStr(outCountLinkM) + ' / ' + IntToStr(outCountHistoryLink);
+     EditCountObject.Text          := IntToStr(outCountMov)       + ' / ' + IntToStr(outCountMI);
+     EditCountStringObject.Text    := IntToStr(outCountMovString) + ' / ' + IntToStr(outCountMIString);
+     EditCountFloatObject.Text     := IntToStr(outCountMovFloat)  + ' / ' + IntToStr(outCountMIFloat);
+     EditCountDateObject.Text      := IntToStr(outCountMovDate)   + ' / ' + IntToStr(outCountMIDate);
+     EditCountBooleanObject.Text   := IntToStr(outCountMovBoolean)+ ' / ' + IntToStr(outCountMIBoolean);
+     EditCountLinkObject.Text      := IntToStr(outCountMovLink)   + ' * ' + IntToStr(outCountMovLinkMov) + ' / ' + IntToStr(outCountMILink);
 
-     EditMinIdObject.Text          := IntToStr(outMinId);
-     EditMaxIdObject.Text          := IntToStr(outMaxId);
-     EditCountIterationObject.Text := IntToStr(outCountIteration) + ' / ' + IntToStr(outCountPack);
+     EditMinIdObject.Text          := IntToStr(outMinMovId);
+     EditMaxIdObject.Text          := IntToStr(outMaxMovId);
+     EditCountIterationObject.Text := IntToStr(outCountMovIteration) + ' / ' + IntToStr(outCountMovPack);
 
      Gauge.Progress:=0;
      Gauge.MaxValue:= 0;
-     Gauge.MaxValue:= Gauge.MaxValue + outCount + outCountString + outCountFloat
-                                     + outCountDate + outCountBoolean + outCountLink + outCountLinkM
-                                     + outCountHistory + outCountHistoryString + outCountHistoryFloat
-                                     + outCountHistoryDate + outCountHistoryBoolean + outCountHistoryLink
+     Gauge.MaxValue:= Gauge.MaxValue + outCountMov + outCountMovString + outCountMovFloat
+                                     + outCountMovDate + outCountMovBoolean + outCountMovLink + outCountMovLinkMov
+                                     + outCountMI + outCountMIString + outCountMIFloat
+                                     + outCountMIDate + outCountMIBoolean + outCountMILink
                                      ;
      //
      if cbMovement.Checked = TRUE then
@@ -4004,35 +4099,37 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_ReplMovement : Boolean;
 //Child: соединение - ПРЯМОЕ - нужен load-Desc-list
+var Message_ret0, Message_ret1, Message_ret2, Message_ret3 : String;
 begin
   //
   try
      Result:= false;
      //
-     // Зафиксировали ВСЕ данные на сервере Main
-     if not pInsert_ReplMovement then exit;
+     // !!!НЕ Зафиксировали ВСЕ данные на сервере Main!!!
+     if cbObject.Checked = FALSE
+     then if not pInsert_ReplMovement then exit;
      //
      // Подключились к серверу Child + главное - получили ВСЕ Desc-ки (нужны только они)
-     if not IniConnection_Child (TRUE, 'load-Desc-list', TRUE) then exit;
+     if not IniConnection_Child_cycle(TRUE, 'load-Desc-list', TRUE) then exit;
      //
      // показали Итоги
-     EditCountObject.Text          := IntToStr(outCount)       + ' / ' + IntToStr(outCountHistory);
-     EditCountStringObject.Text    := IntToStr(outCountString) + ' / ' + IntToStr(outCountHistoryString);
-     EditCountFloatObject.Text     := IntToStr(outCountFloat)  + ' / ' + IntToStr(outCountHistoryFloat);
-     EditCountDateObject.Text      := IntToStr(outCountDate)   + ' / ' + IntToStr(outCountHistoryDate);
-     EditCountBooleanObject.Text   := IntToStr(outCountBoolean)+ ' / ' + IntToStr(outCountHistoryBoolean);
-     EditCountLinkObject.Text      := IntToStr(outCountLink)   + ' * ' + IntToStr(outCountLinkM) + ' / ' + IntToStr(outCountHistoryLink);
+     EditCountObject.Text          := IntToStr(outCountMov)       + ' / ' + IntToStr(outCountMI);
+     EditCountStringObject.Text    := IntToStr(outCountMovString) + ' / ' + IntToStr(outCountMIString);
+     EditCountFloatObject.Text     := IntToStr(outCountMovFloat)  + ' / ' + IntToStr(outCountMIFloat);
+     EditCountDateObject.Text      := IntToStr(outCountMovDate)   + ' / ' + IntToStr(outCountMIDate);
+     EditCountBooleanObject.Text   := IntToStr(outCountMovBoolean)+ ' / ' + IntToStr(outCountMIBoolean);
+     EditCountLinkObject.Text      := IntToStr(outCountMovLink)   + ' * ' + IntToStr(outCountMovLinkMov) + ' / ' + IntToStr(outCountMILink);
 
-     EditMinIdObject.Text          := IntToStr(outMinId);
-     EditMaxIdObject.Text          := IntToStr(outMaxId);
-     EditCountIterationObject.Text := IntToStr(outCountIteration) + ' / ' + IntToStr(outCountPack);
+     EditMinIdObject.Text          := IntToStr(outMinMovId);
+     EditMaxIdObject.Text          := IntToStr(outMaxMovId);
+     EditCountIterationObject.Text := IntToStr(outCountMovIteration) + ' / ' + IntToStr(outCountMovPack);
 
      Gauge.Progress:=0;
      Gauge.MaxValue:= 0;
-     Gauge.MaxValue:= Gauge.MaxValue + outCount + outCountString + outCountFloat
-                                     + outCountDate + outCountBoolean + outCountLink + outCountLinkM
-                                     + outCountHistory + outCountHistoryString + outCountHistoryFloat
-                                     + outCountHistoryDate + outCountHistoryBoolean + outCountHistoryLink
+     Gauge.MaxValue:= Gauge.MaxValue + outCountMov + outCountMovString + outCountMovFloat
+                                     + outCountMovDate + outCountMovBoolean + outCountMovLink + outCountMovLinkMov
+                                     + outCountMI + outCountMIString + outCountMIFloat
+                                     + outCountMIDate + outCountMIBoolean + outCountMILink
                                      ;
      //
      if cbMovement.Checked = TRUE then
@@ -4084,11 +4181,14 @@ begin
   try
      Result:= false;
      //
+     // Зафиксировали ВСЕ данные на сервере Main - !!!сначала Movement!!!
+     if ((cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)) and (cbObject.Checked = TRUE)
+     then if not pInsert_ReplMovement then exit;
      // Зафиксировали ВСЕ данные на сервере Main
      if not pInsert_ReplObject then exit;
      //
      // Подключились к серверу Child + главное - получили ВСЕ Desc-ки (нужны только они)
-     if not IniConnection_Child (TRUE, 'load-Desc-list', TRUE) then exit;
+     if not IniConnection_Child_cycle(TRUE, 'load-Desc-list', TRUE) then exit;
      //
      // показали Итоги
      EditCountObject.Text          := IntToStr(outCount)       +  ' / ' + IntToStr(outCountHistory);
