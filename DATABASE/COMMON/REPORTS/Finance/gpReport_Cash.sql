@@ -2,13 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_Cash(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inAccountId        Integer,    -- Счет
     IN inCashId           Integer,    --
-    IN inCurrencyId       Integer   , -- Валюта
+    IN inCurrencyId       Integer,    -- Валюта
+    IN inisDate           Boolean,    -- разворачивать по дням
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, CurrencyName TVarChar
@@ -28,7 +31,8 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , DebetSumm_Currency TFloat, KreditSumm_Currency TFloat
              , EndAmount_Currency TFloat, EndAmountD_Currency TFloat, EndAmountK_Currency TFloat
              , Summ_Currency TFloat, Summ_Currency_pl TFloat
-             , Comment TVarChar
+             , Comment  TVarChar
+             , OperDate TDateTime
               )
 AS
 $BODY$
@@ -177,6 +181,7 @@ BEGIN
                                                    ELSE 0
                                               END) AS Summ_Currency_pl
                                        , MIContainer.isActive
+                                       , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                                   FROM tmpContainer
                                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                                        -- AND MIContainer.OperDate >= inStartDate
@@ -186,6 +191,7 @@ BEGIN
                                          , tmpContainer.CurrencyId
                                          , MIContainer.isActive
                                          , MIContainer.MovementItemId
+                                         , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                   )
           -- ВСЕ св-ва
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
@@ -224,23 +230,25 @@ BEGIN
                               ) 
  
             -- ДЛЯ движение  в валюте операции
-        , tmpContainerCurrency AS (SELECT MIContainer.MovementItemId,
-                                          tmpContainer.ObjectId,
-                                          tmpContainer.CashId,
-                                          tmpContainer.CurrencyId,
-                                          SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency,
-                                          SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency,
-                                          MIContainer.isActive
+        , tmpContainerCurrency AS (SELECT MIContainer.MovementItemId
+                                        , tmpContainer.ObjectId
+                                        , tmpContainer.CashId
+                                        , tmpContainer.CurrencyId
+                                        , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
+                                        , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
+                                        , MIContainer.isActive
+                                        , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                                    FROM tmpContainer
                                           LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
                                                                                         -- AND MIContainer.OperDate >= inStartDate
                                                                                         AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    WHERE tmpContainer.ContainerId_Currency > 0
-                                   GROUP BY MIContainer.MovementItemId,
-                                            tmpContainer.ObjectId,
-                                            tmpContainer.CashId, 
-                                            tmpContainer.CurrencyId,
-                                            MIContainer.isActive
+                                   GROUP BY MIContainer.MovementItemId
+                                          , tmpContainer.ObjectId
+                                          , tmpContainer.CashId
+                                          , tmpContainer.CurrencyId
+                                          , MIContainer.isActive
+                                          , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                   )
           -- ВСЕ св-ва
         , tmpMovementItemLinkObject_сurr AS (SELECT MovementItemLinkObject.*
@@ -298,7 +306,8 @@ BEGIN
                                    0                         AS Summ_Currency,
                                    0                         AS Summ_Currency_pl,
                                    ''                        AS Comment,
-                                   NULL :: Boolean           AS isActive
+                                   NULL :: Boolean           AS isActive,
+                                   zc_DateStart() :: TDatetime AS OperDate
                             FROM tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
@@ -325,7 +334,8 @@ BEGIN
                                    0                         AS Summ_Currency,
                                    0                         AS Summ_Currency_pl,
                                    ''                        AS Comment,
-                                   NULL :: Boolean           AS isActive
+                                   NULL :: Boolean           AS isActive,
+                                   zc_DateStart() :: TDatetime AS OperDate
                             FROM tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer 
                                                                  ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
@@ -354,7 +364,8 @@ BEGIN
                                    SUM (tmpContainer.Summ_Currency)          AS Summ_Currency,
                                    SUM (tmpContainer.Summ_Currency_pl)       AS Summ_Currency_pl,
                                    COALESCE (MIString_Comment.ValueData, '') AS Comment,
-                                   tmpContainer.isActive                     AS isActive
+                                   tmpContainer.isActive                     AS isActive,
+                                   tmpContainer.OperDate                     AS OperDate
                             FROM tmpContainerBalance AS tmpContainer
                                    LEFT JOIN tmpComment_Balance    AS MIString_Comment ON MIString_Comment.MovementItemId = tmpContainer.MovementItemId
                                    LEFT JOIN tmpMoneyPlace_Balance AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
@@ -366,7 +377,8 @@ BEGIN
                                      MILO_Unit.ObjectId,
                                      MILO_MoneyPlace.ObjectId, 
                                      MILO_Contract.ObjectId,
-                                     MIString_Comment.ValueData
+                                     MIString_Comment.ValueData,
+                                     tmpContainer.OperDate
                             UNION ALL
                             -- движение  в валюте операции
                             SELECT 0                                         AS ContainerId,
@@ -388,7 +400,8 @@ BEGIN
                                    0                                         AS Summ_Currency,
                                    0                                         AS Summ_Currency_pl,
                                    COALESCE (MIString_Comment.ValueData, '') AS Comment,
-                                   tmpContainer.isActive                     AS isActive
+                                   tmpContainer.isActive                     AS isActive,
+                                   tmpContainer.OperDate                     AS OperDate
                             FROM tmpContainerCurrency AS tmpContainer
                                    LEFT JOIN tmpComment_Currency    AS MIString_Comment ON MIString_Comment.MovementItemId = tmpContainer.MovementItemId
                                    LEFT JOIN tmpMoneyPlace_Currency AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
@@ -400,7 +413,8 @@ BEGIN
                                      MILO_Unit.ObjectId, 
                                      MILO_MoneyPlace.ObjectId, 
                                      MILO_Contract.ObjectId,
-                                     MIString_Comment.ValueData
+                                     MIString_Comment.ValueData,
+                                     tmpContainer.OperDate
                             )
                             
      -- Результат
@@ -439,39 +453,40 @@ BEGIN
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
 
-        Operation.StartAmount_Currency ::TFloat                                                                       AS StartAmount_Currency,
-        CASE WHEN Operation.StartAmount_Currency > 0 THEN Operation.StartAmount_Currency ELSE 0 END ::TFloat          AS StartAmountD_Currency,
-        CASE WHEN Operation.StartAmount_Currency < 0 THEN -1 * Operation.StartAmount_Currency ELSE 0 END :: TFloat    AS StartAmountK_Currency,
-        Operation.DebetSumm_Currency::TFloat                                                                          AS DebetSumm_Currency,
-        Operation.KreditSumm_Currency::TFloat                                                                         AS KreditSumm_Currency,
-        Operation.EndAmount_Currency ::TFloat                                                                         AS EndAmount_Currency,
-        CASE WHEN Operation.EndAmount_Currency > 0 THEN Operation.EndAmount_Currency ELSE 0 END :: TFloat             AS EndAmountD_Currency,
-        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END :: TFloat        AS EndAmountK_Currency,
+        Operation.StartAmount_Currency                                                                   ::TFloat  AS StartAmount_Currency,
+        CASE WHEN Operation.StartAmount_Currency > 0 THEN Operation.StartAmount_Currency ELSE 0 END      ::TFloat  AS StartAmountD_Currency,
+        CASE WHEN Operation.StartAmount_Currency < 0 THEN -1 * Operation.StartAmount_Currency ELSE 0 END ::TFloat  AS StartAmountK_Currency,
+        Operation.DebetSumm_Currency                                                                     ::TFloat  AS DebetSumm_Currency,
+        Operation.KreditSumm_Currency                                                                    ::TFloat  AS KreditSumm_Currency,
+        Operation.EndAmount_Currency                                                                     ::TFloat  AS EndAmount_Currency,
+        CASE WHEN Operation.EndAmount_Currency > 0 THEN Operation.EndAmount_Currency ELSE 0 END          ::TFloat  AS EndAmountD_Currency,
+        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END     ::TFloat  AS EndAmountK_Currency,
 
-        Operation.Summ_Currency :: TFloat,  
+        Operation.Summ_Currency    :: TFloat,  
         Operation.Summ_Currency_pl :: TFloat,  
 
-        Operation.Comment :: TVarChar                                                               AS Comment
-
+        Operation.Comment          :: TVarChar,
+        Operation.OperDate         :: TDateTime
+        
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId,
                  Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment,
-                     SUM (Operation_all.StartAmount) AS StartAmount,
-                     SUM (Operation_all.DebetSumm)   AS DebetSumm,
-                     SUM (Operation_all.KreditSumm)  AS KreditSumm,
-                     SUM (Operation_all.EndAmount)   AS EndAmount,
-                     SUM (Operation_all.StartAmount_Currency) AS StartAmount_Currency,
-                     SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency,
-                     SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency,
-                     SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency,
-                     SUM (Operation_all.Summ_Currency)        AS Summ_Currency,
-                     SUM (Operation_all.Summ_Currency_pl)     AS Summ_Currency_pl
+                 Operation_all.OperDate,
+                 SUM (Operation_all.StartAmount) AS StartAmount,
+                 SUM (Operation_all.DebetSumm)   AS DebetSumm,
+                 SUM (Operation_all.KreditSumm)  AS KreditSumm,
+                 SUM (Operation_all.EndAmount)   AS EndAmount,
+                 SUM (Operation_all.StartAmount_Currency) AS StartAmount_Currency,
+                 SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency,
+                 SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency,
+                 SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency,
+                 SUM (Operation_all.Summ_Currency)        AS Summ_Currency,
+                 SUM (Operation_all.Summ_Currency_pl)     AS Summ_Currency_pl
           FROM Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId,
                    Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, 
-                   Operation_all.isActive
+                   Operation_all.isActive, Operation_all.OperDate
          ) AS Operation
-
 
      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.ObjectId
      LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = Operation.CashId
@@ -497,15 +512,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.01.20         * add inisDate
  31.07.17         * шустрее работает
  27.09.14                                        *
  09.09.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_Cash (inStartDate:= '03.12.2019' ::TDateTime, inEndDate:= '03.12.2019'::TDateTime, inAccountId:= 0, inCashId:=280296 , inCurrencyId:=0,  inSession:= '2'::TVarChar);
+-- select * from gpReport_Cash(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime , inAccountId := 0 , inCashId := 296540 , inCurrencyId := 0 ,  inisDate:= true, inSession := '5');

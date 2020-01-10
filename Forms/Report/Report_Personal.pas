@@ -107,6 +107,8 @@ type
     SummNalogRet: TcxGridDBColumn;
     BusinessName: TcxGridDBColumn;
     SummHoliday_inf: TcxGridDBColumn;
+    cbMember: TcxCheckBox;
+    actRefMember: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -198,6 +198,13 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     TabOrder = 21
     Width = 220
   end
+  object cbMember: TcxCheckBox
+    Left = 250
+    Top = 226
+    Caption = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+    TabOrder = 22
+    Width = 85
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -371,6 +378,14 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMember'
+        Value = Null
+        Component = cbMember
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -3,8 +3,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
-  ClientHeight = 181
-  ClientWidth = 434
+  ClientHeight = 221
+  ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 47
-    Top = 131
+    Left = 46
+    Top = 179
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 221
-    Top = 131
+    Left = 220
+    Top = 179
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,15 +37,15 @@ object Report_CashDialogForm: TReport_CashDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 8
-    Top = 85
+    Left = 128
+    Top = 27
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 100
   end
   object deStart: TcxDateEdit
-    Left = 8
+    Left = 12
     Top = 27
     EditValue = 42005d
     Properties.ShowTime = False
@@ -53,23 +53,23 @@ object Report_CashDialogForm: TReport_CashDialogForm
     Width = 100
   end
   object cxLabel6: TcxLabel
-    Left = 8
+    Left = 12
     Top = 7
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 8
-    Top = 62
+    Left = 128
+    Top = 4
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel1: TcxLabel
-    Left = 136
-    Top = 7
+    Left = 12
+    Top = 60
     Caption = #1050#1072#1089#1089#1072':'
   end
   object ceCash: TcxButtonEdit
-    Left = 136
-    Top = 27
+    Left = 12
+    Top = 80
     Properties.Buttons = <
       item
         Default = True
@@ -77,16 +77,16 @@ object Report_CashDialogForm: TReport_CashDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 170
+    Width = 197
   end
   object cxLabel3: TcxLabel
-    Left = 136
-    Top = 62
+    Left = 12
+    Top = 110
     Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
   end
   object edAccount: TcxButtonEdit
-    Left = 136
-    Top = 85
+    Left = 12
+    Top = 130
     Properties.Buttons = <
       item
         Default = True
@@ -94,16 +94,16 @@ object Report_CashDialogForm: TReport_CashDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 286
+    Width = 318
   end
   object cxLabel10: TcxLabel
-    Left = 312
-    Top = 7
+    Left = 220
+    Top = 60
     Caption = #1042#1072#1083#1102#1090#1072':'
   end
   object edCurrency: TcxButtonEdit
-    Left = 312
-    Top = 27
+    Left = 220
+    Top = 80
     Properties.Buttons = <
       item
         Default = True
@@ -113,15 +113,23 @@ object Report_CashDialogForm: TReport_CashDialogForm
     TabOrder = 11
     Width = 110
   end
+  object cbisDate: TcxCheckBox
+    Left = 250
+    Top = 27
+    Caption = #1087#1086' '#1076#1072#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 80
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 40
-    Top = 32
+    Left = 128
+    Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 127
+    Left = 143
+    Top = 151
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -133,8 +141,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 113
+    Left = 320
+    Top = 13
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -204,9 +212,17 @@ object Report_CashDialogForm: TReport_CashDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDate'
+        Value = Null
+        Component = cbisDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 40
-    Top = 120
+    Left = 8
+    Top = 164
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
@@ -240,8 +256,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 64
+    Left = 191
+    Top = 152
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -306,8 +322,8 @@ object Report_CashDialogForm: TReport_CashDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 13
+    Left = 240
+    Top = 97
   end
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
@@ -336,7 +352,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 16
+    Left = 176
+    Top = 124
   end
 end

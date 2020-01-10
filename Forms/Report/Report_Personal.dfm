@@ -23,8 +23,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
       inherited cxGrid: TcxGrid
         Width = 901
         Height = 444
-        ExplicitLeft = 492
-        ExplicitTop = 16
         ExplicitWidth = 901
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -763,12 +761,12 @@ inherited Report_PersonalForm: TReport_PersonalForm
       ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
-      Left = 492
-      Top = 6
+      Left = 537
+      Top = 7
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 613
+      Left = 658
       Top = 5
       Properties.Buttons = <
         item
@@ -780,7 +778,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Width = 162
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 576
+      Left = 621
       Top = 30
       Properties.Buttons = <
         item
@@ -792,12 +790,12 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Width = 199
     end
     object cxLabel4: TcxLabel
-      Left = 492
+      Left = 537
       Top = 31
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 613
+      Left = 658
       Top = 57
       Properties.Buttons = <
         item
@@ -809,7 +807,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Width = 162
     end
     object cxLabel5: TcxLabel
-      Left = 492
+      Left = 537
       Top = 58
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
@@ -828,7 +826,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 126
+      Width = 166
     end
     object ceBranch: TcxButtonEdit
       Left = 329
@@ -840,7 +838,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 160
+      Width = 200
     end
     object cxLabel7: TcxLabel
       Left = 280
@@ -864,6 +862,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
       TabOrder = 15
       Width = 118
     end
+    object cbMember: TcxCheckBox
+      Left = 447
+      Top = 56
+      Action = actRefMember
+      TabOrder = 16
+      Width = 85
+    end
   end
   object cxLabel8: TcxLabel [2]
     Left = 5
@@ -880,15 +885,15 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 204
+    Width = 161
   end
   object cxLabel9: TcxLabel [4]
-    Left = 277
+    Left = 232
     Top = 58
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
   end
   object cePersonal: TcxButtonEdit [5]
-    Left = 340
+    Left = 295
     Top = 57
     Properties.Buttons = <
       item
@@ -953,6 +958,22 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited ActionList: TActionList
     Left = 127
     Top = 327
+    object actRefMember: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetDescSets
+      StoredProcList = <
+        item
+          StoredProc = spGetDescSets
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+      Hint = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGetDescSets
       StoredProcList = <
@@ -2426,6 +2447,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMember'
+          Value = Null
+          Component = cbMember
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2599,6 +2628,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisMember'
+        Value = Null
+        Component = cbMember
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = GuidesAccount
@@ -2746,8 +2783,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 64
-    Top = 16
+    Left = 40
+    Top = 56
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -2817,8 +2854,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 632
-    Top = 5
+    Left = 768
+    Top = 29
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
@@ -3119,8 +3156,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 5
+    Left = 432
+    Top = 65533
   end
   object PersonalServiceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -3149,8 +3186,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 37
+    Left = 120
+    Top = 61
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -3179,7 +3216,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 45
+    Left = 488
+    Top = 5
   end
 end

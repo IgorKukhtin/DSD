@@ -1,12 +1,14 @@
 -- Function: gpReport_Personal
 
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Personal(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inServiceDate      TDateTime , --
     IN inIsServiceDate    Boolean , --
+    IN inIsMember         Boolean , -- по физ лицу
     IN inAccountId        Integer,    -- Счет
     IN inBranchId         Integer,    -- филиал
     IN inInfoMoneyId      Integer,    -- Управленческая статья
@@ -38,6 +40,7 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
 AS
 $BODY$
    DECLARE vbUserId     Integer;
+   DECLARE vbMemberId   Integer;
    DECLARE vbIsList_all Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -60,7 +63,35 @@ BEGIN
      -- !!! округление !!!
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
+     -- таблица сотрудников
+   /*  CREATE TEMP TABLE _tmpPersonal (PersonalId Integer) ON COMMIT DROP;
 
+     -- если inIsMember = TRUE тогда определяем сотрудника по физ лицу
+     IF (inIsMember = TRUE) AND (COALESCE (inPersonalId,0) <> 0)
+     THEN
+         vbMemberId := (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                        FROM ObjectLink AS ObjectLink_Personal_Member
+                        WHERE ObjectLink_Personal_Member.ObjectId = inPersonalId
+                          AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                        );
+         
+         INSERT INTO _tmpPersonal (PersonalId)
+             SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+             FROM ObjectLink AS ObjectLink_Personal_Member
+             WHERE ObjectLink_Personal_Member.ChildObjectId = vbMemberId
+               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member();
+     END IF;
+
+     IF (inIsMember = FALSE) OR ( (inIsMember = TRUE) AND (COALESCE (inPersonalId,0) = 0))
+     THEN
+     INSERT INTO _tmpPersonal (PersonalId)
+         SELECT Object.Id
+         FROM Object
+         WHERE Object.DescId = zc_Object_Personal()
+         AND (Object.Id = inPersonalId OR COALESCE (inPersonalId,0) = 0);
+     END IF;
+*/
+  
      -- таблица - элементы
      -- CREATE TEMP TABLE _tmpList (PersonalServiceListId Integer) ON COMMIT DROP;
 
@@ -123,7 +154,27 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH _tmpList AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+     WITH
+     _tmpPersonal AS(
+                     SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+                     FROM ObjectLink AS ObjectLink_Personal_Member
+                     WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                       AND inIsMember = TRUE AND COALESCE (inPersonalId,0) <> 0
+                       AND ObjectLink_Personal_Member.ChildObjectId IN (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                                                        FROM ObjectLink AS ObjectLink_Personal_Member
+                                                                        WHERE ObjectLink_Personal_Member.ObjectId = inPersonalId
+                                                                          AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                                        )
+                     UNION
+                      SELECT Object.Id
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_Personal()
+                      AND ( ((Object.Id = inPersonalId OR COALESCE (inPersonalId,0) = 0) AND inIsMember = FALSE)
+                          OR (COALESCE (inPersonalId,0) = 0 AND inIsMember = TRUE) )
+                     )
+
+     
+     , _tmpList AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                        FROM ObjectLink AS ObjectLink_User_Member
                             INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                   ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -158,12 +209,13 @@ BEGIN
                            , CLO_Branch.ObjectId              AS BranchId
                            , ObjectDate_Service.ValueData     AS ServiceDate
                       FROM ContainerLinkObject AS CLO_Personal
+
                            INNER JOIN Container ON Container.Id = CLO_Personal.ContainerId AND Container.DescId = zc_Container_Summ()
                            INNER JOIN ContainerLinkObject AS CLO_InfoMoney
                                                           ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                            LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
-                                                          ON CLO_PersonalServiceList.ContainerId = Container.Id
-                                                         AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                         ON CLO_PersonalServiceList.ContainerId = Container.Id
+                                                        AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
 
                            LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                          ON CLO_Unit.ContainerId = Container.Id AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -180,7 +232,8 @@ BEGIN
                                                 ON ObjectDate_Service.ObjectId = CLO_ServiceDate.ObjectId
                                                AND ObjectDate_Service.DescId = zc_ObjectDate_ServiceDate_Value()
                       WHERE CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-                        AND (CLO_Personal.ObjectId = inPersonalId OR inPersonalId = 0)
+                        --AND (CLO_Personal.ObjectId = inPersonalId OR inPersonalId = 0)  -- через _tmpPersonal
+                        AND CLO_Personal.ObjectId  IN (SELECT _tmpPersonal.PersonalId FROM _tmpPersonal)
                         AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                         AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                         AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
@@ -477,6 +530,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.01.20         *
  29.07.19         *
  08.04.19         * add SummService_inf
  16.03.17         * add inPersonalId
@@ -486,4 +540,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2019', inEndDate:= '01.08.2019', inServiceDate:= '01.07.2019', inIsServiceDate:= TRUE, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2019', inEndDate:= '01.08.2019', inServiceDate:= '01.07.2019', inIsServiceDate:= TRUE, inIsMember:= TRUE, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 590270, inSession:= zfCalc_UserAdmin())

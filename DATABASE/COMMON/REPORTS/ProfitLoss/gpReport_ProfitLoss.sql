@@ -28,6 +28,8 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , Amount_Ch  TFloat    -- Черкассы
              , Amount_Lv  TFloat    -- Львов
              , Amount_0   TFloat    -- без филиала
+             
+             , ProfitLossGroup_dop Integer   -- дополнительная группировка
               )
 AS
 $BODY$
@@ -277,6 +279,9 @@ BEGIN
            , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
            , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
            , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
+           
+           -- доп.группа для промежуточного итога   "итого сумма у покупателя"
+           ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
 
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 

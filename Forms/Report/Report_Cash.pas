@@ -88,6 +88,7 @@ type
     cbCurrency: TcxCheckBox;
     bbcbCurrency: TdxBarControlContainerItem;
     Summ_Currency_pl: TcxGridDBColumn;
+    cbisDate: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -82,12 +82,20 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object clProfitLossName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'ProfitLossName'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103
+    end
+    object clProfitLossGroup_dop: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      DataBinding.FieldName = 'ProfitLossGroup_dop'
+      UniqueName = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object clOnComplete: TcxDBPivotGridField
       AreaIndex = 10

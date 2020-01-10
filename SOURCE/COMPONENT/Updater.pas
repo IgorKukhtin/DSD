@@ -414,7 +414,8 @@ begin
   //1.
   S:= ExtractFileName(ParamStr(0));
   if (UpperCase(S) = UpperCase('FarmacyCash.exe'))
-     and (not FileExists(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe'))
+    // and (not FileExists(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe'))
+    // ѕусть FarmacyCashServise.exe обновл€етьс€ всегда, а то не обновл€ют
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyCashServise.exe')));
 

@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>FarmacyCash.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -319,6 +319,15 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
+        <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas">
+            <Form>EnterLoyaltySaveMoneyForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\LoyaltySPList.pas">
+            <Form>LoyaltySPListForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

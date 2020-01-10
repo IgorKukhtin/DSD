@@ -81,6 +81,8 @@ begin
       AddStrField(LocalDataBaseHead,  'CONFCODESP', 10); //Код подтверждения рецепта
       //***07.11.19
       AddIntField(LocalDataBaseHead,  'LOYALTYID');    //Программа лояльности
+      //***08.01.20
+      AddIntField(LocalDataBaseHead,  'LOYALTYSM');    //Программа лояльности накопительная
 
       LocalDataBaseHead.CreateTable;
     end
@@ -160,6 +162,9 @@ begin
         //***07.11.19
         if FindField('LOYALTYID') = nil then
           AddIntField(LFieldDefs,  'LOYALTYID');  //Программа лояльности
+        //***08.01.20
+        if FindField('LOYALTYSM') = nil then
+          AddIntField(LFieldDefs,  'LOYALTYSM');  //Программа лояльности накопительная
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -224,7 +229,9 @@ begin
         (FindField('PDKINDID') = nil) or
         (FindField('CONFCODESP') = nil) or
         //***07.11.19
-        (FindField('LOYALTYID') = nil));
+        (FindField('LOYALTYID') = nil) or
+        //***08.01.20
+        (FindField('LOYALTYSM') = nil));
 
       Close;
 

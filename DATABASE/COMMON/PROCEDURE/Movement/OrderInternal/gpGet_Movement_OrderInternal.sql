@@ -32,7 +32,13 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
-         WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet)
+         WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet
+                                        WHERE (inFromId <> 8451 AND inToId <> 8455)
+                                       UNION
+                                      SELECT (inOperDate - INTERVAL '28 DAY')::TDateTime AS StartDate
+                                           , (inOperDate - INTERVAL '1 DAY') ::TDateTime AS EndDate
+                                        WHERE inFromId = 8451 AND inToId = 8455
+                                        )
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_orderinternal_seq') AS TVarChar) AS InvNumber
@@ -51,7 +57,7 @@ BEGIN
              , Object_To.Id                                       AS ToId
              , Object_To.ValueData                                AS ToName
              -- , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
-             , (1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate) - zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate)))) :: TFloat AS DayCount
+             , (1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate) - zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.StartDate)))) :: TFloat AS DayCount
              , CAST ('' as TVarChar) 		                  AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -75,7 +81,13 @@ BEGIN
      ELSE
 
      RETURN QUERY
-       WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet)
+       WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet
+                                      WHERE (inFromId <> 8451 AND inToId <> 8455)
+                                     UNION
+                                      SELECT (inOperDate - INTERVAL '28 DAY')::TDateTime AS StartDate
+                                           , (inOperDate - INTERVAL '1 DAY') ::TDateTime AS EndDate
+                                      WHERE inFromId = 8451 AND inToId = 8455
+                                      )
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -84,8 +96,8 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
 
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , COALESCE (MovementDate_OperDateStart.ValueData, tmpGoodsReportSaleInf.StartDate) :: TDateTime      AS OperDateStart
-           , COALESCE (MovementDate_OperDateEnd.ValueData, tmpGoodsReportSaleInf.EndDate) :: TDateTime        AS OperDateEnd                      
+           , COALESCE (MovementDate_OperDateStart.ValueData, tmpGoodsReportSaleInf.StartDate) :: TDateTime AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, tmpGoodsReportSaleInf.EndDate)     :: TDateTime AS OperDateEnd                      
            
            , Object_From.Id                                     AS FromId
            , Object_From.ValueData                              AS FromName
@@ -142,6 +154,7 @@ ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, Intege
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.01.20         *
  27.06.15                                        * all
  02.03.15         * add OperDatePartner, OperDateStart, OperDateEnd, DayCount               
  06.06.14                                                        *

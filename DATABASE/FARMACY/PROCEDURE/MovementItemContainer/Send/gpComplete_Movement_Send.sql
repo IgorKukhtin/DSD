@@ -33,7 +33,7 @@ BEGIN
     vbUserId:= inSession;
 
      -- проверка
-    IF COALESCE ((SELECT MIC.Id FROM MovementBoolean  AS MovementBoolean_Deferred
+    IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
                   WHERE MovementBoolean_Deferred.MovementId = inMovementId
                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
     THEN
@@ -162,6 +162,11 @@ BEGIN
     LIMIT 1
    ;
    
+    IF (COALESCE(vbGoodsName,'') <> '') 
+    THEN
+        RAISE EXCEPTION 'ќшибка. ѕо одному <%> или более товарам кол-во перемещени€ <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+    END IF;
+
     -- ѕроверка на то что бы не списали больше чем есть на остатке по распределенным позици€м 
     IF EXISTS (SELECT 1
                FROM MovementItem AS MI_Child
