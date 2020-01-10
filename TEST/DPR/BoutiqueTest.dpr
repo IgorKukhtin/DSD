@@ -318,7 +318,10 @@ uses
   ImportType in '..\..\FormsBoutique\Import\ImportType.pas' {ImportTypeForm: TParentForm},
   ImportSettings in '..\..\FormsBoutique\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
-  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -329,7 +332,7 @@ begin
   CreateStructurePath := '..\DATABASE\Boutique\STRUCTURE\';
   LocalViewPath := '..\DATABASE\Boutique\View\';
   LocalProcedurePath := '..\DATABASE\Boutique\PROCEDURE\';
-  LocalProcessPath := '..\DATABASE\COMMONBoutique\Boutique\PROCESS\';
+  LocalProcessPath := '..\DATABASE\Boutique\PROCESS\';
 
   dsdProject := prBoutique;
 
