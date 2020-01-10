@@ -274,8 +274,8 @@ begin
      // проверка для контрагента
      if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
-       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnIn)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
         )
        and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
      then begin
@@ -318,8 +318,8 @@ begin
      // проверка для формы оплаты
      if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
-       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnIn)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
         )
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger<>CDS.FieldByName('PaidKindId').asInteger)
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger>0)
@@ -372,14 +372,15 @@ begin
                     ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                     ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     ParamByName('ChangePercentAmount').asFloat:= 0;
-                    if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
+                    {if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
+                    and
                     then begin
                               ParamByName('OrderExternalId').AsInteger        := 0;
                               ParamByName('OrderExternal_DescId').AsInteger   := 0;
                               ParamByName('OrderExternal_BarCode').asString   := '';
                               ParamByName('OrderExternal_InvNumber').asString := '';
                               ParamByName('OrderExternalName_master').asString:= '';
-                    end;
+                    end;}
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
@@ -424,8 +425,10 @@ begin
                     ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
                     ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                     ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+                    //
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
                     then ParamByName('ChangePercentAmount').asFloat:= 0;
+                    //
                     if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
                      or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
                      or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
@@ -608,8 +611,8 @@ begin
                     // завершение ТОЛЬКО для НЕКОТОРЫХ
                     if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnOut)
-                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Sale)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnIn)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Sale)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Loss)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_SendOnPrice)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Send)
@@ -633,6 +636,7 @@ begin
                or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
                or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
                or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+               or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
               then CDS.Filter:='Number='+IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').asInteger)
               else CDS.Filter:='(MovementDescId='+IntToStr(ParamsMovement_local.ParamByName('MovementDescId').asInteger)
                               +'  and FromId='+IntToStr(ParamsMovement_local.ParamByName('FromId').asInteger)
@@ -646,12 +650,16 @@ begin
               if ((CDS.RecordCount<>1) and ((ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_SendOnPrice)
                                           or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_Loss)
                                           or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_Send)
-                                          or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_Income))
+                                          or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_Income)
+                                          or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_ReturnIn)
+                                           )
                  )
                or((CDS.RecordCount<>2) and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_SendOnPrice)
                                        and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss)
                                        and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_Send)
-                                       and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income))
+                                       and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income)
+                                       and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_ReturnIn)
+                 )
               then begin
                    ShowMessage('Ошибка.Значение <Вид документа> не определено.');
                    ActiveControl:=EditBarCode;

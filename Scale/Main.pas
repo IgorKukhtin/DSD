@@ -1325,9 +1325,9 @@ begin
   Initialize_afterSave_MI;
   //local visible Columns
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=((SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE)) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
@@ -1335,6 +1335,15 @@ begin
   //
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  //
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible             :=not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible :=not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  //
+  if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then
+  begin
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Caption            := 'Кол. втулок';
+     LabelCountPack.Caption:= 'Кол-во втулок';
+  end;
   //
   if SettingMain.isSticker = TRUE then
   begin
@@ -1457,7 +1466,9 @@ begin
          then PanelOrderExternal.Caption:=' з.'+ParamByName('OrderExternalName_master').asString
          else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_SendOnPrice
               then PanelOrderExternal.Caption:=' ф.'+ParamByName('OrderExternalName_master').asString
-              else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
+              else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_ReturnIn
+                   then PanelOrderExternal.Caption:=' в.'+ParamByName('OrderExternalName_master').asString
+                   else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
     else PanelOrderExternal.Caption:='';
 
      EditBarCodeTransport.Text:=ParamByName('Transport_BarCode').asString;
