@@ -32,6 +32,7 @@ type
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    cbisDate: TcxCheckBox;
   private
     { Private declarations }
   public

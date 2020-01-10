@@ -4,10 +4,8 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -247
-  ExplicitTop = -133
   ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -210,6 +208,11 @@ inherited Report_CashForm: TReport_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = Summ_Currency_pl
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GroupName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -221,6 +224,13 @@ inherited Report_CashForm: TReport_CashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+          end
           object GroupName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GroupName'
@@ -671,11 +681,11 @@ inherited Report_CashForm: TReport_CashForm
     end
     inherited deEnd: TcxDateEdit
       Left = 118
-      Top = 30
+      Top = 29
       EditValue = 43466d
       Properties.SaveTime = False
       ExplicitLeft = 118
-      ExplicitTop = 30
+      ExplicitTop = 29
     end
     inherited cxLabel1: TcxLabel
       Left = 27
@@ -683,17 +693,17 @@ inherited Report_CashForm: TReport_CashForm
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 31
+      Top = 30
       ExplicitLeft = 8
-      ExplicitTop = 31
+      ExplicitTop = 30
     end
     object cxLabel6: TcxLabel
-      Left = 209
+      Left = 299
       Top = 6
       Caption = #1050#1072#1089#1089#1072':'
     end
     object ceCash: TcxButtonEdit
-      Left = 209
+      Left = 299
       Top = 29
       Properties.Buttons = <
         item
@@ -702,7 +712,7 @@ inherited Report_CashForm: TReport_CashForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 305
+      Width = 213
     end
     object cxLabel3: TcxLabel
       Left = 520
@@ -720,6 +730,14 @@ inherited Report_CashForm: TReport_CashForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 345
+    end
+    object cbisDate: TcxCheckBox
+      Left = 215
+      Top = 29
+      Caption = #1087#1086' '#1076#1072#1090#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 76
     end
   end
   object cxLabel10: TcxLabel [2]
@@ -2425,6 +2443,14 @@ inherited Report_CashForm: TReport_CashForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDate'
+          Value = Null
+          Component = cbisDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2478,6 +2504,14 @@ inherited Report_CashForm: TReport_CashForm
         Value = Null
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDate'
+        Value = Null
+        Component = cbisDate
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2902,8 +2936,8 @@ inherited Report_CashForm: TReport_CashForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 13
+    Left = 440
+    Top = 37
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'

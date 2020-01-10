@@ -3,10 +3,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
   ClientHeight = 555
   ClientWidth = 1103
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -466
-  ExplicitTop = -101
   ExplicitWidth = 1119
-  ExplicitHeight = 594
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -590,6 +588,9 @@ inherited Report_FoundersForm: TReport_FoundersForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -624,6 +625,9 @@ inherited Report_FoundersForm: TReport_FoundersForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' - '#1076#1077#1090#1072#1083#1100#1085#1099#1081
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
