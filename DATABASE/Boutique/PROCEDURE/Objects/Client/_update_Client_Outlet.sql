@@ -3,14 +3,14 @@
 -- from (
 -- SELECT ClientId2, min (UnitId2) as minUnitId2
 -- from (
-SELECT distinct Object_Client.*, Object_Unit_ins.*, Object_Unit.*
+/***SELECT distinct Object_Client.*, Object_Unit_ins.*, Object_Unit.*
      , Object_Client.Id as ClientId2, Object_Unit.Id as UnitId2
      -- , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Client_Outlet(), Object_Client.Id, true ) -- *
 FROM Object AS Object_Client
             LEFT JOIN ObjectLink AS ObjectLink_Client_InsertUnit
                                  ON ObjectLink_Client_InsertUnit.ObjectId = Object_Client.Id
                                 AND ObjectLink_Client_InsertUnit.DescId   = zc_ObjectLink_Client_InsertUnit()
-            left join Object AS Object_Unit_ins on Object_Unit_ins.Id = ObjectLink_Client_InsertUnit.ChildObjectId
+            left join Object AS Object_Unit_ins on Object_Unit_ins.Id = ObjectLink_Client_InsertUnit.ChildObjectId***/
 
 /*
                            INNER JOIN ContainerLinkObject AS CLO_Client
@@ -27,7 +27,7 @@ FROM Object AS Object_Client
 */
 
 -- join lfSelect_Object_Unit_isOutlet() AS lfSelect on lfSelect.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
- left join lfSelect_Object_Unit_isOutlet() AS lfSelect on lfSelect.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
+/*** left join lfSelect_Object_Unit_isOutlet() AS lfSelect on lfSelect.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
 
 
  join MovementLinkObject AS MLO
@@ -50,3 +50,4 @@ order by 4
 -- ) as a
 -- group by ClientId2
 -- ) as a
+***/
