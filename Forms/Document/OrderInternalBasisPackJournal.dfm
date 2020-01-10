@@ -396,8 +396,8 @@ inherited OrderInternalBasisPackJournalForm: TOrderInternalBasisPackJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1087#1083#1077#1085#1082#1072')'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1087#1083#1077#1085#1082#1072')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
