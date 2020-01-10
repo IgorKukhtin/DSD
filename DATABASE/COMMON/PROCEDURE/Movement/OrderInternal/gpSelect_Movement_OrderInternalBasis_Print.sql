@@ -157,9 +157,11 @@ BEGIN
            , tmpMI.AmountPartnerPrior   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
            , tmpMI.AmountPartnerSecond  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerSecond
            , tmpMI.Amount_calc          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
+           , tmpMI.Amount_calc_Pack     * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc_Pack
            , tmpMI.AmountRemains        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
 
            , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
+           , SUM (COALESCE (tmpMI.Amount_calc_Pack,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData)                         AS PrintGroup_Scan_Pack
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -176,6 +178,12 @@ BEGIN
                               THEN SUM (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - tmpMI.AmountSend + tmpMI.AmountSendOut - tmpMI.AmountP)
                          ELSE 0
                     END AS Amount_calc -- Расчетный заказ
+                
+                  , CASE WHEN SUM (tmpMI.AmountRemains + tmpMI.AmountSend) < SUM (tmpMI.AmountPartner)
+                              THEN SUM (tmpMI.AmountPartner - tmpMI.AmountRemains - tmpMI.AmountSend)
+                         ELSE 0
+                    END AS Amount_calc_Pack -- Расчетный заказ для Заявки на упаковку (Пленка)
+
                   , SUM (tmpMI.AmountRemains) AS AmountRemains
              FROM (-- Заявка сырье
                    SELECT MovementItem.ObjectId                                  AS GoodsId

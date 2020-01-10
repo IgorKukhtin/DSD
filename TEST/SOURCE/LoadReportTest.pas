@@ -260,13 +260,13 @@ begin
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по просрочке.fr3');
 
   LoadReportFromFile('Отчет По Отгрузкам', ReportPath + '\Отчеты (товарные)\Отчет По Отгрузкам.fr3');
-  }
+
   // Отчеты УП
   LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
 
   LoadReportFromFile('Отчет УП ОПиУ (филиалы)', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ (филиалы).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
 
   LoadReportFromFile('Отчет УП Баланс (Дебет Кредит)', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит).fr3');
@@ -325,10 +325,12 @@ begin
   LoadReportFromFile('Заявка на упаковку (остатки)', ReportPath + '\Производство\Заявка на упаковку (остатки).fr3');
 
   LoadReportFromFile('Заявка на упаковку (меньше заказа)', ReportPath + '\Производство\Заявка на упаковку (меньше заказа).fr3');
-  }
+
   LoadReportFromFile('Заявка на производство (скан)', ReportPath + '\Производство\Заявка на производство (скан).fr3');
   LoadReportFromFile('Заявка на упаковку (скан)', ReportPath + '\Производство\Заявка на упаковку (скан).fr3');
   LoadReportFromFile('Заявка на сырье (скан)', ReportPath + '\Производство\Заявка на сырье (скан).fr3');
+  }
+  LoadReportFromFile('Заявка на упаковку (пленка)', ReportPath + '\Производство\Заявка на упаковку (пленка).fr3');
   exit;
   {
   // Отчеты Заявки

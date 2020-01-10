@@ -115,6 +115,7 @@ BEGIN
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData             AS MeasureName
 
            , Object_Unit.Id                       AS UnitId
            , Object_Unit.ObjectCode               AS UnitCode
