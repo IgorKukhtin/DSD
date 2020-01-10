@@ -4,8 +4,9 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -572
   ExplicitWidth = 1378
-  ExplicitHeight = 425
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -314,6 +315,13 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object BusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089
+            DataBinding.FieldName = 'BusinessName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -1378,7 +1386,7 @@
       MoveParams = <
         item
           FromParam.Name = 'isOLAP'
-          FromParam.Value = FALSE
+          FromParam.Value = False
           FromParam.DataType = ftBoolean
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'isOLAP'

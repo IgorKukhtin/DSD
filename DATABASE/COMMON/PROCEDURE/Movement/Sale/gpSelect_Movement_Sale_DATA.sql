@@ -110,7 +110,7 @@ end if;
                        -- FROM tmpStatus
                        --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
                           FROM Movement
-                               
+
                           WHERE inIsPartnerDate = FALSE
                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.DescId = zc_Movement_Sale()
@@ -197,7 +197,7 @@ analyze tmpMovement;
                        -- FROM tmpStatus
                        --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
                           FROM Movement
-                               
+
                           WHERE inIsPartnerDate = FALSE
                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.DescId = zc_Movement_Sale()
@@ -695,8 +695,11 @@ analyze tmpMovement;
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
            , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
-           , Movement_DocumentMaster.Id    AS MovementId_Master
-           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
+           , Movement_DocumentMaster.Id                     AS MovementId_Master
+           , CASE WHEN Movement_DocumentMaster.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusMaster.ValueData, '') || ' ' || MS_InvNumberPartner_Master.ValueData
+                  ELSE MS_InvNumberPartner_Master.ValueData
+             END                                :: TVarChar AS InvNumberPartner_Master
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
@@ -899,6 +902,7 @@ analyze tmpMovement;
 
             LEFT JOIN tmpMS_InvNumberPartner AS MS_InvNumberPartner_Master
                                              ON MS_InvNumberPartner_Master.MovementId = Movement_DocumentMaster.Id -- Movement_DocumentMaster.Id
+            LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.Id
 
             LEFT JOIN tmpMovement_TransportGoods AS Movement_TransportGoods ON Movement_TransportGoods.MovementId = Movement.Id
 

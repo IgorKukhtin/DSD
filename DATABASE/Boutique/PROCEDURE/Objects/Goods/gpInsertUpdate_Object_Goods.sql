@@ -46,6 +46,14 @@ BEGIN
        ioCode:= NEXTVAL ('Object_Goods_seq'); 
 
    END IF; 
+   
+
+   -- !!!замена!!!
+   IF zc_Enum_GlobalConst_isTerry() = FALSE
+   THEN
+       inName:= ioCode :: TVarChar;
+   END IF;
+
 
    -- НЕ Нужен для загрузки из Sybase т.к. там код НЕ = 0 
    -- IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Goods_seq'); 

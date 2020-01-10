@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, isPartner Boolean
-             , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child Integer
+             , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
              , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar, BranchName TVarChar
@@ -115,13 +115,23 @@ BEGIN
            , Object_TaxKind.Id                		    AS TaxKindId
            , Object_TaxKind.ValueData         		    AS TaxKindName
            , Movement_DocumentMaster.Id                 AS DocumentMasterId
-           , Movement_DocumentMaster.InvNumber          AS InvNumber_Master
-           , MS_InvNumberPartner_DocumentMaster.ValueData AS InvNumberPartner_Master
+           , CASE WHEN Movement_DocumentMaster.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusMaster.ValueData, '') || ' ' || Movement_DocumentMaster.InvNumber
+                  ELSE Movement_DocumentMaster.InvNumber
+             END :: TVarChar AS InvNumber_Master
+           , CASE WHEN Movement_DocumentMaster.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusMaster.ValueData, '') || ' ' || MS_InvNumberPartner_DocumentMaster.ValueData
+                  ELSE MS_InvNumberPartner_DocumentMaster.ValueData
+             END :: TVarChar AS InvNumberPartner_Master
            , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner     -- признак Акт недовоза из документа возврата
            
            , Movement_DocumentChild.Id                   AS DocumentChildId
            , Movement_DocumentChild.OperDate             AS OperDate_Child
-           , zfConvert_StringToNumber (MS_InvNumberPartner_DocumentChild.ValueData) AS InvNumberPartner_Child
+           , CASE WHEN Movement_DocumentChild.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusChild.ValueData, '') || ' ' || MS_InvNumberPartner_DocumentChild.ValueData
+                  ELSE MS_InvNumberPartner_DocumentChild.ValueData
+             END :: TVarChar AS InvNumberPartner_Master
+         --, zfConvert_StringToNumber (MS_InvNumberPartner_DocumentChild.ValueData) AS InvNumberPartner_Child
            , CAST (CASE WHEN (MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR Movement.OperDate <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner_Master.ValueData ELSE Movement_DocumentMaster.OperDate END
@@ -297,6 +307,8 @@ BEGIN
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentMaster ON MS_InvNumberPartner_DocumentMaster.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                           AND MS_InvNumberPartner_DocumentMaster.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.StatusId
+
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
                                    ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementChildId
                                   AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
@@ -339,6 +351,8 @@ BEGIN
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentChild ON MS_InvNumberPartner_DocumentChild.MovementId = MovementLinkMovement_Child.MovementChildId
                                                                          AND MS_InvNumberPartner_DocumentChild.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN Object AS Object_StatusChild ON Object_StatusChild.Id = Movement_DocumentChild.StatusId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Child
                                          ON MovementLinkObject_Partner_Child.MovementId = MovementLinkMovement_Child.MovementChildId
                                         AND MovementLinkObject_Partner_Child.DescId = zc_MovementLinkObject_Partner()

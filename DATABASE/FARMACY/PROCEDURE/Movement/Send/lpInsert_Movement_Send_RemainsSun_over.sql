@@ -142,7 +142,10 @@ BEGIN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
-        WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2()
+        WHERE (OB.ValueData = TRUE
+            OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
+              )
+          AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2()
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
        ;
@@ -159,15 +162,15 @@ BEGIN
              , tmp.Amount_t2, tmp.Summ_t2
         FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                    , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND CURRENT_DATE THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '60 DAY' AND CURRENT_DATE
+                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY' AND inOperDate
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
@@ -197,7 +200,7 @@ BEGIN
                                                                      ON MIContainer.WhereObjectId_Analyzer = tmpContainer.UnitId
                                                                     AND MIContainer.ObjectId_Analyzer      = tmpContainer.GoodsID
                                                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                                                    AND MIContainer.OperDate               >= CURRENT_DATE - INTERVAL '250 DAY'
+                                                                    AND MIContainer.OperDate               >= inOperDate - INTERVAL '250 DAY'
                                                                     AND MIContainer.Amount                 <> 0
                                                                     AND MIContainer.MovementDescId         = zc_Movement_Check()
                                 WHERE MIContainer.ObjectId_Analyzer IS NULL
@@ -225,7 +228,7 @@ BEGIN
                                                         ON MovementDate_Branch.MovementId = Movement.Id
                                                        AND MovementDate_Branch.DescId     = zc_MovementDate_Branch()
                                                        -- AND MovementDate_Branch.ValueData >= CURRENT_DATE
-                                                       AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
+                                                       AND MovementDate_Branch.ValueData BETWEEN inOperDate - INTERVAL '7 DAY' AND inOperDate + INTERVAL '7 DAY'
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = Movement.Id
                                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -261,11 +264,17 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                            WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
+                                                           ON MB_SUN_v2.MovementId = Movement.Id
+                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                                          AND Movement.OperDate    >= inOperDate
+                            WHERE Movement.OperDate >= inOperDate - INTERVAL '30 DAY' AND Movement.OperDate < inOperDate + INTERVAL '30 DAY'
                            -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                              AND MB_SUN_v2.MovementId IS NULL
                             GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -291,11 +300,17 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
+                                                           ON MB_SUN_v2.MovementId = Movement.Id
+                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                                          AND Movement.OperDate    >= inOperDate
                          -- WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
-                            WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
+                            WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                              AND MB_SUN_v2.MovementId IS NULL
                             GROUP BY MovementLinkObject_From.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -404,15 +419,15 @@ BEGIN
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
              , CASE -- дл€ такого
-                    WHEN 1 < FLOOR (-- продажи у у получател€ в разрезе T2=45
-                                    COALESCE (_tmpSale_over.Amount_t2, 0)
-                                    -- ћ»Ќ”— остаток
-                                  - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
-                                   + COALESCE (tmpMI_Send_in.Amount, 0)
-                                   + COALESCE (tmpMI_Income.Amount, 0)
-                                   + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                    )
-                                   )
+                    WHEN 1.0 <= FLOOR (-- продажи у у получател€ в разрезе T2=45
+                                       COALESCE (_tmpSale_over.Amount_t2, 0)
+                                       -- ћ»Ќ”— остаток
+                                     - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                      + COALESCE (tmpMI_Send_in.Amount, 0)
+                                      + COALESCE (tmpMI_Income.Amount, 0)
+                                      + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                       )
+                                      )
                          THEN -- округл€ем ¬¬Ќ»«
                               FLOOR (-- продажи у у получател€ в разрезе T2=45
                                      COALESCE (_tmpSale_over.Amount_t2, 0)
@@ -477,13 +492,13 @@ BEGIN
         SELECT _tmpRemains_all.UnitId, _tmpRemains_all.GoodsId, _tmpRemains_all.Price, _tmpRemains_all.MCS, _tmpRemains_all.AmountResult, _tmpRemains_all.AmountRemains, _tmpRemains_all.AmountIncome, _tmpRemains_all.AmountSend_in, _tmpRemains_all.AmountSend_out, _tmpRemains_all.AmountOrderExternal, _tmpRemains_all.AmountReserve
         FROM _tmpRemains_all
         -- !!!только с таким AmountResult!!!
-         WHERE _tmpRemains_all.AmountResult > 1.0
+        WHERE _tmpRemains_all.AmountResult >= 1.0
        ;
 
 
 
     -- дата + 6 мес€цев
-    vbDate_6:= CURRENT_DATE
+    vbDate_6:= inOperDate
              + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
                                   , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
@@ -498,7 +513,7 @@ BEGIN
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
                );
     -- дата + 1 мес€ц
-    vbDate_1:= CURRENT_DATE
+    vbDate_1:= inOperDate
              + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
                                   , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
@@ -516,7 +531,7 @@ BEGIN
              + INTERVAL '9 DAY'
              ;
     -- дата + 0 мес€цев
-    vbDate_0:= CURRENT_DATE
+    vbDate_0:= inOperDate
              + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
                                   , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
                              FROM Object  AS Object_PartionDateKind
@@ -554,7 +569,7 @@ BEGIN
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          AND MovementItem.isErased   = FALSE
                                                          AND MovementItem.Amount     > 0
-                             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
+                             WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '31 DAY' AND inOperDate - INTERVAL '1 DAY'
                                AND Movement.DescId   = zc_Movement_Send()
                                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                             )
@@ -651,7 +666,7 @@ BEGIN
                                      -- !!!только дл€ таких!!!
                                      INNER JOIN tmpNotSold_all ON tmpNotSold_all.UnitId  = MovementLinkObject_To.ObjectId
                                                               AND tmpNotSold_all.GoodsId = MovementItem.ObjectId
-                                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
+                                WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '31 DAY' AND inOperDate - INTERVAL '1 DAY'
                                   AND Movement.DescId   = zc_Movement_Income()
                                   AND Movement.StatusId IN (zc_Enum_Status_Complete())
                                )
@@ -847,7 +862,7 @@ BEGIN
              -- OVER (—верх запас) на этой аптеке, тогда перемещени€ с других аптек не будет, т.е. этот јвтозаказ не учитываем
              LEFT JOIN _tmpRemains_Partion ON _tmpRemains_Partion.UnitId  = _tmpRemains.UnitId
                                           AND _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
-        WHERE _tmpRemains.AmountResult   > 1
+        WHERE _tmpRemains.AmountResult >= 1.0
        ;
 
 
@@ -1225,7 +1240,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
   AND Movement.StatusId in (  zc_Enum_Status_Erased())
 */
 -- тест
-
+/*
      -- все ѕодразделени€ дл€ схемы SUN
      CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      -- баланс по јптекам - если не соответствует, соотв приход или расход блокируетс€
@@ -1261,3 +1276,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+*/

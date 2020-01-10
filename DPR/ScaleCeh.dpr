@@ -95,7 +95,10 @@ uses
   Oven in '..\ScaleCeh\Util\Oven\Oven.pas',
   DialogBoxLight in '..\ScaleCeh\DialogBoxLight.pas' {DialogBoxLightForm},
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
-  DialogGoodsSeparate in '..\ScaleCeh\DialogGoodsSeparate.pas' {DialogGoodsSeparateForm};
+  DialogGoodsSeparate in '..\ScaleCeh\DialogGoodsSeparate.pas' {DialogGoodsSeparateForm},
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 

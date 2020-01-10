@@ -360,7 +360,7 @@ BEGIN
                  )
     , tmpReport AS (SELECT ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
                          , tmpReport_All.BusinessId
-                         , CASE WHEN tmpReport_All.MovementDescId = zc_Movement_Cash() AND tmpReport_All.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                         , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_Cash(), zc_Movement_Service()) AND tmpReport_All.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                      THEN tmpReport_All.InfoMoneyId_inf
                                      ELSE COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId)
                            END AS InfoMoneyId

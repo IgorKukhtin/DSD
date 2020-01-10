@@ -31,6 +31,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
+             , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
@@ -361,6 +362,7 @@ BEGIN
             , gpReport.GoodsPlatformName
             , gpReport.JuridicalGroupName
             , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
+            , 0 :: Integer AS BusinessId, 0 :: Integer AS BusinessCode, '' :: TVarChar AS BusinessName 
             , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
             , gpReport.RetailName, gpReport.RetailReportName
             , gpReport.AreaName, gpReport.PartnerTagName
@@ -532,6 +534,7 @@ BEGIN
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , COALESCE (MILinkObject_Branch.ObjectId, 0)   AS BranchId
+                              , COALESCE (MILinkObject_Business.ObjectId, 0) AS BusinessId
                               , COALESCE (ContainerLO_Juridical.ObjectId, 0) AS JuridicalId
                               , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
 
@@ -590,6 +593,9 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Business
+                                                               ON MILinkObject_Business.MovementItemId = MIContainer.MovementItemId
+                                                              AND MILinkObject_Business.DescId         = zc_MILinkObject_Business()
                               LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                           ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
@@ -604,6 +610,7 @@ BEGIN
                                 , MIContainer.ObjectIntId_Analyzer -- MILinkObject_GoodsKind.ObjectId
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
                                 , MILinkObject_Branch.ObjectId
+                                , MILinkObject_Business.ObjectId
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
                         )
@@ -614,6 +621,7 @@ BEGIN
 
                               , tmpOperationGroup2.InfoMoneyId
                               , tmpOperationGroup2.BranchId
+                              , tmpOperationGroup2.BusinessId
 
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
@@ -681,6 +689,7 @@ BEGIN
                                 , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END
                                 , tmpOperationGroup2.InfoMoneyId
                                 , tmpOperationGroup2.BranchId
+                                , tmpOperationGroup2.BusinessId
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
@@ -705,6 +714,10 @@ BEGIN
           , Object_Branch.Id                 AS BranchId
           , Object_Branch.ObjectCode         AS BranchCode
           , Object_Branch.ValueData          AS BranchName
+          , Object_Business.Id               AS BusinessId
+          , Object_Business.ObjectCode       AS BusinessCode
+          , Object_Business.ValueData        AS BusinessName
+
           , Object_Juridical.Id              AS JuridicalId
           , Object_Juridical.ObjectCode      AS JuridicalCode
           , Object_Juridical.ValueData       AS JuridicalName
@@ -794,6 +807,8 @@ BEGIN
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
+          LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpOperationGroup.BusinessId
+          
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
 

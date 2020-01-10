@@ -1203,6 +1203,8 @@ AS  (SELECT
             -- , Movement.InvNumber
             -- , Movement.Id
        )
+         -- Модели, для стажеров
+       , tmpList_ModelService_Trainee AS (SELECT OB.ObjectId AS ModelServiceId FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_ModelService_Trainee() AND OB.ValueData = TRUE)
          -- Данные - для стажеров
        , Movement_Sheet_Trainee AS
        (SELECT Movement_Sheet.PositionId
@@ -1226,11 +1228,15 @@ AS  (SELECT
                                              AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
                                                )
                                            AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
+             LEFT JOIN tmpList_ModelService_Trainee ON tmpList_ModelService_Trainee.ModelServiceId = Setting.ServiceModelId
+
         WHERE Movement_Sheet.AmountInDay > 0
           -- НЕ стажер
           AND Movement_Sheet.Tax_Trainee = 0
           -- по дням табель
           AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+          -- НЕ ДОПОЛНИТЕЛЬНО для стажеров
+          AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
        )
 
     -- Результат
@@ -1300,21 +1306,21 @@ AS  (SELECT
        , Movement_Sheet_Count_Day.Count_Day :: Integer    AS Count_Day
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer AS Count_MemberInDay
          -- База итого, кол-во
-       , (CASE WHEN Movement_Sheet.Tax_Trainee > 0 AND Setting.ServiceModelId <> 12387 -- деликатесы
+       , (CASE WHEN Movement_Sheet.Tax_Trainee > 0 AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
                     THEN 0 ELSE ServiceModelMovement.Gross * Setting.Ratio END) :: TFloat AS Gross
          -- База на 1-го чел, кол-во
-       , (CASE WHEN Movement_Sheet.Tax_Trainee > 0 AND Setting.ServiceModelId <> 12387 -- деликатесы
+       , (CASE WHEN Movement_Sheet.Tax_Trainee > 0 AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
                     THEN 0 ELSE ServiceModelMovement.Gross * Setting.Ratio
         / NULLIF (
           CASE -- по дням табель
                WHEN (Movement_Sheet.AmountInDay = 0 OR Movement_Sheet.Amount = 0)
                 AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
-                AND Setting.ServiceModelId <> 12387 -- деликатесы
+                AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
                     THEN 0
 
                -- по дням табель - НЕ стажер
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
-                AND Setting.ServiceModelId = 12387 -- деликатесы
+                AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
                     THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0)
 
                -- по дням табель
@@ -1339,7 +1345,7 @@ AS  (SELECT
 
                      -- по дням табель - НЕ стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() -- AND Movement_Sheet.Tax_Trainee > 0
-                      AND Setting.ServiceModelId = 12387 -- деликатесы
+                      AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
                           THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0) -- * 100 / Movement_Sheet.Tax_Trainee
 
                      -- по дням табель - стажер - !!!сначала!!!
@@ -1441,6 +1447,8 @@ AS  (SELECT
         LEFT JOIN Object AS Object_StorageLine_To   ON Object_StorageLine_To.Id   = ServiceModelMovement.StorageLineId_To
 
         LEFT JOIN Movement ON Movement.Id = ServiceModelMovement.MovementId
+
+        LEFT JOIN tmpList_ModelService_Trainee ON tmpList_ModelService_Trainee.ModelServiceId = Setting.ServiceModelId
 
     WHERE Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                        zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()

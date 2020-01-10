@@ -40,7 +40,7 @@ BEGIN
                0 AS MovementId
              , tmp.GoodsTypeKindId
              , tmp.BarCodeBoxId
-              , ROW_NUMBER() OVER (ORDER BY tmp.GoodsTypeKindId ASC) AS Ord
+             , ROW_NUMBER() OVER (ORDER BY tmp.GoodsTypeKindId ASC) AS Ord
         FROM (SELECT DISTINCT
                      MovementItem.GoodsTypeKindId
                    , MovementItem.BarCodeBoxId
@@ -60,11 +60,12 @@ BEGIN
                                                                    , inMovementDescNumber  := Movement.MovementDescNumber
                                                                    , inWeighingNumber      := _tmpMovement_WeighingProduction.Ord
                                                                                             + COALESCE ((SELECT COUNT(*)
-                                                                                                         FROM wms_MI_WeighingProduction AS MovementItem
-                                                                                                         WHERE MovementItem.MovementId      = inMovementId
-                                                                                                           AND MovementItem.isErased        = FALSE
-                                                                                                           AND MovementItem.ParentId        > 0
-                                                                                                           AND MovementItem.GoodsTypeKindId = _tmpMovement_WeighingProduction.GoodsTypeKindId
+                                                                                                         FROM (SELECT DISTINCT MovementItem.BarCodeBoxId
+                                                                                                               FROM wms_MI_WeighingProduction AS MovementItem
+                                                                                                               WHERE MovementItem.MovementId = inMovementId
+                                                                                                                 AND MovementItem.isErased   = FALSE
+                                                                                                                 AND MovementItem.ParentId   > 0
+                                                                                                              ) AS tmp
                                                                                                         )
                                                                                                       , 0) :: Integer
                                                                     , inFromId              := Movement.FromId

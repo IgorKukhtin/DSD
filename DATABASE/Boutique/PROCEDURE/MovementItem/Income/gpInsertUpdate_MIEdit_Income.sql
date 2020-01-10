@@ -168,6 +168,12 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Группа товаров>.';
      END IF;
 
+     -- !!!замена!!!
+     IF zc_Enum_GlobalConst_isTerry() = FALSE
+     THEN
+         inGoodsName:= ioGoodsCode :: TVarChar;
+     END IF;
+
      -- проверка - свойство должно быть установлено
      inGoodsName:= COALESCE (TRIM (inGoodsName), '');
      IF inGoodsName = '' THEN

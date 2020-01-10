@@ -299,11 +299,12 @@ BEGIN
                                                                   , inMovementDescId      := Movement.MovementDescId
                                                                   , inMovementDescNumber  := Movement.MovementDescNumber
                                                                   , inWeighingNumber      := 1 + COALESCE ((SELECT COUNT(*)
-                                                                                                            FROM wms_MI_WeighingProduction AS MovementItem
-                                                                                                            WHERE MovementItem.MovementId      = inMovementId
-                                                                                                              AND MovementItem.isErased        = FALSE
-                                                                                                              AND MovementItem.ParentId        > 0
-                                                                                                              AND MovementItem.GoodsTypeKindId = vbGoodsTypeKindId
+                                                                                                            FROM (SELECT DISTINCT MovementItem.BarCodeBoxId
+                                                                                                                  FROM wms_MI_WeighingProduction AS MovementItem
+                                                                                                                  WHERE MovementItem.MovementId = inMovementId
+                                                                                                                    AND MovementItem.isErased   = FALSE
+                                                                                                                    AND MovementItem.ParentId   > 0
+                                                                                                                 ) AS tmp
                                                                                                            )
                                                                                                          , 0) :: Integer
                                                                   , inFromId              := Movement.FromId

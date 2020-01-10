@@ -49,6 +49,12 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Данные по <Закладке> не сформированы.';
    END IF;
+   -- если меняют inGoodsId
+   IF ioId > 0 AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = inGoodsId)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав изменять товар.';
+   END IF;
+
 
    -- Проверка для ЦЕХ колбаса+дел-сы
    vbFromId:= COALESCE ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From()), 0);

@@ -49,14 +49,14 @@ BEGIN
        vbUserId := lpInsertUpdate_Object (0, zc_Object_User(), 0, 'Админ');
        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), vbUserId, 'Админ');
    END IF;
-   IF COALESCE (vbUserId_load, 0) = 0
+   /*IF COALESCE (vbUserId_load, 0) = 0
    THEN
        -- Создаем - Загрузка Sybase
        vbUserId_load := lpInsertUpdate_Object (0, zc_Object_User(), 0, 'Загрузка Sybase');
        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), vbUserId_load, 'Админ');
        --
        EXECUTE ('CREATE OR REPLACE FUNCTION zc_User_Sybase() RETURNS Integer AS $BODY$BEGIN RETURN (' || vbUserId_load :: TvarChar || '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
-   END IF;
+   END IF;*/
 
    -- для Админа
    IF NOT EXISTS(SELECT 1

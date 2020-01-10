@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsert_ReplFromMovement (TVarChar, TDateTime, TVarChar
 
 CREATE OR REPLACE FUNCTION gpInsert_ReplFromMovement(
     IN inSessionGUID     TVarChar,      --
-    IN inStartDate       TDateTime,     --
+    IN inStartDate       TDateTime,     -- Дата/время прошлого формирования данных для реплики
     IN inDescCode        TVarChar,      -- если надо только один вид документа
     IN inDataBaseId      Integer,       -- для формирования GUID
 
@@ -191,9 +191,9 @@ BEGIN
         , MIN (ReplMovement.Id) AS outMinId
         , MAX (ReplMovement.Id) AS outMaxId
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplMovement, т.е. inStartId and inEndId
-        , 3000                  AS CountIteration
+        , 30000                 AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
-        , 100                   AS CountPack
+        , 400                   AS CountPack
           --
           INTO outCount, outMinId, outMaxId, outCountIteration, outCountPack
      FROM ReplMovement

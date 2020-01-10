@@ -182,10 +182,17 @@ BEGIN
            , Object_TaxKind.Id                			                    AS TaxKindId
            , Object_TaxKind.ValueData         			                    AS TaxKindName
            , Movement_DocumentMaster.Id                                       AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)              AS DocumentMasterName
+           , CASE WHEN Movement_DocumentMaster.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusMaster.ValueData, '') || ' ' || Movement_DocumentMaster.InvNumber
+                  ELSE Movement_DocumentMaster.InvNumber
+             END :: TVarChar AS DocumentMasterName
+
            , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner     -- признак Акт недовоза из документа возврата
            , Movement_DocumentChild.Id                                        AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)    AS DocumentChildName
+           , CASE WHEN Movement_DocumentChild.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                       THEN COALESCE (Object_StatusChild.ValueData, '') || ' ' || MS_DocumentChild_InvNumberPartner.ValueData
+                  ELSE MS_DocumentChild_InvNumberPartner.ValueData
+             END :: TVarChar AS DocumentChildName
            , MovementString_InvNumberBranch.ValueData                         AS InvNumberBranch
 
            , MovementString_Comment.ValueData       AS Comment
@@ -287,8 +294,8 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
                                            ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
                                           AND MovementLinkMovement_DocumentMaster.DescId = zc_MovementLinkMovement_Master()
-
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_DocumentMaster.MovementChildId
+            LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                       ON MovementBoolean_isPartner.MovementId = Movement_DocumentMaster.Id
@@ -297,8 +304,8 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
                                            ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
                                           AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+            LEFT JOIN Object AS Object_StatusChild ON Object_StatusChild.Id = Movement_DocumentChild.StatusId
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementString AS MovementString_InvNumberBranch

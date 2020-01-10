@@ -172,10 +172,14 @@ BEGIN
                  END :: TVarChar AS InvNumberOrder
                , COALESCE (Object_PriceList.Id,        (SELECT tmp.PriceListId   FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= MovementLinkObject_To.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListId
                , COALESCE (Object_PriceList.ValueData, (SELECT tmp.PriceListName FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= MovementLinkObject_To.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListName
-               , Object_TaxKind.Id                		    AS DocumentTaxKindId
-               , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+               , Object_TaxKind.Id                		AS DocumentTaxKindId
+               , Object_TaxKind.ValueData         		AS DocumentTaxKindName
                , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
-               , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
+               , CASE WHEN Movement_DocumentMaster.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                           THEN COALESCE (Object_StatusMaster.ValueData, '') || ' ' || MS_InvNumberPartner_Master.ValueData
+                      ELSE MS_InvNumberPartner_Master.ValueData
+                 END                                :: TVarChar AS InvNumberPartner_Master
+
                , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
 
                , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
@@ -344,7 +348,8 @@ BEGIN
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-                                                             AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                                                           --AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.Id
                 LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId -- Movement_DocumentMaster.Id
                                                                       AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind

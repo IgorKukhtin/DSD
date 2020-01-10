@@ -131,6 +131,7 @@ type
     Sale_SummReal: TcxGridDBColumn;
     Sale_AmountPartnerR_Weight: TcxGridDBColumn;
     Sale_AmountPartnerR_Sh: TcxGridDBColumn;
+    BusinessName: TcxGridDBColumn;
   private
     { Private declarations }
   public

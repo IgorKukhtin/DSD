@@ -51,7 +51,7 @@ BEGIN
            , OS_Unit_Phone.ValueData         AS Phone
            , OS_Unit_Printer.ValueData       AS Printer
            , OS_Unit_Print.ValueData         AS PrintName
-           , OS_Unit_DiscountTax.ValueData   AS DiscountTax
+           , OF_Unit_DiscountTax.ValueData   AS DiscountTax
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.ValueData          AS ChildName

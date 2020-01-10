@@ -1,10 +1,12 @@
 ﻿-- для SessionGUID - Insert всех данных Object в табл. ReplObject - из которой потом "блоками" идет чтение и формирование скриптов + возвращает сколько всего записей
 
 DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TDateTime, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TVarChar, TDateTime, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ReplObject(
     IN inSessionGUID     TVarChar,      --
-    IN inStartDate       TDateTime,     --
+    IN inSessionGUID_mov TVarChar,      --
+    IN inStartDate       TDateTime,     -- Дата/время прошлого формирования данных для реплики
     IN inDescCode        TVarChar,      -- если надо только один справочник
     IN inIsProtocol      Boolean,       -- данные зависят от inStartDate или все записи
     IN inDataBaseId      Integer,       -- для формирования GUID
@@ -35,20 +37,22 @@ AS
 $BODY$
     DECLARE vbDescId Integer;
 BEGIN
+-- RAISE EXCEPTION 'Ошибка.<%>', inSessionGUID_mov;
      -- проверка прав пользователя на вызов процедуры-*
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
 
 
      -- !!!удаление "старых" сессий!!!
      DELETE FROM ReplObject WHERE OperDate < CURRENT_DATE - INTERVAL '2 DAY';
-+
+
      -- если надо только один Desc
      vbDescId:= COALESCE((SELECT ObjectDesc.Id FROM ObjectDesc WHERE LOWER (ObjectDesc.Code) = LOWER (inDescCode)), 0);
 
 
      -- Результат
      INSERT INTO ReplObject (ObjectId, DescId, UserId_last, OperDate_last, OperDate, SessionGUID)
-        WITH tmpDesc AS (SELECT ObjectDesc.Id AS DescId
+        WITH tmpDesc AS (-- все Desc
+                         SELECT ObjectDesc.Id AS DescId
                          FROM ObjectDesc
                          WHERE (ObjectDesc.Id = vbDescId OR vbDescId = 0)
                            AND (ObjectDesc.Id IN (zc_Object_Role()
@@ -78,6 +82,7 @@ BEGIN
                                                 , zc_Object_ToolsWeighing()
                                                 , zc_Object_GoodsKindWeighing()
                                                 , zc_Object_GoodsKindWeighingGroup()
+                                                , zc_Object_ReestrKind()
                                                  )
                              OR vbDescId > 0)
                         )
@@ -90,23 +95,20 @@ BEGIN
                                   JOIN tmpDesc ON tmpDesc.DescId = Object.DescId
                              WHERE inStartDate             > zc_DateStart()
                                AND inIsProtocol            = TRUE
-                               AND ObjectProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что отловить ВСЕ изменения
+                               AND ObjectProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что б отловить ВСЕ изменения
                             )
-          , tmpList_0 AS (WITH tmpReplMovement AS (SELECT ReplMovement.*
+          , tmpList_0 AS (WITH -- если надо обновить все Object из документов
+                               tmpReplMovement AS (SELECT ReplMovement.*
                                                    FROM ReplMovement
                                                    WHERE inIsProtocol = TRUE
-                                                     AND ReplMovement.OperDate >= CURRENT_DATE + INTERVAL '7 HOUR'
+                                                     AND ReplMovement.SessionGUID = inSessionGUID_mov
                                                   )
-                                  , tmpSession AS (SELECT tmp.SessionGUID
-                                                   FROM (SELECT DISTINCT tmpReplMovement.SessionGUID, tmpReplMovement.OperDate FROM tmpReplMovement) AS tmp
-                                                   ORDER BY tmp.OperDate DESC
-                                                   LIMIT 1
-                                                  )
-
+                          -- если надо - из протокола,
                           SELECT tmpProtocol.DescId, tmpProtocol.ObjectId
                           FROM tmpProtocol
                           WHERE tmpProtocol.Ord = 1 -- !!!последний!!!
                          UNION
+                          -- здесь ВСЕ
                           SELECT Object.DescId, Object.Id AS ObjectId
                           FROM tmpDesc
                                INNER JOIN Object ON Object.DescId = tmpDesc.DescId
@@ -117,14 +119,12 @@ BEGIN
                           FROM tmpReplMovement AS ReplMovement
                                INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = ReplMovement.MovementId
                                INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
-                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          UNION
                           -- из MovementItem
                           SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
                           FROM tmpReplMovement AS ReplMovement
                                INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
                                INNER JOIN Object ON Object.Id = MovementItem.ObjectId
-                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          UNION
                           -- из MovementItemLinkObject
                           SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
@@ -132,7 +132,6 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
                                INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                INNER JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
-                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          )
           , tmpList_1 AS (SELECT DISTINCT Object.DescId, ObjectLink.ChildObjectId AS ObjectId
                           FROM tmpList_0
@@ -228,9 +227,9 @@ BEGIN
         , MIN (ReplObject.Id) AS outMinId
         , MAX (ReplObject.Id) AS outMaxId
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
-        , 3000                AS CountIteration
+        , 100000              AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
-        , 100                 AS CountPack
+        , 400                 AS CountPack
           --
           INTO outCount, outMinId, outMaxId, outCountIteration, outCountPack
      FROM ReplObject
