@@ -2256,8 +2256,8 @@ inherited MainCashForm2: TMainCashForm2
       Top = 0
       Anchors = [akTop, akRight]
       Properties.DisplayFormat = ',0.00;-,0.00'
-      Properties.ReadOnly = True
       TabOrder = 2
+      OnExit = edLoyaltySMChangeSummaExit
       Width = 60
     end
   end

@@ -288,6 +288,13 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
+          object Color_Testing: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Testing'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
           object isErased: TcxGridDBBandedColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -959,6 +966,54 @@ inherited WagesForm: TWagesForm
         end>
       Caption = 'actExecStoredUpdateUnit'
     end
+    object actMITestingUserYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spMITestingUserYes
+      StoredProcList = <
+        item
+          StoredProc = spMITestingUserYes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1089#1076#1072#1085'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1089#1076#1072#1085'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1089#1076#1072#1085'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
+    object actMITestingUserNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spMITestingUserNo
+      StoredProcList = <
+        item
+          StoredProc = spMITestingUserNo
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1085#1077' '#1089#1076#1072#1085'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1085#1077' '#1089#1076#1072#1085'"'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090' "'#1069#1082#1079#1072#1084#1077#1085' '#1085#1077' '#1089#1076#1072#1085'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
+    object actMITestingUserDel: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spMITestingUserDel
+      StoredProcList = <
+        item
+          StoredProc = spMITestingUserDel
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1086#1090#1084#1077#1090#1082#1091'  '#1087#1086' '#1101#1082#1079#1072#1084#1077#1085#1091
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1086#1090#1084#1077#1090#1082#1091'  '#1087#1086' '#1101#1082#1079#1072#1084#1077#1085#1091
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1086#1090#1084#1077#1090#1082#1091'  '#1087#1086' '#1101#1082#1079#1072#1084#1077#1085#1091'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1076,6 +1131,26 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1162,9 +1237,27 @@ inherited WagesForm: TWagesForm
       Action = actUpdateUnit
       Category = 0
     end
+    object dxBarButton13: TdxBarButton
+      Action = actMITestingUserYes
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Action = actMITestingUserNo
+      Category = 0
+    end
+    object dxBarButton15: TdxBarButton
+      Action = actMITestingUserDel
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
+    ColorRuleList = <
+      item
+        ColorColumn = TestingStatus
+        BackGroundValueColumn = Color_Testing
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1524,13 +1617,13 @@ inherited WagesForm: TWagesForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 868
+    Left = 796
     Top = 265
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 868
+    Left = 796
     Top = 214
   end
   object spSelectPrintCalculationUser: TdsdStoredProc
@@ -1732,5 +1825,78 @@ inherited WagesForm: TWagesForm
     PackSize = 1
     Left = 722
     Top = 480
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 968
+    Top = 136
+  end
+  object spMITestingUserYes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTestingUser'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 216
+  end
+  object spMITestingUserNo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTestingUser'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 272
+  end
+  object spMITestingUserDel: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTestingUser'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 320
   end
 end

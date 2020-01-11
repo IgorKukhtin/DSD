@@ -99,8 +99,8 @@ begin
 
   if MainCashForm.spInsertMovementItem.ParamByName('ioId').Value <> 0 then
   begin
-    MainCashForm.LoyaltySPCDS.Close;
-    MainCashForm.LoyaltySPCDS.Open;
+    MainCashForm.spLoyaltySP.ParamByName('inBuyerID').Value :=  MainCashForm.LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
+    MainCashForm.spLoyaltySP.Execute;
     if not MainCashForm.LoyaltySPCDS.Locate('LoyaltySMID', MainCashForm.spInsertMovementItem.ParamByName('ioId').Value, []) or
       (MainCashForm.LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger <> MainCashForm.spInsertMovementItem.ParamByName('ioId').Value) then
       MainCashForm.LoyaltySPCDS.Close;

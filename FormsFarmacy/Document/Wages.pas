@@ -25,7 +25,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul,
-  dsdExportToXLSAction, cxMemo, cxBlobEdit;
+  dsdExportToXLSAction, cxMemo, cxBlobEdit, cxBarEditItem;
 
 type
   TWagesForm = class(TAncestorDocumentForm)
@@ -98,6 +98,17 @@ type
     dxBarButton12: TdxBarButton;
     TestingStatus: TcxGridDBBandedColumn;
     TestingDate: TcxGridDBBandedColumn;
+    PopupMenu1: TPopupMenu;
+    spMITestingUserYes: TdsdStoredProc;
+    spMITestingUserNo: TdsdStoredProc;
+    spMITestingUserDel: TdsdStoredProc;
+    actMITestingUserYes: TdsdExecStoredProc;
+    actMITestingUserNo: TdsdExecStoredProc;
+    actMITestingUserDel: TdsdExecStoredProc;
+    dxBarButton13: TdxBarButton;
+    dxBarButton14: TdxBarButton;
+    dxBarButton15: TdxBarButton;
+    Color_Testing: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

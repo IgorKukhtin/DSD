@@ -402,6 +402,8 @@ begin
       sl.Add('    <Branches>');
       sl.Add('        <Branch>');
       sl.Add('            <BranchID>' + qryReport_Upload.FieldByName('UnitCode').AsString + '</BranchID>');
+      sl.Add('            <EnterpriseID>' + qryReport_Upload.FieldByName('JuridicalCode').AsString + '</EnterpriseID>');
+      sl.Add('            <RestDateTime>' + FormatDateTime('YYYYMMDDHHNNSS', Now()) + '</RestDateTime>');
       sl.Add('            <Rests>');
       qryReport_Upload.First;
       while not qryReport_Upload.Eof do
@@ -413,7 +415,7 @@ begin
                                      ' Quantity="' + CurrToXML(qryReport_Upload.FieldByName('Amount').AsCurrency) + '"/>');
         qryReport_Upload.Next;
       end;
-      sl.Add('            <Rests>');
+      sl.Add('            </Rests>');
       sl.Add('        </Branch>');
       sl.Add('    </Branches>');
       sl.Add('</Data>');

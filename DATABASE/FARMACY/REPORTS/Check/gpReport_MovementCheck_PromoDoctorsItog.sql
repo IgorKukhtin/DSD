@@ -54,7 +54,7 @@ BEGIN
                           , Movement_Check.BayerID
                           , SUM(MovementItem.Amount) :: TFloat                            AS GoodsCount
                           , SUM(MovementItem.AmountSumm) :: TFloat                        AS SummSale
-                          , SUM(MovementItem.SummChangePercent) :: TFloat                 AS SummChangePercent
+                          , SUM(Round(MovementItem.AmountSumm * 2.5 / 100, 2)) :: TFloat  AS SummChangePercent
 
                        FROM tmpMovement AS Movement_Check
 
@@ -87,5 +87,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpReport_MovementCheck_PromoDoctorsItog(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpReport_MovementCheck_PromoDoctorsItog(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime ,  inSession := '3');

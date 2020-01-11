@@ -50,9 +50,9 @@ BEGIN
            , MovementItem.AmountSumm
            , MovementItem.NDS
            , MovementItem.PriceSale
-           , (MovementItem.PriceSale * MovementItem.Amount) :: TFloat AS SummSale
-           , MovementItem.ChangePercent
-           , MovementItem.SummChangePercent
+           , MovementItem.AmountSumm                                          AS SummSale
+           , 2.5::TFloat                                                      AS  ChangePercent
+           , Round(MovementItem.AmountSumm * 2.5 / 100, 2) :: TFloat          AS SummChangePercent
 
         FROM (SELECT Movement.*
                    , MIString_Bayer.ValueData      ::TVarChar AS Doctors

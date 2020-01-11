@@ -565,6 +565,7 @@ type
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
     procedure actSetLoyaltySaveMoneyExecute(Sender: TObject);
     procedure cxButton8Click(Sender: TObject);
+    procedure edLoyaltySMChangeSummaExit(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -2744,7 +2745,23 @@ begin
       Exit;
     end else if LoyaltySPCDS.RecordCount = 1 then
     begin
+      if LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger = 0 then
+      begin
+        spInsertMovementItem.ParamByName('ioId').Value := 0;
+        spInsertMovementItem.ParamByName('inMovementId').Value := LoyaltySPCDS.FieldByName('Id').AsInteger;
+        spInsertMovementItem.ParamByName('inBuyerID').Value := LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
+        spInsertMovementItem.Execute;
 
+        if spInsertMovementItem.ParamByName('ioId').Value <> 0 then
+        begin
+          spLoyaltySP.ParamByName('inBuyerID').Value :=  LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
+          spLoyaltySP.Execute;
+          if not LoyaltySPCDS.Locate('LoyaltySMID', spInsertMovementItem.ParamByName('ioId').Value, []) or
+            (LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger <> spInsertMovementItem.ParamByName('ioId').Value) then
+            LoyaltySPCDS.Close;
+        end else ShowMessage('Ошибка прикрепления покупателя к акции.'#13#10#13#10'Повторите попытку.');
+        if not LoyaltySPCDS.Active then Exit;
+      end;
     end else
     begin
       if not ShowLoyaltySPList then Exit;
@@ -2752,7 +2769,7 @@ begin
     end;
     if LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger > 0 then
       SetPromoCodeLoyaltySM(LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger, cPhone, cName, LoyaltySPCDS.FieldByName('SummaRemainder').AsCurrency, 0)
-
+    else ShowMessage('Ошибка прикрепления покупателя к акции.'#13#10#13#10'Повторите попытку.');
   end;
 end;
 
@@ -2885,7 +2902,7 @@ end;
 
 procedure TMainCashForm2.PromoCodeLoyaltyCalc;
 var
-  nRecNo : Integer; nSumAll, nPrice : Currency;
+  nRecNo : Integer; nSumAll, nPrice, nChangeSumma : Currency;
 begin
 
   CheckCDS.DisableControls;
@@ -2894,7 +2911,9 @@ begin
   nRecNo := CheckCDS.RecNo;
   try
 
-    if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then
+    nChangeSumma := FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value;
+
+    if nChangeSumma > 0 then
     begin
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -2910,17 +2929,17 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then
+      if nChangeSumma > 0 then
       begin
         if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0) then
         begin
-          if FormParams.ParamByName('LoyaltyChangeSumma').Value < nSumAll then
+          if nChangeSumma < nSumAll then
           begin
             if checkCDS.FieldByName('PriceDiscount').asCurrency > 0 then
               nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
-                         (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0)
+                         (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0)
             else nPrice :=  GetPrice(GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) *
-                           (nSumAll - FormParams.ParamByName('LoyaltyChangeSumma').Value) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0);
+                           (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName('Amount').asCurrency, 0);
           end else nPrice := 0.1;
           if nPrice < 0.1 then nPrice := 0.1;
 
@@ -4447,6 +4466,23 @@ begin
   ProgressBar1.Visible:=True;
 end;
 
+procedure TMainCashForm2.edLoyaltySMChangeSummaExit(Sender: TObject);
+begin
+  if edLoyaltySMChangeSumma.Value < 0 then
+  begin
+    ShowMessage('Сумма скидки должна быть больше нуля!');
+    edLoyaltySMChangeSumma.Value := 0;
+  end else if edLoyaltySMSummaRemainder.Value < edLoyaltySMChangeSumma.Value then
+  begin
+    ShowMessage('Сумма скидки должна меньше или равна накопленной сумме!');
+    edLoyaltySMChangeSumma.Value := 0;
+  end;
+
+  FormParams.ParamByName('LoyaltySMChangeSumma').Value := edLoyaltySMChangeSumma.Value;
+  PromoCodeLoyaltyCalc;
+  CalcTotalSumm;
+end;
+
 procedure TMainCashForm2.miMCSAutoClick(Sender: TObject);
 begin
   if RemainsCDS.State in dsEditModes then RemainsCDS.Post;
@@ -5245,7 +5281,7 @@ var
   B:TBookmark;
 Begin
 
-  if FormParams.ParamByName('LoyaltyChangeSumma').Value > 0 then PromoCodeLoyaltyCalc;
+  if (FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value) > 0 then PromoCodeLoyaltyCalc;
 
   FTotalSumm := 0;
   WITH CheckCDS DO
@@ -5771,7 +5807,7 @@ var str_log_xml : String; Disc, nSumAll: Currency;
          begin
             if isFiscal or FieldByName('AccommodationName').IsNull then сAccommodationName := ''
             else сAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-            if (FormParams.ParamByName('LoyaltyChangeSumma').Value > 0) or
+            if ((FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value) > 0) or
                (Self.FormParams.ParamByName('InvNumberSP').Value = '') and (DiscountServiceForm.gCode = 0) and
                not UnitConfigCDS.FieldByName('PermanentDiscountID').IsNull and (UnitConfigCDS.FieldByName('PermanentDiscountPercent').AsCurrency > 0)then
             begin
@@ -5816,7 +5852,7 @@ begin
       if not isFiscal and Assigned(Cash) then Cash.AlwaysSold := False;
 
       // Контроль чека до печати
-      if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
+      if (FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value) <> 0 then
       begin
         nSumAll := 0;
         CheckCDS.First;
@@ -5827,10 +5863,10 @@ begin
           else nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value);
           CheckCDS.Next;
         end;
-        if nSumAll < FormParams.ParamByName('LoyaltyChangeSumma').Value then
+        if nSumAll < (FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value) then
         begin
           ShowMessage('Cумма отпускаемого товара ' + FormatCurr(',0.00', nSumAll) + ' должна быть больше суммы скидки ' +
-            FormatCurr(',0.00', FormParams.ParamByName('LoyaltyChangeSumma').Value) + '.');
+            FormatCurr(',0.00', (FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMChangeSumma').Value)) + '.');
           Exit;
         end;
 

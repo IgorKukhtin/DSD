@@ -116,10 +116,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_ServiceExitv() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_ServiceExit', 'Служебный выход' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ServiceExit'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_isTestingUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isTestingUser'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_isTestingUser', 'Ручной признак сдачи экзамена' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isTestingUser'); 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 10.01.20                                                                       * zc_MIBoolean_isTestingUser
  21.09.19                                                                       * zc_MIBoolean_ServiceExitv
  01.09.19                                                                       * zc_MIBoolean_isIssuedBy
  25.10.18                                                                       * zc_MIBoolean_ClippedReprice
