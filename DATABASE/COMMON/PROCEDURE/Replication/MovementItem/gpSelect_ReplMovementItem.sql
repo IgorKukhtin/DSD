@@ -140,6 +140,7 @@ BEGIN
 
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
+       AND MIString_GUID.ValueData <> ''
      ORDER BY MovementItem.Id
     ;
 
