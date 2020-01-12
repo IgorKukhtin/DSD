@@ -251,7 +251,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'SummaSelling'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 1
@@ -263,7 +263,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'SummaComing'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 1
@@ -274,7 +274,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Caption = #1082#1086#1084#1087#1077#1085#1089#1072#1094#1103
             DataBinding.FieldName = 'SummChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -287,7 +287,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'SummaIncome'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 1
@@ -299,7 +299,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'WagesAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 2
@@ -311,7 +311,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'ExpensesAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 2
@@ -322,7 +322,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Caption = #1088#1072#1089#1093#1086#1076#1099
             DataBinding.FieldName = 'Profit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 3
@@ -334,7 +334,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 4
@@ -346,7 +346,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             DataBinding.FieldName = 'RemainsSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 4

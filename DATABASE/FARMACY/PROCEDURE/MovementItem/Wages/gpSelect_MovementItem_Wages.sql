@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , isIssuedBy Boolean, DateIssuedBy TDateTime
              , isErased Boolean
              , Color_Calc Integer
+             , Color_Testing Integer
               )
 AS
 $BODY$
@@ -111,6 +112,7 @@ BEGIN
                  , NULL::TDateTime                    AS DateIssuedBy
                  , tmpMember.isErased                 AS isErased
                  , zc_Color_Black()                   AS Color_Calc
+                 , zc_Color_White()                   AS Color_Testing
             FROM  tmpMember
                   INNER JOIN ObjectLink AS ObjectLink_User_Member
                                        ON ObjectLink_User_Member.ObjectId = tmpMember.UserID
@@ -151,7 +153,9 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
-                 , TestingUser.Status                 AS TestingStatus
+                 , CASE WHEN MIBoolean_isTestingUser.ValueData IS NULL 
+                        THEN TestingUser.Status      
+                        ELSE CASE WHEN MIBoolean_isTestingUser.ValueData = TRUE THEN '—‰‡Ì' ELSE 'ÕÂ Ò‰‡Ì' END END::TVarChar AS TestingStatus
                  , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
@@ -159,6 +163,8 @@ BEGIN
 
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
+                 ,  CASE WHEN MIBoolean_isTestingUser.ValueData IS NULL 
+                        THEN zc_Color_White() ELSE zc_Color_Yelow() END     AS Color_Testing
             FROM  MovementItem
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -214,6 +220,10 @@ BEGIN
                                              ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
                                             AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
 
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isTestingUser
+                                                ON MIBoolean_isTestingUser.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isTestingUser.DescId = zc_MIBoolean_isTestingUser()
+
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
 
@@ -248,6 +258,7 @@ BEGIN
 
                  , tmpAdditionalExpenses.isErased     AS isErased
                  , zc_Color_Black()                   AS Color_Calc
+                 , zc_Color_White()                   AS Color_Testing
             FROM  tmpAdditionalExpenses
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAdditionalExpenses.UnitID
@@ -314,13 +325,17 @@ BEGIN
                  , Object_Unit.ID                     AS UnitID
                  , Object_Unit.ObjectCode             AS UnitCode
                  , Object_Unit.ValueData              AS UnitName
-                 , TestingUser.Status                 AS TestingStatus
+                 , CASE WHEN MIBoolean_isTestingUser.ValueData IS NULL 
+                        THEN TestingUser.Status      
+                        ELSE CASE WHEN MIBoolean_isTestingUser.ValueData = TRUE THEN '—‰‡Ì' ELSE 'ÕÂ Ò‰‡Ì' END END::TVarChar AS TestingStatus
                  , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
                  , MovementItem.isErased              AS isErased
                  , zc_Color_Black()                   AS Color_Calc
+                 ,  CASE WHEN MIBoolean_isTestingUser.ValueData IS NULL 
+                        THEN zc_Color_White() ELSE zc_Color_Yelow() END     AS Color_Testing
             FROM  MovementItem
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -350,6 +365,7 @@ BEGIN
                                           ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
                                          AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
 
+
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId, Personal_View.UnitID)
 
                   LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
@@ -375,6 +391,10 @@ BEGIN
                   LEFT JOIN MovementItemDate AS MIDate_IssuedBy
                                              ON MIDate_IssuedBy.MovementItemId = MovementItem.Id
                                             AND MIDate_IssuedBy.DescId = zc_MIDate_IssuedBy()
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_isTestingUser
+                                                ON MIBoolean_isTestingUser.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_isTestingUser.DescId = zc_MIBoolean_isTestingUser()
 
                   LEFT JOIN tmpAdditionalExpenses AS AdditionalExpenses
                                                   ON AdditionalExpenses.UnitID = Object_Unit.ID
@@ -410,6 +430,7 @@ BEGIN
 
                  , tmpAdditionalExpenses.isErased     AS isErased
                  , zc_Color_Black()                   AS Color_Calc
+                 , zc_Color_White()                   AS Color_Testing
             FROM  tmpAdditionalExpenses
 
                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAdditionalExpenses.UnitID
@@ -423,6 +444,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 11.01.20                                                        *
  24.10.19                                                        *
  21.08.19                                                        *
 */

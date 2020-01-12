@@ -13,17 +13,17 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
     Height = 496
     ExplicitTop = 59
     ExplicitWidth = 1072
-    ExplicitHeight = 336
+    ExplicitHeight = 496
     ClientRectBottom = 496
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1072
-      ExplicitHeight = 336
+      ExplicitHeight = 496
       inherited cxGrid: TcxGrid
         Width = 1072
         Height = 360
         ExplicitWidth = 1072
-        ExplicitHeight = 185
+        ExplicitHeight = 360
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -215,7 +215,6 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 208
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ItogDS
@@ -314,6 +313,14 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
             Options.Editing = False
             Width = 264
           end
+          object Inog_GUID: TcxGridDBColumn
+            Caption = #1055#1088#1086#1084#1086#1082#1086#1076
+            DataBinding.FieldName = 'GUID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object Itog_CheckCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
             DataBinding.FieldName = 'CheckCount'
@@ -365,7 +372,6 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGridDetals
-        ExplicitTop = 0
       end
     end
   end

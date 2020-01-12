@@ -35,7 +35,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
-    IF inisIssuedBy = FALSE AND vbOperDate >= '01.10.2019'  AND 
+    IF inisIssuedBy = FALSE AND vbOperDate >= '01.10.2019'  AND (
            EXISTS(SELECT MovementItem.ObjectId 
                   FROM MovementItem 
                        INNER JOIN ObjectLink AS ObjectLink_User_Member
@@ -58,7 +58,10 @@ BEGIN
                                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
                                              WHERE MovementItem.ID = inId)
                     AND MovementItem.ObjectId = (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = inId)
-                    AND MovementItem.Amount >= 85)
+                    AND MovementItem.Amount >= 85) OR
+       (COALESCE((SELECT MovementItemBoolean.ValueData FROM MovementItemBoolean WHERE MovementItemBoolean.MovementItemID = inId AND 
+                 MovementItemBoolean.DescId = zc_MIBoolean_isTestingUser()), TRUE) = FALSE))
+                    
     THEN
       RAISE EXCEPTION 'Ошибка. Сотрудник не сдал экзамен. Выдача зарплаты запрещена.';            
     END IF;

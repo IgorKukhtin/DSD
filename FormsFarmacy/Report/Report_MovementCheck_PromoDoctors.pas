@@ -49,6 +49,7 @@ type
     ItogCDS: TClientDataSet;
     actGridToExcelItog: TdsdGridToExcel;
     dxBarButton1: TdxBarButton;
+    Inog_GUID: TcxGridDBColumn;
   private
     { Private declarations }
   public
