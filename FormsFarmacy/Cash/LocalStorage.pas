@@ -83,6 +83,7 @@ begin
       AddIntField(LocalDataBaseHead,  'LOYALTYID');    //Программа лояльности
       //***08.01.20
       AddIntField(LocalDataBaseHead,  'LOYALTYSM');    //Программа лояльности накопительная
+      AddFloatField(LocalDataBaseHead,  'LOYALSMSUM');  //Сумма скидки по Программа лояльности накопительная
 
       LocalDataBaseHead.CreateTable;
     end
@@ -165,6 +166,8 @@ begin
         //***08.01.20
         if FindField('LOYALTYSM') = nil then
           AddIntField(LFieldDefs,  'LOYALTYSM');  //Программа лояльности накопительная
+        if FindField('LOYALSMSUM') = nil then
+          AddFloatField(LFieldDefs,  'LOYALSMSUM');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -231,7 +234,8 @@ begin
         //***07.11.19
         (FindField('LOYALTYID') = nil) or
         //***08.01.20
-        (FindField('LOYALTYSM') = nil));
+        (FindField('LOYALTYSM') = nil) or
+        (FindField('LOYALSMSUM') = nil));
 
       Close;
 

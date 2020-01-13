@@ -4,7 +4,6 @@ inherited MainCashForm2: TMainCashForm2
   ClientHeight = 560
   ClientWidth = 858
   PopupMenu = PopupMenu
-  Position = poScreenCenter
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnDestroy = ParentFormDestroy

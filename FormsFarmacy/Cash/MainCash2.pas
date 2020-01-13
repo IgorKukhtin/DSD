@@ -637,7 +637,7 @@ type
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
       ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
-      ALoyaltySMID : Integer;
+      ALoyaltySMID : Integer; ALoyaltySMChangeSumma : Currency;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -2287,6 +2287,7 @@ begin
                      FormParams.ParamByName('LoyaltySignID').Value,
                      //***08.01.20
                      FormParams.ParamByName('LoyaltySMID').Value,
+                     FormParams.ParamByName('LoyaltySMChangeSumma').Value,
 
                      True,         // NeedComplete
                      CheckNumber,  // FiscalCheckNumber
@@ -3358,6 +3359,7 @@ begin
               ,FormParams.ParamByName('LoyaltySignID').Value
               //***08.01.20
               ,FormParams.ParamByName('LoyaltySMID').Value
+              ,FormParams.ParamByName('LoyaltySMChangeSumma').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3453,6 +3455,7 @@ begin
               ,FormParams.ParamByName('LoyaltySignID').Value
               //***08.01.20
               ,FormParams.ParamByName('LoyaltySMID').Value
+              ,FormParams.ParamByName('LoyaltySMChangeSumma').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -4009,6 +4012,7 @@ begin
               ,FormParams.ParamByName('LoyaltySignID').Value
               //***08.01.20
               ,FormParams.ParamByName('LoyaltySMID').Value
+              ,FormParams.ParamByName('LoyaltySMChangeSumma').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -6593,7 +6597,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
       ARoundingDown: Boolean; APartionDateKindId : integer; AConfirmationCodeSP : string; ALoyaltySignID : Integer;
-      ALoyaltySMID : Integer;
+      ALoyaltySMID : Integer; ALoyaltySMChangeSumma : Currency;
       ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -6800,7 +6804,8 @@ begin
                                          //***07.05.19
                                          ALoyaltySignID,           // Регистрация программы лояльности
                                          //***08.01.20
-                                         ALoyaltySMID              // Регистрация программы лояльности накопительной
+                                         ALoyaltySMID,              // Регистрация программы лояльности накопительной
+                                         ALoyaltySMChangeSumma     // Скидка по программе лояльности накопительной
                                         ]));
       End
       else
