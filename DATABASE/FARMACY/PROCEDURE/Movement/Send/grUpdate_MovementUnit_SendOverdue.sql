@@ -143,13 +143,13 @@
     FROM tmpMovement AS Movement
          LEFT JOIN tmpContainer AS Container ON Movement.ContainerId = Container.Id;
 
-/*      -- ¬останавливаем все удаленные записи
+      -- ¬останавливаем все удаленные записи
     PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
                                              inSession               := inSession)
     FROM MovementItem
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.IsErased = TRUE;
-*/
+
       -- ¬останавливаем удаленные записи с остатком MIChildId
     PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
                                              inSession               := inSession)
@@ -236,4 +236,4 @@
  18.06.19                                                         *
    */
 
-- тест SELECT * FROM grUpdate_MovementUnit_SendOverdue (inMovementID := 7784783  , inSession:= '3')
+-- тест SELECT * FROM grUpdate_MovementUnit_SendOverdue (inMovementID := 7784783  , inSession:= '3')

@@ -101,6 +101,7 @@ type
     isQuarter: TcxGridDBColumn;
     is4Month: TcxGridDBColumn;
     isReport5: TcxGridDBColumn;
+    isReport6: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -28,7 +28,6 @@ object MakerForm: TMakerForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 28
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -203,6 +202,14 @@ object MakerForm: TMakerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 87
+      end
+      object isReport6: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100'  "'#1086#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090'. '#1089#1082#1083#1072#1076#1077'"'
+        DataBinding.FieldName = 'isReport6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaBottom
+        Options.Editing = False
+        Width = 102
       end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099

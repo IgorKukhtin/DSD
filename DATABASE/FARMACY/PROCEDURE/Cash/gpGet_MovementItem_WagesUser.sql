@@ -12,16 +12,26 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
+             , SummaTotal TFloat
               )
 AS
 $BODY$
     DECLARE vbUserId        Integer;
+    DECLARE vbUnitId Integer;
+    DECLARE vbUnitKey TVarChar;
     DECLARE vbMovementId    Integer;
     DECLARE vbMovementMaxId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
     vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+
     inOperDate := date_trunc('month', inOperDate);
     
     IF vbUserId = 3
@@ -81,6 +91,33 @@ BEGIN
                                WHERE Movement.DescId = zc_Movement_TestingUser()
                                  AND Movement.OperDate = inOperDate
                                  AND MovementItem.ObjectId = vbUserId) 
+              , tmpAdditionalExpenses AS (SELECT MIFloat_SummaCleaning.ValueData     AS SummaCleaning
+                                               , MIFloat_SummaSP.ValueData           AS SummaSP
+                                               , MIFloat_SummaOther.ValueData        AS SummaOther
+                                               , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                                               , MovementItem.Amount                 AS SummaTotal
+                                         FROM  MovementItem
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaCleaning
+                                                                            ON MIFloat_SummaCleaning.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaCleaning.DescId = zc_MIFloat_SummaCleaning()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaSP
+                                                                            ON MIFloat_SummaSP.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaSP.DescId = zc_MIFloat_SummaSP()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaOther
+                                                                            ON MIFloat_SummaOther.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaOther.DescId = zc_MIFloat_SummaOther()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
+                                                                            ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
+                                         WHERE MovementItem.MovementId = vbMovementId
+                                           AND MovementItem.ObjectId = vbUnitId
+                                           AND MovementItem.DescId = zc_MI_Sign()
+                                           AND MovementItem.isErased = FALSE)
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -111,6 +148,11 @@ BEGIN
                    CASE WHEN tmpResult.Result >= 85
                    THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS Status
                  , tmpResult.DateTimeTest                       AS DateTimeTest
+                 , tmpAdditionalExpenses.SummaCleaning          AS SummaCleaning
+                 , tmpAdditionalExpenses.SummaSP                AS SummaSP
+                 , tmpAdditionalExpenses.SummaOther             AS SummaOther
+                 , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
+                 , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
             FROM  MovementItem
             
                   LEFT JOIN MovementItem AS MIAmount
@@ -149,6 +191,8 @@ BEGIN
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
                                              
                   LEFT JOIN tmpResult ON 1 = 1
+                  
+                  LEFT JOIN tmpAdditionalExpenses ON 1 = 1
 
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId
@@ -168,4 +212,5 @@ $BODY$
  28.08.19                                                        *
 */
 -- 
-select * from gpGet_MovementItem_WagesUser(inOperDate := '01.11.2019',  inSession := '3');
+
+select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');

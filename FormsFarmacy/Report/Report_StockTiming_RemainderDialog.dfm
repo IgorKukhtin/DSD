@@ -5,8 +5,8 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
   Caption = 
     #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077 +
     ' '#1057#1088#1086#1082#1080'>'
-  ClientHeight = 171
-  ClientWidth = 333
+  ClientHeight = 219
+  ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 127
+    Top = 167
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -30,8 +30,8 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 223
-    Top = 127
+    Left = 215
+    Top = 167
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -68,14 +68,30 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
     Top = 7
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
+  object edMaker: TcxButtonEdit
+    Left = 10
+    Top = 138
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 303
+  end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 115
+    Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100': '
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     Left = 223
-    Top = 91
+    Top = 83
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 230
-    Top = 25
+    Left = 254
+    Top = 33
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -88,7 +104,7 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 255
-    Top = 127
+    Top = 135
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -115,6 +131,21 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MakerId'
+        Value = Null
+        Component = GuidesMaker
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MakerName'
+        Value = Null
+        Component = GuidesMaker
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 46
@@ -168,20 +199,16 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end
         item
         end>
@@ -190,30 +217,6 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = '0'
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 287
-    Top = 83
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -243,5 +246,34 @@ object Report_StockTiming_RemainderDialogForm: TReport_StockTiming_RemainderDial
       end>
     Left = 120
     Top = 80
+  end
+  object GuidesMaker: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMaker
+    FormNameParam.Value = 'TMakerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMakerForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMaker
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMaker
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 148
+    Top = 131
   end
 end

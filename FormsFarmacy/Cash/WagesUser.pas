@@ -54,6 +54,16 @@ type
     edDateTimeTest: TcxDateEdit;
     cxLabel10: TcxLabel;
     ceResult: TcxCurrencyEdit;
+    ceSummaCleaning: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    ceSummaSP: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    ceSummaOther: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    ceSummaValidationResults: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceSummaTotal: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
   private
     { Private declarations }
   public

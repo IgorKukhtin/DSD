@@ -61,6 +61,8 @@ type
     isQuarter: TcxGridDBColumn;
     is4Month: TcxGridDBColumn;
     N5: TMenuItem;
+    isReport6: TcxGridDBColumn;
+    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -111,6 +113,7 @@ type
     procedure ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
     procedure ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
     procedure ReportGoodsPartionDate;
+    procedure ReportStockTimingRemainder;
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -196,6 +199,14 @@ begin
     begin
       RepType := 4;
       ReportGoodsPartionDate;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport6').AsBoolean then
+    begin
+      RepType := 5;
+      ReportStockTimingRemainder;
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
@@ -601,6 +612,47 @@ begin
   end;
 end;
 
+procedure TMainForm.ReportStockTimingRemainder;
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчет по товару на виртуальном складе');
+  FileName := 'Отчет по товару на виртуальном складе';
+  Subject := FileName;
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  UnitName AS "Подразделение", '#13#10 +
+    '  GoodsCode AS "Код", '#13#10 +
+    '  GoodsName AS "Название", '#13#10 +
+    '  Price AS "Цена с НДС", '#13#10 +
+    '  AmountDeferred AS "Отложено количество", '#13#10 +
+    '  SummaDeferred AS "Отложено сумма", '#13#10 +
+    '  AmountComplete AS "Перемещено количество", '#13#10 +
+    '  SummaComplete AS "Перемещено сумма", '#13#10 +
+    '  Amount AS "Остаток количество", '#13#10 +
+    '  Summa AS "Остаток сумма", '#13#10 +
+    '  ExpirationDate AS "Срок годности остатка" '#13#10 +
+    'from gpReport_StockTiming_Remainder(CURRENT_DATE, 0, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  for I := 4 to 9 do
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[I];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+end;
+
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
@@ -728,6 +780,7 @@ begin
     2 : ReportAnalysisRemainsSelling(DateStart, DateEnd);
     3 : ReportIncomeConsumptionBalance(DateStart, DateEnd);
     4 : ReportGoodsPartionDate;
+    5 : ReportStockTimingRemainder;
   end;
 end;
 

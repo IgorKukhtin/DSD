@@ -37,9 +37,11 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
-    spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     GuidesRetail: TdsdGuides;
+    edMaker: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    GuidesMaker: TdsdGuides;
   private
     { Private declarations }
   public

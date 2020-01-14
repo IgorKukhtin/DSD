@@ -52,6 +52,15 @@ type
     AmountDeferred: TcxGridDBColumn;
     AmountComplete: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    SummaDeferred: TcxGridDBColumn;
+    SummaComplete: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    edMaker: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    GuidesMaker: TdsdGuides;
+    MakerName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
