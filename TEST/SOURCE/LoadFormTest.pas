@@ -1415,7 +1415,9 @@ end;
 
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalChoiceForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateItemJournalForm');
 

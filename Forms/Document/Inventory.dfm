@@ -475,7 +475,38 @@ inherited InventoryForm: TInventoryForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrint1: TdsdPrintAction [8]
+    object macDelete_bySeparate: TMultiAction [2]
+      Category = 'Separate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSeparateOpenForm
+        end
+        item
+          Action = actDelete_bySeparate
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1090#1084#1080#1085#1091#1089#1086#1074#1072#1085#1099' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072
+      Caption = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 39
+    end
+    object actDelete_bySeparate: TdsdExecStoredProc [3]
+      Category = 'Separate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_MI_Inventory_bySeparate
+      StoredProcList = <
+        item
+          StoredProc = spDelete_MI_Inventory_bySeparate
+        end>
+      Caption = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 39
+    end
+    object actPrint1: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -557,7 +588,7 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actStorageChoice: TOpenChoiceForm [15]
+    object actStorageChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -584,7 +615,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [16]
+    object actAssetChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -611,7 +642,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [17]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -631,7 +662,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [18]
+    object actUnitChoice: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -658,7 +689,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [19]
+    object actGoodsKindChoice: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -763,6 +794,25 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
+    object actSeparateOpenForm: TOpenChoiceForm
+      Category = 'Separate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsChoice'
+      FormName = 'TProductionSeparateJournalChoiceForm'
+      FormNameParam.Value = 'TProductionSeparateJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_Separate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actPartionGoodsChoiceForm: TOpenChoiceForm
       Category = 'Partion'
       MoveParams = <>
@@ -813,7 +863,7 @@ inherited InventoryForm: TInventoryForm
       isShowModal = True
     end
     object actSendOpenForm: TOpenChoiceForm
-      Category = 'DSDLib'
+      Category = 'Send'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actGoodsChoice'
@@ -832,7 +882,7 @@ inherited InventoryForm: TInventoryForm
       isShowModal = True
     end
     object macDelete_bySend: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Send'
       MoveParams = <>
       ActionList = <
         item
@@ -845,8 +895,8 @@ inherited InventoryForm: TInventoryForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1090#1084#1080#1085#1091#1089#1086#1074#1072#1085#1099' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072
-      Caption = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-      Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Caption = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       ImageIndex = 39
     end
     object macUpdate_PartionGoods: TMultiAction
@@ -866,8 +916,41 @@ inherited InventoryForm: TInventoryForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 77
     end
+    object macInsert_bySeparate: TMultiAction
+      Category = 'Separate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSeparateOpenForm
+        end
+        item
+          Action = actInsert_bySeparate
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object actInsert_bySeparate: TdsdExecStoredProc
+      Category = 'Separate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Inventory_bySeparate
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Inventory_bySeparate
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 27
+    end
     object actDelete_bySend: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Send'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spDelete_MI_Inventory_bySend
@@ -896,7 +979,7 @@ inherited InventoryForm: TInventoryForm
       ImageIndex = 77
     end
     object macInsert_bySend: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Send'
       MoveParams = <>
       ActionList = <
         item
@@ -909,11 +992,11 @@ inherited InventoryForm: TInventoryForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object actInsert_bySend: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Send'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_MI_Inventory_bySend
@@ -1114,11 +1197,19 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbDelete_bySend'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbDelete_bySend'
+          ItemName = 'bbInsert_bySeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete_bySeparate'
         end
         item
           Visible = True
@@ -1212,6 +1303,15 @@ inherited InventoryForm: TInventoryForm
     end
     object bbUpdate_PartionGoods: TdxBarButton
       Action = macUpdate_PartionGoods
+      Category = 0
+    end
+    object bbInsert_bySeparate: TdxBarButton
+      Action = macInsert_bySeparate
+      Category = 0
+      ImageIndex = 27
+    end
+    object bbDelete_bySeparate: TdxBarButton
+      Action = macDelete_bySeparate
       Category = 0
     end
   end
@@ -2019,8 +2119,8 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 440
+    Left = 328
+    Top = 328
   end
   object spInsert_MI_Inventory_bySend: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_bySend'
@@ -2185,5 +2285,69 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 416
     Top = 448
+  end
+  object spInsert_MI_Inventory_bySeparate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Inventory_bySeparate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Separate'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_Separate'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAdd'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 248
+    Top = 424
+  end
+  object spDelete_MI_Inventory_bySeparate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Inventory_bySeparate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Separate'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_Separate'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAdd'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 480
   end
 end
