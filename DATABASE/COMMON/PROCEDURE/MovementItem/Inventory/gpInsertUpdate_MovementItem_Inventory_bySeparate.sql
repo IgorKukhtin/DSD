@@ -1,6 +1,5 @@
 -- Function: gpInsert_MovementItem_Inventory_bySeparate()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySeparate (Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_bySeparate (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Inventory_bySeparate(
