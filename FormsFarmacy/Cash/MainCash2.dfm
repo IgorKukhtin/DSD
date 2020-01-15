@@ -965,6 +965,12 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 93
         end
+        object MainNotSold60: TcxGridDBColumn
+          Caption = #1053#1077' '#1087#1088#1086#1076#1072#1074#1072#1083#1089#1103' 60 '#1076#1085#1077#1081
+          DataBinding.FieldName = 'NotSold60'
+          HeaderAlignmentHorz = taCenter
+          Width = 78
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -1460,11 +1466,11 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object Label11: TLabel
-      Left = 408
+      Left = 336
       Top = 3
-      Width = 50
+      Width = 178
       Height = 13
-      Caption = #1055#1088#1086#1084#1086#1082#1086#1076
+      Caption = #1055#1088#1086#1084#1086#1082#1086#1076'  ('#1080#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1074#1088#1072#1095#1072')'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
@@ -1473,8 +1479,8 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object Label24: TLabel
-      Left = 265
-      Top = 2
+      Left = 236
+      Top = 3
       Width = 41
       Height = 13
       Caption = #1057#1082#1080#1076#1082#1072' '
@@ -1506,7 +1512,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentBackground = False
       TabOrder = 1
       object Label6: TLabel
-        Left = 0
+        Left = 7
         Top = 2
         Width = 137
         Height = 13
@@ -1519,7 +1525,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object edDays: TcxCurrencyEdit
-        Left = 138
+        Left = 145
         Top = -1
         EditValue = 0.000000000000000000
         Properties.DecimalPlaces = 2
@@ -1530,7 +1536,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object edPromoCode: TcxTextEdit
-      Left = 464
+      Left = 515
       Top = -1
       Properties.MaxLength = 8
       TabOrder = 2
@@ -1540,8 +1546,8 @@ inherited MainCashForm2: TMainCashForm2
       Width = 80
     end
     object edPermanentDiscount: TcxTextEdit
-      Left = 312
-      Top = -1
+      Left = 283
+      Top = 0
       TabStop = False
       Properties.AutoSelect = False
       Properties.MaxLength = 0
@@ -2214,7 +2220,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
       ExplicitLeft = 552
     end
-    object lblLoyaltySMChangeSumma: TLabel
+    object lblLoyaltySMSumma: TLabel
       Left = 671
       Top = 3
       Width = 73
@@ -2250,13 +2256,13 @@ inherited MainCashForm2: TMainCashForm2
       TabStop = False
       OnClick = cxButton8Click
     end
-    object edLoyaltySMChangeSumma: TcxCurrencyEdit
+    object edLoyaltySMSumma: TcxCurrencyEdit
       Left = 759
       Top = 0
       Anchors = [akTop, akRight]
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 2
-      OnExit = edLoyaltySMChangeSummaExit
+      OnExit = edLoyaltySMSummaExit
       Width = 60
     end
   end
@@ -4191,7 +4197,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'LoyaltySMChangeSumma'
+        Name = 'LoyaltySMSumma'
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','

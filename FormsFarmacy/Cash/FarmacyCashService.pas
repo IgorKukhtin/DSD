@@ -71,6 +71,9 @@ type
     CONFCODESP  : String[10];    //Код подтверждения рецепта
     //***07.11.19
     LOYALTYID   : integer;       //Регистрация промокода
+    //***15.01.20
+    LOYALTYSM   : integer;       //Программа лояльности накопительная
+    LOYALSMSUM  : Currency;      //Сумма скидки по Программа лояльности накопительная
 
   end;
   TBodyRecord = record
@@ -1351,6 +1354,9 @@ begin
                 CONFCODESP := trim(FieldByName('CONFCODESP').AsString);
                 // ***07.11.19
                 LOYALTYID := FieldByName('LOYALTYID').AsInteger;
+                // ***15.01.20
+                LOYALTYSM := FieldByName('LOYALTYSM').AsInteger;
+                LOYALSMSUM := FieldByName('LOYALSMSUM').AsCurrency;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1497,6 +1503,9 @@ begin
                   dsdSave.Params.AddParam('inConfirmationCodeSP', ftString, ptInput, Head.CONFCODESP);
                   // ***07.11.19
                   dsdSave.Params.AddParam('inLoyaltySignID', ftInteger, ptInput, Head.LOYALTYID);
+                  // ***15.01.20
+                  dsdSave.Params.AddParam('inLoyaltySMID', ftInteger, ptInput, Head.LOYALTYSM);
+                  dsdSave.Params.AddParam('inLoyaltySMSumma', ftFloat, ptInput, Head.LOYALSMSUM);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

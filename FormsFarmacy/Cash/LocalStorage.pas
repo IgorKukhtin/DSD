@@ -83,7 +83,7 @@ begin
       AddIntField(LocalDataBaseHead,  'LOYALTYID');    //Программа лояльности
       //***08.01.20
       AddIntField(LocalDataBaseHead,  'LOYALTYSM');    //Программа лояльности накопительная
-      AddFloatField(LocalDataBaseHead,  'LOYALSMSUM');  //Сумма скидки по Программа лояльности накопительная
+      AddFloatField(LocalDataBaseHead,'LOYALSMSUM');   //Сумма скидки по Программа лояльности накопительная
 
       LocalDataBaseHead.CreateTable;
     end

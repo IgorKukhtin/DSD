@@ -26,6 +26,10 @@ BEGIN
         vbUnitKey := '0';
      END IF;   
      vbUnitId := vbUnitKey :: Integer;
+     IF inSession = '3' 
+     THEN
+       vbUnitId := 0;
+     END IF;
 
 
    RETURN QUERY 
@@ -66,7 +70,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -74,4 +78,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiscountExternal ('2')
+-- SELECT * FROM gpSelect_Object_DiscountExternal ('3')
