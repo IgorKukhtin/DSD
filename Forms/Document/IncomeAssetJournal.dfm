@@ -444,13 +444,35 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
+      object InvNumber_Invoice_Full: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090' ('#1080#1085#1092'.)'
+        DataBinding.FieldName = 'InvNumber_Invoice_Full'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
+      object OperDate_Invoice: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'OperDate_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 97
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 100
       end
       object ContractId: TcxGridDBColumn
         DataBinding.FieldName = 'ContractId'
