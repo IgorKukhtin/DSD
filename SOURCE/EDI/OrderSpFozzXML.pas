@@ -250,17 +250,17 @@ implementation
 
 function GetOrderSp(Doc: IXMLDocument): IXMLORDRSPType;
 begin
-  Result := Doc.GetDocBinding('OrderSp', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
+  Result := Doc.GetDocBinding('ORDRSP', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
 end;
 
 function LoadOrderSp(const FileName: string): IXMLORDRSPType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('OrderSp', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
+  Result := LoadXMLDocument(FileName).GetDocBinding('ORDRSP', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
 end;
 
 function NewOrderSp: IXMLORDRSPType;
 begin
-  Result := NewXMLDocument.GetDocBinding('OrderSp', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
+  Result := NewXMLDocument.GetDocBinding('ORDRSP', TXMLORDRSPType, TargetNamespace) as IXMLORDRSPType;
 end;
 
 { TXMLORDRSPType }

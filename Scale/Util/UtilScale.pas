@@ -314,6 +314,8 @@ begin
           //Всегда цвет - 3-ья линия
           //ParamAdd(Params,'Color_3',ftInteger);
           //
+          //
+          ParamAdd(Params,'MovementItemId',ftInteger); // Id строки
           // локально
           ParamAdd(Params,'Count_box',ftInteger);     // сколько линий для ящиков - 1,2 или 3
           ParamAdd(Params,'LineCode_begin',ftInteger);// вернули № линии, что б подсветить

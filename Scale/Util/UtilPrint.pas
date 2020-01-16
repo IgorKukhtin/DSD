@@ -131,6 +131,8 @@ type
     actExport: TMultiAction;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    actPrintWmsSticker: TdsdPrintAction;
+    spSelectPrintWmsSticker: TdsdStoredProc;
   private
   end;
 
@@ -147,6 +149,7 @@ type
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
   function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+  function Print_StickerWms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
@@ -194,6 +197,14 @@ begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.actPrintSticker.WithOutPreview:= not isPreview;
   UtilPrintForm.actPrintSticker.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_StickerWmsDocument (MovementId,MovementItemId: Integer; isPreview:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementItemId').Value := MovementItemId;
+  UtilPrintForm.actPrintWmsSticker.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrintWmsSticker.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
@@ -475,6 +486,24 @@ begin
              if (MovementDescId = zc_Movement_Income)
              then Print_StickerDocument (MovementId,isPreview)
              else begin ShowMessage('Ошибка.Печать на термопринтер стикера-самоклейки возможна только для документа <Приход от поставщика>.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_StickerWms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             Print_StickerWmsDocument (MovementId,MovementItemId,isPreview);
           except
                 ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
                 exit;

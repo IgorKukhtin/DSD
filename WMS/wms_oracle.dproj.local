@@ -6,11 +6,11 @@
     <Transaction>1899.12.30 00:00:00.000.636,=C:\Users\Константин\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.994,=C:\Users\Константин\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.484,=C:\Users\Константин\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.717,D:\Project-Basis\WMS\Main.dfm=D:\test\oracle\2\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.534,D:\Project-Basis\WMS\wms_oracle.dproj=D:\test\oracle\2\Project1.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.327,C:\Users\Константин\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\test\oracle\2\Project1.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.210,=D:\test\oracle\2\Unit1.pas</Transaction>
-    <Transaction>2019.09.22 22:34:51.534,D:\Project-Basis\WMS\wms_oracle.dproj=D:\test\oracle\2\Project1.dproj</Transaction>
-    <Transaction>2019.09.22 22:35:16.717,D:\Project-Basis\WMS\Main.dfm=D:\test\oracle\2\Unit1.dfm</Transaction>
-    <Transaction>2019.09.22 22:35:16.717,D:\Project-Basis\WMS\Main.pas=D:\test\oracle\2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.717,D:\Project-Basis\WMS\Main.pas=D:\test\oracle\2\Unit1.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android="3100f69eecef432b"/>

@@ -303,17 +303,17 @@ implementation
 
 function GetDesadv(Doc: IXMLDocument): IXMLDESADVType;
 begin
-  Result := Doc.GetDocBinding('Desadv', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
+  Result := Doc.GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
 end;
 
 function LoadDesadv(const FileName: string): IXMLDESADVType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('Desadv', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
+  Result := LoadXMLDocument(FileName).GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
 end;
 
 function NewDesadv: IXMLDESADVType;
 begin
-  Result := NewXMLDocument.GetDocBinding('Desadv', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
+  Result := NewXMLDocument.GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
 end;
 
 { TXMLDESADVType }

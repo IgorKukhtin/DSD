@@ -890,6 +890,11 @@ begin
           //
           RefreshDataSet;
           WriteParamsMovement;
+          //печатаем стикер
+          Print_StickerWms(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                         , ParamsMovement.ParamByName('MovementId').AsInteger
+                         , ParamsLight.ParamByName('MovementItemId').AsInteger
+                         , FALSE);
           //если ящик заполнен - надо новый + показали вес по линиям - ящики
           if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then GetParams_Light (1);
           if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then GetParams_Light (2);
@@ -1780,7 +1785,7 @@ begin
      if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
      and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
-     then begin ActiveControl:=EditGoodsCode;
+     then begin if SettingMain.isModeSorting = FALSE then ActiveControl:=EditGoodsCode;
                 PanelMovementDesc.Font.Color:=clRed;
                 PanelMovementDesc.Caption:='Ошибка.Не определен вес <Продукции>';
           end

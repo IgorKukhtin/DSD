@@ -622,6 +622,8 @@ begin
              ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
            end;}
            //
+           // вернули Id строки
+           ParamsLight.ParamByName('MovementItemId').asInteger:= DataSet.FieldByName('Id').asInteger;
            // вернули какой наполнен
            ParamsLight.ParamByName('isFull_1').asBoolean:= DataSet.FieldByName('isFull_1').asBoolean;
            ParamsLight.ParamByName('isFull_2').asBoolean:= DataSet.FieldByName('isFull_2').asBoolean;

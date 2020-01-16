@@ -221,17 +221,17 @@ implementation
 
 function GetIftmin(Doc: IXMLDocument): IXMLIFTMINType;
 begin
-  Result := Doc.GetDocBinding('Iftmin', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
+  Result := Doc.GetDocBinding('IFTMIN', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
 end;
 
 function LoadIftmin(const FileName: string): IXMLIFTMINType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('Iftmin', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
+  Result := LoadXMLDocument(FileName).GetDocBinding('IFTMIN', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
 end;
 
 function NewIftmin: IXMLIFTMINType;
 begin
-  Result := NewXMLDocument.GetDocBinding('Iftmin', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
+  Result := NewXMLDocument.GetDocBinding('IFTMIN', TXMLIFTMINType, TargetNamespace) as IXMLIFTMINType;
 end;
 
 { TXMLIFTMINType }

@@ -3027,7 +3027,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Документ DESADV отправлен на FTP';
+        'Документ IFTMIN отправлен на FTP';
       FInsertEDIEvents.Execute;
     end;
   finally

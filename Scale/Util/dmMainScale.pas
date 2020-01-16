@@ -815,6 +815,7 @@ begin
        Params.Clear;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
          //
@@ -863,6 +864,7 @@ begin
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
          //
@@ -1122,6 +1124,8 @@ begin
          if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
            or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
            or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
          then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
